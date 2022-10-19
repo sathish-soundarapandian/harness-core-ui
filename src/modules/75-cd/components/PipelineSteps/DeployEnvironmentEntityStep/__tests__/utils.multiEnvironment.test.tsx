@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../types'
@@ -12,7 +19,8 @@ describe('process multi environment initial values', () => {
   test('parallel defaults to true', () => {
     const output = processMultiEnvironmentInitialValues({}, false)
     expect(output).toEqual({
-      parallel: true
+      parallel: true,
+      category: 'multi'
     })
   })
 
@@ -28,7 +36,8 @@ describe('process multi environment initial values', () => {
       false
     )
     expect(output).toEqual({
-      parallel: false
+      parallel: false,
+      category: 'multi'
     })
   })
 })
@@ -263,6 +272,7 @@ describe('process multi environment form values', () => {
   test('parallel value shows with runtime enviroment', () => {
     const output = processMultiEnvironmentFormValues(
       {
+        category: 'multi',
         parallel: false,
         environments: RUNTIME_INPUT_VALUE as any
       },
@@ -280,9 +290,21 @@ describe('process multi environment form values', () => {
   })
 
   test('no environments are passed', () => {
-    const output = processMultiEnvironmentFormValues({}, false)
+    const output = processMultiEnvironmentFormValues(
+      {
+        category: 'multi'
+      },
+      false
+    )
 
-    expect(output).toEqual({})
+    expect(output).toEqual({
+      environments: {
+        metadata: {
+          parallel: undefined
+        },
+        values: []
+      }
+    } as DeployEnvironmentEntityConfig)
   })
 })
 

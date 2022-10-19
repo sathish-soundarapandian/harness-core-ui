@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { Divider } from '@blueprintjs/core'
@@ -93,7 +93,8 @@ export default function DeployEnvironment({
   customDeploymentRef,
   gitOpsEnabled
 }: DeployEnvironmentProps): JSX.Element {
-  const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
+  const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
+    useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
@@ -144,6 +145,15 @@ export default function DeployEnvironment({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMultiEnvironment])
+
+  useEffect(() => {
+    if (errors.environments) {
+      setFieldError(uniquePathForEnvironments.current, errors.environments)
+    } else {
+      setFieldError(uniquePathForEnvironments.current, undefined)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors])
 
   useEffect(() => {
     if (!loading) {
@@ -247,16 +257,15 @@ export default function DeployEnvironment({
       if (draft.environments && Array.isArray(draft.environments)) {
         draft.environments.push({ label: newEnvironmentInfo.name, value: newEnvironmentInfo.identifier })
         if (gitOpsEnabled && draft.clusters) {
-          draft.clusters[newEnvironmentInfo.identifier] = []
           if (draft.infrastructures) {
             delete draft.infrastructures
           }
         } else if (!gitOpsEnabled && draft.infrastructures) {
-          draft.infrastructures[newEnvironmentInfo.identifier] = []
           if (draft.clusters) {
             delete draft.clusters
           }
         }
+        set(draft, uniquePathForEnvironments.current, draft.environments)
       } else {
         draft.environment = newEnvironmentInfo.identifier
         if (gitOpsEnabled) {
@@ -288,7 +297,10 @@ export default function DeployEnvironment({
 
         delete draft.environments
       } else if (Array.isArray(draft.environments)) {
-        draft.environments = draft.environments.filter(env => env.value !== environmentToDelete)
+        const filteredEnvironments = draft.environments.filter(env => env.value !== environmentToDelete)
+        draft.environments = filteredEnvironments
+        set(draft, uniquePathForEnvironments.current, filteredEnvironments)
+        setFieldTouched(uniquePathForEnvironments.current, true)
 
         if (
           gitOpsEnabled &&
@@ -331,6 +343,7 @@ export default function DeployEnvironment({
               isAllSelectionSupported: isUnderEnvGroup
             }}
             onChange={items => {
+              setFieldTouched(uniquePathForEnvironments.current, true)
               if (items?.at(0)?.value === 'All') {
                 setFieldValue(`environments`, undefined)
                 setSelectedEnvironments([])

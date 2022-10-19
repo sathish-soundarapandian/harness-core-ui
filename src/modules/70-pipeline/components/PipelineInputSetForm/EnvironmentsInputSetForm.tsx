@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { get, isNil, pick, set, unset } from 'lodash-es'
+import { get, isEmpty, isNil, pick, set, unset } from 'lodash-es'
 import cx from 'classnames'
 
 import { Color, Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
@@ -204,15 +204,22 @@ function MultiEnvironmentsInputSetForm({
   // This is the value of AllValues
   const deploymentStageInputSet = get(formik?.values, path, {})
 
-  /** Show the environments selection field in the following scenarios
+  const areEnvironmentsPreSelectedInStudio = Array.isArray(get(deploymentStage, pathToEnvironments))
+    ? get(deploymentStage, pathToEnvironments).some(
+        (environment: EnvironmentYamlV2) => !isValueRuntimeInput(environment.environmentRef)
+      )
+    : false
+
+  /** If environments are pre selected in studio, then hide the input field. Else, show the environments selection field in the following scenarios
    * 1. pathToEnvironments is a runtime value - condition 1
    * 2. When 1 is true and the user selects the environments, we need to still continue to show it - condition 2
    *    a. The check for deployToAll of false in 'deploymentStage' is required to show the field in case of 1 and 2,
    *      as then the values of deployToAll in the above scenarios is either <input> or true, and not false */
   const showEnvironmentsSelectionInputField =
-    isValueRuntimeInput(get(deploymentStageTemplate, pathToEnvironments) as unknown as string) ||
-    (Array.isArray(get(deploymentStageTemplate, pathToEnvironments)) &&
-      deploymentStage?.environmentGroup?.deployToAll !== false)
+    !areEnvironmentsPreSelectedInStudio &&
+    (isValueRuntimeInput(get(deploymentStageTemplate, pathToEnvironments) as unknown as string) ||
+      (Array.isArray(get(deploymentStageTemplate, pathToEnvironments)) &&
+        deploymentStage?.environmentGroup?.deployToAll !== false))
 
   return (
     <>
@@ -263,6 +270,7 @@ function MultiEnvironmentsInputSetForm({
                 : {}
 
               const showEnvironmentVariables = Array.isArray(environmentTemplate?.environmentInputs?.variables)
+              const showEnvironmentOverrides = !isEmpty(environmentTemplate?.environmentInputs?.overrides)
               /** Show the infrastructures selection field in the following scenarios
                * 1. environmentTemplate.infrastructureDefinitions is a runtime value - condition 1
                * 2. When 1 is true and the user selects the environments, we need to still continue to show it - condition 2
@@ -290,6 +298,7 @@ function MultiEnvironmentsInputSetForm({
 
               const showEnvironmentPrefix =
                 showEnvironmentVariables ||
+                showEnvironmentOverrides ||
                 showClustersSelectionInputField ||
                 showInfrastructuresSelectionInputField ||
                 showInfrastructuresInputSetForm
@@ -350,6 +359,43 @@ function MultiEnvironmentsInputSetForm({
                         </>
                       )}
 
+                      {showEnvironmentOverrides && (
+                        <>
+                          <Text
+                            font={{ size: 'normal', weight: 'bold' }}
+                            padding={{ bottom: 'medium' }}
+                            color={Color.GREY_600}
+                          >
+                            {getString('common.environmentOverrides')}
+                          </Text>
+                          <Container padding={{ left: 'medium' }}>
+                            <StepWidget<ServiceSpec>
+                              factory={factory}
+                              initialValues={get(
+                                deploymentStageInputSet,
+                                `${pathToEnvironments}[${index}].environmentInputs.overrides`,
+                                {
+                                  variables: []
+                                }
+                              )}
+                              allowableTypes={allowableTypes}
+                              template={get(
+                                deploymentStageTemplate,
+                                `${pathToEnvironments}[${index}].environmentInputs.overrides`,
+                                {}
+                              )}
+                              type={getStepTypeByDeploymentType(deploymentType)}
+                              stepViewType={viewType}
+                              path={`${path}.${pathToEnvironments}[${index}].environmentInputs.overrides`}
+                              readonly={readonly}
+                              customStepProps={{
+                                stageIdentifier
+                              }}
+                            />
+                          </Container>
+                        </>
+                      )}
+
                       {showClustersSelectionInputField && (
                         <StepWidget
                           factory={factory}
@@ -363,9 +409,7 @@ function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             environmentIdentifier: environment.environmentRef,
                             isMultipleCluster: true,
-                            deployToAllClusters:
-                              environmentTemplate.deployToAll === true ||
-                              deploymentStage?.environmentGroup?.deployToAll === true
+                            deployToAllClusters: environmentInDeploymentStage?.deployToAll
                           }}
                         />
                       )}
@@ -385,11 +429,7 @@ function MultiEnvironmentsInputSetForm({
                             environmentIdentifier: environment.environmentRef,
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
-                            deployToAllEnvironments:
-                              deploymentStage?.environmentGroup?.deployToAll === true ||
-                              deploymentStageInputSet?.environmentGroup?.deployToAll === true,
-                            deployToAllInfrastructures:
-                              environment.deployToAll === true || environmentInDeploymentStage?.deployToAll === true
+                            deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll
                           }}
                         />
                       )}

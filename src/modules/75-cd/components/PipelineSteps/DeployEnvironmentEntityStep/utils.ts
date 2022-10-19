@@ -6,8 +6,11 @@
  */
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, isNil, set } from 'lodash-es'
+import * as Yup from 'yup'
+import type { UseStringsReturn } from 'framework/strings'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import type {
   DeployEnvironmentEntityConfig,
   DeployEnvironmentEntityCustomStepProps,
@@ -22,7 +25,8 @@ export type ChangeTypeOfKeys<T, N, K extends keyof T> = Pick<T, K> &
 
 export function processInitialValues(
   initialValues: DeployEnvironmentEntityConfig,
-  customStepProps: DeployEnvironmentEntityCustomStepProps
+  customStepProps: DeployEnvironmentEntityCustomStepProps,
+  onUpdate?: (data: DeployEnvironmentEntityConfig) => void
 ): DeployEnvironmentEntityFormState {
   const gitOpsEnabled = !!customStepProps.gitOpsEnabled
 
@@ -48,11 +52,48 @@ export function processInitialValues(
     return processSingleEnvironmentInitialValues(initialValues.environment, gitOpsEnabled)
   } else if (initialValues.environments) {
     return processMultiEnvironmentInitialValues(initialValues, gitOpsEnabled)
-  } else if (initialValues.environmentGroup && initialValues.environmentGroup.envGroupRef) {
+  } else if (initialValues.environmentGroup) {
+    // This handles the migration from runtime environment group of old pipeline to post multi infra handling
+    if (
+      isEqual(initialValues.environmentGroup, {
+        envGroupRef: RUNTIME_INPUT_VALUE,
+        deployToAll: true
+      })
+    ) {
+      const updatedInitialValues = {
+        environmentGroup: {
+          envGroupRef: RUNTIME_INPUT_VALUE,
+          deployToAll: RUNTIME_INPUT_VALUE as any,
+          environments: RUNTIME_INPUT_VALUE as any
+        }
+      }
+
+      onUpdate?.(updatedInitialValues)
+      return processEnvironmentGroupInitialValues(updatedInitialValues, gitOpsEnabled)
+    } else if (
+      // This handles the migration from 'all' environments under environment group of old pipeline to post multi infra handling
+      initialValues.environmentGroup.deployToAll === true &&
+      !isValueRuntimeInput(initialValues.environmentGroup.envGroupRef) &&
+      isNil(initialValues.environmentGroup.envGroupRef)
+    ) {
+      const updatedInitialValues = {
+        environmentGroup: {
+          envGroupRef: initialValues.environmentGroup.envGroupRef,
+          deployToAll: true,
+          environments: RUNTIME_INPUT_VALUE as any
+        }
+      }
+
+      onUpdate?.(updatedInitialValues)
+      return processEnvironmentGroupInitialValues(updatedInitialValues, gitOpsEnabled)
+    }
+
     return processEnvironmentGroupInitialValues(initialValues, gitOpsEnabled)
   }
 
-  return {}
+  return {
+    category: 'single'
+  }
 }
 
 export function processFormValues(
@@ -62,11 +103,11 @@ export function processFormValues(
   const gitOpsEnabled = !!customStepProps.gitOpsEnabled
 
   // istanbul ignore else
-  if (!isNil(data.environment)) {
+  if (data.category === 'single') {
     return processSingleEnvironmentFormValues(data, gitOpsEnabled)
-  } else if (!isNil(data.environmentGroup)) {
+  } else if (data.category === 'group') {
     return processEnvironmentGroupFormValues(data, gitOpsEnabled)
-  } else if (!isNil(data.environments)) {
+  } else if (data.category === 'multi') {
     return processMultiEnvironmentFormValues(data, gitOpsEnabled)
   }
   return {}
@@ -125,6 +166,7 @@ export function processSingleEnvironmentInitialValues(
     }
   }
 
+  formState.category = 'single'
   return formState
 }
 
@@ -252,6 +294,7 @@ export function processMultiEnvironmentInitialValues(
 ): DeployEnvironmentEntityFormState {
   return {
     parallel: defaultTo(initialValues.environments?.metadata?.parallel, true),
+    category: 'multi',
     ...getEnvironmentsFormStateFromInitialValues(initialValues.environments?.values, false, gitOpsEnabled)
   }
 }
@@ -330,14 +373,22 @@ export function processMultiEnvironmentFormValues(
       }
     }
   }
-  return {}
+
+  return {
+    environments: {
+      metadata: {
+        parallel: data.parallel
+      },
+      values: []
+    }
+  }
 }
 
 export function processEnvironmentGroupInitialValues(
   initialValues: DeployEnvironmentEntityConfig,
   gitOpsEnabled: boolean
 ): DeployEnvironmentEntityFormState {
-  let formState = {}
+  let formState: DeployEnvironmentEntityFormState = {}
 
   if (initialValues.environmentGroup && initialValues.environmentGroup.envGroupRef) {
     set(formState, `environmentGroup`, initialValues.environmentGroup.envGroupRef)
@@ -357,6 +408,7 @@ export function processEnvironmentGroupInitialValues(
     }
   }
 
+  formState.category = 'group'
   return formState
 }
 
@@ -393,5 +445,59 @@ export function processEnvironmentGroupFormValues(
     }
   }
 
-  return {}
+  return {
+    environmentGroup: {
+      envGroupRef: ''
+    }
+  }
+}
+
+export function getValidationSchema(getString: UseStringsReturn['getString'], gitOpsEnabled: boolean): Yup.MixedSchema {
+  return Yup.mixed()
+    .required()
+    .test({
+      test(valueObj: DeployEnvironmentEntityFormState): boolean | Yup.ValidationError {
+        if (valueObj.category === 'single') {
+          if (!valueObj.environment) {
+            return this.createError({
+              path: 'environment',
+              message: getString('cd.pipelineSteps.environmentTab.environmentIsRequired')
+            })
+          }
+
+          if (!gitOpsEnabled && !valueObj.infrastructure && !isValueRuntimeInput(valueObj.environment)) {
+            return this.createError({
+              path: 'infrastructure',
+              message: getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired')
+            })
+          }
+
+          if (gitOpsEnabled && !valueObj.cluster && !isValueRuntimeInput(valueObj.environment)) {
+            return this.createError({
+              path: 'cluster',
+              message: getString('cd.pipelineSteps.environmentTab.clusterIsRequired')
+            })
+          }
+        } else if (valueObj.category === 'multi') {
+          if (
+            !(Array.isArray(valueObj.environments) && valueObj.environments.length) &&
+            !isValueRuntimeInput(valueObj.environments as unknown as string)
+          ) {
+            return this.createError({
+              path: 'environments',
+              message: getString('cd.pipelineSteps.environmentTab.environmentsAreRequired')
+            })
+          }
+        } else if (valueObj.category === 'group') {
+          if (!valueObj.environmentGroup) {
+            return this.createError({
+              path: 'environmentGroup',
+              message: getString('cd.pipelineSteps.environmentTab.environmentGroupIsRequired')
+            })
+          }
+        }
+
+        return true
+      }
+    })
 }

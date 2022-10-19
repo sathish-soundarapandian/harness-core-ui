@@ -269,6 +269,7 @@ export default function DeployInfrastructure({
           label: newInfrastructureInfo.name,
           value: newInfrastructureInfo.identifier
         })
+        set(draft, uniquePathForInfrastructures.current, draft.infrastructures[environmentIdentifier])
       } else {
         draft.infrastructure = newInfrastructureInfo.identifier
       }
@@ -288,9 +289,11 @@ export default function DeployInfrastructure({
         draft.infrastructure = ''
         delete draft.infrastructures
       } else if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
-        draft.infrastructures[environmentIdentifier] = draft.infrastructures[environmentIdentifier].filter(
+        const filteredInfrastructures = draft.infrastructures[environmentIdentifier].filter(
           infra => infra.value !== infrastructureToDelete
         )
+        draft.infrastructures[environmentIdentifier] = filteredInfrastructures
+        set(draft, uniquePathForInfrastructures.current, filteredInfrastructures)
       }
     })
 

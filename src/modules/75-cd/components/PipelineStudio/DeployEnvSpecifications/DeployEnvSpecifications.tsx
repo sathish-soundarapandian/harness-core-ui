@@ -17,7 +17,6 @@ import type { StageElementConfig } from 'services/cd-ng'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { useQueryParams } from '@common/hooks'
 import { FeatureFlag } from '@common/featureFlags'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -45,8 +44,6 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { errorMap } = useValidationErrors()
 
   const isMultiInfra = useFeatureFlag(FeatureFlag.MULTI_SERVICE_INFRA)
-  // Will be removed shortly
-  const { isMultiInfraVisible } = useQueryParams<any>()
 
   useEffect(() => {
     if (errorMap.size > 0) {
@@ -169,8 +166,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     <div className={stageCss.deployStage} key="1">
       <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
-        {/* Putting this condition back till we have the latest BE in QA */}
-        {isMultiInfra && isMultiInfraVisible === 'true' ? (
+        {isMultiInfra ? (
           <StepWidget<DeployEnvironmentEntityConfig>
             type={StepType.DeployEnvironmentEntity}
             readonly={isReadonly}

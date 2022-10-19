@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../types'
 import { processEnvironmentGroupFormValues, processEnvironmentGroupInitialValues } from '../utils'
@@ -45,6 +52,7 @@ describe('process environment group initial values', () => {
     )
 
     expect(output).toEqual({
+      category: 'group',
       environmentGroup: 'Env_Group_1',
       environments: [
         {
@@ -60,7 +68,11 @@ describe('process environment group initial values', () => {
           value: 'Env_3'
         }
       ],
-      environmentInputs: {},
+      environmentInputs: {
+        Env_1: undefined,
+        Env_2: undefined,
+        Env_3: undefined
+      },
       infrastructures: {
         Env_2: [
           {
@@ -101,6 +113,7 @@ describe('process environment group initial values', () => {
     )
 
     expect(output).toEqual({
+      category: 'group',
       environmentGroup: 'Env_Group_1',
       environmentInputs: {},
       infrastructures: {},
@@ -121,6 +134,7 @@ describe('process environment group initial values', () => {
     )
 
     expect(output).toEqual({
+      category: 'group',
       environmentGroup: RUNTIME_INPUT_VALUE
     } as DeployEnvironmentEntityFormState)
   })
@@ -135,14 +149,16 @@ describe('process environment group initial values', () => {
       false
     )
 
-    expect(output).toEqual({})
+    expect(output).toEqual({
+      category: 'group'
+    })
   })
 })
 
 describe('process environment group form values', () => {
   test('env group is selected and environments are marked as runtime', () => {
     const output = processEnvironmentGroupFormValues(
-      { environmentGroup: 'Env_Group_1', environments: RUNTIME_INPUT_VALUE as any },
+      { category: 'group', environmentGroup: 'Env_Group_1', environments: RUNTIME_INPUT_VALUE as any },
       false
     )
 
@@ -156,7 +172,7 @@ describe('process environment group form values', () => {
   })
 
   test('env group is selected and all environments are selected', () => {
-    const output = processEnvironmentGroupFormValues({ environmentGroup: 'Env_Group_1' }, false)
+    const output = processEnvironmentGroupFormValues({ category: 'group', environmentGroup: 'Env_Group_1' }, false)
 
     expect(output).toEqual({
       environmentGroup: {
@@ -168,7 +184,10 @@ describe('process environment group form values', () => {
   })
 
   test('env group is marked as runtime', () => {
-    const output = processEnvironmentGroupFormValues({ environmentGroup: RUNTIME_INPUT_VALUE }, false)
+    const output = processEnvironmentGroupFormValues(
+      { category: 'group', environmentGroup: RUNTIME_INPUT_VALUE },
+      false
+    )
 
     expect(output).toEqual({
       environmentGroup: {
@@ -180,8 +199,12 @@ describe('process environment group form values', () => {
   })
 
   test('env group is not selected', () => {
-    const output = processEnvironmentGroupFormValues({}, false)
+    const output = processEnvironmentGroupFormValues({ category: 'group' }, false)
 
-    expect(output).toEqual({})
+    expect(output).toEqual({
+      environmentGroup: {
+        envGroupRef: ''
+      }
+    })
   })
 })

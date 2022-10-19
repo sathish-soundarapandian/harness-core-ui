@@ -6,7 +6,7 @@
  */
 
 import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react'
-import { isEmpty, isNil, noop, set } from 'lodash-es'
+import { isEmpty, noop, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import produce from 'immer'
 import { RadioGroup } from '@blueprintjs/core'
@@ -30,10 +30,10 @@ import { StringKeys, useStrings } from 'framework/strings'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 
-import { getEnvironmentTabV2Schema } from '../PipelineStepsUtil'
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
+import { getValidationSchema } from './utils'
 
 import css from './DeployEnvironmentEntityStep.module.scss'
 
@@ -109,6 +109,9 @@ export default function DeployEnvironmentEntityWidget({
       const cluster = formikRef.current.values.cluster
 
       const newValues = produce(formikRef.current.values, draft => {
+        draft.category = 'multi'
+        draft.parallel = true
+
         draft.environments =
           environment && !environmentGroup
             ? getMultiTypeFromValue(environment) === MultiTypeInputType.RUNTIME
@@ -124,8 +127,6 @@ export default function DeployEnvironmentEntityWidget({
 
         delete draft.cluster
         delete draft.clusters
-
-        draft.parallel = true
 
         if (environment) {
           if (gitOpsEnabled) {
@@ -162,6 +163,7 @@ export default function DeployEnvironmentEntityWidget({
     /* istanbul ignore else */
     if (formikRef.current && confirmed) {
       const newValues = produce(formikRef.current.values, draft => {
+        draft.category = 'single'
         draft.environment = ''
         delete draft.environments
         delete draft.infrastructures
@@ -179,6 +181,7 @@ export default function DeployEnvironmentEntityWidget({
     /* istanbul ignore else */
     if (formikRef.current && confirmed) {
       const newValues = produce(formikRef.current.values, draft => {
+        draft.category = 'group'
         draft.environmentGroup = ''
         delete draft.environment
         delete draft.environments
@@ -237,15 +240,15 @@ export default function DeployEnvironmentEntityWidget({
           onUpdate?.({ ...values })
         }}
         initialValues={initialValues}
-        validationSchema={getEnvironmentTabV2Schema(getString)}
+        validationSchema={getValidationSchema(getString, gitOpsEnabled)}
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
           formikRef.current = formik
           const { values } = formik
 
-          const isMultiEnvironment = !isNil(values.environments)
-          const isEnvironmentGroup = !isNil(values.environmentGroup)
+          const isMultiEnvironment = values.category === 'multi'
+          const isEnvironmentGroup = values.category === 'group'
 
           return (
             <FormikForm>

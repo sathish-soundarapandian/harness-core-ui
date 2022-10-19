@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../types'
 import { processInitialValues, processFormValues } from '../utils'
@@ -6,7 +13,9 @@ describe('process initial values', () => {
   test('clean slate', () => {
     const output = processInitialValues({}, { gitOpsEnabled: false })
 
-    expect(output).toEqual({})
+    expect(output).toEqual({
+      category: 'single'
+    })
   })
 
   test('environment ref selected', () => {
@@ -26,6 +35,7 @@ describe('process initial values', () => {
     )
 
     expect(output).toEqual({
+      category: 'single',
       environment: 'Env_1',
       environmentInputs: {
         Env_1: undefined
@@ -58,6 +68,7 @@ describe('process initial values', () => {
     )
 
     expect(output).toEqual({
+      category: 'multi',
       environments: [{ label: 'Env_1', value: 'Env_1' }],
       environmentInputs: {
         Env_1: undefined
@@ -80,6 +91,7 @@ describe('process initial values', () => {
     )
 
     expect(output).toEqual({
+      category: 'group',
       environmentGroup: 'Env_Group_1',
       environmentInputs: {},
       infrastructures: {},
@@ -92,12 +104,15 @@ describe('process form values', () => {
   test('clean slate', () => {
     const output = processInitialValues({}, { gitOpsEnabled: false })
 
-    expect(output).toEqual({})
+    expect(output).toEqual({
+      category: 'single'
+    })
   })
 
   test('environment ref selected', () => {
     const output = processFormValues(
       {
+        category: 'single',
         environment: 'Env_1',
         environmentInputs: {
           Env_1: undefined
@@ -128,6 +143,7 @@ describe('process form values', () => {
   test('environments selected', () => {
     const output = processFormValues(
       {
+        category: 'multi',
         environments: [{ label: 'Env_1', value: 'Env_1' }],
         environmentInputs: {
           Env_1: undefined
@@ -156,6 +172,7 @@ describe('process form values', () => {
   test('environment group selected ', () => {
     const output = processFormValues(
       {
+        category: 'group',
         environmentGroup: 'Env_Group_1',
         environmentInputs: {},
         infrastructures: {},

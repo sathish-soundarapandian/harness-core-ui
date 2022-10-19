@@ -35,7 +35,8 @@ export interface DeployEnvironmentEntityFormState {
   cluster?: string
   clusters?: Record<string, SelectOption[]>
   environmentGroup?: string
-  gitOpsEnabled?: DeploymentStageConfig['gitOpsEnabled']
+  /** category is required to handle runtime input to fixed changes as well as cleaner identification during validation */
+  category?: 'single' | 'multi' | 'group'
 }
 
 export interface DeployEnvironmentEntityCustomStepProps {
