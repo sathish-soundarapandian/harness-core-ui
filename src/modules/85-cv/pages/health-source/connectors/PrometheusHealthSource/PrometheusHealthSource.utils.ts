@@ -41,7 +41,7 @@ import {
   validateCommonFieldsForMetricThreshold
 } from '../../common/MetricThresholds/MetricThresholds.utils'
 import type { PersistMappedMetricsType, PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
-import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 
 type UpdateSelectedMetricsMap = {
   updatedMetric: string
@@ -391,10 +391,7 @@ export function transformPrometheusHealthSourceToSetupSource(
         envFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.envFilter),
         additionalFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.additionalFilters),
         aggregator: metricDefinition.aggregation,
-        riskCategory:
-          metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
-            ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
-            : '',
+        riskCategory: metricDefinition?.analysis?.riskProfile?.riskCategory,
         serviceInstance:
           isTemplate && !isConnectorRuntimeOrExpression
             ? {
@@ -465,7 +462,7 @@ export function transformPrometheusSetupSourceToHealthSource(
       continue
     }
 
-    const assignComponentPayload = createPayloadForAssignComponent({
+    const assignComponentPayload = createPayloadForAssignComponentV2({
       sli,
       riskCategory,
       healthScore,

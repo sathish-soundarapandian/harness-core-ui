@@ -123,11 +123,51 @@ export const getCategoryAndMetricType = (riskCategory?: string): Pick<RiskProfil
   }
 }
 
+export const getCategoryAndMetricTypeV2 = (
+  riskCategory?: RiskProfile['riskCategory']
+): Pick<RiskProfile, 'riskCategory'> => {
+  if (!riskCategory && typeof riskCategory !== 'string') {
+    return {}
+  }
+
+  return {
+    riskCategory
+  }
+}
+
 export function createPayloadForAssignComponent(baseMetricInfo: BaseHealthSourceMetricInfo): AssignComponentPayload {
   const { riskCategory, lowerBaselineDeviation, higherBaselineDeviation, sli, continuousVerification, healthScore } =
     baseMetricInfo
 
   const categoryAndMetricType = getCategoryAndMetricType(riskCategory)
+
+  const thresholdTypes: RiskProfile['thresholdTypes'] = getThresholdTypes({
+    lowerBaselineDeviation,
+    higherBaselineDeviation
+  })
+
+  const ifOnlySliIsSelected = Boolean(sli) && !(Boolean(healthScore) || Boolean(continuousVerification))
+
+  const riskProfile = {
+    ...categoryAndMetricType,
+    thresholdTypes
+  }
+
+  return {
+    sli: { enabled: Boolean(sli) },
+    analysis: {
+      riskProfile: ifOnlySliIsSelected ? {} : riskProfile,
+      liveMonitoring: { enabled: Boolean(healthScore) },
+      deploymentVerification: { enabled: Boolean(continuousVerification) }
+    }
+  }
+}
+
+export function createPayloadForAssignComponentV2(baseMetricInfo: BaseHealthSourceMetricInfo): AssignComponentPayload {
+  const { riskCategory, lowerBaselineDeviation, higherBaselineDeviation, sli, continuousVerification, healthScore } =
+    baseMetricInfo
+
+  const categoryAndMetricType = getCategoryAndMetricTypeV2(riskCategory as RiskProfile['riskCategory'])
 
   const thresholdTypes: RiskProfile['thresholdTypes'] = getThresholdTypes({
     lowerBaselineDeviation,

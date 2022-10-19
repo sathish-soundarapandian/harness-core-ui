@@ -30,6 +30,7 @@ import {
 } from './NewRelic.mock'
 import { createNewRelicFormData } from '../NewRelicHealthSource.utils'
 import { newRelicDefaultMetricName } from '../NewRelicHealthSource.constants'
+import { riskCategoryMock } from '../../__tests__/HealthSources.mock'
 
 const createModeProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
@@ -78,6 +79,9 @@ describe('Unit tests for NewRelic health source', () => {
     jest
       .spyOn(cvServices, 'useGetMetricPacks')
       .mockImplementation(() => ({ loading: false, error: null, data: metricPack, refetch: refetchMock } as any))
+    jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
     jest
       .spyOn(cvServices, 'getNewRelicMetricDataPromise')
       .mockImplementation(() => ({ error: null, data: validationData.data } as any))

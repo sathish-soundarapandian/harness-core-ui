@@ -10,6 +10,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Utils } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { SelectHealthSourceServicesProps } from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices.types'
+import { riskCategoryMock } from '@cv/pages/health-source/connectors/__tests__/HealthSources.mock'
 import * as cvServices from 'services/cv'
 import NewRelicCustomMetricForm from '../NewRelicCustomMetricForm'
 import { existingMetricDetails, formikValues, mappedMetricsMap } from './NewRelicCustomMetricForm.mock'
@@ -71,8 +72,8 @@ describe('NewRelicMappedMetric component', () => {
 
   beforeAll(() => {
     jest
-      .spyOn(cvServices, 'useGetMetricPacks')
-      .mockReturnValue({ loading: false, error: null, data: {}, refetch: refetchMock } as any)
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
     jest.spyOn(cvServices, 'useFetchParsedSampleData').mockReturnValue({
       mutate: fetchNewRelicTimeSeriesData
     } as any)
