@@ -22,6 +22,7 @@ export interface TemplatesViewProps {
   onOpenEdit?: (template: TemplateSummaryResponse) => void
   onOpenSettings?: (templateIdentifier: string) => void
   onDelete?: (template: TemplateSummaryResponse) => void
+  isGitSyncEnabled?: boolean
 }
 
 export default function TemplatesView(props: TemplatesViewProps & { view: Views }): React.ReactElement {
@@ -30,8 +31,13 @@ export default function TemplatesView(props: TemplatesViewProps & { view: Views 
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const content = React.useMemo(
-    () => (view === Views.GRID ? <TemplatesGridView {...rest} /> : <TemplatesListView {...rest} />),
-    [view, rest]
+    () =>
+      view === Views.GRID ? (
+        <TemplatesGridView {...rest} isGitSyncEnabled={isGitSyncEnabled} />
+      ) : (
+        <TemplatesListView {...rest} />
+      ),
+    [view, rest, isGitSyncEnabled]
   )
 
   if (isGitSyncEnabled) {
