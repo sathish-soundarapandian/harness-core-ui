@@ -607,6 +607,37 @@ const CENonMFERoutes = (
     >
       <BIDashboard />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toComputeGroups({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CEComputeGroupsPage}
+    >
+      <ComputeGroups />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={[
+        routes.toClusterDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
+        routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
+        routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' })
+      ]}
+      exact
+      pageName={PAGE_NAME.CEClusterDetailsPage}
+    >
+      <CGClusterDetailsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toComputeGroupsSetup({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CEComputeGroupsSetupPage}
+    >
+      <ComputeGroupsSetup />
+    </RouteWithLayout>
   </>
 )
 
@@ -696,7 +727,12 @@ const CERoutes: React.FC = () => {
           clusterName: ':clusterName',
           nodeId: ':nodeId'
         }),
-        routes.toCEDashboards({ ...accountPathProps })
+        routes.toCEDashboards({ ...accountPathProps }),
+        routes.toComputeGroups({ ...accountPathProps }),
+        routes.toClusterDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
+        routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
+        routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
+        routes.toComputeGroupsSetup({ ...accountPathProps })
       ]
     : []
 
@@ -835,37 +871,6 @@ const CERoutes: React.FC = () => {
           pageName={PAGE_NAME.CECommitmentOrchestrationPage}
         >
           <CommitmentOrchestrationSetup />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toComputeGroups({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CEComputeGroupsPage}
-        >
-          <ComputeGroups />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={[
-            routes.toClusterDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
-            routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
-            routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' })
-          ]}
-          exact
-          pageName={PAGE_NAME.CEClusterDetailsPage}
-        >
-          <CGClusterDetailsPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toComputeGroupsSetup({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CEComputeGroupsSetupPage}
-        >
-          <ComputeGroupsSetup />
         </RouteWithLayout>
         <Route path="*">
           <NotFoundPage />
