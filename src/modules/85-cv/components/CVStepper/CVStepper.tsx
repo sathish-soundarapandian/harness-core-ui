@@ -17,9 +17,10 @@ interface CVStepInterface {
   selectedStepId?: string
   step: StepInterface
   index: number
-  onStepChange?: (id: string, skipValidation?: boolean) => void
+  onStepChange?: (id: string) => void
   isStepValid?: (selectedTabId: string) => boolean
   runValidationOnMount?: boolean
+  setSelectedStepId: (id: string) => void
 }
 const CVStep = ({
   stepList,
@@ -28,30 +29,26 @@ const CVStep = ({
   step,
   index,
   onStepChange,
+  setSelectedStepId,
   runValidationOnMount
 }: CVStepInterface): JSX.Element => {
   const selectedStepIndex = stepList.map(item => item.id).indexOf(selectedStepId || '')
   const [isValid, setIsValid] = useState<boolean>()
   const isLastStep = selectedStepIndex === stepList.length - 1
   const isCurrent = selectedStepIndex === index
+
   const onTitleClick = (titleIndex: number): void => {
-    onStepChange?.(stepList[titleIndex].id, true)
+    setSelectedStepId(stepList[titleIndex].id)
+    onStepChange?.(stepList[titleIndex].id)
   }
 
   const isValidEditMode = runValidationOnMount ? !!isStepValid?.(step.id) : isValid
 
-  // useEffect(() => {
-  //   const ids = stepList.map(item => item.id)
-  //   ids.forEach(id => {
-  //     const validStatus = !!isStepValid?.(id)
-  //     setIsValid(validStatus)
-  //   })
-  // }, [])
-
   const onContinue = (selectedIndex: number, skipValidation = false): void => {
     const validStatus = !!isStepValid?.(step.id)
     if (validStatus || skipValidation) {
-      onStepChange?.(stepList[selectedIndex].id, skipValidation)
+      setSelectedStepId(stepList[selectedIndex].id)
+      onStepChange?.(stepList[selectedIndex].id)
     }
     setIsValid(validStatus)
   }
@@ -79,8 +76,8 @@ const CVStep = ({
 }
 
 export const CVStepper = (props: React.PropsWithChildren<CVStepperInterface>): React.ReactElement => {
-  const { stepList, onChange: onStepChange, selectedStepId, isStepValid, runValidationOnMount } = props
-
+  const { stepList, isStepValid, onStepChange, runValidationOnMount } = props
+  const [selectedStepId, setSelectedStepId] = useState(() => stepList[0].id)
   return (
     <Layout.Vertical margin="large">
       {stepList?.map((step, index) => {
@@ -92,6 +89,7 @@ export const CVStepper = (props: React.PropsWithChildren<CVStepperInterface>): R
             stepList={stepList}
             selectedStepId={selectedStepId}
             isStepValid={isStepValid}
+            setSelectedStepId={setSelectedStepId}
             onStepChange={onStepChange}
             runValidationOnMount={runValidationOnMount}
           />

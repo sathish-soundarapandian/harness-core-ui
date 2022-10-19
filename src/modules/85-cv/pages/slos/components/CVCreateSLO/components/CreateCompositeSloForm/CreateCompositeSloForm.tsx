@@ -29,7 +29,7 @@ import sloReviewChange from '@cv/assets/sloReviewChange.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
 import { SloPeriodLength } from '../CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
-import { isFormDataValid, handleStepChange } from './CreateCompositeSloForm.utils'
+import { isFormDataValid } from './CreateCompositeSloForm.utils'
 import SLOName from '../CreateSLOForm/components/SLOName/SLOName'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import {
@@ -47,18 +47,17 @@ export const CreateCompositeSloForm = ({
   retryOnError,
   handleRedirect,
   runValidationOnMount
-}: CreateCompositeSloFormInterface) => {
+}: CreateCompositeSloFormInterface): JSX.Element => {
   const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
   const { getString } = useStrings()
   const formikProps = useFormikContext<CompositeSLOFormInterface>()
-  const [selectedStepId, setSelectedStepId] = useState(CreateCompositeSLOSteps.Define_SLO_Identification)
   const isStepValid = useCallback(
     (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps),
     [formikProps]
   )
 
   const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)
-  const compositeSloPayloadRef = useRef<CompositeSLOFormInterface | null>(formikProps.values) // to be changed
+  const compositeSloPayloadRef = useRef<CompositeSLOFormInterface | null>() // to be changed
 
   const [openModal, closeModal] = useModalHook(
     () => (
@@ -133,12 +132,8 @@ export const CreateCompositeSloForm = ({
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
         <CVStepper
           id="createSLOTabs"
-          selectedStepId={selectedStepId}
           isStepValid={isStepValid}
           runValidationOnMount={validateAllSteps}
-          onChange={(stepId, skipValidation) =>
-            handleStepChange(stepId, formikProps, setSelectedStepId, skipValidation, compositeSloPayloadRef)
-          }
           stepList={[
             {
               id: CreateCompositeSLOSteps.Define_SLO_Identification,

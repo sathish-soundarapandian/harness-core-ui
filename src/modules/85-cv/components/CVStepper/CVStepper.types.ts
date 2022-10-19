@@ -15,8 +15,7 @@ export interface StepInterface {
 export interface CVStepperInterface {
   id: string
   stepList: StepInterface[]
-  onChange?: (id: string, skipValidation?: boolean) => void
-  selectedStepId?: string
+  onStepChange?: (id: string) => void
   isStepValid?: (selectedTabId: string) => boolean
   runValidationOnMount?: boolean
 }
