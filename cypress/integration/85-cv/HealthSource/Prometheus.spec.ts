@@ -10,8 +10,10 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   labelNamesAPI,
   labelNamesResponse,
@@ -46,7 +48,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.get('input[name="product"]').should('be.disabled')
 
-    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
@@ -158,7 +160,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.contains('div', 'Prometheus').click()
 
-    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
@@ -175,6 +177,7 @@ describe('Health Source - Prometheus', () => {
     cy.get('input[name="product"]').should('be.disabled')
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
@@ -256,6 +259,7 @@ describe('Health Source - Prometheus', () => {
     cy.contains('div', 'Prometheus').click()
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
     cy.intercept('GET', sampleDataAPI, sampleDataResponse)
@@ -301,6 +305,7 @@ describe('Prometheus metric thresholds', () => {
     cy.get('input[name="product"]').should('be.disabled')
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
@@ -329,6 +334,7 @@ describe('Prometheus metric thresholds', () => {
     cy.get('input[name="product"]').should('be.disabled')
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
@@ -415,6 +421,7 @@ describe('Prometheus metric thresholds', () => {
     cy.get('input[name="product"]').should('be.disabled')
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 

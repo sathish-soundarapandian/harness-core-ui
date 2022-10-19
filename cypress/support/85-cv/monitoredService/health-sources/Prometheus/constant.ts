@@ -262,8 +262,7 @@ export const monitoredService = {
                   identifier: 'prometheus_metric',
                   metricName: 'Prometheus Metric',
                   riskProfile: {
-                    category: 'Errors',
-                    metricType: 'ERROR',
+                    riskCategory: 'Infrastructure',
                     thresholdTypes: ['ACT_WHEN_HIGHER']
                   },
                   analysis: {
@@ -276,8 +275,7 @@ export const monitoredService = {
                       serviceInstanceMetricPath: null
                     },
                     riskProfile: {
-                      category: 'Errors',
-                      metricType: 'ERROR',
+                      riskCategory: 'Infrastructure',
                       thresholdTypes: ['ACT_WHEN_HIGHER']
                     }
                   },
