@@ -21,6 +21,7 @@ export interface GlanceCardProps {
   href?: string
   styling?: boolean
   intent?: 'success' | 'danger'
+  className?: string
 }
 
 const GlanceCard: React.FC<GlanceCardProps> = ({
@@ -31,13 +32,14 @@ const GlanceCard: React.FC<GlanceCardProps> = ({
   delta,
   href,
   styling = false,
-  intent = 'success'
+  intent = 'success',
+  className
 }) => {
   const history = useHistory()
   return (
     <Card
       interactive={!!href}
-      className={cx(css.card, { [css.styledCard]: styling })}
+      className={cx(css.card, { [css.styledCard]: styling }, className)}
       onClick={() => href && history.push(href)}
     >
       <Icon name={iconName} color={styling ? Color.PRIMARY_7 : Color.GREY_600} className={css.icon} size={iconSize} />

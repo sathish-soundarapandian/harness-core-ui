@@ -134,8 +134,8 @@ jenkinsStep:
     jobName: Jobname is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
-  unstableStatusAsSuccess: Treat unstable Jenkins status as success
-  useConnectorUrlForJobExecution: Use this URL for job execution
+  unstableStatusAsSuccess: Treat unstable Job status as success
+  useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
@@ -454,14 +454,15 @@ failureStrategies:
 loopingStrategy:
   title: Looping Strategy
   subTitle: 'Select 1 of the {{maxCount}} looping execution strategy below.'
-  warningText: All the configuration will be lost
+  warningText: All the configuration will be lost.
   learnMore: Learn more about Looping strategies
   deleteModal:
-    title: Are you sure, you want to remove the looping strategy?
-    content: '{{$.pipeline.loopingStrategy.warningText}}'
+    title: Remove looping strategy?
+    content: Are you sure you want to remove this looping strategy? {{$.pipeline.loopingStrategy.warningText}}
   toggleTypeModal:
-    title: Are you sure, you want to switch the looping strategy?
-    content: '{{$.pipeline.loopingStrategy.warningText}}'
+    title: Switch looping strategy?
+    content: Are you sure you want to switch lopping strategy? {{$.pipeline.loopingStrategy.warningText}}
+    switch: Switch
   matrix:
     label: Matrix
     helperText: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
@@ -995,6 +996,7 @@ mySecurityTestsText: My Security Tests
 myPipelineRunsText: My Pipeline Runs
 noRegions: No regions found
 noBuckets: No buckets found with given region
+noBucketsFound: No buckets found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
@@ -1158,6 +1160,7 @@ runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
 noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
+numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironment}} Environment(s)'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
@@ -1266,13 +1269,13 @@ cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is in
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
-  unsyncedTemplateInfo: Some template(s) referenced in this {{entity}} have gone out of sync.
-  updatedTemplateInfo: Some template(s) referenced in this {{entity}} have been updated.
+  unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
+  updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:
   title: Template Error Inspection
   subtitle: Error Trace
-  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced templates.
-  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated templates.
+  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced entities.
+  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated entities.
   originalYamlLabel: Original
   refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
@@ -1321,6 +1324,7 @@ importSuccessMessage: '{{resourceType}} has been imported successfully'
 duplicateImport: This file is already in use. Do you still want to proceed?
 duplicateImportPipeline: This file is already in use by another pipeline. Do you still want to proceed?
 duplicateImportInputset: This file is already in use by another pipeline or input set. Do you still want to proceed?
+duplicateImportTemplate: This file is already in use by another Template. Do you still want to proceed?
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 fieldLabels:
@@ -1417,3 +1421,6 @@ customDeployment:
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
   validations:
     nameUnique: Field Name should be unique
+step:
+  validation:
+    namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'

@@ -542,6 +542,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                             className={css.specifyHostsRadioGroup}
                             selectedValue={hostsScope}
                             onChange={(e: any) => {
+                              setShowPreviewHostBtn(true)
                               setHostsScope(e.target.value)
                               if (e.target.value === HostScope.ALL) {
                                 formik.setFieldValue('attributeFilters', '')

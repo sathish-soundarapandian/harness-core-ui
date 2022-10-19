@@ -68,16 +68,16 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     <table className={css.detailsTable}>
       <tbody>
         <tr>
-          <th>{getString('startedAt')}</th>
+          <th>{`${getString('startedAt')}:`}</th>
           <td>{step?.startTs ? new Date(step.startTs).toLocaleString() : '-'}</td>
         </tr>
         <tr>
-          <th>{getString('endedAt')}</th>
+          <th>{`${getString('endedAt')}:`}</th>
           <td>{step?.endTs ? new Date(step.endTs).toLocaleString() : '-'}</td>
         </tr>
 
         <tr>
-          <th>{getString('pipeline.duration')}</th>
+          <th>{`${getString('pipeline.duration')}:`}</th>
           <td>
             <Duration
               className={css.timer}
@@ -90,13 +90,13 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
         </tr>
         {!!timeout && (
           <tr>
-            <th>{getString('pipelineSteps.timeoutLabel')}</th>
+            <th>{`${getString('pipelineSteps.timeoutLabel')}:`}</th>
             <td>{timeout}</td>
           </tr>
         )}
         {labels.map((label, index) => (
           <tr key={index}>
-            <th>{label.label}</th>
+            <th>{`${label.label}:`}:</th>
             <td>
               {isArray(label.value)
                 ? label.value.map((outcome, idx) => {
@@ -114,7 +114,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
               {isExecutionCompletedWithBadState(step.status) && (
                 <Icon className={css.iconLabel} size={12} name="warning-sign" color={Color.ORANGE_500} />
               )}
-              {getString('delegate.delegates')}
+              {`${getString('delegate.delegates')}:`}
             </th>
             <td>
               <Layout.Vertical spacing="xsmall">
@@ -199,18 +199,18 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
             <>
               {estimatedRemainingTime && (
                 <tr>
-                  <th>{getString('pipeline.estimatedTimeRemaining')}</th>
+                  <th>{`${getString('pipeline.estimatedTimeRemaining')}:`}</th>
                   <td>{estimatedRemainingTime}</td>
                 </tr>
               )}
               {(progressPercentage || progressPercentage === 0) && (
                 <tr>
-                  <th>{getString('pipeline.progressPercentage')}</th>
+                  <th>{`${getString('pipeline.progressPercentage')}:`}</th>
                   <td>{progressPercentage}</td>
                 </tr>
               )}
               <tr>
-                <th>{getString('pipeline.verificationResult')}</th>
+                <th>{`${getString('pipeline.verificationResult')}:`}</th>
                 <td>
                   <Link
                     to={routes.toCVDeploymentPage({

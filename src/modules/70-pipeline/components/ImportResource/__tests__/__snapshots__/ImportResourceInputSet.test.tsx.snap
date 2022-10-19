@@ -890,7 +890,7 @@ exports[`ImportResource - Input Set snapshot testing 1`] = `
                               placeholder="- common.git.selectBranchPlaceholder -"
                               style="padding-right: 0px;"
                               type="text"
-                              value=""
+                              value="main"
                             />
                             <span
                               class="bp3-input-action"

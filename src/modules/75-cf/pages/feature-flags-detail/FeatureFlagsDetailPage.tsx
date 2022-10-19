@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Layout, PageError } from '@wings-software/uicore'
 import { useParams, useLocation } from 'react-router-dom'
 import { GetFeatureFlagQueryParams, useGetFeatureFlag } from 'services/cf'
@@ -17,7 +17,6 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import FlagActivation from '@cf/components/FlagActivation/FlagActivation'
 import FlagActivationDetails from '@cf/components/FlagActivation/FlagActivationDetails'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import css from './FeatureFlagsDetailPage.module.scss'
 
@@ -90,8 +89,6 @@ const FeatureFlagsDetailPage: React.FC = () => {
     })
   }
 
-  const GitSyncActionsComponent = (): ReactElement => <GitSyncActions />
-
   return (
     <div className={css.pageLayout}>
       <section>
@@ -100,7 +97,6 @@ const FeatureFlagsDetailPage: React.FC = () => {
             <FlagActivationDetails
               featureFlag={featureFlag}
               refetchFlag={refetch}
-              gitSyncActionsComponent={gitSync?.isGitSyncActionsEnabled ? <GitSyncActionsComponent /> : undefined}
               gitSync={gitSync}
               setGovernanceMetadata={setGovernanceMetadata}
             />

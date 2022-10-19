@@ -43,10 +43,10 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { getString } = useStrings()
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
-  // TODO: Remove this after checking backward compatibility of infras and clusters
-  const { isMultiInfraVisible } = useQueryParams<any>()
 
   const isMultiInfra = useFeatureFlag(FeatureFlag.MULTI_SERVICE_INFRA)
+  // Will be removed shortly
+  const { isMultiInfraVisible } = useQueryParams<any>()
 
   useEffect(() => {
     if (errorMap.size > 0) {
@@ -158,8 +158,10 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const filteredAllowableTypes = useMemo(() => {
     return (
       scope === Scope.PROJECT
-        ? allowableTypes
-        : (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.FIXED)
+        ? (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.EXPRESSION)
+        : (allowableTypes as MultiTypeInputType[]).filter(
+            item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
+          )
     ) as AllowedTypes
   }, [scope, allowableTypes])
 
@@ -167,6 +169,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     <div className={stageCss.deployStage} key="1">
       <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
+        {/* Putting this condition back till we have the latest BE in QA */}
         {isMultiInfra && isMultiInfraVisible === 'true' ? (
           <StepWidget<DeployEnvironmentEntityConfig>
             type={StepType.DeployEnvironmentEntity}

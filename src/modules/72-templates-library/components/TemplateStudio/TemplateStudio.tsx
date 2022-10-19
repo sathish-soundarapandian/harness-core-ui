@@ -17,40 +17,20 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useStrings } from 'framework/strings'
-import { getPipelineStages } from '@pipeline/components/PipelineStudio/PipelineStagesUtils'
 
 export function TemplateStudio(): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, templateType, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
   const { versionLabel, repoIdentifier, branch } = useQueryParams<TemplateStudioQueryParams & GitQueryParams>()
-  const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, SECURITY_STAGE } = useFeatureFlags()
-  const { getString } = useStrings()
-
-  const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
-    getPipelineStages({
-      args,
-      getString,
-      module,
-      isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
-      isCDEnabled: licenseInformation['CD'] && CDNG_ENABLED,
-      isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
-      isSTOEnabled: SECURITY_STAGE,
-      isApprovalStageEnabled: true
-    })
 
   return (
     <TemplateProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      module={module}
       templateIdentifier={templateIdentifier}
       versionLabel={versionLabel}
       templateType={templateType}
-      renderPipelineStage={renderPipelineStage}
     >
       <GitSyncStoreProvider>
         <TemplateStudioInternal />

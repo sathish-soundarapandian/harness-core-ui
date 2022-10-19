@@ -35,7 +35,6 @@ import {
   useGetTemplateFromPipeline,
   useUpdateTrigger
 } from 'services/pipeline-ng'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
@@ -94,6 +93,7 @@ import {
   FlatValidScheduleFormikValuesInterface,
   getValidationSchema
 } from './utils'
+import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
@@ -185,12 +185,7 @@ export default function ScheduledTriggerWizard(
       })
     )
 
-  const { isGitSimplificationEnabled, isGitSyncEnabled } = useAppStore()
-
-  const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && isGitSimplificationEnabled,
-    [isGitSyncEnabled, isGitSimplificationEnabled]
-  )
+  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
 
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
 

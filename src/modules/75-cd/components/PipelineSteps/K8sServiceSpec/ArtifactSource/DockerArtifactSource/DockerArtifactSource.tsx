@@ -111,7 +111,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
             ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
             : artifactPath,
           ''
-        )
+        ),
+        'tag'
       )
     },
     lazy: true

@@ -50,6 +50,7 @@ import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PipelineList } from './PipelineList'
+import { EditPipelineStageView } from './EditPipelineStageView'
 import css from './PipelineStageMinimalMode.module.scss'
 
 type PartialPipelineListPageQueryParams = PartiallyRequired<PipelineListPageQueryParams, 'page' | 'size'>
@@ -65,7 +66,7 @@ const queryParamOptions = {
   }
 }
 
-export function PipelineStageMinimalMode(): React.ReactElement {
+export function PipelineStageMinimalMode(props: any): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   const { selectedOrg: currentOrg, selectedProject: currentProject } = useAppStore()
@@ -185,82 +186,92 @@ export function PipelineStageMinimalMode(): React.ReactElement {
   }
 
   return (
-    <Dialog
-      isOpen={isOpen}
-      enforceFocus={false}
-      canEscapeKeyClose
-      canOutsideClickClose
-      onClose={() => setOpen(false)}
-      className={css.dialog}
-      title={
-        <Text font={{ variation: FontVariation.H3 }}>{getString('pipeline.pipelineChaining.selectPipeline')}</Text>
-      }
-    >
-      <Container className={css.mainContainer}>
-        <Layout.Horizontal padding={{ top: 'large' }} spacing="medium">
-          <div className={css.searchBox}>
-            <TextInput
-              wrapperClassName={css.search}
-              placeholder={getString('search')}
-              leftIcon="search"
-              value={searchTerm}
-              autoFocus
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className={css.selectInput}>
-            <Select items={organizations} onChange={handleOrgChange} value={selectedOrg} />
-          </div>
-          <div className={css.selectInput}>
-            <Select
-              items={projects}
-              onQueryChange={setProjectsQuery}
-              onChange={(item: SelectOption) => {
-                setSelectedProject(item)
-                setSelectedRow({})
-              }}
-              value={selectedProject}
-            />
-          </div>
-        </Layout.Horizontal>
-        <div className={css.pipelineContainer}>
-          {isPipelineListLoading ? (
-            <Container flex={{ align: 'center-center' }} padding="small" margin={{ top: 'xxlarge' }}>
-              <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
-            </Container>
-          ) : pipelineListLoadingError ? (
-            <Container margin={{ top: 'xxlarge' }}>
-              <PageError message={get(pipelineListLoadingError, 'message')} onClick={() => fetchPipelineList()} />
-            </Container>
-          ) : pipelineListData?.content?.length ? (
-            <PipelineList
-              gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-              pipelineData={pipelineListData}
-              selectedRow={selectedRow}
-              setSelectedRow={setSelectedRow}
-              orgIdentifier={selectedOrg.value as string}
-              projectIdentifier={selectedProject.value as string}
-            />
-          ) : (
-            <div className={css.noPipelineSection}>
-              <img src={CDPipelineIllustration} className={css.image} />
-              <Text className={css.noPipelineText} margin={{ top: 'medium', bottom: 'small' }}>
-                {getString('pipeline.noPipelineText')}
-              </Text>
+    <>
+      <Dialog
+        isOpen={isOpen}
+        enforceFocus={false}
+        canEscapeKeyClose
+        canOutsideClickClose
+        onClose={() => setOpen(false)}
+        className={css.dialog}
+        title={
+          <Text font={{ variation: FontVariation.H3 }}>{getString('pipeline.pipelineChaining.selectPipeline')}</Text>
+        }
+      >
+        <Container className={css.mainContainer}>
+          <Layout.Horizontal padding={{ top: 'large' }} spacing="medium">
+            <div className={css.searchBox}>
+              <TextInput
+                wrapperClassName={css.search}
+                placeholder={getString('search')}
+                leftIcon="search"
+                value={searchTerm}
+                autoFocus
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+              />
             </div>
-          )}
-        </div>
-        <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
-          <Button
-            variation={ButtonVariation.PRIMARY}
-            text={getString('entityReference.apply')}
-            onClick={() => setOpen(false)}
-            disabled={isEmpty(selectedRow)}
-            className={cx(Classes.POPOVER_DISMISS)}
-          />
-          <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={() => setOpen(false)} />
-        </Layout.Horizontal>
-      </Container>
-    </Dialog>
+            <div className={css.selectInput}>
+              <Select items={organizations} onChange={handleOrgChange} value={selectedOrg} />
+            </div>
+            <div className={css.selectInput}>
+              <Select
+                items={projects}
+                onQueryChange={setProjectsQuery}
+                onChange={(item: SelectOption) => {
+                  setSelectedProject(item)
+                  setSelectedRow({})
+                }}
+                value={selectedProject}
+              />
+            </div>
+          </Layout.Horizontal>
+          <div className={css.pipelineContainer}>
+            {isPipelineListLoading ? (
+              <Container flex={{ align: 'center-center' }} padding="small" margin={{ top: 'xxlarge' }}>
+                <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
+              </Container>
+            ) : pipelineListLoadingError ? (
+              <Container margin={{ top: 'xxlarge' }}>
+                <PageError message={get(pipelineListLoadingError, 'message')} onClick={() => fetchPipelineList()} />
+              </Container>
+            ) : pipelineListData?.content?.length ? (
+              <PipelineList
+                gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
+                pipelineData={pipelineListData}
+                selectedRow={selectedRow}
+                setSelectedRow={setSelectedRow}
+                orgIdentifier={selectedOrg.value as string}
+                projectIdentifier={selectedProject.value as string}
+              />
+            ) : (
+              <div className={css.noPipelineSection}>
+                <img src={CDPipelineIllustration} className={css.image} />
+                <Text className={css.noPipelineText} margin={{ top: 'medium', bottom: 'small' }}>
+                  {getString('pipeline.noPipelineText')}
+                </Text>
+              </div>
+            )}
+          </div>
+          <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
+            <Button
+              variation={ButtonVariation.PRIMARY}
+              text={getString('entityReference.apply')}
+              onClick={() => setOpen(false)}
+              disabled={isEmpty(selectedRow)}
+              className={cx(Classes.POPOVER_DISMISS)}
+            />
+            <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={() => setOpen(false)} />
+          </Layout.Horizontal>
+        </Container>
+      </Dialog>
+      {!isOpen && !isEmpty(selectedRow) && (
+        <EditPipelineStageView
+          {...props}
+          pipelineId={get(selectedRow, 'identifier')}
+          orgId={selectedOrg.value}
+          projectId={selectedProject.value}
+        />
+      )}
+    </>
   )
 }

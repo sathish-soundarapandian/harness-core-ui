@@ -6,229 +6,48 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { Link } from 'react-router-dom'
-
-import userEvent from '@testing-library/user-event'
+import { render } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import * as TemplateContext from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import routes from '@common/RouteDefinitions'
-import { TemplateContextTestWrapper } from '@templates-library/utils/templateContextTestUtils'
+import { accountPathProps, pipelineModuleParams, templatePathProps } from '@common/utils/routeUtils'
 
-import { DefaultTemplate } from 'framework/Templates/templates'
-import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import * as cdng from 'services/cd-ng'
-import { TemplateStudioInternal } from '../TemplateStudioInternal'
-import templateContextProps from './__mock__/templateContextProps.json'
+const TemplateProviderMock = jest
+  .spyOn(TemplateContext, 'TemplateProvider')
+  .mockImplementation(() => <div className={'template-provider-mock'} />)
 
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: jest.fn(), loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
-
-jest.mock('services/template-ng', () => ({
-  useGetTemplateSchema: jest.fn(() => ({})),
-  useUpdateStableTemplate: jest.fn().mockImplementation(() => {
-    return {
-      mutate: () =>
-        Promise.resolve({
-          data: { name: 'date name' }
-        }),
-      loading: false
-    }
-  })
-}))
-
-jest.mock('@common/hooks', () => ({
-  ...(jest.requireActual('@common/hooks') as any),
-  useMutateAsGet: jest.fn(() => ({}))
-}))
-
-const updateTemplate = jest.fn()
-const updateTemplateView = jest.fn()
-
-const testWrapperProps = {
-  path: routes.toTemplateStudio({
-    accountId: ':accountId',
-    orgIdentifier: ':orgIdentifier',
-    projectIdentifier: ':projectIdentifier',
-    templateType: ':templateType',
-    templateIdentifier: ':templateIdentifier'
-  }),
-  pathParams: {
-    accountId: 'dummy',
-    orgIdentifier: 'dummy',
-    projectIdentifier: 'dummy',
-    templateType: 'dummy',
-    templateIdentifier: 'dummy'
-  },
-  queryParams: {
-    versionLabel: 'dummy'
-  }
+const PATH = routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...pipelineModuleParams })
+const PATH_PARAMS = {
+  templateIdentifier: 'Test_Template',
+  versionLabel: 'v1',
+  accountId: 'accountId',
+  projectIdentifier: 'Yogesh_Test',
+  orgIdentifier: 'default',
+  module: 'cd',
+  templateType: 'Step'
 }
 
 describe('<TemplateStudio /> tests', () => {
-  test('snapshot test for new template with git sync', () => {
-    const newTemplateProps = {
-      ...testWrapperProps,
-      pathParams: {
-        ...testWrapperProps.pathParams,
-        templateIdentifier: '-1'
-      },
-      templateContextValues: {
-        state: {
-          template: DefaultTemplate
-        }
-      }
-    }
-    const { container } = render(
-      <TemplateContextTestWrapper {...(newTemplateProps as any)}>
-        <TemplateStudioInternal />
-      </TemplateContextTestWrapper>
+  test('should call TemplateProvider with correct renderPipelineStage prop', () => {
+    render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS} queryParams={{ versionLabel: 'v1' }}>
+        <TemplateStudio />
+      </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('snapshot test for new template without git sync', () => {
-    const newTemplateProps = {
-      ...testWrapperProps,
-      pathParams: {
-        ...testWrapperProps.pathParams,
-        templateIdentifier: '-1'
-      },
-      templateContextValues: {
-        state: {
-          template: DefaultTemplate
-        }
-      }
-    }
-    const { container } = render(
-      <TemplateContextTestWrapper {...(newTemplateProps as any)} isGitSyncEnabled={false}>
-        <TemplateStudioInternal />
-      </TemplateContextTestWrapper>
+    expect(TemplateProviderMock).toBeCalledWith(
+      expect.objectContaining({
+        queryParams: {
+          accountIdentifier: 'accountId',
+          orgIdentifier: 'default',
+          projectIdentifier: 'Yogesh_Test'
+        },
+        module: 'cd',
+        templateIdentifier: 'Test_Template',
+        templateType: 'Step',
+        versionLabel: 'v1'
+      }),
+      expect.anything()
     )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('snapshot test for template studio in visual view', () => {
-    const { container } = render(
-      <TemplateContextTestWrapper {...testWrapperProps}>
-        <TemplateStudioInternal />
-      </TemplateContextTestWrapper>
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('view change toggling in template studio', async () => {
-    /**
-     * View change to yaml loads yaml builder
-     * View change back to visual checks if valid yaml has been entered
-     * Click on same view does not trigger any change
-     */
-    const { container } = render(
-      <TemplateContextTestWrapper
-        {...testWrapperProps}
-        templateContextValues={{
-          updateTemplate: updateTemplate,
-          updateTemplateView: updateTemplateView
-        }}
-      >
-        <TemplateStudioInternal />
-      </TemplateContextTestWrapper>
-    )
-
-    const toggle = container.querySelector('[data-name="toggle-option-two"]')
-    act(() => {
-      userEvent.click(toggle!)
-    })
-    await waitFor(() => expect(toggle?.className).toContain('PillToggle--selected'))
-
-    const toggle2 = container.querySelector('[data-name="toggle-option-one"]')
-    act(() => {
-      userEvent.click(toggle2!)
-    })
-    await waitFor(() => expect(toggle2?.className).toContain('PillToggle--selected'))
-
-    act(() => {
-      userEvent.click(toggle2!)
-    })
-    await waitFor(() => expect(toggle2?.className).not.toEqual('PillToggle--item'))
-  })
-
-  test('is template studio loading', async () => {
-    const { container } = render(
-      <TemplateContextTestWrapper {...testWrapperProps} templateContextValues={{ state: { isLoading: true } as any }}>
-        <TemplateStudioInternal />
-      </TemplateContextTestWrapper>
-    )
-
-    await waitFor(() => expect(container.querySelector('[data-icon="steps-spinner"]')).not.toBeNull())
-  })
-
-  test('navigation on unsaved changes should give warning', async () => {
-    const { container, getByText } = render(
-      <TemplateContextTestWrapper {...testWrapperProps} templateContextValues={{ ...(templateContextProps as any) }}>
-        <TemplateStudioInternal />
-        <Link
-          className="redirect"
-          to={routes.toTriggersPage({
-            projectIdentifier: 'projectIdentifier',
-            orgIdentifier: 'orgIdentifier',
-            pipelineIdentifier: 'pipelineIdentifier',
-            accountId: 'accountId',
-            module: 'cd'
-          })}
-        >
-          Redirect
-        </Link>
-      </TemplateContextTestWrapper>
-    )
-
-    const nameField = getByText('Test_ash')
-    expect(nameField).toBeDefined()
-
-    const redirectButton = container.querySelector('[class*="redirect"]')
-    if (!redirectButton) {
-      throw Error('redirect button')
-    }
-    fireEvent.click(redirectButton)
-
-    await waitFor(() => expect(document.body.querySelector('[class*="dialog"]')).not.toBeNull())
-    expect(document.body.querySelector('[data-icon="warning-icon"]')).not.toBeNull()
-  })
-})
-
-describe('yaml validation in template studio', () => {
-  test('yaml parsed but error in validation', () => {
-    const errorMap = new Map()
-    errorMap.set(1, 'err1')
-    errorMap.set(2, 'err2')
-
-    const { container } = render(
-      <TemplateContextTestWrapper
-        {...testWrapperProps}
-        templateContextValues={{
-          state: {
-            yamlHandler: {
-              getLatestYaml: () => '---\template:\n  name: "uFXrIYA7TwyPav9UkH2s2w',
-              getYAMLValidationErrorMap: () => errorMap
-            }
-          } as any
-        }}
-      >
-        <TemplateStudioInternal />
-      </TemplateContextTestWrapper>
-    )
-
-    const toggle = container.querySelector('[data-name="toggle-option-two"]')
-    userEvent.click(toggle!)
-    expect(toggle?.className).toContain('PillToggle--selected')
-
-    const toggle2 = container.querySelector('[data-name="toggle-option-one"]')
-    userEvent.click(toggle2!)
-    waitFor(() => expect(toggle2?.className).toContain('PillToggle--selected'))
-
-    userEvent.click(toggle2!)
-    waitFor(() => expect(toggle2?.className).not.toEqual('PillToggle--item'))
   })
 })

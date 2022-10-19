@@ -9,12 +9,11 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { Form, Formik } from 'formik'
 import type { ObjectSchema } from 'yup'
 import * as yup from 'yup'
-import { ButtonVariation, ExpandingSearchInput, Page, Pagination } from '@harness/uicore'
+import { ButtonVariation, ExpandingSearchInput, Layout, Page, Pagination } from '@harness/uicore'
 import type { Feature, Segment, Target } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import usePercentageRolloutValidationSchema from '@cf/hooks/usePercentageRolloutValidationSchema'
-import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import TargetManagementFlagsListing from '../TargetManagementFlagsListing/TargetManagementFlagsListing'
 import NoSearchResults from '../NoData/NoSearchResults'
 import NoFlags, { NoFlagsProps } from './NoFlags'
@@ -58,8 +57,6 @@ const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurati
   const { disabled, planEnforcementProps, ReasonTooltip } = useFormDisabled(item)
 
   const percentageRolloutValidationSchema = usePercentageRolloutValidationSchema()
-
-  const { isGitSyncActionsEnabled } = useFFGitSyncContext()
 
   const validationSchema = useMemo(() => {
     if (!includePercentageRollout) {
@@ -163,7 +160,7 @@ const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurati
       {({ dirty, setFieldValue }) => (
         <Form className={css.layout}>
           <Page.SubHeader className={css.toolbar}>
-            <div className={css.flagGitSync}>
+            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
               <AddFlagButton
                 item={item}
                 onAdd={onAdd}
@@ -172,8 +169,8 @@ const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurati
                 planEnforcementProps={planEnforcementProps}
                 title={addFlagsDialogTitle}
               />
-              {isGitSyncActionsEnabled && <TargetManagementToolbar />}
-            </div>
+              <TargetManagementToolbar />
+            </Layout.Horizontal>
             <ExpandingSearchInput alwaysExpanded onChange={onSearch} />
           </Page.SubHeader>
 

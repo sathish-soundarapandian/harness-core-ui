@@ -38,6 +38,16 @@ export const environmentListCall =
   '/ng/api/environmentsV2/listV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 
 //API Responses
+export const infraCall =
+  '/ng/api/infrastructures?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&environmentIdentifier=testEnvConfig'
+
+export const selectInfraCall =
+  '/template/api/templates/dep_temp_test?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&versionLabel=1&getDefaultFromOtherRepo=true'
+export const validateInfraDtYamlCall =
+  '/ng/api/customDeployment/validate-infrastructure/testReconcileInfra?accountIdentifier=accountId&envIdentifier=testEnvConfig&orgIdentifier=default&projectIdentifier=project1'
+
+export const getUpdatedYamlCall =
+  '/ng/api/customDeployment/get-updated-Yaml/testReconcileInfra?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 
 export const incompleteTemplateCreationResponse = {
   status: 'ERROR',
@@ -547,6 +557,92 @@ export const afterUseTemplateListResponse = {
   metaData: null,
   correlationId: '6c46fbb4-80f1-4b34-8690-05e8e06e4e07'
 }
+export const getUpdatedYamlResponse = {
+  status: 'SUCCESS',
+  data: {
+    refreshedYaml:
+      'infrastructureDefinition:\n  name: "testReconcileInfra"\n  identifier: "testReconcileInfra"\n  description: ""\n  tags: {}\n  orgIdentifier: "default"\n  projectIdentifier: "project1"\n  environmentRef: "testEnv"\n  deploymentType: "CustomDeployment"\n  type: "CustomDeployment"\n  spec:\n    customDeploymentRef:\n      templateRef: "dep_temp_test"\n      versionLabel: "1"\n    variables:\n    - name: "stringUpdated"\n      type: "String"\n      description: ""\n      value: "Hi, I am Updated"\n    - name: "secret"\n      type: "Secret"\n      description: ""\n      value: "account.jenkinssecret1"\n    - name: "number"\n      type: "Number"\n      description: ""\n      value: 10\n    - name: "connector"\n      type: "Connector"\n      description: ""\n      value: "gitConnector"\n    - name: "string1"\n      type: "String"\n      description: ""\n      value: "Hi"\n    - name: "secret1"\n      type: "Secret"\n      description: ""\n      value: "account.JenkinsPassword"\n    - name: "number1"\n      type: "Number"\n      description: ""\n      value: 10\n    - name: "connector1"\n      type: "Connector"\n      description: ""\n      value: "testArtifactory"\n    - name: "stringRuntime"\n      type: "String"\n      description: ""\n      value: "<+input>"\n    - name: "secretRuntime"\n      type: "Secret"\n      description: ""\n      value: "<+input>"\n    - name: "numberRuntime"\n      type: "Number"\n      description: ""\n      value: "<+input>"\n    - name: "connectorRuntime"\n      type: "Connector"\n      description: ""\n      value: "<+input>"\n    - name: "stringExpression"\n      type: "String"\n      description: ""\n      value: "<+stage.spec.infrastructure.output.variables.string>"\n    - name: "secretExpression"\n      type: "Secret"\n      description: ""\n      value: "<+stage.spec.infrastructure.output.variables.secret>"\n    - name: "numberExpression"\n      type: "Number"\n      description: ""\n      value: "<+stage.spec.infrastructure.output.variables.number>"\n    - name: "connectorExpression"\n      type: "Connector"\n      description: ""\n      value: "test"\n  allowSimultaneousDeployments: false\n'
+  },
+  metaData: null,
+  correlationId: 'cee21a99-5f68-4705-aa16-4fdeb7bb1940'
+}
+export const validateInfraDtYamlResponse = {
+  status: 'SUCCESS',
+  data: {
+    obsolete: true
+  },
+  metaData: null,
+  correlationId: '13a10847-f4b4-429f-89f1-f8c6d5b061a0'
+}
+export const selectInfraResponse = {
+  status: 'SUCCESS',
+  data: {
+    accountId: 'accountId',
+    orgIdentifier: 'default',
+    projectIdentifier: 'project1',
+    identifier: 'dep_temp_test',
+    name: 'dep temp test',
+    description: '',
+    tags: {},
+    yaml: 'template:\n  name: dep temp test\n  identifier: dep_temp_test\n  versionLabel: "1"\n  type: CustomDeployment\n  projectIdentifier: project1\n  orgIdentifier: default\n  tags: {}\n  spec:\n    infrastructure:\n      variables:\n        - name: string\n          type: String\n          description: ""\n          value: Hi\n        - name: secret\n          type: Secret\n          description: ""\n          value: account.jenkinssecret1\n        - name: number\n          type: Number\n          description: ""\n          value: 10\n        - name: connector\n          type: Connector\n          description: ""\n          value: gitConnector\n        - name: string1\n          type: String\n          description: ""\n          value: Hi\n        - name: secret1\n          type: Secret\n          description: ""\n          value: account.JenkinsPassword\n        - name: number1\n          type: Number\n          description: ""\n          value: 10\n        - name: connector1\n          type: Connector\n          description: ""\n          value: testArtifactory\n        - name: stringRuntime\n          type: String\n          description: ""\n          value: <+input>\n        - name: secretRuntime\n          type: Secret\n          description: ""\n          value: <+input>\n        - name: numberRuntime\n          type: Number\n          description: ""\n          value: <+input>\n        - name: connectorRuntime\n          type: Connector\n          description: ""\n          value: <+input>\n        - name: stringExpression\n          type: String\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.string>\n        - name: secretExpression\n          type: Secret\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.secret>\n        - name: numberExpression\n          type: Number\n          description: ""\n          value: <+stage.spec.infrastructure.output.variables.number>\n        - name: connectorExpression\n          type: Connector\n          description: ""\n          value: test\n        - name: s\n          type: String\n          value: ""\n          description: ""\n      fetchInstancesScript:\n        store:\n          type: Inline\n          spec:\n            content: fsdfdsf\n      instanceAttributes:\n        - name: hostname\n          jsonPath: dsf\n          description: dfsf\n      instancesListPath: dfdsf\n    execution:\n      stepTemplateRefs:\n        - templateRef: org.new_org_http\n          versionLabel: "1"\n        - templateRef: new_http_temp\n          versionLabel: "1"\n        - templateRef: new_shell_temp\n          versionLabel: "1"\n        - templateRef: account.accountSetup\n          versionLabel: "1"\n        - templateRef: custom_shell\n          versionLabel: "1"\n',
+    versionLabel: '1',
+    templateEntityType: 'CustomDeployment',
+    templateScope: 'project',
+    version: 9,
+    gitDetails: {
+      objectId: null,
+      branch: null,
+      repoIdentifier: null,
+      rootFolder: null,
+      filePath: null,
+      repoName: null,
+      commitId: null,
+      fileUrl: null,
+      repoUrl: null
+    },
+    entityValidityDetails: {
+      valid: true,
+      invalidYaml: null
+    },
+    lastUpdatedAt: 1664523824906,
+    storeType: 'INLINE',
+    stableTemplate: true
+  },
+  metaData: null,
+  correlationId: 'ff92b138-66c2-419b-abdf-ccc738daf738'
+}
+export const infraResponse = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 1,
+    pageSize: 100,
+    content: [
+      {
+        infrastructure: {
+          accountId: 'accountId',
+          identifier: 'testReconcileInfra',
+          orgIdentifier: 'default',
+          projectIdentifier: 'project1',
+          environmentRef: 'testEnv',
+          name: 'testReconcileInfra',
+          description: '',
+          tags: {},
+          type: 'CustomDeployment',
+          deploymentType: 'CustomDeployment',
+          yaml: 'infrastructureDefinition:\n  name: testReconcileInfra\n  identifier: testReconcileInfra\n  description: ""\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: project1\n  environmentRef: testEnv\n  deploymentType: CustomDeployment\n  type: CustomDeployment\n  spec:\n    customDeploymentRef:\n      templateRef: dep_temp_test\n      versionLabel: "1"\n    variables:\n      - name: string\n        type: String\n        description: ""\n        value: Hi\n      - name: secret\n        type: Secret\n        description: ""\n        value: account.jenkinssecret1\n      - name: number\n        type: Number\n        description: ""\n        value: 10\n      - name: connector\n        type: Connector\n        description: ""\n        value: gitConnector\n      - name: string1\n        type: String\n        description: ""\n        value: Hi\n      - name: secret1\n        type: Secret\n        description: ""\n        value: account.JenkinsPassword\n      - name: number1\n        type: Number\n        description: ""\n        value: 10\n      - name: connector1\n        type: Connector\n        description: ""\n        value: testArtifactory\n      - name: stringRuntime\n        type: String\n        description: ""\n        value: <+input>\n      - name: secretRuntime\n        type: Secret\n        description: ""\n        value: <+input>\n      - name: numberRuntime\n        type: Number\n        description: ""\n        value: <+input>\n      - name: connectorRuntime\n        type: Connector\n        description: ""\n        value: <+input>\n      - name: stringExpression\n        type: String\n        description: ""\n        value: <+stage.spec.infrastructure.output.variables.string>\n      - name: secretExpression\n        type: Secret\n        description: ""\n        value: <+stage.spec.infrastructure.output.variables.secret>\n      - name: numberExpression\n        type: Number\n        description: ""\n        value: <+stage.spec.infrastructure.output.variables.number>\n      - name: connectorExpression\n        type: Connector\n        description: ""\n        value: test\n  allowSimultaneousDeployments: false\n'
+        },
+        createdAt: 1664955181166,
+        lastModifiedAt: 1664955181166
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  metaData: null,
+  correlationId: '139ba439-116b-409b-9d2f-e722964a125d'
+}
 export const afterUseTemplateServiceV2Response = {
   status: 'SUCCESS',
   data: [
@@ -589,3 +685,23 @@ export const serviceYamlDataResponse = {
   metaData: null,
   correlationId: '2ca96851-9483-4cb3-8fc8-8b9bc2f4a4d9'
 }
+
+//Data
+export const depTempTestVariables = [
+  'string',
+  'number',
+  'connector',
+  'secret',
+  'string1',
+  'number1',
+  'connector1',
+  'secret1',
+  'stringRuntime',
+  'numberRuntime',
+  'connectorRuntime',
+  'secretRuntime',
+  'stringExpression',
+  'numberExpression',
+  'connectorExpression',
+  'secretExpression'
+]

@@ -105,7 +105,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
     (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
         const newServiceData = getUpdatedPipelineYaml()
-        newServiceData && updatePipeline(newServiceData)
+        newServiceData && updatePipeline(newServiceData, view)
       }
       setView(view)
       setSelectedView(view)

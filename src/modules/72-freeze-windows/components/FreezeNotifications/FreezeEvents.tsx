@@ -14,23 +14,23 @@ import type { FreezeNotificationRules, FreezeEvent } from '@freeze-windows/types
 import css from '@pipeline/components/Notifications/useNotificationModal.module.scss'
 
 export enum EventType {
-  WINDOW_ENABLED = 'WINDOW_ENABLED',
-  REJECTED_DEPLOYENTS = 'REJECTED_DEPLOYENTS',
-  TRIGGER_INVOCATIONS_REJECTED = 'TRIGGER_INVOCATIONS_REJECTED'
+  FREEZE_WINDOW_ENABLED = 'FreezeWindowEnabled',
+  DEPLOYMENT_REJECTED_DUE_TO_FREEZE = 'DeploymentRejectedDueToFreeze',
+  TRIGGER_INVOCATION_REJECTED_DUE_TO_FREEZE = 'TriggerInvocationRejectedDueToFreeze'
 }
 
 const getEventItems = (getString: UseStringsReturn['getString']) => [
   {
     label: getString('freezeWindows.freezeNotifications.windowEnabled'),
-    value: EventType.WINDOW_ENABLED
+    value: EventType.FREEZE_WINDOW_ENABLED
   },
   {
     label: getString('freezeWindows.freezeNotifications.rejectedDeployments'),
-    value: EventType.REJECTED_DEPLOYENTS
+    value: EventType.DEPLOYMENT_REJECTED_DUE_TO_FREEZE
   },
   {
     label: getString('freezeWindows.freezeNotifications.rejectedInvocations'),
-    value: EventType.TRIGGER_INVOCATIONS_REJECTED
+    value: EventType.TRIGGER_INVOCATION_REJECTED_DUE_TO_FREEZE
   }
 ]
 

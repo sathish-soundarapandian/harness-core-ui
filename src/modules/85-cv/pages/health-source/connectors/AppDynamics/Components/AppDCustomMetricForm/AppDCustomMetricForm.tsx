@@ -6,7 +6,6 @@
  */
 
 import React, { useState, useMemo, useEffect, useContext, useCallback } from 'react'
-
 import {
   Container,
   Accordion,
@@ -19,7 +18,7 @@ import {
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
-import { debounce, defaultTo } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -53,8 +52,16 @@ import css from '../../AppDHealthSource.module.scss'
 import basePathStyle from '../BasePath/BasePath.module.scss'
 
 export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterface) {
-  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate, expressions } =
-    props
+  const {
+    formikValues,
+    formikSetField,
+    mappedMetrics,
+    selectedMetric,
+    connectorIdentifier,
+    isTemplate,
+    expressions,
+    appdMultiType
+  } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -77,7 +84,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
 
   const debounceRefetch = useCallback(debounce(refetchcompleteServiceInsance, 500), [])
   useEffect(() => {
-    const hasRuntimeField = checkRuntimeFields(formikValues)
+    const hasRuntimeField = checkRuntimeFields(formikValues, appdMultiType)
     const shouldRefetch = isTemplate
       ? !hasRuntimeField && formikValues?.continuousVerification
       : formikValues?.continuousVerification
@@ -101,10 +108,16 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
       })
     }
 
-    if (getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED) {
+    if (
+      formikValues?.continuousVerification &&
+      getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED
+    ) {
       formikSetField('serviceInstanceMetricPath', RUNTIME_INPUT_VALUE)
+    } else if (!formikValues?.continuousVerification && !isEmpty(formikValues?.serviceInstanceMetricPath)) {
+      formikSetField('serviceInstanceMetricPath', '')
     }
   }, [
+    appdMultiType,
     formikValues?.continuousVerification,
     formikValues.appdApplication,
     formikValues?.basePath,

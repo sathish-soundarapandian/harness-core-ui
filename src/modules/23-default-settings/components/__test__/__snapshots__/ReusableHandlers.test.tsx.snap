@@ -2,51 +2,35 @@
 
 exports[`Reusable Components DefaultSettingCheckBoxWithTrueAndFalse 1`] = `
 <div>
-  <div
-    class="bp3-form-group"
+  <label
+    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main"
   >
-    <div
-      class="bp3-form-content"
-    >
-      <label
-        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main StyledProps--inline"
-      >
-        <input
-          name="check"
-          type="checkbox"
-        />
-        <span
-          class="bp3-control-indicator"
-        />
-        
-      </label>
-    </div>
-  </div>
+    <input
+      name="check"
+      type="checkbox"
+    />
+    <span
+      class="bp3-control-indicator"
+    />
+    
+  </label>
 </div>
 `;
 
 exports[`Reusable Components DefaultSettingCheckBoxWithTrueAndFalse with different labels 1`] = `
 <div>
-  <div
-    class="bp3-form-group"
+  <label
+    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main"
   >
-    <div
-      class="bp3-form-content"
-    >
-      <label
-        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main StyledProps--inline"
-      >
-        <input
-          name="check"
-          type="checkbox"
-        />
-        <span
-          class="bp3-control-indicator"
-        />
-        
-      </label>
-    </div>
-  </div>
+    <input
+      name="check"
+      type="checkbox"
+    />
+    <span
+      class="bp3-control-indicator"
+    />
+    
+  </label>
 </div>
 `;
 

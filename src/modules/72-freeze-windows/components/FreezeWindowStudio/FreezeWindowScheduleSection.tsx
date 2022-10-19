@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
+import { Spinner } from '@blueprintjs/core'
 import { Card, Container, Heading, ButtonVariation, Button, Layout, Color } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -58,25 +59,31 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
                 variation={ButtonVariation.SECONDARY}
                 text={getString('back')}
               />
-              <RbacButton
-                type="submit"
-                disabled={isSaveDisabled}
-                variation={ButtonVariation.PRIMARY}
-                text={getString('save')}
-                icon="send-data"
-                loading={isSaveInProgress}
-                permission={{
-                  permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
-                  resource: {
-                    resourceType: ResourceType.DEPLOYMENTFREEZE
-                  },
-                  resourceScope: {
-                    accountIdentifier,
-                    orgIdentifier,
-                    projectIdentifier
-                  }
-                }}
-              />
+              {isSaveInProgress ? (
+                <Container padding={{ left: 'xxlarge', right: 'medium' }}>
+                  <Spinner size={Spinner.SIZE_SMALL} />
+                </Container>
+              ) : (
+                <RbacButton
+                  type="submit"
+                  disabled={isSaveDisabled}
+                  variation={ButtonVariation.PRIMARY}
+                  text={getString('save')}
+                  icon="send-data"
+                  loading={isSaveInProgress}
+                  permission={{
+                    permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+                    resource: {
+                      resourceType: ResourceType.DEPLOYMENTFREEZE
+                    },
+                    resourceScope: {
+                      accountIdentifier,
+                      orgIdentifier,
+                      projectIdentifier
+                    }
+                  }}
+                />
+              )}
             </Layout.Horizontal>
           }
         />

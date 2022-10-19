@@ -256,7 +256,7 @@ export function LoopingStrategy({
         intent="danger"
         titleText={getString('pipeline.loopingStrategy.deleteModal.title')}
         contentText={getString('pipeline.loopingStrategy.deleteModal.content')}
-        confirmButtonText={getString('applyChanges')}
+        confirmButtonText={getString('common.remove')}
         cancelButtonText={getString('cancel')}
         isOpen={isDeleteConfirmationOpen}
         onClose={handleCloseDeleteConfirmation}
@@ -265,7 +265,7 @@ export function LoopingStrategy({
         intent="danger"
         titleText={getString('pipeline.loopingStrategy.toggleTypeModal.title')}
         contentText={getString('pipeline.loopingStrategy.toggleTypeModal.content')}
-        confirmButtonText={getString('applyChanges')}
+        confirmButtonText={getString('pipeline.loopingStrategy.toggleTypeModal.switch')}
         cancelButtonText={getString('cancel')}
         isOpen={isToggleTypeConfirmationOpen}
         onClose={handleCloseToggleTypeConfirmation}

@@ -206,3 +206,25 @@
   display: flex;
   margin: var(--spacing-large) 0 var(--spacing-large) 0 !important;
 }
+
+.configOptionCard {
+  &:hover {
+    cursor: pointer;
+  }
+  margin: var(--spacing-medium) 0 var(--spacing-medium) 0;
+  padding: var(--spacing-4) var(--spacing-xlarge) !important;
+}
+
+.branchSelector {
+  :global {
+    .bp3-input-group {
+      width: 350px;
+    }
+  }
+}
+
+.yamlPathField {
+  width: 350px;
+  height: 32px !important;
+  padding-bottom: var(--spacing-huge);
+}

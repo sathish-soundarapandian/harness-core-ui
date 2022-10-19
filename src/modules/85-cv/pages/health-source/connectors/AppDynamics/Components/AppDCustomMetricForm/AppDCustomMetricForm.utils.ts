@@ -38,9 +38,9 @@ export const setServiceIntance = ({
   }
 }
 
-export const checkRuntimeFields = (formikValues: AppDynamicsFomikFormInterface) =>
-  getMultiTypeFromValue(formikValues?.continuousVerification) !== MultiTypeInputType.FIXED ||
-  getMultiTypeFromValue(formikValues.appdApplication) !== MultiTypeInputType.FIXED ||
+export const checkRuntimeFields = (formikValues: AppDynamicsFomikFormInterface, appdMultiType?: MultiTypeInputType) =>
+  formikValues?.continuousVerification ||
+  appdMultiType !== MultiTypeInputType.FIXED ||
   getMultiTypeFromValue(formikValues.completeMetricPath) !== MultiTypeInputType.FIXED
 
 export const getDerivedCompleteMetricPath = (formikValues: AppDynamicsFomikFormInterface) => {

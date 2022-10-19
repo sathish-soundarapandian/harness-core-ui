@@ -11,7 +11,11 @@ declare const styles: {
   readonly container: string
   readonly contentContainer: string
   readonly dialog: string
+  readonly layoutHeight: string
   readonly placeholder: string
+  readonly placeholderContainer: string
+  readonly pointer: string
   readonly referenceSelect: string
+  readonly selectBtn: string
 }
 export default styles

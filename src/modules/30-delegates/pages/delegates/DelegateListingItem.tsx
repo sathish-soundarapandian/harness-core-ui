@@ -18,7 +18,8 @@ import {
   Card,
   useToaster,
   useConfirmationDialog,
-  Icon
+  Icon,
+  HarnessDocTooltip
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem, Classes, Position } from '@blueprintjs/core'
@@ -89,8 +90,13 @@ export const DelegateListingHeader = () => {
         {getString('version')}
       </div>
       {USE_IMMUTABLE_DELEGATE ? (
-        <div key="instanceStatus" style={{ width: columnWidths.instanceStatus, paddingLeft: 'var(--spacing-4)' }}>
+        <div
+          key="instanceStatus"
+          style={{ width: columnWidths.instanceStatus, paddingLeft: 'var(--spacing-4)' }}
+          data-tooltip-id="instanceStatus"
+        >
           {getString('delegates.instanceStatus')}
+          <HarnessDocTooltip tooltipId="instanceStatus" useStandAlone={true}></HarnessDocTooltip>
         </div>
       ) : null}
       <div

@@ -32,7 +32,6 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags,
@@ -173,7 +172,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
             : artifactPath,
           ''
-        )
+        ),
+        'tag'
       )
     },
     lazy: true
@@ -260,7 +260,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (

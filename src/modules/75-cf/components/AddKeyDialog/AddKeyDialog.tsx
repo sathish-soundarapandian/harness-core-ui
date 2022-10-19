@@ -44,6 +44,11 @@ import ios from '@cf/images/icons/ios.svg'
 import java from '@cf/images/icons/java.svg'
 import javascript from '@cf/images/icons/javascript.svg'
 import python from '@cf/images/icons/python.svg'
+import php from '@cf/images/icons/php.svg'
+import ruby from '@cf/images/icons/ruby.svg'
+import xamarin from '@cf/images/icons/xamarin.svg'
+import flutter from '@cf/images/icons/flutter.svg'
+import reactNative from '@cf/images/icons/react.svg'
 import css from './AddKeyDialog.module.scss'
 
 export interface AddKeyDialogProps {
@@ -54,6 +59,7 @@ export interface AddKeyDialogProps {
   buttonProps?: ButtonProps
   keyType?: EnvironmentSDKKeyType
   apiKeys?: ApiKey[]
+  isLinkVariation?: boolean
 }
 
 interface KeyValues {
@@ -68,7 +74,8 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
   onCreate,
   buttonProps,
   keyType,
-  apiKeys = []
+  apiKeys = [],
+  isLinkVariation
 }) => {
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -131,12 +138,17 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
             <img className={css.languageIcon} src={golang} alt="Golang" />
             <img className={css.languageIcon} src={dotnet} alt="DotNet" />
             <img className={css.languageIcon} src={python} alt="Python" />
+            <img className={css.languageIcon} src={php} alt="PHP" />
+            <img className={css.languageIcon} src={ruby} alt="Ruby" />
           </Layout.Horizontal>
         ) : (
           <Layout.Horizontal spacing="small">
             <img className={css.languageIcon} src={javascript} alt="JavaScript" />
             <img className={css.languageIcon} src={android} alt="Android" />
             <img className={css.languageIcon} src={ios} alt="IOS" />
+            <img className={css.languageIcon} src={xamarin} alt="Xamarin" />
+            <img className={css.languageIcon} src={flutter} alt="Flutter" />
+            <img className={css.languageIcon} src={reactNative} alt="ReactNative" />
           </Layout.Horizontal>
         )}
       </Layout.Vertical>
@@ -238,7 +250,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
     <RbacButton
       icon="plus"
       disabled={disabled}
-      variation={ButtonVariation.PRIMARY}
+      variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
       onClick={() => {
         trackEvent(FeatureActions.CreateSDKKeyClick, {
           category: Category.FEATUREFLAG

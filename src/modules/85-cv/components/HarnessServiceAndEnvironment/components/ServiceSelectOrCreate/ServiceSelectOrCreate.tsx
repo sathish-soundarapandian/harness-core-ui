@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo, noop } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import {
   AllowedTypes,
   Container,
@@ -80,7 +80,6 @@ export const ServiceSelectOrCreate: React.FC<ServiceSelectOrCreateProps> = props
     data: { name: '', identifier: '', orgIdentifier, projectIdentifier },
     isService: true,
     isEdit: false,
-    onClose: noop,
     onCreateOrUpdate: onSubmit,
     modalTitle,
     skipServiceCreateOrUpdate,

@@ -20,9 +20,6 @@ export const fromPipelineInputTriggerTab = (formik: FormikValues, fromTrigger = 
     formik?.values?.triggerType === TriggerTypes.MANIFEST && !isEmpty(formik?.values?.selectedArtifact) && !fromTrigger
   )
 }
-export function isNewServiceEntity(path: string): boolean {
-  return path?.includes('service.serviceInputs.serviceDefinition')
-}
 export const isSelectedStage = (stageIdentifier: string, formikStageId: string): boolean =>
   stageIdentifier === formikStageId
 export const isSelectedManifest = (selectedManifest: any, identifier: string): boolean =>

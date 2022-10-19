@@ -9,6 +9,7 @@ import React, { ReactElement, useState } from 'react'
 import { Text, Container, Icon, Layout } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
+import { GitSyncSetupRedirect } from '@cf/components/GitSyncSetupRedirect/GitSyncSetupRedirect'
 import BranchSettingsButton from './BranchSettingsButton'
 import css from './GitSyncActions.module.scss'
 
@@ -17,10 +18,10 @@ export interface GitSyncActionsProps {
 }
 
 const GitSyncActions = ({ isLoading }: GitSyncActionsProps): ReactElement => {
-  const { gitRepoDetails } = useFFGitSyncContext()
+  const { gitRepoDetails, isGitSyncEnabled } = useFFGitSyncContext()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  return (
+  return isGitSyncEnabled ? (
     <Layout.Horizontal spacing="small" width={400}>
       <Container className={css.gitRepoText}>
         <Icon name="repository" />
@@ -37,6 +38,8 @@ const GitSyncActions = ({ isLoading }: GitSyncActionsProps): ReactElement => {
         />
       </Container>
     </Layout.Horizontal>
+  ) : (
+    <GitSyncSetupRedirect />
   )
 }
 

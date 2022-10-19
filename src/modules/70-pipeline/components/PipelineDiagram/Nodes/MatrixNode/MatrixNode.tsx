@@ -11,7 +11,7 @@ import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uic
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
-import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
+import { isMultiSvcOrMultiEnv, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
@@ -21,58 +21,50 @@ import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { BaseReactComponentProps, NodeType, PipelineGraphState, PipelineGraphType } from '../../types'
-import { getPositionOfAddIcon, matrixNodeNameToJSON } from '../utils'
+import {
+  COLLAPSED_MATRIX_NODE_LENGTH,
+  DEFAULT_MATRIX_PARALLELISM,
+  getMatrixHeight,
+  getPositionOfAddIcon,
+  LayoutStyles,
+  matrixNodeNameToJSON,
+  MAX_ALLOWED_MATRIX_COLLAPSED_NODES
+} from '../utils'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
 import css from './MatrixNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
-interface LayoutStyles {
-  height: string
-  width: string
-  marginLeft?: string
-}
-const COLLAPSED_MATRIX_NODE_LENGTH = 8
-const MAX_ALLOWED_MATRIX_COLLAPSED_NODES = 4
-const DEFAULT_MATRIX_PARALLELISM = 1
-
-const getHeight = (nodeHeight: number, maxChildLength: number, parallelism: number, showAllNodes: boolean): number => {
-  if (parallelism === 0) {
-    // parallel case + 20 (nodeGap except last child)
-    return maxChildLength * nodeHeight + 20 * (maxChildLength - 1)
-  } else if (!showAllNodes && maxChildLength < parallelism) {
-    // collapsed mode, single row
-    return nodeHeight + 20
-  } else {
-    return (
-      (Math.floor(maxChildLength / parallelism) + Math.ceil((maxChildLength % parallelism) / parallelism)) *
-        nodeHeight +
-      20
-    )
-  }
-}
-
 const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, showAllNodes?: boolean): LayoutStyles => {
-  const nodeWidth = data?.[0]?.nodeType === StageType.APPROVAL ? 142 : 165 // (125- text with lineClamp,90-PipelineStage), 132(Diamond) + 40(padding)
-  const nodeHeight = data?.[0]?.nodeType === StageType.APPROVAL ? 120 : 100 // 40(node) + 60(text)
+  const nodeWidth = data?.[0]?.nodeType === StageType.APPROVAL ? 85 : 120 // (125- text with lineClamp,90-PipelineStage), 132(Diamond) + 40(padding)
+  const nodeHeight = data?.[0]?.nodeType === StageType.APPROVAL ? 139 : 115 // 64/40(node) + 55/50(text)+ 25(gap)
   parallelism = !parallelism ? 0 : (parallelism === 1 ? data.length : parallelism) || DEFAULT_MATRIX_PARALLELISM // parallelism strategy (undefined)- setting to default 0
   if (showAllNodes) {
     const maxChildLength = defaultTo(data?.length, 0)
-    const finalHeight = getHeight(nodeHeight, maxChildLength, parallelism, true)
-    const finalWidth = nodeWidth * (parallelism === 0 ? 1 : Math.min(parallelism, (data || []).length))
+    const finalHeight = getMatrixHeight(nodeHeight, maxChildLength, parallelism, true)
+    let finalWidth =
+      nodeWidth * (parallelism === 0 ? 1 : Math.min(parallelism, (data || []).length)) + ((parallelism || 1) - 1) * 60 // colGap
+    if (parallelism === 0) {
+      finalWidth += 30
+    }
     return {
-      height: `${finalHeight}px`,
-      width: `${finalWidth + 40}px`
+      height: finalHeight - 20,
+      width: finalWidth
     }
   } else {
-    const updatedParallelism = Math.min(parallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES)
+    const updatedParallelism = Math.min(parallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES) || 1
     const maxChildLength = Math.min(data.length, COLLAPSED_MATRIX_NODE_LENGTH)
-    const finalHeight = getHeight(nodeHeight, maxChildLength, updatedParallelism, false)
-    const finalWidth = nodeWidth * (parallelism === 0 ? 1 : Math.min(updatedParallelism, (data || []).length))
+    const finalHeight = getMatrixHeight(nodeHeight, maxChildLength, updatedParallelism, false)
+    let finalWidth =
+      nodeWidth * (parallelism === 0 ? 1 : Math.min(updatedParallelism, (data || []).length)) +
+      (updatedParallelism - 1) * 60 // colGap
+    if (parallelism === 0) {
+      finalWidth += 30
+    }
     return {
-      height: `${finalHeight}px`,
-      width: `${finalWidth}px`
+      height: finalHeight - 20,
+      width: finalWidth
     }
   }
 }
@@ -86,13 +78,24 @@ export function MatrixNode(props: any): JSX.Element {
   const [state, setState] = React.useState<PipelineGraphState[]>([])
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
   const [showAllNodes, setShowAllNodes] = React.useState(false)
-  const [layoutStyles, setLayoutStyles] = React.useState<LayoutStyles>({ height: '100px', width: '70px' })
+  const [layoutStyles, setLayoutStyles] = React.useState<LayoutStyles>({ height: 100, width: 70 })
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
   const queryParams = useQueryParams<ExecutionPageQueryParams>()
   const defaultNode = props.getDefaultNode()?.component
   const { selectedStageExecutionId } = useExecutionContext()
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
+  const subType = get(props, 'data.data.moduleInfo.stepParameters.subType')
+  const numOfServices = get(
+    props,
+    'data.data.moduleInfo.stepParameters.services.values.__encodedValue.valueDoc.value.length',
+    1
+  )
+  const numOfEnvironment = get(
+    props,
+    'data.data.moduleInfo.stepParameters.environments.values.__encodedValue.valueDoc.value.length',
+    1
+  )
   const updateTreeRect = (): void => {
     const treeContainer = document.getElementById('tree-container')
     const rectBoundary = treeContainer?.getBoundingClientRect()
@@ -152,7 +155,7 @@ export function MatrixNode(props: any): JSX.Element {
     if (state?.length) {
       setLayoutStyles(getCalculatedStyles(state, maxParallelism, showAllNodes))
     } else {
-      setLayoutStyles({ height: '100px', width: '70px' })
+      setLayoutStyles({ height: 100, width: 70 })
     }
   }, [state, props?.isNodeCollapsed, showAllNodes, isNodeCollapsed])
 
@@ -161,8 +164,8 @@ export function MatrixNode(props: any): JSX.Element {
   }, [queryParams?.stageExecId, isNodeCollapsed])
 
   useDeepCompareEffect(() => {
-    !maxParallelism && !hasChildrenToBeCollapsed && setShowAllNodes(true)
-  }, [maxParallelism])
+    setShowAllNodes(!maxParallelism && !hasChildrenToBeCollapsed)
+  }, [maxParallelism, hasChildrenToBeCollapsed])
 
   return (
     <>
@@ -177,13 +180,22 @@ export function MatrixNode(props: any): JSX.Element {
             !props.readonly && allowAdd && debounceHideVisibility()
           }}
           onDragLeave={() => !props.readonly && allowAdd && debounceHideVisibility()}
-          className={cx(css.stepGroup, {
+          className={cx(css.matrixNode, {
             [css.firstnode]: !props?.isParallelNode,
             [css.marginBottom]: props?.isParallelNode,
-            [css.nestedGroup]: isNestedStepGroup
+            [css.nestedGroup]: isNestedStepGroup,
+            [css.multiSvcEnv]: isMultiSvcOrMultiEnv(subType)
           })}
         >
-          <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={props?.data?.nodeType} />
+          <MatrixNodeLabelWrapper
+            isParallelNode={props?.isParallelNode}
+            nodeType={
+              isMultiSvcOrMultiEnv(subType)
+                ? getString('pipeline.numOfServicesAndEnv', { numOfServices, numOfEnvironment })
+                : props?.data?.nodeType
+            }
+            subType={subType}
+          />
           <div id={props?.id} className={css.horizontalBar}></div>
           {props.data?.skipCondition && (
             <div className={css.conditional}>
@@ -193,7 +205,7 @@ export function MatrixNode(props: any): JSX.Element {
                   isDark: true
                 }}
               >
-                <Icon size={26} name={'conditional-skip-new'} color="white" />
+                <Icon size={26} name={'conditional-skip-new'} />
               </Text>
             </div>
           )}
@@ -205,7 +217,7 @@ export function MatrixNode(props: any): JSX.Element {
                   isDark: true
                 }}
               >
-                <Icon size={26} name={'conditional-skip-new'} color="white" />
+                <Icon size={26} name={'conditional-skip-new'} />
               </Text>
             </div>
           )}
@@ -213,13 +225,13 @@ export function MatrixNode(props: any): JSX.Element {
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
               <Layout.Horizontal
                 spacing="small"
-                width="60%"
                 onMouseOver={e => {
                   e.stopPropagation()
                 }}
                 onMouseOut={e => {
                   e.stopPropagation()
                 }}
+                className={css.headerTitle}
               >
                 <Icon
                   className={css.collapseIcon}
@@ -263,7 +275,7 @@ export function MatrixNode(props: any): JSX.Element {
                 </Text>
               </Layout.Horizontal>
               {/* Execution summary on collapse */}
-              <NodeStatusIndicator nodeState={state} />
+              <NodeStatusIndicator nodeState={state} className={css.headerStatus} />
             </Layout.Horizontal>
           </div>
           <div
@@ -289,7 +301,7 @@ export function MatrixNode(props: any): JSX.Element {
                   className={cx(css.stepGroupBody, { [css.hasMoreChild]: hasChildrenToBeCollapsed })}
                   style={layoutStyles}
                 >
-                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '80px', rowGap: '20px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '60px', rowGap: '20px' }}>
                     {state.map((node: any, index: number) => {
                       const NodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
                         props.getNode?.(node?.type)?.component,
@@ -356,7 +368,7 @@ export function MatrixNode(props: any): JSX.Element {
                     withoutCurrentColor={true}
                   />
                 )}
-                {maxParallelism && (
+                {(maxParallelism || hasChildrenToBeCollapsed) && (
                   <Layout.Horizontal className={css.matrixFooter}>
                     <Layout.Horizontal className={css.matrixBorderWrapper}>
                       <Layout.Horizontal className={css.showNodes}>

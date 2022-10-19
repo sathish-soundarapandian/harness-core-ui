@@ -110,7 +110,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
       orgIdentifier,
-      yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false }))
+      yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false, removeEmptyString: false }))
     }
 
     try {

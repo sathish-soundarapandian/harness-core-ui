@@ -54,14 +54,24 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
     url: resolveUrl(paths.toAccountSettings(params))
   }
 
-  const isHome = pathname.indexOf(paths.toHome({ accountId: params.accountId })) !== -1
+  const isHome =
+    pathname.indexOf(paths.toHome({ accountId: params.accountId })) !== -1 ||
+    pathname.indexOf(paths.toMainDashboard({ accountId: params.accountId })) !== -1
   const isDashBoards = pathname.indexOf(paths.toCustomDashboard({ accountId: params.accountId })) !== -1
+
+  const isProjects = pathname.indexOf(paths.toProjects({ accountId: params.accountId })) !== -1
 
   if (isHome) {
     moduleBreadCrumb = {
       label: getString('common.home'),
       iconProps: { name: 'harness', color: 'primary7' },
-      url: resolveUrl(paths.toHome(params))
+      url: resolveUrl(paths.toMainDashboard(params))
+    }
+  } else if (isProjects) {
+    moduleBreadCrumb = {
+      label: getString('projectsText'),
+      iconProps: { name: 'nav-project', color: 'primary7' },
+      url: resolveUrl(paths.toAllProjects(params))
     }
   } else if (isDashBoards) {
     moduleBreadCrumb = {
@@ -72,7 +82,7 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
   }
 
   if (module) {
-    let url = paths.toHome(params)
+    let url = paths.toMainDashboard(params)
     let label = getString('common.home')
     switch (module.toUpperCase() as ModuleName) {
       case ModuleName.CD:

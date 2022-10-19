@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import AppDApplications from '../AppDApplications'
 
@@ -24,6 +25,8 @@ describe('AppDApplications', () => {
           refetchTier={refetchTier}
           setCustomFieldAndValidation={setCustomFieldAndValidation}
           isTemplate={false}
+          appdMultiType={MultiTypeInputType.FIXED}
+          setAppdMultiType={jest.fn()}
         />
       </TestWrapper>
     )
@@ -39,6 +42,8 @@ describe('AppDApplications', () => {
           refetchTier={refetchTier}
           setCustomFieldAndValidation={setCustomFieldAndValidation}
           isTemplate={false}
+          appdMultiType={MultiTypeInputType.FIXED}
+          setAppdMultiType={jest.fn()}
         />
       </TestWrapper>
     )
@@ -54,6 +59,8 @@ describe('AppDApplications', () => {
           refetchTier={refetchTier}
           setCustomFieldAndValidation={setCustomFieldAndValidation}
           isTemplate={false}
+          appdMultiType={MultiTypeInputType.FIXED}
+          setAppdMultiType={jest.fn()}
         />
       </TestWrapper>
     )
@@ -73,6 +80,8 @@ describe('AppDApplications', () => {
           refetchTier={refetchTier}
           setCustomFieldAndValidation={setCustomFieldAndValidation}
           isTemplate={true}
+          appdMultiType={MultiTypeInputType.FIXED}
+          setAppdMultiType={jest.fn()}
         />
       </TestWrapper>
     )
@@ -88,6 +97,8 @@ describe('AppDApplications', () => {
           refetchTier={refetchTier}
           setCustomFieldAndValidation={setCustomFieldAndValidation}
           isTemplate={true}
+          appdMultiType={MultiTypeInputType.FIXED}
+          setAppdMultiType={jest.fn()}
         />
       </TestWrapper>
     )
@@ -103,6 +114,8 @@ describe('AppDApplications', () => {
           refetchTier={refetchTier}
           setCustomFieldAndValidation={setCustomFieldAndValidation}
           isTemplate={true}
+          appdMultiType={MultiTypeInputType.FIXED}
+          setAppdMultiType={jest.fn()}
         />
       </TestWrapper>
     )

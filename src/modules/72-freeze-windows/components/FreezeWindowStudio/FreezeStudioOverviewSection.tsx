@@ -69,7 +69,7 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
                 formikProps={formikProps}
                 identifierProps={{
                   inputLabel: getString('name'),
-                  isIdentifierEditable: windowIdentifier === DefaultFreezeId,
+                  isIdentifierEditable: windowIdentifier === DefaultFreezeId && !isReadOnly,
                   inputGroupProps: { disabled: isReadOnly, inputGroup: { autoFocus: true } }
                 }}
                 descriptionProps={{ disabled: isReadOnly }}

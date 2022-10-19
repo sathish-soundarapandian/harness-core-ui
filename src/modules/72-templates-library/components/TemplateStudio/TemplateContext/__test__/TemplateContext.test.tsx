@@ -47,6 +47,7 @@ const wrapper = ({ children }: React.PropsWithChildren<unknown>) => (
         repoIdentifier: 'firstRepo',
         branch: 'master'
       }}
+      module={'cd'}
       templateIdentifier={'someTemplateIdentifier'}
       versionLabel={'someVersionLabel'}
       templateType={'Pipeline'}

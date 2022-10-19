@@ -23,7 +23,11 @@ const renderComponent = (props?: Partial<CreateAFlagViewProps>): RenderResult =>
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <CreateAFlagView selectedFlag={props?.selectedFlag} setSelectedFlag={setSelectedFlag} />
+      <CreateAFlagView
+        selectedFlag={props?.selectedFlag}
+        setSelectedFlag={setSelectedFlag}
+        setCreateFlagError={jest.fn()}
+      />
     </TestWrapper>
   )
 }

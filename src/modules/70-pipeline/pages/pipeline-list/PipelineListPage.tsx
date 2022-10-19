@@ -45,6 +45,7 @@ import { DEFAULT_PIPELINE_LIST_TABLE_SORT, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import type { PartiallyRequired } from '@pipeline/utils/types'
 import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
@@ -84,10 +85,17 @@ export function PipelineListPage(): React.ReactElement {
   } = useToggleOpen()
 
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
-  const { searchTerm, repoIdentifier, branch, page, size, sort } = queryParams
+  const { searchTerm, repoIdentifier, branch, page, size } = queryParams
   const pathParams = useParams<PipelineListPagePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = pathParams
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
+
+  const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
+    PreferenceScope.USER,
+    'PipelineSortingPreference'
+  )
+
+  const sort = sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort
 
   const handleRepoChange = (filter: GitFilterScope): void => {
     updateQueryParams({
@@ -292,6 +300,7 @@ export function PipelineListPage(): React.ReactElement {
               onDeletePipeline={onDeletePipeline}
               onClonePipeline={onClonePipeline}
               setSortBy={sortArray => {
+                setSortingPreference(JSON.stringify(sortArray))
                 updateQueryParams({ sort: sortArray })
               }}
               sortBy={sort}

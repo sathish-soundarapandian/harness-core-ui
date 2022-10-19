@@ -19,11 +19,10 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useConfirmAction } from '@common/hooks'
-import { NoData } from '@cf/components/NoData/NoData'
 import { String, useStrings } from 'framework/strings'
 import AddKeyDialog from '../../components/AddKeyDialog/AddKeyDialog'
-import EmptySDKs from './NoSDKs.svg'
 
+import EnvironmentDetailsSectionNoData from './EnvironmentDetailsSectionNoData'
 import css from './EnvironmentDetails.module.scss'
 export interface EnvironmentDetailsBodyProps {
   environment: EnvironmentResponseDTO
@@ -269,11 +268,7 @@ const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
 
       {emptyData && (
         <Container height="100%" flex={{ align: 'center-center' }}>
-          <NoData
-            imageURL={EmptySDKs}
-            message={getString('cf.environments.apiKeys.noKeysFoundTitle')}
-            description={<String useRichText stringID="cf.environments.apiKeys.noKeysFoundMessage" />}
-          >
+          <EnvironmentDetailsSectionNoData>
             <AddKeyDialog
               primary
               environment={environment}
@@ -282,8 +277,9 @@ const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
                 onNewKeyCreated()
                 hideModal()
               }}
+              isLinkVariation
             />
-          </NoData>
+          </EnvironmentDetailsSectionNoData>
         </Container>
       )}
       {loading && <ContainerSpinner flex={{ align: 'center-center' }} />}

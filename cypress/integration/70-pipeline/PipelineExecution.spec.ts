@@ -427,10 +427,5 @@ describe('Pipeline Execution', () => {
     cy.get('*[class^="ExecutionStatusLabel"]').within(() => {
       cy.contains('span', 'ABORTED').should('be.visible')
     })
-
-    cy.get('.Pane.horizontal.Pane1').within(() => {
-      cy.get('.default-node').first().should('be.visible').trigger('mouseover')
-      cy.get('.default-node').first().should('be.visible').trigger('onmouseover')
-    })
   })
 })

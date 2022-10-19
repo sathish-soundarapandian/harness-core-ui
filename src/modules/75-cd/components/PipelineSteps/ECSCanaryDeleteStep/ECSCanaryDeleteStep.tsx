@@ -92,6 +92,7 @@ export class ECSCanaryDeleteStep extends PipelineStep<StepElementConfig> {
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
+        formikFormName={'ecsCanaryDeleteStepForm'}
       />
     )
   }

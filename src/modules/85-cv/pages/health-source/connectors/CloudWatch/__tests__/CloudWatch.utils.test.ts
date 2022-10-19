@@ -1,7 +1,8 @@
 import type { CloudWatchFormType, CloudWatchSetupSource } from '../CloudWatch.types'
-import { getFormikInitialValue, validateForm } from '../CloudWatch.utils'
+import { getFormikInitialValue, getSampleDataHightchartPoints, validateForm } from '../CloudWatch.utils'
 import {
   assignErrorMock,
+  chartSeriesValue,
   defaultFormikValue,
   formValuesMock,
   formValuesMockInvalidMetricIdentifier,
@@ -9,6 +10,7 @@ import {
   formValuesMockNoServiceInstance,
   identifierInvalidValidationError,
   initialValueMock,
+  sampleDataForTest,
   serviceInstanceErrorMock
 } from './CloudWatch.mock'
 
@@ -49,5 +51,11 @@ describe('CloudWatch utils', () => {
     const result = validateForm(formValuesMockInvalidMetricIdentifier as unknown as CloudWatchFormType, key => key)
 
     expect(result).toEqual(identifierInvalidValidationError)
+  })
+
+  test('getSampleDataHightchartPoints should give correct chart data', () => {
+    const result = getSampleDataHightchartPoints(sampleDataForTest.data)
+
+    expect(result).toEqual(chartSeriesValue)
   })
 })

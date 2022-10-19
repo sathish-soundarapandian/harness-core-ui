@@ -23,6 +23,7 @@ import { projectPathProps } from '@common/utils/routeUtils'
 import ProjectDetails from '../views/ProjectDetails/ProjectDetails'
 import {
   createMockData,
+  getCountMockData,
   invitesMockData,
   OrgMockData,
   projectMockDataWithModules,
@@ -106,6 +107,10 @@ jest.mock('services/cd-ng', () => ({
 
 jest.mock('services/rbac', () => ({
   useGetRoleList: jest.fn().mockImplementation(() => ({ data: roleMockData, loading: false, refetch: jest.fn() }))
+}))
+
+jest.mock('services/dashboard-service', () => ({
+  useGetCounts: jest.fn().mockImplementation(() => ({ data: getCountMockData, loading: false, refetch: jest.fn() }))
 }))
 
 describe('Project Details', () => {

@@ -18,7 +18,6 @@ export abstract class Template {
   protected abstract icon: IconName
   protected abstract allowedScopes: Scope[]
   protected abstract colorMap: React.CSSProperties
-  protected isEnabled = true
   protected abstract isRemoteEnabled: boolean
 
   getLabel(): string {
@@ -39,10 +38,6 @@ export abstract class Template {
 
   getAllowedScopes(): Scope[] {
     return this.allowedScopes
-  }
-
-  getIsEnabled(): boolean {
-    return this.isEnabled
   }
 
   getIsRemoteEnabled(): boolean {

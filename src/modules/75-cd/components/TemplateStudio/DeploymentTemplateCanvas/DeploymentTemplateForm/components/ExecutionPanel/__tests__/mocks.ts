@@ -16,7 +16,7 @@ export const initialValues = {
     fetchInstancesScript: {},
     instanceAttributes: [
       {
-        name: 'hostname',
+        name: 'instancename',
         jsonPath: '',
         description: ''
       }

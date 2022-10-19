@@ -64,6 +64,7 @@ import { getReadableDateTime } from '@common/utils/dateUtils'
 import { Connectors } from '@connectors/constants'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import RbacButton from '@rbac/components/Button/Button'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import ConnectorsEmptyState from './connectors-no-data.png'
 import css from './ConnectorReferenceField.module.scss'
 
@@ -121,6 +122,9 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   error?: string
   tooltipProps?: DataTooltipInterface
   connectorFilterProperties?: ConnectorFilterProperties
+  isMultiSelect?: boolean
+  selectedConnectors?: ConnectorSelectedValue[] | string[]
+  onMultiSelectChange?: (arg: ScopeAndIdentifier[]) => void
 }
 
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
@@ -435,23 +439,24 @@ export function getReferenceFieldProps({
   getString,
   openConnectorModal,
   setPagedConnectorData,
-  connectorFilterProperties
+  connectorFilterProperties,
+  isMultiSelect,
+  selectedConnectors
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
-  'onChange' | 'onCancel' | 'pagination'
+  'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
 > {
   return {
     name,
     width,
     selectAnReferenceLabel: getString('selectAnExistingConnector'),
-    selected: selected as ConnectorSelectedValue,
+    selected,
     placeholder,
     defaultScope,
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-
-    fetchRecords: (scope, done, search = '', page = 0) => {
+    fetchRecords: (scope, done, search = '', page = 0, signal = undefined) => {
       const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
@@ -461,41 +466,49 @@ export function getReferenceFieldProps({
               getDefaultFromOtherRepo: gitScope.getDefaultFromOtherRepo ?? true
             }
           : {}
-      const request = Array.isArray(type)
-        ? getConnectorListV2Promise({
-            queryParams: {
-              accountIdentifier,
-              searchTerm: search,
-              ...additionalParams,
-              ...gitFilterParams,
-              pageIndex: page,
-              pageSize: 10
-            },
-            body: merge(
+      const request =
+        Array.isArray(type) || !isEmpty(connectorFilterProperties)
+          ? getConnectorListV2Promise(
               {
-                ...(!category && { types: type }),
-                category,
-                filterType: 'Connector',
-                projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-                orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+                queryParams: {
+                  accountIdentifier,
+                  searchTerm: search,
+                  ...additionalParams,
+                  ...gitFilterParams,
+                  pageIndex: page,
+                  pageSize: 10
+                },
+                body: merge(
+                  {
+                    ...(!category && { types: type }),
+                    category,
+                    filterType: 'Connector',
+                    projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
+                    orgIdentifier:
+                      scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+                  },
+                  connectorFilterProperties
+                ) as ConnectorFilterProperties
               },
-              connectorFilterProperties
-            ) as ConnectorFilterProperties
-          })
-        : getConnectorListPromise({
-            queryParams: {
-              accountIdentifier,
-              // If we also pass "type" along with "category", "category" will be ignored
-              ...(!category && { type }),
-              ...gitFilterParams,
-              category,
-              searchTerm: search,
-              pageIndex: page,
-              pageSize: 10,
-              projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-              orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined
-            }
-          })
+              signal
+            )
+          : getConnectorListPromise(
+              {
+                queryParams: {
+                  accountIdentifier,
+                  // If we also pass "type" along with "category", "category" will be ignored
+                  ...(!category && { type }),
+                  ...gitFilterParams,
+                  category,
+                  searchTerm: search,
+                  pageIndex: page,
+                  pageSize: 10,
+                  projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
+                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined
+                }
+              },
+              signal
+            )
 
       return request
         .then(responseData => {
@@ -563,7 +576,9 @@ export function getReferenceFieldProps({
         getString
       }
       return <CollapseRecordRender {...recordRenderProps} />
-    }
+    },
+    isMultiSelect,
+    selectedReferences: selectedConnectors
   }
 }
 export const getConnectorStatusCall = async (
@@ -611,6 +626,9 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     error,
     disabled,
     connectorFilterProperties,
+    isMultiSelect,
+    selectedConnectors,
+    onMultiSelectChange,
     ...rest
   } = props
 
@@ -686,9 +704,9 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     lazy: true
   })
   const getConnectorStatus = (): void => {
-    if (typeof selected !== 'string') {
+    if (selected && typeof selected !== 'string') {
       setConnectorStatusCheckInProgress(true)
-      getConnectorStatusCall(selected as ConnectorSelectedValue, accountIdentifier)
+      getConnectorStatusCall(selected, accountIdentifier)
         .then(
           status => {
             setConnectorStatus(status)
@@ -705,6 +723,8 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     }
   }
   React.useEffect(() => {
+    if (isMultiSelect) return
+
     if (
       typeof selected == 'string' &&
       getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED &&
@@ -721,9 +741,11 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
       }
       setSelectedValue(selected)
     }
-  }, [selected, refetch])
+  }, [selected, refetch, isMultiSelect])
 
   React.useEffect(() => {
+    if (isMultiSelect) return
+
     if (
       typeof selected === 'string' &&
       getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED &&
@@ -753,7 +775,8 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     connectorData,
     connectorData?.data?.connector?.identifier,
     connectorData?.data?.status?.status,
-    name
+    name,
+    isMultiSelect
   ])
 
   const helperText = error ? <FormError name={name} errorMessage={error} /> : undefined
@@ -818,7 +841,9 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     category,
     openConnectorModal,
     setPagedConnectorData,
-    connectorFilterProperties
+    connectorFilterProperties,
+    isMultiSelect,
+    selectedConnectors
   })
   return (
     <FormGroup
@@ -867,6 +892,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
             }}
           ></RbacButton>
         }
+        onMultiSelectChange={onMultiSelectChange}
       />
     </FormGroup>
   )

@@ -97,6 +97,12 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
     }
   }, [templateInputYaml?.data])
 
+  React.useEffect(() => {
+    if (loading) {
+      setInputSetTemplate(undefined)
+    }
+  }, [loading])
+
   return (
     <Container
       style={{ overflow: 'auto' }}
@@ -140,7 +146,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                           template={inputSetTemplate as PipelineInfoConfig}
                           originalPipeline={formikProps.values.data as PipelineInfoConfig}
                           path={'data'}
-                          viewType={StepViewType.InputSet}
+                          viewType={StepViewType.TemplateUsage}
                           readonly={true}
                           allowableTypes={allowableTypes}
                           viewTypeMetadata={{ isTemplateDetailDrawer: true }}
@@ -151,7 +157,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                           template={{ stage: inputSetTemplate as StageElementConfig }}
                           allValues={{ stage: formikProps.values.data as StageElementConfig }}
                           path={'data'}
-                          viewType={StepViewType.InputSet}
+                          viewType={StepViewType.TemplateUsage}
                           readonly={true}
                           allowableTypes={allowableTypes}
                           hideTitle={true}
@@ -169,7 +175,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                             template={{ step: inputSetTemplate as StepElementConfig }}
                             allValues={{ step: formikProps.values.data as StepElementConfig }}
                             path={'data'}
-                            viewType={StepViewType.InputSet}
+                            viewType={StepViewType.TemplateUsage}
                             readonly={true}
                             allowableTypes={allowableTypes}
                             hideTitle={true}

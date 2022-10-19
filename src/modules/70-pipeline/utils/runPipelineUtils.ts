@@ -8,6 +8,7 @@
 import { cloneDeep, defaultTo, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 
+import type { AllowedTypes, MultiTypeInputType } from '@wings-software/uicore'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -15,6 +16,8 @@ import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
@@ -398,4 +401,10 @@ export function getStageIdentifierFromStageData(selectedStageData: StageSelectio
   return selectedStageData.allStagesSelected
     ? []
     : selectedStageData.selectedStageItems.map(stageData => stageData.value as string)
+}
+
+export function getFilteredAllowableTypes(allowableTypes: AllowedTypes, viewType: StepViewType): AllowedTypes {
+  return viewType === StepViewType.TemplateUsage
+    ? allowableTypes
+    : ((allowableTypes as MultiTypeInputType[]).filter(allowedType => !isMultiTypeRuntime(allowedType)) as AllowedTypes)
 }

@@ -248,7 +248,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                               autocomplete="off"
                               class="bp3-input"
                               name="versionLabel"
-                              placeholder="templatesLibrary.createNewModal.versionPlaceholder"
+                              placeholder="common.template.createNewModal.versionPlaceholder"
                               type="text"
                               value="v1"
                             />
@@ -680,7 +680,7 @@ exports[`Git experience git experience snapshot 1`] = `
                               autocomplete="off"
                               class="bp3-input"
                               name="versionLabel"
-                              placeholder="templatesLibrary.createNewModal.versionPlaceholder"
+                              placeholder="common.template.createNewModal.versionPlaceholder"
                               type="text"
                               value="v1"
                             />

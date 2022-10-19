@@ -140,6 +140,7 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
     | 'Acr'
     | 'AmazonS3'
     | 'Jenkins'
+    | 'CustomArtifact'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
 }
@@ -470,6 +471,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'CustomSecretManager'
     | 'ELK'
     | 'GcpSecretManager'
+    | 'AzureArtifacts'
   )[]
 }
 
@@ -515,6 +517,18 @@ export type CustomApprovalStepInfo = StepSpecType & {
   scriptTimeout: string
   shell: 'Bash' | 'PowerShell'
   source: ShellScriptSourceWrapper
+}
+
+export type CustomArtifactSpec = ArtifactTypeSpec & {
+  artifactsArrayPath?: string
+  eventConditions?: TriggerEventDataCondition[]
+  inputs?: NGVariable[]
+  metadata?: {
+    [key: string]: string
+  }
+  script?: string
+  version?: string
+  versionPath?: string
 }
 
 export type CustomPolicyStepSpec = PolicySpec & {
@@ -3110,8 +3124,10 @@ export interface PipelineSaveResponse {
 }
 
 export type PipelineStageConfig = StageInfoConfig & {
+  inputSetReferences?: string[]
   org: string
   pipeline: string
+  pipelineInputs?: JsonNode
   project: string
 }
 
@@ -3385,9 +3401,9 @@ export interface ResourceDTO {
     | 'MONITORED_SERVICE'
     | 'CHAOS_INFRASTRUCTURE'
     | 'CHAOS_EXPERIMENT'
+    | 'CHAOS_GAMEDAY'
     | 'STO_TARGET'
     | 'STO_EXEMPTION'
-    | 'CHAOS_GAMEDAY'
     | 'SERVICE_LEVEL_OBJECTIVE'
     | 'PERSPECTIVE'
     | 'PERSPECTIVE_BUDGET'
@@ -4279,6 +4295,13 @@ export interface ResponseTemplatesResolvedPipelineResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseTriggerCatalogResponse {
+  correlationId?: string
+  data?: TriggerCatalogResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseValidateTemplateInputsResponseDTO {
   correlationId?: string
   data?: ValidateTemplateInputsResponseDTO
@@ -4932,7 +4955,6 @@ export interface TemplatesResolvedPipelineResponseDTO {
 
 export interface Throwable {
   cause?: Throwable
-  detailMessage?: string
   localizedMessage?: string
   message?: string
   stackTrace?: StackTraceElement[]
@@ -4956,6 +4978,29 @@ export interface TotalHealthInfo {
 export interface TransitionTo {
   status: string
   transitionName?: string
+}
+
+export interface TriggerCatalogItem {
+  category?: 'WEBHOOK' | 'ARTIFACT' | 'MANIFEST' | 'SCHEDULED'
+  triggerCatalogType?: (
+    | 'Github'
+    | 'Gitlab'
+    | 'Bitbucket'
+    | 'Codecommit'
+    | 'GCR'
+    | 'ECR'
+    | 'DockerRegistry'
+    | 'Artifactory'
+    | 'ACR'
+    | 'AmazonS3'
+    | 'Nexus'
+    | 'HelmChart'
+    | 'Scheduled'
+  )[]
+}
+
+export interface TriggerCatalogResponse {
+  catalog?: TriggerCatalogItem[]
 }
 
 export interface TriggerEventDataCondition {
@@ -10941,6 +10986,7 @@ export interface GetPipelineSummaryQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  getMetadataOnly?: boolean
 }
 
 export interface GetPipelineSummaryPathParams {
@@ -12218,6 +12264,54 @@ export const createTriggerPromise = (
     NGTriggerConfigV2RequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/triggers`, props, signal)
+
+export interface GetTriggerCatalogQueryParams {
+  accountIdentifier?: string
+}
+
+export type GetTriggerCatalogProps = Omit<
+  GetProps<ResponseTriggerCatalogResponse, Failure | Error, GetTriggerCatalogQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Trigger catalog
+ */
+export const GetTriggerCatalog = (props: GetTriggerCatalogProps) => (
+  <Get<ResponseTriggerCatalogResponse, Failure | Error, GetTriggerCatalogQueryParams, void>
+    path={`/triggers/catalog`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetTriggerCatalogProps = Omit<
+  UseGetProps<ResponseTriggerCatalogResponse, Failure | Error, GetTriggerCatalogQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Trigger catalog
+ */
+export const useGetTriggerCatalog = (props: UseGetTriggerCatalogProps) =>
+  useGet<ResponseTriggerCatalogResponse, Failure | Error, GetTriggerCatalogQueryParams, void>(`/triggers/catalog`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * Get Trigger catalog
+ */
+export const getTriggerCatalogPromise = (
+  props: GetUsingFetchProps<ResponseTriggerCatalogResponse, Failure | Error, GetTriggerCatalogQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseTriggerCatalogResponse, Failure | Error, GetTriggerCatalogQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/triggers/catalog`,
+    props,
+    signal
+  )
 
 export type GenerateWebhookTokenProps = Omit<GetProps<RestResponseString, Failure | Error, void, void>, 'path'>
 
@@ -13732,6 +13826,8 @@ export interface GetSchemaYamlQueryParams {
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
     | 'Freeze'
+    | 'GitOpsUpdateReleaseRepo'
+    | 'EcsRunTask'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -13945,6 +14041,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
     | 'Freeze'
+    | 'GitOpsUpdateReleaseRepo'
+    | 'EcsRunTask'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

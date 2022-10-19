@@ -96,6 +96,8 @@ export enum PermissionIdentifier {
   // This is edit, delete, access permission
   // There is no view permission for deployment freeze
   MANAGE_DEPLOYMENT_FREEZE = 'core_deploymentfreeze_manage',
+  GLOBAL_DEPLOYMENT_FREEZE = 'core_deploymentfreeze_global',
+  OVERRIDE_DEPLOYMENT_FREEZE = 'core_deploymentfreeze_override',
 
   // CHANGE INTELLIGENCE Permissions
   EDIT_MONITORED_SERVICE = 'chi_monitoredservice_edit',

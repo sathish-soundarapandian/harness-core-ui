@@ -748,7 +748,9 @@ export function RightDrawer(): React.ReactElement {
 
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        allChildTypes: [stepType],
+        filterProperties: {
+          childTypes: [stepType]
+        },
         selectedTemplate,
         gitDetails,
         storeMetadata

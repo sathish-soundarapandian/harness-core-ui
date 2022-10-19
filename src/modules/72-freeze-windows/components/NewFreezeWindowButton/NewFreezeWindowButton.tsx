@@ -55,6 +55,9 @@ export const NewFreezeWindowButton: FC<NewFreezeWindowButtonProps> = ({ text }) 
           projectIdentifier
         }
       }}
+      tooltipProps={{
+        dataTooltipId: 'createFreezeWindow'
+      }}
     />
   )
 }

@@ -17,11 +17,7 @@ export enum TemplateType {
   Pipeline = 'Pipeline',
   CustomDeployment = 'CustomDeployment',
   MonitoredService = 'MonitoredService',
-  SecretManager = 'SecretManager',
-  Service = 'Service',
-  Infrastructure = 'Infrastructure',
-  StepGroup = 'StepGroup',
-  Execution = 'Execution'
+  SecretManager = 'SecretManager'
 }
 
 export enum TemplateUsage {
@@ -47,7 +43,7 @@ export const getAllowedTemplateTypes = (
       allowedTemplateTypes.push({
         label: defaultTo(template?.getLabel(), ''),
         value: item,
-        disabled: !template?.getIsEnabled() || featureFlagBasedTemplates?.[item] === false
+        disabled: featureFlagBasedTemplates?.[item] === false
       })
     }
   })

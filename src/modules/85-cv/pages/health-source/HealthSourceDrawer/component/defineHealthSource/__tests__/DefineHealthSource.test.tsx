@@ -161,9 +161,7 @@ describe('DefineHealthSource', () => {
       userEvent.click(container.querySelector('button[data-testid="cr-field-connectorRef"]')!)
     })
     await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
-    await waitFor(() =>
-      expect(document.querySelector('.bp3-dialog div[data-tab-id="organization"]')).not.toBeInTheDocument()
-    )
+    await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="org"]')).not.toBeInTheDocument())
     await waitFor(() =>
       expect(document.querySelector('.bp3-dialog div[data-tab-id="project"]')).not.toBeInTheDocument()
     )
@@ -188,9 +186,7 @@ describe('DefineHealthSource', () => {
       userEvent.click(container.querySelector('button[data-testid="cr-field-connectorRef"]')!)
     })
     await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
-    await waitFor(() =>
-      expect(document.querySelector('.bp3-dialog div[data-tab-id="organization"]')).toBeInTheDocument()
-    )
+    await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="org"]')).toBeInTheDocument())
     await waitFor(() =>
       expect(document.querySelector('.bp3-dialog div[data-tab-id="project"]')).not.toBeInTheDocument()
     )

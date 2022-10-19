@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import isEmpty from 'lodash-es/isEmpty'
+import debounce from 'lodash-es/debounce'
 import type { SelectOption } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceList } from 'services/cd-ng'
@@ -57,17 +57,6 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     lazy: true
   })
 
-  const {
-    data: accountProjects,
-    loading: loadingAccountProjects,
-    refetch: refetchAllProjects
-  } = useGetProjectList({
-    queryParams: {
-      accountIdentifier: accountId
-    },
-    lazy: true
-  })
-
   const [orgs, setOrgs] = React.useState<SelectOption[]>([])
   const [orgsMap, setOrgsMap] = React.useState<Record<string, SelectOption>>({
     All: allOrgsObj(getString)
@@ -83,7 +72,7 @@ export const useFreezeStudioData = (): ResourcesInterface => {
   const [servicesMap, setServicesMap] = React.useState<Record<string, SelectOption>>({
     All: allServicesObj(getString)
   })
-  // data.content[1].organizationResponse.organization.identifier
+
   React.useEffect(() => {
     refetchOrgs()
   }, [accountId])
@@ -146,35 +135,22 @@ export const useFreezeStudioData = (): ResourcesInterface => {
         projectsMapp[value] = obj
         return obj
       })
-      setProjects(adaptedProjectsData)
-      setProjectsMap(projectsMapp)
+
+      if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+        setProjects(adaptedProjectsData)
+        setProjectsMap(projectsMapp)
+      }
+      if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+        const accum = { projects: adaptedProjectsData, projectsMap: projectsMapp }
+        const orgIdentifierr = projectsData.data?.content?.[0]?.project?.orgIdentifier
+        if (!orgIdentifierr) return
+        setProjectsByOrgId(_projectsByOrgId => ({
+          ..._projectsByOrgId,
+          [orgIdentifierr]: accum
+        }))
+      }
     }
   }, [loadingProjects])
-
-  React.useEffect(() => {
-    if (!loadingAccountProjects && accountProjects?.data?.content) {
-      const accProjects = accountProjects?.data?.content
-      const accum: Record<string, ProjctsByOrgId> = {}
-
-      accProjects.map(datum => {
-        if (isEmpty(datum.project)) {
-          return
-        }
-        const { name, identifier, orgIdentifier: _orgIdentifier } = datum.project
-
-        const obj = { value: identifier, label: name }
-
-        accum[_orgIdentifier as string] = accum[_orgIdentifier as string] || {
-          projects: [],
-          projectsMap: { All: allProjectsObj(getString) }
-        }
-        accum[_orgIdentifier as string].projects.push(obj)
-        accum[_orgIdentifier as string].projectsMap[identifier] = obj
-      })
-
-      setProjectsByOrgId(accum)
-    }
-  }, [loadingAccountProjects])
 
   React.useEffect(() => {
     if (freezeWindowLevel === FreezeWindowLevels.ORG && orgIdentifier) {
@@ -182,11 +158,15 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     }
   }, [orgIdentifier, freezeWindowLevel])
 
-  React.useEffect(() => {
-    if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT && accountId) {
-      refetchAllProjects()
-    }
-  }, [accountId, freezeWindowLevel])
+  const fetchProjectsForOrgId = debounce((_orgIdentifier: string) => {
+    if (!_orgIdentifier) return
+    refetchProjects({
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier: _orgIdentifier
+      }
+    })
+  }, 300)
 
   return {
     orgs,
@@ -196,6 +176,49 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     services,
     servicesMap,
     freezeWindowLevel,
-    projectsByOrgId
+    projectsByOrgId,
+    fetchProjectsForOrgId
   }
 }
+// Deprecated - we will remove it in November
+// React.useEffect(() => {
+//   if (!loadingAccountProjects && accountProjects?.data?.content) {
+//     const accProjects = accountProjects?.data?.content
+//     const accum: Record<string, ProjctsByOrgId> = {}
+//
+//     accProjects.map(datum => {
+//       if (isEmpty(datum.project)) {
+//         return
+//       }
+//       const { name, identifier, orgIdentifier: _orgIdentifier } = datum.project
+//
+//       const obj = { value: identifier, label: name }
+//
+//       accum[_orgIdentifier as string] = accum[_orgIdentifier as string] || {
+//         projects: [],
+//         projectsMap: { All: allProjectsObj(getString) }
+//       }
+//       accum[_orgIdentifier as string].projects.push(obj)
+//       accum[_orgIdentifier as string].projectsMap[identifier] = obj
+//     })
+//
+//     setProjectsByOrgId(accum)
+//   }
+// }, [loadingAccountProjects])
+
+// React.useEffect(() => {
+//   if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT && accountId) {
+//     // refetchAllProjects()
+//   }
+// }, [accountId, freezeWindowLevel])
+
+// const {
+//   data: accountProjects,
+//   loading: loadingAccountProjects,
+//   refetch: refetchAllProjects
+// } = useGetProjectList({
+//   queryParams: {
+//     accountIdentifier: accountId
+//   },
+//   lazy: true
+// })

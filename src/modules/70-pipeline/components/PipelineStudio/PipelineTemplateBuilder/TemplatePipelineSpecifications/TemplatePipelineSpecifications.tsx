@@ -249,7 +249,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
                           originalPipeline={allValues}
                           path={TEMPLATE_INPUT_PATH}
                           readonly={isReadonly}
-                          viewType={StepViewType.InputSet}
+                          viewType={StepViewType.TemplateUsage}
                           allowableTypes={allowableTypes}
                           viewTypeMetadata={viewTypeMetadata}
                         />

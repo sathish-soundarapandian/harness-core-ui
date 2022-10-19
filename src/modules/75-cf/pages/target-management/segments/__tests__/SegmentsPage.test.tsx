@@ -240,9 +240,8 @@ describe('SegmentsPage', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'plus cf.segments.create' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'cf.segments.noTargetGroupsForEnv' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.segments' })).toBeInTheDocument()
   })
 
   test('No environment view should be rendered', async () => {
@@ -274,9 +273,8 @@ describe('SegmentsPage', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByRole('button', { name: 'plus newEnvironment' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'environments' })).toBeInTheDocument()
-    expect(screen.getByText('cf.environments.noEnvironmentSection.message')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'plus cf.targets.newEnvironmentTarget' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.segments' })).toBeInTheDocument()
   })
 
   test('Should go to edit page by clicking a row', async () => {

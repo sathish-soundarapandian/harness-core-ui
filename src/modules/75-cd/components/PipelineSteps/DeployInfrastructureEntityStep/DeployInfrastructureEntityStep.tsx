@@ -15,7 +15,7 @@ import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 
 import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
 import DeployInfrastructureEntityInputStep from './DeployInfrastructureEntityInputStep'
-import type { DeployInfrastructureEntityCustomStepProps } from './types'
+import type { DeployInfrastructureEntityCustomInputStepProps } from './types'
 
 export class DeployInfrastructureEntityStep extends Step<DeployEnvironmentEntityConfig['environment']> {
   protected type = StepType.DeployInfrastructureEntity
@@ -42,7 +42,7 @@ export class DeployInfrastructureEntityStep extends Step<DeployEnvironmentEntity
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
           stepViewType={stepViewType}
-          {...(customStepProps as Required<DeployInfrastructureEntityCustomStepProps>)}
+          {...(customStepProps as Required<DeployInfrastructureEntityCustomInputStepProps>)}
         />
       )
     }

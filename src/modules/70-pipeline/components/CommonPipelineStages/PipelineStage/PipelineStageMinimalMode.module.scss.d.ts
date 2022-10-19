@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addStageHeading: string
   readonly codeSourceColumn: string
   readonly codeSourceColumnContainer: string
   readonly contentWrapper: string
@@ -22,6 +23,7 @@ declare const styles: {
   readonly searchBox: string
   readonly selectInput: string
   readonly selectedItem: string
+  readonly stageCreate: string
   readonly table: string
   readonly tableRow: string
 }

@@ -477,12 +477,19 @@ export const createAppDynamicsPayload = (
         higherBaselineDeviation
       })
 
+      let serviceInstanceMetricPathData = {}
+      if (assignComponentPayload.analysis?.deploymentVerification?.enabled) {
+        serviceInstanceMetricPathData = {
+          completeServiceInstanceMetricPath: serviceInstanceMetricPath
+        }
+      }
+
       specPayload?.metricDefinitions?.push({
         identifier: metricIdentifier,
         metricName,
         completeMetricPath: derivedCompleteMetricPath,
         groupName: groupName?.value as string,
-        completeServiceInstanceMetricPath: serviceInstanceMetricPath,
+        ...serviceInstanceMetricPathData,
         ...assignComponentPayload
       })
     }
@@ -550,8 +557,15 @@ export const createAppDFormData = (
   const mappedMetricsData = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric?.split(' ').join('_')
   const { completeMetricPath = '', serviceInstanceMetricPath = '' } = mappedMetricsData || {}
-  if (isTemplate && serviceInstanceMetricPath === '' && mappedMetricsData) {
+  if (
+    isTemplate &&
+    serviceInstanceMetricPath === '' &&
+    mappedMetricsData &&
+    mappedMetricsData?.continuousVerification
+  ) {
     mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
+  } else if (!mappedMetricsData?.continuousVerification && !isEmpty(mappedMetricsData?.serviceInstanceMetricPath)) {
+    mappedMetricsData.serviceInstanceMetricPath = ''
   }
 
   const isTierRuntimeOrExpression = getMultiTypeFromValue(nonCustomFeilds?.appDTier) !== MultiTypeInputType.FIXED
@@ -677,10 +691,11 @@ export const setCustomFieldAndValidation = (
   >,
   validate = false
 ): void => {
+  const isTierExpression = getTypeOfInput(nonCustomFeilds.appDTier) === MultiTypeInputType.EXPRESSION
   const updatedNonCustomValue = {
     ...nonCustomFeilds,
     appdApplication: value,
-    appDTier: getTypeOfInput(value) !== MultiTypeInputType.FIXED ? RUNTIME_INPUT_VALUE : ''
+    appDTier: getTierValue(value, isTierExpression, nonCustomFeilds)
   }
   setNonCustomFeilds(updatedNonCustomValue)
   if (validate) {
@@ -773,4 +788,12 @@ export const deriveBaseAndMetricPath = (
   const basePathObj = convertStringBasePathToObject(baseFolder || '')
   const metricPathObj = convertStringMetricPathToObject(metricPath || '')
   return { metricPathObj, basePathObj }
+}
+
+const getTierValue = (value: string, isTierExpression: boolean, nonCustomFeilds: NonCustomFeildsInterface) => {
+  return getTypeOfInput(value) !== MultiTypeInputType.FIXED
+    ? isTierExpression
+      ? nonCustomFeilds.appDTier
+      : RUNTIME_INPUT_VALUE
+    : ''
 }

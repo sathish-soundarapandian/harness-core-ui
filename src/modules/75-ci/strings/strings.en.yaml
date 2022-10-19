@@ -180,7 +180,7 @@ getStartedWithCI:
   setUpAuth: Set up Authentication
   genericGit: Generic Git
   fetchingRepos: Please wait while we fetch git repositories...
-  plsChoose: 'Please choose {{field}}'
+  pleaseChoose: 'Please choose {{field}}'
   fieldIsMissing: '{{field}} is missing'
   startProvisioning: Start Provisioning
   provisioningHelpText: Provision the '{{ $.ci.getStartedWithCI.hostedByHarness }}' Infrastructure (~2 mins)
@@ -188,6 +188,15 @@ getStartedWithCI:
   nonGitCloneOption: Use this option if your Git provider is not supported by Harness or if you have nothing to clone.
   cloneCodebaseHelpText: Unless disabled, Harness automatically clones your codebase repository before executing the Pipeline.
   createPipelineWithOtherOption: Please click on "Create Pipeline" below to complete the pipeline setup.
+  configureYourPipeline: Configure your Pipeline
+  configurePipeline: Configure Pipeline
+  starterPipeline: Starter Pipeline
+  starterPipelineHelptext: Start with a minimum pipeline that you can build upon
+  chooseExistingYAML: Choose an existing yaml
+  chooseExistingYAMLHelptext: Select an existing pipeline yaml from any branch in the repository
+  chooseStarterConfig: Choose a Starter Configuration
+  configurationOption: Configuration Option
+  validYAMLFile: YAML Path should end with ".yaml" extension
   carousel:
     labels:
       harnessCIFeatures: Harness CI

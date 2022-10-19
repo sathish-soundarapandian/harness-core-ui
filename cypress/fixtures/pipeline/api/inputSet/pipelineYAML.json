@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n  name: testPipeline_Cypress\n  identifier: testPipeline_Cypress\n  projectIdentifier: sunnyTest\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: s1\n        identifier: s1\n        description: \"\"\n        type: Approval\n        spec:\n          execution:\n            steps:\n              - step:\n                  name: s1\n                  identifier: s1\n                  type: HarnessApproval\n                  timeout: 1d\n                  spec:\n                    approvalMessage: |-\n                      Please review the following information\n                      and approve the pipeline progression\n                    includePipelineExecutionHistory: true\n                    approvers:\n                      minimumCount: 1\n                      disallowPipelineExecutor: false\n                      userGroups: <+input>\n                    approverInputs: []\n        tags: {}\n",
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "modules": ["pms"]
+  },
+  "metaData": null,
+  "correlationId": "4fb4c4cf-fdfc-4812-9e6c-1de132e7c6d1"
+}

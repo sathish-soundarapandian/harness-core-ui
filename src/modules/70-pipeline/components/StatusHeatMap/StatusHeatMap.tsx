@@ -11,44 +11,64 @@ import React, { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ExecutionStatus,
-  isExecutionCompletedWithBadState,
+  isExecutionAborted,
+  isExecutionApprovalRejected,
+  isExecutionExpired,
+  isExecutionFailed,
   isExecutionPaused,
   isExecutionPausing,
   isExecutionRunning,
   isExecutionSuccess,
+  isExecutionSuspended,
   isExecutionWaiting
 } from '@pipeline/utils/statusHelpers'
 import css from './StatusHeatMap.module.scss'
 
-type StatusMap = {
-  primaryState: string
-  icon?: IconName
-  iconColor?: string
+// Visually, all of the statuses are limited to these variants - https://www.figma.com/file/4HavSweFhZeVsJoaWwSrj8/Pipelines?node-id=3499%3A285830
+type CombinedStatus = 'default' | 'success' | 'aborted' | 'failed' | 'paused' | 'running'
+
+const statusIconMap: Partial<Record<CombinedStatus, { name: IconName; color?: string; size: number }>> = {
+  aborted: {
+    name: 'circle-stop',
+    color: Color.GREY_600,
+    size: 12
+  },
+  failed: {
+    name: 'warning-sign',
+    color: Color.RED_900,
+    size: 10
+  },
+  paused: {
+    name: 'pause',
+    color: Color.ORANGE_900,
+    size: 12
+  },
+  running: {
+    name: 'loading',
+    color: Color.PRIMARY_7,
+    size: 12
+  }
 }
 
-export const getStatusMapping = (status: ExecutionStatus): StatusMap => {
-  // ['Skipped,Queued,Discontinuing,NotStarted'] or any other unknown status will default to this
-  const colorMap: StatusMap = {
-    primaryState: 'default',
-    icon: undefined,
-    iconColor: undefined
-  }
+export const getCombinedStatus = (status: ExecutionStatus): CombinedStatus => {
+  let state: CombinedStatus = 'default'
+
   if (isExecutionSuccess(status)) {
-    colorMap.primaryState = 'success'
-  } else if (isExecutionCompletedWithBadState(status)) {
-    colorMap.primaryState = 'failed'
-    colorMap.icon = 'cross'
-    colorMap.iconColor = Color.RED_900
+    state = 'success'
+  } else if (isExecutionAborted(status) || isExecutionExpired(status)) {
+    state = 'aborted'
+  } else if (isExecutionFailed(status) || isExecutionSuspended(status) || isExecutionApprovalRejected(status)) {
+    state = 'failed'
   } else if (isExecutionPaused(status) || isExecutionPausing(status) || isExecutionWaiting(status)) {
-    colorMap.primaryState = 'paused'
-    colorMap.icon = 'pause'
-    colorMap.iconColor = Color.ORANGE_900
+    state = 'paused'
   } else if (isExecutionRunning(status)) {
-    colorMap.primaryState = 'running'
-    colorMap.icon = 'spinner'
-    colorMap.iconColor = Color.PRIMARY_7
+    state = 'running'
+  } else {
+    // ['Skipped,Queued,Discontinuing,NotStarted'] or any other unknown status will default to this
+    state = 'default'
   }
-  return colorMap
+
+  return state
 }
 
 export interface StatusHeatMapProps<T> {
@@ -70,15 +90,16 @@ export function StatusHeatMap<T>(props: StatusHeatMapProps<T>): React.ReactEleme
   const { data, getId, getStatus, className, getPopoverProps, onClick, getLinkProps } = props
 
   function StatusCell({ row, id }: StatusCell<T>) {
-    const { primaryState, icon, iconColor } = getStatusMapping(getStatus(row))
+    const combinedStatus = getCombinedStatus(getStatus(row))
+    const iconProps = statusIconMap[combinedStatus]
     return (
       <div
         data-id={getId(row, id)}
-        data-primary-state={primaryState}
+        data-state={combinedStatus}
         className={css.statusHeatMapCell}
         onClick={e => onClick?.(row, e)}
       >
-        {icon && <Icon name={icon} size={12} color={iconColor} />}
+        {iconProps && <Icon {...iconProps} />}
       </div>
     )
   }

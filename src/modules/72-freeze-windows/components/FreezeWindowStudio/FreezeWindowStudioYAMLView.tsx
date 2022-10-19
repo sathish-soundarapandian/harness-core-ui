@@ -11,13 +11,14 @@ import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import { ButtonVariation, Tag } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useGetFreezeSchema } from 'services/cd-ng'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
 import css from './FreezeWindowStudio.module.scss'
 
@@ -27,7 +28,6 @@ export const POLL_INTERVAL = 1 * 1000
 let Interval: number | undefined
 
 export const FreezeWindowStudioYAMLView = () => {
-  // setYamlFileName
   const [yamlFileName] = React.useState<string>(defaultFileName)
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const {
@@ -35,15 +35,12 @@ export const FreezeWindowStudioYAMLView = () => {
     isReadOnly,
     updateYamlView,
     updateFreeze,
+    drawerType,
     setYamlHandler: setYamlHandlerContext
   } = React.useContext(FreezeWindowContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-
-  React.useEffect(() => {
-    // Edit mode
-    // setYamlFileName(template.identifier + '.yaml')
-  }, []) // template.identifier
+  const isDrawerOpened = !!drawerType
 
   React.useEffect(() => {
     if (yamlHandler) {
@@ -52,7 +49,7 @@ export const FreezeWindowStudioYAMLView = () => {
   }, [yamlHandler, setYamlHandlerContext])
 
   React.useEffect(() => {
-    if (yamlHandler) {
+    if (yamlHandler && !isDrawerOpened) {
       Interval = window.setInterval(() => {
         try {
           const freezeFromYaml = parse(yamlHandler.getLatestYaml())?.freeze
@@ -74,21 +71,33 @@ export const FreezeWindowStudioYAMLView = () => {
       }
     }
   }, [yamlHandler, freezeObj])
-  const entityType = 'FreezeWindow' as GetYamlSchemaQueryParams['entityType']
-  return (
+
+  const { data: freezeSchema } = useGetFreezeSchema({
+    queryParams: {
+      projectIdentifier,
+      orgIdentifier,
+      scope: getScopeFromDTO({
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier
+      }),
+      accountIdentifier: accountId
+    }
+  })
+
+  return isDrawerOpened ? null : (
     <div className={css.yamlBuilder}>
       <YamlBuilderMemo
         key={`${isYamlEditable.toString()}_${freezeObj.identifier}`}
         fileName={defaultTo(yamlFileName, defaultFileName)}
-        entityType={entityType} // should be Freeze Window
+        entityType={'Freeze'}
         isReadOnlyMode={isReadOnly || !isYamlEditable}
         existingJSON={{ freeze: freezeObj }}
         // existingYaml
         bind={setYamlHandler}
         showSnippetSection={false}
-        // schema
+        schema={freezeSchema?.data}
         // onExpressionTrigger
-        // yamlSanityConfig
         yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
         height={'calc(100vh - 200px)'}
         width="calc(100vw - 400px)"

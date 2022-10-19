@@ -32,7 +32,6 @@ createNewModal:
   nameError: 'Template Name'
   namePlaceholder: 'New {{entity}} Template Name'
   identifierPlaceholder: 'new_{{entity}}_template_name'
-  versionPlaceholder: 'Ex: Version1'
   lastPublishedVersion: 'Last published:'
 saveAsNewLabelModal:
   heading: 'Save as new version'

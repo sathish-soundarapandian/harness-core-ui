@@ -32,8 +32,8 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
   isCDEnabled = false,
   isCFEnabled = false,
   isSTOEnabled = false,
-  isApprovalStageEnabled = false
-  // isPipelineChainingEnabled = false
+  isApprovalStageEnabled = false,
+  isPipelineChainingEnabled = false
 }) => {
   if (module === 'ci') {
     return (
@@ -43,7 +43,7 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
         {stagesCollection.getStage(StageType.APPROVAL, isApprovalStageEnabled, getString)}
         {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
         {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
-        {/* {stagesCollection.getStage(StageType.PIPELINE, false, getString)} */}
+        {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
       </PipelineStages>
@@ -53,8 +53,8 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
       <PipelineStages {...args}>
         {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
         {/* {stagesCollection.getStage(StageType.DEPLOY, isCDEnabled, getString)}
-      {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
-      {stagesCollection.getStage(StageType.PIPELINE, false, getString)} */}
+        {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)} */}
+        {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.APPROVAL, isApprovalStageEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
@@ -68,7 +68,7 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
         {stagesCollection.getStage(StageType.APPROVAL, isApprovalStageEnabled, getString)}
         {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
         {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
-        {/* {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)} */}
+        {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
       </PipelineStages>

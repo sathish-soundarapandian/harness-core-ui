@@ -20,7 +20,7 @@ const RedirectToHome: React.FC = () => {
   const history = useHistory()
   const accountId = SessionToken.accountId()
   if (accountId) {
-    return <Redirect to={routes.toHome({ accountId })} />
+    return <Redirect to={routes.toMainDashboard({ accountId })} />
   } else {
     history.push({ pathname: routes.toRedirect(), search: returnUrlParams(getLoginPageURL({})) })
     return null

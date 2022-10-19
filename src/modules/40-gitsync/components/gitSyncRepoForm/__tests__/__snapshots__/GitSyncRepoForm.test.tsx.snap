@@ -130,13 +130,13 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               </div>
             </div>
             <div
-              aria-controls="bp3-tab-panel_selectScope_organization"
+              aria-controls="bp3-tab-panel_selectScope_org"
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
               class="bp3-tab tabClass"
-              data-tab-id="organization"
-              id="bp3-tab-title_selectScope_organization"
+              data-tab-id="org"
+              id="bp3-tab-title_selectScope_org"
               role="tab"
               tabindex="0"
             >
@@ -2251,13 +2251,13 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               </div>
             </div>
             <div
-              aria-controls="bp3-tab-panel_selectScope_organization"
+              aria-controls="bp3-tab-panel_selectScope_org"
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
               class="bp3-tab tabClass"
-              data-tab-id="organization"
-              id="bp3-tab-title_selectScope_organization"
+              data-tab-id="org"
+              id="bp3-tab-title_selectScope_org"
               role="tab"
               tabindex="0"
             >

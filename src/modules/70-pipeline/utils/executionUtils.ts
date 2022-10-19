@@ -76,6 +76,7 @@ export enum NodeType {
   INFRASTRUCTURE_SECTION = 'INFRASTRUCTURE_SECTION',
   DEPLOYMENT_STAGE_STEP = 'DEPLOYMENT_STAGE_STEP',
   APPROVAL_STAGE = 'APPROVAL_STAGE',
+  CUSTOM_STAGE = 'CUSTOM_STAGE',
   NG_SECTION_WITH_ROLLBACK_INFO = 'NG_SECTION_WITH_ROLLBACK_INFO',
   NG_EXECUTION = 'NG_EXECUTION',
   StepGroupNode = 'StepGroupNode',
@@ -92,6 +93,7 @@ export const NonSelectableNodes: NodeType[] = [
   NodeType.FORK,
   NodeType.DEPLOYMENT_STAGE_STEP,
   NodeType.APPROVAL_STAGE,
+  NodeType.CUSTOM_STAGE,
   NodeType.NG_EXECUTION
 ]
 
@@ -120,6 +122,7 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   NG_FORK: 'fork',
   DEPLOYMENT_STAGE_STEP: 'circle',
   APPROVAL_STAGE: 'approval-stage-icon',
+  CUSTOM_STAGE: 'custom-stage-icon',
   StepGroupNode: 'step-group',
   'GITOPS CLUSTERS': 'gitops-clusters',
   STRATEGY: 'step-group',
@@ -1239,4 +1242,8 @@ export const processForCIData = ({
   })
 
   return newNodeMap
+}
+
+export function isMultiSvcOrMultiEnv(type?: string): boolean {
+  return !!type && ['MULTI_SERVICE_DEPLOYMENT', 'MULTI_ENV_DEPLOYMENT', 'MULTI_SERVICE_ENV_DEPLOYMENT'].includes(type)
 }

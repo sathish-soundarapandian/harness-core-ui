@@ -119,7 +119,6 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
     const monitoredServiceTemplate = new MonitoredServiceTemplate()
     expect(monitoredServiceTemplate).toEqual({
       allowedScopes: [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT],
-      isEnabled: true,
       label: 'Monitored Service',
       type: 'MonitoredService',
       icon: 'cv-main',

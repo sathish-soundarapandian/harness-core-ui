@@ -801,6 +801,8 @@ template:
     templateDeleted: 'Template "{{ name }}" Deleted'
     errorWhileDeletingTemplates: Error occurred deleting Templates
     errorWhileDeletingTemplate: Error occurred deleting Template
+  createNewModal:
+    versionPlaceholder: 'Ex: Version1'
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -980,6 +982,8 @@ moduleConfig:
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
 configureModuleList: Configure Module List
+cdAndGitops: Continuous Delivery & GitOps
+stoText: Security Testing Orchestration
 
 # Chaos Module
 chaosText: Chaos
@@ -1034,6 +1038,7 @@ serviceName: Service Name
 assignedAt: Assigned at
 assignedThrough: Assigned Through
 directly: Directly
+noAvailableTags: No available tags
 loadBalancer: Load Balancer
 environmentInputs: Environment inputs
 infrastructures: Infrastructures
@@ -1075,3 +1080,4 @@ schedulePanel:
   expressionBreakdown: 'Expression Breakdown'
   cronExpression: 'Cron Expression'
   cronExpressionRequired: 'Cron Expression required'
+allClusters: 'All Clusters'

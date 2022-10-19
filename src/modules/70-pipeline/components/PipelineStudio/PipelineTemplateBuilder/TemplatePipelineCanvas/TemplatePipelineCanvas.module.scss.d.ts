@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly canvas: string
+  readonly graphLink: string
   readonly readOnlyTag: string
   readonly renderPopover: string
 }

@@ -26,7 +26,7 @@ import { useModalHook } from '@harness/use-modal'
 import type { FormikErrors } from 'formik'
 import * as Yup from 'yup'
 import { EnvironmentResponseDTO, ResponseEnvironmentResponseDTO, useCreateEnvironment } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useToaster } from '@common/exports'
@@ -47,6 +47,7 @@ export interface EnvironmentDialogProps {
   buttonProps?: ButtonProps
   environments?: EnvironmentResponseDTO[]
   isLinkVariation?: boolean
+  buttonText?: StringKeys
 }
 
 interface EnvironmentValues {
@@ -62,7 +63,8 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
   onCreate,
   buttonProps,
   environments,
-  isLinkVariation
+  isLinkVariation,
+  buttonText
 }) => {
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -229,7 +231,7 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
         })
         openModal()
       }}
-      text={getString('newEnvironment')}
+      text={getString(buttonText || 'newEnvironment')}
       intent="primary"
       variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
       padding={{

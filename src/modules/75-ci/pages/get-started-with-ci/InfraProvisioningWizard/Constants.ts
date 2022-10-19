@@ -7,8 +7,8 @@
 
 import { set } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
-import type { BitbucketPRSpec, GithubPRSpec, GitlabPRSpec } from 'services/pipeline-ng'
-import type { ConnectorInfoDTO, SecretDTOV2, UserRepoResponse } from 'services/cd-ng'
+import type { BitbucketPRSpec, GithubPRSpec, GitlabPRSpec, PipelineConfig } from 'services/pipeline-ng'
+import type { ConnectorInfoDTO, SecretDTOV2 } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import { Connectors } from '@connectors/constants'
 import type { SelectBuildLocationForwardRef } from './SelectBuildLocation'
@@ -20,6 +20,7 @@ export interface InfraProvisioningWizardProps {
     secretForPreSelectedConnector?: SecretDTOV2
   }
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
+  enableFieldsForTesting?: boolean
 }
 
 export const enum Hosting {
@@ -105,7 +106,8 @@ export const AllBuildLocationsForSaaS: BuildLocationDetails[] = [
 export enum InfraProvisiongWizardStepId {
   SelectBuildLocation = 'SELECT_BUILD_LOCATION',
   SelectGitProvider = 'SELECT_GIT_PROVIDER',
-  SelectRepository = 'SELECT_REPOSITORY'
+  SelectRepository = 'SELECT_REPOSITORY',
+  ConfigurePipeline = 'CONFIGURE_PIPELINE'
 }
 
 // TODO Need to use exported StepStatus from uicore -> MultiStepProgressIndicator component
@@ -269,7 +271,7 @@ export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
   )
 }
 
-export const getCloudPipelinePayloadWithoutCodebase = (): Record<string, any> => {
+export const getCloudPipelinePayloadWithoutCodebase = (): PipelineConfig => {
   const originalPipeline = getPipelinePayloadWithoutCodebase()
   set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
   set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.image', undefined)
@@ -278,18 +280,13 @@ export const getCloudPipelinePayloadWithoutCodebase = (): Record<string, any> =>
   return originalPipeline
 }
 
-export const getCloudPipelinePayloadWithCodebase = (): Record<string, any> => {
+export const getCloudPipelinePayloadWithCodebase = (): PipelineConfig => {
   const originalPipeline = getCloudPipelinePayloadWithoutCodebase()
   return set(
     set(originalPipeline, 'pipeline.properties', CodebaseProperties),
     'pipeline.stages.0.stage.spec.cloneCodebase',
     true
   )
-}
-
-export const getFullRepoName = (repository: UserRepoResponse): string => {
-  const { name: repositoryName, namespace } = repository
-  return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 
 export const DELEGATE_INSTALLATION_REFETCH_DELAY = 20 * 1000 // 20 secs

@@ -35,7 +35,6 @@ import {
 import { useMutateAsGet } from '@common/hooks'
 import {
   Error,
-  NGTemplateInfoConfig,
   TemplateMetadataSummaryResponse,
   TemplateResponse,
   TemplateSummaryResponse,
@@ -54,7 +53,6 @@ import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import {
@@ -64,6 +62,7 @@ import {
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -218,6 +217,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
 
   const onChange = React.useCallback(
     (option: SelectOption): void => {
+      setSelectedBranch(undefined)
       const version = defaultTo(option.value?.toString(), '')
       if (version === DefaultStableVersionValue) {
         setSelectedTemplate((templates as TemplateSummaryResponse[]).find(item => !item.versionLabel))
@@ -339,25 +339,22 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                 padding={{ top: 'large', left: 'xxlarge', bottom: 'large', right: 'xxlarge' }}
                 border={{ bottom: true }}
               >
-                <Layout.Horizontal className={css.shrink} spacing={'small'}>
+                <Layout.Horizontal className={css.shrink} spacing={'small'} flex={{ alignItems: 'center' }}>
                   <Text lineClamp={1} font={{ size: 'medium', weight: 'bold' }} color={Color.GREY_800}>
                     {selectedTemplate.name}
                   </Text>
                   {supportingTemplatesGitx && (
-                    <StudioGitPopover
-                      connectorRef={(selectedTemplate as TemplateResponse).connectorRef}
-                      gitDetails={defaultTo(
-                        {
-                          ...selectedTemplate.gitDetails,
-                          branch: defaultTo(gitPopoverBranch, selectedTemplate.gitDetails?.branch)
-                        },
-                        {}
-                      )}
+                    <GitPopoverV2
+                      storeMetadata={{
+                        ...storeMetadata,
+                        connectorRef: (selectedTemplate as TemplateResponse).connectorRef,
+                        storeType: (selectedTemplate as TemplateResponse).storeType,
+                        branch: gitPopoverBranch
+                      }}
+                      gitDetails={selectedTemplate.gitDetails!}
                       onGitBranchChange={onGitBranchChange}
-                      identifier={defaultTo(selectedTemplate?.identifier, '')}
                       isReadonly={isStandAlone}
-                      entityData={selectedTemplate as NGTemplateInfoConfig}
-                      entityType={defaultTo(selectedTemplate?.templateEntityType, '')}
+                      forceFetch
                     />
                   )}
                   {isGitSyncEnabled && (

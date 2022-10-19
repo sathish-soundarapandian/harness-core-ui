@@ -532,7 +532,7 @@ describe('AmazonS3 tests', () => {
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
     const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Buckets...')
     expect(loadingBucketsOption).toBeDefined()
-    await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
+    await waitFor(() => expect(fetchBuckets).not.toHaveBeenCalled())
   })
 
   test(`region field placeholder should be loading when region data is being fetched`, async () => {
@@ -576,7 +576,7 @@ describe('AmazonS3 tests', () => {
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBuckets')
+    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBucketsFound')
     expect(noBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
   })

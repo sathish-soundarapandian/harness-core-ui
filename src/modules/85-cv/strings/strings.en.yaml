@@ -966,3 +966,5 @@ metricThresholds:
   deletePromptTitle: Confirm delete Metric thresholds
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
+codeErrors: Code Errors
+codeErrorsHeading: Review code errors related to your project

@@ -23,7 +23,7 @@ import {
 import { Color } from '@harness/design-system'
 import { Menu, MenuItem } from '@blueprintjs/core'
 import { useToaster } from '@common/components'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { AuthenticationSettingsResponse, SAMLSettings } from 'services/cd-ng'
 import { useDeleteSamlMetaData, useUpdateAuthMechanism, useGetSamlLoginTest } from 'services/cd-ng'
@@ -107,13 +107,11 @@ const SAMLProvider: React.FC<Props> = ({
   const { openDialog: confirmSamlSettingsDelete } = useConfirmationDialog({
     titleText: getString('authSettings.deleteSamlProvider'),
     contentText: (
-      <React.Fragment>
-        <span>{getString('authSettings.deleteSamlProviderDescription')} </span>
-        <Text inline font={{ weight: 'bold' }} color={Color.GREY_800}>
-          {samlSettings?.displayName}
-        </Text>
-        ?
-      </React.Fragment>
+      <String
+        stringID="authSettings.deleteSamlProviderDescription"
+        useRichText={true}
+        vars={{ displayName: samlSettings?.displayName }}
+      />
     ),
     confirmButtonText: getString('confirm'),
     cancelButtonText: getString('cancel'),

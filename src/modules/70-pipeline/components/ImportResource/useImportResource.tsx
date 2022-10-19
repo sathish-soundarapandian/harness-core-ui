@@ -18,7 +18,7 @@ import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import ImportResource from './ImportResource'
 
-export type InitialValuesType = NameIdDescriptionTagsType & StoreMetadata
+export type InitialValuesType = NameIdDescriptionTagsType & StoreMetadata & { versionLabel?: string }
 export type ModifiedInitialValuesType = Omit<InitialValuesType, 'repoName'> & { repo?: string }
 
 interface UseImportResourceReturnType {
@@ -45,12 +45,12 @@ export default function useImportResource(props: UseImportResourceProps): UseImp
 
   const { getString } = useStrings()
 
-  const onImportSuccess = () => {
+  const onImportSuccess = (): void => {
     hideImportResourceModal()
     onSuccess?.()
   }
 
-  const onImportFailure = () => {
+  const onImportFailure = (): void => {
     onFailure?.()
   }
 
@@ -77,7 +77,8 @@ export default function useImportResource(props: UseImportResourceProps): UseImp
             connectorRef: defaultTo(connectorRef, ''),
             repoName: defaultTo(repoName, ''),
             branch: defaultTo(branch, ''),
-            filePath: ''
+            filePath: '',
+            versionLabel: ''
           }}
           resourceType={resourceType}
           onCancelClick={hideImportResourceModal}

@@ -25,13 +25,23 @@ export interface GenericExecutionStepProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
+  formikFormName: string
 }
 
 const GenericExecutionStepEdit = (
   props: GenericExecutionStepProps,
   formikRef: StepFormikFowardRef<StepElementConfig>
 ): React.ReactElement => {
-  const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
+  const {
+    initialValues,
+    onUpdate,
+    isNewStep = true,
+    readonly,
+    onChange,
+    allowableTypes,
+    stepViewType,
+    formikFormName
+  } = props
   const { getString } = useStrings()
   return (
     <>
@@ -39,7 +49,7 @@ const GenericExecutionStepEdit = (
         onSubmit={(values: StepElementConfig) => {
           onUpdate?.(values)
         }}
-        formName="genericExecutionStepForm"
+        formName={formikFormName}
         initialValues={initialValues}
         validate={data => {
           onChange?.(data)

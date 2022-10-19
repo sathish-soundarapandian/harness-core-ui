@@ -68,3 +68,12 @@ export type SampleDataType = MetricSamplePointsData & ResponseMap['data']
 export interface MetricSamplePoints {
   data: MetricSamplePointsData
 }
+
+export interface IsMultiRecordDataErrorParameters {
+  expression?: string
+  isQueryExectuted?: boolean
+  loading: boolean
+  isDataPressent: boolean
+  isMultipleSampleData: boolean
+  isUpdatedExpression: boolean
+}

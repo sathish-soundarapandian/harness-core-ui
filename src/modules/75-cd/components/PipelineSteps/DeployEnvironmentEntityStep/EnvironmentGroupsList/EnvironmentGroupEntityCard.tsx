@@ -50,7 +50,7 @@ export function EnvironmentGroupCard({
   gitOpsEnabled
 }: EnvironmentGroupCardProps): React.ReactElement {
   const { getString } = useStrings()
-  const { name, identifier, tags, envIdentifiers } = envGroup || {}
+  const { name, identifier, tags } = envGroup || {}
 
   return (
     <Card className={css.card}>
@@ -119,7 +119,7 @@ export function EnvironmentGroupCard({
           deploymentType={deploymentType}
           customDeploymentRef={customDeploymentRef}
           gitOpsEnabled={gitOpsEnabled}
-          identifiersToLoad={envIdentifiers}
+          envGroupIdentifier={identifier}
         />
       </>
     </Card>

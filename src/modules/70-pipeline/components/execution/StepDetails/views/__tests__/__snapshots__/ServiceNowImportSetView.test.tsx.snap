@@ -73,7 +73,7 @@ exports[`ServiceNowImportSet View Test  snapshot for displaying import set detai
           <tbody>
             <tr>
               <th>
-                startedAt
+                startedAt:
               </th>
               <td>
                 -
@@ -81,7 +81,7 @@ exports[`ServiceNowImportSet View Test  snapshot for displaying import set detai
             </tr>
             <tr>
               <th>
-                endedAt
+                endedAt:
               </th>
               <td>
                 -
@@ -89,7 +89,7 @@ exports[`ServiceNowImportSet View Test  snapshot for displaying import set detai
             </tr>
             <tr>
               <th>
-                pipeline.duration
+                pipeline.duration:
               </th>
               <td>
                 <span
@@ -121,7 +121,8 @@ exports[`ServiceNowImportSet View Test  snapshot for displaying import set detai
             </tr>
             <tr>
               <th>
-                Import Set Details
+                Import Set Details:
+                :
               </th>
               <td>
                 <div>

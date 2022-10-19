@@ -19,7 +19,8 @@ import {
   Text,
   StepProps,
   SelectOption,
-  Tag
+  Tag,
+  HarnessDocTooltip
 } from '@wings-software/uicore'
 import type { FormikProps, FormikHelpers } from 'formik'
 import {
@@ -331,7 +332,11 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                       ) : null}
                     </Layout.Vertical>
                     <Layout.Vertical className={css.rightPanel}>
-                      <div className={css.permissionsTitle}>{getString('delegates.delegatePermissions.title')}</div>
+                      <div className={css.permissionsTitle} data-tooltip-id="delegatePermissions">
+                        {getString('delegates.delegatePermissions.title')}
+                        <HarnessDocTooltip tooltipId="delegatePermissions" useStandAlone={true}></HarnessDocTooltip>
+                      </div>
+
                       <CardSelect
                         cardClassName={css.permissionSelect}
                         cornerSelected={true}

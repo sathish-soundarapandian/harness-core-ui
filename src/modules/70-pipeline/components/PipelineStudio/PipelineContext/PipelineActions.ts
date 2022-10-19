@@ -148,6 +148,7 @@ export interface PipelineReducerState {
   snippets?: YamlSnippetMetaData[]
   selectionState: SelectionState
   templateError?: GetDataError<Failure | Error> | null
+  remoteFetchError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
@@ -176,6 +177,7 @@ export interface ActionResponse {
   pipelineView?: PipelineViewData
   selectionState?: SelectionState
   templateError?: GetDataError<Failure | Error> | null
+  remoteFetchError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }

@@ -726,11 +726,7 @@ export const onPreviousPayload = {
         metricDefinitions: [
           {
             analysis: {
-              deploymentVerification: {
-                enabled: true,
-                serviceInstanceFieldName: null,
-                serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute'
-              },
+              deploymentVerification: { enabled: true },
               liveMonitoring: { enabled: true },
               riskProfile: {
                 category: 'Errors',
@@ -740,13 +736,13 @@ export const onPreviousPayload = {
             },
             appDApplication: 'PR-git-experiment',
             appDTier: 'cvng',
-            baseFolder: 'Overall Application Performance',
+            completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
+            completeServiceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
             groupName: 'Group 1',
             identifier: 'appdMetric',
             lowerBaselineDeviation: true,
             metricName: 'appdMetric',
             metricPacks: [{ identifier: 'Performance' }, { identifier: 'Errors' }],
-            metricPath: 'Calls per Minute',
             riskProfile: {
               category: 'Errors',
               metricType: 'ERROR',
@@ -1502,13 +1498,12 @@ export const onSubmitPayload = {
           liveMonitoring: { enabled: true },
           riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
         },
-        baseFolder: 'Overall Application Performance',
         groupName: 'Group 1',
         identifier: 'appdMetric',
         metricName: 'appdMetric',
-        metricPath: 'Calls per Minute',
         sli: { enabled: true },
-        completeMetricPath: undefined
+        completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
+        completeServiceInstanceMetricPath: undefined
       }
     ],
     metricPacks: [

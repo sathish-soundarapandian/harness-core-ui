@@ -148,6 +148,9 @@ export default function DeployServiceEntityWidget({
   const shouldAddCustomDeploymentData =
     deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
 
+  const [serviceInputType, setServiceInputType] = React.useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues?.service?.serviceRef)
+  )
   const {
     servicesData,
     servicesList,
@@ -380,10 +383,9 @@ export default function DeployServiceEntityWidget({
           formikRef.current = formik
           const { values } = formik
 
-          const isMultiSvc = !isNil(values.services)
-          const isFixed = isMultiSvc
-            ? Array.isArray(values.services)
-            : getMultiTypeFromValue(values.service) === MultiTypeInputType.FIXED
+          // Multi Service is disabled for gitops enabled temporarily
+          const isMultiSvc = !isNil(values.services) && !gitOpsEnabled
+          const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
             Array.isArray(values.services) && values.services
               ? getString('services')
@@ -437,7 +439,8 @@ export default function DeployServiceEntityWidget({
                           expressions,
                           selectProps: { items: selectOptions },
                           allowableTypes,
-                          defaultValueToReset: ''
+                          defaultValueToReset: '',
+                          onTypeChange: setServiceInputType
                         }}
                         selectItems={selectOptions}
                       />
@@ -460,7 +463,7 @@ export default function DeployServiceEntityWidget({
                       />
                     ) : null}
                   </Layout.Horizontal>
-                  {MULTI_SERVICE_INFRA ? (
+                  {MULTI_SERVICE_INFRA && !gitOpsEnabled ? (
                     <Toggle
                       className={css.serviceActionWrapper}
                       checked={isMultiSvc}

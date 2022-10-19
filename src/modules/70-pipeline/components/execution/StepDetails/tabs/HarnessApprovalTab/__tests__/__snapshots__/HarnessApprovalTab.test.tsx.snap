@@ -8,7 +8,7 @@ exports[`<HarnessApprovalTab /> tests Non-Waiting Status form is not shown 1`] =
     <tbody>
       <tr>
         <th>
-          startedAt
+          startedAt:
         </th>
         <td>
           -
@@ -16,7 +16,7 @@ exports[`<HarnessApprovalTab /> tests Non-Waiting Status form is not shown 1`] =
       </tr>
       <tr>
         <th>
-          endedAt
+          endedAt:
         </th>
         <td>
           -
@@ -24,7 +24,7 @@ exports[`<HarnessApprovalTab /> tests Non-Waiting Status form is not shown 1`] =
       </tr>
       <tr>
         <th>
-          pipeline.duration
+          pipeline.duration:
         </th>
         <td>
           <div>

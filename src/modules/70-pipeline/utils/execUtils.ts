@@ -9,7 +9,10 @@ import type { IconName } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
-import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
+import {
+  getConditionalExecutionFlag,
+  getStatusProps
+} from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { Event } from '@pipeline/components/Diagram'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -124,7 +127,13 @@ export const processLiteEngineTask = (
     id: nodeData?.uuid as string,
     status: nodeData?.status as ExecutionStatus,
     type: nodeData?.stepType as string,
-    data: { ...nodeData, when: nodeData?.nodeRunInfo, ...iconData, icon: 'initialize-step' },
+    data: {
+      ...nodeData,
+      when: nodeData?.nodeRunInfo,
+      ...iconData,
+      icon: 'initialize-step',
+      conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData?.nodeRunInfo)
+    },
     icon: 'initialize-step'
   }
 
@@ -166,7 +175,6 @@ const processParallelNodeData = ({
               skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
                 ? parentNodeData.skipInfo.skipCondition
                 : undefined,
-              when: parentNodeData?.nodeRunInfo,
               status: parentNodeData?.status as ExecutionStatus,
               type: parentNodeData?.stepType,
               data: parentNodeData,
@@ -182,7 +190,6 @@ const processParallelNodeData = ({
               skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
                 ? parentNodeData.skipInfo.skipCondition
                 : undefined,
-              when: parentNodeData?.nodeRunInfo,
               status: parentNodeData?.status as ExecutionStatus,
               type: nodeStrategyType,
               nodeType: nodeStrategyType,
@@ -198,14 +205,15 @@ const processParallelNodeData = ({
             skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
               ? parentNodeData.skipInfo.skipCondition
               : undefined,
-            when: parentNodeData?.nodeRunInfo,
             status: parentNodeData?.status as ExecutionStatus,
             type: parentNodeData?.stepType,
             data: parentNodeData
           }),
       nodeType: nodeStrategyType,
       maxParallelism: parentNodeData?.stepParameters?.maxConcurrency,
-      graphType: PipelineGraphType.STEP_GRAPH
+      graphType: PipelineGraphType.STEP_GRAPH,
+      conditionalExecutionEnabled: getConditionalExecutionFlag(parentNodeData?.nodeRunInfo),
+      when: parentNodeData?.nodeRunInfo
     },
     children: processNodeDataV1(childNodeIds || /* istanbul ignore next */ [], nodeMap, nodeAdjacencyListMap, rootNodes)
   })
@@ -352,7 +360,7 @@ const processSingleItem = ({
     when: nodeData?.nodeRunInfo,
     status: nodeData?.status as ExecutionStatus,
     type: nodeData?.stepType,
-    data: { ...nodeData },
+    data: { ...nodeData, conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData.nodeRunInfo) },
     showInLabel
   }
   const nodeStrategyType =
@@ -393,7 +401,8 @@ const processSingleItem = ({
           }
         : { step: item }),
       nodeType: nodeStrategyType,
-      maxParallelism: nodeData?.stepParameters?.maxConcurrency
+      maxParallelism: nodeData?.stepParameters?.maxConcurrency,
+      conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData.nodeRunInfo)
     }
   }
   items.push(finalItem)
@@ -509,6 +518,7 @@ ProcessGroupItemArgs): void => {
               data: {
                 ...stepNodeData,
                 graphType: PipelineGraphType.STEP_GRAPH,
+                conditionalExecutionEnabled: getConditionalExecutionFlag(stepNodeData?.nodeRunInfo),
                 ...((isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP) && {
                   isNestedGroup: true, // strategy in step_group
                   type: nodeStrategyType,
@@ -549,6 +559,7 @@ ProcessGroupItemArgs): void => {
             data: {
               id: childStep?.uuid as string,
               isNestedGroup: true,
+              conditionalExecutionEnabled: getConditionalExecutionFlag(childStep?.nodeRunInfo),
               stepGroup: {
                 ...childStep,
                 ...childSecondaryIconProps,
@@ -594,6 +605,7 @@ ProcessGroupItemArgs): void => {
               ...childSecondaryIconProps,
               matrixNodeName,
               graphType: PipelineGraphType.STEP_GRAPH,
+              conditionalExecutionEnabled: getConditionalExecutionFlag(childStep?.nodeRunInfo),
               ...(isNodeTypeMatrixOrFor(nodeStrategyType) && {
                 isNestedGroup: true, // strategy in step_group
                 type: nodeStrategyType,
@@ -694,7 +706,8 @@ ProcessGroupItemArgs): void => {
           }
         : item),
       nodeType: nodeStrategyType,
-      maxParallelism: nodeData?.stepParameters?.maxConcurrency
+      maxParallelism: nodeData?.stepParameters?.maxConcurrency,
+      conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData?.nodeRunInfo)
     }
   }
   items.push(finalDataItem)

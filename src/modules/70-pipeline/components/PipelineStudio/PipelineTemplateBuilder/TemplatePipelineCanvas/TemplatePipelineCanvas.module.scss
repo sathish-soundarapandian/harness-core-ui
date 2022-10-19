@@ -42,4 +42,7 @@ $dot-space: 10px;
     top: var(--spacing-large);
     left: var(--spacing-large);
   }
+  .graphLink {
+    stroke: var(--primary-4);
+  }
 }

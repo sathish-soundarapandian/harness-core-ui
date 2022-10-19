@@ -287,7 +287,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                         allValues={{ stage: allValues }}
                         path={TEMPLATE_INPUT_PATH}
                         readonly={isReadonly}
-                        viewType={StepViewType.InputSet}
+                        viewType={StepViewType.TemplateUsage}
                         hideTitle={true}
                         stageClassName={css.stageCard}
                         allowableTypes={allowableTypes}

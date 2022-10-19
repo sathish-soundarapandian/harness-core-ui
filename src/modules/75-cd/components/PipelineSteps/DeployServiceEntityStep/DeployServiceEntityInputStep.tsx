@@ -14,7 +14,7 @@ import {
   RUNTIME_INPUT_VALUE,
   SelectOption
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -121,7 +121,7 @@ export function DeployServiceEntityInputStep({
         formik.setFieldValue(`${pathPrefix}values`, [])
       } else {
         updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
-        formik.setFieldValue(`${pathPrefix}serviceInputs`, {})
+        formik.setFieldValue(`${pathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
       }
       return
     }
@@ -142,8 +142,10 @@ export function DeployServiceEntityInputStep({
             ?.serviceInputs
         : get(formik.values, `${pathPrefix}serviceInputs`)
 
-      if (isValueRuntimeInput(serviceInputs)) {
+      if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
         serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
+      } else {
+        serviceInputs = merge(svcTemplate ? clearRuntimeInput(svcTemplate) : undefined, serviceInputs)
       }
 
       return {
@@ -161,7 +163,7 @@ export function DeployServiceEntityInputStep({
           newServicesTemplate[0].serviceInputs,
           isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.RUNTIME
             ? RUNTIME_INPUT_VALUE
-            : null
+            : undefined
         ),
         `${pathPrefix}serviceInputs`
       )
@@ -171,7 +173,7 @@ export function DeployServiceEntityInputStep({
           newServicesValues[0].serviceInputs,
           isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.RUNTIME
             ? RUNTIME_INPUT_VALUE
-            : null
+            : undefined
         )
       )
     }

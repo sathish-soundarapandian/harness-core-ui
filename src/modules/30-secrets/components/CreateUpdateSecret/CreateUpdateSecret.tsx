@@ -74,7 +74,7 @@ interface CreateUpdateSecretProps {
   privateSecret?: boolean
 }
 
-const LocalFormFieldsSMList = ['Local', 'GcpKms', 'AwsKms']
+const LocalFormFieldsSMList = ['Local', 'GcpKms', 'AwsKms', 'GcpSecretManager']
 const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()

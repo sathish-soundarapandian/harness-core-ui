@@ -15,6 +15,12 @@
   }
 }
 
+.separator {
+  width: 1px;
+  height: 20px;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .subHeaderLeftView {
   .templateName {
     font-size: 20px !important;
@@ -22,6 +28,10 @@
     white-space: nowrap !important;
     max-width: 240px;
     overflow: hidden;
+
+    &.shortened {
+      max-width: 140px;
+    }
   }
 
   .dropdown {

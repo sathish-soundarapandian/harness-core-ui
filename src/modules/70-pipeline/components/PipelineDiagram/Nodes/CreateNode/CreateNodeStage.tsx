@@ -22,7 +22,7 @@ interface CreateNodeStageProps {
   identifier: string
   name: string
   disabled?: boolean
-  node: CreateNodeStageProps
+  node?: CreateNodeStageProps
   visible?: boolean
   className?: string
 }
@@ -36,7 +36,7 @@ function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null
       onMouseLeave={() => {
         props.onMouseLeave?.()
       }}
-      className={cssDefault.defaultNode}
+      className={cx(cssDefault.defaultNode, 'create-node')}
       onDragOver={event => {
         event.preventDefault()
         event.stopPropagation()

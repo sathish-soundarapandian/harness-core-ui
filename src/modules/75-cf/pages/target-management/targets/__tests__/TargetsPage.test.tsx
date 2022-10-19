@@ -140,7 +140,7 @@ describe('TargetsPage', () => {
     expect(getByText(document.body, error.message)).toBeDefined()
   })
 
-  test('Targets Page should render environment empty state when there are no environments', () => {
+  test('Targets Page should render empty state with add environment button when there are no environments', () => {
     mockImport('@cf/hooks/useEnvironmentSelectV2', {
       useEnvironmentSelectV2: () => ({
         environments: [],
@@ -155,9 +155,8 @@ describe('TargetsPage', () => {
 
     renderComponent()
 
-    expect(screen.getByRole('button', { name: 'plus newEnvironment' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'environments' })).toBeInTheDocument()
-    expect(screen.getByText('cf.environments.noEnvironmentSection.message')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'plus cf.targets.newEnvironmentTarget' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.targets' })).toBeInTheDocument()
   })
 
   test('Targets Page should render Target empty state when there are environments but no targets', () => {
@@ -187,9 +186,8 @@ describe('TargetsPage', () => {
 
     renderComponent()
 
-    expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'plus cf.targets.create' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'cf.targets.noTargetForEnv' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.targets' })).toBeInTheDocument()
   })
 
   test('TargetsPage should render data correctly', async () => {

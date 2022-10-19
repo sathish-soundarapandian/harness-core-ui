@@ -60,15 +60,7 @@ export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> 
       />
     )
   }
-  return (
-    <FormInput.MultiSelect
-      style={{ width: '400px' }}
-      name={name}
-      items={services}
-      label={getString('services')}
-      // onChange={(selected?: SelectOption[]) => {}}
-    />
-  )
+  return <FormInput.MultiSelect style={{ width: '400px' }} name={name} items={services} label={getString('services')} />
 }
 
 const getOrgNameKeys = (namePrefix: string) => {
@@ -91,6 +83,7 @@ interface OrganizationfieldPropsInterface {
   organizations: SelectOption[]
   values: any
   setFieldValue: any
+  fetchProjectsForOrgId: (orgId: string) => void
 }
 
 export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
@@ -98,7 +91,8 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   namePrefix,
   organizations,
   values,
-  setFieldValue
+  setFieldValue,
+  fetchProjectsForOrgId
 }) => {
   const orgValue = values[FIELD_KEYS.Org]
   const excludeOrgCheckboxValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
@@ -112,6 +106,14 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
       setAllOrgs([{ label: 'All Organizations', value: All }, ...organizations])
     }
   }, [organizations])
+
+  React.useEffect(() => {
+    const isAllOrgSelected = isAllOptionSelected(orgValue)
+    if (!isAllOrgSelected && orgValue?.length === 1) {
+      fetchProjectsForOrgId(orgValue[0]?.value as string)
+    }
+  }, [])
+
   return (
     <>
       <FormInput.MultiSelect
@@ -120,17 +122,20 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
         label={getString('orgLabel')}
         onChange={(selected?: SelectOption[]) => {
           const isAllSelected = isAllOptionSelected(selected)
-          const isMultiSelected = (selected || []).length > 1
+          const selectedLen = (selected || []).length
+          const isMultiSelected = selectedLen > 1
+          const isSingleSelected = selectedLen === 1
+          const isEmptyOrg = selectedLen === 0
 
           // Only All Orgs is selected
-          if (isAllSelected && !isMultiSelected) {
+          if ((isAllSelected && !isMultiSelected) || isEmptyOrg) {
             // set projects fields
             setFieldValue(projFieldName, [allProjectsObj(getString)])
             setFieldValue(projCheckBoxName, false)
             setFieldValue(excludeProjName, undefined)
           }
 
-          if (isMultiSelected) {
+          if (isMultiSelected || isEmptyOrg) {
             // Set org field
             setFieldValue(orgCheckBoxName, false)
             setFieldValue(excludeOrgName, undefined)
@@ -138,6 +143,10 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
             setFieldValue(projFieldName, [allProjectsObj(getString)])
             setFieldValue(projCheckBoxName, false)
             setFieldValue(excludeProjName, undefined)
+          }
+
+          if (!isAllSelected && isSingleSelected) {
+            fetchProjectsForOrgId(selected?.[0]?.value as string)
           }
         }}
       />
@@ -205,7 +214,7 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
         setExcludeProjects(projects)
       }
     }
-  }, [projects, isOrgValueAll, isSingleOrgValue])
+  }, [projects, isOrgValueAll, isSingleOrgValue, resources.projectsByOrgId])
   return (
     <>
       <FormInput.MultiSelect
@@ -243,50 +252,6 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
       ) : null}
     </>
   )
-}
-
-const renderKeyValue = (key: string, value?: string) => {
-  return (
-    <div>
-      <span>{key}</span>: <span>{value}</span>
-    </div>
-  )
-}
-
-interface OrgFieldViewModePropsInterface {
-  data?: EntityType
-  getString: UseStringsReturn['getString']
-}
-export const OrgFieldViewMode: React.FC<OrgFieldViewModePropsInterface> = ({ data, getString }) => {
-  if (!data) return null
-  const { filterType, entityRefs } = data
-  let value = 'All Organizations'
-  if (filterType === All) {
-    value = 'All Organizations'
-  } else if (filterType === Equals) {
-    value = (entityRefs as string[])?.join(', ')
-  } else if (filterType === NotEquals) {
-    value = `All Organizations except ${entityRefs?.join(', ')}`
-  }
-  return renderKeyValue(getString('orgLabel'), value)
-}
-
-interface ProjectFieldViewModePropsInterface {
-  data?: EntityType
-  getString: UseStringsReturn['getString']
-}
-export const ProjectFieldViewMode: React.FC<ProjectFieldViewModePropsInterface> = ({ data, getString }) => {
-  if (!data) return null
-  const { filterType, entityRefs } = data
-  let value = 'All Projects'
-  if (filterType === All) {
-    value = 'All Projects'
-  } else if (filterType === Equals) {
-    value = (entityRefs as string[])?.join(', ')
-  } else if (filterType === NotEquals) {
-    value = `All Projects except ${entityRefs?.join(', ')}`
-  }
-  return renderKeyValue(getString('projectsText'), value)
 }
 
 export const ServicesAndEnvRenderer: React.FC<{
@@ -354,8 +319,6 @@ const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = 
   const resourcesMap = resources.orgsMap
   const projResourcesMap = resources.projectsMap
   const selectedItemIds = entityMap?.entityRefs || []
-  // let nodesEl = null
-
   if (filterType === All || selectedItemIds.length === 0) {
     return (
       <>
@@ -375,7 +338,6 @@ const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = 
         </span>
       )
     })
-
     return (
       <>
         <div className={classnames(css.viewRowNode, css.marginSmaller)}>
@@ -432,8 +394,6 @@ const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = 
         </>
       )
     }
-
-    // Is single selected
   }
   return <div></div>
 }
@@ -450,7 +410,7 @@ const OrgLevelRenderer: React.FC<OrgRendererPropsInterface> = ({ entitiesMap, pr
   const selectedItemIds = entityMap?.entityRefs || []
   let nodesEl = null
   if (filterType === All || selectedItemIds.length === 0) {
-    const nodes = <span className={css.badge}>{projectsMap[All]?.label}</span>
+    const nodes = <span className={css.badge}>{allProjectsObj(getString).label}</span>
     nodesEl = (
       <>
         <span>{getString('projectsText')}:</span> {nodes}
@@ -468,7 +428,8 @@ const OrgLevelRenderer: React.FC<OrgRendererPropsInterface> = ({ entitiesMap, pr
     return (
       <>
         <div className={classnames(css.viewRowNode, css.marginSmaller)}>
-          <span>{getString('projectsText')}:</span> <span className={css.badge}>{projectsMap[All]?.label}</span>
+          <span>{getString('projectsText')}:</span>{' '}
+          <span className={css.badge}>{allProjectsObj(getString)?.label}</span>
         </div>
         <div className={css.viewRowNode}>
           <span>

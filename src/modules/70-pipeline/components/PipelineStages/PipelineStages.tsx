@@ -88,7 +88,9 @@ export function PipelineStages<T = Record<string, unknown>>({
     try {
       const { template: newTemplate, isCopied } = await getTemplate({
         templateType: 'Stage',
-        allChildTypes: childTypes,
+        filterProperties: {
+          childTypes
+        },
         gitDetails,
         storeMetadata
       })

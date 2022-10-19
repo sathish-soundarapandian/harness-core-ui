@@ -328,20 +328,4 @@ describe('TargetManagementFlagConfigurationPanel', () => {
 
     await waitFor(() => expect(screen.queryByText(addFlagsDialogTitle)).not.toBeInTheDocument())
   })
-
-  describe('gitSync', () => {
-    test('it should not display the Target Management Toolbar when gitSync is disabled', async () => {
-      renderComponent()
-
-      expect(screen.queryByTestId('target-management-toolbar')).not.toBeInTheDocument()
-    })
-
-    test('it should display the Target Management Toolbar when gitSync is enabled', async () => {
-      useGitSyncMock.mockReturnValue({ isGitSyncActionsEnabled: true } as any)
-
-      renderComponent()
-
-      expect(screen.getByTestId('target-management-toolbar')).toBeInTheDocument()
-    })
-  })
 })

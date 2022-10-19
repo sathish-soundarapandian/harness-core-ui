@@ -20,6 +20,6 @@ describe('Validate Dynatrace Custom Metrics', () => {
     expect(extractServiceMethods(SERVICE_LIST_MOCK, 'mock_entity_id_1')).toEqual(EXPECTED_SERVICE_METHODS)
   })
   test('should return undefined when service not found in provided list', async () => {
-    expect(extractServiceMethods(SERVICE_LIST_MOCK, 'non_existing_service_id')).toEqual(undefined)
+    expect(extractServiceMethods(SERVICE_LIST_MOCK, 'non_existing_service_id')).toEqual([])
   })
 })

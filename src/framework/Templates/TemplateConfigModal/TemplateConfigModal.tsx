@@ -398,7 +398,7 @@ const BasicTemplateDetails = (
                         />
                         <FormInput.Text
                           name="versionLabel"
-                          placeholder={getString('templatesLibrary.createNewModal.versionPlaceholder')}
+                          placeholder={getString('common.template.createNewModal.versionPlaceholder')}
                           label={getString('common.versionLabel')}
                           disabled={disabledFields.includes(Fields.VersionLabel) || isReadonly}
                           className={css.gitFormFieldWidth}

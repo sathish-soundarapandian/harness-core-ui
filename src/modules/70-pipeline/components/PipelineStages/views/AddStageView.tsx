@@ -17,6 +17,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { PipelineStageProps } from '../PipelineStage'
 import EmptyStageView from './EmptyStageView'
 import StageHoverView from './StageHoverView'
@@ -49,6 +51,7 @@ export function AddStageView({
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const [selectedType, setSelectedType] = React.useState<SelectedAddStageTypeData | undefined>(undefined)
+  const isPipelineChainingEnabled = useFeatureFlag(FeatureFlag.PIPELINE_CHAINING)
 
   useEffect(() => {
     trackEvent(StageActions.LoadSelectStageTypeView, {
@@ -84,7 +87,9 @@ export function AddStageView({
             .filter(stage => stage.type !== StageType.Template)
             .map(stage => (
               <React.Fragment key={stage.type}>
-                {stage.isHidden !== true && (!stage.isApproval || !isParallel) ? (
+                {stage.isHidden !== true &&
+                (!stage.isApproval || !isParallel) &&
+                (stage.type !== StageType.PIPELINE || isPipelineChainingEnabled) ? (
                   <div>
                     <Card
                       data-testid={`stage-${stage.type}`}

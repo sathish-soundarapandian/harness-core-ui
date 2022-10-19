@@ -246,7 +246,7 @@ export function StepGroupNodeLayerWidget(props: StepGroupNodeLayerWidgetProps): 
               }}
               withoutHref
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Link>
           </div>
         )}
@@ -258,7 +258,7 @@ export function StepGroupNodeLayerWidget(props: StepGroupNodeLayerWidgetProps): 
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}

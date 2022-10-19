@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { MultiTypeInputType } from '@harness/uicore'
 import type { ResponseString } from 'services/cv'
 import type { CustomMappedMetric } from '@cv/pages/health-source/common/CustomMetric/CustomMetric.types'
 import type { AppDynamicsFomikFormInterface } from '../../AppDHealthSource.types'
@@ -17,6 +18,7 @@ export interface AppDCustomMetricFormInterface {
   connectorIdentifier: string
   isTemplate?: boolean
   expressions?: string[]
+  appdMultiType?: MultiTypeInputType
 }
 
 export interface SetServiceInstanceInterface {

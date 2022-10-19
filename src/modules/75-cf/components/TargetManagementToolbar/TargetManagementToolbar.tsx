@@ -7,19 +7,16 @@
 
 import { Container } from '@wings-software/uicore'
 import React, { ReactElement } from 'react'
-import { Color } from '@harness/design-system'
 import GitSyncActions from '../GitSyncActions/GitSyncActions'
 
 const TargetManagementToolbar = (): ReactElement => {
   return (
-    <Container border={{ bottom: true, style: 'solid', color: Color.GREY_200 }}>
-      <Container
-        flex={{ justifyContent: 'space-between', alignItems: 'center' }}
-        width={230}
-        margin={{ left: 'xxlarge', top: 'large', bottom: 'large' }}
-      >
-        <GitSyncActions />
-      </Container>
+    <Container
+      flex={{ justifyContent: 'space-between', alignItems: 'center' }}
+      width={230}
+      margin={{ top: 'large', bottom: 'large' }}
+    >
+      <GitSyncActions />
     </Container>
   )
 }

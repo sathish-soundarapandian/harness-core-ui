@@ -864,7 +864,7 @@ exports[`UsersPage Test Invite a User 1`] = `
                   </p>
                 </div>
                 <div
-                  class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                  class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
                 >
                   <div
                     class="StyledProps--font StyledProps--main pointer"

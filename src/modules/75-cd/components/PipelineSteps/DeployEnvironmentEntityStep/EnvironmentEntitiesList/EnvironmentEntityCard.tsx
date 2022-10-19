@@ -39,6 +39,7 @@ import type {
 } from '../types'
 import { GenericServiceSpecInputSetMode } from '../../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
+import DeployCluster from '../DeployCluster/DeployCluster'
 
 import css from './EnvironmentEntitiesList.module.scss'
 
@@ -60,7 +61,8 @@ export function EnvironmentEntityCard({
   initialValues,
   stageIdentifier,
   deploymentType,
-  customDeploymentRef
+  customDeploymentRef,
+  gitOpsEnabled
 }: EnvironmentEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -141,7 +143,7 @@ export function EnvironmentEntityCard({
             />
           </Container>
           <Collapse keepChildrenMounted={false} isOpen={showInputs}>
-            <Container border={{ top: true }}>
+            <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
               <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
                 {getString('common.environmentInputs')}
               </Text>
@@ -165,16 +167,25 @@ export function EnvironmentEntityCard({
           <Container margin={{ top: 'medium', bottom: 'medium' }}>
             <Divider />
           </Container>
-          <DeployInfrastructure
-            initialValues={initialValues}
-            readonly={readonly}
-            allowableTypes={allowableTypes}
-            environmentIdentifier={identifier}
-            isMultiInfrastructure
-            stageIdentifier={stageIdentifier}
-            deploymentType={deploymentType}
-            customDeploymentRef={customDeploymentRef}
-          />
+          {gitOpsEnabled ? (
+            <DeployCluster
+              initialValues={initialValues}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+              environmentIdentifier={identifier}
+              isMultiCluster
+            />
+          ) : (
+            <DeployInfrastructure
+              initialValues={initialValues}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+              environmentIdentifier={identifier}
+              isMultiInfrastructure
+              deploymentType={deploymentType}
+              customDeploymentRef={customDeploymentRef}
+            />
+          )}
         </>
       )}
     </Card>

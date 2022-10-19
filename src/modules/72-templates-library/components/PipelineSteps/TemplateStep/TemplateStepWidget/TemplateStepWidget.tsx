@@ -237,7 +237,7 @@ function TemplateStepWidget(
                       values={{ step: formik.values.template?.templateInputs as StepElementConfig }}
                       allValues={{ step: allValues }}
                       readonly={readonly}
-                      viewType={StepViewType.InputSet}
+                      viewType={StepViewType.TemplateUsage}
                       path={TEMPLATE_INPUT_PATH}
                       allowableTypes={allowableTypes}
                       onUpdate={noop}

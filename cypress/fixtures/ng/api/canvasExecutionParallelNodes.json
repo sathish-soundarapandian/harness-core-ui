@@ -1,0 +1,472 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "pipelineExecutionSummary": {
+      "pipelineIdentifier": "sad",
+      "planExecutionId": "c7VeZjF3SCWWM3Y-pE8SWw",
+      "name": "testParallelNodesPipeline",
+      "status": "Success",
+      "tags": [],
+      "executionTriggerInfo": {
+        "triggerType": "MANUAL",
+        "triggeredBy": {
+          "uuid": "qUaLKpHcTOS3ThJVG2bwIw",
+          "identifier": "Pratyush Garg",
+          "extraInfo": {
+            "email": "pratyush.garg@harness.io"
+          }
+        },
+        "isRerun": false
+      },
+      "governanceMetadata": {
+        "id": "0",
+        "deny": false,
+        "details": [],
+        "message": "",
+        "timestamp": "1665056790356",
+        "status": "pass",
+        "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+        "orgId": "default",
+        "projectId": "project1",
+        "entity": "accountIdentifier%3Apx7xd_BFRCi-pfWPYXVjvw%2ForgIdentifier%3Adefault%2FprojectIdentifier%3Aproject1%2FpipelineIdentifier%3Asad",
+        "type": "pipeline",
+        "action": "onrun",
+        "created": "1665056790312"
+      },
+      "moduleInfo": {},
+      "layoutNodeMap": {
+        "0WkiRk38TPSAU-5YhdRk-A": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test14",
+          "name": "test14",
+          "nodeUuid": "0WkiRk38TPSAU-5YhdRk-A",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832038,
+          "endTs": 1665056836563,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "l7uhFOcQQGek9pk4slWrzw",
+          "executionInputConfigured": false
+        },
+        "9759-sm6RnyUmeiRUYSijg": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test17",
+          "name": "test17",
+          "nodeUuid": "9759-sm6RnyUmeiRUYSijg",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832081,
+          "endTs": 1665056836522,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "KmSofEjzT0SoK2UUcjSLlw",
+          "executionInputConfigured": false
+        },
+        "y2b4qTE6QPu2wkd4z5vRfg": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test1",
+          "name": "test1",
+          "nodeUuid": "y2b4qTE6QPu2wkd4z5vRfg",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832043,
+          "endTs": 1665056836445,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "Y2z7eXoUR76hoJQ0kfioQg",
+          "executionInputConfigured": false
+        },
+        "o0CAEe_FRNOmfKLQQoXkkQ": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test13",
+          "name": "test13",
+          "nodeUuid": "o0CAEe_FRNOmfKLQQoXkkQ",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056842812,
+          "endTs": 1665056847626,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "_R84oWc9S_6ck7yE0a9Rnw",
+          "executionInputConfigured": false
+        },
+        "cT2SflKET865Kc5wO3XnKw": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test12",
+          "name": "test12",
+          "nodeUuid": "cT2SflKET865Kc5wO3XnKw",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832047,
+          "endTs": 1665056836306,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "FM0fvbmiSp6eGdm5E1XH6Q",
+          "executionInputConfigured": false
+        },
+        "wEoVWj68TeuH0VSxD9GhRw": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test19",
+          "name": "test19",
+          "nodeUuid": "wEoVWj68TeuH0VSxD9GhRw",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832048,
+          "endTs": 1665056847541,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "vUEWZtWBS66kiF0_fJnhwA",
+          "executionInputConfigured": false
+        },
+        "vahOBEzWQkKwvL7MFmECrQparallel": {
+          "nodeType": "parallel",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "parallelvahOBEzWQkKwvL7MFmECrQparallel",
+          "name": "",
+          "nodeUuid": "vahOBEzWQkKwvL7MFmECrQparallel",
+          "status": "NotStarted",
+          "edgeLayoutList": {
+            "currentNodeChildren": [
+              "y2b4qTE6QPu2wkd4z5vRfg",
+              "cT2SflKET865Kc5wO3XnKw",
+              "o0CAEe_FRNOmfKLQQoXkkQ",
+              "0WkiRk38TPSAU-5YhdRk-A",
+              "mMrs5J2ASFGxkUwTM5AB_Q",
+              "7scZLVw7SiSkQZ5Y2zNBGA",
+              "9759-sm6RnyUmeiRUYSijg",
+              "K5wMITy3QMCimaCY5PWF2g",
+              "wEoVWj68TeuH0VSxD9GhRw",
+              "irowXCLESvK1hLHWKeobEw"
+            ],
+            "nextIds": []
+          }
+        },
+        "7scZLVw7SiSkQZ5Y2zNBGA": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test16",
+          "name": "test16",
+          "nodeUuid": "7scZLVw7SiSkQZ5Y2zNBGA",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832039,
+          "endTs": 1665056836428,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "JFKmQcgCQbOqSzpk5QqhKA",
+          "executionInputConfigured": false
+        },
+        "irowXCLESvK1hLHWKeobEw": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test20",
+          "name": "test20",
+          "nodeUuid": "irowXCLESvK1hLHWKeobEw",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832067,
+          "endTs": 1665056836510,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "Cb_3uGWSSYq1gfNRzswzjA",
+          "executionInputConfigured": false
+        },
+        "mMrs5J2ASFGxkUwTM5AB_Q": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test15",
+          "name": "test15",
+          "nodeUuid": "mMrs5J2ASFGxkUwTM5AB_Q",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832027,
+          "endTs": 1665056836333,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "QODOtRN6T62Slg0oCqc2bQ",
+          "executionInputConfigured": false
+        },
+        "K5wMITy3QMCimaCY5PWF2g": {
+          "nodeType": "Custom",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "test18",
+          "name": "test18",
+          "nodeUuid": "K5wMITy3QMCimaCY5PWF2g",
+          "status": "Success",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "startTs": 1665056832061,
+          "endTs": 1665056836460,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "R4U30VT2S4q4cAKA2V39UA",
+          "executionInputConfigured": false
+        }
+      },
+      "modules": ["pms"],
+      "startingNodeId": "vahOBEzWQkKwvL7MFmECrQparallel",
+      "startTs": 1665056790356,
+      "endTs": 1665056847891,
+      "createdAt": 1665056790568,
+      "canRetry": true,
+      "showRetryHistory": false,
+      "runSequence": 2,
+      "successfulStagesCount": 10,
+      "runningStagesCount": 0,
+      "failedStagesCount": 0,
+      "totalStagesCount": 10,
+      "storeType": "INLINE",
+      "executionInputConfigured": false,
+      "allowStageExecutions": false,
+      "stagesExecution": false
+    }
+  },
+  "metaData": null,
+  "correlationId": "af678924-312a-40e2-97ac-358ea6cf6932"
+}

@@ -1,0 +1,32 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "name": "testPipeline_Cypress",
+    "identifier": "testPipeline_Cypress",
+    "tags": {},
+    "version": 4,
+    "numOfStages": 1,
+    "modules": ["pms"],
+    "executionSummaryInfo": {
+      "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
+      "deployments": [0, 0, 0, 0, 0, 0, 0],
+      "lastExecutionStatus": "Running",
+      "lastExecutionId": "lastExecutionId"
+    },
+    "filters": { "pms": { "stageTypes": ["Approval"], "featureFlagStepCount": 0 } },
+    "stageNames": ["test"],
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "storeType": "INLINE",
+    "isDraft": false
+  },
+  "metaData": null,
+  "correlationId": "4fb4c4cf-fdfc-4812-9e6c-1de132e7c6d1"
+}

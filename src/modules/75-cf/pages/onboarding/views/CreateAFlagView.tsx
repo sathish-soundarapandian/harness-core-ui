@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { Container, Layout, Text, Select } from '@harness/uicore'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Container, Heading, Layout, Text, Select } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
@@ -26,9 +26,14 @@ import { OnboardingSelectedFlag } from '../OnboardingSelectedFlag'
 export interface CreateAFlagViewProps {
   selectedFlag?: Feature
   setSelectedFlag: (flag?: Feature) => void
+  setCreateFlagError: Dispatch<SetStateAction<boolean>>
 }
 
-export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, setSelectedFlag }) => {
+export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({
+  selectedFlag,
+  setSelectedFlag,
+  setCreateFlagError
+}) => {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -92,7 +97,10 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
         setFlagCreated(true)
         refetchFlags()
       })
-      .catch(error => showError(getErrorMessage(error), undefined, 'cf.create.ff.error'))
+      .catch(error => {
+        showError(getErrorMessage(error), undefined, 'cf.create.ff.error')
+        setCreateFlagError(true)
+      })
   }
 
   const onChangeSelect = (selectedOption: string): void => {
@@ -107,9 +115,9 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
   return (
     <Container height="100%">
       <Container padding="xlarge">
-        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }} style={{ fontWeight: 'lighter' }}>
+        <Heading font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
           {getString('cf.onboarding.letsGetStarted')}
-        </Text>
+        </Heading>
         <Layout.Vertical spacing="medium">
           <Text font={{ variation: FontVariation.H5 }}>{getString('cf.onboarding.createFlag')}</Text>
           <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>

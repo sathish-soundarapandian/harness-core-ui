@@ -119,3 +119,16 @@
     max-width: 380px;
   }
 }
+
+.stageCreate {
+  width: 430px;
+  padding: var(--spacing-medium);
+  background-color: var(--white);
+}
+
+.addStageHeading {
+  letter-spacing: 0.5px;
+  color: var(--grey-800) !important;
+  font-weight: 600 !important;
+  line-height: 24px;
+}

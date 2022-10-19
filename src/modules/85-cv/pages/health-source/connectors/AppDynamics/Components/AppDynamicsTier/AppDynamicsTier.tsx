@@ -5,22 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { defaultTo } from 'lodash-es'
 import {
   SelectOption,
   FormInput,
   MultiTypeInputType,
-  getMultiTypeFromValue,
   MultiTypeInput,
   Text,
   FormError,
   RUNTIME_INPUT_VALUE,
-  AllowedTypes
+  AllowedTypes,
+  getMultiTypeFromValue
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { getPlaceholder, getTypeOfInput, setAppDynamicsTier } from '../../AppDHealthSource.utils'
+import { getPlaceholder, setAppDynamicsTier } from '../../AppDHealthSource.utils'
 import { getInputGroupProps } from '../../../MonitoredServiceConnector.utils'
 import css from '../../AppDHealthSource.module.scss'
 
@@ -39,6 +39,9 @@ interface AppDynamicsTierInterface {
   ) => Promise<void>
   setAppDTierCustomField: (tierValue: string) => void
   tierError?: string
+  appdMultiType?: MultiTypeInputType
+  tierMultiType?: MultiTypeInputType
+  setTierMultiType?: Dispatch<SetStateAction<MultiTypeInputType>>
 }
 
 export default function AppDynamicsTier({
@@ -49,18 +52,22 @@ export default function AppDynamicsTier({
   formikValues,
   onValidate,
   setAppDTierCustomField,
-  tierError
+  tierError,
+  appdMultiType,
+  tierMultiType: multitypeInputValue,
+  setTierMultiType: setMultitypeInputValue
 }: AppDynamicsTierInterface): JSX.Element {
   const { getString } = useStrings()
-  const isApplicationRuntimeOrExpression =
-    getMultiTypeFromValue(formikValues?.appdApplication) !== MultiTypeInputType.FIXED
+  const isApplicationRuntimeOrExpression = appdMultiType !== MultiTypeInputType.FIXED
   const allowedTypes: AllowedTypes = isApplicationRuntimeOrExpression
     ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
 
-  const [multitypeInputValue, setMultitypeInputValue] = React.useState<MultiTypeInputType | undefined>(
-    getTypeOfInput(formikValues?.appDTier || formikValues?.appdApplication)
-  )
+  useEffect(() => {
+    if (getMultiTypeFromValue(formikValues?.appDTier) === MultiTypeInputType.RUNTIME) {
+      setMultitypeInputValue?.(MultiTypeInputType.RUNTIME)
+    }
+  }, [formikValues.appDTier])
 
   return isTemplate ? (
     <>
@@ -68,7 +75,7 @@ export default function AppDynamicsTier({
         {getString('cv.healthSource.connectors.AppDynamics.trierLabel')}
       </Text>
       <MultiTypeInput
-        key={multitypeInputValue + formikValues?.appdApplication}
+        key={`${multitypeInputValue}  ${appdMultiType}`}
         name={'appDTier'}
         data-testid="appDTier"
         placeholder={getPlaceholder(tierLoading, 'cv.healthSource.connectors.AppDynamics.tierPlaceholder', getString)}
@@ -82,7 +89,7 @@ export default function AppDynamicsTier({
         multitypeInputValue={multitypeInputValue}
         onChange={async (item, _valueType, multiType) => {
           if (multitypeInputValue !== multiType) {
-            setMultitypeInputValue(multiType)
+            setMultitypeInputValue?.(multiType)
           }
           const selectedItem = item as string | SelectOption
           const selectedValue =
@@ -105,9 +112,7 @@ export default function AppDynamicsTier({
       value={setAppDynamicsTier(tierLoading, formikValues?.appDTier, tierOptions) as SelectOption}
       onChange={async item => {
         setAppDTierCustomField(item.label)
-        if (
-          !(formikValues?.appdApplication === RUNTIME_INPUT_VALUE || formikValues?.appDTier === RUNTIME_INPUT_VALUE)
-        ) {
+        if (!(isApplicationRuntimeOrExpression || formikValues?.appDTier === RUNTIME_INPUT_VALUE)) {
           await onValidate(formikValues.appdApplication, item.label as string, formikValues.metricData)
         }
       }}

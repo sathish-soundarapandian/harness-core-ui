@@ -22,42 +22,21 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
-import { ModuleName } from 'framework/types/ModuleName'
-import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import {
   MODULES_CONFIG_PREFERENCE_STORE_KEY,
   ModulesPreferenceStoreData
 } from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
 import ModuleList from '../ModuleList/ModuleList'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
-import {
-  BuildsNavItem,
-  ChaosNavItem,
-  CloudCostsNavItem,
-  DeploymentsNavItem,
-  FeatureFlagsNavItem,
-  SCMNavItem,
-  SRMNavItem,
-  STONavItem
-} from './ModuleLinks'
+
+import ModulesContainer from './ModulesContainer/ModulesContainer'
+import { moduleToNavItemsMap } from './util'
 import css from './MainNav.module.scss'
 
 const commonLinkProps: Partial<NavLinkProps> = {
   activeClassName: css.active,
   className: cx(css.navLink)
-}
-
-const MAX_NUM_OF_MODULES_TO_SHOW = 3
-
-const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
-  [ModuleName.CD]: DeploymentsNavItem,
-  [ModuleName.CI]: BuildsNavItem,
-  [ModuleName.CF]: FeatureFlagsNavItem,
-  [ModuleName.CE]: CloudCostsNavItem,
-  [ModuleName.CV]: SRMNavItem,
-  [ModuleName.CHAOS]: ChaosNavItem,
-  [ModuleName.STO]: STONavItem,
-  [ModuleName.SCM]: SCMNavItem
 }
 
 export default function L1Nav(): React.ReactElement {
@@ -71,9 +50,6 @@ export default function L1Nav(): React.ReactElement {
   const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
-  const { selectedModules = [] } = modulesPreferenceData || {}
-  const modulesListHeight = 92 * Math.min(MAX_NUM_OF_MODULES_TO_SHOW, selectedModules.length)
-
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
     const items = Array.from(document.querySelectorAll(`.${css.navList}`))
@@ -86,7 +62,8 @@ export default function L1Nav(): React.ReactElement {
     const root = document.querySelector(':root') as HTMLElement
     root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
 
-    NEW_LEFT_NAVBAR_SETTINGS && document.getElementsByClassName(css.active)[0]?.scrollIntoView({ block: 'nearest' })
+    NEW_LEFT_NAVBAR_SETTINGS &&
+      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'start' })
   })
 
   useEffect(() => {
@@ -103,32 +80,46 @@ export default function L1Nav(): React.ReactElement {
     <>
       <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
         <ul className={css.navList}>
+          {NEW_LEFT_NAVBAR_SETTINGS && (
+            <li className={css.navItem}>
+              <Link {...commonLinkProps} to={paths.toMainDashboard(params)}>
+                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                  <Icon name={'harness'} size={30} />
+                  <Text
+                    font={{ weight: 'semi-bold', align: 'center' }}
+                    padding={{ bottom: 'xsmall' }}
+                    color={Color.WHITE}
+                    className={css.text}
+                  >
+                    <String stringID={'common.home'} />
+                  </Text>
+                </Layout.Vertical>
+              </Link>
+            </li>
+          )}
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toHome(params)}>
               <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="harness" size={30} />
+                {NEW_LEFT_NAVBAR_SETTINGS ? (
+                  <Icon name={'nav-project'} size={30} color={Color.PRIMARY_4} />
+                ) : (
+                  <Icon name={'harness'} size={30} />
+                )}
                 <Text
                   font={{ weight: 'semi-bold', align: 'center' }}
                   padding={{ bottom: 'xsmall' }}
                   color={Color.WHITE}
                   className={css.text}
                 >
-                  <String stringID="common.home" />
+                  <String stringID={NEW_LEFT_NAVBAR_SETTINGS ? 'projectsText' : 'common.home'} />
                 </Text>
               </Layout.Vertical>
             </Link>
           </li>
           {NEW_LEFT_NAVBAR_SETTINGS ? (
-            <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
-              {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
-                const NavItem = moduleToNavItemsMap[moduleName]
-                const moduleInfo = moduleMap[moduleName]
-
-                return selectedModules.indexOf(moduleName) > -1 && moduleInfo.shouldVisible ? (
-                  <NavItem key={moduleName} />
-                ) : null
-              })}
-            </div>
+            <li>
+              <ModulesContainer />
+            </li>
           ) : (
             DEFAULT_MODULES_ORDER.map(moduleName => {
               const NavItem = moduleToNavItemsMap[moduleName]
@@ -220,7 +211,14 @@ export default function L1Nav(): React.ReactElement {
         </ul>
       </nav>
       {NEW_LEFT_NAVBAR_SETTINGS ? (
-        <ModuleList isOpen={isModuleListOpen} close={closeModuleList} onConfigIconClick={toggleModuleConfig} />
+        <ModuleList
+          isOpen={isModuleListOpen}
+          close={() => {
+            closeModuleList()
+            closeModuleConfig()
+          }}
+          onConfigIconClick={toggleModuleConfig}
+        />
       ) : null}
       {isModuleConfigOpen ? (
         <ModuleConfigurationScreen

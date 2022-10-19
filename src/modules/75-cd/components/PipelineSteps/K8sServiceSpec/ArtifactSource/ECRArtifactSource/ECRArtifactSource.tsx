@@ -116,7 +116,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
             ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
             : artifactPath,
           ''
-        )
+        ),
+        'tag'
       )
     },
     lazy: true

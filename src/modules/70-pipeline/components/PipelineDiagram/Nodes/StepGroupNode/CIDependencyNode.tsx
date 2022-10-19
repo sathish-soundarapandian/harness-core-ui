@@ -21,9 +21,16 @@ export function CIDependencyNode(props: any): JSX.Element {
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const stepsData = props?.data?.steps
   const { getString } = useStrings()
+
   React.useEffect(() => {
     props?.updateGraphLinks?.()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNodeCollapsed])
+
+  React.useEffect(() => {
+    // collapse empty dependency node for readonly user
+    setNodeCollapsed(stepsData?.length === 0 && props.readonly)
+  }, [props.readonly, stepsData])
 
   return (
     <>

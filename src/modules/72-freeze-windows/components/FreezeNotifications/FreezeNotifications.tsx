@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react'
+import { isEqual } from 'lodash-es'
 import type { CellProps, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { NotificationsHeader } from '@pipeline/components/Notifications/NotificationHeader'
@@ -43,6 +44,7 @@ export const FreezeNotifications = () => {
   const [selectedNotificationTypeFilter, setSelectedNotificationTypeFilter] = useState<string | undefined>(undefined)
   const [page, setPage] = React.useState(0)
   // Notification component rules
+  const [initialNotificatioRules] = React.useState(freezeObj.notificationRules)
   const [notificationRulesInState, setNotificationRulesInState] = React.useState<FreezeNotificationRules[]>(
     (freezeObj.notificationRules || []) as FreezeNotificationRules[]
   )
@@ -77,6 +79,10 @@ export const FreezeNotifications = () => {
     )
   }
 
+  const isUpdated = React.useMemo(() => {
+    return !isEqual(initialNotificatioRules || [], notificationRulesInState)
+  }, [initialNotificatioRules, notificationRulesInState])
+
   return (
     <>
       <NotificationsHeader
@@ -84,7 +90,7 @@ export const FreezeNotifications = () => {
         applyChanges={applyChanges}
         discardChanges={() => setDrawerType()}
         name={freezeObj.name as string}
-        isUpdated={true} // todo implement
+        isUpdated={isUpdated}
       />
       <div className={css.pipelineNotifications}>
         <NotificationTable
@@ -96,8 +102,9 @@ export const FreezeNotifications = () => {
 
             if (action === Actions.Delete) {
               setNotificationRulesInState((notificationRules: FreezeNotificationRules[]) => {
-                notificationRules?.splice(index || 0, 1)
-                return [...notificationRules]
+                const updatedNotifications = [...notificationRules]
+                updatedNotifications?.splice(index || 0, 1)
+                return [...updatedNotifications]
               })
             } else if (action === Actions.Added && notification) {
               setNotificationRulesInState((notificationRules: FreezeNotificationRules[]) => {
@@ -107,8 +114,9 @@ export const FreezeNotifications = () => {
               closeModal?.()
             } else if (action === Actions.Update && notification) {
               setNotificationRulesInState(notificationRules => {
-                notificationRules?.splice(index || 0, 1, notification)
-                return [...notificationRules]
+                const updatedNotifications = [...notificationRules]
+                updatedNotifications?.splice(index || 0, 1, notification)
+                return [...updatedNotifications]
               })
               closeModal?.()
             }
