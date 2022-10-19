@@ -237,7 +237,8 @@ describe('templateUtils', () => {
       template: {
         templateInputs: undefined,
         templateRef: 'account.tempInner',
-        versionLabel: 'v1'
+        versionLabel: 'v1',
+        variables: undefined
       }
     })
   })
