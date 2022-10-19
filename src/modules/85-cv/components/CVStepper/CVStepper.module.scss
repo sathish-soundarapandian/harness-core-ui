@@ -15,3 +15,12 @@
 .card {
   min-width: 100%;
 }
+
+// .layoutVerticalNoTopMargin {
+//   :global {
+//     :not(.Layout--vertical).Layout--vertical > * + *,
+//     :not(.Layout--horizontal).Layout--vertical > * + * {
+//       margin-top: 0 !important;
+//     }
+//   }
+// }

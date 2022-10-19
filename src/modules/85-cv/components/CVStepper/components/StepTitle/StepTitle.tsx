@@ -39,21 +39,28 @@ export const StepTitle = ({ step, index, isValid, isCurrent, onClick }: StepTitl
   const shouldShowErrorOrSuccess = typeof isValid === 'boolean'
   const { icon, labelColor, iconColor, cursor } = getState(isValid)
   return (
-    <Layout.Horizontal
-      data-testid={`steptitle_${step.id}`}
-      style={{ cursor: shouldShowErrorOrSuccess ? 'pointer' : cursor }}
-      key={`${step.id}_horizontal`}
-      onClick={() => (shouldShowErrorOrSuccess ? onClick(index) : noop)}
-      flex={{ alignItems: 'center', justifyContent: 'start' }}
-    >
-      {isCurrent ? (
-        <Icon name={shouldShowErrorOrSuccess ? icon : 'edit'} size={20} margin="small" color={iconColor} />
-      ) : (
-        <Icon name={icon} size={20} margin="small" color={iconColor} />
-      )}
-      <Text font={{ variation: FontVariation.H5 }} color={labelColor}>
-        {step.title}
-      </Text>
-    </Layout.Horizontal>
+    <Layout.Vertical spacing="small">
+      <Layout.Horizontal
+        data-testid={`steptitle_${step.id}`}
+        style={{ cursor: shouldShowErrorOrSuccess ? 'pointer' : cursor }}
+        key={`${step.id}_horizontal`}
+        onClick={() => (shouldShowErrorOrSuccess ? onClick(index) : noop)}
+        flex={{ alignItems: 'center', justifyContent: 'start' }}
+      >
+        {isCurrent ? (
+          <Icon name={shouldShowErrorOrSuccess ? icon : 'edit'} size={20} margin="small" color={iconColor} />
+        ) : (
+          <Icon name={icon} size={20} margin="small" color={iconColor} />
+        )}
+        <Text font={{ variation: FontVariation.H5 }} color={labelColor}>
+          {step.title}
+        </Text>
+      </Layout.Horizontal>
+      {/* {shouldShowErrorOrSuccess && !isValid && !isCurrent && (
+        <Text font={{ variation: FontVariation.FORM_MESSAGE_DANGER }} color={Color.ERROR}>
+          {'Required fields are missing or have not been entered correctly'}
+        </Text>
+      )} */}
+    </Layout.Vertical>
   )
 }

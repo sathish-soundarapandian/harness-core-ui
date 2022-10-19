@@ -23,12 +23,14 @@ export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtons
           {getString('back')}
         </Button>
       )}
-      <Button
-        data-testid="nextButton"
-        variation={ButtonVariation.PRIMARY}
-        text={isLastStep ? getString('save') : getString('next')}
-        onClick={() => onContinue(isLastStep ? index : index + 1)}
-      />
+      {!isLastStep && (
+        <Button
+          data-testid="nextButton"
+          variation={ButtonVariation.PRIMARY}
+          text={getString('next')}
+          onClick={() => onContinue(index + 1)}
+        />
+      )}
     </Layout.Horizontal>
   )
 }

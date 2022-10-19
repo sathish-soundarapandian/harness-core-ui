@@ -146,75 +146,79 @@ const SLOName: React.FC<SLONameProps> = ({
     []
   )
 
-  return (
+  const content = (
     <>
-      <Card className={css.card}>
-        <Container width={350}>
-          <NameIdDescriptionTags
-            formikProps={formikProps}
-            className={css.selectPrimary}
-            identifierProps={{
-              inputLabel: getString('cv.slos.sloName'),
-              inputName: SLOFormFields.NAME,
-              isIdentifierEditable: !identifier
-            }}
-          />
-        </Container>
-        {fetchingMonitoredServices && (
-          <Container flex={{ justifyContent: 'flex-start' }}>
-            <Container width={350}>
-              <FormInput.Select
-                name={SLOFormFields.MONITORED_SERVICE_REF}
-                label={getString('connectors.cdng.monitoredService.label')}
-                placeholder={
-                  monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
-                }
-                items={monitoredServicesOptions}
-                onChange={() => {
-                  formikProps.setFieldValue(SLOFormFields.HEALTH_SOURCE_REF, undefined)
-                  formikProps.setFieldValue(SLOFormFields.VALID_REQUEST_METRIC, undefined)
-                  formikProps.setFieldValue(SLOFormFields.GOOD_REQUEST_METRIC, undefined)
-                }}
-              />
-            </Container>
-            <RbacButton
-              icon="plus"
-              text={getString('cv.monitoredServices.newMonitoredServices')}
-              variation={ButtonVariation.LINK}
-              onClick={showModal}
-              permission={{
-                permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-                resource: {
-                  resourceType: ResourceType.MONITOREDSERVICE,
-                  resourceIdentifier: projectIdentifier
-                }
+      <Container width={350}>
+        <NameIdDescriptionTags
+          formikProps={formikProps}
+          className={css.selectPrimary}
+          identifierProps={{
+            inputLabel: getString('cv.slos.sloName'),
+            inputName: SLOFormFields.NAME,
+            isIdentifierEditable: !identifier
+          }}
+        />
+      </Container>
+      {fetchingMonitoredServices && (
+        <Container flex={{ justifyContent: 'flex-start' }}>
+          <Container width={350}>
+            <FormInput.Select
+              name={SLOFormFields.MONITORED_SERVICE_REF}
+              label={getString('connectors.cdng.monitoredService.label')}
+              placeholder={
+                monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
+              }
+              items={monitoredServicesOptions}
+              onChange={() => {
+                formikProps.setFieldValue(SLOFormFields.HEALTH_SOURCE_REF, undefined)
+                formikProps.setFieldValue(SLOFormFields.VALID_REQUEST_METRIC, undefined)
+                formikProps.setFieldValue(SLOFormFields.GOOD_REQUEST_METRIC, undefined)
               }}
             />
           </Container>
-        )}
-        <Container width={350}>
-          <HarnessServiceAsFormField
-            key={key}
-            customRenderProps={{
-              name: SLOFormFields.USER_JOURNEY_REF,
-              label: TEXT_USER_JOURNEY
+          <RbacButton
+            icon="plus"
+            text={getString('cv.monitoredServices.newMonitoredServices')}
+            variation={ButtonVariation.LINK}
+            onClick={showModal}
+            permission={{
+              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+              resource: {
+                resourceType: ResourceType.MONITOREDSERVICE,
+                resourceIdentifier: projectIdentifier
+              }
             }}
-            serviceProps={{
-              item: activeUserJourney,
-              options: userJourneyOptions,
-              onSelect: selectedUserJourney =>
-                formikProps.setFieldValue(SLOFormFields.USER_JOURNEY_REF, selectedUserJourney.value),
-              modalTitle: TEXT_USER_JOURNEY,
-              placeholder: getString('cv.slos.userJourneyPlaceholder'),
-              skipServiceCreateOrUpdate: true,
-              onNewCreated: newOption => handleCreateUserJourney(newOption),
-              loading: userJourneysLoading,
-              name: TEXT_USER_JOURNEY
-            }}
-            customLoading={saveUserJourneyLoading}
           />
         </Container>
-      </Card>
+      )}
+      <Container width={350}>
+        <HarnessServiceAsFormField
+          key={key}
+          customRenderProps={{
+            name: SLOFormFields.USER_JOURNEY_REF,
+            label: TEXT_USER_JOURNEY
+          }}
+          serviceProps={{
+            item: activeUserJourney,
+            options: userJourneyOptions,
+            onSelect: selectedUserJourney =>
+              formikProps.setFieldValue(SLOFormFields.USER_JOURNEY_REF, selectedUserJourney.value),
+            modalTitle: TEXT_USER_JOURNEY,
+            placeholder: getString('cv.slos.userJourneyPlaceholder'),
+            skipServiceCreateOrUpdate: true,
+            onNewCreated: newOption => handleCreateUserJourney(newOption),
+            loading: userJourneysLoading,
+            name: TEXT_USER_JOURNEY
+          }}
+          customLoading={saveUserJourneyLoading}
+        />
+      </Container>
+    </>
+  )
+
+  return (
+    <>
+      {fetchingMonitoredServices ? <Card className={css.card}>{content}</Card> : content}
       {children}
     </>
   )

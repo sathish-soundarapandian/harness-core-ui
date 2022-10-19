@@ -17,8 +17,11 @@ import {
   Container,
   Dialog,
   FontVariation,
-  Heading
+  Heading,
+  FormInput,
+  Icon
 } from '@harness/uicore'
+import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
@@ -34,7 +37,8 @@ import {
   CompositeSLOFormInterface,
   CreateCompositeSloFormInterface
 } from './CreateCompositeSloForm.types'
-import { CreatePreview } from './components/CreatePreview/CreatePreview'
+import { CreatePreview, LabelAndValue } from './components/CreatePreview/CreatePreview'
+import SLOTargetNotificationsContainer from '../CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import css from './CreateCompositeSloForm.module.scss'
 
 export const CreateCompositeSloForm = ({
@@ -53,7 +57,8 @@ export const CreateCompositeSloForm = ({
     [formikProps]
   )
 
-  const compositeSloPayloadRef = useRef<CompositeSLOFormInterface | null>(null)
+  const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)
+  const compositeSloPayloadRef = useRef<CompositeSLOFormInterface | null>(formikProps.values) // to be changed
 
   const [openModal, closeModal] = useModalHook(
     () => (
@@ -90,10 +95,17 @@ export const CreateCompositeSloForm = ({
           </Layout.Horizontal>
 
           <Layout.Horizontal spacing="medium" margin={{ top: 'large', bottom: 'xlarge' }}>
-            <Button text={getString('common.ok')} onClick={() => closeModal()} intent="primary" />
+            <Button
+              text={getString('common.ok')}
+              onClick={() => {
+                closeModal()
+              }}
+              intent="primary"
+            />
             <Button
               text={getString('cancel')}
               onClick={() => {
+                // to be fixed
                 formikProps.setValues({ ...compositeSloPayloadRef?.current } as CompositeSLOFormInterface)
                 closeModal()
               }}
@@ -123,7 +135,7 @@ export const CreateCompositeSloForm = ({
           id="createSLOTabs"
           selectedStepId={selectedStepId}
           isStepValid={isStepValid}
-          runValidationOnMount={runValidationOnMount}
+          runValidationOnMount={validateAllSteps}
           onChange={(stepId, skipValidation) =>
             handleStepChange(stepId, formikProps, setSelectedStepId, skipValidation, compositeSloPayloadRef)
           }
@@ -139,43 +151,86 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Set_SLO_Time_Window,
               title: 'Set SLO Time Window',
-              panel: <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} />
+              panel: <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
+              preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Time_Window} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Add_SLOs,
               title: 'Add SLOs',
-              panel: (
-                <>
-                  <AddSLOs />
-                </>
-              )
+              panel: <AddSLOs />,
+              preview: <CreatePreview id={CreateCompositeSLOSteps.Add_SLOs} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Set_SLO_Target,
               title: 'Set SLO Target',
-              panel: <></>
+              panel: (
+                <>
+                  <Layout.Horizontal spacing="medium" margin={{ bottom: 'small' }}>
+                    <LabelAndValue label="Period Type" value={formikProps.values.periodType || ''} />
+                    {formikProps.values.periodLength && (
+                      <LabelAndValue label="Period length" value={formikProps.values.periodLength || ''} />
+                    )}
+                    {formikProps.values.periodLengthType && (
+                      <LabelAndValue label="Window ends" value={formikProps.values.periodLengthType || ''} />
+                    )}
+                  </Layout.Horizontal>
+                  <Container width={250} margin={{ top: 'medium' }}>
+                    <FormInput.Text
+                      name={'SLOTargetPercentage'}
+                      label={getString('cv.SLOTarget')}
+                      inputGroup={{
+                        type: 'number',
+                        min: 0,
+                        max: 100,
+                        step: 'any',
+                        rightElement: <Icon name="percentage" padding="small" />
+                      }}
+                    />
+                  </Container>
+                </>
+              ),
+              preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Error_Budget_Policy,
-              title: 'Error Budget Policy',
-              panel: <></>
+              title: 'Error Budget Policy (Optional)',
+              panel: (
+                <SLOTargetNotificationsContainer
+                  identifier={identifier}
+                  setFieldValue={formikProps?.setFieldValue}
+                  notificationRuleRefs={formikProps.values?.notificationRuleRefs}
+                />
+              )
             }
           ]}
         />
+        <Page.Header
+          className={css.footer}
+          title={
+            <Layout.Horizontal spacing="medium">
+              <Button
+                text={getString('cancel')}
+                variation={ButtonVariation.SECONDARY}
+                onClick={() => {
+                  if (isEqual(compositeSloPayloadRef.current, formikProps.values)) {
+                    handleRedirect()
+                  } else {
+                    openModal()
+                  }
+                }}
+              />
+              <Button
+                text={getString('save')}
+                variation={ButtonVariation.PRIMARY}
+                onClick={() => {
+                  setValidateAllSteps(true)
+                  formikProps.submitForm()
+                }}
+              />
+            </Layout.Horizontal>
+          }
+        />
       </Page.Body>
-      <Page.Header
-        className={css.footer}
-        title={
-          <Layout.Horizontal spacing="medium">
-            <Button text={getString('cancel')} variation={ButtonVariation.SECONDARY} onClick={() => handleRedirect()} />
-            <Button
-              text={getString('save')}
-              variation={ButtonVariation.PRIMARY}
-              onClick={() => formikProps.submitForm()}
-            />
-          </Layout.Horizontal>
-        }
-      />
     </>
   )
 }
