@@ -4691,6 +4691,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deployToAll': string
+  'cd.pipelineSteps.environmentTab.envGroupToggleText': string
   'cd.pipelineSteps.environmentTab.environmentGroupConfirmationText': string
   'cd.pipelineSteps.environmentTab.environmentGroupDialogTitleText': string
   'cd.pipelineSteps.environmentTab.environmentGroupIsRequired': string

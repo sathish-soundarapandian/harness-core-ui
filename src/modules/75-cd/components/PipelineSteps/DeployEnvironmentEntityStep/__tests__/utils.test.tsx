@@ -59,7 +59,8 @@ describe('process initial values', () => {
           values: [
             {
               environmentRef: 'Env_1',
-              deployToAll: true
+              deployToAll: true,
+              infrastructureDefinitions: RUNTIME_INPUT_VALUE as any
             }
           ]
         }
@@ -73,7 +74,6 @@ describe('process initial values', () => {
       environmentInputs: {
         Env_1: undefined
       },
-      infrastructures: { Env_1: undefined as any },
       parallel: false
     } as DeployEnvironmentEntityFormState)
   })
@@ -162,7 +162,8 @@ describe('process form values', () => {
         values: [
           {
             environmentRef: 'Env_1',
-            deployToAll: true
+            deployToAll: true,
+            infrastructureDefinitions: RUNTIME_INPUT_VALUE as any
           }
         ]
       }

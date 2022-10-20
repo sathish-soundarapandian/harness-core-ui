@@ -91,11 +91,13 @@ export function MatrixNode(props: any): JSX.Element {
     'data.data.moduleInfo.stepParameters.services.values.__encodedValue.valueDoc.value.length',
     1
   )
-  const numOfEnvironment = get(
-    props,
-    'data.data.moduleInfo.stepParameters.environments.values.__encodedValue.valueDoc.value.length',
+  const numOfEnvironment =
+    get(props, 'data.data.moduleInfo.stepParameters.environments.values.__encodedValue.valueDoc.value.length') ||
+    get(
+      props,
+      'data.data.moduleInfo.stepParameters.environmentGroup.environments.__encodedValue.valueDoc.value.length'
+    ) ||
     1
-  )
   const updateTreeRect = (): void => {
     const treeContainer = document.getElementById('tree-container')
     const rectBoundary = treeContainer?.getBoundingClientRect()

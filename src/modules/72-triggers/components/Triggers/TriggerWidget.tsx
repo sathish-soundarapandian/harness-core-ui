@@ -32,7 +32,7 @@ export function TriggerWidget<T>({
 
   // CD_TRIGGERS_REFACTOR check can be removed once triggers refactoring is complete.
   // Until then it gives us the freedom to selectively render only those triggers that have been refactored.
-  // Show triggers V2 for NG_SVC_ENV_REDESIGN or CD_TRIGGERS_REFACTOR
+  // Show triggers V2 for NG_SVC_ENV_REDESIGN with artifact or manifest, or CD_TRIGGERS_REFACTOR
   const trigger =
     ((NG_SVC_ENV_REDESIGN && (baseType === TriggerBaseType.ARTIFACT || baseType === TriggerBaseType.MANIFEST)) ||
       CD_TRIGGERS_REFACTOR) &&

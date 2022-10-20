@@ -427,6 +427,7 @@ export default function DeployEnvironment({
                     initialValues={initialValues}
                     readonly={readonly}
                     allowableTypes={allowableTypes}
+                    isMultiCluster
                     environmentIdentifier={selectedEnvironments[0]}
                   />
                 ) : (

@@ -210,12 +210,15 @@ function MultiEnvironmentsInputSetForm({
       )
     : false
 
+  const isEnvGroupRuntime = isValueRuntimeInput(deploymentStageInputSet?.environmentGroup?.envGroupRef)
+
   /** If environments are pre selected in studio, then hide the input field. Else, show the environments selection field in the following scenarios
    * 1. pathToEnvironments is a runtime value - condition 1
    * 2. When 1 is true and the user selects the environments, we need to still continue to show it - condition 2
    *    a. The check for deployToAll of false in 'deploymentStage' is required to show the field in case of 1 and 2,
    *      as then the values of deployToAll in the above scenarios is either <input> or true, and not false */
   const showEnvironmentsSelectionInputField =
+    !isEnvGroupRuntime &&
     !areEnvironmentsPreSelectedInStudio &&
     (isValueRuntimeInput(get(deploymentStageTemplate, pathToEnvironments) as unknown as string) ||
       (Array.isArray(get(deploymentStageTemplate, pathToEnvironments)) &&

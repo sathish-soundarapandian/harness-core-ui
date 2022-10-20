@@ -32,24 +32,28 @@ export function processInitialValues(
 
   // istanbul ignore else
   if (initialValues.environment && initialValues.environment.environmentRef) {
-    // this is backwards compatibility for single env multiple clusters in the older redesign setup
-    if (
-      Array.isArray(initialValues.environment.gitOpsClusters) &&
-      initialValues.environment.gitOpsClusters.length > 1
-    ) {
-      return processMultiEnvironmentInitialValues(
-        {
-          environments: {
-            metadata: {
-              parallel: false
-            },
-            values: [{ ...initialValues.environment }]
-          }
-        },
-        gitOpsEnabled
-      )
+    if (gitOpsEnabled) {
+      return processSingleEnvironmentGitOpsInitialValues(initialValues.environment)
+    } else {
+      // this is backwards compatibility for single env multiple clusters in the older redesign setup
+      if (
+        Array.isArray(initialValues.environment.gitOpsClusters) &&
+        initialValues.environment.gitOpsClusters.length > 1
+      ) {
+        return processMultiEnvironmentInitialValues(
+          {
+            environments: {
+              metadata: {
+                parallel: false
+              },
+              values: [{ ...initialValues.environment }]
+            }
+          },
+          gitOpsEnabled
+        )
+      }
+      return processSingleEnvironmentInitialValues(initialValues.environment, gitOpsEnabled)
     }
-    return processSingleEnvironmentInitialValues(initialValues.environment, gitOpsEnabled)
   } else if (initialValues.environments) {
     return processMultiEnvironmentInitialValues(initialValues, gitOpsEnabled)
   } else if (initialValues.environmentGroup) {
@@ -104,7 +108,11 @@ export function processFormValues(
 
   // istanbul ignore else
   if (data.category === 'single') {
-    return processSingleEnvironmentFormValues(data, gitOpsEnabled)
+    if (gitOpsEnabled) {
+      return processSingleEnvironmentGitOpsFormValues(data)
+    } else {
+      return processSingleEnvironmentFormValues(data, gitOpsEnabled)
+    }
   } else if (data.category === 'group') {
     return processEnvironmentGroupFormValues(data, gitOpsEnabled)
   } else if (data.category === 'multi') {
@@ -170,6 +178,44 @@ export function processSingleEnvironmentInitialValues(
   return formState
 }
 
+export function processSingleEnvironmentGitOpsInitialValues(
+  environment: DeployEnvironmentEntityConfig['environment']
+): DeployEnvironmentEntityFormState {
+  const formState: DeployEnvironmentEntityFormState = {}
+
+  if (environment) {
+    if (getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.RUNTIME) {
+      set(formState, 'environment', RUNTIME_INPUT_VALUE)
+    } else {
+      set(formState, 'environment', environment.environmentRef)
+      // if environmentRef is a FIXED value and contains selected environment
+      set(
+        formState,
+        'environmentInputs',
+        getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.FIXED
+          ? { [environment.environmentRef]: environment?.environmentInputs }
+          : {}
+      )
+
+      if (environment.deployToAll !== true) {
+        set(
+          formState,
+          `clusters.${environment.environmentRef}`,
+          Array.isArray(environment.gitOpsClusters)
+            ? environment.gitOpsClusters?.map(gitOpsCluster => ({
+                label: gitOpsCluster.identifier,
+                value: gitOpsCluster.identifier
+              }))
+            : environment.gitOpsClusters
+        )
+      }
+    }
+  }
+
+  formState.category = 'single'
+  return formState
+}
+
 export function processSingleEnvironmentFormValues(
   data: DeployEnvironmentEntityFormState,
   gitOpsEnabled: boolean
@@ -226,6 +272,50 @@ export function processSingleEnvironmentFormValues(
   return {}
 }
 
+export function processSingleEnvironmentGitOpsFormValues(
+  data: DeployEnvironmentEntityFormState
+): DeployEnvironmentEntityConfig {
+  if (!isNil(data.environment)) {
+    // ! Do not merge this with the other returns even if they look similar. It makes it confusing to read
+    if (getMultiTypeFromValue(data.environment) === MultiTypeInputType.RUNTIME) {
+      return {
+        environment: {
+          environmentRef: RUNTIME_INPUT_VALUE,
+          deployToAll: RUNTIME_INPUT_VALUE as any,
+          environmentInputs: RUNTIME_INPUT_VALUE as any,
+          gitOpsClusters: RUNTIME_INPUT_VALUE as any
+        }
+      }
+    } else {
+      const selectedClusters = data.clusters?.[data.environment as string]
+
+      const deployToAll =
+        getMultiTypeFromValue(selectedClusters) === MultiTypeInputType.RUNTIME
+          ? (RUNTIME_INPUT_VALUE as any)
+          : isEmpty(selectedClusters)
+
+      return {
+        environment: {
+          environmentRef: data.environment,
+          ...(!!data.environmentInputs?.[data.environment] && {
+            environmentInputs: data.environmentInputs[data.environment]
+          }),
+          deployToAll,
+          ...(!isEmpty(data.clusters) && {
+            gitOpsClusters: Array.isArray(selectedClusters)
+              ? selectedClusters?.map(cluster => ({
+                  identifier: cluster.value as string
+                }))
+              : selectedClusters
+          })
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
 export function getEnvironmentsFormStateFromInitialValues(
   environments?: EnvironmentYamlV2[],
   deployToAll?: boolean,
@@ -265,21 +355,23 @@ export function getEnvironmentsFormStateFromInitialValues(
           set(formState, `clusters.${environment.environmentRef}`, environment.gitOpsClusters)
         }
       } else {
-        if (Array.isArray(environment.infrastructureDefinitions)) {
-          environment.infrastructureDefinitions.map((infrastructure, infrastructureIndex) => {
-            set(formState, `infrastructures.${environment.environmentRef}.${infrastructureIndex}`, {
-              label: infrastructure.identifier,
-              value: infrastructure.identifier
-            })
+        if (environment.deployToAll !== true) {
+          if (Array.isArray(environment.infrastructureDefinitions)) {
+            environment.infrastructureDefinitions.map((infrastructure, infrastructureIndex) => {
+              set(formState, `infrastructures.${environment.environmentRef}.${infrastructureIndex}`, {
+                label: infrastructure.identifier,
+                value: infrastructure.identifier
+              })
 
-            set(
-              formState,
-              `infrastructureInputs.${environment.environmentRef}.${infrastructure.identifier}`,
-              infrastructure.inputs
-            )
-          })
-        } else {
-          set(formState, `infrastructures.${environment.environmentRef}`, environment.infrastructureDefinitions)
+              set(
+                formState,
+                `infrastructureInputs.${environment.environmentRef}.${infrastructure.identifier}`,
+                infrastructure.inputs
+              )
+            })
+          } else {
+            set(formState, `infrastructures.${environment.environmentRef}`, environment.infrastructureDefinitions)
+          }
         }
       }
     })
@@ -317,7 +409,9 @@ export function getEnvironmentsFormValuesFromFormState(
           const selectedClusters = data.clusters?.[environment.value as string]
           const isClusterRuntime = (selectedClusters as unknown as string) === RUNTIME_INPUT_VALUE
 
-          set(environmentsFormState, 'deployToAll', isClusterRuntime ? (RUNTIME_INPUT_VALUE as any) : !selectedClusters)
+          const deployToAll = isClusterRuntime ? (RUNTIME_INPUT_VALUE as any) : !selectedClusters
+
+          set(environmentsFormState, 'deployToAll', deployToAll)
 
           if (selectedClusters) {
             set(
@@ -334,11 +428,13 @@ export function getEnvironmentsFormValuesFromFormState(
           const selectedInfrastructures = data.infrastructures?.[environment.value as string]
           const isInfrastructureRuntime = (selectedInfrastructures as unknown as string) === RUNTIME_INPUT_VALUE
 
-          set(
-            environmentsFormState,
-            'deployToAll',
-            isInfrastructureRuntime ? (RUNTIME_INPUT_VALUE as any) : !selectedInfrastructures
-          )
+          const deployToAll = isInfrastructureRuntime ? (RUNTIME_INPUT_VALUE as any) : !selectedInfrastructures
+
+          set(environmentsFormState, 'deployToAll', deployToAll)
+
+          if (deployToAll === true) {
+            set(environmentsFormState, 'infrastructureDefinitions', RUNTIME_INPUT_VALUE)
+          }
 
           if (selectedInfrastructures) {
             set(
@@ -472,12 +568,13 @@ export function getValidationSchema(getString: UseStringsReturn['getString'], gi
             })
           }
 
-          if (gitOpsEnabled && !valueObj.cluster && !isValueRuntimeInput(valueObj.environment)) {
-            return this.createError({
-              path: 'cluster',
-              message: getString('cd.pipelineSteps.environmentTab.clusterIsRequired')
-            })
-          }
+          // To be put back once BE supports multi environments
+          // if (gitOpsEnabled && !valueObj.cluster && !isValueRuntimeInput(valueObj.environment)) {
+          //   return this.createError({
+          //     path: 'cluster',
+          //     message: getString('cd.pipelineSteps.environmentTab.clusterIsRequired')
+          //   })
+          // }
         } else if (valueObj.category === 'multi') {
           if (
             !(Array.isArray(valueObj.environments) && valueObj.environments.length) &&

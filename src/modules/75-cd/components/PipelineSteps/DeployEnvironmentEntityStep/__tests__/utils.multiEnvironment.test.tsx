@@ -380,7 +380,8 @@ describe('get environments form values from form state', () => {
             }
           ]
         },
-        deployToAll: true
+        deployToAll: true,
+        infrastructureDefinitions: RUNTIME_INPUT_VALUE as any
       },
       {
         environmentRef: 'Env_2',
@@ -402,7 +403,8 @@ describe('get environments form values from form state', () => {
             }
           },
           {
-            identifier: 'Infra_2'
+            identifier: 'Infra_2',
+            inputs: undefined
           }
         ]
       }
