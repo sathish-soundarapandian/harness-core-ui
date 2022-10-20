@@ -205,7 +205,7 @@ function PipelineYamlView(): React.ReactElement {
               )
             }}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
-            height={'calc(100vh - 200px)'}
+            height={'50vh'}
             width="calc(100vw - 400px)"
             invocationMap={stepsFactory.getInvocationMap()}
             schema={schema}
@@ -213,6 +213,7 @@ function PipelineYamlView(): React.ReactElement {
             isEditModeSupported={!isReadonly}
             openDialogProp={openDialog}
             existingJSON={{}}
+            showErrorPanel={true}
           />
         )}
       </>

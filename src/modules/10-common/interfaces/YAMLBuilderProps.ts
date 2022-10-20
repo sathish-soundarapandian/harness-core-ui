@@ -55,6 +55,7 @@ export interface YamlBuilderProps {
   renderCustomHeader?: () => React.ReactElement | null
   openDialogProp?: () => void
   showCopyIcon?: boolean
+  showErrorPanel?: boolean
 }
 
 export interface CompletionItemInterface {

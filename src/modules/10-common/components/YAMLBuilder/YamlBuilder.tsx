@@ -13,7 +13,19 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
-import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil } from 'lodash-es'
+import {
+  debounce,
+  isEmpty,
+  truncate,
+  throttle,
+  defaultTo,
+  attempt,
+  every,
+  isEqualWith,
+  isNil,
+  isUndefined
+} from 'lodash-es'
+import { Layout } from '@harness/uicore'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
@@ -121,7 +133,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     onErrorCallback,
     renderCustomHeader,
     openDialogProp,
-    showCopyIcon = true
+    showCopyIcon = true,
+    showErrorPanel = false
   } = props
   setUpEditor(theme)
   const params = useParams()
@@ -252,14 +265,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     debounce((updatedYaml: string): void => {
       setCurrentYaml(updatedYaml)
       yamlRef.current = updatedYaml
-      // verifyYAML({
-      //   updatedYaml,
-      //   setYamlValidationErrors,
-      //   showError,
-      //   schema,
-      //   errorMessage: yamlError
-      // })
-      // onChange?.(!(updatedYaml === ''))
+      verifyYAML({
+        updatedYaml,
+        setYamlValidationErrors,
+        showError,
+        schema,
+        errorMessage: yamlError
+      })
+      onChange?.(!(updatedYaml === ''))
       const editor = editorRef.current?.editor
       if (editor) {
         const currentCursorPosition = editor.getPosition()
@@ -591,6 +604,19 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [currentYaml])
 
+  const renderErrorPanel = useCallback((): JSX.Element => {
+    if (isUndefined(yamlValidationErrors)) {
+      return <></>
+    }
+    return (
+      <ul>
+        {Array.from(yamlValidationErrors.values()).map(value => {
+          return <li>{value}</li>
+        })}
+      </ul>
+    )
+  }, [yamlValidationErrors])
+
   const renderEditor = useCallback(
     (): JSX.Element => (
       <MonacoEditor
@@ -630,30 +656,33 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   return (
-    <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' })}>
-      {showSnippetSection ? (
-        <SplitPane
-          split="vertical"
-          className={css.splitPanel}
-          onChange={handleResize}
-          maxSize={-1 * MIN_SNIPPET_SECTION_WIDTH}
-          style={{ height: defaultTo(height, DEFAULT_EDITOR_HEIGHT) }}
-          pane1Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH, width: dynamicWidth }}
-          pane2Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH }}
-        >
+    <Layout.Vertical>
+      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' })}>
+        {showSnippetSection ? (
+          <SplitPane
+            split="vertical"
+            className={css.splitPanel}
+            onChange={handleResize}
+            maxSize={-1 * MIN_SNIPPET_SECTION_WIDTH}
+            style={{ height: defaultTo(height, DEFAULT_EDITOR_HEIGHT) }}
+            pane1Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH, width: dynamicWidth }}
+            pane2Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH }}
+          >
+            <div className={css.editor}>
+              {defaultTo(renderCustomHeader, renderHeader)()}
+              {renderEditor()}
+            </div>
+            {showSnippetSection ? renderSnippetSection() : null}
+          </SplitPane>
+        ) : (
           <div className={css.editor}>
             {defaultTo(renderCustomHeader, renderHeader)()}
             {renderEditor()}
           </div>
-          {showSnippetSection ? renderSnippetSection() : null}
-        </SplitPane>
-      ) : (
-        <div className={css.editor}>
-          {defaultTo(renderCustomHeader, renderHeader)()}
-          {renderEditor()}
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+      {showErrorPanel ? renderErrorPanel() : null}
+    </Layout.Vertical>
   )
 }
 
