@@ -99,3 +99,11 @@
   position: relative !important;
   border-radius: 10px;
 }
+
+.noStyleUl {
+  list-style-type: none;
+  padding: var(--spacing-small);
+  margin: 0;
+  background-color: var(--black);
+  color: var(--white);
+}

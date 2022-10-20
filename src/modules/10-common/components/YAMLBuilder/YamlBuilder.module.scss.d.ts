@@ -21,6 +21,7 @@ declare const styles: {
   readonly layout: string
   readonly lightBg: string
   readonly main: string
+  readonly noStyleUl: string
   readonly splitPanel: string
   readonly summaryPopover: string
   readonly validationIcon: string

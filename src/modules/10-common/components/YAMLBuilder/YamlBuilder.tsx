@@ -25,7 +25,8 @@ import {
   isNil,
   isUndefined
 } from 'lodash-es'
-import { Layout } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
@@ -609,9 +610,15 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       return <></>
     }
     return (
-      <ul>
+      <ul className={css.noStyleUl}>
         {Array.from(yamlValidationErrors.values()).map(value => {
-          return <li>{value}</li>
+          return (
+            <Container padding="xsmall">
+              <li>
+                <Text color={Color.WHITE}>{value}</Text>
+              </li>
+            </Container>
+          )
         })}
       </ul>
     )
@@ -681,7 +688,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           </div>
         )}
       </div>
-      {showErrorPanel ? renderErrorPanel() : null}
+      {showErrorPanel ? (
+        <Container padding={{ top: 'medium', bottom: 'medium' }}>{renderErrorPanel()}</Container>
+      ) : null}
     </Layout.Vertical>
   )
 }
