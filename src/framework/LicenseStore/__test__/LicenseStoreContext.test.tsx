@@ -10,9 +10,6 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { LicenseStoreProvider, useLicenseStore, handleUpdateLicenseStore } from '../LicenseStoreContext'
 
-const featureFlags = {
-  NG_LICENSES_ENABLED: true
-}
 const defaultUuid = '1234'
 const defaultUserInfo = {
   accounts: [
@@ -24,7 +21,6 @@ const defaultUserInfo = {
 }
 
 const defaultAppStoreValues = {
-  featureFlags,
   currentUserInfo: defaultUserInfo
 }
 

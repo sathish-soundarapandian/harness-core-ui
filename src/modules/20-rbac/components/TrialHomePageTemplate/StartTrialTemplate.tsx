@@ -126,7 +126,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   const { accountId } = useParams<AccountPathProps>()
   const refererURL = getSavedRefererURL()
   const gaClientID = getGaClientID()
-  const { mutate: startTrial, loading: startingTrial } = useStartTrialLicense({
+  const { loading: startingTrial } = useStartTrialLicense({
     queryParams: {
       accountIdentifier: accountId,
       ...(refererURL ? { referer: refererURL } : {})

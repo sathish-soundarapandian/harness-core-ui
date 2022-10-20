@@ -18,16 +18,10 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getModuleDescriptionsForModuleSelectionDialog, getModuleFullLengthTitle } from '@projects-orgs/utils/utils'
 import { getModuleIcon, useGetCommunity, isOnPrem } from '@common/utils/utils'
-import {
-  Project,
-  StartFreeLicenseQueryParams,
-  StartTrialDTO,
-  startFreeLicensePromise,
-  ResponseModuleLicenseDTO
-} from 'services/cd-ng'
+import { Project, StartFreeLicenseQueryParams, startFreeLicensePromise, ResponseModuleLicenseDTO } from 'services/cd-ng'
 import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFactory'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import css from './useModuleSelect.module.scss'
 
