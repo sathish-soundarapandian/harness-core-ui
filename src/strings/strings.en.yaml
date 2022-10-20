@@ -256,6 +256,7 @@ errorDetails: Error Details
 and: 'And'
 na: N/A
 all: All
+showAllBranches: All Branches
 plus: +
 passed: Passed
 failed: Failed

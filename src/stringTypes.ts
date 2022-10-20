@@ -10732,6 +10732,10 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  showAllBranches: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   sidecar: string
   /**
    * @deprecated migrate this string to module level file
