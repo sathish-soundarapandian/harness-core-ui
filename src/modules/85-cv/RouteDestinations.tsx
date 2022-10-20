@@ -171,6 +171,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SLO, {
 
 // eslint-disable-next-line import/no-unresolved
 const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
+
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,
   subtitle: 'Service',
@@ -180,8 +181,8 @@ const CVSideNavProps: SidebarContext = {
 
 const SRMRoutes: React.FC = () => {
   const { SRM_MICRO_FRONTEND } = useFeatureFlags()
-  const enableMicroFrontend = SRM_MICRO_FRONTEND
-  const mfePaths = enableMicroFrontend ? [routes.toCEDashboards({ ...accountPathProps })] : []
+  const enableMicroFrontend = true
+  const mfePaths = enableMicroFrontend ? [] : []
   return (
     <>
       <Route
@@ -235,14 +236,14 @@ const SRMRoutes: React.FC = () => {
       >
         <CVCodeErrors />
       </RouteWithLayout>
-
-      <RouteWithLayout
+      {/* behind feature flag */}
+      {/* <RouteWithLayout
         exact
         sidebarProps={CVSideNavProps}
         path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
       >
         <CVSLOsListingPage />
-      </RouteWithLayout>
+      </RouteWithLayout> */}
 
       <RouteWithLayout
         sidebarProps={CVSideNavProps}
@@ -322,7 +323,10 @@ const SRMRoutes: React.FC = () => {
       {/* Replace above route once BE integration is complete */}
 
       {enableMicroFrontend ? (
-        <RouteWithLayout path={[...mfePaths, routes.toSRMMFE({ ...accountPathProps })]} sidebarProps={CVSideNavProps}>
+        <RouteWithLayout
+          path={[...mfePaths, routes.toCVSLOs({ ...accountPathProps, ...projectPathProps })]}
+          sidebarProps={CVSideNavProps}
+        >
           <ChildAppMounter<SRMUIAppCustomProps>
             customComponents={{
               CVSLOsListingPage
