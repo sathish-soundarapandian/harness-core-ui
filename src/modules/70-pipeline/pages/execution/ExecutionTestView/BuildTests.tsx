@@ -22,7 +22,6 @@ import {
 } from 'services/ti-service'
 import { PageSpinner } from '@common/components'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { BuildZeroState } from './BuildZeroState'
 import { TestsExecution } from './TestsExecution'
 import { TestsOverview } from './TestsOverview'

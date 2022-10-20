@@ -16,7 +16,6 @@ import { useGetLicensesAndSummary } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 
 const CEHomePage: React.FC = () => {

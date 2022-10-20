@@ -11,13 +11,11 @@ import { useToaster } from '@harness/uicore'
 import pick from 'lodash-es/pick'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useQueryParams } from '@common/hooks'
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { ResponseModuleLicenseDTO, useStartFreeLicense, useStartTrialLicense } from 'services/cd-ng'
+import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { ResponseModuleLicenseDTO, useStartFreeLicense } from 'services/cd-ng'
 import useChaosTrialModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
 import bgImageURL from '../../images/chaos.svg'
@@ -31,12 +29,6 @@ const ChaosTrialHomePage: React.FC = () => {
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const module = 'chaos'
   const moduleType = 'CHAOS'
-
-  const { mutate: startTrial } = useStartTrialLicense({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
 
   const { mutate: startFreePlan } = useStartFreeLicense({
     queryParams: {

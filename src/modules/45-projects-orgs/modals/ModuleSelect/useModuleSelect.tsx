@@ -23,7 +23,6 @@ import {
   StartFreeLicenseQueryParams,
   StartTrialDTO,
   startFreeLicensePromise,
-  startTrialLicensePromise,
   ResponseModuleLicenseDTO
 } from 'services/cd-ng'
 import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFactory'
@@ -143,21 +142,6 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
     })
       .then(planData => {
         updateLicenseStoreAndGotoModulePage({ planData, experienceType: ModuleLicenseType.FREE })
-      })
-      .catch(err => {
-        showError(err)
-      })
-  }
-  const startTrialLicense = (): void => {
-    startTrialLicensePromise({
-      body: {
-        moduleType: selectedModuleName as StartTrialDTO['moduleType'],
-        edition: Editions.ENTERPRISE
-      },
-      queryParams: { accountIdentifier: accountId }
-    })
-      .then(planData => {
-        updateLicenseStoreAndGotoModulePage({ planData, experienceType: ModuleLicenseType.TRIAL })
       })
       .catch(err => {
         showError(err)

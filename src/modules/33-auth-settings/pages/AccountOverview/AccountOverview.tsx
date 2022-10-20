@@ -20,7 +20,7 @@ const AccountOverview: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
-  const {  DISABLE_HARNESS_SM } = useFeatureFlags()
+  const { DISABLE_HARNESS_SM } = useFeatureFlags()
 
   const { accounts } = currentUserInfo
   const createdFromNG = accounts?.find(account => account.uuid === accountId)?.createdFromNG

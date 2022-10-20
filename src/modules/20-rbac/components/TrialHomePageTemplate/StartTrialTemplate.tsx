@@ -15,19 +15,16 @@ import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStor
 import {
   useStartTrialLicense,
   ResponseModuleLicenseDTO,
-  StartTrialDTORequestBody,
   useStartFreeLicense,
   StartFreeLicenseQueryParams
 } from 'services/cd-ng'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, PlanActions, TrialActions } from '@common/constants/TrackingConstants'
+import { Category, PlanActions } from '@common/constants/TrackingConstants'
 import routes from '@common/RouteDefinitions'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
-import { useFeatureFlags, useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './StartTrialTemplate.module.scss'
 
 interface StartTrialTemplateProps {
@@ -127,11 +124,6 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
-
-  const startTrialRequestBody: StartTrialDTORequestBody = {
-    moduleType: module.toUpperCase() as any,
-    edition: Editions.ENTERPRISE
-  }
   const refererURL = getSavedRefererURL()
   const gaClientID = getGaClientID()
   const { mutate: startTrial, loading: startingTrial } = useStartTrialLicense({

@@ -23,7 +23,6 @@ import {
 } from 'services/cd-ng'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { Module } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import GenericErrorPage, { GENERIC_ERROR_CODES } from '@common/pages/GenericError/GenericErrorPage'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'

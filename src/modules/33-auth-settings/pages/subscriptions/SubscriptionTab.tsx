@@ -18,8 +18,6 @@ import type { ModuleName } from 'framework/types/ModuleName'
 import type { AccountDTO, ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
-
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'stringTypes'
 import { useGetCommunity } from '@common/utils/utils'
 
