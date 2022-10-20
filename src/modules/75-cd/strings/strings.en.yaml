@@ -189,7 +189,7 @@ pipelineSteps:
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
     environmentGroupIsRequired: 'Environment Group is required'
-    clusterIsRequired: 'Clusters are required'
+    clusterIsRequired: 'Cluster is required'
     multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
     viewEnvironmentInputs: View environment inputs
     hideEnvironmentInputs: Hide environment inputs

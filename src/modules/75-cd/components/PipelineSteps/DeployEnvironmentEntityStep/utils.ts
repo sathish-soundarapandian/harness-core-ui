@@ -35,7 +35,7 @@ export function processInitialValues(
     // this is backwards compatibility for single env multiple clusters in the older redesign setup
     if (
       Array.isArray(initialValues.environment.gitOpsClusters) &&
-      initialValues.environment.gitOpsClusters.length > 0
+      initialValues.environment.gitOpsClusters.length > 1
     ) {
       return processMultiEnvironmentInitialValues(
         {

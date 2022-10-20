@@ -46,7 +46,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   const [actionsOptions, setActionsOptions] = useState<SelectOption[]>([])
   const [actionsOptionsMap, setActionsOptionsMap] = useState<{ [key: string]: string[] }>({})
   const { getString } = useStrings()
-  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.GIT_WEBHOOK_POLLING)
+  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
   const loading = false
 
   useEffect(() => {

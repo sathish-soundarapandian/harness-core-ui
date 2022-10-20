@@ -194,7 +194,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
   })
 
-  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.GIT_WEBHOOK_POLLING)
+  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
 
   const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
 
