@@ -40,7 +40,7 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enabl
     remotes.ccmui = "ccmui@[window.getApiBaseUrl('ccmui/remoteEntry.js')]"
   }
 
-  if (enableSRMUI) {
+  if (true) {
     remotes.srmui = "srmui@[window.getApiBaseUrl('srmui/remoteEntry.js')]"
   }
 
