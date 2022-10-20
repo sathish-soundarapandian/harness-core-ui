@@ -298,8 +298,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               itemRenderer: itemRenderer,
               items: buckets,
               allowCreatingNewItems: true,
-              addClearBtn: true,
-              addTooltip: true
+              addClearBtn: true
             },
             onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
               if (

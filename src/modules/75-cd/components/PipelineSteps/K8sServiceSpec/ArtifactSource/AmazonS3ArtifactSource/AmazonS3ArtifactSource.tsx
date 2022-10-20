@@ -345,7 +345,8 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                   ),
                   itemRenderer: itemRenderer,
                   items: getBuckets(),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  addClearBtn: true
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
