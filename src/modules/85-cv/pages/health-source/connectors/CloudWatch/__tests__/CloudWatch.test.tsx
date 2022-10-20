@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -168,7 +175,7 @@ describe('CloudWatch', () => {
 
     //expect modal to show and fill out new name
     await waitFor(() =>
-      expect(screen.getByText('cv.monitoringSources.prometheus.newPrometheusGroupName')).not.toBeNull()
+      expect(screen.getByText('cv.healthSource.connectors.CloudWatch.groupModalTitle')).not.toBeNull()
     )
     await setFieldValue({
       container: document.body,
