@@ -912,8 +912,7 @@ export function PipelineCanvas({
                 <>
                   <VisualYamlToggle
                     className={css.visualYamlToggle}
-                    // selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}
-                    selectedView={SelectedView.YAML}
+                    selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}
                     disableToggle={disableVisualView}
                     onChange={nextMode => {
                       handleViewChange(nextMode)

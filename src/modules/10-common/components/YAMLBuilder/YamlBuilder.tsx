@@ -611,14 +611,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
     return (
       <ul className={css.noStyleUl}>
-        {Array.from(yamlValidationErrors.values()).map(value => {
-          return (
+        {Array.from(yamlValidationErrors.keys()).map(key => {
+          const errorMssg = yamlValidationErrors.get(key)
+          return errorMssg ? (
             <Container padding="xsmall">
               <li>
-                <Text color={Color.WHITE}>{value}</Text>
+                <Text color={Color.WHITE}>
+                  Line&nbsp;{key + 1}:&nbsp;{errorMssg}
+                </Text>
               </li>
             </Container>
-          )
+          ) : null
         })}
       </ul>
     )
