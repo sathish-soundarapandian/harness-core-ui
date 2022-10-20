@@ -92,9 +92,6 @@ describe('AccountSideNav', () => {
   })
 
   test('AccountSideNav test no licenses enabled', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      NG_LICENSES_ENABLED: true
-    })
     const renderObj = render(
       <TestWrapper>
         <AccountSideNav />
