@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { noop } from 'lodash-es'
-import { Text } from '@harness/uicore'
+import React, { useState } from 'react'
+import { Text, Button } from '@harness/uicore'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -20,53 +19,45 @@ const Wrapped = ({
   isStepValid: (stepId: string) => boolean
   runValidationOnMount?: boolean
 }): React.ReactElement => {
-  const [selectedStepId, setSelectedStepId] = React.useState<string>('Step1')
-  const onChangeStep = (stepId: string, skipValidation?: boolean) => {
-    setSelectedStepId(stepId)
-    if (skipValidation) {
-      noop()
-    }
-  }
-
+  const [validateAll, setValidateAll] = useState(runValidationOnMount)
   return (
-    <CVStepper
-      id="createSLOTabs"
-      selectedStepId={selectedStepId}
-      isStepValid={isStepValid}
-      runValidationOnMount={runValidationOnMount}
-      onChange={(stepId, skipValidation) => {
-        onChangeStep(stepId, skipValidation)
-      }}
-      stepList={[
-        {
-          id: 'Step1',
-          title: 'This is Step 1',
-          panel: (
-            <>
-              <Text>Panel Step 1</Text>
-            </>
-          )
-        },
-        {
-          id: 'Step2',
-          title: 'This is Step 2',
-          panel: (
-            <>
-              <Text>Panel Step 2</Text>
-            </>
-          )
-        },
-        {
-          id: 'Step3',
-          title: 'This is Step 3',
-          panel: (
-            <>
-              <Text>Panel Step 3</Text>
-            </>
-          )
-        }
-      ]}
-    />
+    <>
+      <CVStepper
+        id="createSLOTabs"
+        isStepValid={isStepValid}
+        runValidationOnMount={validateAll}
+        stepList={[
+          {
+            id: 'Step1',
+            title: 'This is Step 1',
+            panel: (
+              <>
+                <Text>Panel Step 1</Text>
+              </>
+            )
+          },
+          {
+            id: 'Step2',
+            title: 'This is Step 2',
+            panel: (
+              <>
+                <Text>Panel Step 2</Text>
+              </>
+            )
+          },
+          {
+            id: 'Step3',
+            title: 'This is Step 3',
+            panel: (
+              <>
+                <Text>Panel Step 3</Text>
+              </>
+            )
+          }
+        ]}
+      />
+      <Button text="save" onClick={() => setValidateAll(true)} />
+    </>
   )
 }
 
@@ -94,12 +85,11 @@ describe('Validate CVStepper', () => {
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="edit"]')).toBeInTheDocument()
     expect(screen.getByText('back')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="nextButton"]')).not.toBeInTheDocument()
     userEvent.click(screen.getByText('save'))
-    expect(container.querySelector('[data-testid="nextButton"]')).toBeInTheDocument()
 
     // goto step 1 ( edit icon not visible on selected one as status is available )
     userEvent.click(container.querySelector('[data-testid="steptitle_Step1"]')!)
-    // expect(container).toMatchSnapshot()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="tick-circle"]')).toBeInTheDocument()
@@ -134,7 +124,6 @@ describe('Validate CVStepper', () => {
 
     // directly jump to step 3 in error state
     userEvent.click(container.querySelector('[data-testid="steptitle_Step3"]')!)
-    expect(container).toMatchSnapshot()
     expect(getByText('Panel Step 3')).toBeInTheDocument()
     userEvent.click(screen.getByText('back'))
     expect(getByText('Panel Step 2')).toBeInTheDocument()
