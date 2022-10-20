@@ -82,10 +82,10 @@ export function VariablesInputModal({
       if (!isEmpty(parsedData.variables)) {
         setVariablesTemplate(parsedData.variables as AllNGVariables[])
       } else {
-        onResolve(defaultTo(template.yaml, ''))
+        onSubmit({ variables: [] })
       }
     } else if (!loading) {
-      onResolve(defaultTo(template.yaml, ''))
+      onSubmit({ variables: [] })
     }
   }, [templateInputYaml?.data])
 
@@ -96,29 +96,30 @@ export function VariablesInputModal({
     }
   }, [inputSetError])
 
-  const onSubmit = async ({ variables }: { variables: AllNGVariables[] }) => {
+  const onSubmit = ({ variables }: { variables: AllNGVariables[] }) => {
     setLoadingCopyTemplate(true)
-    try {
-      const response = await copyTemplateWithVariablesPromise({
-        body: {
-          templateYaml: defaultTo(template.yaml, ''),
-          variables
-        },
-        queryParams: {
-          accountIdentifier: defaultTo(template.accountId, ''),
-          orgIdentifier: template.orgIdentifier,
-          projectIdentifier: template.projectIdentifier
+    copyTemplateWithVariablesPromise({
+      body: {
+        templateYaml: defaultTo(template.yaml, ''),
+        variables
+      },
+      queryParams: {
+        accountIdentifier: defaultTo(template.accountId, ''),
+        orgIdentifier: template.orgIdentifier,
+        projectIdentifier: template.projectIdentifier
+      }
+    })
+      .then(response => {
+        if (response && response.status === 'SUCCESS') {
+          onResolve(stringify({ template: parse<TemplateSummaryResponse>(defaultTo(response.data, '')) }))
+        } else {
+          throw response
         }
       })
-      if (response && response.status === 'SUCCESS') {
-        onResolve(stringify({ template: parse<TemplateSummaryResponse>(defaultTo(response.data, '')) }))
-      } else {
-        throw response
-      }
-    } catch (error) {
-      setLoadingCopyTemplate(false)
-      showError(getRBACErrorMessage(error), undefined, 'template.copy.variables.error')
-    }
+      .catch(error => {
+        setLoadingCopyTemplate(false)
+        showError(getRBACErrorMessage(error), undefined, 'template.copy.variables.error')
+      })
   }
 
   const onValidate = (values: { variables: NGVariable[] }) => {
