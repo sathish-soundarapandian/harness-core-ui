@@ -256,6 +256,9 @@ export function StepForm({
     : ((template?.step as StepElementConfig)?.type as StepType)
   const iconColor = factory.getStepIconColor(type)
   const templateVariables = (template?.step as unknown as TemplateStepNode)?.template?.variables
+  const finalStepTemplate = isTemplateStep
+    ? { step: (template?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
+    : template
 
   return (
     <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
@@ -296,29 +299,29 @@ export function StepForm({
           </Layout.Vertical>
         </Container>
       )}
-      <StepFormInternal
-        template={
-          isTemplateStep
-            ? { step: (template?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : template
-        }
-        allValues={
-          (allValues?.step as unknown as TemplateStepNode)?.template
-            ? { step: (allValues?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : allValues
-        }
-        values={
-          isTemplateStep
-            ? { step: (values?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : values
-        }
-        path={isTemplateStep ? (path ? `${path}.${TEMPLATE_INPUT_PATH}` : TEMPLATE_INPUT_PATH) : path}
-        readonly={readonly}
-        viewType={viewType}
-        allowableTypes={allowableTypes}
-        onUpdate={onUpdate}
-        customStepProps={customStepProps}
-      />
+      {finalStepTemplate?.step && (
+        <StepFormInternal
+          template={finalStepTemplate}
+          allValues={
+            (allValues?.step as unknown as TemplateStepNode)?.template
+              ? {
+                  step: (allValues?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig
+                }
+              : allValues
+          }
+          values={
+            isTemplateStep
+              ? { step: (values?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
+              : values
+          }
+          path={isTemplateStep ? (path ? `${path}.${TEMPLATE_INPUT_PATH}` : TEMPLATE_INPUT_PATH) : path}
+          readonly={readonly}
+          viewType={viewType}
+          allowableTypes={allowableTypes}
+          onUpdate={onUpdate}
+          customStepProps={customStepProps}
+        />
+      )}
     </Layout.Vertical>
   )
 }

@@ -170,14 +170,7 @@ function TemplateStepWidget(
 
   React.useEffect(() => {
     if (stepTemplateInputSetLoading) {
-<<<<<<< HEAD
       setAllTemplateInputs(undefined)
-=======
-      setFormValues({
-        name: initialValues.name,
-        identifier: initialValues.identifier
-      } as TemplateStepNode)
->>>>>>> 3c7f325823d8 (feat: [CDS-42781]: template variables support)
       setAllValues(undefined)
     } else {
       const newAllTemplateInputs = {

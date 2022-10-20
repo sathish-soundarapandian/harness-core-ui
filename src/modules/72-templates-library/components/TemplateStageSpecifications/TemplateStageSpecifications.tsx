@@ -172,14 +172,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
 
   React.useEffect(() => {
     if (templateInputSetLoading) {
-<<<<<<< HEAD
       setAllTemplateInputs(undefined)
-=======
-      setFormValues({
-        name: stage?.stage?.name,
-        identifier: stage?.stage?.identifier
-      } as StageElementConfig)
->>>>>>> 3c7f325823d8 (feat: [CDS-42781]: template variables support)
       setAllValues(undefined)
     } else {
       const newAllTemplateInputs = {

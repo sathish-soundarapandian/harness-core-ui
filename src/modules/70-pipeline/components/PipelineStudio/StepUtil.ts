@@ -21,7 +21,8 @@ import type {
   PipelineInfoConfig,
   ExecutionWrapperConfig,
   StageElementConfig,
-  PipelineStageConfig
+  PipelineStageConfig,
+  NGVariable
 } from 'services/pipeline-ng'
 import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
@@ -110,6 +111,20 @@ export const validateStep = ({
     const suffix = isTemplateStep ? '.template.templateInputs' : ''
     set(errors, `step${suffix}`, errorResponse)
   }
+
+  if (isTemplateStep) {
+    const variablesErrorsResponse = factory.getStep(StepType.CustomVariable)?.validateInputSet({
+      data: { variables: (step as TemplateStepNode).template.variables },
+      template: { variables: (template as TemplateStepNode).template.variables },
+      getString,
+      viewType: StepViewType.DeploymentForm
+    }) as { variables: NGVariable[] }
+
+    if (!isEmpty(variablesErrorsResponse)) {
+      set(errors, `step.template.variables`, variablesErrorsResponse.variables)
+    }
+  }
+
   return errors
 }
 
