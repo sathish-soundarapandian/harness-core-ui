@@ -26,7 +26,6 @@ import bgImageURL from '../../images/chaos.svg'
 export default function ChaosHomePage(): React.ReactElement {
   const { currentUserInfo } = useAppStore()
   const { getString } = useStrings()
-  const { NG_LICENSES_ENABLED } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
 
   const { accountId } = useParams<AccountPathProps>()
@@ -71,7 +70,7 @@ export default function ChaosHomePage(): React.ReactElement {
     return <PageError message={message} onClick={() => refetch()} />
   }
 
-  const showTrialPages = createdFromNG || NG_LICENSES_ENABLED
+  const showTrialPages = createdFromNG
 
   if (showTrialPages && data?.status === 'SUCCESS' && !data.data) {
     history.push(

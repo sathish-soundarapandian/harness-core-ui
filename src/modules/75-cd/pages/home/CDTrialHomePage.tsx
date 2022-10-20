@@ -8,8 +8,6 @@
 import React from 'react'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import bgImageURL from './images/cd.svg'
 
 const CDTrialHomePage: React.FC = () => {
@@ -17,11 +15,7 @@ const CDTrialHomePage: React.FC = () => {
   const module = 'cd'
   const moduleType = 'CD'
 
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
-
-  const startBtnDescription = isFreeEnabled
-    ? getString('common.startFreePlan', { module: moduleType })
-    : getString('cd.cdTrialHomePage.startTrial.startBtn.description')
+  const startBtnDescription = getString('common.startFreePlan', { module: moduleType })
 
   const startTrialProps = {
     description: getString('cd.cdTrialHomePage.startTrial.description'),

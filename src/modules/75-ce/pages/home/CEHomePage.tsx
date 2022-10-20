@@ -21,7 +21,6 @@ import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 
 const CEHomePage: React.FC = () => {
   const { currentUserInfo } = useAppStore()
-  const { NG_LICENSES_ENABLED } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
 
   const { accountId } = useParams<AccountPathProps>()
@@ -66,7 +65,7 @@ const CEHomePage: React.FC = () => {
     return <PageError message={message} onClick={() => refetch()} />
   }
 
-  const showTrialPages = createdFromNG || NG_LICENSES_ENABLED
+  const showTrialPages = createdFromNG
 
   if (showTrialPages && data?.status === 'SUCCESS' && !data.data) {
     history.push(

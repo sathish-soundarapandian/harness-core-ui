@@ -28,7 +28,7 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
   const { handleStartTrial, module } = props
 
   const { getString } = useStrings()
-  const { CDNG_ENABLED, FREE_PLAN_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED } = useFeatureFlags()
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -58,7 +58,7 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
       }
     }
 
-    const startTrialDescription = FREE_PLAN_ENABLED ? 'common.startFreePlan' : 'common.startTrial'
+    const startTrialDescription = 'common.startFreePlan'
 
     const getButtonText = (): string | undefined => {
       if (source) {

@@ -76,7 +76,6 @@ function getStringByModuleProps(module: ModuleName): StringByModuleProps {
 
 function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageModuleProps): React.ReactElement {
   const { getString } = useStrings()
-  const { NG_LICENSES_ENABLED } = useFeatureFlags()
 
   const { accountId } = useParams<AccountPathProps>()
 
@@ -231,7 +230,7 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
     return <PageError message={pipelineError.message} onClick={() => refetchPipeline()} />
   }
 
-  const showTrialPages = createdFromNG || NG_LICENSES_ENABLED
+  const showTrialPages = createdFromNG
 
   const { title, subTitle, documentText, documentURL } = getStringByModuleProps(moduleName)
 

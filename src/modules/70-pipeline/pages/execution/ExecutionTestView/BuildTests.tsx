@@ -281,8 +281,6 @@ export function Reports({
   serviceToken?: string | null
   testsCountDiff?: number
 }): JSX.Element {
-  const { NG_LICENSES_ENABLED } = useFeatureFlags()
-
   return (
     <>
       {header}
@@ -311,7 +309,7 @@ export function Reports({
               skippedTests={reportSummaryData.skipped_tests}
             />
           )}
-        {NG_LICENSES_ENABLED && !hasTIStep && <TICallToAction />}
+        {!hasTIStep && <TICallToAction />}
       </Layout.Horizontal>
       <Layout.Horizontal spacing="large">
         {/* <TestsCoverage /> */}

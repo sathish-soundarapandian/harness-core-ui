@@ -35,7 +35,6 @@ const CFHomePage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId: accountIdentifier } = useParams<AccountPathProps>()
   const { currentUserInfo, selectedProject } = useAppStore()
-  const { NG_LICENSES_ENABLED } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const moduleType = ModuleName.CF
   const module = moduleType.toLowerCase() as Module
@@ -139,7 +138,7 @@ const CFHomePage: React.FC = () => {
     return <PageError message={projectsErr.message} onClick={() => refetchProject()} />
   }
 
-  const showTrialPages = createdFromNG || NG_LICENSES_ENABLED
+  const showTrialPages = createdFromNG
 
   if (showTrialPages && licenseData?.status === 'SUCCESS' && !licenseData.data) {
     history.push(

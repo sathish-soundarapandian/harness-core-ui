@@ -51,7 +51,6 @@ interface GoToModuleBtnProps {
 interface ModulesRoutesMap extends GoToModuleBtnProps {
   search?: string
   accountId: string
-  freePlanEnabled?: boolean
 }
 interface UpdateLicneseStoreAndGotoModulePageProps {
   planData: ResponseModuleLicenseDTO
@@ -61,8 +60,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
   selectedModuleName,
   projectData,
   search = '',
-  accountId,
-  freePlanEnabled = false
+  accountId
 }: ModulesRoutesMap): Map<ModuleName, any> => {
   const cdCiPath = {
     pathname: routes.toPipelineStudio({
@@ -72,7 +70,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
       accountId,
       module: selectedModuleName.toLowerCase() as Module
     }),
-    search: `modal=${freePlanEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL}`
+    search: `modal=${ModuleLicenseType.FREE}`
   }
   return new Map([
     [
@@ -114,7 +112,6 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()
@@ -132,8 +129,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       selectedModuleName,
       projectData,
       accountId,
-      search: `?experience=${experienceType}&&modal=${experienceType}`,
-      freePlanEnabled: FREE_PLAN_ENABLED
+      search: `?experience=${experienceType}&&modal=${experienceType}`
     })
     history.push(moudleRoutePathMap.get(selectedModuleName))
   }
@@ -173,10 +169,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName) &&
       !isOnPrem()
     ) {
-      if (FREE_PLAN_ENABLED) {
-        return getString('common.startFreePlan')
-      }
-      return getString('common.startTrial')
+      return getString('common.startFreePlan')
     }
     return getString('projectsOrgs.goToModuleBtn')
   }
@@ -203,11 +196,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
             })
           )
         } else {
-          if (FREE_PLAN_ENABLED) {
-            startFreeLicense()
-          } else {
-            startTrialLicense()
-          }
+          startFreeLicense()
         }
       }}
     ></Button>

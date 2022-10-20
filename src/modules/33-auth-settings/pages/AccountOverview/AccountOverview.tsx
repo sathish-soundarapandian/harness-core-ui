@@ -20,7 +20,7 @@ const AccountOverview: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
-  const { NG_LICENSES_ENABLED, DISABLE_HARNESS_SM } = useFeatureFlags()
+  const {  DISABLE_HARNESS_SM } = useFeatureFlags()
 
   const { accounts } = currentUserInfo
   const createdFromNG = accounts?.find(account => account.uuid === accountId)?.createdFromNG
@@ -29,7 +29,7 @@ const AccountOverview: React.FC = () => {
       <Page.Header title={getString('common.accountOverview')} />
       <Page.Body>
         <AccountDetails />
-        {(createdFromNG || NG_LICENSES_ENABLED) && <SubscribedModules />}
+        {createdFromNG && <SubscribedModules />}
         {DISABLE_HARNESS_SM ? <AccountSettings /> : null}
       </Page.Body>
     </>

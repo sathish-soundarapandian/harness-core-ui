@@ -80,7 +80,6 @@ export function useLicenseStore(): LicenseStoreContextProps {
 
 export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { currentUserInfo } = useAppStore()
-  const { NG_LICENSES_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { accountId } = useParams<{
     accountId: string
@@ -91,8 +90,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
   const createdFromNG = accounts?.find(account => account.uuid === accountId)?.createdFromNG
 
   // If the user has been created from NG signup we will always enforce licensing
-  // If the user is a CG user we will look at the NG_LICENSES_ENABLED feature flag to determine whether or not we should enforce licensing
-  const shouldLicensesBeDisabled = __DEV__ || (!createdFromNG && !NG_LICENSES_ENABLED)
+
+  const shouldLicensesBeDisabled = __DEV__ || !createdFromNG
 
   const defaultLicenses = {
     CD: {

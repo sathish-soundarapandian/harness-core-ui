@@ -64,16 +64,15 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED, PLANS_ENABLED } = useFeatureFlags()
-  const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
-  const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
-  const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
+  const clickEvent = PlanActions.StartFreeClick
+  const experience = ModuleLicenseType.FREE
+  const modal = ModuleLicenseType.FREE
 
   async function handleStartTrial(): Promise<void> {
     trackEvent(clickEvent, {
       category: Category.SIGNUP,
       module,
-      edition: FREE_PLAN_ENABLED ? Editions.FREE : Editions.ENTERPRISE
+      edition: Editions.FREE
     })
     try {
       const data = await startTrial()
@@ -114,11 +113,9 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
         onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
         disabled={loading}
       />
-      {PLANS_ENABLED && (
-        <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
-          {getString('common.exploreAllPlans')}
-        </Link>
-      )}
+      <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
+        {getString('common.exploreAllPlans')}
+      </Link>
     </Layout.Vertical>
   )
 }
@@ -130,8 +127,6 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
-
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
 
   const startTrialRequestBody: StartTrialDTORequestBody = {
     moduleType: module.toUpperCase() as any,
@@ -163,7 +158,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   })
 
   function handleStartTrial(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? startFreePlan() : startTrial(startTrialRequestBody)
+    return startFreePlan()
   }
 
   return (

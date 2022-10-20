@@ -29,7 +29,6 @@ const ChaosTrialHomePage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
   const module = 'chaos'
   const moduleType = 'CHAOS'
 
@@ -55,7 +54,7 @@ const ChaosTrialHomePage: React.FC = () => {
     if (experience) {
       return experience
     }
-    return isFreeEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
+    return ModuleLicenseType.FREE
   }
 
   const { showModal, hideModal } = useChaosTrialModal({
@@ -73,7 +72,7 @@ const ChaosTrialHomePage: React.FC = () => {
   const { showError } = useToaster()
 
   function startPlan(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? startFreePlan() : startTrial({ moduleType, edition: Editions.ENTERPRISE })
+    return startFreePlan()
   }
 
   const handleStartTrial = async (): Promise<void> => {
@@ -95,9 +94,7 @@ const ChaosTrialHomePage: React.FC = () => {
     }
   }
 
-  const startBtnDescription = isFreeEnabled
-    ? getString('common.startFreePlan', { module: moduleType })
-    : getString('chaos.chaosTrialHomePage.description')
+  const startBtnDescription = getString('common.startFreePlan', { module: moduleType })
 
   const startTrialProps = {
     description: getString('chaos.homepage.slogan'),

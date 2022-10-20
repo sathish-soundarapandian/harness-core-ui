@@ -31,7 +31,6 @@ const CETrialHomePage: React.FC = () => {
   const history = useHistory()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
   const module = 'ce'
   const moduleType = 'CE'
   const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)
@@ -70,7 +69,7 @@ const CETrialHomePage: React.FC = () => {
     if (experience) {
       return experience
     }
-    return isFreeEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
+    return ModuleLicenseType.FREE
   }
 
   const { showModal, hideModal } = useCETrialModal({

@@ -24,7 +24,6 @@ import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
@@ -62,9 +61,7 @@ const CITrialHomePage: React.FC = () => {
 
   useTelemetry({ pageName: PageNames.CIStartTrial })
 
-  const startBtnDescription = FREE_PLAN_ENABLED
-    ? getString('common.startFreePlan', { module: 'CI' })
-    : getString('ci.ciTrialHomePage.startTrial.startBtn.description')
+  const startBtnDescription = getString('common.startFreePlan', { module: 'CI' })
 
   const startTrialProps = {
     description: getString('ci.ciTrialHomePage.startTrial.description'),
