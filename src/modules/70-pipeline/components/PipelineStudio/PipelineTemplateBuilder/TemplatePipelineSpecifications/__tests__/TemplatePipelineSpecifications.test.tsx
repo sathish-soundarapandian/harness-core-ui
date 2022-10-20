@@ -188,7 +188,6 @@ describe('<TemplatePipelineSpecifications/> tests', () => {
             parse<TemplateLinkConfig>(pipelineTemplateInputYaml.data || '').templateInputs
           )
           set(draft, 'template.templateInputs.stages[0].stage.spec.execution.steps[0].step.timeout', '10s')
-          set(draft, 'template.variables', {})
         })
       )
     })
