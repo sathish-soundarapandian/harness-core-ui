@@ -9,10 +9,7 @@ import React from 'react'
 
 import { Layout } from '@wings-software/uicore'
 import type { ModuleName } from 'framework/types/ModuleName'
-
 import type { ModuleLicenseDTO } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import type { TrialInformation } from '../SubscriptionsPage'
