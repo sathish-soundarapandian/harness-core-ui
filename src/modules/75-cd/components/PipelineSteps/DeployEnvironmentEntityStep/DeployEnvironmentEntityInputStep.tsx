@@ -26,6 +26,7 @@ import type { EnvironmentYamlV2 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
@@ -118,13 +119,15 @@ export default function DeployEnvironmentEntityInputStep({
     if (isMultiEnvironment) {
       formik.setFieldValue(
         uniquePath.current,
-        environmentIdentifiers.map(environmentId => ({
-          label: defaultTo(
-            environmentsList.find(environmentInList => environmentInList.identifier === environmentId)?.name,
-            environmentId
-          ),
-          value: environmentId
-        }))
+        get(formik.values, pathForDeployToAll) === true
+          ? [SELECT_ALL_OPTION]
+          : environmentIdentifiers.map(environmentId => ({
+              label: defaultTo(
+                environmentsList.find(environmentInList => environmentInList.identifier === environmentId)?.name,
+                environmentId
+              ),
+              value: environmentId
+            }))
       )
     }
 
@@ -210,15 +213,15 @@ export default function DeployEnvironmentEntityInputStep({
       }
 
       const deployToAll = isMultiEnvironment
-        ? environmentObject.deployToAll
+        ? !!environmentObject?.deployToAll
         : get(formik.values, `${pathToEnvironments}.deployToAll`)
 
       const infrastructureDefinitions = isMultiEnvironment
-        ? environmentObject.infrastructureDefinitions
+        ? environmentObject?.infrastructureDefinitions
         : get(formik.values, `${pathToEnvironments}.infrastructureDefinitions`)
 
       const gitOpsClusters = isMultiEnvironment
-        ? environmentObject.gitOpsClusters
+        ? environmentObject?.gitOpsClusters
         : get(formik.values, `${pathToEnvironments}.gitOpsClusters`)
 
       // End - Retain form values
