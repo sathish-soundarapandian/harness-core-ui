@@ -128,10 +128,10 @@ export enum PAGE_NAME {
   SCMNewRepo = 'SCMNewRepo',
   SCMRepoSettings = 'SCMRepoSettings',
   SCMFiles = 'SCMFiles',
-  SCMFileDetail = 'SCMFileDetail',
+  SCMFileDetails = 'SCMFileDetails',
   SCMCommits = 'SCMCommits',
-  SCMCommitDetail = 'SCMCommitDetail',
+  SCMCommitDetails = 'SCMCommitDetails',
   SCMPullRequests = 'SCMPullRequests',
-  SCMPullRequestDetail = 'SCMPullRequestDetail',
+  SCMPullRequestDetails = 'SCMPullRequestDetails',
   ExecutionList = 'ExecutionList'
 }

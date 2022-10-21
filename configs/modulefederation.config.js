@@ -53,7 +53,7 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enabl
     remotes.scm = "scmRemote@[window.getApiBaseUrl('scm/remoteEntry.js')]"
   }
 
-  if (process.env.TARGET_LOCALHOST) {
+  if (process.env.TARGET_LOCALHOST && false) {
     remotes.errortracking = 'errortracking@http://localhost:3091/remoteEntry.js'
   } else {
     remotes.errortracking = "errortracking@[window.getApiBaseUrl('et/remoteEntry.js')]"

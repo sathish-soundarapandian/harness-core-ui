@@ -24,6 +24,7 @@ export default function SCMSideNav(): React.ReactElement {
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
     updateAppStore({ selectedProject: data })
 
+
     history.push(
       routes.toSCMRepos({
         accountId,
@@ -45,6 +46,87 @@ export default function SCMSideNav(): React.ReactElement {
             label={getString('repositories')}
             to={routes.toSCMRepos({ accountId, orgIdentifier, projectIdentifier })}
           />
+
+          {/** TODO: DON"T COMMIT THESE
+          <SidebarLink label="Repos" to={routes.toSCMRepos({ accountId, orgIdentifier, projectIdentifier })} />
+          <SidebarLink label="NewRepo" to={routes.toSCMNewRepo({ accountId, orgIdentifier, projectIdentifier })} />
+          <SidebarLink
+            label="RepoFiles"
+            to={routes.toSCMFiles({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: 'testRepo',
+              branchName: 'dev'
+            })}
+          />
+          <SidebarLink
+            label="RepoFileDetails"
+            to={routes.toSCMFileDetails({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: 'testRepo',
+              branchName: 'dev',
+              filePath: 'README.md'
+            })}
+          />
+
+          <SidebarLink
+            label="RepoCommits"
+            to={routes.toSCMCommits({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: 'testRepo',
+              branchName: 'dev'
+            })}
+          />
+
+          <SidebarLink
+            label="RepoCommitDetails"
+            to={routes.toSCMCommitDetails({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: 'testRepo',
+              branchName: 'dev',
+              commitId: 'abc-xyz'
+            })}
+          />
+
+          <SidebarLink
+            label="RepoPullRequests"
+            to={routes.toSCMPullRequests({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: 'testRepo',
+              branchName: 'dev'
+            })}
+          />
+
+          <SidebarLink
+            label="RepoPullRequestDetails"
+            to={routes.toSCMPullRequestDetails({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: 'testRepo',
+              branchName: 'dev',
+              pullRequestId: 'adkajdl'
+            })}
+          />
+
+          <SidebarLink
+            label="RepoSettings"
+            to={routes.toSCMRepoSettings({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: 'testRepo'
+            })}
+          />*/}
         </>
       )}
     </Layout.Vertical>

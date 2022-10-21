@@ -223,19 +223,7 @@ if (!enableSTO) {
 
 // render a mock app when SCM MF is disabled
 if (!enableSCM) {
-  const scmModules = [
-    'scm/App',
-    'scm/Welcome',
-    'scm/Repos',
-    'scm/NewRepo',
-    'scm/RepoFiles',
-    'scm/RepoFileDetail',
-    'scm/RepoCommits',
-    'scm/RepoCommitDetail',
-    'scm/RepoPullRequests',
-    'scm/RepoPullRequestDetail',
-    'scm/RepoSettings'
-  ]
+  const scmModules = ['scm/App', 'scm/Welcome', 'scm/Repos', 'scm/RepoResources', 'scm/RepoResourceDetails']
   scmModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }
 

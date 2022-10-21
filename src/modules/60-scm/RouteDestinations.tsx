@@ -14,7 +14,7 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { SCMPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@scm/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { WelcomeView } from './SCMRemoteApp'
+import { RemmoteRepoResourceDetails, RemoteRepoResources, RemoteRepos, RemoteWelcome } from './SCMApp'
 
 export const SCMSideNavProps: SidebarContext = {
   navComponent: SideNav,
@@ -42,50 +42,26 @@ export const SCMRouteDestinations: React.FC<{
       <RedirectToDefaultSCMRoute />
     </Route>
     <RouteWithLayout path={routes.toSCMHome(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMWelcome}>
-      <WelcomeView />
+      <RemoteWelcome />
     </RouteWithLayout>
-    <RouteWithLayout
-      path={routes.toSCMNewRepo(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMNewRepo}
-    />
     <RouteWithLayout
       path={routes.toSCMRepos(pathProps)}
       sidebarProps={sidebarProps}
       pageName={PAGE_NAME.SCMRepos}
       exact
-    />
-    <RouteWithLayout
-      path={routes.toSCMRepoSettings(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMRepoSettings}
-    />
-    <RouteWithLayout path={routes.toSCMFiles(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMFiles} />
+    >
+      <RemoteRepos />
+    </RouteWithLayout>
+    <RouteWithLayout path={routes.toSCMFiles(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMFiles}>
+      <RemoteRepoResources />
+    </RouteWithLayout>
     <RouteWithLayout
       path={routes.toSCMFileDetails(pathProps)}
       sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMFileDetail}
-    />
-    <RouteWithLayout
-      path={routes.toSCMCommits(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMCommits}
-    />
-    <RouteWithLayout
-      path={routes.toSCMCommitDetails(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMCommitDetail}
-    />
-    <RouteWithLayout
-      path={routes.toSCMPullRequests(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMPullRequests}
-    />
-    <RouteWithLayout
-      path={routes.toSCMPullRequestDetails(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMPullRequestDetail}
-    />
+      pageName={PAGE_NAME.SCMFileDetails}
+    >
+      <RemmoteRepoResourceDetails />
+    </RouteWithLayout>
   </Route>
 )
 

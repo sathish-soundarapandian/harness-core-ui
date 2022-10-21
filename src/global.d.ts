@@ -141,4 +141,19 @@ declare module 'scm/Welcome' {
   export default ChildApp
 }
 
+declare module 'scm/Repos' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'scm/RepoResources' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'scm/RepoResourceDetails' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
