@@ -42,6 +42,11 @@ exports[`CDTrialHomePage snapshot test should render properly 1`] = `
             cd.cdTrialHomePage.startTrial.startBtn.description
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=cd&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>

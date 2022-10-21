@@ -42,6 +42,11 @@ exports[`CVTrialHomePage snapshot test should render properly 1`] = `
             cv.cvTrialHomePage.startTrial.startBtn.description
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=cv&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>

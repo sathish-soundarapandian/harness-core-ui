@@ -13,16 +13,32 @@ import {
   useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
-  useSaveFeedback
+  useSaveFeedback,
+  useGetLicensesAndSummary,
+  useGetCDLicenseUsageForServiceInstances,
+  useGetCDLicenseUsageForServices
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 
 jest.mock('services/cd-ng')
+
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
+const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
+const useGetCDLicenseUsageForServiceInstancesMock = useGetCDLicenseUsageForServiceInstances as jest.MockedFunction<any>
+const useGetCDLicenseUsageForServicesMock = useGetCDLicenseUsageForServices as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
+useGetLicensesAndSummaryMock.mockImplementation(() => {
+  return {}
+})
+useGetCDLicenseUsageForServicesMock.mockImplementation(() => {
+  return {}
+})
+useGetCDLicenseUsageForServiceInstancesMock.mockImplementation(() => {
+  return {}
+})
 useExtendTrialLicenseMock.mockImplementation(() => {
   return {
     mutate: jest.fn()

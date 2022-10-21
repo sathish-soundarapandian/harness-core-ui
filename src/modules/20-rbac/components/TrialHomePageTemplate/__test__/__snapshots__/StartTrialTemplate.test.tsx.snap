@@ -42,6 +42,11 @@ exports[`StartTrialTemplate snapshot test should call prop onClick when there is
             Continue
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -105,6 +110,11 @@ exports[`StartTrialTemplate snapshot test should call the start button click han
             Start A Trial
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -153,6 +163,11 @@ exports[`StartTrialTemplate snapshot test should display error msg when api call
             Start A Trial
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -201,6 +216,11 @@ exports[`StartTrialTemplate snapshot test should open the modal when a button is
             Start A Trial
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -249,6 +269,11 @@ exports[`StartTrialTemplate snapshot test should render start a trial by default
             Start A Trial
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>

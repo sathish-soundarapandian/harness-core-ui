@@ -70,6 +70,11 @@ exports[`CITrialHomePage snapshot test should call button event when click 1`] =
             ci.ciTrialHomePage.startTrial.startBtn.description
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -133,6 +138,11 @@ exports[`CITrialHomePage snapshot test should render properly 1`] = `
             ci.ciTrialHomePage.startTrial.startBtn.description
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>

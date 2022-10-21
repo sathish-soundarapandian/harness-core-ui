@@ -42,6 +42,11 @@ exports[`CFTrialHomePage snapshot test should render properly 1`] = `
             cf.cfTrialHomePage.startTrial.startBtn.description
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=cf&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
