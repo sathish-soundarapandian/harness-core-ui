@@ -74,7 +74,6 @@ const SubscriptionTab = ({
   licenseData,
   refetchGetLicense
 }: SubscriptionTabProps): ReactElement => {
-  const { PLANS_ENABLED } = useFeatureFlags()
   const isCommunity = useGetCommunity()
 
   const [selectedSubscriptionTab, setSelectedSubscriptionTab] = useState<SubscriptionTabInfo>(SUBSCRIPTION_TABS[0])
@@ -124,11 +123,6 @@ const SubscriptionTab = ({
         </Button>
       )
     })
-
-    // show Plans tab only when feature flag is on, always show for community edition
-    if (!isCommunity && !PLANS_ENABLED) {
-      tabs.splice(1, 1)
-    }
 
     return tabs
   }

@@ -27,8 +27,6 @@ interface SubscriptionOverviewProps {
 
 const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountName, licenseData, module, trialInformation, refetchGetLicense } = props
-  const enabled = useFeatureFlag(FeatureFlag.VIEW_USAGE_ENABLED)
-
   return (
     <Layout.Vertical spacing="large" width={'90%'}>
       <SubscriptionDetailsCard
@@ -38,7 +36,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         trialInformation={trialInformation}
         refetchGetLicense={refetchGetLicense}
       />
-      {enabled && licenseData && <SubscriptionUsageCard module={module} />}
+      {licenseData && <SubscriptionUsageCard module={module} />}
     </Layout.Vertical>
   )
 }

@@ -154,7 +154,7 @@ export default function FeatureBanner(): React.ReactElement | null {
   const { module } = useModuleInfo()
   const { getString } = useStrings()
 
-  const { FEATURE_ENFORCEMENT_ENABLED: isFeatureEnforceEnabled, FREE_PLAN_ENFORCEMENT_ENABLED } = useFeatureFlags()
+  const { FEATURE_ENFORCEMENT_ENABLED: isFeatureEnforceEnabled } = useFeatureFlags()
   const [activeModuleFeatures, setActiveModuleFeatures] = React.useState<FeatureProps | null>(null)
   const [isBannerDismissed, setIsBannerDismissed] = useLocalStorage<Partial<Record<Module, boolean>>>(
     BANNER_KEY,
@@ -177,7 +177,7 @@ export default function FeatureBanner(): React.ReactElement | null {
       isEnterpriseEdition
     }
   }, [isFreeEdition, isTeamEdition, isEnterpriseEdition])
-  const shouldDisplayForFreePlanOnly = FREE_PLAN_ENFORCEMENT_ENABLED && (isTeamEdition || isEnterpriseEdition)
+  const shouldDisplayForFreePlanOnly = isTeamEdition || isEnterpriseEdition
 
   React.useEffect(() => {
     if (module) {

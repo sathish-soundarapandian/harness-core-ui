@@ -64,7 +64,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED, PLANS_ENABLED } = useFeatureFlags()
+  const { FREE_PLAN_ENABLED } = useFeatureFlags()
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
@@ -114,11 +114,9 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
         onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
         disabled={loading}
       />
-      {PLANS_ENABLED && (
-        <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
-          {getString('common.exploreAllPlans')}
-        </Link>
-      )}
+      <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
+        {getString('common.exploreAllPlans')}
+      </Link>
     </Layout.Vertical>
   )
 }
