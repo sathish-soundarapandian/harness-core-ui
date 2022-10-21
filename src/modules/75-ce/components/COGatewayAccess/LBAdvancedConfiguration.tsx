@@ -143,8 +143,8 @@ const LBAdvancedConfiguration: React.FC<LBAdvancedConfigurationProps> = props =>
 
   const handleHealthCheckToggle = (toggleStatus: boolean) => {
     const hcData = toggleStatus
-      ? !_isEmpty(healthCheckPattern)
-        ? healthCheckPattern
+      ? !_isEmpty(healthCheckData?.response)
+        ? (healthCheckData?.response as HealthCheck)
         : Utils.getDefaultRuleHealthCheck()
       : null
     setHealthCheckPattern(hcData)
