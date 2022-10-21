@@ -2546,6 +2546,55 @@
         }
       }
     },
+    "accounts/{account_id}/healthchecks": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloud_account_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "instance_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getInstanceHealthCheckDetails"],
+        "summary": "Fetches health check details for an instance in the specified region",
+        "description": "Fetches health check details for an instance in the specified region",
+        "operationId": "getInstanceHealthCheckDetails",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/InstanceHealthCheckDetailsResponse"
+            }
+          }
+        }
+      }
+    },
     "/app_id": {
       "get": {
         "tags": ["appId"],
@@ -2629,6 +2678,21 @@
             }
           },
           "additionalProperties": false
+        }
+      }
+    },
+    "InstanceHealthCheckDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response": {
+          "type": "object",
+          "$ref": "#/definitions/HealthCheck"
         }
       }
     },
