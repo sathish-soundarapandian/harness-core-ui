@@ -17,36 +17,24 @@ import routes from '@common/RouteDefinitions'
 import { useGetTriggerListForTarget } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
-import { AddDrawer } from '@common/components'
-import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, OrgPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
-
-import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
-import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
+import TriggerCatalogDrawer from './TriggerCatalogDrawer'
 import css from './TriggersList.module.scss'
 
 interface TriggersListPropsInterface {
-  onNewTriggerClick: (val: TriggerDataInterface) => void
-  isPipelineInvalid?: boolean
-  gitAwareForTriggerEnabled?: boolean
+  isPipelineInvalid: boolean
 }
 
-export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
-  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
+export default function TriggersList(props: TriggersListPropsInterface): JSX.Element {
+  const { isPipelineInvalid } = props
   const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
-    PipelineType<{
-      projectIdentifier: string
-      orgIdentifier: string
-      accountId: string
-      pipelineIdentifier: string
-    }>
-  >()
+  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
+    useParams<PipelineType<OrgPathProps & PipelinePathProps>>()
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
 
@@ -155,30 +143,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     )
   }
 
-  const [openDrawer, hideDrawer] = useModalHook(() => {
-    /* istanbul ignore next */
-    const onSelect = (val: ItemInterface): void => {
-      if (val?.categoryValue) {
-        hideDrawer()
-        onNewTriggerClick({
-          triggerType: val.categoryValue,
-          sourceRepo: (val.categoryValue === TriggerTypes.WEBHOOK && val.value) || undefined,
-          artifactType: (val.categoryValue === TriggerTypes.ARTIFACT && val.value) || undefined,
-          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined,
-          scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && val.value) || undefined
-        })
-      }
-    }
-
-    return (
-      <AddDrawer
-        addDrawerMap={getCategoryItems(getString, false)}
-        onSelect={onSelect}
-        onClose={hideDrawer}
-        drawerContext={DrawerContext.STUDIO}
-      />
-    )
-  })
+  const [openDrawer, hideDrawer] = useModalHook(() => <TriggerCatalogDrawer hideDrawer={hideDrawer} />)
   const buttonProps = incompatibleGitSyncBranch
     ? {
         tooltip: getString('triggers.tooltip.defaultGitSyncBranchOnly')
@@ -238,7 +203,6 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           goToEditWizard={goToEditWizard}
           goToDetails={goToDetails}
           isPipelineInvalid={isPipelineInvalid}
-          gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
         />
       </Page.Body>
     </>

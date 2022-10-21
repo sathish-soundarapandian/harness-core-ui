@@ -5,53 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import routes from '@common/RouteDefinitions'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import React from 'react'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import type { GitQueryParams, OrgPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import TriggersList from './views/TriggersList'
-import type { TriggerDataInterface } from './utils/TriggersListUtils'
 
 const TriggersPage: React.FC = (): React.ReactElement => {
-  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = useParams<
-    PipelineType<{
-      projectIdentifier: string
-      orgIdentifier: string
-      accountId: string
-      pipelineIdentifier: string
-      triggerIdentifier: string
-    }>
+  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } = useParams<
+    OrgPathProps & PipelinePathProps
   >()
-  const history = useHistory()
-  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
-  const onNewTriggerClick = (val: TriggerDataInterface): void => {
-    const { triggerType, sourceRepo, manifestType, artifactType, scheduleType } = val
-    history.push(
-      routes.toTriggersWizardPage({
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier,
-        triggerIdentifier: 'new', // new is a reserved identifier
-        triggerType,
-        sourceRepo,
-        manifestType,
-        artifactType,
-        scheduleType,
-        module,
-        repoIdentifier,
-        connectorRef,
-        repoName,
-        branch,
-        storeType
-      })
-    )
-  }
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
   const { getString } = useStrings()
 
   const { data: pipeline } = useGetPipelineSummaryQuery(
@@ -75,22 +43,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  const { supportingGitSimplification } = useAppStore()
-  const isGitSyncEnabled = useMemo(() => !!pipeline?.data?.gitDetails?.branch, [pipeline])
-  const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && supportingGitSimplification,
-    [isGitSyncEnabled, supportingGitSimplification]
-  )
-
-  return (
-    <TriggersList
-      onNewTriggerClick={onNewTriggerClick}
-      repoIdentifier={repoIdentifier}
-      branch={branch}
-      isPipelineInvalid={isPipelineInvalid}
-      gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-    />
-  )
+  return <TriggersList isPipelineInvalid={isPipelineInvalid} />
 }
 
 export default TriggersPage

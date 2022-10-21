@@ -6,20 +6,62 @@
  */
 
 import type { CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
-import { Connectors } from '@connectors/constants'
+import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { manifestTypeLabels } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { StringKeys } from 'framework/strings'
-import { getCategoryItems } from '../utils/TriggersListUtils'
+import { getTriggerCategoryDrawerMapFromTriggerCatalogItem, GitSourceProviders } from '../utils/TriggersListUtils'
+import { triggerCatalogSuccessResponse } from './TriggerCatalogResponseMockData'
 
 const getString = (key: StringKeys): string => key
 
 describe('Test util methods', () => {
   test('Test getCategoryItems method', () => {
-    const triggerCategories = getCategoryItems(getString, true).categories
-    let webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
-    expect(triggerCategories.length).toBe(5)
-    webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
+    const triggerCategories = getTriggerCategoryDrawerMapFromTriggerCatalogItem(
+      getString,
+      triggerCatalogSuccessResponse.data?.catalog ?? []
+    ).categories
+    const webhookTriggerCategories = triggerCategories.find(
+      (item: CategoryInterface) => item.categoryValue === 'Webhook'
+    )
+    const artifactTriggerCategories = triggerCategories.find(
+      (item: CategoryInterface) => item.categoryValue === 'Artifact'
+    )
+    const manifestTriggerCategories = triggerCategories.find(
+      (item: CategoryInterface) => item.categoryValue === 'Manifest'
+    )
+    const scheduledTriggerCategories = triggerCategories.find(
+      (item: CategoryInterface) => item.categoryValue === 'Scheduled'
+    )
+    expect(triggerCategories.length).toBe(4)
     expect(webhookTriggerCategories).toBeDefined()
     expect(webhookTriggerCategories?.items?.find(item => item.value === Connectors.AZURE_REPO)).toBeDefined()
     expect(webhookTriggerCategories?.items?.length).toBe(5)
+    expect(artifactTriggerCategories).toBeDefined()
+    expect(manifestTriggerCategories).toBeDefined()
+    expect(scheduledTriggerCategories).toBeDefined()
+    expect(webhookTriggerCategories?.items?.length).toBe(4)
+    expect(artifactTriggerCategories?.items?.length).toBe(6)
+    expect(manifestTriggerCategories?.items?.length).toBe(1)
+    expect(scheduledTriggerCategories?.items?.length).toBe(1)
+    expect(webhookTriggerCategories?.items?.find(item => item.value === GitSourceProviders.GITHUB.value)).toBeDefined()
+    expect(webhookTriggerCategories?.items?.find(item => item.value === GitSourceProviders.GITLAB.value)).toBeDefined()
+    expect(
+      webhookTriggerCategories?.items?.find(item => item.value === GitSourceProviders.BITBUCKET.value)
+    ).toBeDefined()
+    expect(
+      webhookTriggerCategories?.items?.find(item => item.value === GitSourceProviders.AWS_CODECOMMIT.value)
+    ).toBeDefined()
+    expect(artifactTriggerCategories?.items?.find(item => item.value === ENABLED_ARTIFACT_TYPES.Gcr)).toBeDefined()
+    expect(artifactTriggerCategories?.items?.find(item => item.value === ENABLED_ARTIFACT_TYPES.Ecr)).toBeDefined()
+    expect(
+      artifactTriggerCategories?.items?.find(item => item.value === ENABLED_ARTIFACT_TYPES.DockerRegistry)
+    ).toBeDefined()
+    expect(
+      artifactTriggerCategories?.items?.find(item => item.value === ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry)
+    ).toBeDefined()
+    expect(artifactTriggerCategories?.items?.find(item => item.value === ENABLED_ARTIFACT_TYPES.Acr)).toBeDefined()
+    expect(artifactTriggerCategories?.items?.find(item => item.value === ENABLED_ARTIFACT_TYPES.AmazonS3)).toBeDefined()
+    expect(manifestTriggerCategories?.items?.find(item => item.value === manifestTypeLabels.HelmChart)).toBeDefined()
+    expect(scheduledTriggerCategories?.items?.find(item => item.value === 'Cron')).toBeDefined()
   })
 })

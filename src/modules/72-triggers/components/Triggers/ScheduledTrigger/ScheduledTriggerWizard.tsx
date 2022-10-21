@@ -498,7 +498,7 @@ export default function ScheduledTriggerWizard(
         description,
         tags,
         pipeline: pipelineJson,
-        triggerType: TriggerBaseType.SCHEDULE,
+        triggerType: TriggerBaseType.SCHEDULED,
         expression,
         pipelineBranchName,
         inputSetRefs,
@@ -513,7 +513,7 @@ export default function ScheduledTriggerWizard(
   }
 
   useEffect(() => {
-    if (triggerData?.yaml && triggerData.type === TriggerBaseType.SCHEDULE) {
+    if (triggerData?.yaml && triggerData.type === TriggerBaseType.SCHEDULED) {
       const newOnEditInitialValues = getScheduleTriggerValues({
         triggerResponseYaml: triggerData.yaml
       })

@@ -15118,6 +15118,7 @@ export interface GetSchemaYamlQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'Container'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -15381,6 +15382,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'Container'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

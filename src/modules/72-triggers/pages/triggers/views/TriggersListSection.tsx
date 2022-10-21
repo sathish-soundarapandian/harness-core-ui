@@ -38,6 +38,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { UseStringsReturn } from 'framework/strings'
+import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import {
   getTriggerIcon,
   GitSourceProviders,
@@ -58,7 +59,6 @@ interface TriggersListSectionProps {
   goToEditWizard: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
   goToDetails: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
   isPipelineInvalid?: boolean
-  gitAwareForTriggerEnabled?: boolean
 }
 
 // type CustomColumn<T extends object> = Column<T> & {
@@ -547,8 +547,7 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
   refetchTriggerList,
   goToEditWizard,
   goToDetails,
-  isPipelineInvalid,
-  gitAwareForTriggerEnabled
+  isPipelineInvalid
 }): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -578,6 +577,7 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
   )
 
   const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
+  const gitAwareForTriggerEnabled = useIsNewGitSyncRemotePipeline()
 
   const columns: any = React.useMemo(
     // const columns: CustomColumn<NGTriggerDetailsResponse>[] = React.useMemo( // wait for backend to support condition

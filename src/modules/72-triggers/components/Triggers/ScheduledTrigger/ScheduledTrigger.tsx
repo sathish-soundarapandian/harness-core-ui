@@ -16,7 +16,7 @@ import { TriggerBaseType } from '../TriggerInterface'
 import ScheduledTriggerWizard from './ScheduledTriggerWizard'
 
 export abstract class ScheduledTrigger<T> extends Trigger<T> {
-  protected baseType = TriggerBaseType.SCHEDULE
+  protected baseType = TriggerBaseType.SCHEDULED
 
   renderStepOne(): JSX.Element {
     return <TriggerOverviewPanel />

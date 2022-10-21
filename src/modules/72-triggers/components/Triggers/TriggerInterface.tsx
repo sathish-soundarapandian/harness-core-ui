@@ -9,7 +9,7 @@ import type { ArtifactTriggerConfig, ManifestTriggerConfig, NGTriggerSourceV2 } 
 
 export enum TriggerBaseType {
   WEBHOOK = 'Webhook',
-  SCHEDULE = 'Scheduled',
+  SCHEDULED = 'Scheduled',
   ARTIFACT = 'Artifact',
   MANIFEST = 'Manifest'
 }
