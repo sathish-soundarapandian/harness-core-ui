@@ -413,6 +413,14 @@ export interface InstanceBasedRoutingData {
   scale_group?: ASGMinimal
 }
 
+// tslint:disable-next-line:no-empty-interface
+export interface InstanceHealthCheckDetailsData {}
+
+export interface InstanceHealthCheckDetailsResponse {
+  errors?: string[]
+  response?: HealthCheck
+}
+
 export interface ListAccessPointResponse {
   response?: AccessPoint[]
 }
@@ -3611,6 +3619,74 @@ export const useGetRulesMetadata = ({ account_id, ...props }: UseGetRulesMetadat
       `accounts/${paramsInPath.account_id}/autostopping/rules/list/metadata`,
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )
+
+export interface GetInstanceHealthCheckDetailsQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+  instance_id: string
+  region: string
+}
+
+export interface GetInstanceHealthCheckDetailsPathParams {
+  account_id: string
+}
+
+export type GetInstanceHealthCheckDetailsProps = Omit<
+  GetProps<
+    InstanceHealthCheckDetailsResponse,
+    unknown,
+    GetInstanceHealthCheckDetailsQueryParams,
+    GetInstanceHealthCheckDetailsPathParams
+  >,
+  'path'
+> &
+  GetInstanceHealthCheckDetailsPathParams
+
+/**
+ * Fetches health check details for an instance in the specified region
+ *
+ * Fetches health check details for an instance in the specified region
+ */
+export const GetInstanceHealthCheckDetails = ({ account_id, ...props }: GetInstanceHealthCheckDetailsProps) => (
+  <Get<
+    InstanceHealthCheckDetailsResponse,
+    unknown,
+    GetInstanceHealthCheckDetailsQueryParams,
+    GetInstanceHealthCheckDetailsPathParams
+  >
+    path={`accounts/${account_id}/healthchecks`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetInstanceHealthCheckDetailsProps = Omit<
+  UseGetProps<
+    InstanceHealthCheckDetailsResponse,
+    unknown,
+    GetInstanceHealthCheckDetailsQueryParams,
+    GetInstanceHealthCheckDetailsPathParams
+  >,
+  'path'
+> &
+  GetInstanceHealthCheckDetailsPathParams
+
+/**
+ * Fetches health check details for an instance in the specified region
+ *
+ * Fetches health check details for an instance in the specified region
+ */
+export const useGetInstanceHealthCheckDetails = ({ account_id, ...props }: UseGetInstanceHealthCheckDetailsProps) =>
+  useGet<
+    InstanceHealthCheckDetailsResponse,
+    unknown,
+    GetInstanceHealthCheckDetailsQueryParams,
+    GetInstanceHealthCheckDetailsPathParams
+  >((paramsInPath: GetInstanceHealthCheckDetailsPathParams) => `accounts/${paramsInPath.account_id}/healthchecks`, {
+    base: getConfig('lw/api'),
+    pathParams: { account_id },
+    ...props
+  })
 
 export interface GetMachineListForZoneResponse {
   response?: GcpMachineType[]

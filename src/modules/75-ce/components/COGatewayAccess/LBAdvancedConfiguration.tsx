@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
+import { isEmpty as _isEmpty, defaultTo as _defaultTo, get } from 'lodash-es'
 import { Container, Icon, Layout, Switch, Tabs, Text } from '@wings-software/uicore'
 import { Tab } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -17,7 +17,8 @@ import {
   HealthCheck,
   PortConfig,
   useSecurityGroupsOfInstances,
-  NetworkSecurityGroupForInstanceArray
+  NetworkSecurityGroupForInstanceArray,
+  useGetInstanceHealthCheckDetails
 } from 'services/lw'
 import { portProtocolMap } from '@ce/constants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -61,6 +62,22 @@ const LBAdvancedConfiguration: React.FC<LBAdvancedConfigurationProps> = props =>
       accountIdentifier: accountId
     }
   })
+
+  const { data: healthCheckData } = useGetInstanceHealthCheckDetails({
+    account_id: accountId,
+    queryParams: {
+      accountIdentifier: accountId,
+      cloud_account_id: get(props, 'gatewayDetails.cloudAccount.id', ''),
+      instance_id: get(props, 'gatewayDetails.selectedInstances.0.id', ''),
+      region: get(props, 'gatewayDetails.selectedInstances.0.region', '')
+    }
+  })
+
+  useEffect(() => {
+    if (healthCheckData?.response) {
+      setHealthCheckPattern(healthCheckData.response)
+    }
+  }, [healthCheckData?.response])
 
   useEffect(() => {
     if (_isEmpty(routingRecords) && !_isEmpty(props.gatewayDetails.selectedInstances)) {
