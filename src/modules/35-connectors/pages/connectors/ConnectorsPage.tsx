@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   Layout,
   SelectOption,
@@ -19,7 +19,6 @@ import {
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
-import type { GetDataError } from 'restful-react'
 import { debounce, pick } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import {
@@ -31,12 +30,10 @@ import {
   FilterDTO,
   usePostFilter,
   useUpdateFilter,
-  PageConnectorResponse,
   useDeleteFilter,
   ResponsePageFilterDTO,
   ResponseConnectorStatistics,
   GetConnectorListV2QueryParams,
-  Failure,
   ConnectorInfoDTO
 } from 'services/cd-ng'
 import type { ConnectorFilterProperties } from 'services/cd-ng'
@@ -54,6 +51,7 @@ import {
   flattenObject
 } from '@common/components/Filter/utils/FilterUtils'
 import { useStrings } from 'framework/strings'
+import { useMutateAsGet } from '@common/hooks'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -108,23 +106,28 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const [filters, setFilters] = useState<FilterDTO[]>()
   const [appliedFilter, setAppliedFilter] = useState<FilterDTO | null>()
   const { showError } = useToaster()
-  const [connectors, setConnectors] = useState<PageConnectorResponse | undefined>()
-  const [loading, setLoading] = useState<boolean>(false)
-  const [connectorFetchError, setConnectorFetchError] = useState<GetDataError<Failure | Error>>()
+  // const [connectors, setConnectors] = useState<PageConnectorResponse | undefined>()
+  // const [loading, setLoading] = useState<boolean>(false)
+  // const [connectorFetchError, setConnectorFetchError] = useState<GetDataError<Failure | Error>>()
   const [isRefreshingFilters, setIsRefreshingFilters] = useState<boolean>(false)
   const [isFetchingStats, setIsFetchingStats] = useState<boolean>(false)
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
   const [gitFilter, setGitFilter] = useState<GitFilterScope>({ repo: '', branch: '' })
   const [shouldApplyGitFilters, setShouldApplyGitFilters] = useState<boolean>()
   const [queryParamsWithGitContext, setQueryParamsWithGitContext] = useState<GetConnectorListV2QueryParams>({})
-  const defaultQueryParams: GetConnectorListV2QueryParams = {
-    pageIndex: page,
-    pageSize: 10,
-    projectIdentifier,
-    orgIdentifier,
-    accountIdentifier: accountId,
-    searchTerm: ''
-  }
+  // const defaultQueryParams: GetConnectorListV2QueryParams = {
+  //   pageIndex: page,
+  //   pageSize: 10,
+  //   projectIdentifier,
+  //   orgIdentifier,
+  //   accountIdentifier: accountId,
+  //   searchTerm: ''
+  // }
+  const [queryParams, setQueryParams] = useState<GetConnectorListV2QueryParams>()
+  // shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams
+
+  const shouldApply = isGitSyncEnabled && !!gitFilter.repo && !!gitFilter.branch
+
   const defaultQueryParamsForConnectorStats: GetConnectorListV2QueryParams = {
     projectIdentifier,
     orgIdentifier,
@@ -136,130 +139,162 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
 
   /* #region Connector CRUD section */
 
-  const { mutate: fetchConnectors } = useGetConnectorListV2({
-    queryParams: defaultQueryParams
+  const {
+    connectorNames,
+    connectorIdentifiers,
+    description,
+    types,
+    connectivityStatuses,
+    tags
+  }: ConnectorFilterProperties = appliedFilter?.filterProperties || {}
+
+  const requestBodyPayload = Object.assign(
+    appliedFilter?.filterProperties
+      ? {
+          connectorNames: typeof connectorNames === 'string' ? [connectorNames] : connectorNames,
+          connectorIdentifiers:
+            typeof connectorIdentifiers === 'string' ? [connectorIdentifiers] : connectorIdentifiers,
+          description,
+          types: types?.map(type => type?.toString()),
+          connectivityStatuses: connectivityStatuses?.map(status => status?.toString()),
+          tags
+        }
+      : {},
+    {
+      filterType: 'Connector'
+    }
+  ) as ConnectorFilterProperties
+
+  const sanitizedFilterRequest = removeNullAndEmpty(requestBodyPayload)
+
+  const {
+    data: connectorData,
+    loading,
+    error: connectorFetchError
+  } = useMutateAsGet(useGetConnectorListV2, {
+    queryParams: {
+      accountIdentifier: accountId,
+      pageIndex: page,
+      pageSize: 10,
+      projectIdentifier,
+      orgIdentifier,
+      searchTerm,
+      ...(shouldApply ? { repoIdentifier: gitFilter.repo, branch: gitFilter.branch } : {})
+
+      // ...queryParams
+    },
+    body: sanitizedFilterRequest
   })
 
-  const refetchConnectorList = React.useCallback(
-    async (
-      params?: GetConnectorListV2QueryParams,
-      filter?: ConnectorFilterProperties,
-      needsRefinement = true
-    ): Promise<void> => {
-      setLoading(true)
-      const { connectorNames, connectorIdentifiers, description, types, connectivityStatuses, tags } = filter || {}
+  // const refetchConnectorList = React.useCallback(
+  //   async (filter?: ConnectorFilterProperties): Promise<void> => {
+  //     // setLoading(true)
+  //     // const { connectorNames, connectorIdentifiers, description, types, connectivityStatuses, tags } = filter || {}
 
-      const requestBodyPayload = Object.assign(
-        filter
-          ? {
-              connectorNames: typeof connectorNames === 'string' ? [connectorNames] : connectorNames,
-              connectorIdentifiers:
-                typeof connectorIdentifiers === 'string' ? [connectorIdentifiers] : connectorIdentifiers,
-              description,
-              types: needsRefinement ? types?.map(type => type?.toString()) : types,
-              connectivityStatuses: needsRefinement
-                ? connectivityStatuses?.map(status => status?.toString())
-                : connectivityStatuses,
-              tags
-            }
-          : {},
-        {
-          filterType: 'Connector'
-        }
-      ) as ConnectorFilterProperties
-      const sanitizedFilterRequest = removeNullAndEmpty(requestBodyPayload)
-      try {
-        const { status, data } = await fetchConnectors(sanitizedFilterRequest, { queryParams: params })
-        /* istanbul ignore else */ if (status === 'SUCCESS') {
-          setConnectors(data)
-          setConnectorFetchError(undefined)
-        }
-      } /* istanbul ignore next */ catch (e) {
-        if (shouldShowError(e)) {
-          showError(getRBACErrorMessage(e))
-        }
-        setConnectorFetchError(e)
-      }
-      setLoading(false)
-    },
-    [fetchConnectors]
-  )
+  //     // const requestBodyPayload = Object.assign(
+  //     //   filter
+  //     //     ? {
+  //     //         connectorNames: typeof connectorNames === 'string' ? [connectorNames] : connectorNames,
+  //     //         connectorIdentifiers:
+  //     //           typeof connectorIdentifiers === 'string' ? [connectorIdentifiers] : connectorIdentifiers,
+  //     //         description,
+  //     //         types: types?.map(type => type?.toString()),
+  //     //         connectivityStatuses: connectivityStatuses?.map(status => status?.toString()),
+  //     //         tags
+  //     //       }
+  //     //     : {},
+  //     //   {
+  //     //     filterType: 'Connector'
+  //     //   }
+  //     // ) as ConnectorFilterProperties
+  //     // const sanitizedFilterRequest = removeNullAndEmpty(requestBodyPayload)
+
+  //     try {
+  //       const { status } = await fetchConnectors(sanitizedFilterRequest)
+  //       /* istanbul ignore else */ if (status === 'SUCCESS') {
+  //         // setConnectors(data)
+  //         // setConnectorFetchError(undefined)
+  //       }
+  //     } /* istanbul ignore next */ catch (e) {
+  //       // if (shouldShowError(e)) {
+  //       //   showError(getRBACErrorMessage(e))
+  //       // }
+  //       // setConnectorFetchError(e)
+  //     }
+  //     // setLoading(false)
+  //   },
+  //   [fetchConnectors]
+  // )
 
   /* Different ways to trigger filter search */
 
-  const firstRender = useRef(true)
   /* Through page browsing */
-  useEffect(() => {
-    /* Initial page load */
-    if (firstRender.current) {
-      firstRender.current = false
-    } else {
-      const updatedQueryParams = {
-        ...(shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams),
-        searchTerm,
-        pageIndex: page
-      }
-      refetchConnectorList(updatedQueryParams, appliedFilter?.filterProperties)
-    }
-  }, [page])
+  // useEffect(() => {
+  //   /* Initial page load */
+  //   // if (firstRender.current) {
+  //   //   firstRender.current = false
+  //   // } else {
+  //   setQueryParams({
+  //     ...(shouldApplyGitFilters ? queryParamsWithGitContext : queryParams),
+  //     searchTerm,
+  //     pageIndex: page
+  //   })
+  //   // refetchConnectorList(appliedFilter?.filterProperties)
+  //   // }
+  // }, [page])
+
+  console.log('page ', page)
 
   /* Through git filter */
-  useEffect(() => {
-    const shouldApply = isGitSyncEnabled && !!gitFilter.repo && !!gitFilter.branch
-    const updatedQueryParams = { ...defaultQueryParams, repoIdentifier: gitFilter.repo, branch: gitFilter.branch }
-    /* Fetch all connectors and stats for filter panel per repo and branch */
-    Promise.all([
-      refetchConnectorList(
-        {
-          ...(shouldApply ? updatedQueryParams : defaultQueryParams),
-          searchTerm,
-          /* For every git-filter, always start from first page(index 0) */
-          pageIndex: 0
-        },
-        appliedFilter?.filterProperties
-      ),
-      fetchConnectorStats({
-        queryParams: shouldApply
-          ? {
-              ...defaultQueryParamsForConnectorStats,
-              repoIdentifier: gitFilter.repo,
-              branch: gitFilter.branch
-            }
-          : defaultQueryParamsForConnectorStats
-      })
-    ])
-    setShouldApplyGitFilters(shouldApply)
-    setQueryParamsWithGitContext(updatedQueryParams)
-  }, [gitFilter, projectIdentifier, orgIdentifier])
+  // useEffect(() => {
+  //   const updatedQueryParams = { repoIdentifier: gitFilter.repo, branch: gitFilter.branch }
+  //   setQueryParams({
+  //     ...(shouldApply ? updatedQueryParams : {}),
+  //     /* For every git-filter, always start from first page(index 0) */
+  //     pageIndex: 0
+  //   })
+  //   setPage(0)
+  //   /* Fetch all connectors and stats for filter panel per repo and branch */
+  //   fetchConnectorStats({
+  //     queryParams: shouldApply
+  //       ? {
+  //           ...defaultQueryParamsForConnectorStats,
+  //           repoIdentifier: gitFilter.repo,
+  //           branch: gitFilter.branch
+  //         }
+  //       : defaultQueryParamsForConnectorStats
+  //   })
+  //   setShouldApplyGitFilters(shouldApply)
+  //   setQueryParamsWithGitContext(updatedQueryParams)
+  // }, [gitFilter, projectIdentifier, orgIdentifier])
 
   /* Through expandable filter text search */
   const debouncedConnectorSearch = useCallback(
     debounce((query: string): void => {
       /* For a non-empty query string, always start from first page(index 0) */
-      const updatedQueryParams = {
-        ...(shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams),
+      setQueryParams({
+        ...(shouldApplyGitFilters ? queryParamsWithGitContext : {}),
         searchTerm: query,
         pageIndex: 0
-      }
-      if (query) {
-        refetchConnectorList(updatedQueryParams, appliedFilter?.filterProperties)
-      } /* on clearing query */ else {
-        page === 0
-          ? /* fetch connectors for 1st page */ refetchConnectorList(
-              updatedQueryParams,
-              appliedFilter?.filterProperties
-            )
-          : /* or navigate to first page */ setPage(0)
-      }
+      })
+      setPage(0)
+      // if (query) {
+      //   // refetchConnectorList(appliedFilter?.filterProperties)
+      // } /* on clearing query */ else {
+      //   // page === 0
+      //   //   ? /* fetch connectors for 1st page */ refetchConnectorList(appliedFilter?.filterProperties)
+      //   //   : /* or navigate to first page */ setPage(0)
+      // }
     }, 500),
-    [refetchConnectorList, appliedFilter?.filterProperties, shouldApplyGitFilters, queryParamsWithGitContext]
+    [appliedFilter?.filterProperties, shouldApplyGitFilters, queryParamsWithGitContext]
   )
 
   /* Clearing filter from Connector Filter Panel */
   const reset = (): void => {
-    refetchConnectorList({ ...(shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams), searchTerm })
+    setQueryParams({ ...(shouldApplyGitFilters ? queryParamsWithGitContext : {}), searchTerm })
+    // refetchConnectorList()
     setAppliedFilter(undefined)
-    setConnectorFetchError(undefined)
+    // setConnectorFetchError(undefined)
   }
 
   /* #endregion */
@@ -284,15 +319,13 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   }, [isFetchingConnectorStats])
 
   const refetchAllConnectorsWithStats = async (): Promise<void> => {
-    const __params = shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams
+    const __params = shouldApplyGitFilters ? queryParamsWithGitContext : {}
+    setQueryParams({
+      ...__params,
+      searchTerm
+    })
     Promise.all([
-      refetchConnectorList(
-        {
-          ...__params,
-          searchTerm
-        },
-        appliedFilter?.filterProperties
-      ),
+      // refetchConnectorList(appliedFilter?.filterProperties),
       fetchConnectorStats({
         queryParams: shouldApplyGitFilters
           ? {
@@ -475,12 +508,12 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
     const onFilterApply = (formData: Record<string, any>) => {
       if (!isObjectEmpty(formData)) {
         const filterFromFormData = getValidFilterArguments({ ...formData })
-        const updatedQueryParams = {
-          ...(shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams),
+        setQueryParams({
+          ...(shouldApplyGitFilters ? queryParamsWithGitContext : {}),
           searchTerm,
           pageIndex: 0
-        }
-        refetchConnectorList(updatedQueryParams, filterFromFormData, false)
+        })
+        // refetchConnectorList(filterFromFormData, false)
         setAppliedFilter({ ...unsavedFilter, filterProperties: filterFromFormData })
         setPage(0)
         hideFilterDrawer()
@@ -572,12 +605,13 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
     if (option.value) {
       const selectedFilter = getFilterByIdentifier(option.value?.toString())
       setAppliedFilter(selectedFilter)
-      const updatedQueryParams = {
-        ...(shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams),
+      setQueryParams({
+        ...(shouldApplyGitFilters ? queryParamsWithGitContext : {}),
         searchTerm,
         pageIndex: 0
-      }
-      refetchConnectorList(updatedQueryParams, selectedFilter?.filterProperties, false)
+      })
+      setPage(0)
+      // refetchConnectorList(selectedFilter?.filterProperties, false)
     } else {
       reset()
     }
@@ -613,7 +647,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
         }
       />
       <Layout.Vertical className={css.listPage}>
-        {connectors?.content?.length || isGitSyncEnabled || searchTerm || loading || appliedFilter ? (
+        {connectorData?.data?.content?.length || isGitSyncEnabled || searchTerm || loading || appliedFilter ? (
           <Layout.Horizontal flex className={css.header}>
             <Layout.Horizontal spacing="small">
               <RbacButton
@@ -710,12 +744,15 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
                 }}
               />
             </div>
-          ) : connectors?.content?.length ? (
+          ) : connectorData?.data?.content?.length ? (
             <ConnectorsListView
-              data={connectors}
+              data={connectorData?.data}
               reload={refetchAllConnectorsWithStats}
               openConnectorModal={openConnectorModal}
-              gotoPage={pageNumber => setPage(pageNumber)}
+              gotoPage={pageNumber => {
+                console.log('changing page to ', pageNumber)
+                setPage(pageNumber)
+              }}
             />
           ) : (
             <Page.NoDataCard
