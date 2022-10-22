@@ -1365,15 +1365,16 @@ const routes = {
   ),
 
   // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
-  toSCM: withAccountId(() => `/scm`),
-  toSCMHome: withAccountId(() => `/scm/home`),
-  toSCMRepos: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos`
+  toSCM: withAccountId(() => `/code`),
+  toSCMHome: withAccountId(() => `/code/home`),
+  toSCMReposListing: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: SCMPathProps) => `/code/orgs/${orgIdentifier}/projects/${projectIdentifier}`
   ),
   toSCMRepo: withAccountId(
     ({ orgIdentifier, projectIdentifier, repoName, branch }: RequireField<SCMPathProps, 'repoName' | 'branch'>) =>
-      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}`, { branch })
+      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}`, {
+        branch
+      })
   ),
   toSCMRepoResourceDetails: withAccountId(
     ({
@@ -1383,10 +1384,7 @@ const routes = {
       branch,
       filePath
     }: RequireField<SCMPathProps, 'repoName' | 'branch' | 'filePath'>) =>
-      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}/c`, {
-        branch,
-        filePath
-      })
+      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}/c`, { branch, filePath })
   ),
 
   /********************************************************************************************************************/
