@@ -54,6 +54,7 @@ import MonitoredServiceInputSetsTemplate from './pages/monitored-service/Monitor
 import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
 import { CVCodeErrorsAgents } from './pages/code-errors-agent-control/code-errors-agents/CVCodeErrorsAgents'
 import CVCodeErrorsAgentsControl from './pages/code-errors-agent-control/CVCodeErrorsAgentsControl'
+import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -310,6 +311,14 @@ export default (
       })}
     >
       <CVSLODetailsPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+    >
+      <CVCreateSLOV2 isComposite />
     </RouteWithLayout>
 
     <RouteWithLayout

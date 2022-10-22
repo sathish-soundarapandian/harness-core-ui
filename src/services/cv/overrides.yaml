@@ -167,6 +167,10 @@ allowpaths:
   - /cloudwatch/metrics/regions
   - /cloudwatch/metrics/fetch-sample-data
   - /risk-category
+  - /slo/v2
+  - /slo/v2/{identifier}
+  - /slo/v2/{identifier}/logs
+  - /slo/v2/{identifier}/notification-rules
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

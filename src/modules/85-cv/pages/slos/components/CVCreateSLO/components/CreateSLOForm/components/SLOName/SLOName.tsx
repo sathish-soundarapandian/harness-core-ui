@@ -16,10 +16,11 @@ import {
   ButtonVariation,
   Dialog,
   Formik,
-  Text
+  Text,
+  MultiSelectOption
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-
+import { noop } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { Classes } from '@blueprintjs/core'
@@ -41,20 +42,19 @@ import type { ServiceAndEnv } from './SLOName.types'
 import { initialFormData } from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO.constants'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 
-const SLOName: React.FC<SLONameProps> = ({
+const SLOName = <T,>({
   children,
   formikProps,
   identifier,
-  monitoredServicesLoading,
-  monitoredServicesOptions,
+  monitoredServicesLoading = false,
+  monitoredServicesOptions = [],
   fetchingMonitoredServices
-}) => {
+}: SLONameProps<T>): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const TEXT_USER_JOURNEY = getString('cv.slos.userJourney')
   const { userJourneyRef } = formikProps.values
-
   const {
     data: userJourneysData,
     error: userJourneysError,
@@ -113,7 +113,10 @@ const SLOName: React.FC<SLONameProps> = ({
   )
 
   const activeUserJourney = useMemo(
-    () => userJourneyOptions.find(userJourney => userJourney.value === userJourneyRef),
+    () =>
+      Array.isArray(userJourneyRef)
+        ? userJourneyRef.map(userJourney => userJourney.value)
+        : userJourneyOptions?.find(userJourney => userJourney.value === userJourneyRef),
     [userJourneyOptions, userJourneyRef]
   )
 
@@ -134,7 +137,7 @@ const SLOName: React.FC<SLONameProps> = ({
                 <CreateMonitoredServiceFromSLO
                   monitoredServiceFormikProps={monitoredServiceFormikProps}
                   setFieldForSLOForm={formikProps?.setFieldValue}
-                  fetchingMonitoredServices={fetchingMonitoredServices}
+                  fetchingMonitoredServices={fetchingMonitoredServices || noop}
                   hideModal={hideModal}
                 />
               </Form>
@@ -146,20 +149,20 @@ const SLOName: React.FC<SLONameProps> = ({
     []
   )
 
-  return (
+  const content = (
     <>
-      <Card className={css.card}>
-        <Container width={350}>
-          <NameIdDescriptionTags
-            formikProps={formikProps}
-            className={css.selectPrimary}
-            identifierProps={{
-              inputLabel: getString('cv.slos.sloName'),
-              inputName: SLOFormFields.NAME,
-              isIdentifierEditable: !identifier
-            }}
-          />
-        </Container>
+      <Container width={350}>
+        <NameIdDescriptionTags
+          formikProps={formikProps}
+          className={css.selectPrimary}
+          identifierProps={{
+            inputLabel: getString('cv.slos.sloName'),
+            inputName: SLOFormFields.NAME,
+            isIdentifierEditable: !identifier
+          }}
+        />
+      </Container>
+      {fetchingMonitoredServices && (
         <Container flex={{ justifyContent: 'flex-start' }}>
           <Container width={350}>
             <FormInput.Select
@@ -190,29 +193,48 @@ const SLOName: React.FC<SLONameProps> = ({
             }}
           />
         </Container>
-        <Container width={350}>
-          <HarnessServiceAsFormField
-            key={key}
-            customRenderProps={{
-              name: SLOFormFields.USER_JOURNEY_REF,
-              label: TEXT_USER_JOURNEY
-            }}
-            serviceProps={{
-              item: activeUserJourney,
-              options: userJourneyOptions,
-              onSelect: selectedUserJourney =>
-                formikProps.setFieldValue(SLOFormFields.USER_JOURNEY_REF, selectedUserJourney.value),
-              modalTitle: TEXT_USER_JOURNEY,
-              placeholder: getString('cv.slos.userJourneyPlaceholder'),
-              skipServiceCreateOrUpdate: true,
-              onNewCreated: newOption => handleCreateUserJourney(newOption),
-              loading: userJourneysLoading,
-              name: TEXT_USER_JOURNEY
-            }}
-            customLoading={saveUserJourneyLoading}
-          />
-        </Container>
-      </Card>
+      )}
+      <Container width={350}>
+        <HarnessServiceAsFormField
+          key={key}
+          customRenderProps={{
+            name: SLOFormFields.USER_JOURNEY_REF,
+            label: TEXT_USER_JOURNEY
+          }}
+          isMultiSelectField
+          serviceProps={{
+            item:
+              Array.isArray(activeUserJourney) && activeUserJourney.length
+                ? userJourneyOptions
+                    ?.map(item => {
+                      if (activeUserJourney?.includes(item?.value)) {
+                        return item
+                      }
+                    })
+                    .filter(item => item)
+                : activeUserJourney,
+            options: userJourneyOptions,
+            onSelect: (selectedUserJourney: SelectOption | MultiSelectOption) =>
+              formikProps.setFieldValue(
+                SLOFormFields.USER_JOURNEY_REF,
+                Array.isArray(selectedUserJourney) ? selectedUserJourney : selectedUserJourney.value
+              ),
+            modalTitle: TEXT_USER_JOURNEY,
+            placeholder: getString('cv.slos.userJourneyPlaceholder'),
+            skipServiceCreateOrUpdate: true,
+            onNewCreated: newOption => handleCreateUserJourney(newOption),
+            loading: userJourneysLoading,
+            name: TEXT_USER_JOURNEY
+          }}
+          customLoading={saveUserJourneyLoading}
+        />
+      </Container>
+    </>
+  )
+
+  return (
+    <>
+      {fetchingMonitoredServices ? <Card className={css.card}>{content}</Card> : content}
       {children}
     </>
   )
