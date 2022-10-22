@@ -160,7 +160,7 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, modu
   useEffect(() => {
     // deselect current project if user switches module
     // and the new module isn't added on selected project
-    if (moduleFilter && !selectedProject?.modules?.includes(moduleFilter) && false) {
+    if (moduleFilter && !selectedProject?.modules?.includes(moduleFilter)) {
       updateAppStore({ selectedProject: undefined })
     }
   }, [moduleFilter])
