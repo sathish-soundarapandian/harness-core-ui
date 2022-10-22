@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SCMHomePage snapshot test Ensure project success handler calls history push 1`] = `
+<div>
+  <div>
+    <h1>
+      Not Found
+    </h1>
+    <div
+      data-testid="location"
+    >
+      /account/undefined/cv/orgs//projects/undefined/slos
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SCMHomePage snapshot test should render properly 1`] = `
+<div>
+  <div
+    class="homepagetemplage"
+  >
+    <button
+      class="projectCreate"
+    />
+  </div>
+</div>
+`;

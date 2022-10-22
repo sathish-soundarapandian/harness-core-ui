@@ -6,7 +6,7 @@
  */
 
 import qs from 'qs'
-import { getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
+import { getScopeBasedRoute, withAccountId, withQueryParams } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
   ConnectorPathProps,
@@ -1305,28 +1305,25 @@ const routes = {
   // SCM Module (https://harness.atlassian.net/wiki/spaces/code/overview?homepageId=21144371782)
   toSCM: withAccountId(() => `/code`),
   toSCMHome: withAccountId(() => `/code/home`),
-  toSCMRepos: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
-      `/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos`
+  toSCMReposListing: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: SCMPathProps) => `/code/orgs/${orgIdentifier}/projects/${projectIdentifier}`
   ),
-  toSCMFiles: withAccountId(
+  toSCMRepo: withAccountId(
+    ({ orgIdentifier, projectIdentifier, repoName, branch }: RequireField<SCMPathProps, 'repoName' | 'branch'>) =>
+      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}`, { branch })
+  ),
+  toSCMRepoResourceDetails: withAccountId(
     ({
       orgIdentifier,
       projectIdentifier,
       repoName,
-      branchName
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
-      `/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}`
-  ),
-  toSCMFileDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName,
+      branch,
       filePath
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'filePath'>) =>
-      `/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/files/${filePath}`
+    }: RequireField<SCMPathProps, 'repoName' | 'branch' | 'filePath'>) =>
+      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}/c`, {
+        branch,
+        filePath
+      })
   ),
 
   /********************************************************************************************************************/

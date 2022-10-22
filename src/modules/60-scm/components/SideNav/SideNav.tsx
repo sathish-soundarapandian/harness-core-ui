@@ -24,9 +24,8 @@ export default function SCMSideNav(): React.ReactElement {
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
     updateAppStore({ selectedProject: data })
 
-
     history.push(
-      routes.toSCMRepos({
+      routes.toSCMReposListing({
         accountId,
         orgIdentifier: data.orgIdentifier as string,
         projectIdentifier: data.identifier
@@ -44,7 +43,7 @@ export default function SCMSideNav(): React.ReactElement {
         <>
           <SidebarLink
             label={getString('repositories')}
-            to={routes.toSCMRepos({ accountId, orgIdentifier, projectIdentifier })}
+            to={routes.toSCMReposListing({ accountId, orgIdentifier, projectIdentifier })}
           />
 
           {/** TODO: DON"T COMMIT THESE

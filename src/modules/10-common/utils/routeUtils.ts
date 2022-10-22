@@ -165,7 +165,7 @@ export const servicePathProps: ServicePathProps = {
 export const scmPathProps: Required<SCMPathProps> = {
   ...projectPathProps,
   repoName: ':repoName',
-  branchName: ':branchName',
+  branch: ':branch',
   filePath: ':filePath',
   pullRequestId: ':pullRequestId',
   commitId: ':commitId'
@@ -193,6 +193,20 @@ export function withProjectIdentifier<T>(fn: (args: T) => string) {
 
     return `/projects/${params.projectIdentifier}/${path.replace(/^\//, '')}`
   }
+}
+
+export function withQueryParams(path: string, params: Record<string, string>): string {
+  return Object.entries(params).every(([key, value]) => ':' + key === value)
+    ? path
+    : [
+        path,
+        Object.entries(params)
+          .reduce((value, entry) => {
+            value.push(entry.join('='))
+            return value
+          }, [] as string[])
+          .join('&')
+      ].join('?')
 }
 
 export const getScopeBasedRoute = ({

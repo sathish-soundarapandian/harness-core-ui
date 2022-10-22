@@ -14,11 +14,12 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { SCMPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@scm/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { RemmoteRepoResourceDetails, RemoteRepoResources, RemoteRepos, RemoteWelcome } from './SCMApp'
+import { RemmoteRepoResourceDetails, RemoteRepoResources, RemoteRepos } from './SCMApp'
+import SCMHomePage from './pages/home/SCMHomePage'
 
 export const SCMSideNavProps: SidebarContext = {
   navComponent: SideNav,
-  title: 'Repos',
+  title: 'Code',
   icon: 'gitops-green'
 }
 
@@ -42,21 +43,21 @@ export const SCMRouteDestinations: React.FC<{
       <RedirectToDefaultSCMRoute />
     </Route>
     <RouteWithLayout path={routes.toSCMHome(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMWelcome}>
-      <RemoteWelcome />
+      <SCMHomePage />
     </RouteWithLayout>
     <RouteWithLayout
-      path={routes.toSCMRepos(pathProps)}
+      path={routes.toSCMReposListing(pathProps)}
       sidebarProps={sidebarProps}
       pageName={PAGE_NAME.SCMRepos}
       exact
     >
       <RemoteRepos />
     </RouteWithLayout>
-    <RouteWithLayout path={routes.toSCMFiles(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMFiles}>
+    <RouteWithLayout path={routes.toSCMRepo(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMFiles}>
       <RemoteRepoResources />
     </RouteWithLayout>
     <RouteWithLayout
-      path={routes.toSCMFileDetails(pathProps)}
+      path={routes.toSCMRepoResourceDetails(pathProps)}
       sidebarProps={sidebarProps}
       pageName={PAGE_NAME.SCMFileDetails}
     >
