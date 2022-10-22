@@ -8,7 +8,7 @@
 import React from 'react'
 
 import { ModuleName } from 'framework/types/ModuleName'
-import { useCDTrialModal } from '@cd/modals/CDTrial/useCDTrialModal'
+import { useCDTrialModal } from '@pipeline/components/PipelineStudio/CDTrial/useCDTrialModal'
 import HomePageByModule from '@pipeline/components/HomePageByModule/HomePageByModule'
 import bgImageURL from './images/cd.svg'
 

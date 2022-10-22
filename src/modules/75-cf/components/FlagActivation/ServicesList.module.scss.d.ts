@@ -10,5 +10,6 @@ declare const styles: {
   readonly displayTags: string
   readonly serviceCheckbox: string
   readonly serviceTable: string
+  readonly serviceToolbar: string
 }
 export default styles

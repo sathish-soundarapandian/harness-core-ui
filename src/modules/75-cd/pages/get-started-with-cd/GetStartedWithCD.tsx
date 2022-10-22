@@ -9,6 +9,8 @@ import React, { useState } from 'react'
 import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import bgImageURL from '../home/images/cd.svg'
 import delegateImageURL from '../home/images/cd-delegates-banner.svg'
 import { DelegateSelectorWizard } from './DelegateSelectorWizard/DelegateSelectorWizard'
@@ -20,6 +22,8 @@ export default function GetStartedWithCI(): React.ReactElement {
   const closeWizard = (): void => {
     setShowWizard(false)
   }
+
+  const { trackEvent } = useTelemetry()
 
   return showWizard ? (
     <DelegateSelectorWizard onClickBack={closeWizard} />
@@ -51,15 +55,21 @@ export default function GetStartedWithCI(): React.ReactElement {
                 <Text font={{ variation: FontVariation.H3, weight: 'semi-bold' }} padding={{ bottom: 'large' }}>
                   {getString('cd.delegateInstallation')}
                 </Text>
-                <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'80%'}>
+                <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'90%'}>
                   {getString('cd.getStartedWithCD.delegateInfo')}
                 </Text>
                 <Layout.Horizontal className={css.buttonRow}>
                   <Button
                     variation={ButtonVariation.PRIMARY}
                     size={ButtonSize.LARGE}
-                    text={getString('cd.delegateInstallBtnText')}
-                    onClick={() => setShowWizard(true)}
+                    text={getString('cd.installDelegate')}
+                    className={css.btn}
+                    onClick={() => {
+                      setShowWizard(true)
+                      trackEvent(CDOnboardingActions.delegateInstallWizardStart, {
+                        category: Category.DELEGATE
+                      })
+                    }}
                   />
                   <a
                     href="https://docs.harness.io/article/2k7lnc7lvl-delegates-overview"
@@ -77,7 +87,6 @@ export default function GetStartedWithCI(): React.ReactElement {
                 title={getString('common.getStarted.buildPipeline')}
                 src={delegateImageURL}
                 width="50%"
-                height={260}
               />
             </Layout.Horizontal>
           </Container>

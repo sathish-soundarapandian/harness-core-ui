@@ -26,9 +26,11 @@ import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/Conf
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import AzureWebAppConfigSelection from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
-import { setupMode } from '../PipelineStepsUtil'
+import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
+import { AzureWebAppSelectionTypes } from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -57,12 +59,16 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!NG_ARTIFACT_SOURCES,
+    stage?.stage as DeploymentStageElementConfig
+  )
 
   const updateStageData = async (newStage: any): Promise<void> => {
     setLoading(true)
@@ -75,7 +81,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
         <>
           <Card className={css.sectionCard} id={getString('pipeline.startupCommand.name')}>
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('optionalField', {
@@ -97,7 +103,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
 
           <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('optionalField', {
@@ -111,6 +117,9 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={readonly || loading}
               updateStage={updateStageData}
+              showApplicationSettings={true}
+              showConnectionStrings={true}
+              selectionType={AzureWebAppSelectionTypes.PIPELINE}
             />
           </Card>
 
@@ -119,36 +128,43 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
-          </Card>
-          {(isNewService || isServiceEntityPage) &&
-            NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2
-              <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
-                <div
-                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
-                >
-                  {getString('pipelineSteps.configFiles')}
-                </div>
-                <ConfigFilesSelection
-                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                  isPropagating={isPropagating}
-                  deploymentType={selectedDeploymentType}
-                  readonly={!!readonly}
-                />
-              </Card>
+            {isPrimaryArtifactSources ? (
+              <ServiceV2ArtifactsSelection
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            ) : (
+              <ArtifactsSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
             )}
+          </Card>
+          {(isNewService || isServiceEntityPage) && ( //Config files are only available for creation or readonly mode for service V2
+            <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
+              <div
+                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.configFiles')}
+              </div>
+              <ConfigFilesSelection
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
         </>
       )}
 
@@ -157,7 +173,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={css.tabSubHeading}>{getString('common.variables')}</div>
+          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
           {isReadonlyServiceMode ? (
             <VariableListReadOnlyView />
           ) : (

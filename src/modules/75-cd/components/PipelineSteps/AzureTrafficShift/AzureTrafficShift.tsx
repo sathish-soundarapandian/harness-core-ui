@@ -37,6 +37,7 @@ export class AzureTrafficShift extends PipelineStep<AzureTrafficShiftStepInfo> {
   protected stepName = 'Azure Traffic Shift'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AzureTrafficShift'
   protected stepIconSize = 25
+  protected referenceId = 'AzureWebAppTrafficShift'
 
   protected defaultValues = {
     type: StepType.AzureTrafficShift,

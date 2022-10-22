@@ -9,7 +9,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as templateService from 'services/template-ng'
 import { templateRefData, useGetTemplateData } from './HealthSourceInputset.test.mock'
 import HealthSourceInputset from '../HealthSourceInputset'
 
@@ -48,20 +47,17 @@ const mockInitValue = {
 describe('Validate HealthSourceInputset', () => {
   test('should render HealthSourceInputset', () => {
     const msTemplateRefetch = jest.fn().mockResolvedValue({})
-    jest.spyOn(templateService, 'useGetTemplate').mockImplementation(
-      () =>
-        ({
-          data: useGetTemplateData,
-          refetch: msTemplateRefetch,
-          error: null,
-          loading: false,
-          cancel: jest.fn()
-        } as any)
-    )
     const { container, rerender } = render(
       <TestWrapper>
         <Formik formName="" initialValues={mockInitValue} onSubmit={() => undefined}>
           <HealthSourceInputset
+            data={{
+              data: { ...useGetTemplateData, identifier: 'identifier', accountId: 'accountId', name: 'name' },
+              correlationId: ''
+            }}
+            loading={true}
+            error={null}
+            refetch={msTemplateRefetch}
             templateRefData={templateRefData}
             isReadOnlyInputSet={true}
             healthSourcesWithRuntimeList={[
@@ -77,6 +73,13 @@ describe('Validate HealthSourceInputset', () => {
       <TestWrapper>
         <Formik formName="" initialValues={mockInitValue} onSubmit={() => undefined}>
           <HealthSourceInputset
+            data={{
+              data: { ...useGetTemplateData, identifier: 'identifier', accountId: 'accountId', name: 'name' },
+              correlationId: ''
+            }}
+            loading={true}
+            error={null}
+            refetch={msTemplateRefetch}
             templateRefData={templateRefData}
             isReadOnlyInputSet={false}
             healthSourcesWithRuntimeList={[
@@ -91,19 +94,13 @@ describe('Validate HealthSourceInputset', () => {
   })
 
   test('should render HealthSourceInputset in loading state', () => {
-    jest.spyOn(templateService, 'useGetTemplate').mockImplementation(
-      () =>
-        ({
-          data: {},
-          refetch: jest.fn(),
-          error: null,
-          loading: true,
-          cancel: jest.fn()
-        } as any)
-    )
     const { container } = render(
       <TestWrapper>
         <HealthSourceInputset
+          data={{}}
+          loading={true}
+          error={null}
+          refetch={jest.fn()}
           templateRefData={templateRefData}
           isReadOnlyInputSet={true}
           healthSourcesWithRuntimeList={[]}
@@ -114,23 +111,13 @@ describe('Validate HealthSourceInputset', () => {
   })
 
   test('should render HealthSourceInputset in error state', () => {
-    jest.spyOn(templateService, 'useGetTemplate').mockImplementation(
-      () =>
-        ({
-          data: {},
-          refetch: jest.fn(),
-          error: {
-            data: {
-              message: 'api call failed'
-            }
-          },
-          loading: false,
-          cancel: jest.fn()
-        } as any)
-    )
     const { container, getByText } = render(
       <TestWrapper>
         <HealthSourceInputset
+          data={{}}
+          loading={false}
+          error={{ data: { message: 'api call failed' }, message: 'api call failed' }}
+          refetch={jest.fn()}
           templateRefData={templateRefData}
           isReadOnlyInputSet={true}
           healthSourcesWithRuntimeList={[]}
@@ -142,19 +129,13 @@ describe('Validate HealthSourceInputset', () => {
   })
 
   test('should render HealthSourceInputset in no data state', () => {
-    jest.spyOn(templateService, 'useGetTemplate').mockImplementation(
-      () =>
-        ({
-          data: {},
-          refetch: jest.fn().mockResolvedValue({}),
-          error: null,
-          loading: false,
-          cancel: jest.fn()
-        } as any)
-    )
     const { container } = render(
       <TestWrapper>
         <HealthSourceInputset
+          data={{}}
+          loading={true}
+          error={null}
+          refetch={jest.fn()}
           templateRefData={templateRefData}
           isReadOnlyInputSet={true}
           healthSourcesWithRuntimeList={[]}

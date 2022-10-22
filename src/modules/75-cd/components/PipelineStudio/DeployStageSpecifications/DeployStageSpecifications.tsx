@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { debounce, omit, set } from 'lodash-es'
+import { debounce, defaultTo, set } from 'lodash-es'
 import produce from 'immer'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { DeploymentStageConfig, StageElementConfig } from 'services/cd-ng'
+import type { StageElementConfig } from 'services/cd-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { deleteStageInfo, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { EditStageView } from '../DeployStage/EditStageView/EditStageView'
@@ -29,14 +29,23 @@ export default function DeployStageSpecifications(props: React.PropsWithChildren
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleChange = React.useCallback(
     debounce((values: DeploymentStageElementConfig): void => {
-      updateStage({
-        ...stage?.stage,
-        ...omit(values, 'gitOpsEnabled'),
-        spec: {
-          ...stage?.stage?.spec,
-          gitOpsEnabled: (values as EditStageFormikType).gitOpsEnabled
-        } as DeploymentStageConfig
+      const gitopsEnableNow = !stage?.stage?.spec?.gitOpsEnabled && (values as EditStageFormikType).gitOpsEnabled
+
+      const newStage = produce(defaultTo(stage?.stage, {} as DeploymentStageElementConfig), draft => {
+        Object.assign(draft, values)
+        delete (draft as EditStageFormikType).gitOpsEnabled
+
+        if (draft.spec) {
+          draft.spec.gitOpsEnabled = (values as EditStageFormikType).gitOpsEnabled
+
+          if (gitopsEnableNow) {
+            delete draft.spec.service
+            delete draft.spec.services
+          }
+        }
       })
+
+      updateStage(newStage)
     }, 300),
     [stage?.stage, updateStage]
   )

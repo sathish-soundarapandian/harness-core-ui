@@ -22,9 +22,11 @@ import {
   FormikForm,
   Intent
 } from '@harness/uicore'
+import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   LdapGroupSettings,
@@ -34,7 +36,13 @@ import {
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
-import { QueryFormTitle, QueryStepTitle, QueryTestFailMsgs, QueryTestSuccessMsg } from '../utils'
+import {
+  getErrorMessageFromException,
+  QueryFormTitle,
+  QueryStepTitle,
+  QueryTestFailMsgs,
+  QueryTestSuccessMsg
+} from '../utils'
 import css from '../CreateUpdateLdapWizard.module.scss'
 
 export interface StepGroupQueriesProps {
@@ -44,6 +52,7 @@ export interface StepGroupQueriesProps {
 
 interface GroupQueryPreviewProps {
   index: number
+  displayIndex: number
   customClass?: string
 }
 
@@ -91,6 +100,7 @@ const GroupQueryEdit: React.FC<
   descriptionAttr,
   nameAttr,
   index,
+  displayIndex,
   customClass,
   onGroupQueryCommitEdit,
   onGroupQueryDiscardEdit,
@@ -99,9 +109,37 @@ const GroupQueryEdit: React.FC<
   const { getString } = useStrings()
   const groupQueryFormRef = useRef<FormikProps<LdapGroupSettings>>(null)
   const [groupQueryTestResult, setGroupQueryTestResult] = useState<React.ReactNode | undefined>()
+  enum groupQueryFields {
+    BASE_DN = 'baseDN',
+    SEARCH_FILTER = 'searchFilter',
+    NAME_ATTR = 'nameAttr',
+    DESCRIPTION_ATTR = 'descriptionAttr'
+  }
+  const groupQueryValidationSchema = Yup.object().shape({
+    [groupQueryFields.BASE_DN]: Yup.string().trim().required(getString('authSettings.ldap.baseDNRequired')),
+    [groupQueryFields.SEARCH_FILTER]: Yup.string().trim().required(getString('authSettings.ldap.searchFilterRequired')),
+    [groupQueryFields.NAME_ATTR]: Yup.string().trim().required(getString('authSettings.ldap.nameAttributesRequired')),
+    [groupQueryFields.DESCRIPTION_ATTR]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.descriptionAttributesRequired'))
+  })
   const testQuery = async (): Promise<void> => {
     try {
       setGroupQueryTestResult(undefined)
+      if (!groupQueryFormRef.current) {
+        return
+      }
+      groupQueryFormRef.current.setTouched({
+        ...groupQueryFormRef.current.touched,
+        [groupQueryFields.BASE_DN]: true,
+        [groupQueryFields.SEARCH_FILTER]: true,
+        [groupQueryFields.NAME_ATTR]: true,
+        [groupQueryFields.DESCRIPTION_ATTR]: true
+      })
+      const groupQueryFormValidation = await groupQueryFormRef.current.validateForm()
+      if (!isEmpty(groupQueryFormValidation)) {
+        return
+      }
       const result = await onTestGroupQuery(
         (groupQueryFormRef.current as FormikProps<LdapGroupSettings>).values as LdapGroupSettings
       )
@@ -123,12 +161,9 @@ const GroupQueryEdit: React.FC<
         )
       }
     } catch (e: any) /* istanbul ignore next */ {
-      const hasResponseMessages = e.data?.responseMessages && e.data?.responseMessages.length > 0
       setGroupQueryTestResult(
         <QueryTestFailMsgs
-          errorMessages={
-            hasResponseMessages ? e.data?.responseMessages : [{ level: 'ERROR', message: e.data?.message || e.message }]
-          }
+          errorMessages={getErrorMessageFromException(e, getString('authSettings.ldap.queryTestFail'))}
         />
       )
     }
@@ -142,10 +177,11 @@ const GroupQueryEdit: React.FC<
         onSubmit={formData => {
           onGroupQueryCommitEdit(formData, index)
         }}
+        validationSchema={groupQueryValidationSchema}
       >
         <FormikForm>
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-            <QueryFormTitle title={getString('authSettings.ldap.groupQueryTitle', { index: index + 1 })} />
+            <QueryFormTitle title={getString('authSettings.ldap.groupQueryTitle', { index: displayIndex })} />
             <Container className={css.queryCtaContainer} flex={{ alignItems: 'center' }}>
               <Button
                 text={getString('test')}
@@ -220,6 +256,7 @@ const GroupQueryPreview: React.FC<
   descriptionAttr,
   nameAttr,
   index,
+  displayIndex,
   customClass,
   onDeleteGroupQuery,
   onEnableGroupQueryDraftMode
@@ -230,7 +267,7 @@ const GroupQueryPreview: React.FC<
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
         <Text font={{ variation: FontVariation.H5 }}>
           <Icon name="chevron-down" color={Color.PRIMARY_6} margin={{ right: 'small' }} />
-          {getString('authSettings.ldap.groupQueryTitle', { index: index + 1 })}
+          {getString('authSettings.ldap.groupQueryTitle', { index: displayIndex })}
         </Text>
         <Container className={css.queryCtaContainer}>
           <Button
@@ -297,7 +334,7 @@ export const StepGroupQueries: React.FC<
   StepProps<CreateUpdateLdapWizardProps> & LdapWizardStepProps<LdapGroupSettings[]>
 > = props => {
   const { getString } = useStrings()
-  const { stepData, name, updateStepData, auxilliaryData, triggerSaveData } = props
+  const { stepData, name, updateStepData, auxilliaryData } = props
   const [groupSettingsList, setGroupSettingsList] = useState<LdapGroupSettingsDraft[]>(stepData || [])
   const [isAddSettingEnabled, setIsAddSettingEnabled] = useState<boolean>(true)
   const { accountId } = useParams<AccountPathProps>()
@@ -349,7 +386,7 @@ export const StepGroupQueries: React.FC<
   }
 
   const onGroupQueriesSave = (): void => {
-    /** This is to preserve any uncommitted changes on step change */
+    /** MapFilter is to ignore any uncommitted changes on step change */
     updateStepData(
       groupSettingsList
         .filter(groupSetting => !groupSetting.isNewSetting)
@@ -380,7 +417,7 @@ export const StepGroupQueries: React.FC<
       accountId: accountId
     })
   }
-  const GroupQueryListPreview = groupSettingsList?.map((groupSetting, groupQueryIdx) => {
+  const GroupQueryListPreview = groupSettingsList?.map((groupSetting, groupQueryIdx, groupSettingsArr) => {
     if (groupSetting.isDraft) {
       return (
         <GroupQueryEdit
@@ -391,6 +428,7 @@ export const StepGroupQueries: React.FC<
           onGroupQueryCommitEdit={onGroupQueryCommitEdit}
           onGroupQueryDiscardEdit={onGroupQueryDiscardEdit}
           onTestGroupQuery={onTestGroupQuery}
+          displayIndex={groupSettingsArr.length - groupQueryIdx}
         />
       )
     }
@@ -402,6 +440,7 @@ export const StepGroupQueries: React.FC<
         customClass={css.queryPreviewItem}
         onEnableGroupQueryDraftMode={onEnableGroupQueryDraftMode}
         onDeleteGroupQuery={onDeleteGroupQuery}
+        displayIndex={groupSettingsArr.length - groupQueryIdx}
       />
     )
   })
@@ -432,7 +471,10 @@ export const StepGroupQueries: React.FC<
       </Layout.Vertical>
       <Layout.Horizontal className={css.stepCtaContainer}>
         <Button
-          onClick={() => props.previousStep?.()}
+          onClick={() => {
+            onGroupQueriesSave()
+            props.previousStep?.()
+          }}
           text={getString('back')}
           icon="chevron-left"
           margin={{ right: 'small' }}
@@ -443,9 +485,9 @@ export const StepGroupQueries: React.FC<
           intent="primary"
           onClick={() => {
             onGroupQueriesSave()
-            triggerSaveData?.()
+            props.nextStep?.()
           }}
-          text={getString('save')}
+          text={getString('continue')}
           rightIcon="chevron-right"
           data-testid="submit-group-query-step"
         />

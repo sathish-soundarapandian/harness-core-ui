@@ -14,7 +14,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { getCDPipelineStages as GetCDPipelineStages } from '../CDPipelineStagesUtils'
+import { getPipelineStages as GetCDPipelineStages } from '@pipeline/components/PipelineStudio/PipelineStagesUtils'
 import { getStageAttributes, getStageEditorImplementation } from '../DeployStage'
 
 const TEST_PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
@@ -62,7 +62,7 @@ describe('Testing Empty pipeline stages', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <GetCDPipelineStages getString={jest.fn()} args={argsMock} />
+        <GetCDPipelineStages module="cd" getString={jest.fn()} args={argsMock} />
       </TestWrapper>
     )
     const addStage = await waitFor(() => getByText(document.body, 'pipeline.addStage.description'))
@@ -83,7 +83,7 @@ describe('Testing Empty pipeline stages', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <GetCDPipelineStages getString={getString} args={argsMock} isCDEnabled={true} />
+        <GetCDPipelineStages module="cd" getString={getString} args={argsMock} isCDEnabled={true} />
       </TestWrapper>
     )
 
@@ -107,7 +107,7 @@ describe('Testing Empty pipeline stages', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <GetCDPipelineStages getString={getString} args={argsMockWithOnSelectStage} isCDEnabled={true} />
+        <GetCDPipelineStages module="cd" getString={getString} args={argsMockWithOnSelectStage} isCDEnabled={true} />
       </TestWrapper>
     )
 
@@ -131,7 +131,7 @@ describe('Testing Empty pipeline stages', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <GetCDPipelineStages getString={getString} args={argsMockWithSelectMenuFalse} isCDEnabled={true} />
+        <GetCDPipelineStages module="cd" getString={getString} args={argsMockWithSelectMenuFalse} isCDEnabled={true} />
       </TestWrapper>
     )
     expect(container).toMatchInlineSnapshot(`<div />`)

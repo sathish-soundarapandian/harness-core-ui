@@ -23,6 +23,7 @@ import { NodeType } from '../types'
 import { useNodeResizeObserver } from '../hooks/useResizeObserver'
 import { getRelativeBounds } from './PipelineGraphUtils'
 import { isFirstNodeAGroupNode, isNodeParallel, shouldAttachRef, shouldRenderGroupNode, showChildNode } from './utils'
+import GraphConfigStore from './GraphConfigStore'
 import css from './PipelineGraph.module.scss'
 
 let IS_RENDER_OPTIMIZATION_ENABLED = true
@@ -308,10 +309,16 @@ function PipelineGraphNodeWithCollapse(
   props: PipelineGraphNodeWithoutCollapseProps & {
     collapsibleProps?: NodeCollapsibleProps
     parentSelector?: string
+    isDragging?: boolean
   }
 ): React.ReactElement {
   const ref = useRef<HTMLDivElement>(null)
-  const resizeState = useNodeResizeObserver(ref?.current, props.collapsibleProps, props.parentSelector)
+  const resizeState = useNodeResizeObserver(
+    ref?.current,
+    props.collapsibleProps,
+    props.parentSelector,
+    props?.isDragging
+  )
   const [intersectingIndex, setIntersectingIndex] = useState<number>(-1)
 
   useLayoutEffect(() => {
@@ -347,7 +354,7 @@ function PipelineGraphNodeWithCollapse(
 interface PipelineGraphNodeBasicProps extends PipelineGraphNodeWithoutCollapseProps {
   collapsibleProps?: NodeCollapsibleProps
 }
-function PipelineGraphNodeBasic(props: PipelineGraphNodeBasicProps): React.ReactElement {
+function PipelineGraphNodeBasic(props: PipelineGraphNodeBasicProps & { isDragging?: boolean }): React.ReactElement {
   return props?.collapsibleProps ? (
     <PipelineGraphNodeWithCollapse {...props} />
   ) : (
@@ -359,6 +366,7 @@ const PipelineGraphNode = React.memo(PipelineGraphNodeBasic)
 function PipelineGraphNodeObserved(
   props: PipelineGraphNodeBasicProps & { index: number; isDragging?: boolean }
 ): React.ReactElement {
+  const { graphScale } = React.useContext(GraphConfigStore)
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [visible, setVisible] = useState(true)
   const updateVisibleState = React.useCallback(throttle(setVisible, 200), [])
@@ -396,7 +404,7 @@ function PipelineGraphNodeObserved(
     return () => {
       if (observer && ref && IS_RENDER_OPTIMIZATION_ENABLED) observer.unobserve(ref as HTMLDivElement)
     }
-  }, [ref, elementRect, props?.isDragging])
+  }, [ref, elementRect, props?.isDragging, graphScale])
 
   React.useEffect(() => {
     if (!elementRect && ref !== null) {

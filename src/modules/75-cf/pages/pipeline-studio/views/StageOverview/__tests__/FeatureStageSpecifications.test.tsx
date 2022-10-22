@@ -45,9 +45,11 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isDBInitialized: true,
     isInitialized: true,
     isLoading: false,
+    isIntermittentLoading: false,
     isUpdated: true,
     templateTypes: {},
-    templateServiceData: {}
+    templateServiceData: {},
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [
@@ -81,11 +83,12 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  setTemplateServiceData: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 })
 
 describe('StepWidget tests', () => {
-  test(`renders DeployStageSpecifications without crashing `, () => {
+  test('it renders StageOverview', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getPipelineContext()}>

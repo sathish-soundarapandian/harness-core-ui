@@ -18,6 +18,7 @@ export const InputWithDynamicModalForJsonMultiType = (
   }
 ): JSX.Element => {
   const { isMultiType, allowableTypes, expressions, ...rest } = props
+  const { inputLabel, inputName, fieldValue, dataTooltipId, onChange } = rest
   return isMultiType ? (
     <>
       <Layout.Vertical
@@ -25,19 +26,20 @@ export const InputWithDynamicModalForJsonMultiType = (
         spacing={'small'}
         style={{ marginBottom: 'var(--spacing-medium)' }}
       >
-        <Text style={{ fontSize: 13, fontWeight: 'normal' }} tooltipProps={{ dataTooltipId: props.dataTooltipId }}>
-          {props.inputLabel}
+        <Text style={{ fontSize: 13, fontWeight: 'normal' }} tooltipProps={{ dataTooltipId }}>
+          {inputLabel}
         </Text>
         <ExpressionAndRuntimeType
-          name={props.inputName}
-          value={props.fieldValue}
+          name={inputName}
+          value={fieldValue}
           allowableTypes={allowableTypes}
           expressions={expressions}
           onChange={(key, value, valueType): void => {
             if (isMultiTypeRuntime(valueType) || valueType === MultiTypeInputType.EXPRESSION) {
-              props.onChange(props.inputName as string, key as string)
+              onChange(inputName, key as string)
             } else if (valueType === MultiTypeInputType.FIXED) {
-              props.onChange(props.inputName as string, value as string)
+              const fixedValue = key ? value : ''
+              onChange(inputName, fixedValue as string)
             }
           }}
           fixedTypeComponentProps={{

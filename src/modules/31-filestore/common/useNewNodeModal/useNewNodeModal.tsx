@@ -41,7 +41,7 @@ const useNewNodeModal = ({
           label: getString('edit'),
           title: editMode ? getString('filestore.editFileDetails') : getString('filestore.newFile'),
           icon: FileAddIcon,
-          height: 460
+          height: 'auto'
         }
       case FileStoreNodeTypes.FOLDER:
         return {
@@ -61,7 +61,7 @@ const useNewNodeModal = ({
         enforceFocus={false}
         isOpen
         title={title}
-        style={{ width: 504, height }}
+        style={{ width: 504, minHeight: height }}
         onClose={hideModal}
         className={css.layout}
         usePortal

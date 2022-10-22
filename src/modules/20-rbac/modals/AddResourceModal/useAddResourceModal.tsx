@@ -32,6 +32,9 @@ const useAddResourceModal = (props: UseAddResourceModalProps): UseAddResourceMod
   const { onSuccess } = props
   const resourceHandler = resource ? RbacFactory.getResourceTypeHandler(resource) : null
   const resourceLabel = resourceHandler ? getString(resourceHandler.label) : ''
+  const resourceLabelSingular = resourceHandler?.labelSingular
+    ? getString(resourceHandler.labelSingular)
+    : resourceLabel
   const [showModal, hideModal] = useModalHook(
     () => (
       <Dialog
@@ -43,7 +46,7 @@ const useAddResourceModal = (props: UseAddResourceModalProps): UseAddResourceMod
         className={cx(css.dialog)}
         title={
           isAttributeFilter
-            ? `${getString('add')} ${resourceLabel} ${getString('common.types')}`
+            ? `${getString('add')} ${resourceLabelSingular} ${getString('common.types')}`
             : `${getString('add')} ${resourceLabel}`
         }
       >

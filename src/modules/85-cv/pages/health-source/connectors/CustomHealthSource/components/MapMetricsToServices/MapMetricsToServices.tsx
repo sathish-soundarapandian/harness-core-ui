@@ -9,10 +9,10 @@ import React, { useContext, useState } from 'react'
 import { SelectOption, Container } from '@wings-software/uicore'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { useStrings } from 'framework/strings'
+import GroupName from '@cv/components/GroupName/GroupName'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { GroupName } from '@cv/pages/health-source/common/GroupName/GroupName'
-import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/GroupName.utils'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { CustomHealthSourceFieldNames } from '../../CustomHealthSource.constants'
 import type { MapMetricsToServicesInterface } from './MapMetricsToServices.types'
 import css from './MapMetricsToServices.module.scss'
@@ -46,7 +46,15 @@ export default function MapMetricsToServices({
           isIdentifierEditable: Boolean(!currentSelectedMetricDetail?.identifier)
         }}
       />
-      <GroupName groupNames={groupNames} onChange={onChange} item={formValue?.groupName} setGroupNames={setGroupName} />
+      <GroupName
+        groupNames={groupNames}
+        onChange={onChange}
+        item={formValue?.groupName}
+        setGroupNames={setGroupName}
+        label={getString('cv.monitoringSources.prometheus.groupName')}
+        title={getString('cv.customHealthSource.addGroupNameTitle')}
+        fieldName={'groupName'}
+      />
     </Container>
   )
 }

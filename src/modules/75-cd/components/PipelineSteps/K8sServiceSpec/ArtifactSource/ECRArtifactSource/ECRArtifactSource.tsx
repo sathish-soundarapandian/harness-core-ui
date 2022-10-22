@@ -19,6 +19,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -27,11 +28,11 @@ import {
   getFqnPath,
   getImagePath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags,
-  shouldFetchTagsSource
+  shouldFetchTagsSource,
+  isExecutionTimeFieldDisabled
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -106,7 +107,18 @@ const Content = (props: ECRRenderContent): JSX.Element => {
       region: getFinalQueryParamValue(regionValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'tag'
+      )
     },
     lazy: true
   })
@@ -158,8 +170,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     }
     return false
   }
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -190,42 +201,79 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               }}
             />
           )}
+          <div className={css.inputFieldLayout}>
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
+              <ExperimentalInput
+                formik={formik}
+                multiTypeInputProps={{
+                  onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
+                  selectProps: {
+                    usePortal: true,
+                    addClearBtn: !readonly,
+                    items: regions
+                  },
+                  expressions,
+                  allowableTypes
+                }}
+                useValue
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
+                selectItems={regions}
+                label={getString('regionLabel')}
+                name={`${path}.artifacts.${artifactPath}.spec.region`}
+              />
+            )}
+            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.region`)) ===
+              MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                className={css.configureOptions}
+                style={{ alignSelf: 'center' }}
+                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.region`)}
+                type="String"
+                variableName="region"
+                showRequiredField={false}
+                showDefaultField={true}
+                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, value)
+                }}
+              />
+            )}
+          </div>
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
-            <ExperimentalInput
-              formik={formik}
-              multiTypeInputProps={{
-                onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
-                selectProps: {
-                  usePortal: true,
-                  addClearBtn: !readonly,
-                  items: regions
-                },
-                expressions,
-                allowableTypes
-              }}
-              useValue
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
-              selectItems={regions}
-              label={getString('regionLabel')}
-              name={`${path}.artifacts.${artifactPath}.spec.region`}
-            />
-          )}
-
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
-            <TextFieldInputSetView
-              label={getString('pipeline.imagePathLabel')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-              fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
-              template={template}
-            />
-          )}
+          <div className={css.inputFieldLayout}>
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
+              <TextFieldInputSetView
+                label={getString('pipeline.imagePathLabel')}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
+                onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
+                fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
+                template={template}
+              />
+            )}
+            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.imagePath`)) ===
+              MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                className={css.configureOptions}
+                style={{ alignSelf: 'center' }}
+                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.imagePath`)}
+                type="String"
+                variableName="imagePath"
+                showRequiredField={false}
+                showDefaultField={true}
+                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.imagePath`, value)
+                }}
+              />
+            )}
+          </div>
 
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
             <FormInput.MultiTextInput
@@ -252,18 +300,36 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               stageIdentifier={stageIdentifier}
             />
           )}
-
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-            <FormInput.MultiTextInput
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              label={getString('tagRegex')}
-              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-            />
-          )}
+          <div className={css.inputFieldLayout}>
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
+              <FormInput.MultiTextInput
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('tagRegex')}
+                name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+              />
+            )}
+            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)) ===
+              MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                className={css.configureOptions}
+                style={{ alignSelf: 'center' }}
+                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)}
+                type="String"
+                variableName="tagRegex"
+                showRequiredField={false}
+                showDefaultField={true}
+                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
+                }}
+              />
+            )}
+          </div>
         </Layout.Vertical>
       )}
     </>

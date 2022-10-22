@@ -16,7 +16,7 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Hourly select
           <span
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
-            triggers.schedulePanel.title
+            common.schedule
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"
@@ -1083,7 +1083,7 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Minutes selec
           <span
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
-            triggers.schedulePanel.title
+            common.schedule
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"
@@ -1554,7 +1554,7 @@ exports[`SchedulePanel Triggers tests Renders/snapshots Initial Render - Schedul
           <span
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
-            triggers.schedulePanel.title
+            common.schedule
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"

@@ -83,6 +83,7 @@ export abstract class Step<T> {
   protected _hasStepVariables = false
   protected _hasDelegateSelectionVisible = false
   protected isHarnessSpecific = false
+  protected isStepNonDeletable = false // If true, the step can not be deleted from pipeline execution tab view
   protected invocationMap?: Map<
     RegExp,
     (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>
@@ -101,6 +102,10 @@ export abstract class Step<T> {
 
   getIsHarnessSpecific(): boolean {
     return this.isHarnessSpecific
+  }
+
+  getIsNonDeletable(): boolean {
+    return this.isStepNonDeletable
   }
 
   getReferenceId(): string | undefined {

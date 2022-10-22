@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import type { HealthSource } from 'services/cv'
@@ -16,11 +15,13 @@ import { PrometheusProductNames } from '@cv/pages/health-source/connectors/Prome
 import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import { ErrorTrackingProductNames } from '@cv/pages/health-source/connectors/ErrorTrackingHealthSource/ErrorTrackingHealthSource.utils'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
+import { CloudWatchProductNames } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatchConstants'
 import {
   NewRelicProductNames,
   ConnectorRefFieldName,
   SplunkProduct,
-  DynatraceProductNames
+  DynatraceProductNames,
+  ElkProduct
 } from './DefineHealthSource.constant'
 import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
 
@@ -42,6 +43,35 @@ export const validateDuplicateIdentifier = (values: DefineHealthSourceFormInterf
   const { healthSourceIdentifier, healthSourceList } = values
   if (healthSourceList?.some(item => item.identifier === healthSourceIdentifier)) {
     return { healthSourceName: 'identifier already exist' }
+  }
+}
+
+export const getConnectorTypeName = (name: HealthSourceTypes): string => {
+  let connectorTypeName
+
+  switch (name) {
+    case HealthSourceTypes.GoogleCloudOperations:
+      connectorTypeName = Connectors.GCP
+      break
+    case HealthSourceTypes.CloudWatch:
+      connectorTypeName = Connectors.AWS
+      break
+    default:
+      connectorTypeName = name
+  }
+
+  return connectorTypeName
+}
+
+export const getConnectorPlaceholderText = (sourceType?: string): string => {
+  if (!sourceType) {
+    return ''
+  }
+
+  if (sourceType === Connectors.AWS) {
+    return Connectors.AWS.toUpperCase()
+  } else {
+    return sourceType
   }
 }
 
@@ -124,6 +154,14 @@ export const getFeatureOption = (
         ...optionalFeature
       ]
     }
+    case HealthSourceTypes.Elk: {
+      return [
+        {
+          value: ElkProduct.ELK_LOGS,
+          label: ElkProduct.ELK_LOGS
+        }
+      ]
+    }
     case Connectors.CUSTOM_HEALTH:
       return [
         {
@@ -140,6 +178,14 @@ export const getFeatureOption = (
         {
           value: ErrorTrackingProductNames.LOGS,
           label: getString('cv.monitoringSources.gco.product.logs')
+        }
+      ]
+
+    case Connectors.AWS:
+      return [
+        {
+          value: CloudWatchProductNames.METRICS,
+          label: CloudWatchProductNames.METRICS
         }
       ]
     default:
@@ -187,21 +233,4 @@ export const getSelectedFeature = (sourceData: any): any => {
   const selectedFeature = currentHealthSource?.spec?.feature
 
   return selectedFeature ? { label: selectedFeature, value: selectedFeature } : { ...sourceData?.product }
-}
-
-export const modifyCustomHealthFeatureBasedOnFF = (
-  isCustomLogEnabled: boolean,
-  isCustomMetricEnabled: boolean,
-  customHealthOptions: SelectOption[]
-): SelectOption[] => {
-  const featureOptionForConnector = []
-  if (isCustomMetricEnabled) {
-    featureOptionForConnector.push(customHealthOptions[0])
-  }
-
-  if (isCustomLogEnabled) {
-    featureOptionForConnector.push(customHealthOptions[1])
-  }
-
-  return featureOptionForConnector
 }

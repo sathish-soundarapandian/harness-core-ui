@@ -5,24 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useEffect, useState, useMemo, useReducer } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import {
   useToaster,
   ButtonVariation,
   CardSelect,
   CardSelectType,
-  Card,
   NoDataCard,
-  Pagination,
   Layout,
   FlexExpander,
   Container,
-  Heading,
-  HarnessDocTooltip,
-  SelectOption
+  TableV2,
+  Text,
+  IconName,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
-import { filter, isEmpty, compact, values } from 'lodash-es'
+
+import { Color, FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
+import type { CellProps, Renderer } from 'react-table'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -34,18 +36,16 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import {
   useDeleteSLOData,
   useGetAllJourneys,
-  useGetAllMonitoredServicesWithTimeSeriesHealthSources,
-  useGetSLODashboardWidgets,
   useGetServiceLevelObjectivesRiskCount,
   RiskCount,
-  useResetErrorBudget,
-  SLOErrorBudgetResetDTO
+  useGetSLOHealthListView,
+  useGetSLOAssociatedMonitoredServices
 } from 'services/cv'
 import RbacButton from '@rbac/components/Button/Button'
-import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { getErrorMessage, getRiskColorLogo, getRiskColorValue, getSearchString } from '@cv/utils/CommonUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import SLOCardSelect from './components/SLOCardSelect/SLOCardSelect'
-import type { CVSLOsListingPageProps, SLORiskFilter } from './CVSLOsListingPage.types'
+import type { CVSLOsListingPageProps, RiskTypes, SLORiskFilter } from './CVSLOsListingPage.types'
 import {
   getErrorObject,
   getIsSLODashboardAPIsLoading,
@@ -62,38 +62,33 @@ import {
   getInitialFilterState,
   getClassNameForMonitoredServicePage,
   isSLOFilterApplied,
-  getServiceTitle
+  getServiceTitle,
+  getSLOsNoDataMessageTitle
 } from './CVSLOListingPage.utils'
 import SLODashbordFilters from './components/SLODashbordFilters/SLODashbordFilters'
-import SLOCardHeader from './SLOCard/SLOCardHeader'
-import SLOCardContent from './SLOCard/SLOCardContent'
+import SLOActions from './components/SLOActions/SLOActions'
+import { SLODetailsPageTabIds } from './CVSLODetailsPage/CVSLODetailsPage.types'
 import css from './CVSLOsListingPage.module.scss'
 
 const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService }) => {
   const history = useHistory()
   const { getString } = useStrings()
-
   const monitoredServiceIdentifier = useMemo(() => monitoredService?.identifier, [monitoredService?.identifier])
-
   useDocumentTitle([getString('cv.srmTitle'), getServiceTitle(getString, monitoredServiceIdentifier)])
 
   const { showError, showSuccess } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-
   const [filterState, dispatch] = useReducer(sloFilterReducer, getInitialFilterState(getString), passedInitialState =>
     getInitialFilterStateLazy(passedInitialState, monitoredService)
   )
+  const [pageNumber, setPageNumber] = useState(0)
+  const [search, setSearch] = useState<string>('')
 
   useEffect(() => {
     if (monitoredService && monitoredServiceIdentifier) {
       dispatch(SLODashboardFilterActions.updateMonitoredServices(getMonitoredServicesInitialState(monitoredService)))
     }
   }, [monitoredService])
-  const [pageNumber, setPageNumber] = useState(0)
-
-  useEffect(() => {
-    setPageNumber(0)
-  }, [projectIdentifier])
 
   const pathParams = useMemo(() => {
     return {
@@ -103,12 +98,16 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     }
   }, [accountId, orgIdentifier, projectIdentifier])
 
+  const sloDashboardWidgetsParams = useMemo(() => {
+    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber, search)
+  }, [pathParams, filterState, pageNumber, search])
+
   const {
     data: dashboardWidgetsResponse,
     loading: dashboardWidgetsLoading,
     refetch: refetchDashboardWidgets,
     error: dashboardWidgetsError
-  } = useGetSLODashboardWidgets(getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber))
+  } = useGetSLOHealthListView(sloDashboardWidgetsParams)
 
   const {
     data: riskCountResponse,
@@ -124,7 +123,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     loading: monitoredServicesLoading,
     error: monitoredServicesDataError,
     refetch: refetchMonitoredServicesData
-  } = useGetAllMonitoredServicesWithTimeSeriesHealthSources({
+  } = useGetSLOAssociatedMonitoredServices({
     queryParams: pathParams
   })
 
@@ -148,6 +147,18 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     queryParams: pathParams
   })
 
+  const onEdit = (sloIdentifier: string): void => {
+    history.push({
+      pathname: routes.toCVSLODetailsPage({
+        identifier: sloIdentifier,
+        accountId,
+        orgIdentifier,
+        projectIdentifier
+      }),
+      search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, monitoredServiceIdentifier })
+    })
+  }
+
   const onDelete = async (identifier: string, name: string): Promise<void> => {
     try {
       await deleteSLO(identifier)
@@ -158,22 +169,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       }
       await refetchRiskCount()
       showSuccess(getString('cv.slos.sloDeleted', { name }))
-    } catch (e) {
-      showError(getErrorMessage(e))
-    }
-  }
-
-  const { mutate: resetErrorBudget, loading: resetErrorBudgetLoading } = useResetErrorBudget({
-    identifier: '',
-    queryParams: pathParams
-  })
-
-  const onResetErrorBudget = async (identifier: string, formData: SLOErrorBudgetResetDTO): Promise<void> => {
-    try {
-      await resetErrorBudget(formData, { pathParams: { identifier } })
-      await Promise.all([refetchDashboardWidgets(), refetchRiskCount()])
-
-      showSuccess(getString('cv.errorBudgetIsSuccessfullyReset'))
     } catch (e) {
       showError(getErrorMessage(e))
     }
@@ -220,17 +215,188 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     () => isSLOFilterApplied(getString, filterState) || !!riskCountResponse?.data?.totalCount,
     [isSLOFilterApplied(getString, filterState), riskCountResponse?.data?.totalCount]
   )
+
+  const RenderSLOName: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { name = '', sloIdentifier = '', description = '' } = slo || {}
+
+    return (
+      <Link
+        to={routes.toCVSLODetailsPage({
+          identifier: sloIdentifier,
+          accountId,
+          orgIdentifier,
+          projectIdentifier
+        })}
+      >
+        <Text color={Color.PRIMARY_7} title={name} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+          {name}
+        </Text>
+        <Text title={name} font={{ align: 'left', size: 'small' }}>
+          {description}
+        </Text>
+      </Link>
+    )
+  }
+
+  const RenderMonitoredService: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { serviceName = '', environmentIdentifier = '', monitoredServiceIdentifier: identifier = '' } = slo || {}
+
+    return (
+      <Layout.Vertical padding={{ left: 'small' }}>
+        <Link
+          to={routes.toCVAddMonitoringServicesEdit({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            identifier,
+            module: 'cv'
+          })}
+        >
+          <Text
+            color={Color.PRIMARY_7}
+            className={css.titleInSloTable}
+            title={serviceName}
+            font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+          >
+            {serviceName}
+          </Text>
+        </Link>
+        <Link
+          to={routes.toCVAddMonitoringServicesEdit({
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            identifier,
+            module: 'cv'
+          })}
+        >
+          <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
+            {environmentIdentifier}
+          </Text>
+        </Link>
+      </Layout.Vertical>
+    )
+  }
+
+  const RenderAlerts: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { noOfActiveAlerts = 0 } = slo || {}
+    return (
+      <Text
+        className={css.titleInSloTable}
+        title={`${noOfActiveAlerts}`}
+        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      >
+        {`${noOfActiveAlerts}`}
+      </Text>
+    )
+  }
+
+  const RenderBurnRate: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { burnRate } = slo || {}
+    return (
+      <Text
+        className={css.titleInSloTable}
+        title={`${defaultTo(Number(burnRate), 0).toFixed(2)}%`}
+        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      >
+        {defaultTo(Number(burnRate), 0).toFixed(2)}%
+      </Text>
+    )
+  }
+
+  const RenderUserJourney: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { userJourneyName = '' } = slo || {}
+    return (
+      <Text
+        className={css.titleInSloTable}
+        title={userJourneyName}
+        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      >
+        {userJourneyName}
+      </Text>
+    )
+  }
+
+  const RenderTarget: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row.original
+    return (
+      <Text
+        className={css.titleInSloTable}
+        title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      >
+        {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+      </Text>
+    )
+  }
+
+  const RenderSLOStatus: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { errorBudgetRisk } = slo || {}
+    const riskCategory = getRiskColorLogo(errorBudgetRisk?.toUpperCase()?.replace(/ /g, '_') as RiskTypes) as IconName
+
+    return (
+      <Text
+        className={css.errorBudgetRisk}
+        title={errorBudgetRisk}
+        style={{ backgroundColor: getRiskColorValue(errorBudgetRisk), color: Color.WHITE }}
+        font={{ align: 'left', size: 'normal' }}
+        iconProps={{ color: Color.WHITE, padding: { right: 'small' } }}
+        icon={riskCategory}
+      >
+        {errorBudgetRisk}
+      </Text>
+    )
+  }
+
+  const RenderRemainingErrorBudget: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { errorBudgetRemainingPercentage = '', errorBudgetRemaining = '' } = slo || {}
+    return (
+      <Layout.Horizontal>
+        <Text
+          className={css.titleInSloTable}
+          title={` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
+          font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+          padding={{ right: 'small' }}
+        >
+          {` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
+        </Text>
+        <Container className={css.errorBudgetRemainingContainer}>
+          <Text font={{ variation: FontVariation.SMALL }} className={css.errorBudgetRemaining}>
+            {`${errorBudgetRemaining} m`}
+          </Text>
+        </Container>
+      </Layout.Horizontal>
+    )
+  }
+
+  const RenderSLOActions: Renderer<CellProps<any>> = ({ row }) => {
+    const slo = row?.original
+    const { sloIdentifier = '', name = '' } = slo || {}
+    return <SLOActions sloIdentifier={sloIdentifier} title={name} onDelete={onDelete} onEdit={onEdit} />
+  }
   return (
     <>
+      <HelpPanel referenceId="sloDetails" type={HelpPanelType.FLOATING_CONTAINER} />
       {!monitoredServiceIdentifier && hasSloFilterApplied && (
         <>
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
             title={
-              <Heading level={3} font={{ variation: FontVariation.H4 }}>
-                {getString('cv.slos.title')}
-                <HarnessDocTooltip tooltipId={'sloDashboardTitle'} useStandAlone />
-              </Heading>
+              <Layout.Vertical>
+                <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'sloHeader' }}>
+                  {getString('cv.slos.completeTitle')}
+                </Text>
+                <Text title={getString('cv.slos.subTitle')} font={{ align: 'left', size: 'small' }}>
+                  {getString('cv.slos.subTitle')}
+                </Text>
+              </Layout.Vertical>
             }
           />
           <Page.Header title={getAddSLOButton()} />
@@ -243,8 +409,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           dashboardWidgetsLoading,
           deleteSLOLoading,
           monitoredServicesLoading,
-          riskCountLoading,
-          resetErrorBudgetLoading
+          riskCountLoading
         )}
         error={getErrorMessage(
           getErrorObject(dashboardWidgetsError, userJourneysError, dashboardRiskCountError, monitoredServicesDataError)
@@ -278,6 +443,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             {monitoredServiceIdentifier && getAddSLOButton()}
             {hasSloFilterApplied && (
               <Container
+                flex
                 className={getClassNameForMonitoredServicePage(css.sloDropdownFilters, monitoredServiceIdentifier)}
               >
                 <SLODashbordFilters
@@ -285,6 +451,12 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   dispatch={dispatch}
                   filterItemsData={filterItemsData}
                   hideMonitoresServicesFilter={Boolean(monitoredService)}
+                />
+                <ExpandingSearchInput
+                  width={250}
+                  throttle={500}
+                  onChange={setSearch}
+                  placeholder={getString('cv.slos.searchSLO')}
                 />
               </Container>
             )}
@@ -308,41 +480,81 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           )}
           {!!content?.length && (
             <>
-              <div className={css.sloCardContainer} data-testid="slo-card-container">
-                {content.map(serviceLevelObjective => (
-                  <Card key={serviceLevelObjective.sloIdentifier} className={css.sloCard}>
-                    <SLOCardHeader
-                      onDelete={onDelete}
-                      onResetErrorBudget={onResetErrorBudget}
-                      serviceLevelObjective={serviceLevelObjective}
-                      monitoredServiceIdentifier={monitoredServiceIdentifier}
-                    />
-                    <SLOCardContent serviceLevelObjective={serviceLevelObjective} />
-                  </Card>
-                ))}
-              </div>
-              <FlexExpander />
-              <Pagination
-                itemCount={totalItems}
-                pageCount={totalPages}
-                pageIndex={pageIndex}
-                pageSize={pageSize}
-                gotoPage={setPageNumber}
+              <TableV2
+                sortable={false}
+                columns={[
+                  {
+                    Header: getString('cv.slos.sloName').toUpperCase(),
+                    width: '18%',
+                    Cell: RenderSLOName
+                  },
+                  {
+                    Header: getString('cv.slos.monitoredService').toUpperCase(),
+                    width: '12%',
+                    Cell: RenderMonitoredService
+                  },
+                  {
+                    Header: getString('cv.slos.status').toUpperCase(),
+                    width: '13%',
+                    Cell: RenderSLOStatus
+                  },
+                  {
+                    Header: getString('cv.errorBudgetRemaining').toUpperCase(),
+                    width: '12%',
+                    Cell: RenderRemainingErrorBudget
+                  },
+                  {
+                    Header: getString('cv.slos.target').toUpperCase(),
+                    width: '10%',
+                    Cell: RenderTarget
+                  },
+                  {
+                    Header: getString('cv.slos.burnRate').toUpperCase(),
+                    width: '9%',
+                    Cell: RenderBurnRate
+                  },
+                  {
+                    Header: getString('ce.budgets.listPage.tableHeaders.alerts').toUpperCase(),
+                    width: '8%',
+                    Cell: RenderAlerts
+                  },
+                  {
+                    Header: getString('cv.slos.userJourney').toUpperCase(),
+                    width: '10%',
+                    Cell: RenderUserJourney
+                  },
+                  {
+                    Header: '',
+                    id: 'sloActions',
+                    width: '8%',
+                    Cell: RenderSLOActions
+                  }
+                ]}
+                data={content}
+                pagination={{
+                  pageSize,
+                  pageIndex,
+                  pageCount: totalPages,
+                  itemCount: totalItems,
+                  gotoPage: nextPage => {
+                    setPageNumber(nextPage)
+                  }
+                }}
               />
+              <FlexExpander />
             </>
           )}
 
           {getIsWidgetDataEmpty(content?.length, dashboardWidgetsLoading) && (
             <NoDataCard
               image={slosEmptyState}
-              messageTitle={
-                monitoredServiceIdentifier
-                  ? getString('cv.slos.noDataMS')
-                  : !riskCountResponse?.data?.riskCounts ||
-                    isEmpty(filter(compact(values(filterState)), ({ label }: SelectOption) => label !== 'All'))
-                  ? getString('cv.slos.noData')
-                  : getString('cv.slos.noMatchingData')
-              }
+              messageTitle={getSLOsNoDataMessageTitle({
+                monitoredServiceIdentifier,
+                getString,
+                riskCountResponse,
+                filterState,
+                search
+              })}
               message={getString('cv.slos.noSLOsStateMessage')}
               className={css.noSloData}
             />

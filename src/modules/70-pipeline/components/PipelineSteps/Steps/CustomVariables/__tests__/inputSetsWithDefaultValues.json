@@ -20,11 +20,6 @@
         "name": "var4",
         "type": "String",
         "value": "<+input>"
-      },
-      {
-        "name": "var5",
-        "type": "String",
-        "value": "<+input>"
       }
     ]
   },
@@ -49,11 +44,6 @@
       },
       {
         "name": "var4",
-        "type": "String",
-        "value": "<+input>"
-      },
-      {
-        "name": "var5",
         "type": "String",
         "value": "<+input>"
       }

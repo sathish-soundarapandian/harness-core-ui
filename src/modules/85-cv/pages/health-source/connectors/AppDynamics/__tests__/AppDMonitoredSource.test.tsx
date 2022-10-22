@@ -29,6 +29,7 @@ import {
   appDynamicsDataFull
 } from './AppDMonitoredSource.mock'
 import AppDMonitoredSource from '../AppDHealthSource'
+import { riskCategoryMock } from '../../__tests__/HealthSources.mock'
 
 const createModeProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
@@ -83,6 +84,9 @@ describe('Unit tests for createAppd monitoring source', () => {
       .spyOn(cvServices, 'useGetMetricPacks')
       .mockImplementation(() => ({ loading: false, error: null, data: metricPack, refetch: refetchMock } as any))
     jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
+    jest
       .spyOn(cvServices, 'useGetAppdynamicsMetricStructure')
       .mockImplementation(
         () => ({ loading: false, error: null, data: [{ name: 'cvng', type: 'leaf' }], refetch: refetchMock } as any)
@@ -93,7 +97,7 @@ describe('Unit tests for createAppd monitoring source', () => {
         () => ({ loading: false, error: null, data: { data: ['overall performane'] }, refetch: refetchMock } as any)
       )
     jest
-      .spyOn(cvServices, 'useGetServiceInstanceMetricPath')
+      .spyOn(cvServices, 'useGetCompleteServiceInstanceMetricPath')
       .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: refetchMock } as any))
     jest
       .spyOn(cvServices, 'useGetAppdynamicsMetricDataByPath')
@@ -103,9 +107,7 @@ describe('Unit tests for createAppd monitoring source', () => {
       .mockImplementation(() => ({ error: null, data: validationData.data } as any))
   })
 
-  // Skipped as it is not checking the checkbox correctly, will be checked by Deepesh soon
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Component renders in edit mode', async () => {
+  test('Component renders in edit mode', async () => {
     jest.spyOn(uuid, 'v4').mockReturnValue('MockedUUID')
     const submitData = jest.fn()
     const { container, getByText } = render(
@@ -132,6 +134,10 @@ describe('Unit tests for createAppd monitoring source', () => {
     })
 
     act(() => {
+      fireEvent.click(getByText('Performance/Response Time'))
+    })
+
+    act(() => {
       fireEvent.click(getByText('submit'))
     })
 
@@ -139,7 +145,7 @@ describe('Unit tests for createAppd monitoring source', () => {
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Validate metric packs', async () => {
+  test('Validate metric packs', async () => {
     const submitData = jest.fn()
     const { container, getByText } = render(
       <TestWrapper {...createModeProps}>

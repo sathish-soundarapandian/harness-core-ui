@@ -20,13 +20,14 @@ import {
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
-import { debounce, escape } from 'lodash-es'
+import { debounce, defaultTo, escape, isEmpty } from 'lodash-es'
 
-import { String } from 'framework/strings'
+import { useParams } from 'react-router-dom'
+import { String, StringKeys, useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import type { NGVariable } from 'services/cd-ng'
+import type { ConnectorInfoDTO, NGVariable } from 'services/cd-ng'
 import type { YamlProperties } from 'services/pipeline-ng'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -37,10 +38,14 @@ import {
   usePipelineVariables
 } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useQueryParams } from '@common/hooks'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import AddEditCustomVariable from './AddEditCustomVariable'
 import type { VariableState } from './AddEditCustomVariable'
 import { VariableType } from './CustomVariableUtils'
+import type { VariablesCustomValidationSchemaType } from './CustomVariablesEditableStage'
 import css from './CustomVariables.module.scss'
 
 export interface CustomVariablesData {
@@ -61,6 +66,13 @@ export interface CustomVariableEditableExtraProps {
   enableValidation?: boolean
   path?: string
   hideExecutionTimeField?: boolean
+  allowedVarialblesTypes?: VariableType[]
+  isDescriptionEnabled?: boolean
+  headerComponent?: JSX.Element
+  allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
+  addVariableLabel?: StringKeys
+  validationSchema?: VariablesCustomValidationSchemaType
+  isDrawerMode?: boolean
 }
 
 export interface CustomVariableEditableProps extends CustomVariableEditableExtraProps {
@@ -69,6 +81,7 @@ export interface CustomVariableEditableProps extends CustomVariableEditableExtra
   stepViewType?: StepViewType
   readonly?: boolean
   allowableTypes: AllowedTypes
+  fromEnvironmentConfiguration?: boolean
 }
 
 export function CustomVariableEditable(props: CustomVariableEditableProps): React.ReactElement {
@@ -83,10 +96,21 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
     path,
     formName,
     hideExecutionTimeField,
-    allowableTypes
+    allowableTypes,
+    allowedVarialblesTypes,
+    isDescriptionEnabled,
+    headerComponent,
+    addVariableLabel,
+    isDrawerMode = false
   } = props
   const uids = React.useRef<string[]>([])
-
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+  const { getString } = useStrings()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [hoveredVariable, setHoveredVariable] = useState<Record<string, boolean>>({})
   const [selectedVariable, setSelectedVariable] = React.useState<VariableState | null>(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,7 +121,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '' },
+      variable: { name: '', type: 'String', value: '', description: '' },
       index: -1
     })
   }
@@ -158,6 +182,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                   setSelectedVariable={setSelectedVariable}
                   existingVariables={values.variables}
                   formName={formName}
+                  allowedVarialblesTypes={allowedVarialblesTypes}
+                  isDescriptionEnabled={isDescriptionEnabled}
                 />
                 {values.canAddVariable ? (
                   <div className={css.headerRow}>
@@ -170,16 +196,19 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                       size={ButtonSize.SMALL}
                       disabled={readonly}
                     >
-                      <String stringID="common.addVariable" />
+                      <String stringID={defaultTo(addVariableLabel, 'common.addVariable')} />
                     </Button>
                   </div>
                 ) : /* istanbul ignore next */ null}
-                {props.showHeaders && values.variables.length > 0 ? (
-                  <section className={css.subHeader}>
-                    <String stringID="variableLabel" />
-                    <String stringID="valueLabel" />
-                  </section>
-                ) : /* istanbul ignore next */ null}
+                {headerComponent
+                  ? headerComponent
+                  : props.showHeaders &&
+                    values.variables.length > 0 && (
+                      <section className={css.subHeader}>
+                        <String stringID="variableLabel" />
+                        <String stringID="valueLabel" />
+                      </section>
+                    )}
                 {values.variables.map?.((variable, index) => {
                   // generated uuid if they are not present
                   if (!uids.current[index]) {
@@ -237,6 +266,11 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                           />
                         </Text>
                       )}
+                      {isDescriptionEnabled && (
+                        <Text lineClamp={1} className="descriptionRow">
+                          {isEmpty(variable?.description) ? '-' : variable?.description}
+                        </Text>
+                      )}
                       <div
                         className={cx(css.valueRow, {
                           [css.selectedSearchTextValueRow]: searchText?.length && isValidValueMatch,
@@ -244,7 +278,25 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                         })}
                       >
                         <div>
-                          {variable.type === VariableType.Secret ? (
+                          {(variable?.type as unknown) === VariableType.Connector ? (
+                            <FormMultiTypeConnectorField
+                              name={`variables[${index}].value`}
+                              label=""
+                              placeholder={getString('connectors.selectConnector')}
+                              disabled={readonly}
+                              accountIdentifier={accountId}
+                              multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                              projectIdentifier={projectIdentifier}
+                              orgIdentifier={orgIdentifier}
+                              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                              setRefValue
+                              connectorLabelClass="connectorVariableField"
+                              enableConfigureOptions={false}
+                              mini={true}
+                              isDrawerMode={isDrawerMode}
+                              type={[]}
+                            />
+                          ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput
                               small
                               name={`variables[${index}].value`}

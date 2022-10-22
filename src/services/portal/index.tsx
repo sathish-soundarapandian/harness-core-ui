@@ -262,6 +262,7 @@ export interface Account {
   }
   delegateConfiguration?: DelegateConfiguration
   forImport?: boolean
+  globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
@@ -940,6 +941,7 @@ export interface AppPermission {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
   )[]
   appFilter?: AppFilter
   entityFilter?: Filter
@@ -1012,6 +1014,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   envPermissions?: {
@@ -1026,6 +1029,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   envPipelineDeployPermissions?: {
@@ -1043,6 +1047,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   provisionerPermissions?: {
@@ -1057,6 +1062,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   servicePermissions?: {
@@ -1071,6 +1077,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   templatePermissions?: {
@@ -1085,6 +1092,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   workflowPermissions?: {
@@ -1099,6 +1107,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
 }
@@ -1817,26 +1826,16 @@ export interface AuditHeaderYamlResponse {
   oldYamlPath?: string
 }
 
-export interface AuditPreference {
+export type AuditPreference = Preference & {
   accountAuditFilter?: AccountAuditFilter
-  accountId?: string
-  appId: string
   applicationAuditFilter?: ApplicationAuditFilter
-  createdAt?: number
-  createdBy?: EmbeddedUser
   createdByUserIds?: string[]
   endTime?: string
   includeAccountLevelResources?: boolean
   includeAppLevelResources?: boolean
   lastNDays?: number
-  lastUpdatedAt: number
-  lastUpdatedBy?: EmbeddedUser
-  name?: string
   operationTypes?: string[]
-  preferenceType?: string
   startTime?: string
-  userId?: string
-  uuid: string
 }
 
 export interface AuditPreferenceResponse {
@@ -1924,6 +1923,7 @@ export type AwsConnector = ConnectorConfigDTO & {
 
 export interface AwsCredential {
   crossAccountAccess?: CrossAccountAccess
+  region?: string
   spec?: AwsCredentialSpec
   type: 'InheritFromDelegate' | 'ManualConfig' | 'Irsa'
 }
@@ -2113,11 +2113,11 @@ export interface AwsSecretsManagerConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   externalName?: string
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
@@ -2389,11 +2389,11 @@ export interface AzureVaultConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   manuallyEnteredSecretEngineMigrationIteration?: number
@@ -2801,6 +2801,7 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
@@ -3263,6 +3264,11 @@ export interface ChangeSetDTO {
 
 export interface ChangesetInformation {
   [key: string]: any
+}
+
+export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
+  totalChaosInfrastructures?: number
+  totalChaosExperimentRun?: number
 }
 
 export interface CloneMetadata {
@@ -3751,11 +3757,11 @@ export interface ConfigFile {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   entityId?: string
   entityType:
     | 'SERVICE'
@@ -3921,7 +3927,6 @@ export interface ConfigFile {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -4027,6 +4032,9 @@ export interface ConnectorInfoDTO {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
+    | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorValidationResult {
@@ -4606,6 +4614,16 @@ export interface CustomRepositoryMapping {
   buildNoPath?: string
 }
 
+export type CustomSecretManager = ConnectorConfigDTO & {
+  connectorRef?: string
+  default?: boolean
+  delegateSelectors?: string[]
+  host?: string
+  onDelegate: boolean
+  template: TemplateLinkConfigForCustomSecretManager
+  workingDirectory?: string
+}
+
 export interface CustomSecretsManagerConfig {
   accountId?: string
   commandPath?: string
@@ -4624,11 +4642,11 @@ export interface CustomSecretsManagerConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   executeOnDelegate?: boolean
   host?: string
   lastUpdatedAt?: number
@@ -4664,41 +4682,6 @@ export interface CustomSourceConfig {
 
 export type CustomUserGroupFilter = UserGroupFilter & {
   userGroups?: string[]
-}
-
-export interface CyberArkConfig {
-  accountId?: string
-  appId?: string
-  clientCertificate?: string
-  createdAt?: number
-  createdBy?: EmbeddedUser
-  cyberArkUrl?: string
-  default?: boolean
-  encryptedBy?: string
-  encryptionServiceUrl?: string
-  encryptionType?:
-    | 'LOCAL'
-    | 'KMS'
-    | 'GCP_KMS'
-    | 'AWS_SECRETS_MANAGER'
-    | 'AZURE_VAULT'
-    | 'CYBERARK'
-    | 'VAULT'
-    | 'GCP_SECRETS_MANAGER'
-    | 'CUSTOM'
-    | 'VAULT_SSH'
-  lastUpdatedAt?: number
-  lastUpdatedBy?: EmbeddedUser
-  manuallyEnteredSecretEngineMigrationIteration?: number
-  name?: string
-  nextTokenRenewIteration?: number
-  numOfEncryptedValue?: number
-  scopedToAccount?: boolean
-  templatized?: boolean
-  templatizedFields?: string[]
-  usageRestrictions?: UsageRestrictions
-  uuid: string
-  validationCriteria?: string
 }
 
 export interface DashboardAccessPermissions {
@@ -4798,6 +4781,11 @@ export interface DataCollectionRequest {
     | 'DYNATRACE_SAMPLE_DATA_REQUEST'
     | 'DYNATRACE_METRIC_LIST_REQUEST'
     | 'SPLUNK_METRIC_SAMPLE_DATA'
+    | 'ELK_SAMPLE_DATA'
+    | 'ELK_INDEX_DATA'
+    | 'CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST'
+    | 'CLOUDWATCH_METRIC_DATA_REQUEST'
+    | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
 }
 
 export interface DataDogSetupTestNodeData {
@@ -5020,6 +5008,7 @@ export interface Delegate {
   delegateType?: string
   description?: string
   excludeScopes?: DelegateScope[]
+  expirationTime?: number
   heartbeatAsObject?: boolean
   hostName?: string
   immutable?: boolean
@@ -5030,6 +5019,7 @@ export interface Delegate {
   lastExpiredEventHeartbeatTime?: number
   lastHeartBeat?: number
   location?: string
+  mtls?: boolean
   ng?: boolean
   owner?: DelegateEntityOwner
   polllingModeEnabled?: boolean
@@ -5043,6 +5033,7 @@ export interface Delegate {
   status?: 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
   supportedTaskTypes?: string[]
   tags?: string[]
+  tagsFromYaml?: string[]
   taskExpiryCheckNextIteration?: number
   useCdn?: boolean
   useJreVersion?: string
@@ -5233,15 +5224,15 @@ export interface DelegateGroupDTO {
 
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
-  autoUpgrade?: boolean
+  autoUpgrade?: 'ON' | 'OFF' | 'SYNCHRONIZING'
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
+  delegateGroupExpirationTime?: number
   delegateGroupIdentifier?: string
   delegateInstanceDetails?: DelegateInner[]
   delegateType?: string
   delegateVersion?: string
-  expirationTime?: string
   groupCustomSelectors?: string[]
   groupId?: string
   groupImplicitSelectors?: {
@@ -5254,7 +5245,9 @@ export interface DelegateGroupDetails {
       | 'PROFILE_SELECTORS'
   }
   groupName?: string
+  groupVersion?: string
   grpcActive?: boolean
+  immutable?: boolean
   lastHeartBeat?: number
   tokenActive?: boolean
   upgraderLastUpdated?: number
@@ -5299,10 +5292,12 @@ export interface DelegateInitializationDetails {
 export interface DelegateInner {
   activelyConnected?: boolean
   connections?: DelegateConnectionDetails[]
+  delegateExpirationTime?: number
   hostName?: string
   lastHeartbeat?: number
   tokenActive?: boolean
   uuid?: string
+  version?: string
 }
 
 export interface DelegateMetaInfo {
@@ -5314,6 +5309,7 @@ export interface DelegateParams {
   accountId?: string
   ceEnabled?: boolean
   currentlyExecutingDelegateTasks?: string[]
+  delegateConnectionId?: string
   delegateGroupId?: string
   delegateGroupName?: string
   delegateId?: string
@@ -5340,6 +5336,8 @@ export interface DelegateParams {
   sessionIdentifier?: string
   supportedTaskTypes?: string[]
   tags?: string[]
+  token?: string
+  tokenName?: string
   version?: string
 }
 
@@ -5404,9 +5402,11 @@ export interface DelegateResponseData {
 }
 
 export interface DelegateScalingGroup {
-  autoUpgrade?: boolean
+  autoUpgrade?: 'ON' | 'OFF' | 'SYNCHRONIZING'
+  delegateGroupExpirationTime?: number
   delegates?: DelegateInner[]
   groupName?: string
+  immutable?: boolean
   upgraderLastUpdated?: number
 }
 
@@ -5505,6 +5505,8 @@ export interface DelegateScope {
     | 'AZURE'
     | 'SERVERLESS_NG'
     | 'COMMAND_TASK_NG'
+    | 'ECS'
+    | 'AZURE_NG_ARM_BLUEPRINT'
   )[]
   uuid: string
   valid?: boolean
@@ -5558,6 +5560,7 @@ export interface DelegateSetupDetails {
   name: string
   orgIdentifier?: string
   projectIdentifier?: string
+  runAsRoot?: boolean
   size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
   tags?: string[]
   tokenName?: string
@@ -5573,6 +5576,7 @@ export interface DelegateSizeDetails {
 
 export interface DelegateStatus {
   delegates?: DelegateInner[]
+  publishedImmutableDelegateVersion?: string
   publishedVersions?: string[]
   scalingGroups?: DelegateScalingGroup[]
 }
@@ -5816,6 +5820,7 @@ export interface DelegateTaskPackageV2 {
     | 'LOGZ_GET_LOG_SAMPLE'
     | 'LOGZ_GET_HOST_RECORDS'
     | 'ARTIFACTORY_GET_BUILDS'
+    | 'ARTIFACTORY_GET_LABELS'
     | 'ARTIFACTORY_GET_JOBS'
     | 'ARTIFACTORY_GET_PLANS'
     | 'ARTIFACTORY_GET_ARTIFACTORY_PATHS'
@@ -5824,7 +5829,6 @@ export interface DelegateTaskPackageV2 {
     | 'ARTIFACTORY_COLLECTION'
     | 'ARTIFACTORY_VALIDATE_ARTIFACT_SERVER'
     | 'ARTIFACTORY_VALIDATE_ARTIFACT_STREAM'
-    | 'CYBERARK_VALIDATE_CONFIG'
     | 'VAULT_GET_CHANGELOG'
     | 'VAULT_RENEW_TOKEN'
     | 'VAULT_LIST_ENGINES'
@@ -5906,15 +5910,18 @@ export interface DelegateTaskPackageV2 {
     | 'GIT_FETCH_NEXT_GEN_TASK'
     | 'BUILD_SOURCE_TASK'
     | 'DOCKER_ARTIFACT_TASK_NG'
+    | 'GOOGLE_ARTIFACT_REGISTRY_TASK_NG'
     | 'JENKINS_ARTIFACT_TASK_NG'
     | 'GCR_ARTIFACT_TASK_NG'
     | 'NEXUS_ARTIFACT_TASK_NG'
     | 'ARTIFACTORY_ARTIFACT_TASK_NG'
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
+    | 'GITHUB_PACKAGES_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
     | 'CUSTOM_VALIDATE_ARTIFACT_STREAM'
+    | 'CUSTOM_ARTIFACT_NG'
     | 'SHELL_SCRIPT_PROVISION_TASK'
     | 'SERVICENOW_ASYNC'
     | 'SERVICENOW_SYNC'
@@ -5980,15 +5987,20 @@ export interface DelegateTaskPackageV2 {
     | 'OCI_HELM_CONNECTIVITY_TASK'
     | 'AZURE_WEB_APP_TASK_NG'
     | 'COMMAND_TASK_NG'
-    | 'CI_DOCKER_INITIALIZE_TASK'
-    | 'CI_DOCKER_EXECUTE_TASK'
-    | 'CI_DOCKER_CLEANUP_TASK'
+    | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
+    | 'FETCH_CUSTOM_SECRET'
+    | 'RESOLVE_CUSTOM_SM_CONFIG'
     | 'NG_LDAP_TEST_USER_SETTINGS'
     | 'NG_LDAP_TEST_GROUP_SETTINGS'
     | 'DLITE_CI_VM_INITIALIZE_TASK'
     | 'DLITE_CI_VM_EXECUTE_TASK'
     | 'DLITE_CI_VM_CLEANUP_TASK'
     | 'NG_LDAP_GROUPS_SYNC'
+    | 'AZURE_NG_ARM'
+    | 'NG_LDAP_TEST_AUTHENTICATION'
+    | 'ECS_GIT_FETCH_TASK_NG'
+    | 'ECS_COMMAND_TASK_NG'
+    | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
 }
 
 export interface DelegateTaskResponse {
@@ -6164,6 +6176,7 @@ export interface DelegateTaskResponse {
     | 'LOGZ_GET_LOG_SAMPLE'
     | 'LOGZ_GET_HOST_RECORDS'
     | 'ARTIFACTORY_GET_BUILDS'
+    | 'ARTIFACTORY_GET_LABELS'
     | 'ARTIFACTORY_GET_JOBS'
     | 'ARTIFACTORY_GET_PLANS'
     | 'ARTIFACTORY_GET_ARTIFACTORY_PATHS'
@@ -6172,7 +6185,6 @@ export interface DelegateTaskResponse {
     | 'ARTIFACTORY_COLLECTION'
     | 'ARTIFACTORY_VALIDATE_ARTIFACT_SERVER'
     | 'ARTIFACTORY_VALIDATE_ARTIFACT_STREAM'
-    | 'CYBERARK_VALIDATE_CONFIG'
     | 'VAULT_GET_CHANGELOG'
     | 'VAULT_RENEW_TOKEN'
     | 'VAULT_LIST_ENGINES'
@@ -6254,15 +6266,18 @@ export interface DelegateTaskResponse {
     | 'GIT_FETCH_NEXT_GEN_TASK'
     | 'BUILD_SOURCE_TASK'
     | 'DOCKER_ARTIFACT_TASK_NG'
+    | 'GOOGLE_ARTIFACT_REGISTRY_TASK_NG'
     | 'JENKINS_ARTIFACT_TASK_NG'
     | 'GCR_ARTIFACT_TASK_NG'
     | 'NEXUS_ARTIFACT_TASK_NG'
     | 'ARTIFACTORY_ARTIFACT_TASK_NG'
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
+    | 'GITHUB_PACKAGES_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
     | 'CUSTOM_VALIDATE_ARTIFACT_STREAM'
+    | 'CUSTOM_ARTIFACT_NG'
     | 'SHELL_SCRIPT_PROVISION_TASK'
     | 'SERVICENOW_ASYNC'
     | 'SERVICENOW_SYNC'
@@ -6328,15 +6343,20 @@ export interface DelegateTaskResponse {
     | 'OCI_HELM_CONNECTIVITY_TASK'
     | 'AZURE_WEB_APP_TASK_NG'
     | 'COMMAND_TASK_NG'
-    | 'CI_DOCKER_INITIALIZE_TASK'
-    | 'CI_DOCKER_EXECUTE_TASK'
-    | 'CI_DOCKER_CLEANUP_TASK'
+    | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
+    | 'FETCH_CUSTOM_SECRET'
+    | 'RESOLVE_CUSTOM_SM_CONFIG'
     | 'NG_LDAP_TEST_USER_SETTINGS'
     | 'NG_LDAP_TEST_GROUP_SETTINGS'
     | 'DLITE_CI_VM_INITIALIZE_TASK'
     | 'DLITE_CI_VM_EXECUTE_TASK'
     | 'DLITE_CI_VM_CLEANUP_TASK'
     | 'NG_LDAP_GROUPS_SYNC'
+    | 'AZURE_NG_ARM'
+    | 'NG_LDAP_TEST_AUTHENTICATION'
+    | 'ECS_GIT_FETCH_TASK_NG'
+    | 'ECS_COMMAND_TASK_NG'
+    | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
 }
 
 export interface DelegateTaskResponseV2 {
@@ -6511,6 +6531,7 @@ export interface DelegateTaskResponseV2 {
     | 'LOGZ_GET_LOG_SAMPLE'
     | 'LOGZ_GET_HOST_RECORDS'
     | 'ARTIFACTORY_GET_BUILDS'
+    | 'ARTIFACTORY_GET_LABELS'
     | 'ARTIFACTORY_GET_JOBS'
     | 'ARTIFACTORY_GET_PLANS'
     | 'ARTIFACTORY_GET_ARTIFACTORY_PATHS'
@@ -6519,7 +6540,6 @@ export interface DelegateTaskResponseV2 {
     | 'ARTIFACTORY_COLLECTION'
     | 'ARTIFACTORY_VALIDATE_ARTIFACT_SERVER'
     | 'ARTIFACTORY_VALIDATE_ARTIFACT_STREAM'
-    | 'CYBERARK_VALIDATE_CONFIG'
     | 'VAULT_GET_CHANGELOG'
     | 'VAULT_RENEW_TOKEN'
     | 'VAULT_LIST_ENGINES'
@@ -6601,15 +6621,18 @@ export interface DelegateTaskResponseV2 {
     | 'GIT_FETCH_NEXT_GEN_TASK'
     | 'BUILD_SOURCE_TASK'
     | 'DOCKER_ARTIFACT_TASK_NG'
+    | 'GOOGLE_ARTIFACT_REGISTRY_TASK_NG'
     | 'JENKINS_ARTIFACT_TASK_NG'
     | 'GCR_ARTIFACT_TASK_NG'
     | 'NEXUS_ARTIFACT_TASK_NG'
     | 'ARTIFACTORY_ARTIFACT_TASK_NG'
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
+    | 'GITHUB_PACKAGES_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
     | 'CUSTOM_VALIDATE_ARTIFACT_STREAM'
+    | 'CUSTOM_ARTIFACT_NG'
     | 'SHELL_SCRIPT_PROVISION_TASK'
     | 'SERVICENOW_ASYNC'
     | 'SERVICENOW_SYNC'
@@ -6675,15 +6698,20 @@ export interface DelegateTaskResponseV2 {
     | 'OCI_HELM_CONNECTIVITY_TASK'
     | 'AZURE_WEB_APP_TASK_NG'
     | 'COMMAND_TASK_NG'
-    | 'CI_DOCKER_INITIALIZE_TASK'
-    | 'CI_DOCKER_EXECUTE_TASK'
-    | 'CI_DOCKER_CLEANUP_TASK'
+    | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
+    | 'FETCH_CUSTOM_SECRET'
+    | 'RESOLVE_CUSTOM_SM_CONFIG'
     | 'NG_LDAP_TEST_USER_SETTINGS'
     | 'NG_LDAP_TEST_GROUP_SETTINGS'
     | 'DLITE_CI_VM_INITIALIZE_TASK'
     | 'DLITE_CI_VM_EXECUTE_TASK'
     | 'DLITE_CI_VM_CLEANUP_TASK'
     | 'NG_LDAP_GROUPS_SYNC'
+    | 'AZURE_NG_ARM'
+    | 'NG_LDAP_TEST_AUTHENTICATION'
+    | 'ECS_GIT_FETCH_TASK_NG'
+    | 'ECS_COMMAND_TASK_NG'
+    | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
 }
 
 export interface DelegateTokenDetails {
@@ -7035,6 +7063,16 @@ export type DynatraceConnectorDTO = ConnectorConfigDTO & {
   apiTokenRef: string
   delegateSelectors?: string[]
   url: string
+}
+
+export type ELKConnectorDTO = ConnectorConfigDTO & {
+  apiKeyId?: string
+  apiKeyRef?: string
+  authType?: 'UsernamePassword' | 'ApiClientToken' | 'None'
+  delegateSelectors?: string[]
+  passwordRef?: string
+  url: string
+  username?: string
 }
 
 export interface EbsInstanceBlockDevice {
@@ -7395,7 +7433,6 @@ export interface EncryptableSetting {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -7431,11 +7468,11 @@ export interface EncryptedData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   backupKmsId?: string
   base64Encoded?: boolean
   changeLog?: number
@@ -7451,11 +7488,11 @@ export interface EncryptedData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   envIds?: string[]
   fileSize?: number
   hideFromListing?: boolean
@@ -7539,7 +7576,6 @@ export interface EncryptedData {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -7636,7 +7672,6 @@ export interface EncryptedDataParent {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -7670,11 +7705,11 @@ export interface EncryptedRecord {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   backupKmsId?: string
   base64Encoded?: boolean
   encryptedValue?: string[]
@@ -7685,11 +7720,11 @@ export interface EncryptedRecord {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   kmsId?: string
   name?: string
   parameters?: EncryptedDataParams[]
@@ -7707,11 +7742,11 @@ export interface EncryptedRecordData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   backupKmsId?: string
   base64Encoded?: boolean
   encryptedValue?: string[]
@@ -7722,11 +7757,11 @@ export interface EncryptedRecordData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   kmsId?: string
   name?: string
   parameters?: EncryptedDataParams[]
@@ -7744,11 +7779,11 @@ export interface EncryptionConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   globalKms?: boolean
   name?: string
   numOfEncryptedValue?: number
@@ -8130,6 +8165,7 @@ export interface EnvironmentRole {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
   }
 }
 
@@ -8235,6 +8271,7 @@ export interface ExecutionCapability {
     | 'SERVERLESS_INSTALL'
     | 'OCI_HELM_REPO'
     | 'AWS_CLI_INSTALL'
+    | 'NG_WINRM_HOST_CONNECTION'
   maxValidityPeriod?: Duration
   periodUntilNextValidation?: Duration
 }
@@ -8737,6 +8774,7 @@ export interface FailureStrategy {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   manualInterventionTimeout?: number
   repairActionCode?:
@@ -9029,6 +9067,12 @@ export interface GcpOrganization {
   uuid?: string
 }
 
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
+}
+
 export interface GenericEntityFilter {
   filterType?: string
   ids?: string[]
@@ -9179,6 +9223,7 @@ export interface GitFileActivity {
   triggeredBy?: 'USER' | 'GIT' | 'FULL_SYNC'
   userDoesNotHavePermForFile?: boolean
   uuid?: string
+  validUntil?: string
 }
 
 export interface GitFileActivitySummary {
@@ -9197,6 +9242,7 @@ export interface GitFileActivitySummary {
   repositoryName?: string
   status?: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'COMPLETED_WITH_ERRORS' | 'SKIPPED'
   uuid: string
+  validUntil?: string
 }
 
 export interface GitFileConfig {
@@ -9272,6 +9318,7 @@ export interface GitSyncError {
   status?: 'ACTIVE' | 'DISCARDED' | 'EXPIRED' | 'RESOLVED' | 'OVERRIDDEN'
   userDoesNotHavePermForFile?: boolean
   uuid: string
+  validUntil?: string
   yamlContent?: string
   yamlFilePath?: string
   yamlGitConfigId?: string
@@ -10122,6 +10169,7 @@ export interface ImmutablePairResourceTypeAction {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
   value?:
     | 'ALL'
     | 'CREATE'
@@ -10133,6 +10181,7 @@ export interface ImmutablePairResourceTypeAction {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
 }
 
 export interface ImportStatus {
@@ -10359,7 +10408,6 @@ export interface InfrastructureMapping {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -10916,7 +10964,6 @@ export interface InstanceExecutionHistory {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -11010,6 +11057,7 @@ export interface InstanceExecutionHistory {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -11095,6 +11143,15 @@ export interface InstanceExecutionHistory {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -11387,7 +11444,6 @@ export interface JiraConfig {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -11529,11 +11585,11 @@ export interface KmsConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   externalName?: string
   kmsArn?: string
   lastUpdatedAt?: number
@@ -11736,7 +11792,6 @@ export interface LdapConnectionSettings {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -11803,6 +11858,7 @@ export interface LdapSettings {
   createdAt?: number
   createdBy?: EmbeddedUser
   cronExpression?: string
+  disabled?: boolean
   displayName?: string
   groupSettings?: LdapGroupSettings
   groupSettingsList?: LdapGroupSettings[]
@@ -12966,6 +13022,13 @@ export interface NameValuePair {
   valueType?: string
 }
 
+export interface NameValuePairWithDefault {
+  name?: string
+  type: string
+  useAsDefault?: boolean
+  value: string
+}
+
 export type NewInstanceTriggerCondition = TriggerCondition & {}
 
 export interface NewRelicApplication {
@@ -14041,6 +14104,7 @@ export interface Permission {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
   appId?: string
   envId?: string
   environmentType?: 'PROD' | 'NON_PROD' | 'ALL'
@@ -14144,6 +14208,7 @@ export interface PerpetualTaskClientContext {
 export interface PerpetualTaskRecord {
   accountId?: string
   assignAfterMs?: number
+  assignIteration?: number
   assignTryCount?: number
   assignerIterations?: number[]
   clientContext?: PerpetualTaskClientContext
@@ -15080,7 +15145,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -15174,6 +15238,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -15259,6 +15324,15 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -15270,6 +15344,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -16140,6 +16215,7 @@ export interface RestResponseInviteOperationResponse {
     | 'FAIL'
     | 'INVITE_EXPIRED'
     | 'INVITE_INVALID'
+    | 'USER_INVITE_NOT_REQUIRED'
   responseMessages?: ResponseMessage[]
 }
 
@@ -16871,6 +16947,7 @@ export interface RestResponseListInviteOperationResponse {
     | 'FAIL'
     | 'INVITE_EXPIRED'
     | 'INVITE_INVALID'
+    | 'USER_INVITE_NOT_REQUIRED'
   )[]
   responseMessages?: ResponseMessage[]
 }
@@ -17292,7 +17369,6 @@ export interface RestResponseMapDeploymentTypeListSettingVariableTypes {
       | 'VAULT'
       | 'VAULT_SSH'
       | 'AWS_SECRETS_MANAGER'
-      | 'CYBERARK'
       | 'WINRM_CONNECTION_ATTRIBUTES'
       | 'WINRM_SESSION_CONFIG'
       | 'PROMETHEUS'
@@ -18862,11 +18938,11 @@ export interface SSHVaultConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   engineManuallyEntered?: boolean
   k8sAuthEndpoint?: string
   lastUpdatedAt?: number
@@ -19141,11 +19217,11 @@ export interface SecretManagerConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   manuallyEnteredSecretEngineMigrationIteration?: number
@@ -19220,7 +19296,6 @@ export interface SecretSetupUsage {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -19794,11 +19869,11 @@ export interface ServiceVariable {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   entityId?: string
   entityType:
     | 'SERVICE'
@@ -19956,7 +20031,6 @@ export interface ServiceVariable {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -20001,11 +20075,11 @@ export interface SettingAttribute {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   envId?: string
   lastUpdatedAt: number
   name?: string
@@ -20077,7 +20151,6 @@ export interface SettingValue {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -21068,6 +21141,7 @@ export interface TagFilterCondition {
     | 'OR'
     | 'AND'
     | 'ELEMENT_MATCH'
+    | 'TEXT_SEARCH'
   tagType?: 'USER' | 'HARNESS'
   values?: string[]
 }
@@ -21248,6 +21322,8 @@ export interface TaskSelectorMap {
     | 'AZURE'
     | 'SERVERLESS_NG'
     | 'COMMAND_TASK_NG'
+    | 'ECS'
+    | 'AZURE_NG_ARM_BLUEPRINT'
   uuid: string
 }
 
@@ -21329,6 +21405,14 @@ export interface TemplateGallery {
   name?: string
   referencedGalleryId?: string
   uuid: string
+}
+
+export interface TemplateLinkConfigForCustomSecretManager {
+  templateInputs?: {
+    [key: string]: NameValuePairWithDefault[]
+  }
+  templateRef: string
+  versionLabel: string
 }
 
 export interface TemplateMetaData {
@@ -22122,11 +22206,11 @@ export interface VaultConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   engineManuallyEntered?: boolean
   k8sAuthEndpoint?: string
   lastUpdatedAt?: number
@@ -22170,6 +22254,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
+  renewAppRoleToken?: boolean
   renewalIntervalMinutes: number
   secretEngineManuallyConfigured?: boolean
   secretEngineName?: string
@@ -22931,7 +23016,6 @@ export interface YamlGitConfig {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -23276,13 +23360,13 @@ export type YamlPayloadRequestBody = YamlPayload
 
 export type GcpSignUpRequestBody = void
 
+export type GetDelegatePropertiesBodyRequestBody = string[]
+
 export type ImportAccountDataRequestBody = void
 
-export type SaveApiCallLogsBodyRequestBody = string[]
+export type SaveGcpSecretsManagerConfigRequestBody = void
 
 export type SaveGcpSecretsManagerConfig1RequestBody = void
-
-export type SaveGlobalKmsConfigRequestBody = void
 
 export interface SaveMessageComparisonListBodyRequestBody {
   [key: string]: string
@@ -25293,6 +25377,54 @@ export const getDelegateFromIdPromise = (
     signal
   )
 
+export interface GetIterationsFromCronQueryParams {
+  accountId?: string
+}
+
+export type GetIterationsFromCronProps = Omit<
+  MutateProps<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>,
+  'path' | 'verb'
+>
+
+export const GetIterationsFromCron = (props: GetIterationsFromCronProps) => (
+  <Mutate<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>
+    verb="POST"
+    path={`/sso/ldap/iterations`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetIterationsFromCronProps = Omit<
+  UseMutateProps<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>,
+  'path' | 'verb'
+>
+
+export const useGetIterationsFromCron = (props: UseGetIterationsFromCronProps) =>
+  useMutate<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>(
+    'POST',
+    `/sso/ldap/iterations`,
+    { base: getConfig('api'), ...props }
+  )
+
+export const getIterationsFromCronPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseListLong,
+    unknown,
+    GetIterationsFromCronQueryParams,
+    CronExpressionRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>(
+    'POST',
+    getConfig('api'),
+    `/sso/ldap/iterations`,
+    props,
+    signal
+  )
+
 export interface GetFeatureFlagsPathParams {
   accountId: string
 }
@@ -25524,6 +25656,47 @@ export const getUserPromise = (
   props: GetUsingFetchProps<RestResponseUser, unknown, void, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseUser, unknown, void, void>(getConfig('api'), `/users/user`, props, signal)
+
+export interface GetUserAccountsQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type GetUserAccountsProps = Omit<
+  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const GetUserAccounts = (props: GetUserAccountsProps) => (
+  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
+    path={`/users/userAccounts`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetUserAccountsProps = Omit<
+  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
+  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getUserAccountsPromise = (
+  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
+    getConfig('api'),
+    `/users/userAccounts`,
+    props,
+    signal
+  )
 
 export interface Logout1PathParams {
   userId: string

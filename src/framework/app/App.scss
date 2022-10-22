@@ -22,8 +22,51 @@ body,
 body {
   --font-family: 'Inter', sans-serif;
   --font-family-mono: Monaco, 'Ubuntu Mono', 'Courier New', monospace;
+  --font-family-reenie-beanie: 'Reenie Beanie';
   --font-size: var(--font-size-small);
   min-width: 1280px;
 }
+
+/* stylelint-disable  color-no-hex */
+:root {
+  // Continuous Delivery
+  --cd-foreground: #30841f;
+  --cd-border: #5fb34e;
+  --cd-background: #f6fff2;
+
+  // Continuous Integration
+  --ci-foreground: #0672b6;
+  --ci-border: #2bb1f2;
+  --ci-background: #e2f5ff;
+
+  // Cloud Cost Management
+  --ccm-foreground: #24807f;
+  --ccm-border: #01c9cc;
+  --ccm-background: #ecffff;
+
+  // Feature Flag Management
+  --ff-foreground: #c05809;
+  --ff-border: #ee8625;
+  --ff-background: #fcf4e3;
+
+  // Service Reliability Management
+  --srm-foreground: #6938c0;
+  --srm-border: #ae82fc;
+  --srm-background: #f6f1ff;
+
+  // Security Test Orchestration
+  --sto-foreground: #1947ec;
+  --sto-border: #4791ff;
+  --sto-background: #ebefff;
+
+  // Chaos Engineering
+  --chaos-foreground: #9a0041;
+  --chaos-border: #ff006a;
+  --chaos-background: #fff1f7;
+
+  // Default Colors
+  --default-module-border: white;
+}
+/* stylelint-enable  color-no-hex */
 
 @import '@common/styles/index.scss';

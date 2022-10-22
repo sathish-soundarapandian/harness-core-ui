@@ -10,7 +10,7 @@ import { Container, Tab, Tabs, Layout } from '@wings-software/uicore'
 import { Expander } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { isEmpty, noop, omit } from 'lodash-es'
+import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { HelpPanel, HelpPanelType, FloatingButton } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
@@ -65,13 +65,14 @@ export function StepCommands(
     hasStepGroupAncestor,
     withoutTabs,
     isNewStep = true,
-    stageType = StageType.DEPLOY,
+    selectedStage,
     stepViewType,
     className = '',
     viewType,
     allowableTypes,
     gitDetails,
-    storeMetadata
+    storeMetadata,
+    isSaveAsTemplateEnabled = true
   } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepCommandTabs.StepConfiguration)
@@ -179,6 +180,9 @@ export function StepCommands(
         stepViewType={stepViewType}
         ref={stepRef}
         allowableTypes={allowableTypes}
+        customStepProps={{
+          selectedStage: selectedStage
+        }}
       />
     )
   }
@@ -223,6 +227,8 @@ export function StepCommands(
             templateLinkConfig={(step as TemplateStepNode).template}
             onOpenTemplateSelector={onUseTemplate}
             onRemoveTemplate={onRemoveTemplate}
+            isReadonly={isReadonly}
+            storeMetadata={storeMetadata}
           />
           <Container>{getStepWidgetWithFormikRef()}</Container>
         </Layout.Vertical>
@@ -251,12 +257,13 @@ export function StepCommands(
                     isStepGroup={isStepGroup}
                     hasStepGroupAncestor={hasStepGroupAncestor}
                     ref={advancedConfRef}
-                    stageType={stageType}
+                    stageType={defaultTo(selectedStage?.stage?.type, StageType.DEPLOY) as StageType}
                     stepType={stepType}
                   />
                 }
               />
-              {!isStepGroup &&
+              {isSaveAsTemplateEnabled &&
+                !isStepGroup &&
                 viewType === StepCommandsViews.Pipeline &&
                 module !== 'cf' &&
                 (step as StepElementConfig).type !== StepType.FlagConfiguration && (

@@ -8,6 +8,7 @@
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { ThresholdTypes } from '../AppDHealthSource.constants'
 import type { AppDynamicsData, AppDynamicsFomikFormInterface } from '../AppDHealthSource.types'
+import { PATHTYPE } from '../Components/AppDCustomMetricForm/AppDCustomMetricForm.constants'
 
 export const sourceData = {
   isEdit: true,
@@ -27,29 +28,23 @@ export const sourceData = {
             identifier: 'appdMetric',
             metricName: 'appdMetric',
             riskProfile: {
-              category: 'Errors',
-              metricType: 'ERROR',
+              riskCategory: 'Errors/ERROR',
               thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
             },
             analysis: {
               liveMonitoring: { enabled: true },
-              deploymentVerification: {
-                enabled: true,
-                serviceInstanceFieldName: null,
-                serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute'
-              },
+              deploymentVerification: { enabled: true },
               riskProfile: {
-                category: 'Errors',
-                metricType: 'ERROR',
+                riskCategory: 'Errors/ERROR',
                 thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
               }
             },
             sli: { enabled: true },
             groupName: 'Group 1',
-            baseFolder: 'Overall Application Performance',
-            metricPath: 'Calls per Minute',
             appDApplication: 'PR-git-experiment',
             appDTier: 'cvng',
+            completeServiceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
+            completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
             lowerBaselineDeviation: true,
             metricPacks: [{ identifier: 'Performance' }, { identifier: 'Errors' }]
           }
@@ -150,8 +145,7 @@ export const templateSourceDataWithCustomMetric = {
             sli: { enabled: true },
             analysis: {
               riskProfile: {
-                category: 'Performance',
-                metricType: 'THROUGHPUT',
+                riskCategory: 'Performance/THROUGHPUT',
                 thresholdTypes: ['ACT_WHEN_HIGHER']
               },
               liveMonitoring: { enabled: true },
@@ -190,8 +184,7 @@ export const templateSourceDataWithCustomMetric = {
           sli: { enabled: true },
           analysis: {
             riskProfile: {
-              category: 'Performance',
-              metricType: 'THROUGHPUT',
+              riskCategory: 'Performance/THROUGHPUT',
               thresholdTypes: ['ACT_WHEN_HIGHER']
             },
             liveMonitoring: { enabled: true },
@@ -549,6 +542,7 @@ export const appDMetricValue = {
     }
   },
   continuousVerification: true,
+  completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
   groupName: {
     label: 'Group 1',
     value: 'Group 1'
@@ -571,7 +565,6 @@ export const appDMetricValue = {
     }
   },
   riskCategory: 'Errors/ERROR',
-  serviceInstance: null,
   serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
   sli: true
 }
@@ -729,30 +722,24 @@ export const onPreviousPayload = {
         metricDefinitions: [
           {
             analysis: {
-              deploymentVerification: {
-                enabled: true,
-                serviceInstanceFieldName: null,
-                serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute'
-              },
+              deploymentVerification: { enabled: true },
               liveMonitoring: { enabled: true },
               riskProfile: {
-                category: 'Errors',
-                metricType: 'ERROR',
+                riskCategory: 'Errors/ERROR',
                 thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
               }
             },
             appDApplication: 'PR-git-experiment',
             appDTier: 'cvng',
-            baseFolder: 'Overall Application Performance',
+            completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
+            completeServiceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
             groupName: 'Group 1',
             identifier: 'appdMetric',
             lowerBaselineDeviation: true,
             metricName: 'appdMetric',
             metricPacks: [{ identifier: 'Performance' }, { identifier: 'Errors' }],
-            metricPath: 'Calls per Minute',
             riskProfile: {
-              category: 'Errors',
-              metricType: 'ERROR',
+              riskCategory: 'Errors/ERROR',
               thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
             },
             sli: { enabled: true }
@@ -1209,6 +1196,7 @@ export const formData = {
     basePathDropdown_0: { path: '', value: 'Overall Application Performance' },
     basePathDropdown_1: { path: 'Overall Application Performance', value: '' }
   },
+  pathType: PATHTYPE.DropdownPath,
   metricName: 'appdMetric One Updated',
   riskCategory: 'Errors/INFRA',
   lowerBaselineDeviation: true,
@@ -1236,48 +1224,35 @@ export const formDataExpectedOutput = {
     metricDefinitions: [
       {
         analysis: {
-          deploymentVerification: {
-            enabled: false,
-            serviceInstanceMetricPath: undefined
-          },
-          liveMonitoring: {
-            enabled: true
-          },
+          deploymentVerification: { enabled: false },
+          liveMonitoring: { enabled: true },
           riskProfile: {
-            category: 'Errors',
-            metricType: 'ERROR',
+            riskCategory: 'Errors/ERROR',
             thresholdTypes: []
           }
         },
-        baseFolder: 'Application Infrastructure Performance',
         groupName: 'Two',
         identifier: undefined,
         metricName: 'appdMetric Two',
-        metricPath: 'JVM',
+        completeMetricPath: 'Application Infrastructure Performance|cvng|JVM',
+        completeServiceInstanceMetricPath: undefined,
         sli: {
           enabled: true
         }
       },
       {
         analysis: {
-          deploymentVerification: {
-            enabled: true,
-            serviceInstanceMetricPath: undefined
-          },
-          liveMonitoring: {
-            enabled: false
-          },
+          deploymentVerification: { enabled: true },
+          liveMonitoring: { enabled: false },
           riskProfile: {
-            category: 'Errors',
-            metricType: 'INFRA',
+            riskCategory: 'Errors/INFRA',
             thresholdTypes: ['ACT_WHEN_LOWER']
           }
         },
-        baseFolder: 'Overall Application Performance',
         groupName: 'One',
         identifier: undefined,
         metricName: 'appdMetric One Updated',
-        metricPath: 'Calls per Minute',
+        completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
         sli: {
           enabled: false
         }
@@ -1398,6 +1373,7 @@ const appdMetricData = {
       value: ''
     }
   },
+  completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
   continuousVerification: true,
   groupName: {
     label: 'Group 1',
@@ -1421,7 +1397,6 @@ const appdMetricData = {
     }
   },
   riskCategory: 'Errors/ERROR',
-  serviceInstance: null,
   serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
   sli: true
 }
@@ -1443,7 +1418,7 @@ export const formikInitialData = {
       value: ''
     }
   },
-  completeMetricPath: '',
+  completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
   connectorRef: 'TestAppD',
   continuousVerification: true,
   groupName: {
@@ -1453,11 +1428,10 @@ export const formikInitialData = {
   healthScore: true,
   higherBaselineDeviation: true,
   identifier: 'AppD_Single',
-  pathType: 'dropdownPath',
+  pathType: 'completeMetricPath',
   isEdit: true,
   lowerBaselineDeviation: true,
   metricIdentifier: 'appdMetric',
-  fullPath: 'Overall Application Performance|cvng|Calls per Minute',
   metricData: {
     Errors: true,
     Performance: true
@@ -1489,7 +1463,6 @@ export const formikInitialData = {
     value: 'Application Monitoring'
   },
   riskCategory: 'Errors/ERROR',
-  serviceInstance: null,
   serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
   showCustomMetric: true,
   sli: true,
@@ -1514,15 +1487,13 @@ export const onSubmitPayload = {
         analysis: {
           deploymentVerification: { enabled: false },
           liveMonitoring: { enabled: true },
-          riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
+          riskProfile: { riskCategory: 'Performance_ResponseTime', thresholdTypes: ['ACT_WHEN_HIGHER'] }
         },
-        baseFolder: 'Overall Application Performance',
         groupName: 'Group 1',
         identifier: 'appdMetric',
         metricName: 'appdMetric',
-        metricPath: 'Calls per Minute',
         sli: { enabled: true },
-        completeMetricPath: undefined
+        completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute'
       }
     ],
     metricPacks: [
@@ -1577,7 +1548,6 @@ export const defaultPayload = {
   appdApplication: 'cv-app',
   completeMetricPath: '',
   connectorRef: 'appdconnector',
-  fullPath: '',
   identifier: 'appdtemplate',
   isEdit: false,
   metricData: {
@@ -1589,7 +1559,7 @@ export const defaultPayload = {
   metricName: 'cv.monitoringSources.appD.defaultAppDMetricName',
   metricPacks: undefined,
   name: 'appdtemplate',
-  pathType: 'fullPath',
+  pathType: 'completeMetricPath',
   product: {
     label: 'Application Monitoring',
     value: 'Application Monitoring'

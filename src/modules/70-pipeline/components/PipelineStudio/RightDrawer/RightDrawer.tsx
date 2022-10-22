@@ -136,7 +136,7 @@ export const updateStepWithinStage = (
             }
           }
         }
-        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, isRollback)
+        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, false)
       }
     } else if (stepWithinStage.parallel) {
       // If stage has a parallel steps, loop over and update the matching identifier with node
@@ -146,7 +146,7 @@ export const updateStepWithinStage = (
         } else if (parallelStep.step?.identifier === processingNodeIdentifier) {
           parallelStep.step = processedNode as any
         } else if (parallelStep?.stepGroup) {
-          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, isRollback)
+          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, false)
         }
       })
     } else if (stepWithinStage.step?.identifier === processingNodeIdentifier) {
@@ -458,7 +458,8 @@ export function RightDrawer(): React.ReactElement {
       selectionState: { selectedStageId, selectedStepId },
       gitDetails,
       storeMetadata,
-      pipeline
+      pipeline,
+      isIntermittentLoading
     },
     allowableTypes,
     updatePipeline,
@@ -513,6 +514,7 @@ export function RightDrawer(): React.ReactElement {
         stepType={stepType}
         toolTipType={toolTipType}
         stepData={stepData}
+        disabled={isIntermittentLoading}
         discardChanges={discardChanges}
         applyChanges={() =>
           applyChanges(formikRef, data, getString, updatePipelineView, pipelineView, setSelectedStepId, trackEvent)
@@ -743,9 +745,12 @@ export function RightDrawer(): React.ReactElement {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
         get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef)
+
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        allChildTypes: [stepType],
+        filterProperties: {
+          childTypes: [stepType]
+        },
         selectedTemplate,
         gitDetails,
         storeMetadata
@@ -867,7 +872,7 @@ export function RightDrawer(): React.ReactElement {
           onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
-          stageType={stageType as StageType}
+          selectedStage={selectedStage}
           gitDetails={gitDetails}
           storeMetadata={storeMetadata}
         />
@@ -886,7 +891,9 @@ export function RightDrawer(): React.ReactElement {
         />
       )}
       {/* TODO */}
-      {type === DrawerTypes.PipelineVariables && <PipelineVariables ref={variablesRef} pipeline={pipeline} />}
+      {type === DrawerTypes.PipelineVariables && (
+        <PipelineVariables ref={variablesRef} pipeline={pipeline} storeMetadata={storeMetadata} />
+      )}
       {type === DrawerTypes.Templates && <PipelineTemplates />}
       {type === DrawerTypes.ExecutionStrategy && (
         <ExecutionStrategy selectedStage={defaultTo(selectedStage, {})} ref={executionStrategyRef} />
@@ -925,7 +932,7 @@ export function RightDrawer(): React.ReactElement {
           isStepGroup={false}
           allowableTypes={allowableTypes}
           withoutTabs
-          stageType={stageType as StageType}
+          selectedStage={selectedStage}
           storeMetadata={storeMetadata}
         />
       )}
@@ -1034,7 +1041,7 @@ export function RightDrawer(): React.ReactElement {
           }
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
-          stageType={stageType as StageType}
+          selectedStage={selectedStage}
           onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
             addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
           }

@@ -27,6 +27,7 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { errorCheck } from '@common/utils/formikHelpers'
+import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import type { FileUsage } from '@filestore/interfaces/FileStore'
@@ -63,6 +64,9 @@ export interface MultiTypeMapProps {
   values: string | string[]
   allowableTypes?: AllowedTypes
   fileUsage?: FileUsage
+  addFileLabel?: string
+  isAttachment?: boolean
+  deploymentType?: string
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -83,6 +87,9 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     values,
     allowableTypes,
     fileUsage,
+    addFileLabel,
+    isAttachment = false,
+    deploymentType,
     ...restProps
   } = props
 
@@ -158,14 +165,17 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     margin={{ top: 'small', bottom: hasError && 'medium' }}
                                     key={index}
                                     ref={providedDrag.innerRef}
+                                    data-testid={`${name}[${index}]`}
                                     {...providedDrag.draggableProps}
                                     {...providedDrag.dragHandleProps}
                                   >
                                     <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                                      <>
-                                        <Icon name="drag-handle-vertical" />
-                                        <Text className={css.text}>{`${index + 1}.`}</Text>
-                                      </>
+                                      {!restrictToSingleEntry && (
+                                        <>
+                                          <Icon name="drag-handle-vertical" />
+                                          <Text className={css.text}>{`${index + 1}.`}</Text>
+                                        </>
+                                      )}
 
                                       <div className={css.multiSelectField}>
                                         <div className={cx(css.group)}>
@@ -175,7 +185,9 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             label={''}
                                             defaultValueToReset={''}
                                             style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
-                                            disableTypeSelection={false}
+                                            disableTypeSelection={
+                                              multiTypeFieldSelectorProps.disableTypeSelection || false
+                                            }
                                             changed={changed}
                                             supportListOfExpressions={true}
                                             defaultType={getMultiTypeFromValue(
@@ -208,6 +220,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                                 <FileSelectField
                                                   value={get(formik?.values, `${name}[${index}]`)}
                                                   name={`${name}[${index}]`}
+                                                  isSshWinRm={isSshOrWinrmDeploymentType(defaultTo(deploymentType, ''))}
                                                   onChange={(newValue, i) => {
                                                     replace(i as number, {
                                                       ...restValue,
@@ -252,13 +265,14 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                         <Button
                           intent="primary"
                           minimal
-                          text={getString('plusAdd')}
+                          text={defaultTo(addFileLabel, getString('plusAdd'))}
                           data-testid={`add-${name}`}
                           onClick={() => {
                             push('')
                           }}
                           disabled={disabled || isRunTime}
-                          style={{ padding: 0, marginTop: 24 }}
+                          style={{ padding: 0 }}
+                          margin={{ top: 'xlarge', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
                         />
                       )}
                     </>

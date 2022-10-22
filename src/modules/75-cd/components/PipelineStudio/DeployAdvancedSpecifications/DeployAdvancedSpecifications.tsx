@@ -8,7 +8,7 @@
 import React from 'react'
 import { Card, Container, HarnessDocTooltip, Layout } from '@wings-software/uicore'
 import { produce } from 'immer'
-import { set, isEmpty, unset } from 'lodash-es'
+import { set, isEmpty, unset, get } from 'lodash-es'
 import cx from 'classnames'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import { StepActions } from '@common/constants/TrackingConstants'
@@ -18,7 +18,8 @@ import { FailureStrategyWithRef } from '@pipeline/components/PipelineStudio/Fail
 import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/DelegateSelector/DelegateSelector'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import ConditionalExecution from '@pipeline/components/PipelineStudio/ConditionalExecution/ConditionalExecution'
-import SkipInstances from '@pipeline/components/PipelineStudio/SkipInstances/SkipInstances'
+import MultiTypeSkipInstances from '@pipeline/components/PipelineStudio/SkipInstances/MultiTypeSkipInstances'
+
 import { useStrings } from 'framework/strings'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -48,7 +49,11 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
 
   const getSshOrWinRmType = React.useCallback(() => {
     const { deploymentType } = stage?.stage?.spec as DeploymentStageConfig
-    return isSSHWinRMDeploymentType(deploymentType as string)
+    if (deploymentType) {
+      return isSSHWinRMDeploymentType(deploymentType as string)
+    }
+    const type = get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', '')
+    return isSSHWinRMDeploymentType(type)
   }, [stage])
 
   const { SSH_NG } = useFeatureFlags()
@@ -201,27 +206,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
         </Card>
         {SSH_NG && getSshOrWinRmType() ? (
           <div data-testid="skip-instances" className={stageCss.tabHeading}>
-            <SkipInstances
-              selectedStage={stage?.stage}
-              isReadonly={isReadonly}
-              onUpdate={checked => {
-                const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
-
-                if (pipelineStage?.stage) {
-                  const stageData = produce(pipelineStage, draft => {
-                    if (!checked) {
-                      unset(draft, 'stage.skipInstances')
-                    } else {
-                      set(draft, 'stage.skipInstances', checked)
-                    }
-                  })
-                  /* istanbul ignore else */
-                  if (stageData.stage) {
-                    updateStage(stageData.stage)
-                  }
-                }
-              }}
-            />
+            <MultiTypeSkipInstances value={stage?.stage?.skipInstances} />
           </div>
         ) : null}
         <Container margin={{ top: 'xxlarge' }}>{children}</Container>

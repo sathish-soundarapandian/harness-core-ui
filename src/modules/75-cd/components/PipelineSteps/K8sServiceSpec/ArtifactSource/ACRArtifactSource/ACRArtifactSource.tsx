@@ -43,7 +43,6 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags,
@@ -106,7 +105,12 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     path as string,
     !!isPropagatedStage,
     stageIdentifier,
-    defaultTo(artifactPath, ''),
+    defaultTo(
+      isSidecar
+        ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+        : artifactPath,
+      ''
+    ),
     'connectorRef'
   )
 
@@ -151,7 +155,18 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       repository: getFinalQueryParamValue(repositoryValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId,
-      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'tag'
+      )
     },
     lazy: true
   })
@@ -346,8 +361,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     return typeof item === 'string' ? (item as string) : item?.value
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (

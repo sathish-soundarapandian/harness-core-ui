@@ -17,11 +17,11 @@ import {
   Text,
   StepProps,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 
@@ -41,7 +41,7 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface ServerlessAwsLambdaManifestPropType {
@@ -95,7 +95,10 @@ function ServerlessAwsLambdaManifest({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              }))
       }
     }
     return {
@@ -199,7 +202,7 @@ function ServerlessAwsLambdaManifest({
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: ServerlessManifestDataType }) => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -370,7 +373,7 @@ function ServerlessAwsLambdaManifest({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

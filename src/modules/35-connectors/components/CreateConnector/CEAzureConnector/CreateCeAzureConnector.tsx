@@ -11,7 +11,7 @@ import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
 
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import Overview, { CEAzureDTO } from './Steps/Overview/AzureConnectorOverview'
@@ -43,7 +43,7 @@ const CreateCeAzureConnector: React.FC<CreateConnectorModalProps> = props => {
         <Billing name={getString('connectors.ceAzure.steps.billingExports')} />
         <ChooseRequirements name={getString('connectors.ceAzure.steps.requirements')} />
         <CreateServicePrincipal name={getString('connectors.ceAzure.steps.servicePrincipal')} />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.ceAzure.testConnection.heading')}
           connectorInfo={props.connectorInfo}
           isStep={true}

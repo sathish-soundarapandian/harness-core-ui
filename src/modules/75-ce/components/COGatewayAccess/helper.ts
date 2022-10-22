@@ -28,6 +28,7 @@ import type {
   GatewayDetails,
   GetInitialAccessPointDetails,
   GetInitialAzureAccessPoint,
+  Handler,
   RuleCreationParams
 } from '../COCreateGateway/models'
 
@@ -77,6 +78,23 @@ export const getValidStatusForDnsLink = (
 
   // check for routing ports
   if (validStatus && _isEmpty(gatewayDetails.routing.container_svc) && _isEmpty(gatewayDetails.routing.ports)) {
+    validStatus = false
+  }
+
+  // check for AWS redirect routing config
+  if (validStatus && Utils.isProviderAws(gatewayDetails.provider) && !_isEmpty(gatewayDetails.routing.ports)) {
+    validStatus = !gatewayDetails.routing.ports.some(
+      portConfig => portConfig.action === 'redirect' && _isEmpty(portConfig.redirect_url)
+    )
+  }
+
+  // check for custom exclusion/inclusion
+  const sourceFiltersList = get(gatewayDetails, 'routing.source_filters.filters', [])
+  if (
+    validStatus &&
+    !_isEmpty(sourceFiltersList) &&
+    !_isEmpty(sourceFiltersList.find((item: Handler) => _isEmpty(item.value)))
+  ) {
     validStatus = false
   }
   return validStatus

@@ -34,7 +34,7 @@ jest.mock(
   '@cv/pages/health-source/connectors/MetricPackCustom',
   () =>
     (props: {
-      onChange: (data: { [key: string]: boolean }) => void
+      onChange: (id: string, updatedValue: boolean) => void
       setMetricDataValue: (value: { [key: string]: boolean }) => void
       setSelectedMetricPacks: React.Dispatch<React.SetStateAction<MetricPackDTO[]>>
     }) => {
@@ -49,7 +49,7 @@ jest.mock(
           <button
             name={'customMetricCheckboxChangeMock'}
             onClick={() => {
-              props.onChange({ Performance: true })
+              props.onChange('Performance', true)
             }}
           />
           <button
@@ -169,6 +169,7 @@ describe('Validate DynatraceCustomMetricPacksToService', () => {
     })
     await waitFor(() => expect(metricVerificationModalComponentRenderedMock).toHaveBeenCalledTimes(1))
   })
+
   test('should validate proper service is set as chosen', async () => {
     // provided props contain dynatraceMetricData which has selected service with 'mock_service_name'
     const { container } = render(<WrapperComponent {...DynatraceMetricPacksToServicePropsMock} />)

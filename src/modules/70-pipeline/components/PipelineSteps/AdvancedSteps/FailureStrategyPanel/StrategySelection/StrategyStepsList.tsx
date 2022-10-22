@@ -10,12 +10,12 @@ import type { FormikContextType } from 'formik'
 import { ThumbnailSelect, ThumbnailSelectProps } from '@wings-software/uicore'
 
 import { useStrings } from 'framework/strings'
-import { Strategy, stringsMap, strategyIconMap } from '@pipeline/utils/FailureStrategyUtils'
+import { StrategyType, stringsMap, strategyIconMap } from '@pipeline/utils/FailureStrategyUtils'
 
 import css from './StrategySelection.module.scss'
 
 export interface StrategyStepsListProps {
-  allowedStrategies: Strategy[]
+  allowedStrategies: StrategyType[]
   name: string
   formik: FormikContextType<Record<string, never>>
   disabled?: boolean

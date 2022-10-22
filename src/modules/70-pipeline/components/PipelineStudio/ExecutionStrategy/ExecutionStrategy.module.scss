@@ -226,7 +226,7 @@
   .canary {
     :global {
       .bp3-input {
-        min-width: 218px !important;
+        min-width: 212px !important;
       }
       .bp3-button {
         padding: 0 !important;
@@ -281,10 +281,10 @@
   .btnContainer {
     position: absolute;
     right: -250px;
-    top: 380px;
+    top: 280px;
   }
   .phasesListContainer {
-    height: 350px;
+    max-height: 240px;
     overflow: scroll;
   }
 }

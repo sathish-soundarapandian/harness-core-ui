@@ -1,0 +1,60 @@
+[
+  {
+    "interruptId": "k0RAv_0rSNWFnzI7wAYfRg",
+    "tookEffectAt": 1665774595453,
+    "interruptType": "MARK_EXPIRED",
+    "interruptConfig": {
+      "issuedBy": {
+        "issueTime": 1665774595000,
+        "manualIssuer": {
+          "email_id": "",
+          "user_id": "",
+          "type": "",
+          "identifier": ""
+        },
+        "adviserIssuer": {
+          "adviseType": "UNKNOWN"
+        },
+        "timeoutIssuer": {
+          "timeoutInstanceId": "6ZmN5uRsQTude_jMy-_uNw"
+        },
+        "triggerIssuer": {
+          "triggerRef": "",
+          "abortPrevConcurrentExecution": false
+        }
+      },
+      "retryInterruptConfig": {
+        "retryId": ""
+      }
+    }
+  },
+  {
+    "interruptId": "jALhgGRdSr6w2sEzoZJIcA",
+    "tookEffectAt": 1665774600669,
+    "interruptType": "RETRY",
+    "interruptConfig": {
+      "issuedBy": {
+        "issueTime": 0,
+        "manualIssuer": {
+          "email_id": "",
+          "user_id": "",
+          "type": "",
+          "identifier": ""
+        },
+        "adviserIssuer": {
+          "adviseType": "RETRY"
+        },
+        "timeoutIssuer": {
+          "timeoutInstanceId": ""
+        },
+        "triggerIssuer": {
+          "triggerRef": "",
+          "abortPrevConcurrentExecution": false
+        }
+      },
+      "retryInterruptConfig": {
+        "retryId": "EdGH1DewSqm4q7Dokf2n_w"
+      }
+    }
+  }
+]

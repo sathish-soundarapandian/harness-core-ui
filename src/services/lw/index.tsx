@@ -548,6 +548,7 @@ export interface RoutingData {
   lb?: string
   override_dns_record?: boolean
   ports?: PortConfig[]
+  source_filters?: SourceFilters
 }
 
 export interface RoutingRule {
@@ -747,6 +748,18 @@ export interface SessionReportRow {
 
 export interface SessionReportRows {
   rows?: SessionReportRow[]
+}
+
+export interface SourceFilterItem {
+  cidr_range?: string
+  ipaddresses?: string[]
+  kind?: string
+  path?: string[]
+}
+
+export interface SourceFilters {
+  filters?: SourceFilterItem[]
+  type?: string
 }
 
 export interface StaticSchedule {

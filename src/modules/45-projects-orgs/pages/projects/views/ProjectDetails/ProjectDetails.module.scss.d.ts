@@ -12,9 +12,13 @@ declare const styles: {
   readonly colorBar: string
   readonly divider: string
   readonly enabledModules: string
+  readonly fullWidth: string
+  readonly glanceCard: string
+  readonly glanceCardContainer: string
   readonly header: string
   readonly projectDetailsAvatarGroup: string
   readonly tags: string
+  readonly timeRangeSelect: string
   readonly title: string
   readonly wrap: string
 }

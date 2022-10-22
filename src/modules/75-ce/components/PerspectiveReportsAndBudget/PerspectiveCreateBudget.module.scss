@@ -238,3 +238,14 @@
   position: absolute;
   z-index: 10;
 }
+
+.selectDropdown {
+  position: absolute;
+  box-shadow: none;
+
+  :global {
+    .bp3-menu {
+      box-shadow: var(--elevation-4);
+    }
+  }
+}

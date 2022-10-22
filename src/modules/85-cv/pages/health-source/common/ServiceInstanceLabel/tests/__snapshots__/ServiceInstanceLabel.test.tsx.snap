@@ -10,11 +10,16 @@ exports[`Unit tests for ServiceInstanceLabel Ensure label is rendered correctly 
     >
       cv.monitoringSources.serviceInstanceIdentifier
     </p>
-    <p
-      class="StyledProps--font StyledProps--main secondaryLabel"
+    <div
+      class="Text--withDocsTooltip"
+      data-tooltip-id="healthSourceMetricsServiceInstanceId"
     >
-      cv.monitoringSources.optionalServiceInstanceLabel
-    </p>
+      <p
+        class="StyledProps--font StyledProps--main secondaryLabel"
+      >
+        cv.monitoringSources.optionalServiceInstanceLabel
+      </p>
+    </div>
   </div>
 </div>
 `;

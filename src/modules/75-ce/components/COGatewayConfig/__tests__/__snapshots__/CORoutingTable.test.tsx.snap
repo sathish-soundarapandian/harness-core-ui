@@ -52,28 +52,60 @@ exports[`Routing Table Tests fill in details for a route: updated route 1`] = `
           <thead>
             <tr>
               <th>
-                PROTOCOL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.protocol
+                </p>
               </th>
               <th>
-                PORT
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  common.smtp.port
+                </p>
               </th>
               <th>
-                ACTION
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  action
+                </p>
               </th>
               <th>
-                TARGET PROTOCOL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.targetProtocol
+                </p>
               </th>
               <th>
-                TARGET PORT
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.targetPort
+                </p>
               </th>
               <th>
-                REDIRECT URL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.redirectUrl
+                </p>
               </th>
               <th>
-                SERVER NAME
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.serverName
+                </p>
               </th>
               <th>
-                PATH MATCH
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.pathMatch
+                </p>
               </th>
               <th />
             </tr>
@@ -308,7 +340,7 @@ exports[`Routing Table Tests fill in details for a route: updated route 1`] = `
                       disabled=""
                       style="margin-bottom: 0px;"
                       type="text"
-                      value="redirect_url"
+                      value=""
                     />
                   </div>
                 </div>
@@ -442,28 +474,60 @@ exports[`Routing Table Tests render additional columns for redirection rule 1`] 
           <thead>
             <tr>
               <th>
-                PROTOCOL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.protocol
+                </p>
               </th>
               <th>
-                PORT
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  common.smtp.port
+                </p>
               </th>
               <th>
-                ACTION
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  action
+                </p>
               </th>
               <th>
-                TARGET PROTOCOL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.targetProtocol
+                </p>
               </th>
               <th>
-                TARGET PORT
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.targetPort
+                </p>
               </th>
               <th>
-                REDIRECT URL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.redirectUrl
+                </p>
               </th>
               <th>
-                SERVER NAME
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.serverName
+                </p>
               </th>
               <th>
-                PATH MATCH
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.pathMatch
+                </p>
               </th>
               <th />
             </tr>
@@ -688,10 +752,11 @@ exports[`Routing Table Tests render additional columns for redirection rule 1`] 
                   class="TextInput--main"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-input-group bp3-disabled"
                   >
                     <input
                       class="bp3-input"
+                      disabled=""
                       style="margin-bottom: 0px;"
                       type="text"
                       value="updated_redirect_url"
@@ -828,28 +893,60 @@ exports[`Routing Table Tests render table with default columns 1`] = `
           <thead>
             <tr>
               <th>
-                PROTOCOL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.protocol
+                </p>
               </th>
               <th>
-                PORT
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  common.smtp.port
+                </p>
               </th>
               <th>
-                ACTION
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  action
+                </p>
               </th>
               <th>
-                TARGET PROTOCOL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.targetProtocol
+                </p>
               </th>
               <th>
-                TARGET PORT
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.targetPort
+                </p>
               </th>
               <th>
-                REDIRECT URL
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.redirectUrl
+                </p>
               </th>
               <th>
-                SERVER NAME
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.serverName
+                </p>
               </th>
               <th>
-                PATH MATCH
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  ce.common.pathMatch
+                </p>
               </th>
               <th />
             </tr>

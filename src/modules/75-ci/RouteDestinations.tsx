@@ -9,6 +9,8 @@ import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import CIPipelineDeploymentList from '@ci/pages/pipeline-deployment-list/CIPipelineDeploymentList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import ChildAppMounter from 'microfrontends/ChildAppMounter'
+
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
 import { BannerType } from '@common/layouts/Constants'
@@ -40,6 +42,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 
 import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
@@ -47,7 +50,7 @@ import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
-import CIPipelineStudio from '@ci/pages/pipeline-studio/CIPipelineStudio'
+import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
@@ -66,7 +69,10 @@ import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
-import { CITemplateStudioWrapper } from './components/TemplateStudio/CITemplateStudioWrapper/CITemplateStudioWrapper'
+
+// eslint-disable-next-line import/no-unresolved
+const CiuiMicroFrontendPath = React.lazy(() => import('ciui/MicroFrontendApp'))
+const useCIMicroFrontend = false
 
 executionFactory.registerCardInfo(StageType.BUILD, {
   icon: 'ci-main',
@@ -189,7 +195,9 @@ const CIDashboardPageOrRedirect = (): React.ReactElement => {
   const { selectedProject } = useAppStore()
   const { CI_OVERVIEW_PAGE } = useFeatureFlags()
 
-  if (CI_OVERVIEW_PAGE) {
+  if (useCIMicroFrontend) {
+    return <ChildAppMounter ChildApp={CiuiMicroFrontendPath} />
+  } else if (CI_OVERVIEW_PAGE) {
     return <CIDashboardPage />
   } else if (selectedProject?.modules?.includes(ModuleName.CI)) {
     return <Redirect to={routes.toDeployments({ ...params, module: 'ci' })} />
@@ -313,7 +321,7 @@ export default (
 
     {
       PipelineRouteDestinations({
-        pipelineStudioComponent: CIPipelineStudio,
+        pipelineStudioComponent: PipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CIPipelineStudio,
         pipelineDeploymentListComponent: CIPipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CIPipelineDeploymentList,
@@ -372,7 +380,7 @@ export default (
 
     {
       TemplateRouteDestinations({
-        templateStudioComponent: CITemplateStudioWrapper,
+        templateStudioComponent: TemplateStudio,
         templateStudioPageName: PAGE_NAME.CITemplateStudioWrapper,
         moduleParams,
         licenseRedirectData,

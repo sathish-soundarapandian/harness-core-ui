@@ -8,5 +8,6 @@
 export enum LookerEventType {
   DASHBOARD_FILTERS_CHANGED = 'dashboard:filters:changed',
   DASHBOARD_LOADED = 'dashboard:loaded',
+  DASHBOARD_RUN_COMPLETE = 'dashboard:run:complete',
   PAGE_CHANGED = 'page:changed'
 }

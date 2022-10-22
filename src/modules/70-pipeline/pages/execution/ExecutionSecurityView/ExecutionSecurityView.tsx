@@ -9,11 +9,10 @@ import React, { lazy } from 'react'
 import { Container } from '@wings-software/uicore'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
-import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import { UserLabel } from '@common/exports'
 
 export default function ExecutionSecurityView(): React.ReactElement | null {
   const context = useExecutionContext()
@@ -21,6 +20,7 @@ export default function ExecutionSecurityView(): React.ReactElement | null {
 
   const isV2 = useFeatureFlag(FeatureFlag.STO_API_V2)
   const RemoteSTOApp = lazy(() => (isV2 ? import(`stoV2/App`) : import(`sto/App`)))
+  /* istanbul ignore next */
   const RemotePipelineSecurityView = lazy(() =>
     isV2 ? import(`stoV2/PipelineSecurityView`) : import(`sto/PipelineSecurityView`)
   )
@@ -31,7 +31,7 @@ export default function ExecutionSecurityView(): React.ReactElement | null {
 
   return (
     <Container width="100%" height="100%">
-      <ChildAppMounter<STOAppCustomProps> ChildApp={RemoteSTOApp} customComponents={{ CardRailView, ExecutionCard }}>
+      <ChildAppMounter<STOAppCustomProps> ChildApp={RemoteSTOApp} customComponents={{ UserLabel }}>
         <RemotePipelineSecurityView pipelineExecutionDetail={pipelineExecutionDetail} />
       </ChildAppMounter>
     </Container>

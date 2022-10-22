@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { get, set, isEmpty } from 'lodash-es'
-import { Form, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import {
@@ -19,7 +19,8 @@ import {
   Text,
   StepProps,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 
@@ -41,6 +42,7 @@ interface CommonManifestDetailsProps {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  showIdentifierField?: boolean
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
@@ -71,7 +73,8 @@ export function CommonManifestDetails({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly = false
+  isReadonly = false,
+  showIdentifierField = true
 }: StepProps<ConnectorConfigDTO> & CommonManifestDetailsProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -157,7 +160,9 @@ export function CommonManifestDetails({
         initialValues={getInitialValues()}
         formName="manifestDetails"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...(showIdentifierField
+            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+            : {}),
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',
             then: Yup.string().trim().required(getString('validation.branchName'))
@@ -167,7 +172,7 @@ export function CommonManifestDetails({
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
           paths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+            if (getMultiTypeFromValue(value as unknown as any) === MultiTypeInputType.FIXED) {
               return Yup.array().of(
                 Yup.object().shape({
                   path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
@@ -196,7 +201,7 @@ export function CommonManifestDetails({
       >
         {(formik: FormikProps<CommonManifestDataType>) => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -209,6 +214,7 @@ export function CommonManifestDetails({
                     allowableTypes={allowableTypes}
                     prevStepData={prevStepData}
                     isReadonly={isReadonly}
+                    showIdentifierField={showIdentifierField}
                   />
 
                   {showAdvancedSection(selectedManifest) && (
@@ -237,7 +243,7 @@ export function CommonManifestDetails({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

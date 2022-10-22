@@ -18,7 +18,8 @@ export interface ResizeObserverResult {
 export const useNodeResizeObserver = (
   elementToCompare: Element | null,
   options: NodeCollapsibleProps = {} as NodeCollapsibleProps,
-  parentSelector = ''
+  parentSelector = '',
+  isDragging = false
 ): ResizeObserverResult => {
   const { graphScale } = useContext(GraphConfigStore)
   const { percentageNodeVisible = 0.8, bottomMarginInPixels = 120 } = options
@@ -63,7 +64,7 @@ export const useNodeResizeObserver = (
       cleanup()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [element, refElement, graphScale])
+  }, [element, refElement, graphScale, isDragging])
 
   return state
 }

@@ -111,9 +111,8 @@ describe('ECSInfraSpecEditable tests', () => {
     await waitFor(() => expect(getByText('Aws Connector 2')).toBeInTheDocument())
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    act(() => {
-      userEvent.click(connnectorRefInput!)
-    })
+    userEvent.click(connnectorRefInput!)
+
     await testConnectorRefChange()
     await waitFor(() =>
       expect(fetchClusters).toBeCalledWith({

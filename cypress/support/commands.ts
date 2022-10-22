@@ -81,6 +81,8 @@ declare global {
       login(username: string, pass: string): void
       visitPageAssertion(className?: string): void
       createDeploymentStage(): void
+      createKubernetesDeploymentStage(): void
+      selectRuntimeInputForInfrastructure(): void
       visitCreatePipeline(): void
       visitPipelinesList(): void
       visitExecutionsList(): void
@@ -93,6 +95,7 @@ declare global {
       fillName(name: string): void
       initializeRoute(): void
       clickSubmit(): void
+      isChildVisible(): void
       fillField(fieldName: string, value: string): void
       addNewMonitoredServiceWithServiceAndEnv(): void
       mapMetricToServices(hasServiceIndentifier?: boolean): void
@@ -118,6 +121,7 @@ declare global {
       configureStaticFieldsVerifyStepInStepTemplate(): void
       // https://github.com/jaredpalmer/cypress-image-snapshot
       matchImageSnapshot(snapshotName?: string, options?: unknown): void
+      checkIfMetricThresholdsExists(): void
     }
   }
 }
@@ -171,6 +175,19 @@ Cypress.Commands.add('createDeploymentStage', () => {
 
   cy.fillName('testStage_Cypress')
   cy.clickSubmit()
+})
+Cypress.Commands.add('createKubernetesDeploymentStage', () => {
+  cy.get('[icon="plus"]').click()
+  cy.findByTestId('stage-Deployment').click()
+
+  cy.fillName('testStage_Cypress')
+  cy.contains('p', 'Kubernetes').should('be.visible').click({ force: true })
+  cy.clickSubmit()
+})
+Cypress.Commands.add('selectRuntimeInputForInfrastructure', () => {
+  cy.get('span[data-icon="fixed-input"]').eq(1).click()
+  cy.contains('span', 'Fixed value').should('be.visible')
+  cy.contains('span', 'Runtime input').should('be.visible').click()
 })
 
 Cypress.Commands.add('visitPipelinesList', () => {
@@ -257,7 +274,7 @@ Cypress.Commands.add('visitSRMMonitoredServicePage', () => {
 Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
   cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
-
+  cy.wait(1000)
   cy.contains('span', 'New Monitored Service').click()
   cy.wait('@ServiceCall')
   cy.wait('@EnvCall')
@@ -572,3 +589,18 @@ Cypress.Commands.add('configureStaticFieldsVerifyStepInStepTemplate', () => {
   cy.get('input[name="spec.spec.duration"]').click({ force: true })
   cy.contains('p', '5 min').click({ force: true })
 })
+
+Cypress.Commands.add('checkIfMetricThresholdsExists', () => {
+  cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
+})
+
+Cypress.Commands.add(
+  'isChildVisible',
+  {
+    prevSubject: true
+  },
+  subject => {
+    const isChildVisible = elem => !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length)
+    expect(isChildVisible(subject[0]), 'Element Visible').to.be.true
+  }
+)

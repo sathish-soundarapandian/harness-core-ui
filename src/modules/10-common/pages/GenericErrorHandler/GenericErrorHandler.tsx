@@ -11,7 +11,7 @@ import { Icon, Layout, Heading, Text, Container } from '@wings-software/uicore'
 
 interface ErrorType {
   errorMessage?: string
-  errStatusCode?: number
+  errStatusCode?: number | string
 }
 export default function GenericErrorHandler({ errorMessage, errStatusCode }: ErrorType): JSX.Element {
   return (

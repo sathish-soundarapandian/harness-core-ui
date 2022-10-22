@@ -6,19 +6,26 @@
  */
 
 import React from 'react'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 
 interface MonitoredServiceContextInterface {
   isTemplate: boolean
+  templateScope?: Scope
 }
 export const MonitoredServiceContext = React.createContext<MonitoredServiceContextInterface>({
   isTemplate: false
 })
 
-export const MonitoredServiceProvider = ({
+export const MonitoredServiceProvider: React.FC<MonitoredServiceContextInterface> = ({
   isTemplate,
+  templateScope,
   children
-}: React.PropsWithChildren<MonitoredServiceContextInterface>) => {
-  return <MonitoredServiceContext.Provider value={{ isTemplate }}>{children}</MonitoredServiceContext.Provider>
+}) => {
+  return (
+    <MonitoredServiceContext.Provider value={{ isTemplate, templateScope }}>
+      {children}
+    </MonitoredServiceContext.Provider>
+  )
 }
 
 export function useMonitoredServiceContext(): MonitoredServiceContextInterface {

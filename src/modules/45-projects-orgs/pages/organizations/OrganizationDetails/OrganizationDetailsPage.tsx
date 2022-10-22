@@ -15,6 +15,8 @@ import { Project, useGetOrganizationAggregateDTO } from 'services/cd-ng'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { useStrings, String } from 'framework/strings'
+import { isEnterprisePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -31,11 +33,14 @@ import css from './OrganizationDetailsPage.module.scss'
 
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
-  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
-  const DEPLOYMENT_FREEZE = false
+  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
   const history = useHistory()
   const { getString } = useStrings()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
+  const { licenseInformation } = useLicenseStore()
+  const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
+  const showDeploymentFreeze = isEnterpriseEdition && NG_DEPLOYMENT_FREEZE
+
   const { data, refetch, loading, error } = useGetOrganizationAggregateDTO({
     identifier: orgIdentifier,
     queryParams: {
@@ -104,6 +109,17 @@ const OrganizationDetailsPage: React.FC = () => {
       selectable: true
     } as ResourceOption
   ]
+
+  const govFreezeCard: ResourceOption[] = [
+    {
+      label: <String stringID="common.governance" />,
+      icon: 'governance',
+      route: routes.toGovernance({ accountId, orgIdentifier }),
+      colorClass: css.governance
+    }
+  ]
+
+  const showGovCard = canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE)
 
   return (
     <>
@@ -229,21 +245,13 @@ const OrganizationDetailsPage: React.FC = () => {
             </Heading>
             <ResourceCardList items={getResourceCardList()} />
           </Layout.Vertical>
-          {canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE) && (
+          {(showGovCard || showDeploymentFreeze) && (
             <Layout.Vertical spacing="medium" padding={{ top: 'large' }}>
               <Heading font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
                 {getString('projectsOrgs.orgGovernance')}
               </Heading>
               <ResourceCardList
-                items={[
-                  {
-                    label: <String stringID="common.governance" />,
-                    icon: 'governance',
-                    route: routes.toGovernance({ accountId, orgIdentifier }),
-                    colorClass: css.governance
-                  },
-                  ...(DEPLOYMENT_FREEZE ? deploymentFreezeCard : [])
-                ]}
+                items={[...(showGovCard ? govFreezeCard : []), ...(showDeploymentFreeze ? deploymentFreezeCard : [])]}
               />
             </Layout.Vertical>
           )}

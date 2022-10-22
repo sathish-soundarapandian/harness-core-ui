@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { debounce, defaultTo, isEmpty, isEqual, noop, set, unset } from 'lodash-es'
+import React from 'react'
+import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import React, { useRef } from 'react'
-import { Container, Formik, FormikForm, Heading, Layout, PageError, Text } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { produce } from 'immer'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getsMergedTemplateInputYamlPromise,
@@ -21,40 +22,43 @@ import {
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
+  getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { PageSpinner } from '@common/components'
 import { PipelineInputSetFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import { useMutateAsGet } from '@common/hooks'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplatePipelineSpecifications.module.scss'
-
-const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
-  (JSON.stringify(templateInfo || {}).match(/<\+input>/g) || []).length
 
 export function TemplatePipelineSpecifications(): JSX.Element {
   const {
-    state: { pipeline, schemaErrors, gitDetails },
+    state: { pipeline, schemaErrors, gitDetails, storeMetadata },
     allowableTypes,
     updatePipeline,
-    isReadonly
+    isReadonly,
+    setIntermittentLoading
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
-  const scope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
+  const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
+  const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
+  const pipelineScope = getScopeFromDTO(pipeline)
+  const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>(pipeline)
+  const [allValues, setAllValues] = React.useState<PipelineInfoConfig>()
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const formRefDom = React.useRef<HTMLElement | undefined>()
   const [formikErrors, setFormikErrors] = React.useState<FormikErrors<PipelineInfoConfig>>()
   const [showFormError, setShowFormError] = React.useState<boolean>()
-  const dummyPipeline = useRef(pipeline)
   const viewTypeMetadata = { isTemplateBuilder: true }
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
 
@@ -72,21 +76,19 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     loading: pipelineLoading
   } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
     queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, scope),
+      ...getScopeBasedProjectPathParams(queryParams, pipelineScope),
       pipelineIdentifier: pipeline.identifier,
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     },
     body: {
-      originalEntityYaml: yamlStringify({ pipeline: dummyPipeline.current })
-    }
+      originalEntityYaml: yamlStringify({ pipeline: formValues })
+    },
+    lazy: true
   })
 
-  const allValues = React.useMemo(
-    () => parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline,
-    [pipelineResponse?.data?.mergedPipelineYaml]
-  )
+  React.useEffect(() => {
+    setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
+  }, [pipelineResponse?.data?.mergedPipelineYaml])
 
   const {
     data: templateInputSetYaml,
@@ -96,11 +98,9 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   } = useGetTemplateInputSetYaml({
     templateIdentifier: templateRef,
     queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, scope),
-      versionLabel: defaultTo(pipeline.template?.versionLabel, ''),
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getScopeBasedProjectPathParams(queryParams, templateScope),
+      versionLabel: templateVersionLabel,
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     }
   })
 
@@ -109,7 +109,19 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     [templateInputSetYaml?.data]
   )
 
-  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
+  const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
+    const updatedPipeline = produce(pipeline, draft => {
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
+    })
+    setFormValues(updatedPipeline)
+    updatePipeline(updatedPipeline)
+  }
+
+  React.useEffect(() => {
+    if (!isEmpty(formValues)) {
+      refetchPipeline()
+    }
+  }, [formValues])
 
   React.useEffect(() => {
     if (!isEmpty(templateInputs)) {
@@ -125,28 +137,28 @@ export function TemplatePipelineSpecifications(): JSX.Element {
           }
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
-            const mergedTemplateInputs = parse(defaultTo(response.data?.mergedTemplateInputs, ''))
-            set(pipeline, TEMPLATE_INPUT_PATH, mergedTemplateInputs)
-            updatePipeline(pipeline)
+            setLoadingMergedTemplateInputs(false)
+            updateFormValues(parse(defaultTo(response.data?.mergedTemplateInputs, '')))
           } else {
             throw response
           }
         })
       } catch (error) {
-        set(pipeline, TEMPLATE_INPUT_PATH, templateInputs)
-        updatePipeline(pipeline)
+        setLoadingMergedTemplateInputs(false)
+        updateFormValues(templateInputs)
       }
-      setLoadingMergedTemplateInputs(false)
     } else if (!templateInputSetLoading) {
-      unset(pipeline, TEMPLATE_INPUT_PATH)
-      updatePipeline(pipeline)
+      updateFormValues(undefined)
     }
   }, [templateInputs])
 
   React.useEffect(() => {
-    dummyPipeline.current = pipeline
-    setFormikErrors({})
-  }, [pipeline.template?.templateRef, pipeline.template?.versionLabel])
+    if (templateInputSetLoading) {
+      setFormikErrors({})
+      setAllValues(undefined)
+      setFormValues(undefined)
+    }
+  }, [templateInputSetLoading])
 
   React.useEffect(() => {
     if (schemaErrors) {
@@ -188,17 +200,31 @@ export function TemplatePipelineSpecifications(): JSX.Element {
 
   const error = defaultTo(templateInputSetError, pipelineError)
 
+  /**
+   * This effect disables/enables Save button on Pipeline and Template Studio
+   * For gitx, template resolution takes a long time
+   * If user clicks on Save button before resolution, template exception occurs
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
+
   return (
     <Container className={css.contentSection} height={'100%'} background={Color.FORM_BG}>
       {isLoading && <PageSpinner />}
       {!isLoading && error && (
-        <PageError message={defaultTo((error?.data as Error)?.message, error?.message)} onClick={() => refetch()} />
+        <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
       )}
-      {!isLoading && !error && templateInputs && allValues && pipeline && (
+      {!isLoading && !error && templateInputs && allValues && formValues && (
         <>
           {showFormError && formikErrors && <ErrorsStrip formErrors={formikErrors} domRef={formRefDom} />}
           <Formik<PipelineInfoConfig>
-            initialValues={pipeline}
+            initialValues={formValues}
             formName="templateStageOverview"
             onSubmit={noop}
             validate={validateForm}
@@ -214,19 +240,16 @@ export function TemplatePipelineSpecifications(): JSX.Element {
                     }}
                   >
                     <Layout.Vertical padding={{ bottom: 'large' }} spacing={'xlarge'}>
-                      <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-                        <Heading level={5} color={Color.BLACK}>
-                          {getString('pipeline.templateInputs')}
-                        </Heading>
-                        <Text font={{ size: 'normal' }}>{`Total Inputs: ${templateInputsCount}`}</Text>
-                      </Layout.Horizontal>
+                      <Heading level={5} color={Color.BLACK}>
+                        {getString('pipeline.templateInputs')}
+                      </Heading>
                       <Container>
                         <PipelineInputSetFormInternal
                           template={templateInputs}
                           originalPipeline={allValues}
                           path={TEMPLATE_INPUT_PATH}
                           readonly={isReadonly}
-                          viewType={StepViewType.InputSet}
+                          viewType={StepViewType.TemplateUsage}
                           allowableTypes={allowableTypes}
                           viewTypeMetadata={viewTypeMetadata}
                         />

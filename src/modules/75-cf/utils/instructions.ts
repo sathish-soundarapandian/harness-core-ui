@@ -384,10 +384,6 @@ class SemanticPatch {
     this.instructions.push(instruction)
   }
 
-  toJSON(): string {
-    return JSON.stringify(this.instructions)
-  }
-
   toPatchOperation(): PatchOperation {
     return {
       instructions: this.instructions

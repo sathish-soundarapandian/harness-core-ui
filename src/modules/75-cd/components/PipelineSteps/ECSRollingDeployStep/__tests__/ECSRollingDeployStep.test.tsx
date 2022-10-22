@@ -52,12 +52,12 @@ describe('ECSRollingDeployStep tests', () => {
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('30m'))
 
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'sameAsAlreadyRunningInstances',
+      'spec.sameAsAlreadyRunningInstances',
       container
     ) as HTMLInputElement
     userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
 
-    const forceNewDeploymentCheckbox = queryByNameAttribute('forceNewDeployment', container) as HTMLInputElement
+    const forceNewDeploymentCheckbox = queryByNameAttribute('spec.forceNewDeployment', container) as HTMLInputElement
     userEvent.click(forceNewDeploymentCheckbox)
 
     act(() => {
@@ -68,8 +68,10 @@ describe('ECSRollingDeployStep tests', () => {
         identifier: 'Step_1',
         name: 'Step 1',
         timeout: '30m',
-        sameAsAlreadyRunningInstances: true,
-        forceNewDeployment: true,
+        spec: {
+          sameAsAlreadyRunningInstances: true,
+          forceNewDeployment: true
+        },
         type: StepType.EcsRollingDeploy
       })
     )
@@ -88,8 +90,10 @@ describe('ECSRollingDeployStep tests', () => {
           identifier: 'Step_1',
           name: 'Step 1',
           timeout: RUNTIME_INPUT_VALUE,
-          sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
-          forceNewDeployment: RUNTIME_INPUT_VALUE,
+          spec: {
+            sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+            forceNewDeployment: RUNTIME_INPUT_VALUE
+          },
           type: StepType.EcsRollingDeploy
         }}
         type={StepType.EcsRollingDeploy}
@@ -101,20 +105,7 @@ describe('ECSRollingDeployStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'sameAsAlreadyRunningInstances',
-      container
-    ) as HTMLInputElement
-    expect(sameAsAlreadyRunningInstancesCheckbox).toBeVisible()
-    const forceNewDeploymentCheckbox = queryByNameAttribute('forceNewDeployment', container) as HTMLInputElement
-    expect(forceNewDeploymentCheckbox).toBeVisible()
-
-    userEvent.click(submitBtn)
-    await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
-    expect(onUpdate).not.toHaveBeenCalled()
     userEvent.type(timeoutInput!, '20m')
-    userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
-    userEvent.click(forceNewDeploymentCheckbox)
 
     userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
@@ -122,8 +113,6 @@ describe('ECSRollingDeployStep tests', () => {
       identifier: 'Step_1',
       name: 'Step 1',
       timeout: '20m',
-      sameAsAlreadyRunningInstances: true,
-      forceNewDeployment: true,
       type: StepType.EcsRollingDeploy
     })
   })

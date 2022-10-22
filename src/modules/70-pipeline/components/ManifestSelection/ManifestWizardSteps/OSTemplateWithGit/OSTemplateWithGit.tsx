@@ -17,10 +17,10 @@ import {
   StepProps,
   Accordion,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
@@ -39,7 +39,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import templateCss from './OSTemplateWithGit.module.scss'
@@ -97,7 +97,10 @@ function OpenShiftTemplateWithGit({
         paramsPaths:
           typeof initialValues?.spec?.paramsPaths === 'string'
             ? initialValues?.spec?.paramsPaths
-            : initialValues?.spec?.paramsPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(initialValues?.spec?.paramsPaths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning
       }
     }
@@ -203,7 +206,7 @@ function OpenShiftTemplateWithGit({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: OpenShiftTemplateGITDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={templateCss.templateForm}>
               <FormInput.Text
                 name="identifier"
@@ -397,7 +400,7 @@ function OpenShiftTemplateWithGit({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

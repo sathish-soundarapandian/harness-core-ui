@@ -31,6 +31,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/TrackingConstants'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../CreateDockerConnector.module.scss'
@@ -92,8 +93,8 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
         value: DockerProviderType.DOCKERHUB
       },
       {
-        label: getString('connectors.docker.harbour'),
-        value: DockerProviderType.HARBOUR
+        label: getString('connectors.docker.harbor'),
+        value: DockerProviderType.HARBOR
       },
       {
         label: getString('connectors.docker.quay'),
@@ -137,6 +138,13 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
       category: Category.CONNECTOR,
       connector_type: ConnectorTypes.Docker
     })
+
+    const scope: ScopedObjectDTO | undefined = props.isEditMode
+      ? {
+          orgIdentifier: prevStepData?.orgIdentifier,
+          projectIdentifier: prevStepData?.projectIdentifier
+        }
+      : undefined
 
     return loadingConnectorSecrets ? (
       <PageSpinner />
@@ -206,7 +214,7 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
                       stringId="username"
                       type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
                     />
-                    <SecretInput name={'password'} label={getString('password')} />
+                    <SecretInput name={'password'} label={getString('password')} scope={scope} />
                   </>
                 ) : null}
               </Layout.Vertical>

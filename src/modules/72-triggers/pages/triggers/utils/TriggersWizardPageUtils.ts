@@ -5,14 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
+import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
 import { parse } from 'yaml'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable, NGTriggerConfigV2 } from 'services/pipeline-ng'
+import type {
+  NGTriggerSourceV2,
+  PipelineInfoConfig,
+  NGVariable,
+  NGTriggerConfigV2,
+  NGTriggerSpecV2
+} from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -125,7 +132,7 @@ const getTriggerTitle = ({
 export const clearNullUndefined = /* istanbul ignore next */ (data: TriggerConfigDTO): TriggerConfigDTO =>
   omitBy(omitBy(data, isUndefined), isNull)
 
-export const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineInfoConfig => {
+export const clearRuntimeInputValue = <T>(template: T): T => {
   return JSON.parse(
     JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
   )
@@ -149,16 +156,21 @@ const isIdentifierIllegal = (identifier: string): boolean =>
   regexIdentifier.test(identifier) && illegalIdentifiers.includes(identifier)
 
 const checkValidTriggerConfiguration = ({
-  formikValues
+  formikValues,
+  formikErrors
 }: {
   formikValues: { [key: string]: any }
   formikErrors: { [key: string]: any }
 }): boolean => {
   const sourceRepo = formikValues['sourceRepo']
   const identifier = formikValues['identifier']
-  const connectorURLType = formikValues.connectorRef?.connector?.spec?.type
+  const connectorType = formikValues.connectorRef?.connector?.spec?.type
 
   if (isIdentifierIllegal(identifier)) {
+    return false
+  }
+
+  if (formikErrors.pollInterval) {
     return false
   }
 
@@ -167,8 +179,8 @@ const checkValidTriggerConfiguration = ({
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
     else if (
-      !connectorURLType ||
-      !!([connectorURLType.ACCOUNT, connectorURLType.PROJECT].includes(connectorURLType) && !formikValues.repoName)
+      !connectorType ||
+      !!([connectorUrlType.ACCOUNT, connectorUrlType.PROJECT].includes(connectorType) && !formikValues.repoName)
     )
       return false
   }
@@ -277,7 +289,7 @@ const getPanels = ({
       },
       {
         id: 'Schedule',
-        tabTitle: getString('triggers.schedulePanel.title'),
+        tabTitle: getString('common.schedule'),
         checkValidPanel: checkValidCronExpression,
         requiredFields: ['expression']
       },
@@ -329,7 +341,9 @@ export const getWizardMap = ({
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   triggerType: NGTriggerSourceV2['type'],
-  getString: (key: StringKeys, params?: any) => string
+  getString: (key: StringKeys, params?: any) => string,
+  isGitWebhookPollingEnabled?: boolean,
+  isGithubWebhookAuthenticationEnabled?: boolean
 ): ObjectSchema<Record<string, any> | undefined> => {
   if (triggerType === TriggerTypes.WEBHOOK) {
     return object().shape({
@@ -342,10 +356,25 @@ export const getValidationSchema = (
           return this.parent.sourceRepo === CUSTOM || event
         }
       ),
-      pollInterval: getDurationValidationSchema({
-        minimum: '2m',
-        maximum: '60m',
-        explicitAllowedValues: ['0']
+      ...(isGithubWebhookAuthenticationEnabled && {
+        encryptedWebhookSecretIdentifier: string().test(
+          getString('triggers.validation.configureSecret'),
+          getString('triggers.validation.configureSecret'),
+          function (encryptedWebhookSecretIdentifier) {
+            return !!encryptedWebhookSecretIdentifier
+          }
+        )
+      }),
+      ...(isGitWebhookPollingEnabled && {
+        pollInterval: getDurationValidationSchema({
+          minimum: '2m',
+          maximum: '60m',
+          explicitAllowedValues: ['0']
+        }).required(
+          getString('common.validation.fieldIsRequired', {
+            name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
+          })
+        )
       }),
       connectorRef: object().test(
         getString('triggers.validation.connector'),
@@ -361,13 +390,13 @@ export const getValidationSchema = (
           getString('triggers.validation.repoName'),
           getString('triggers.validation.repoName'),
           function (repoName) {
-            const connectorURLType = this.parent.connectorRef?.connector?.spec?.type
+            const connectorType = this.parent.connectorRef?.connector?.spec?.type
             return (
-              !connectorURLType ||
-              (connectorURLType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
-              (connectorURLType === connectorUrlType.REGION && repoName?.trim()) ||
-              (connectorURLType === connectorUrlType.PROJECT && repoName?.trim()) ||
-              connectorURLType === connectorUrlType.REPO
+              !connectorType ||
+              (connectorType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
+              (connectorType === connectorUrlType.REGION && repoName?.trim()) ||
+              (connectorType === connectorUrlType.PROJECT && repoName?.trim()) ||
+              connectorType === connectorUrlType.REPO
             )
           }
         ),
@@ -1853,8 +1882,11 @@ export function updatePipelineManifest({
     (item: any) => item.manifest?.identifier === selectedArtifact?.identifier
   )
 
+  // Update the pipeline data without eventConditions
+  const newArtifactData = omit(newArtifact, 'spec.eventConditions')
+
   if (stageArtifactIdx >= 0) {
-    stageArtifacts[stageArtifactIdx].manifest = newArtifact
+    stageArtifacts[stageArtifactIdx].manifest = newArtifactData
   }
 
   return newPipeline
@@ -1887,20 +1919,23 @@ export function updatePipelineArtifact({
     (item: any) => item.sidecar?.identifier === selectedArtifact?.identifier
   )
 
+  // Update the pipeline data without eventConditions
+  const newArtifactData = omit(newArtifact, 'spec.eventConditions')
+
   if (selectedArtifact) {
     if (stageArtifacts?.sidecars || stageArtifacts?.primary) {
       if (stageArtifactIdx >= 0) {
         const { sidecars } = stageArtifacts
-        sidecars[stageArtifactIdx].sidecar = newArtifact
-      } else if (stageArtifacts?.primary && !newArtifact?.identifier) {
-        stageArtifacts['primary'] = newArtifact
+        sidecars[stageArtifactIdx].sidecar = newArtifactData
+      } else if (stageArtifacts?.primary && !newArtifactData?.identifier) {
+        stageArtifacts['primary'] = newArtifactData
       }
     } else if (stageOverrideArtifacts?.sidecars || stageOverrideArtifacts?.primary) {
       if (stageOverrideArtifactIdx >= 0) {
         const { sidecars } = stageOverrideArtifacts
-        sidecars[stageArtifactIdx].sidecar = newArtifact
-      } else if (stageOverrideArtifacts?.primary && !newArtifact?.identifier) {
-        stageOverrideArtifacts['primary'] = newArtifact
+        sidecars[stageArtifactIdx].sidecar = newArtifactData
+      } else if (stageOverrideArtifacts?.primary && !newArtifactData?.identifier) {
+        stageOverrideArtifacts['primary'] = newArtifactData
       }
     }
   }
@@ -1927,13 +1962,17 @@ export const getOrderedPipelineVariableValues = ({
   originalPipelineVariables?: NGVariable[]
   currentPipelineVariables: NGVariable[]
 }): NGVariable[] => {
+  const runtimeVariables = originalPipelineVariables?.filter(
+    pipelineVariable => getMultiTypeFromValue(get(pipelineVariable, 'value')) === MultiTypeInputType.RUNTIME
+  )
+
   if (
-    originalPipelineVariables &&
+    runtimeVariables &&
     currentPipelineVariables.some(
-      (variable: NGVariable, index: number) => variable.name !== originalPipelineVariables[index].name
+      (variable: NGVariable, index: number) => variable.name !== runtimeVariables[index].name
     )
   ) {
-    return originalPipelineVariables.map(
+    return runtimeVariables.map(
       variable =>
         currentPipelineVariables.find(currentVariable => currentVariable.name === variable.name) ||
         Object.assign(variable, { value: '' })
@@ -2244,7 +2283,7 @@ export const getArtifactManifestTriggerYaml = ({
   }
 
   // clears any runtime inputs and set values in source->spec->spec
-  let artifactSourceSpec = clearRuntimeInputValue(
+  let artifactSourceSpec = clearRuntimeInputValue<NGTriggerSpecV2>(
     cloneDeep(
       parse(
         JSON.stringify({

@@ -141,7 +141,7 @@ export function CommandList(props: CommandListProps): React.ReactElement {
             isUpdate: false
           })
         }}
-        className={stepCss.topMargin5}
+        className={formik.values.spec.commandUnits?.length ? stepCss.topMargin5 : undefined}
       >
         {getString('cd.steps.commands.addCommand')}
       </Button>

@@ -2,7 +2,7 @@
 
 exports[`Select Artifact Modal tests inital Render 1`] = `
 <div
-  class="bp3-dialog selectArtifactModal ModalDialog--container"
+  class="bp3-dialog selectArtifactModal ModalDialog--container ModalDialog--noToolbar"
   style="width: 880px; --ModalDialog-Height: 350px;"
 >
   <header
@@ -21,9 +21,21 @@ exports[`Select Artifact Modal tests inital Render 1`] = `
     data-testid="modaldialog-body"
   >
     <div
-      class="nopadLeft accordionSummary"
-      id="Stage.undefined.Service.Manifests"
-    />
+      class="ModalDialog--bodyContent"
+    >
+      <div
+        data-position="top"
+      />
+      <div>
+        <div
+          class="nopadLeft accordionSummary"
+          id="Stage.undefined.Service.Manifests"
+        />
+      </div>
+      <div
+        data-position="bottom"
+      />
+    </div>
   </div>
   <footer
     class="ModalDialog--footer"
@@ -83,7 +95,7 @@ exports[`Select Artifact Modal tests inital Render 1`] = `
 
 exports[`Select Artifact Modal tests on click of select button 1`] = `
 <div
-  class="bp3-dialog selectArtifactModal ModalDialog--container"
+  class="bp3-dialog selectArtifactModal ModalDialog--container ModalDialog--noToolbar"
   style="width: 880px; --ModalDialog-Height: 350px;"
 >
   <header
@@ -102,246 +114,258 @@ exports[`Select Artifact Modal tests on click of select button 1`] = `
     data-testid="modaldialog-body"
   >
     <div
-      class="TableV2--table selectArtifactTable"
+      class="ModalDialog--bodyContent"
     >
       <div
-        class="TableV2--header"
-        role="row"
-      >
+        data-position="top"
+      />
+      <div>
         <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 5%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 25%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="manifestName"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                MANIFESTSTEXT
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 25%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="manifestRepository"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.ARTIFACTREPOSITORY
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 18%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="artifactManifestLocation"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 13%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="manifestHasVersion"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                VERSION
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 18%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="artifactManifestRuntimeInputs"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.HASRUNTIMEINPUTS
-              </span>
-            </div>
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--body"
-      >
-        <div
-          class="TableV2--row TableV2--card TableV2--clickable"
-          role="row"
+          class="TableV2--table selectArtifactTable"
         >
           <div
-            class="TableV2--cells"
+            class="TableV2--header"
+            role="row"
           >
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 5%;"
             >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                style="justify-content: center;"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <div>
-                  <label
-                    class="bp3-label"
-                  />
-                  <label
-                    class="bp3-control bp3-radio"
-                  >
-                    <input
-                      name="artifactLabel"
-                      type="radio"
-                      value="stagea: dsfds"
-                    />
-                    <span
-                      class="bp3-control-indicator"
-                    />
-                  </label>
-                </div>
-              </div>
+                
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 25%;"
             >
-              <div
-                class="Layout--horizontal StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="--text-line-clamp: 1; width: 176px;"
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="manifestName"
                 >
-                  stagea: dsfds
-                </p>
-              </div>
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    MANIFESTSTEXT
+                  </span>
+                </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 25%;"
             >
-              <div
-                class="Layout--horizontal StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="--text-line-clamp: 1; width: 159px;"
-                />
-              </div>
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="manifestRepository"
+                >
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.ARTIFACTREPOSITORY
+                  </span>
+                </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 18%;"
             >
-              <div
-                class="Layout--horizontal StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="min-height: 18px; --text-line-clamp: 1; width: 110px;"
-                />
-              </div>
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="artifactManifestLocation"
+                >
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
+                  </span>
+                </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 13%;"
             >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="min-height: 18px; --text-line-clamp: 1;"
-                />
-              </div>
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="manifestHasVersion"
+                >
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    VERSION
+                  </span>
+                </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 18%;"
             >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font StyledProps--main"
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="artifactManifestRuntimeInputs"
                 >
-                  Yes
-                </p>
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.HASRUNTIMEINPUTS
+                  </span>
+                </div>
+              </p>
+            </div>
+          </div>
+          <div
+            class="TableV2--body"
+          >
+            <div
+              class="TableV2--row TableV2--card TableV2--clickable"
+              role="row"
+            >
+              <div
+                class="TableV2--cells"
+              >
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 5%;"
+                >
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                    style="justify-content: center;"
+                  >
+                    <div>
+                      <label
+                        class="bp3-label"
+                      />
+                      <label
+                        class="bp3-control bp3-radio"
+                      >
+                        <input
+                          name="artifactLabel"
+                          type="radio"
+                          value="stagea: dsfds"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 25%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1; width: 176px;"
+                    >
+                      stagea: dsfds
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 25%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1; width: 159px;"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 18%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="min-height: 18px; --text-line-clamp: 1; width: 110px;"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 13%;"
+                >
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="min-height: 18px; --text-line-clamp: 1;"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 18%;"
+                >
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      Yes
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        
       </div>
+      <div
+        data-position="bottom"
+      />
     </div>
-    
   </div>
   <footer
     class="ModalDialog--footer"
@@ -404,7 +428,7 @@ exports[`Select Artifact Modal tests on click of select button 1`] = `
 
 exports[`Select Artifact Modal tests when selected manifest-chart is not runtime input 1`] = `
 <div
-  class="bp3-dialog selectArtifactModal ModalDialog--container"
+  class="bp3-dialog selectArtifactModal ModalDialog--container ModalDialog--noToolbar"
   style="width: 880px; --ModalDialog-Height: 350px;"
 >
   <header
@@ -423,259 +447,271 @@ exports[`Select Artifact Modal tests when selected manifest-chart is not runtime
     data-testid="modaldialog-body"
   >
     <div
-      class="TableV2--table selectArtifactTable"
+      class="ModalDialog--bodyContent"
     >
       <div
-        class="TableV2--header"
-        role="row"
-      >
+        data-position="top"
+      />
+      <div>
         <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 5%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 25%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="manifestName"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                MANIFESTSTEXT
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 25%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="manifestRepository"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.ARTIFACTREPOSITORY
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 18%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="artifactManifestLocation"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 13%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="manifestHasVersion"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                VERSION
-              </span>
-            </div>
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 18%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            <div
-              class="Text--withDocsTooltip"
-              data-tooltip-id="artifactManifestRuntimeInputs"
-            >
-              <span
-                class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
-              >
-                PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.HASRUNTIMEINPUTS
-              </span>
-            </div>
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--body"
-      >
-        <div
-          class="TableV2--row TableV2--card TableV2--clickable"
-          role="row"
+          class="TableV2--table selectArtifactTable"
         >
           <div
-            class="TableV2--cells"
+            class="TableV2--header"
+            role="row"
           >
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 5%;"
             >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main disabledRow"
-                style="justify-content: center;"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <div>
-                  <label
-                    class="bp3-label"
-                  />
-                  <label
-                    class="bp3-control bp3-radio bp3-disabled"
+                
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 25%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="manifestName"
+                >
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
                   >
-                    <input
-                      disabled=""
-                      name="artifactLabel"
-                      type="radio"
-                      value="stagea: testhelmmanifest"
-                    />
-                    <span
-                      class="bp3-control-indicator"
-                    />
-                  </label>
+                    MANIFESTSTEXT
+                  </span>
                 </div>
-              </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 25%;"
             >
-              <div
-                class="Layout--horizontal StyledProps--main disabledRow"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="--text-line-clamp: 1; width: 176px;"
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="manifestRepository"
                 >
-                  stagea: testhelmmanifest
-                </p>
-              </div>
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.ARTIFACTREPOSITORY
+                  </span>
+                </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
-              style="width: 25%;"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main disabledRow"
-              >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="--text-line-clamp: 1; width: 159px;"
-                >
-                  testecr2
-                </p>
-              </div>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 18%;"
             >
-              <div
-                class="Layout--horizontal StyledProps--main disabledRow"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="min-height: 18px; --text-line-clamp: 1; width: 110px;"
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="artifactManifestLocation"
                 >
-                  Runtime Input
-                </p>
-              </div>
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
+                  </span>
+                </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 13%;"
             >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main disabledRow"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="min-height: 18px; --text-line-clamp: 1;"
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="manifestHasVersion"
                 >
-                  Runtime Input
-                </p>
-              </div>
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    VERSION
+                  </span>
+                </div>
+              </p>
             </div>
             <div
               class="TableV2--cell"
-              role="cell"
+              colspan="1"
+              role="columnheader"
               style="width: 18%;"
             >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main disabledRow"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                <p
-                  class="StyledProps--font StyledProps--main"
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="artifactManifestRuntimeInputs"
                 >
-                  Yes
-                </p>
+                  <span
+                    class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
+                  >
+                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.HASRUNTIMEINPUTS
+                  </span>
+                </div>
+              </p>
+            </div>
+          </div>
+          <div
+            class="TableV2--body"
+          >
+            <div
+              class="TableV2--row TableV2--card TableV2--clickable"
+              role="row"
+            >
+              <div
+                class="TableV2--cells"
+              >
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 5%;"
+                >
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main disabledRow"
+                    style="justify-content: center;"
+                  >
+                    <div>
+                      <label
+                        class="bp3-label"
+                      />
+                      <label
+                        class="bp3-control bp3-radio bp3-disabled"
+                      >
+                        <input
+                          disabled=""
+                          name="artifactLabel"
+                          type="radio"
+                          value="stagea: testhelmmanifest"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 25%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main disabledRow"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1; width: 176px;"
+                    >
+                      stagea: testhelmmanifest
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 25%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main disabledRow"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1; width: 159px;"
+                    >
+                      testecr2
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 18%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main disabledRow"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="min-height: 18px; --text-line-clamp: 1; width: 110px;"
+                    >
+                      Runtime Input
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 13%;"
+                >
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main disabledRow"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="min-height: 18px; --text-line-clamp: 1;"
+                    >
+                      Runtime Input
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 18%;"
+                >
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main disabledRow"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      Yes
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main"
+          style="color: rgb(255, 123, 38);"
+        >
+          pipeline.artifactTriggerConfigPanel.chartVersionRuntimeInput
+        </p>
+        
       </div>
+      <div
+        data-position="bottom"
+      />
     </div>
-    <p
-      class="StyledProps--font StyledProps--main"
-      style="color: rgb(255, 123, 38);"
-    >
-      pipeline.artifactTriggerConfigPanel.chartVersionRuntimeInput
-    </p>
-    
   </div>
   <footer
     class="ModalDialog--footer"

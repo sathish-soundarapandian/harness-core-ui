@@ -8,19 +8,8 @@
 import React from 'react'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { NodeModelListener } from '@projectstorm/react-diagrams-core'
 import { defaultTo, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import {
-  CreateNewModel,
-  CreateNewWidget,
-  DefaultNodeModel,
-  DefaultNodeModelOptions,
-  DefaultNodeWidget,
-  DiamondNodeModel,
-  DiamondNodeWidget,
-  Event
-} from '@pipeline/components/Diagram'
 import type { StageElementConfig } from 'services/cd-ng'
 import { DynamicPopover } from '@common/components'
 import { renderPopover } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'
@@ -31,16 +20,19 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useGlobalEventListener } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { PopoverData, getCommonStyles } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { getCommonStyles, PopoverData } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { DefaultNewStageId } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
 import { SplitViewTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import stageBuilderCss from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder.module.scss'
+import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
+import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
+import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import css from './StageTemplateDiagram.module.scss'
-
+import stageBuilderCss from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder.module.scss'
 const CREATE_NODE_ID = 'create-node'
+const EMPTY_STRING = ''
 
 export const StageTemplateDiagram = (): JSX.Element => {
   const {
@@ -75,7 +67,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
     dynamicPopoverHandler?.hide()
   })
 
-  const openStageSelection = (nodeId: string) => {
+  const openStageSelection = (nodeId: string): void => {
     dynamicPopoverHandler?.show(
       `[data-nodeid="${nodeId}"]`,
       {
@@ -102,59 +94,28 @@ export const StageTemplateDiagram = (): JSX.Element => {
     )
   }
 
-  const nodeListeners: NodeModelListener = {
-    [Event.ClickNode]: (_event: any) => {
-      dynamicPopoverHandler?.hide()
-      if (templateIdentifier === DefaultNewTemplateId) {
-        openStageSelection(CREATE_NODE_ID)
-      }
-    }
-  }
-
-  const getCreateNode = () => {
-    const createNode = new CreateNewModel({
-      id: CREATE_NODE_ID,
-      width: 90,
-      height: 40,
-      customNodeStyle: { borderColor: 'var(--pipeline-grey-border)' },
-      nodeClassName: css.createNewModal
-    })
-    createNode.registerListener(nodeListeners)
-    return createNode
-  }
-
-  const getOptions = (stage: StageElementConfig): DefaultNodeModelOptions => {
+  const getOptions = (stage: StageElementConfig): any => {
     return {
       identifier: stage.identifier,
       id: stage.identifier,
+      name: EMPTY_STRING,
+      data: {
+        isInComplete: false,
+        loopingStrategyEnabled: !!stage?.strategy,
+        conditionalExecutionEnabled: stage.when
+          ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
+          : false
+      },
       customNodeStyle: { ...getCommonStyles(false), borderColor: 'var(--primary-7)', borderStyle: 'solid' },
-      name: '',
-      isInComplete: false,
       defaultSelected: false,
-      draggable: false,
-      canDelete: false,
-      loopingStrategyEnabled: !!stage?.strategy,
-      conditionalExecutionEnabled: stage.when
-        ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
-        : false,
       allowAdd: false,
-      iconStyle: { color: stagesMap[defaultTo(stage.type, '')]?.iconColor },
       icon: stagesMap[defaultTo(stage.type, '')]?.icon,
-      nodeClassName: css.createNewModal,
-      ...(stage.when && {})
+      showMarkers: false,
+      isParallelNode: false,
+      isSelected: false,
+      readonly: true,
+      onClick: onClickHandler
     }
-  }
-
-  const getStageNode = (stage: StageElementConfig) => {
-    const stageNode = new DefaultNodeModel({ ...getOptions(stage), width: 90, height: 40 })
-    stageNode.registerListener(nodeListeners)
-    return stageNode
-  }
-
-  const getDiamondStageNode = (stage: StageElementConfig) => {
-    const stageNode = new DiamondNodeModel({ ...getOptions(stage), width: 57, height: 57, secondaryIcon: undefined })
-    stageNode.registerListener(nodeListeners)
-    return stageNode
   }
 
   React.useEffect(() => {
@@ -168,7 +129,14 @@ export const StageTemplateDiagram = (): JSX.Element => {
     if (stageType) {
       setStageData(stagesMap[stageType])
     }
-  }, [selectedStageId])
+  }, [selectedStage.stage?.stage?.type, selectedStageId, stagesMap])
+
+  const onClickHandler = (_event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    dynamicPopoverHandler?.hide()
+    if (templateIdentifier === DefaultNewTemplateId) {
+      openStageSelection(CREATE_NODE_ID)
+    }
+  }
 
   return (
     <Container
@@ -185,23 +153,23 @@ export const StageTemplateDiagram = (): JSX.Element => {
       }}
     >
       <Layout.Vertical height={'100%'} flex={{ justifyContent: 'center', alignItems: 'flex-start' }} spacing={'small'}>
-        <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
+        <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600} margin={{ bottom: 'small' }}>
           Stage Type
         </Text>
         <Container>
-          <Layout.Horizontal className={stageData?.isApproval ? css.approvalLayout : css.normalLayout}>
+          <Layout.Horizontal className={css.normalLayout}>
             <Container data-nodeid={CREATE_NODE_ID}>
               {selectedStage.stage?.stage?.type ? (
                 stageData?.isApproval ? (
-                  <DiamondNodeWidget node={getDiamondStageNode(selectedStage.stage?.stage)} />
+                  <DiamondNodeWidget {...getOptions(selectedStage.stage?.stage)} />
                 ) : (
-                  <DefaultNodeWidget node={getStageNode(selectedStage.stage?.stage)} />
+                  <PipelineStageNode {...getOptions(selectedStage.stage?.stage)} />
                 )
               ) : (
-                <CreateNewWidget node={getCreateNode()} />
+                <CreateNodeStage identifier={CREATE_NODE_ID} name={EMPTY_STRING} onClick={onClickHandler} />
               )}
             </Container>
-            <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600} className={css.stageType}>
+            <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
               {defaultTo(stageData?.name, '')}
             </Text>
           </Layout.Horizontal>

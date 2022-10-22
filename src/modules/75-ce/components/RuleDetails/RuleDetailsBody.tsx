@@ -34,6 +34,7 @@ import COGatewayLogs from '../COGatewayList/COGatewayLogs'
 import RuleDetailsTabContainer from './RuleDetailsTabContainer'
 import CLITabContainer from './CLITabContainer'
 import CEChart from '../CEChart/CEChart'
+import CustomTabContainer from './CustomTabContainer'
 import css from './RuleDetailsBody.module.scss'
 
 interface RulesDetailsBodyProps {
@@ -128,6 +129,8 @@ const RulesDetailsBody: React.FC<RulesDetailsBodyProps> = ({
     registerRefreshFunction(refetchHealthState)
   }, [])
 
+  const sourceFilters = !isEmpty(get(service, 'routing.source_filters.filters'))
+
   return (
     <PageBody className={css.ruleDetailsBody}>
       <Layout.Horizontal>
@@ -151,6 +154,13 @@ const RulesDetailsBody: React.FC<RulesDetailsBodyProps> = ({
                 />
               }
             />
+            {sourceFilters && (
+              <Tab
+                id={'customExclusion'}
+                title={getString('ce.co.autoStoppingRule.setupAccess.customExclusion.heading')}
+                panel={<CustomTabContainer data={get(service, 'routing.source_filters')} />}
+              />
+            )}
             {!isK8sRule && (
               <Tab
                 id={'ssh'}

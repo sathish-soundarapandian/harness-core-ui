@@ -309,69 +309,44 @@ exports[`Test Diagram App should test basic snapshot 1`] = `
                         tabindex="0"
                       >
                         <span
-                          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                          class="bp3-icon StyledProps--main"
                           data-icon="conditional-skip-new"
                         >
                           <svg
                             fill="none"
                             height="26"
-                            viewBox="0 0 26 24"
+                            viewBox="0 0 24 24"
                             width="26"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                            <g
-                              filter="url(#conditional-skip-new_svg__filter0_dd)"
-                            >
-                              <rect
-                                fill="#F79400"
-                                height="16"
-                                rx="2"
-                                width="18"
-                                x="4"
-                                y="2"
-                              />
-                            </g>
                             <path
-                              d="M20.479 7.054c-.243-.128-.555-.064-.693.191l-.798 1.183c-.831-2.365-3.257-3.994-5.995-3.994-2.807 0-5.268 1.725-6.065 4.153-.07.256.07.512.346.607.278.064.555-.063.659-.319.658-2.045 2.703-3.483 5.06-3.483 2.287 0 4.297 1.342 4.99 3.291l-1.317-.703c-.242-.128-.554-.064-.693.16a.446.446 0 00.174.64l2.39 1.277c.07.032.174.064.278.064.035 0 .104 0 .139-.032a.548.548 0 00.312-.224l1.386-2.204c.139-.192.07-.48-.173-.607z"
+                              d="M18.462 2.769H5.539c-1.02 0-1.847.827-1.847 1.846v11.077c0 1.02.827 1.846 1.847 1.846h12.923c1.02 0 1.846-.826 1.846-1.846V4.615c0-1.02-.827-1.846-1.846-1.846z"
+                              fill="#F79400"
+                            />
+                            <path
+                              d="M18.904 7.435c-.225-.119-.513-.06-.64.176l-.737 1.092c-.767-2.183-3.006-3.687-5.534-3.687-2.59 0-4.862 1.592-5.598 3.834-.065.236.065.472.32.56.256.059.512-.058.608-.294C7.93 7.228 9.818 5.9 11.993 5.9c2.111 0 3.967 1.24 4.606 3.038l-1.215-.649c-.224-.118-.512-.059-.64.148a.41.41 0 00.16.59l2.207 1.18c.064.03.16.059.256.059.033 0 .096 0 .129-.03a.505.505 0 00.288-.207l1.28-2.034c.128-.177.064-.443-.16-.56z"
                               fill="#fff"
                             />
                             <path
                               clip-rule="evenodd"
-                              d="M9.875 11.125V16H5v-4.875h4.875zm-.813.813h-3.25v3.25h3.25v-3.25zm6.5-.813V16h-4.874v-4.875h4.874zm-.812.813H11.5v3.25h3.25v-3.25zm6.5-.813V16h-4.875v-4.875h4.875zm-.813.813h-3.25v3.25h3.25v-3.25z"
+                              d="M9.115 11.192v4.5h-4.5v-4.5h4.5zm-.75.75h-3v3h3v-3zm6-.75v4.5h-4.5v-4.5h4.5zm-.75.75h-3v3h3v-3zm6-.75v4.5h-4.5v-4.5h4.5zm-.75.75h-3v3h3v-3z"
                               fill="#fff"
                               fill-rule="evenodd"
                             />
                             <path
-                              d="M7.438 12.75h-.813v.813h.813v-.813zm.812.813h-.813v.812h.813v-.813z"
+                              d="M6.866 12.692h-.75v.75h.75v-.75zm.75.75h-.751v.75h.75v-.75z"
                               fill="#fff"
                             />
                             <path
                               clip-rule="evenodd"
-                              d="M18 12.75h.813v.813H18v-.813z"
+                              d="M16.615 12.692h.75v.75h-.75v-.75z"
                               fill="#fff"
                               fill-rule="evenodd"
                             />
                             <path
-                              d="M19.625 13.563h-.813v.812h.813v-.813z"
+                              d="M18.115 13.443h-.75v.75h.75v-.751z"
                               fill="#fff"
                             />
-                            <defs>
-                              <filter
-                                color-interpolation-filters="sRGB"
-                                filterUnits="userSpaceOnUse"
-                                height="24"
-                                id="conditional-skip-new_svg__filter0_dd"
-                                width="26"
-                                x="0"
-                                y="0"
-                              >
-                                <feblend
-                                  in="SourceGraphic"
-                                  in2="effect2_dropShadow"
-                                  result="shape"
-                                />
-                              </filter>
-                            </defs>
                           </svg>
                         </span>
                       </p>

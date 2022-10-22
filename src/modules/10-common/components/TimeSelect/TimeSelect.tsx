@@ -22,7 +22,7 @@ interface TimeSelectPropsInterface {
   amPmValue: SelectOption | string
   disabled?: boolean
   className?: string
-  hideSeconds?: boolean
+  hideSeconds: boolean
 }
 const getSelectValueOption = (val: string | SelectOption, options: SelectOption[]): any => {
   if (Array.isArray(val)) {

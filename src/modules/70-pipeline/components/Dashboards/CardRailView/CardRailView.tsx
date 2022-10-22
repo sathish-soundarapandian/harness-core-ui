@@ -84,7 +84,7 @@ export default function CardRailView({ contentType, isLoading, onShowAll, childr
     FAILED_DEPLOYMENT: getString('pipeline.dashboards.noFailedDeployments'),
     ACTIVE_DEPLOYMENT: getString('pipeline.dashboards.noActiveDeployments'),
     PENDING_DEPLOYMENT: getString('pipeline.dashboards.noPendingDeployments'),
-    BASELINE_TARGET: getString('pipeline.dashboards.baselineActivityComingSoon')
+    BASELINE_TARGET: getString('pipeline.dashboards.noTargetBaselines')
   }
 
   const onResize = () => {

@@ -19,6 +19,7 @@ import {
 import { useStrings } from 'framework/strings'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/exports'
+import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
@@ -49,6 +50,11 @@ declare global {
 
 interface SaveTemplateObj {
   template: NGTemplateInfoConfig
+}
+
+interface LastRemoteObjectId {
+  lastObjectId?: string
+  lastCommitId?: string
 }
 
 interface UseSaveTemplateReturnType {
@@ -112,11 +118,31 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     []
   )
 
+  const publishTemplate = async (
+    latestTemplate: NGTemplateInfoConfig,
+    updatedGitDetails?: SaveToGitFormInterface
+  ): Promise<void> => {
+    // If new template creation
+    if (templateIdentifier === DefaultNewTemplateId) {
+      await deleteTemplateCache?.(updatedGitDetails)
+
+      navigateToLocation(latestTemplate, updatedGitDetails)
+    } else {
+      // Update template in existing branch
+      if (updatedGitDetails?.isNewBranch === false) {
+        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
+      } else {
+        // Update template in new branch
+        navigateToLocation(latestTemplate, updatedGitDetails)
+      }
+    }
+  }
+
   const updateExistingLabel = async (
     latestTemplate: NGTemplateInfoConfig,
     comments?: string,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string },
+    lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     const response = await updateExistingTemplateVersionPromise({
@@ -129,7 +155,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         orgIdentifier,
         comments,
         ...(updatedGitDetails ?? {}),
-        ...(lastObject?.lastObjectId ? lastObject : {}),
+        ...(lastObject ?? {}),
         ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
         ...(updatedGitDetails && updatedGitDetails.isNewBranch
           ? { baseBranch: defaultTo(branch, storeMetadata?.branch), branch: updatedGitDetails.branch }
@@ -138,15 +164,19 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
     })
     if (response && response.status === 'SUCCESS') {
-      if (isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE) {
+      const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
+      if (isInlineTemplate) {
         clear()
         showSuccess(getString('common.template.updateTemplate.templateUpdated'))
+        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
       }
-      await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
-      if (updatedGitDetails?.isNewBranch) {
-        navigateToLocation(latestTemplate, updatedGitDetails)
+
+      return {
+        status: response.status,
+        nextCallback: () => {
+          publishTemplate(latestTemplate, updatedGitDetails)
+        }
       }
-      return { status: response.status }
     } else {
       throw response
     }
@@ -157,7 +187,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     comments?: string,
     isEdit = false,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string },
+    lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     if (isEdit) {
@@ -182,15 +212,23 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         if (!isTemplateStudio && response.data?.templateResponseDTO) {
           window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
         }
-        if (isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE) {
+
+        const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
+        if (isInlineTemplate) {
           clear()
           showSuccess(getString('common.template.saveTemplate.publishTemplate'))
+          await deleteTemplateCache?.()
+          if (isTemplateStudio) {
+            navigateToLocation(latestTemplate, updatedGitDetails)
+          }
         }
-        await deleteTemplateCache?.()
-        if (isTemplateStudio) {
-          navigateToLocation(latestTemplate, updatedGitDetails)
+
+        return {
+          status: response.status,
+          nextCallback: () => {
+            publishTemplate(latestTemplate, updatedGitDetails)
+          }
         }
-        return { status: response.status }
       } else {
         throw response
       }
@@ -202,6 +240,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     payload?: SaveTemplateObj,
     objectId?: string,
     isEdit = false,
+    lastCommitId = '',
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     let latestTemplate = payload?.template as NGTemplateInfoConfig
@@ -220,23 +259,28 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       '',
       isEdit,
       omit(updatedGitDetails, 'name', 'identifier'),
-      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId } : {},
+      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
       storeMetadata
     )
-    return {
-      status: response?.status
-    }
+    return response
   }
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SaveTemplateObj>({
     onSuccess: (
-      gitData: SaveToGitFormInterface,
+      gitData: GitData,
       payload?: SaveTemplateObj,
       objectId?: string,
       isEdit = false,
       storeMetadata?: StoreMetadata
     ): Promise<UseSaveSuccessResponse> =>
-      saveAndPublishWithGitInfo(gitData, payload, defaultTo(objectId, ''), isEdit, storeMetadata)
+      saveAndPublishWithGitInfo(
+        gitData,
+        payload,
+        defaultTo(objectId, ''),
+        isEdit,
+        gitData?.resolvedConflictCommitId || gitData?.lastCommitId,
+        storeMetadata
+      )
   })
 
   const getUpdatedGitDetails = (
@@ -257,12 +301,13 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     updatedTemplate: NGTemplateInfoConfig,
     extraInfo: PromiseExtraArgs
   ): Promise<UseSaveSuccessResponse> => {
-    const { isEdit, comment, updatedGitDetails, storeMetadata } = extraInfo
+    const { isEdit, comment, updatedGitDetails, storeMetadata, disableCreatingNewBranch } = extraInfo
 
     // if Git sync enabled then display modal
     if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
       openSaveToGitDialog({
         isEditing: defaultTo(isEdit, false),
+        disableCreatingNewBranch,
         resource: {
           type: 'Template',
           name: updatedTemplate.name,

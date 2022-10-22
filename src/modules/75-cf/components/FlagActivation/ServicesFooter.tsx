@@ -16,7 +16,7 @@ export interface ServicesFooterProps {
   loading: boolean
   onClose: () => void
   onSave: () => void
-  paginationProps: PaginationProps
+  paginationProps: PaginationProps | false
 }
 
 const ServicesFooter: FC<ServicesFooterProps> = ({ loading, onSave, onClose, paginationProps }) => {
@@ -24,14 +24,17 @@ const ServicesFooter: FC<ServicesFooterProps> = ({ loading, onSave, onClose, pag
 
   return (
     <>
-      <Pagination
-        className={css.pagination}
-        itemCount={paginationProps.itemCount}
-        pageSize={paginationProps.pageSize}
-        pageCount={paginationProps.pageCount}
-        pageIndex={paginationProps.pageIndex}
-        gotoPage={paginationProps.gotoPage}
-      />
+      {paginationProps && (
+        <Pagination
+          className={css.pagination}
+          itemCount={paginationProps.itemCount}
+          pageSize={paginationProps.pageSize}
+          pageCount={paginationProps.pageCount}
+          pageIndex={paginationProps.pageIndex}
+          gotoPage={paginationProps.gotoPage}
+        />
+      )}
+
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
         <Button
           type="submit"

@@ -11,12 +11,13 @@ import { Intent } from '@blueprintjs/core'
 import { defaultTo, set } from 'lodash-es'
 import produce from 'immer'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import { getStepFromStage } from '@pipeline/components/PipelineStudio/StepUtil'
 import { useGlobalEventListener } from '@common/hooks'
 import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { getStepFromId } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import type { TemplateStepNode } from 'services/pipeline-ng'
 
 export function useSaveTemplateListener(): void {
   const [savedTemplate, setSavedTemplate] = React.useState<TemplateSummaryResponse>()
@@ -53,12 +54,15 @@ export function useSaveTemplateListener(): void {
 
   const updateStepTemplate = async (): Promise<void> => {
     const selectedStepId = defaultTo(drawerData.data?.stepConfig?.node.identifier, '')
-    const selectedStep = getStepFromStage(selectedStepId, [
-      ...defaultTo(selectedStage?.stage?.spec?.execution?.steps, []),
-      ...defaultTo(selectedStage?.stage?.spec?.execution?.rollbackSteps, [])
-    ])
-    if (selectedStep?.step) {
-      const processNode = createTemplate(selectedStep.step, savedTemplate)
+    const selectedStep = getStepFromId(
+      selectedStage?.stage?.spec?.execution,
+      selectedStepId,
+      false,
+      false,
+      Boolean(pipelineView.isRollbackToggled)
+    )
+    if (selectedStep?.node) {
+      const processNode = createTemplate(selectedStep.node as TemplateStepNode, savedTemplate)
       const newPipelineView = produce(pipelineView, draft => {
         set(draft, 'drawerData.data.stepConfig.node', processNode)
       })

@@ -24,7 +24,7 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
         class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
       >
         <div
-          class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+          class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
         >
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -199,7 +199,7 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
         </div>
       </div>
       <label
-        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
       >
         <input
           name="gitOpsEnabled"
@@ -242,7 +242,7 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
         class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
       >
         <div
-          class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+          class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
         >
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -417,7 +417,7 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
         </div>
       </div>
       <label
-        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
       >
         <input
           name="gitOpsEnabled"
@@ -460,7 +460,7 @@ exports[`DeployServiceDefinition should render DeployServiceDefinition and switc
         class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
       >
         <div
-          class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+          class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
         >
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -635,7 +635,7 @@ exports[`DeployServiceDefinition should render DeployServiceDefinition and switc
         </div>
       </div>
       <label
-        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
       >
         <input
           name="gitOpsEnabled"

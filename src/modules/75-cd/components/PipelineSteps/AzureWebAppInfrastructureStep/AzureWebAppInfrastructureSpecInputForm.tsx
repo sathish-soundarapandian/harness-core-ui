@@ -6,14 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  Text,
-  Layout,
-  FormInput,
-  SelectOption,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@wings-software/uicore'
+import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -38,6 +31,7 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   AzureWebAppInfrastructureSpecEditableProps,
   getValue,
@@ -242,7 +236,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       )}
       {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             name={`${path}.subscriptionId`}
             tooltipProps={{
               dataTooltipId: 'azureInfraSubscription'
@@ -292,12 +286,14 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
               expressions,
               allowableTypes
             }}
+            fieldPath="subscriptionId"
+            template={template}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             name={`${path}.resourceGroup`}
             tooltipProps={{
               dataTooltipId: 'azureInfraResourceGroup'
@@ -368,6 +364,8 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
               expressions,
               allowableTypes
             }}
+            fieldPath="resourceGroup"
+            template={template}
           />
         </div>
       )}

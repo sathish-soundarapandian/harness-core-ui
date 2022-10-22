@@ -8,6 +8,7 @@
   background-color: var(--white) !important;
   border: 1px solid var(--grey-200);
   max-height: 398px;
+  max-width: 800px;
   overflow-y: auto;
 }
 
@@ -75,6 +76,13 @@
 .stepQueryContainer {
   .stepCtaContainer {
     position: relative;
+  }
+}
+
+.stepScheduleContainer {
+  .stepCtaContainer {
+    position: relative;
+    top: 30px;
   }
 }
 

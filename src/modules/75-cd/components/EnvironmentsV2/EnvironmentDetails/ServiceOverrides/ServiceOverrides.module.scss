@@ -30,13 +30,16 @@
   &.row-value {
     padding-top: var(--spacing-medium);
     padding-bottom: var(--spacing-medium);
-    padding-left: var(--spacing-medium);
     border-bottom: solid 1px var(--grey-100);
     font-size: medium;
   }
 
   & :global(.bp3-form-group) {
     margin: 0;
+  }
+
+  .variableListButtons {
+    justify-content: flex-end !important;
   }
 
   .value-string {
@@ -69,7 +72,6 @@
     letter-spacing: 0.2px;
     color: var(--grey-600);
     text-transform: uppercase;
-    padding-left: var(--spacing-medium);
   }
 }
 
@@ -79,4 +81,13 @@
 }
 .addOverrideBtn {
   padding: 0 !important;
+  justify-content: flex-start;
+}
+
+.overridesAccordionPanel {
+  padding: 0 !important;
+}
+
+.overridesAccordionDetails {
+  padding-bottom: 0 !important;
 }

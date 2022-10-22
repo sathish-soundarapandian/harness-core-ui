@@ -41,6 +41,25 @@ export interface AuthorInfo {
   url?: string
 }
 
+export type BackgroundStepInfo = StepSpecType & {
+  command?: string
+  connectorRef?: string
+  entrypoint?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
+  image?: string
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  portBindings?: {
+    [key: string]: string
+  }
+  privileged?: boolean
+  reports?: UnitTestReport
+  resources?: ContainerResource
+  runAsUser?: number
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
+}
+
 export type BranchBuildSpec = BuildSpec & {
   branch: string
 }
@@ -115,7 +134,7 @@ export interface BuildInfo {
 }
 
 export interface BuildJobEnvInfo {
-  type?: 'K8' | 'VM'
+  type?: 'K8' | 'VM' | 'DOCKER'
 }
 
 export interface BuildRepositoryCount {
@@ -263,6 +282,15 @@ export type CleanupStepInfo = StepSpecType & {
   podName: string
 }
 
+export type CloudRuntime = Runtime & {
+  spec: CloudRuntimeSpec
+  type: 'Cloud'
+}
+
+export interface CloudRuntimeSpec {
+  size?: string
+}
+
 export interface CodeBase {
   build: Build
   connectorRef: string
@@ -295,7 +323,15 @@ export interface ContainerDefinitionInfo {
   commands?: string[]
   containerImageDetails?: ContainerImageDetails
   containerResourceParams?: ContainerResourceParams
-  containerType?: 'STEP_EXECUTOR' | 'ADD_ON' | 'RUN' | 'PLUGIN' | 'SERVICE' | 'LITE_ENGINE' | 'TEST_INTELLIGENCE'
+  containerType?:
+    | 'STEP_EXECUTOR'
+    | 'ADD_ON'
+    | 'RUN'
+    | 'PLUGIN'
+    | 'SERVICE'
+    | 'LITE_ENGINE'
+    | 'TEST_INTELLIGENCE'
+    | 'BACKGROUND'
   envVars?: {
     [key: string]: string
   }
@@ -369,6 +405,24 @@ export interface DeprecatedImageInfo {
   version?: string
 }
 
+export interface DockerInfraSpec {
+  platform: ParameterFieldPlatform
+}
+
+export type DockerInfraYaml = Infrastructure & {
+  spec: DockerInfraSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+}
+
+export type DockerRuntime = Runtime & {
+  spec: DockerRuntimeSpec
+  type: 'Docker'
+}
+
+export interface DockerRuntimeSpec {
+  [key: string]: any
+}
+
 export type DockerStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
   buildArgs?: {
@@ -437,6 +491,7 @@ export interface EntityGitDetails {
   objectId?: string
   repoIdentifier?: string
   repoName?: string
+  repoUrl?: string
   rootFolder?: string
 }
 
@@ -601,7 +656,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -695,6 +749,7 @@ export interface Error {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -777,12 +832,373 @@ export interface Error {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
   metadata?: ErrorMetadataDTO
   responseMessages?: ResponseMessage[]
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ErrorMetadata {
+  errorCode?:
+    | 'DEFAULT_ERROR_CODE'
+    | 'INVALID_ARGUMENT'
+    | 'INVALID_EMAIL'
+    | 'DOMAIN_NOT_ALLOWED_TO_REGISTER'
+    | 'COMMNITY_EDITION_NOT_FOUND'
+    | 'DEPLOY_MODE_IS_NOT_ON_PREM'
+    | 'USER_ALREADY_REGISTERED'
+    | 'USER_INVITATION_DOES_NOT_EXIST'
+    | 'USER_DOES_NOT_EXIST'
+    | 'USER_INVITE_OPERATION_FAILED'
+    | 'USER_DISABLED'
+    | 'ACCOUNT_DOES_NOT_EXIST'
+    | 'INACTIVE_ACCOUNT'
+    | 'ACCOUNT_MIGRATED'
+    | 'USER_DOMAIN_NOT_ALLOWED'
+    | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
+    | 'RESOURCE_NOT_FOUND'
+    | 'INVALID_FORMAT'
+    | 'ROLE_DOES_NOT_EXIST'
+    | 'EMAIL_NOT_VERIFIED'
+    | 'EMAIL_VERIFICATION_TOKEN_NOT_FOUND'
+    | 'INVALID_TOKEN'
+    | 'REVOKED_TOKEN'
+    | 'INVALID_CAPTCHA_TOKEN'
+    | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
+    | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
+    | 'TOKEN_ALREADY_REFRESHED_ONCE'
+    | 'ACCESS_DENIED'
+    | 'NG_ACCESS_DENIED'
+    | 'INVALID_CREDENTIAL'
+    | 'INVALID_CREDENTIALS_THIRD_PARTY'
+    | 'INVALID_KEY'
+    | 'INVALID_CONNECTOR_TYPE'
+    | 'INVALID_KEYPATH'
+    | 'INVALID_VARIABLE'
+    | 'UNKNOWN_HOST'
+    | 'UNREACHABLE_HOST'
+    | 'INVALID_PORT'
+    | 'SSH_SESSION_TIMEOUT'
+    | 'SOCKET_CONNECTION_ERROR'
+    | 'CONNECTION_ERROR'
+    | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
+    | 'CONNECTION_TIMEOUT'
+    | 'SSH_CONNECTION_ERROR'
+    | 'USER_GROUP_ERROR'
+    | 'INVALID_EXECUTION_ID'
+    | 'ERROR_IN_GETTING_CHANNEL_STREAMS'
+    | 'UNEXPECTED'
+    | 'UNKNOWN_ERROR'
+    | 'UNKNOWN_EXECUTOR_TYPE_ERROR'
+    | 'DUPLICATE_STATE_NAMES'
+    | 'TRANSITION_NOT_LINKED'
+    | 'TRANSITION_TO_INCORRECT_STATE'
+    | 'TRANSITION_TYPE_NULL'
+    | 'STATES_WITH_DUP_TRANSITIONS'
+    | 'BARRIERS_NOT_RUNNING_CONCURRENTLY'
+    | 'NON_FORK_STATES'
+    | 'NON_REPEAT_STATES'
+    | 'INITIAL_STATE_NOT_DEFINED'
+    | 'FILE_INTEGRITY_CHECK_FAILED'
+    | 'INVALID_URL'
+    | 'FILE_DOWNLOAD_FAILED'
+    | 'PLATFORM_SOFTWARE_DELETE_ERROR'
+    | 'INVALID_CSV_FILE'
+    | 'INVALID_REQUEST'
+    | 'SCHEMA_VALIDATION_FAILED'
+    | 'FILTER_CREATION_ERROR'
+    | 'INVALID_YAML_ERROR'
+    | 'PLAN_CREATION_ERROR'
+    | 'INVALID_INFRA_STATE'
+    | 'PIPELINE_ALREADY_TRIGGERED'
+    | 'NON_EXISTING_PIPELINE'
+    | 'DUPLICATE_COMMAND_NAMES'
+    | 'INVALID_PIPELINE'
+    | 'COMMAND_DOES_NOT_EXIST'
+    | 'DUPLICATE_ARTIFACTSTREAM_NAMES'
+    | 'DUPLICATE_HOST_NAMES'
+    | 'STATE_NOT_FOR_TYPE'
+    | 'STATE_MACHINE_ISSUE'
+    | 'STATE_DISCONTINUE_FAILED'
+    | 'STATE_PAUSE_FAILED'
+    | 'PAUSE_ALL_ALREADY'
+    | 'RESUME_ALL_ALREADY'
+    | 'ROLLBACK_ALREADY'
+    | 'ABORT_ALL_ALREADY'
+    | 'EXPIRE_ALL_ALREADY'
+    | 'RETRY_FAILED'
+    | 'UNKNOWN_ARTIFACT_TYPE'
+    | 'UNKNOWN_STAGE_ELEMENT_WRAPPER_TYPE'
+    | 'INIT_TIMEOUT'
+    | 'LICENSE_EXPIRED'
+    | 'NOT_LICENSED'
+    | 'REQUEST_TIMEOUT'
+    | 'WORKFLOW_ALREADY_TRIGGERED'
+    | 'JENKINS_ERROR'
+    | 'INVALID_ARTIFACT_SOURCE'
+    | 'INVALID_ARTIFACT_SERVER'
+    | 'INVALID_CLOUD_PROVIDER'
+    | 'UPDATE_NOT_ALLOWED'
+    | 'DELETE_NOT_ALLOWED'
+    | 'APPDYNAMICS_CONFIGURATION_ERROR'
+    | 'APM_CONFIGURATION_ERROR'
+    | 'SPLUNK_CONFIGURATION_ERROR'
+    | 'ELK_CONFIGURATION_ERROR'
+    | 'LOGZ_CONFIGURATION_ERROR'
+    | 'SUMO_CONFIGURATION_ERROR'
+    | 'INSTANA_CONFIGURATION_ERROR'
+    | 'APPDYNAMICS_ERROR'
+    | 'STACKDRIVER_ERROR'
+    | 'STACKDRIVER_CONFIGURATION_ERROR'
+    | 'NEWRELIC_CONFIGURATION_ERROR'
+    | 'NEWRELIC_ERROR'
+    | 'DYNA_TRACE_CONFIGURATION_ERROR'
+    | 'DYNA_TRACE_ERROR'
+    | 'CLOUDWATCH_ERROR'
+    | 'CLOUDWATCH_CONFIGURATION_ERROR'
+    | 'PROMETHEUS_CONFIGURATION_ERROR'
+    | 'DATA_DOG_CONFIGURATION_ERROR'
+    | 'SERVICE_GUARD_CONFIGURATION_ERROR'
+    | 'ENCRYPTION_NOT_CONFIGURED'
+    | 'UNAVAILABLE_DELEGATES'
+    | 'WORKFLOW_EXECUTION_IN_PROGRESS'
+    | 'PIPELINE_EXECUTION_IN_PROGRESS'
+    | 'AWS_ACCESS_DENIED'
+    | 'AWS_CLUSTER_NOT_FOUND'
+    | 'AWS_SERVICE_NOT_FOUND'
+    | 'IMAGE_NOT_FOUND'
+    | 'ILLEGAL_ARGUMENT'
+    | 'IMAGE_TAG_NOT_FOUND'
+    | 'DELEGATE_NOT_AVAILABLE'
+    | 'INVALID_YAML_PAYLOAD'
+    | 'AUTHENTICATION_ERROR'
+    | 'AUTHORIZATION_ERROR'
+    | 'UNRECOGNIZED_YAML_FIELDS'
+    | 'COULD_NOT_MAP_BEFORE_YAML'
+    | 'MISSING_BEFORE_YAML'
+    | 'MISSING_YAML'
+    | 'NON_EMPTY_DELETIONS'
+    | 'GENERAL_YAML_ERROR'
+    | 'GENERAL_YAML_INFO'
+    | 'YAML_GIT_SYNC_ERROR'
+    | 'GIT_CONNECTION_ERROR'
+    | 'GIT_ERROR'
+    | 'ARTIFACT_SERVER_ERROR'
+    | 'ENCRYPT_DECRYPT_ERROR'
+    | 'SECRET_MANAGEMENT_ERROR'
+    | 'SECRET_NOT_FOUND'
+    | 'KMS_OPERATION_ERROR'
+    | 'GCP_KMS_OPERATION_ERROR'
+    | 'VAULT_OPERATION_ERROR'
+    | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'UNSUPPORTED_OPERATION_EXCEPTION'
+    | 'FEATURE_UNAVAILABLE'
+    | 'GENERAL_ERROR'
+    | 'BASELINE_CONFIGURATION_ERROR'
+    | 'SAML_IDP_CONFIGURATION_NOT_AVAILABLE'
+    | 'INVALID_AUTHENTICATION_MECHANISM'
+    | 'INVALID_SAML_CONFIGURATION'
+    | 'INVALID_OAUTH_CONFIGURATION'
+    | 'INVALID_LDAP_CONFIGURATION'
+    | 'USER_GROUP_SYNC_FAILURE'
+    | 'USER_GROUP_ALREADY_EXIST'
+    | 'INVALID_TWO_FACTOR_AUTHENTICATION_CONFIGURATION'
+    | 'EXPLANATION'
+    | 'HINT'
+    | 'NOT_WHITELISTED_IP'
+    | 'INVALID_TOTP_TOKEN'
+    | 'EMAIL_FAILED'
+    | 'SSL_HANDSHAKE_FAILED'
+    | 'NO_APPS_ASSIGNED'
+    | 'INVALID_INFRA_CONFIGURATION'
+    | 'TEMPLATES_LINKED'
+    | 'USER_HAS_NO_PERMISSIONS'
+    | 'USER_NOT_AUTHORIZED'
+    | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
+    | 'INVALID_USAGE_RESTRICTION'
+    | 'USAGE_RESTRICTION_ERROR'
+    | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
+    | 'DELEGATE_TASK_RETRY'
+    | 'KUBERNETES_API_TASK_EXCEPTION'
+    | 'KUBERNETES_TASK_EXCEPTION'
+    | 'KUBERNETES_YAML_ERROR'
+    | 'SAVE_FILE_INTO_GCP_STORAGE_FAILED'
+    | 'READ_FILE_FROM_GCP_STORAGE_FAILED'
+    | 'FILE_NOT_FOUND_ERROR'
+    | 'USAGE_LIMITS_EXCEEDED'
+    | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
+    | 'JIRA_ERROR'
+    | 'EXPRESSION_EVALUATION_FAILED'
+    | 'KUBERNETES_VALUES_ERROR'
+    | 'KUBERNETES_CLUSTER_ERROR'
+    | 'INCORRECT_SIGN_IN_MECHANISM'
+    | 'OAUTH_LOGIN_FAILED'
+    | 'INVALID_TERRAFORM_TARGETS_REQUEST'
+    | 'TERRAFORM_EXECUTION_ERROR'
+    | 'FILE_READ_FAILED'
+    | 'FILE_SIZE_EXCEEDS_LIMIT'
+    | 'CLUSTER_NOT_FOUND'
+    | 'MARKETPLACE_TOKEN_NOT_FOUND'
+    | 'INVALID_MARKETPLACE_TOKEN'
+    | 'INVALID_TICKETING_SERVER'
+    | 'SERVICENOW_ERROR'
+    | 'PASSWORD_EXPIRED'
+    | 'USER_LOCKED'
+    | 'PASSWORD_STRENGTH_CHECK_FAILED'
+    | 'ACCOUNT_DISABLED'
+    | 'INVALID_ACCOUNT_PERMISSION'
+    | 'PAGERDUTY_ERROR'
+    | 'HEALTH_ERROR'
+    | 'SAML_TEST_SUCCESS_MECHANISM_NOT_ENABLED'
+    | 'DOMAIN_WHITELIST_FILTER_CHECK_FAILED'
+    | 'INVALID_DASHBOARD_UPDATE_REQUEST'
+    | 'DUPLICATE_FIELD'
+    | 'INVALID_AZURE_VAULT_CONFIGURATION'
+    | 'USER_NOT_AUTHORIZED_DUE_TO_USAGE_RESTRICTIONS'
+    | 'INVALID_ROLLBACK'
+    | 'DATA_COLLECTION_ERROR'
+    | 'SUMO_DATA_COLLECTION_ERROR'
+    | 'DEPLOYMENT_GOVERNANCE_ERROR'
+    | 'BATCH_PROCESSING_ERROR'
+    | 'GRAPHQL_ERROR'
+    | 'FILE_CREATE_ERROR'
+    | 'ILLEGAL_STATE'
+    | 'GIT_DIFF_COMMIT_NOT_IN_ORDER'
+    | 'FAILED_TO_ACQUIRE_PERSISTENT_LOCK'
+    | 'FAILED_TO_ACQUIRE_NON_PERSISTENT_LOCK'
+    | 'POD_NOT_FOUND_ERROR'
+    | 'COMMAND_EXECUTION_ERROR'
+    | 'REGISTRY_EXCEPTION'
+    | 'ENGINE_INTERRUPT_PROCESSING_EXCEPTION'
+    | 'ENGINE_IO_EXCEPTION'
+    | 'ENGINE_OUTCOME_EXCEPTION'
+    | 'ENGINE_SWEEPING_OUTPUT_EXCEPTION'
+    | 'CACHE_NOT_FOUND_EXCEPTION'
+    | 'ENGINE_ENTITY_UPDATE_EXCEPTION'
+    | 'SHELL_EXECUTION_EXCEPTION'
+    | 'TEMPLATE_NOT_FOUND'
+    | 'AZURE_SERVICE_EXCEPTION'
+    | 'AZURE_CLIENT_EXCEPTION'
+    | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
+    | 'TIMEOUT_ENGINE_EXCEPTION'
+    | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
+    | 'NO_INSTALLED_DELEGATES'
+    | 'DUPLICATE_DELEGATE_EXCEPTION'
+    | 'GCP_MARKETPLACE_EXCEPTION'
+    | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
+    | 'INCORRECT_DEFAULT_GOOGLE_CREDENTIALS'
+    | 'OPTIMISTIC_LOCKING_EXCEPTION'
+    | 'NG_PIPELINE_EXECUTION_EXCEPTION'
+    | 'NG_PIPELINE_CREATE_EXCEPTION'
+    | 'RESOURCE_NOT_FOUND_EXCEPTION'
+    | 'PMS_INITIALIZE_SDK_EXCEPTION'
+    | 'UNEXPECTED_SNIPPET_EXCEPTION'
+    | 'UNEXPECTED_SCHEMA_EXCEPTION'
+    | 'CONNECTOR_VALIDATION_EXCEPTION'
+    | 'TIMESCALE_NOT_AVAILABLE'
+    | 'MIGRATION_EXCEPTION'
+    | 'REQUEST_PROCESSING_INTERRUPTED'
+    | 'SECRET_MANAGER_ID_NOT_FOUND'
+    | 'GCP_SECRET_MANAGER_OPERATION_ERROR'
+    | 'GCP_SECRET_OPERATION_ERROR'
+    | 'GIT_OPERATION_ERROR'
+    | 'TASK_FAILURE_ERROR'
+    | 'INSTANCE_STATS_PROCESS_ERROR'
+    | 'INSTANCE_STATS_MIGRATION_ERROR'
+    | 'DEPLOYMENT_MIGRATION_ERROR'
+    | 'CG_LICENSE_USAGE_ERROR'
+    | 'INSTANCE_STATS_AGGREGATION_ERROR'
+    | 'UNRESOLVED_EXPRESSIONS_ERROR'
+    | 'KRYO_HANDLER_NOT_FOUND_ERROR'
+    | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'UNEXPECTED_TYPE_ERROR'
+    | 'EXCEPTION_HANDLER_NOT_FOUND'
+    | 'CONNECTOR_NOT_FOUND_EXCEPTION'
+    | 'GCP_SERVER_ERROR'
+    | 'HTTP_RESPONSE_EXCEPTION'
+    | 'SCM_NOT_FOUND_ERROR'
+    | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
+    | 'SCM_UNPROCESSABLE_ENTITY'
+    | 'PROCESS_EXECUTION_EXCEPTION'
+    | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
+    | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'DATA'
+    | 'CONTEXT'
+    | 'PR_CREATION_ERROR'
+    | 'URL_NOT_REACHABLE'
+    | 'URL_NOT_PROVIDED'
+    | 'ENGINE_EXPRESSION_EVALUATION_ERROR'
+    | 'ENGINE_FUNCTOR_ERROR'
+    | 'JIRA_CLIENT_ERROR'
+    | 'SCM_NOT_MODIFIED'
+    | 'APPROVAL_STEP_NG_ERROR'
+    | 'BUCKET_SERVER_ERROR'
+    | 'GIT_SYNC_ERROR'
+    | 'TEMPLATE_EXCEPTION'
+    | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'INVALID_INPUT_SET'
+    | 'INVALID_OVERLAY_INPUT_SET'
+    | 'RESOURCE_ALREADY_EXISTS'
+    | 'INVALID_JSON_PAYLOAD'
+    | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+  errorMessage?: string
 }
 
 export interface ErrorMetadataDTO {
@@ -973,7 +1389,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1067,6 +1482,7 @@ export interface Failure {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1149,6 +1565,19 @@ export interface Failure {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1156,14 +1585,25 @@ export interface Failure {
 }
 
 export interface FailureStrategyActionConfig {
-  type: 'Ignore' | 'Retry' | 'MarkAsSuccess' | 'Abort' | 'StageRollback' | 'StepGroupRollback' | 'ManualIntervention'
+  type:
+    | 'Ignore'
+    | 'Retry'
+    | 'MarkAsSuccess'
+    | 'Abort'
+    | 'StageRollback'
+    | 'StepGroupRollback'
+    | 'PipelineRollback'
+    | 'ManualIntervention'
+    | 'ProceedWithDefaultValues'
 }
 
 export interface FailureStrategyConfig {
   onFailure: OnFailureConfig
 }
 
-export type FilterCreatorErrorResponse = ErrorMetadataDTO & {}
+export type FilterCreatorErrorResponse = ErrorMetadataDTO & {
+  errorMetadataList?: ErrorMetadata[]
+}
 
 export type GCRStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
@@ -1187,6 +1627,19 @@ export type GCRStepInfo = StepSpecType & {
   target?: string
 }
 
+export type GitCloneStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  build: Build
+  cloneDirectory?: string
+  connectorRef: string
+  depth?: number
+  projectName?: string
+  repoName?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  sslVerify?: boolean
+}
+
 export interface GitInfo {
   commit?: string
   commitID?: string
@@ -1200,6 +1653,7 @@ export interface HarnessForConfig {
   end?: number
   items?: string[]
   maxConcurrency?: number
+  partitionSize?: number
   start?: number
   times?: number
   unit?: 'Percentage' | 'Count'
@@ -1221,6 +1675,15 @@ export type HostPathYaml = CIVolume & {
 export interface HostPathYamlSpec {
   path: string
   type?: string
+}
+
+export interface HostedVmInfraSpec {
+  platform: ParameterFieldPlatform
+}
+
+export type HostedVmInfraYaml = Infrastructure & {
+  spec: HostedVmInfraSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
@@ -1252,6 +1715,9 @@ export type InitializeStepInfo = StepSpecType & {
   skipGitClone: boolean
   stageElementConfig?: IntegrationStageConfig
   stageIdentifier?: string
+  strategyExpansionMap?: {
+    [key: string]: StrategyExpansionData
+  }
   variables?: NGVariable[]
 }
 
@@ -1267,6 +1733,7 @@ export interface InputSetErrorResponse {
 
 export type InputSetErrorWrapper = ErrorMetadataDTO & {
   errorPipelineYaml?: string
+  invalidInputSetReferences?: string[]
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
@@ -1281,7 +1748,8 @@ export interface IntegrationStageConfig {
   cloneCodebase?: ParameterFieldBoolean
   execution?: ExecutionElementConfig
   infrastructure?: Infrastructure
-  runsOn?: ParameterFieldString
+  platform?: ParameterFieldPlatform
+  runtime?: Runtime
   serviceDependencies?: ParameterFieldListDependencyElement
   sharedPaths?: ParameterFieldListString
 }
@@ -1289,7 +1757,8 @@ export interface IntegrationStageConfig {
 export type IntegrationStageConfigImpl = StageInfoConfig & {
   cloneCodebase?: boolean
   infrastructure?: Infrastructure
-  runsOn?: string
+  platform?: Platform
+  runtime?: Runtime
   serviceDependencies?: DependencyElement[]
   sharedPaths?: string[]
 }
@@ -1433,6 +1902,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
+    | 'InputTimeoutError'
   )[]
 }
 
@@ -1571,8 +2041,8 @@ export interface ParameterFieldMapStringJsonNode {
   }
 }
 
-export interface ParameterFieldString {
-  defaultValue?: string
+export interface ParameterFieldPlatform {
+  defaultValue?: Platform
   executionInput?: boolean
   expression?: boolean
   expressionValue?: string
@@ -1580,11 +2050,11 @@ export interface ParameterFieldString {
   jsonResponseField?: boolean
   responseField?: string
   typeString?: boolean
-  value?: string
+  value?: Platform
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -1603,8 +2073,18 @@ export interface PersistentVolumeClaimYamlSpec {
   readOnly?: boolean
 }
 
+export type PipelineRollbackFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'PipelineRollback'
+}
+
+export interface Platform {
+  arch?: 'Amd64'
+  os?: 'Linux' | 'MacOS' | 'Windows'
+}
+
 export type PluginStepInfo = StepSpecType & {
   connectorRef: string
+  entrypoint?: string[]
   image: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   privileged?: boolean
@@ -1639,6 +2119,10 @@ export interface PodVolume {
 
 export interface PodsSetupInfo {
   podSetupInfoList?: PodSetupInfo[]
+}
+
+export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'ProceedWithDefaultValues'
 }
 
 export interface ReferenceDTO {
@@ -1915,7 +2399,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -2009,6 +2492,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -2091,6 +2575,19 @@ export interface ResponseMessage {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2102,6 +2599,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -2126,22 +2624,6 @@ export interface ResponseYamlSchemaDetailsWrapper {
   data?: YamlSchemaDetailsWrapper
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface RestResponse {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: { [key: string]: any }
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponseString {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: string
-  responseMessages?: ResponseMessage[]
 }
 
 export type RestoreCacheGCSStepInfo = StepSpecType & {
@@ -2180,10 +2662,6 @@ export interface RetryFailureSpecConfig {
   retryIntervals: string[]
 }
 
-export interface RunOnInfraSpec {
-  runsOn: string
-}
-
 export type RunStepInfo = StepSpecType & {
   command: string
   connectorRef?: string
@@ -2203,15 +2681,16 @@ export type RunStepInfo = StepSpecType & {
 export type RunTestsStepInfo = StepSpecType & {
   args: string
   buildEnvironment?: 'Core' | 'Framework'
-  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole'
+  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT'
   connectorRef?: string
+  enableTestSplitting?: boolean
   envVariables?: {
     [key: string]: string
   }
   frameworkVersion?: '5.0' | '6.0'
   image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
-  language: 'Java' | 'Csharp'
+  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp'
   namespaces?: string
   outputVariables?: OutputNGVariable[]
   packages?: string
@@ -2224,11 +2703,11 @@ export type RunTestsStepInfo = StepSpecType & {
   runOnlySelectedTests?: boolean
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
   testAnnotations?: string
+  testSplitStrategy?: 'ClassTiming' | 'TestCount'
 }
 
-export type RunsOnInfra = Infrastructure & {
-  spec: RunOnInfraSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+export interface Runtime {
+  type?: 'Docker' | 'Cloud'
 }
 
 export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
@@ -2286,14 +2765,6 @@ export interface SecurityContext {
   runAsUser?: number
 }
 
-export type SecurityStageConfigImpl = StageInfoConfig & {
-  cloneCodebase?: boolean
-  infrastructure: Infrastructure
-  runsOn?: string
-  serviceDependencies?: DependencyElement[]
-  sharedPaths?: string[]
-}
-
 export type SecurityStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
@@ -2306,6 +2777,7 @@ export type SecurityStepInfo = StepSpecType & {
 
 export interface ServiceDeploymentInfo {
   image?: string
+  serviceId?: string
   serviceName?: string
   serviceTag?: string
 }
@@ -2327,6 +2799,7 @@ export interface StageElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
+  skipInstances?: boolean
   spec?: StageInfoConfig
   strategy?: StrategyConfig
   tags?: {
@@ -2392,6 +2865,10 @@ export interface StrategyConfig {
   repeat?: HarnessForConfig
 }
 
+export interface StrategyExpansionData {
+  maxConcurrency?: number
+}
+
 export type StringNGVariable = NGVariable & {
   default?: string
   name?: string
@@ -2409,7 +2886,14 @@ export type TagBuildSpec = BuildSpec & {
 }
 
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -2430,12 +2914,14 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 export interface TemplateLinkConfig {
   templateInputs?: JsonNode
   templateRef: string
+  templateVariables?: JsonNode
   versionLabel?: string
 }
 
 export interface TemplateResponse {
   accountId: string
   childType?: string
+  connectorRef?: string
   description?: string
   entityValidityDetails?: EntityValidityDetails
   gitDetails?: EntityGitDetails
@@ -2445,10 +2931,18 @@ export interface TemplateResponse {
   orgIdentifier?: string
   projectIdentifier?: string
   stableTemplate?: boolean
+  storeType?: 'INLINE' | 'REMOTE'
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2560,6 +3054,7 @@ export type VmPoolYaml = VmInfraSpec & {
 export interface VmPoolYamlSpec {
   harnessImageConnectorRef?: string
   identifier?: string
+  initTimeout?: string
   os?: 'Linux' | 'MacOS' | 'Windows'
   poolName?: string
 }
@@ -2573,6 +3068,7 @@ export interface WebhookBaseAttributes {
   authorName?: string
   before?: string
   link?: string
+  mergeSha?: string
   message?: string
   ref?: string
   sender?: string
@@ -2621,7 +3117,19 @@ export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
 export interface YamlSchemaMetadata {
   featureFlags?: string[]
   featureRestrictions?: string[]
-  modulesSupported?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
+  modulesSupported?: (
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'CHAOS'
+  )[]
   namespace?: string
   yamlGroup: YamlGroup
 }
@@ -2630,7 +3138,7 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -2993,7 +3501,7 @@ export const getExecutionConfigPromise = (
   )
 
 export interface GetCustomerConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
   overridesOnly: boolean
   accountIdentifier: string
 }
@@ -3043,7 +3551,7 @@ export const getCustomerConfigPromise = (
   )
 
 export interface GetDefaultConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
 }
 
 export type GetDefaultConfigProps = Omit<
@@ -3091,7 +3599,7 @@ export const getDefaultConfigPromise = (
   )
 
 export interface ResetExecutionConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
   accountIdentifier: string
 }
 
@@ -3149,7 +3657,7 @@ export const resetExecutionConfigPromise = (
   )
 
 export interface UpdateExecutionConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
   accountIdentifier: string
 }
 
@@ -3205,31 +3713,6 @@ export const updateExecutionConfigPromise = (
     props,
     signal
   )
-
-export type GetCIHealthStatusProps = Omit<GetProps<RestResponseString, unknown, void, void>, 'path'>
-
-/**
- * get health for CI service
- */
-export const GetCIHealthStatus = (props: GetCIHealthStatusProps) => (
-  <Get<RestResponseString, unknown, void, void> path={`/health`} base={getConfig('ci')} {...props} />
-)
-
-export type UseGetCIHealthStatusProps = Omit<UseGetProps<RestResponseString, unknown, void, void>, 'path'>
-
-/**
- * get health for CI service
- */
-export const useGetCIHealthStatus = (props: UseGetCIHealthStatusProps) =>
-  useGet<RestResponseString, unknown, void, void>(`/health`, { base: getConfig('ci'), ...props })
-
-/**
- * get health for CI service
- */
-export const getCIHealthStatusPromise = (
-  props: GetUsingFetchProps<RestResponseString, unknown, void, void>,
-  signal?: RequestInit['signal']
-) => getUsingFetch<RestResponseString, unknown, void, void>(getConfig('ci'), `/health`, props, signal)
 
 export interface GetPartialYamlSchemaQueryParams {
   accountIdentifier: string
@@ -3339,9 +3822,11 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
+    | 'CustomDeployment'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -3349,6 +3834,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -3359,12 +3845,12 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
     | 'BuildAndPushECR'
-    | 'BuildAndPushACR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
     | 'DeleteStack'
@@ -3377,9 +3863,25 @@ export interface GetStepYamlSchemaQueryParams {
     | 'StrategyNode'
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
+    | 'FetchInstanceScript'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
+    | 'AzureCreateARMResource'
+    | 'BuildAndPushACR'
+    | 'AzureCreateBPResource'
+    | 'AzureARMRollback'
+    | 'Background'
+    | 'Wait'
+    | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   yamlGroup?: string
 }
 

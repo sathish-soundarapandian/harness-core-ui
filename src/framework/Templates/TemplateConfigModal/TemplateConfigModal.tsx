@@ -50,8 +50,6 @@ import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from '../templates'
 import css from './TemplateConfigModal.module.scss'
 
@@ -74,6 +72,7 @@ export interface PromiseExtraArgs {
   updatedGitDetails?: EntityGitDetails
   comment?: string
   storeMetadata?: StoreMetadata
+  disableCreatingNewBranch?: boolean
 }
 
 export enum Intent {
@@ -92,6 +91,7 @@ export interface ModalProps {
   disabledFields?: Fields[]
   allowScopeChange?: boolean
   lastPublishedVersion?: string
+  disableCreatingNewBranch?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
 }
 
@@ -141,7 +141,8 @@ const BasicTemplateDetails = (
     disabledFields = [],
     promise,
     lastPublishedVersion,
-    onFailure
+    onFailure,
+    disableCreatingNewBranch
   } = props
   const pathParams = useParams<TemplateStudioPathProps>()
   const { orgIdentifier, projectIdentifier } = pathParams
@@ -150,7 +151,6 @@ const BasicTemplateDetails = (
     gitSyncEnabledOnlyForFF,
     supportingTemplatesGitx
   } = useAppStore()
-  const isTemplateGitxAccountEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATE_GITX_ACCOUNT_ORG)
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const formName = `create${initialValues.type}Template`
   const [loading, setLoading] = React.useState<boolean>()
@@ -171,10 +171,20 @@ const BasicTemplateDetails = (
   const cardDisabledStatus = React.useMemo(
     () =>
       intent === Intent.EDIT ||
-      !!props.disabledFields?.includes(Fields.StoreType) ||
-      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type) ||
-      (!isTemplateGitxAccountEnabled && selectedScope !== Scope.PROJECT),
-    [initialValues.type, intent, isTemplateGitxAccountEnabled, props.disabledFields, selectedScope]
+      !!disabledFields?.includes(Fields.StoreType) ||
+      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type),
+    [initialValues.type, intent, disabledFields]
+  )
+
+  const gitDisabledFields = pick(
+    disabledFields?.reduce((fields: Record<string, boolean>, field: string) => {
+      fields[field] = true
+      return fields
+    }, {}),
+    Fields.ConnectorRef,
+    Fields.RepoName,
+    Fields.Branch,
+    Fields.FilePath
   )
 
   React.useImperativeHandle(
@@ -246,6 +256,7 @@ const BasicTemplateDetails = (
       const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
+        disableCreatingNewBranch,
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
@@ -283,17 +294,6 @@ const BasicTemplateDetails = (
             unset(draft, 'branch')
           }
         }
-        if (!isTemplateGitxAccountEnabled) {
-          if (value === Scope.PROJECT) {
-            Object.assign(draft, pick(formInitialValues, 'connectorRef', 'repo', 'branch', 'storeType', 'filePath'))
-          } else {
-            draft.storeType = GitStoreType.INLINE
-            unset(draft, 'connectorRef')
-            unset(draft, 'repo')
-            unset(draft, 'branch')
-            unset(draft, 'filePath')
-          }
-        }
       })
     )
   }
@@ -325,12 +325,13 @@ const BasicTemplateDetails = (
   }, [formInitialValues])
 
   const gitxValidationSchema = supportingTemplatesGitx ? gitSyncFormSchema(getString) : {}
-  const gitsyncValidationSchema = isGitSyncEnabled
-    ? {
-        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-      }
-    : {}
+  const gitsyncValidationSchema =
+    isGitSyncEnabled && selectedScope === Scope.PROJECT
+      ? {
+          repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+          branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+        }
+      : {}
 
   return (
     <Container
@@ -397,7 +398,7 @@ const BasicTemplateDetails = (
                         />
                         <FormInput.Text
                           name="versionLabel"
-                          placeholder={getString('templatesLibrary.createNewModal.versionPlaceholder')}
+                          placeholder={getString('common.template.createNewModal.versionPlaceholder')}
                           label={getString('common.versionLabel')}
                           disabled={disabledFields.includes(Fields.VersionLabel) || isReadonly}
                           className={css.gitFormFieldWidth}
@@ -477,6 +478,7 @@ const BasicTemplateDetails = (
                             isEdit={intent === Intent.EDIT}
                             initialValues={formInitialValues}
                             entityScope={getScopeFromDTO(formik.values)}
+                            disableFields={gitDisabledFields}
                           />
                         )}
                       </>

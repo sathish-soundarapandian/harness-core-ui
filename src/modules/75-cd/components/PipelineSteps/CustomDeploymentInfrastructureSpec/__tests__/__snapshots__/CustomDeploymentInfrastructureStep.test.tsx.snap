@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Custom Deployment Infrastructure Spec snapshot Should render edit view with empty initial values 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main ng-tooltip-native StyledProps--font-variation-h6"
+              data-tooltip-id="updateInfraVariablesDT"
+            />
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow infraSections"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main lastRow StyledProps--flex StyledProps--flex-alignItems-center StyledProps--margin-top-medium"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="allowSimultaneousDeployments-0"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox simultaneousDeployment StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="allowSimultaneousDeployments"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="customDeploymentAllowSimultaneousDeployments"
+                  >
+                    cd.allowSimultaneousDeployments
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Custom Deployment Infrastructure Spec snapshot Should render edit view with values and some runtime variable calues 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main ng-tooltip-native StyledProps--font-variation-h6"
+              data-tooltip-id="updateInfraVariablesDT"
+            />
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow infraSections"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main lastRow StyledProps--flex StyledProps--flex-alignItems-center StyledProps--margin-top-medium"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="allowSimultaneousDeployments-0"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox simultaneousDeployment StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="allowSimultaneousDeployments"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="customDeploymentAllowSimultaneousDeployments"
+                  >
+                    cd.allowSimultaneousDeployments
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Custom Deployment Infrastructure Spec snapshot Should render variable view 1`] = `<div />`;

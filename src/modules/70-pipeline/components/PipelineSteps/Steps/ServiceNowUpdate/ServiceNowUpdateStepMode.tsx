@@ -24,6 +24,7 @@ import {
   AllowedTypes
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
+import { ALLOWED_VALUES_TYPE, VALIDATORS, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import {
@@ -46,7 +47,6 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ServiceNowDynamicFieldsSelector } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowDynamicFieldsSelector'
 import { ServiceNowFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
@@ -329,6 +329,8 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+            allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
           />
         )}
       </div>
@@ -502,7 +504,7 @@ function FormContent({
                       value={formik.values.spec.description || ''}
                       type="String"
                       variableName="spec.description"
-                      showRequiredField={true}
+                      showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
                       onChange={value => formik.setFieldValue('spec.description', value)}
@@ -523,7 +525,7 @@ function FormContent({
                       value={formik.values.spec.shortDescription || ''}
                       type="String"
                       variableName="spec.shortDescription"
-                      showRequiredField={true}
+                      showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
                       onChange={value => formik.setFieldValue('spec.shortDescription', value)}

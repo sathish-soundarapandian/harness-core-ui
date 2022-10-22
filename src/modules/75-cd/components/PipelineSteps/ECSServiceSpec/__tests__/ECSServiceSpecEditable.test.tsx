@@ -150,7 +150,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     const taskDefinitionSection = getByTestId('task-definition-card')
-    const addTaskDefinitionBtn = within(taskDefinitionSection).getByText('common.plusAddName')
+    const addTaskDefinitionBtn = within(taskDefinitionSection).getByText('common.addName')
     expect(addTaskDefinitionBtn).toBeDefined()
     fireEvent.click(addTaskDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
@@ -184,7 +184,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     const serviceDefinitionSection = getByTestId('service-definition-card')
-    const addServiceDefinitionBtn = within(serviceDefinitionSection).getByText('common.plusAddName')
+    const addServiceDefinitionBtn = within(serviceDefinitionSection).getByText('common.addName')
     expect(addServiceDefinitionBtn).toBeDefined()
     fireEvent.click(addServiceDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
@@ -217,8 +217,8 @@ describe('ManifestSelection tests for ECS', () => {
       </TestWrapper>
     )
 
-    const scallingPolicyDefinitionSection = getByTestId('scalling-policy-definition-card')
-    const addScallingPolicyDefinitionBtn = within(scallingPolicyDefinitionSection).getByText('common.plusAddName')
+    const scallingPolicyDefinitionSection = getByTestId('scaling-policy-definition-card')
+    const addScallingPolicyDefinitionBtn = within(scallingPolicyDefinitionSection).getByText('common.addName')
     expect(addScallingPolicyDefinitionBtn).toBeDefined()
     fireEvent.click(addScallingPolicyDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
@@ -255,7 +255,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     const scalableTargetDefinitionSection = getByTestId('scalable-target-definition-card')
-    const addscalableTargetDefinitionBtn = within(scalableTargetDefinitionSection).getByText('common.plusAddName')
+    const addscalableTargetDefinitionBtn = within(scalableTargetDefinitionSection).getByText('common.addName')
     expect(addscalableTargetDefinitionBtn).toBeDefined()
     fireEvent.click(addscalableTargetDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
@@ -274,7 +274,7 @@ describe('ManifestSelection tests for ECS', () => {
     })
   })
 
-  test('for Amazon ECS deployment type, add EcsScalableTargetDefinition manifest', async () => {
+  test('for Amazon ECS deployment type, only expected add manifest buttons should appear', async () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
@@ -292,7 +292,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     // There should be only 2 Add buttons because EcsTaskDefinition and EcsServiceDefinition allows only 1 manifest addition
-    const allPlusAddManifestButtons = await findAllByText(/common.plusAddName/)
+    const allPlusAddManifestButtons = await findAllByText(/common.addName/)
     expect(allPlusAddManifestButtons).toHaveLength(2)
 
     // Check if section is rendered with correct header and list items
@@ -406,37 +406,6 @@ describe('ManifestSelection tests for ECS', () => {
     })
   })
 
-  test('delete EcsScalingPolicyDefinition manifest', async () => {
-    const updateStage = jest.fn()
-    pipelineContextECSManifests.updateStage = updateStage
-
-    const { getByText, container, getAllByText } = render(
-      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
-        <PipelineContext.Provider value={pipelineContextECSManifests}>
-          <ECSServiceSpecEditable
-            initialValues={{
-              isReadonlyServiceMode: false
-            }}
-            readonly={false}
-          />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-
-    // Check if required manifest sections are present then Click Delete button of Scalling Policy manifest
-    expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
-    expect(getByText('ScallingPolicy_Manifest')).toBeInTheDocument()
-    const deleteButtons = container.querySelectorAll('[data-icon="main-trash"]')
-    expect(deleteButtons).toHaveLength(4)
-    const scallingPolicyManifestDeleteButton = deleteButtons[2]
-    expect(scallingPolicyManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(scallingPolicyManifestDeleteButton)
-
-    await waitFor(() => {
-      expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsScallingPolicyManifestDelete)
-    })
-  })
-
   test('delete EcsScalableTargetDefinition manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
@@ -459,12 +428,43 @@ describe('ManifestSelection tests for ECS', () => {
     expect(getByText('ScalableTarget_Manifest')).toBeInTheDocument()
     const deleteButtons = container.querySelectorAll('[data-icon="main-trash"]')
     expect(deleteButtons).toHaveLength(4)
-    const scalableTargetManifestDeleteButton = deleteButtons[3]
+    const scalableTargetManifestDeleteButton = deleteButtons[2]
     expect(scalableTargetManifestDeleteButton).toBeInTheDocument()
     userEvent.click(scalableTargetManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsScalableTargetManifestDelete)
+    })
+  })
+
+  test('delete EcsScalingPolicyDefinition manifest', async () => {
+    const updateStage = jest.fn()
+    pipelineContextECSManifests.updateStage = updateStage
+
+    const { getByText, container, getAllByText } = render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
+        <PipelineContext.Provider value={pipelineContextECSManifests}>
+          <ECSServiceSpecEditable
+            initialValues={{
+              isReadonlyServiceMode: false
+            }}
+            readonly={false}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    // Check if required manifest sections are present then Click Delete button of Scalling Policy manifest
+    expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
+    expect(getByText('ScallingPolicy_Manifest')).toBeInTheDocument()
+    const deleteButtons = container.querySelectorAll('[data-icon="main-trash"]')
+    expect(deleteButtons).toHaveLength(4)
+    const scallingPolicyManifestDeleteButton = deleteButtons[3]
+    expect(scallingPolicyManifestDeleteButton).toBeInTheDocument()
+    userEvent.click(scallingPolicyManifestDeleteButton)
+
+    await waitFor(() => {
+      expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsScallingPolicyManifestDelete)
     })
   })
 
@@ -572,7 +572,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     // Two Add buttons should be visible (Scalling Policy and Scalable Target sections)
-    const allPlusAddManifestButtons = await findAllByText(/common.plusAddName/)
+    const allPlusAddManifestButtons = await findAllByText(/common.addName/)
     expect(allPlusAddManifestButtons).toHaveLength(2)
 
     // Check header of each manifest section card
@@ -582,10 +582,10 @@ describe('ManifestSelection tests for ECS', () => {
     expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
 
     // Check if + Add Primary Artifact button is disabled
-    const addPrimaryArtifactBtn = getByText('pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryArtifactBtn = getByText('pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryArtifactBtn).toBeInTheDocument()
     // Check if + Add Sidecar button is disabled
-    const addSidecarBtn = getByText('pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarBtn = getByText('pipeline.artifactsSelection.addSidecar')
     expect(addSidecarBtn).toBeInTheDocument()
 
     // Check if Variable section is rendered

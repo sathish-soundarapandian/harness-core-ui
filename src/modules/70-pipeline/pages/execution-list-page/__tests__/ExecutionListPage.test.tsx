@@ -10,8 +10,8 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
 import { useGetListOfExecutions } from 'services/pipeline-ng'
+import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
 import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
 import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
@@ -133,9 +133,9 @@ describe('ExecutionListPage', () => {
       </TestWrapper>
     )
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
-    const noScansText = await screen.findByText('stoSteps.noScansText')
+    const noScansText = await screen.findByText('sto.noScansText')
     expect(noScansText).toBeInTheDocument()
-    expect(screen.getByText('stoSteps.noScansRunPipelineText')).toBeInTheDocument()
+    expect(screen.getByText('sto.noScansRunPipelineText')).toBeInTheDocument()
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'sto' }) })
     )

@@ -51,12 +51,8 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const {
     state: { selectorData }
   } = useTemplateSelectorContext()
-  const {
-    templateType = '',
-    allChildTypes = [],
-    selectedTemplate: defaultTemplate,
-    gitDetails = {}
-  } = selectorData || {}
+  const { templateType = '', filterProperties, selectedTemplate: defaultTemplate, gitDetails = {} } = selectorData || {}
+  const { childTypes = [], templateIdentifiers } = filterProperties || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
@@ -72,8 +68,9 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [selectedChildType, setSelectedChildType] = React.useState<string | undefined>(
-    allChildTypes.length === 1 ? allChildTypes[0] : undefined
+    childTypes.length === 1 ? childTypes[0] : undefined
   )
+  const [selectedTemplateRefs, setSelectedTemplateRefs] = React.useState<string[] | undefined>(templateIdentifiers)
   const scopeOptions: SelectOption[] = React.useMemo(
     () => getScopeOptions(getScopeFromDTO(params), getString),
     [params]
@@ -96,9 +93,19 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     return {
       filterType: 'Template',
       templateEntityTypes: [templateType],
-      childTypes: selectedChildType ? [selectedChildType] : allChildTypes
+      childTypes: selectedChildType ? [selectedChildType] : childTypes,
+      templateIdentifiers: selectedTemplateRefs,
+      ...(!supportingTemplatesGitx
+        ? {
+            listingScope: {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier
+            }
+          }
+        : {})
     }
-  }, [templateType, selectedChildType, allChildTypes])
+  }, [templateType, selectedChildType, childTypes, selectedTemplateRefs])
 
   const queryParams = React.useMemo(() => {
     return {
@@ -123,9 +130,10 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     if (searchParam) {
       searchRef.current.clear()
     }
-    setSelectedChildType(allChildTypes.length === 1 ? allChildTypes[0] : undefined)
+    setSelectedChildType(childTypes.length === 1 ? childTypes[0] : undefined)
     setSelectedScope(scopeOptions[0])
-  }, [searchParam, searchRef.current, allChildTypes])
+    setSelectedTemplateRefs(templateIdentifiers)
+  }, [searchParam, searchRef.current, childTypes, templateIdentifiers])
 
   const getName = React.useCallback(
     (item: string): string => {
@@ -143,13 +151,13 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
 
   const dropdownItems = React.useMemo(
     (): SelectOption[] =>
-      allChildTypes
+      childTypes
         .map(item => ({
           label: getName(item),
           value: item
         }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-    [allChildTypes, getName]
+    [childTypes, getName]
   )
 
   const {

@@ -32,7 +32,6 @@ describe('test cases for recommendation details', () => {
           }
           histogramData={MockHistogramData as RecommendationItem}
           timeRange={{ value: TimeRangeType.LAST_7, label: TimeRange.LAST_7 }}
-          timeRangeFilter={['2022-02-02T00:00:00Z', '2022-02-08T03:18:24Z']}
           currentContainer={1}
           totalContainers={1}
         />
@@ -59,7 +58,6 @@ describe('test cases for recommendation details', () => {
           }
           histogramData={MockHistogramData as RecommendationItem}
           timeRange={{ value: TimeRangeType.LAST_7, label: TimeRange.LAST_7 }}
-          timeRangeFilter={['2022-02-02T00:00:00Z', '2022-02-08T03:18:24Z']}
           currentContainer={1}
           totalContainers={2}
         />

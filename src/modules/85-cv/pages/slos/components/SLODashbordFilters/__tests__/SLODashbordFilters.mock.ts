@@ -19,11 +19,13 @@ export const filterItemData = {
     }
   },
   monitoredServices: {
-    data: [
-      {
-        name: 'm1',
-        identifier: 'm1'
-      }
-    ]
+    data: {
+      content: [
+        {
+          name: 'm1',
+          identifier: 'm1'
+        }
+      ]
+    }
   }
 }

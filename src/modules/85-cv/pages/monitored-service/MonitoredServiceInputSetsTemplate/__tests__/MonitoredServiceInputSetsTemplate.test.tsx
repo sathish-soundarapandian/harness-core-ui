@@ -12,8 +12,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as templateService from 'services/template-ng'
 import * as cvServices from 'services/cv'
 import MonitoredServiceInputSetsTemplate from '../MonitoredServiceInputSetsTemplate'
-import { pathList, spec, templateYamlData } from './MonitoredServiceInputSetsTemplate.mock'
-import { getLabelByName, getNestedRuntimeInputs } from '../MonitoredServiceInputSetsTemplate.utils'
+import { pathList, spec, templateYamlData, templateYamlDataGCO } from './MonitoredServiceInputSetsTemplate.mock'
+import { getLabelByName, getNestedRuntimeInputs, getPathForKey } from '../MonitoredServiceInputSetsTemplate.utils'
 import * as InputSetUtils from '../MonitoredServiceInputSetsTemplate.utils'
 
 jest.mock('services/template-ng', () => ({
@@ -214,9 +214,71 @@ describe('Test MonitoredServiceInputSetsTemplate', () => {
     expect(getNestedRuntimeInputs({}, [], 'path')).toEqual([])
   })
 
+  test('should validate getPathForKey', () => {
+    const output = getPathForKey(spec, [], 'path', 'category')
+    expect(output).toEqual([{ name: 'category', path: 'path.metricDefinitions.0.analysis.riskProfile.category' }])
+    expect(getPathForKey({}, [], '', '')).toEqual([])
+  })
+
   test('should validate getLabelByName', () => {
     expect(getLabelByName('applicationName', str => str)).toEqual('cv.monitoringSources.appD.applicationName')
     expect(getLabelByName('category', str => str)).toEqual('Category for cv.monitoringSources.riskCategoryLabel')
     expect(getLabelByName('', str => str)).toEqual('')
+  })
+})
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useQueryParams: jest.fn().mockImplementation(() => ({
+    templateRef:
+      '{"identifier":"gco_logs_runtime","accountId":"-k53qRQAQ1O7DBLb9ACnjQ","orgIdentifier":"cvng","projectIdentifier":"Template_testing","versionLabel":"1"}'
+  }))
+}))
+
+describe('Test MonitoredServiceInputSetsTemplate with GCO', () => {
+  test('should render with ms inputset for GCO metric having runtime query', async () => {
+    jest.clearAllMocks()
+    const refetchSaveTemplateYamlGCO = jest.fn().mockResolvedValue({})
+    jest.spyOn(InputSetUtils, 'validateInputSet').mockReturnValue({})
+    jest.spyOn(cvServices, 'useSaveMonitoredServiceFromYaml').mockReturnValue({
+      mutate: refetchSaveTemplateYamlGCO,
+      cancel: jest.fn(),
+      error: null,
+      loading: false
+    })
+    jest.spyOn(templateService, 'useGetTemplateInputSetYaml').mockReturnValue({
+      data: {
+        correlationId: '69e17be6-aa27-4524-820c-79a1831c1cec',
+        data: 'type: "Application"\nserviceRef: "<+input>"\nsources:\n  healthSources:\n  - identifier: "metric"\n    type: "Stackdriver"\n    spec:\n      connectorRef: "<+input>"\n      metricDefinitions:\n      - identifier: "test"\n        jsonMetricDefinition: "<+input>"\n',
+        metaData: null,
+        status: 'SUCCESS'
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    } as any)
+    jest
+      .spyOn(templateService, 'useGetTemplate')
+      .mockReturnValue({ data: templateYamlDataGCO, refetch: jest.fn(), error: null, loading: false } as any)
+    const { container, getByText } = render(
+      <TestWrapper>
+        <MonitoredServiceInputSetsTemplate />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+
+    const submit = await getByText('submit')
+    await act(() => {
+      const name = container.querySelector(
+        'input[name="sources.healthSources.0.spec.metricDefinitions.0.jsonMetricDefinition"]'
+      ) as HTMLInputElement
+      fireEvent.change(name, {
+        target: {
+          value: '{"dataSets": [{"timeSeriesQuery": "query"}]}'
+        }
+      })
+      fireEvent.click(submit)
+    })
   })
 })

@@ -189,6 +189,7 @@ export class CustomVariables extends Step<CustomVariablesData> {
         ...(!isNil(row.default)
           ? { default: row.type === 'Number' ? parseFloat(row.default as unknown as string) : row.default }
           : {}),
+        ...(!isNil(row.description) ? { description: row.description } : {}),
         value:
           row.type === 'Number' &&
           getMultiTypeFromValue(row.value as unknown as string) === MultiTypeInputType.FIXED &&

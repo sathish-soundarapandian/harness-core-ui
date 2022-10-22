@@ -48,9 +48,9 @@ export function NoTagResults({
   }, [isServerlessDeploymentTypeSelected, getString])
 
   return (
-    <span className={css.padSmall}>
-      <Text lineClamp={1}>{get(tagError, 'data.message', null) || getErrorText()}</Text>
-    </span>
+    <Text className={css.padSmall} lineClamp={1}>
+      {get(tagError, 'data.message', null) || getErrorText()}
+    </Text>
   )
 }
 
@@ -94,6 +94,7 @@ function ArtifactImagePathTagView({
   tagError,
   tagDisabled,
   isArtifactPath,
+  isImagePath = true,
   isServerlessDeploymentTypeSelected
 }: ArtifactImagePathTagViewProps): React.ReactElement {
   const { getString } = useStrings()
@@ -150,10 +151,10 @@ function ArtifactImagePathTagView({
             multiTextInputProps={{ expressions, allowableTypes }}
             onChange={onChangeImageArtifactPath}
           />
-          {getMultiTypeFromValue(formik.values?.artifactPath) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik?.values?.artifactPath) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
-                value={formik.values?.artifactPath}
+                value={formik?.values?.artifactPath}
                 type="String"
                 variableName="artifactPath"
                 showRequiredField={false}
@@ -168,31 +169,33 @@ function ArtifactImagePathTagView({
           )}
         </div>
       ) : (
-        <div className={css.imagePathContainer}>
-          <FormInput.MultiTextInput
-            label={getString('pipeline.imagePathLabel')}
-            name="imagePath"
-            placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-            multiTextInputProps={{ expressions, allowableTypes }}
-            onChange={onChangeImageArtifactPath}
-          />
-          {getMultiTypeFromValue(formik.values?.imagePath) === MultiTypeInputType.RUNTIME && (
-            <div className={css.configureOptions}>
-              <ConfigureOptions
-                value={formik.values?.imagePath}
-                type="String"
-                variableName="imagePath"
-                showRequiredField={false}
-                showDefaultField={false}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue('imagePath', value)
-                }}
-                isReadonly={isReadonly}
-              />
-            </div>
-          )}
-        </div>
+        isImagePath && (
+          <div className={css.imagePathContainer}>
+            <FormInput.MultiTextInput
+              label={getString('pipeline.imagePathLabel')}
+              name="imagePath"
+              placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
+              multiTextInputProps={{ expressions, allowableTypes }}
+              onChange={onChangeImageArtifactPath}
+            />
+            {getMultiTypeFromValue(formik?.values?.imagePath) === MultiTypeInputType.RUNTIME && (
+              <div className={css.configureOptions}>
+                <ConfigureOptions
+                  value={formik?.values?.imagePath}
+                  type="String"
+                  variableName="imagePath"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => {
+                    formik.setFieldValue('imagePath', value)
+                  }}
+                  isReadonly={isReadonly}
+                />
+              </div>
+            )}
+          </div>
+        )
       )}
 
       <div className={css.tagGroup}>
@@ -206,13 +209,13 @@ function ArtifactImagePathTagView({
           className={css.radioGroup}
         />
       </div>
-      {formik.values?.tagType === 'value' ? (
+      {formik?.values?.tagType === 'value' ? (
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             selectItems={tags}
             disabled={tagDisabled}
             helperText={
-              getMultiTypeFromValue(formik.values?.tag) === MultiTypeInputType.FIXED &&
+              getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.FIXED &&
               getHelpeTextForTags(
                 helperTextData(selectedArtifact, formik, connectorIdValue),
                 getString,
@@ -223,7 +226,7 @@ function ArtifactImagePathTagView({
               expressions,
               allowableTypes,
               selectProps: {
-                defaultSelectedItem: formik.values?.tag,
+                defaultSelectedItem: formik?.values?.tag,
                 noResults: (
                   <NoTagResults
                     tagError={tagError}
@@ -244,10 +247,10 @@ function ArtifactImagePathTagView({
             className={css.tagInputButton}
           />
 
-          {getMultiTypeFromValue(formik.values?.tag) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
-                value={formik.values?.tag}
+                value={formik?.values?.tag}
                 type="String"
                 variableName="tag"
                 showRequiredField={false}
@@ -273,10 +276,10 @@ function ArtifactImagePathTagView({
             placeholder={getString('pipeline.artifactsSelection.existingDocker.enterTagRegex')}
             multiTextInputProps={{ expressions, allowableTypes }}
           />
-          {getMultiTypeFromValue(formik.values?.tagRegex) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik?.values?.tagRegex) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
-                value={formik.values?.tagRegex}
+                value={formik?.values?.tagRegex}
                 type="String"
                 variableName="tagRegex"
                 showRequiredField={false}

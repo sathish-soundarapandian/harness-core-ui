@@ -23,7 +23,6 @@ import {
   makeStackedCircleShortName,
   StackedCircleContainer
 } from '@cf/components/StackedCircleContainer/StackedCircleContainer'
-import { NoEnvironment } from '@cf/components/NoEnvironment/NoEnvironment'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
 import { GetAllSegmentsQueryParams, Segment, useDeleteSegment, useGetAllSegments } from 'services/cf'
 import TargetManagementHeader from '@cf/components/TargetManagementHeader/TargetManagementHeader'
@@ -260,25 +259,18 @@ export const SegmentsPage: React.FC = () => {
     }
   }, [clear])
 
-  const content = noEnvironmentExists ? (
-    <Container flex={{ align: 'center-center' }} height="100%">
-      <NoEnvironment
-        onCreated={response => {
-          const { location } = window
-          location.replace(`${location.href}?activeEnvironment=${response?.data?.identifier}`)
-          refetchEnvs()
-        }}
-      />
-    </Container>
-  ) : noSegmentExists ? (
-    <NoSegmentsView
-      onNewSegmentCreated={segmentIdentifier => {
-        gotoSegmentDetailPage(segmentIdentifier)
-        showToaster(getString('cf.messages.segmentCreated'))
-      }}
-    />
-  ) : (
-    <>
+  const content =
+    noEnvironmentExists || noSegmentExists ? (
+      <Container flex={{ align: 'center-center' }} height="100%">
+        <NoSegmentsView
+          onNewSegmentCreated={segmentIdentifier => {
+            gotoSegmentDetailPage(segmentIdentifier)
+            showToaster(getString('cf.messages.segmentCreated'))
+          }}
+          noEnvironment={noEnvironmentExists}
+        />
+      </Container>
+    ) : (
       <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
         <TableV2<Segment>
           columns={columns}
@@ -288,8 +280,7 @@ export const SegmentsPage: React.FC = () => {
           }}
         />
       </Container>
-    </>
-  )
+    )
 
   const displayToolbar = !noEnvironmentExists && (!noSegmentExists || searchTerm)
 

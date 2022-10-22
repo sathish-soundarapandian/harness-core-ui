@@ -7,7 +7,7 @@
 
 import { pick, isString, get } from 'lodash-es'
 import type { IconName, StepProps } from '@wings-software/uicore'
-import { Connectors, EntityTypes } from '@connectors/constants'
+import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
 import type {
   ConnectorInfoDTO,
   GetSecretV2QueryParams,
@@ -25,7 +25,8 @@ import type {
   VaultConnectorDTO,
   AzureKeyVaultConnectorDTO,
   GcpKmsConnectorDTO,
-  ErrorTrackingConnectorDTO
+  ErrorTrackingConnectorDTO,
+  ELKConnectorDTO
 } from 'services/cd-ng'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -75,7 +76,7 @@ export const DelegateInClusterType = {
 
 export const DockerProviderType = {
   DOCKERHUB: 'DockerHub',
-  HARBOUR: 'Harbor',
+  HARBOR: 'Harbor',
   QUAY: 'Quay',
   OTHER: 'Other'
 }
@@ -277,6 +278,31 @@ const getGitApiAccessSpec = (formData: FormData): Record<string, any> => {
     default:
       return {}
   }
+}
+
+export const buildSpotPayload = (formData: FormData) => {
+  const savedData: any = {
+    name: formData.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData.identifier,
+    tags: formData?.tags,
+    type: Connectors.SPOT,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
+      credential: {
+        type: CredTypeValues.ManualConfig,
+        spec: {
+          [formData.accountId.type === ValueType.TEXT ? 'accountId' : 'accountIdRef']: formData.accountId.value,
+          apiTokenRef: formData.apiTokenRef.referenceString
+        }
+      }
+    }
+  }
+
+  return { connector: savedData }
 }
 
 export const buildGithubPayload = (formData: FormData) => {
@@ -643,6 +669,30 @@ export const setupKubFormData = async (connectorInfo: ConnectorInfoDTO, accountI
   return formData
 }
 
+export const setupSpotFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo?.projectIdentifier,
+    orgIdentifier: connectorInfo?.orgIdentifier
+  }
+
+  const authdata = connectorInfo?.spec?.credential?.spec
+  const formData = {
+    accountId:
+      authdata?.accountId || authdata?.accountIdRef
+        ? {
+            value: authdata.accountId || authdata.accountIdRef,
+            type: authdata.accountIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+    apiTokenRef: await setSecretField(authdata?.apiTokenRef, scopeQueryParams),
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
+    delegate: connectorInfo?.spec?.delegateSelectors || undefined
+  }
+
+  return formData
+}
+
 export const setupGCPFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const scopeQueryParams: GetSecretV2QueryParams = {
     accountIdentifier: accountId,
@@ -868,6 +918,24 @@ export const setupAzureFormData = async (connectorInfo: ConnectorInfoDTO, accoun
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 }
+export const setupGCPSecretManagerFormData = async (
+  connectorInfo: ConnectorInfoDTO,
+  accountId: string
+): Promise<FormData> => {
+  const connectorInfoSpec = connectorInfo?.spec
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+  const credentials = await setSecretField(connectorInfoSpec?.credentialsRef, scopeQueryParams)
+  return {
+    credentialsRef: credentials || undefined,
+
+    delegate: connectorInfoSpec?.delegateSelectors || undefined,
+    default: connectorInfoSpec?.default || false
+  }
+}
 
 export const setupAwsKmsFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const connectorInfoSpec = connectorInfo?.spec
@@ -1016,6 +1084,25 @@ export const buildAWSKmsSMPayload = (formData: FormData): ConnectorRequestBody =
       },
       kmsArn: formData?.awsArn?.referenceString,
       region: formData?.region,
+      default: formData.default
+    }
+  }
+  return { connector: savedData }
+}
+
+export const buildGcpSMPayload = (formData: FormData): ConnectorRequestBody => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.GcpSecretManager,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      credentialsRef: formData?.credentialsRef.referenceString,
+
       default: formData.default
     }
   }
@@ -1615,6 +1702,30 @@ export const buildAppDynamicsPayload = (formData: FormData): Connector => {
   return payload
 }
 
+export const buildELKPayload = (formData: FormData): Connector => {
+  const payload: Connector = {
+    connector: {
+      ...pick(formData, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'description', 'tags']),
+      type: Connectors.ELK,
+      spec: {
+        delegateSelectors: formData.delegateSelectors ?? {},
+        authType: formData.authType,
+        url: formData.url
+      } as ELKConnectorDTO
+    }
+  }
+
+  if (formData.authType === ElkAuthType.USERNAME_PASSWORD) {
+    payload.connector!.spec.username = formData.username
+    payload.connector!.spec.passwordRef = formData.password.referenceString
+  } else if (formData.authType === ElkAuthType.API_CLIENT_TOKEN) {
+    payload.connector!.spec.apiKeyId = formData.apiKeyId
+    payload.connector!.spec.apiKeyRef = formData.apiKeyRef.referenceString
+  }
+
+  return payload
+}
+
 export const buildNewRelicPayload = (formData: FormData) => ({
   connector: {
     name: formData.name,
@@ -1950,7 +2061,7 @@ export const setupVaultFormData = async (connectorInfo: ConnectorInfoDTO, accoun
     secretId: secretId || undefined,
     authToken: authToken || undefined,
     sinkPath: connectorInfoSpec?.sinkPath || '',
-    renewalIntervalMinutes: connectorInfoSpec?.renewalIntervalMinutes || 10,
+    renewalIntervalMinutes: connectorInfoSpec?.renewalIntervalMinutes,
     vaultAwsIamRole: connectorInfoSpec.vaultAwsIamRole,
     xvaultAwsIamServerId,
     useAwsIam: connectorInfoSpec.useAwsIam,
@@ -2046,6 +2157,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-servicenow'
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
+    case Connectors.ELK:
+      return 'service-elk'
     case Connectors.ERROR_TRACKING:
       return 'error-tracking'
     case Connectors.AZURE:
@@ -2054,6 +2167,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-jenkins'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
+    case Connectors.GcpSecretManager:
+      return 'gcp-secret-manager'
     default:
       return 'cog'
   }
@@ -2129,6 +2244,10 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Error Tracking'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'Custom Secrets Manager'
+    case Connectors.GcpSecretManager:
+      return 'GCP Secrets Manager'
+    case Connectors.SPOT:
+      return 'Spot'
     default:
       return ''
   }
@@ -2192,6 +2311,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.gcr')
     case Connectors.APP_DYNAMICS:
       return getString('connectors.testConnectionStep.validationText.appD')
+    case Connectors.ELK:
+      return getString('connectors.elk.testConnectionStepValidation')
     case Connectors.SPLUNK:
       return getString('connectors.testConnectionStep.validationText.splunk')
     case Connectors.VAULT:

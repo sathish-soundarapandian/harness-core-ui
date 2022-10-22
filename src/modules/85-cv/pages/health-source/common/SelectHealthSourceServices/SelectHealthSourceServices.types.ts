@@ -6,7 +6,16 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'
+import type { useGetMetricPacks, useGetLabelNames, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
+
+interface HealthSourceServicesFieldNames {
+  sli?: string
+  serviceHealth?: string
+  deploymentVerification?: string
+  riskProfileCategory?: string
+  higherBaselineDeviation?: string
+  lowerBaselineDeviation?: string
+}
 
 export type SelectHealthSourceServicesProps = {
   values: {
@@ -17,7 +26,7 @@ export type SelectHealthSourceServicesProps = {
     riskCategory?: string
     serviceInstanceMetricPath?: string
   }
-  metricPackResponse: ReturnType<typeof useGetMetricPacks>
+  metricPackResponse?: ReturnType<typeof useGetMetricPacks>
   labelNamesResponse?: ReturnType<typeof useGetLabelNames>
   hideServiceIdentifier?: boolean
   hideCV?: boolean
@@ -28,4 +37,7 @@ export type SelectHealthSourceServicesProps = {
   isConnectorRuntimeOrExpression?: boolean
   key?: string
   customServiceInstanceName?: string
+  fieldNames?: Partial<HealthSourceServicesFieldNames>
+  riskProfileCategoryName?: string
+  riskProfileResponse?: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
 }

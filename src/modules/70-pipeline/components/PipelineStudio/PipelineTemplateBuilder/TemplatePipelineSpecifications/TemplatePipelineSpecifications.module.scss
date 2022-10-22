@@ -16,6 +16,10 @@
       min-height: 200px;
     }
   }
+
+  .errorHandler {
+    margin-top: 16px !important;
+  }
   :global {
     .bp3-dialog-container {
       align-items: flex-start !important;

@@ -62,6 +62,23 @@ export const getRiskColorValue = (
   }
 }
 
+export const getRiskColorLogo = (riskStatus?: RiskTypes | SloHealthIndicatorDTO['errorBudgetRisk']): string => {
+  switch (riskStatus) {
+    case RiskValues.HEALTHY:
+      return 'heart'
+    case RiskValues.OBSERVE:
+      return 'warning-icon'
+    case RiskValues.NEED_ATTENTION:
+      return 'warning-sign'
+    case RiskValues.UNHEALTHY:
+      return 'heart-broken'
+    case SLOErrorBudget.EXHAUSTED:
+      return 'remove-minus'
+    default:
+      return 'grid'
+  }
+}
+
 export function getSecondaryRiskColorValue(
   riskStatus?: RiskTypes | SloHealthIndicatorDTO['errorBudgetRisk'],
   realCSSColor = true
@@ -262,4 +279,8 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
     default:
       return key
   }
+}
+
+export const getIsValidPrimitive = <T>(value: T): value is NonNullable<T> => {
+  return value !== undefined && value !== null
 }

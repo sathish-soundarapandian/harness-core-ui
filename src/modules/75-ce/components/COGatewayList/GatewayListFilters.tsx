@@ -44,7 +44,7 @@ import { StringUtils } from '@common/exports'
 import type { FilterDataInterface } from '@common/components/Filter/Constants'
 import { Utils } from '@ce/common/Utils'
 
-interface GatewayListFiltersProps {
+export interface GatewayListFiltersProps {
   applyFilter: (filter?: FilterDTO) => void
   appliedFilter?: FilterDTO
 }

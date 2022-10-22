@@ -36,35 +36,10 @@ describe('LookerEmbeddedDashboard', () => {
       fireEvent(
         window,
         new MessageEvent<string>('message', {
-          data: JSON.stringify(lookerEvent),
-          origin: 'https://dashboards.harness.io'
+          data: JSON.stringify(lookerEvent)
         })
       )
     })
     await waitFor(() => expect(actionCallback).toHaveBeenCalledWith(lookerEvent))
-  })
-
-  test('it should not trigger callback if embedded event is triggered from a different origin', async () => {
-    const actionCallback = jest.fn()
-    render(<LookerEmbeddedDashboard embedUrl="test" onLookerAction={actionCallback} />)
-
-    const lookerEvent: any = {
-      type: 'test',
-      eventData: {
-        dashboard: {
-          dashboard_filters: 'test'
-        }
-      }
-    }
-    await act(async () => {
-      fireEvent(
-        window,
-        new MessageEvent<string>('message', {
-          data: JSON.stringify(lookerEvent),
-          origin: 'www.RandomOrigin.com'
-        })
-      )
-    })
-    expect(actionCallback).not.toHaveBeenCalled()
   })
 })

@@ -39,6 +39,7 @@ import { GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
+import RbacButton from '@rbac/components/Button/Button'
 import { CloudProvider } from '@ce/types'
 import { ConnectorStatus } from '@ce/constants'
 import { useFeature } from '@common/hooks/useFeatures'
@@ -65,6 +66,17 @@ import css from './CloudIntegrationTabs.module.scss'
 const ConnectorNameCell: CustomK8sCell = ({ row, column }) => {
   const k8sConnector = row.original?.k8sConnector?.connector as ConnectorInfoDTO
 
+  const [canUpdate] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CONNECTOR,
+        resourceIdentifier: k8sConnector?.identifier || ''
+      },
+      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
+    },
+    [k8sConnector?.identifier]
+  )
+
   return (
     <Text
       icon="app-kubernetes"
@@ -72,7 +84,9 @@ const ConnectorNameCell: CustomK8sCell = ({ row, column }) => {
       font={{ variation: FontVariation.BODY2 }}
       className={css.nameCell}
       onClick={() => {
-        ;(column as any).openConnectorModal(true, 'K8sCluster', { connectorInfo: k8sConnector })
+        if (canUpdate) {
+          ;(column as any).openConnectorModal(true, 'K8sCluster', { connectorInfo: k8sConnector })
+        }
       }}
       lineClamp={1}
     >
@@ -175,11 +189,15 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
   return (
     <Layout.Horizontal className={css.features}>
       {!ccmk8sConnectorList?.length ? (
-        <Button
+        <RbacButton
           icon="ccm-solid"
           variation={ButtonVariation.SECONDARY}
           className={css.enableCloudCostsBtn}
           text={getString('ce.cloudIntegration.enableCloudCosts')}
+          permission={{
+            permission: PermissionIdentifier.UPDATE_CONNECTOR,
+            resource: { resourceType: ResourceType.CONNECTOR }
+          }}
           onClick={() => {
             openCloudVisibilityModal()
           }}
@@ -214,27 +232,29 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
           {isAutoStoppingEnabled ? (
             <Text {...props}>{getString('common.ce.autostopping')}</Text>
           ) : (
-            <Button
+            <RbacButton
               icon="plus"
               variation={ButtonVariation.SECONDARY}
               className={css.addAutoStoppingBtn}
               text={getString('common.ce.autostopping')}
               onClick={openAutoStoppingModal}
+              permission={{
+                permission: PermissionIdentifier.UPDATE_CONNECTOR,
+                resource: { resourceType: ResourceType.CONNECTOR, resourceIdentifier: ccmk8sConnector?.identifier }
+              }}
             />
           )}
           <FlexExpander />
-          {!isConnectorStatusSuccess ? (
-            <Button
-              icon="repeat"
-              iconProps={{ size: 12 }}
-              variation={ButtonVariation.LINK}
-              text={getString('common.smtp.testConnection')}
-              size={ButtonSize.SMALL}
-              onClick={() => {
-                ;(column as any).openTestConnectionModal({ connector: ccmk8sConnector })
-              }}
-            />
-          ) : null}
+          <Button
+            icon="repeat"
+            iconProps={{ size: 12 }}
+            variation={ButtonVariation.LINK}
+            text={getString('common.smtp.testConnection')}
+            size={ButtonSize.SMALL}
+            onClick={() => {
+              ;(column as any).openTestConnectionModal({ connector: ccmk8sConnector })
+            }}
+          />
         </>
       )}
     </Layout.Horizontal>
@@ -345,7 +365,7 @@ const MenuCell: CustomK8sCell = ({ row, column }) => {
       },
       permissions: [PermissionIdentifier.UPDATE_CONNECTOR, PermissionIdentifier.DELETE_CONNECTOR]
     },
-    []
+    [k8sConnector?.identifier]
   )
 
   const [canUpdateCcmK8sConnector] = usePermission(
@@ -356,7 +376,7 @@ const MenuCell: CustomK8sCell = ({ row, column }) => {
       },
       permissions: [PermissionIdentifier.UPDATE_CONNECTOR, PermissionIdentifier.DELETE_CONNECTOR]
     },
-    []
+    [ccmk8sConnector?.identifier]
   )
 
   return (

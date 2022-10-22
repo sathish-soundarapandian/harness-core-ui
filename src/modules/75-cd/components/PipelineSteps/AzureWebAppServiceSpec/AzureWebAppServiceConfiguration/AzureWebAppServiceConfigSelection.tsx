@@ -24,16 +24,25 @@ import { getIdentifierFromValue, getScopeFromValue } from '@common/components/En
 import AzureWebAppListView from './AzureWebAppServiceConfigListView/AzureWebAppServiceListView'
 import {
   AzureWebAppSelectionProps,
+  AzureWebAppSelectionTypes,
   AzureWebAppsServiceDefinition,
   ModalViewOption
 } from './AzureWebAppServiceConfig.types'
 
-export default function AzureWebAppConfigSelection({
+export default function ApplicationConfigSelection({
   isPropagating,
   deploymentType,
   isReadonlyServiceMode,
   readonly,
-  updateStage
+  updateStage,
+  showApplicationSettings,
+  showConnectionStrings,
+  selectionType,
+  data,
+  handleSubmitConfig,
+  handleDeleteConfig,
+  editServiceOverride,
+  environmentAllowableTypes
 }: AzureWebAppSelectionProps): JSX.Element | null {
   const {
     state: {
@@ -76,30 +85,38 @@ export default function AzureWebAppConfigSelection({
   })
 
   const applicationSettings = useMemo(() => {
-    /* istanbul ignore else */
-    /* istanbul ignore next */
-    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.applicationSettings, {})
-    }
-    if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.applicationSettings', {})
-    }
+    switch (selectionType) {
+      case AzureWebAppSelectionTypes.PIPELINE:
+        if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
+          return defaultTo(serviceInfo?.spec.applicationSettings, {})
+        }
+        if (isPropagating) {
+          return get(stage, 'stage.spec.serviceConfig.stageOverrides.applicationSettings', {})
+        }
 
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.applicationSettings', {})
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage, selectedOption])
+        return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.applicationSettings', {})
+      default:
+        return showApplicationSettings ? data : null
+    }
+  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage, selectedOption, data, selectionType])
 
   const connectionStrings = useMemo(() => {
-    /* istanbul ignore else */
-    /* istanbul ignore next */
-    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec?.connectionStrings, {})
-    }
-    if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.connectionStrings', {})
-    }
+    switch (selectionType) {
+      case AzureWebAppSelectionTypes.PIPELINE:
+        /* istanbul ignore else */
+        /* istanbul ignore next */
+        if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
+          return defaultTo(serviceInfo?.spec?.connectionStrings, {})
+        }
+        if (isPropagating) {
+          return get(stage, 'stage.spec.serviceConfig.stageOverrides.connectionStrings', {})
+        }
 
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.connectionStrings', {})
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage, selectedOption])
+        return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.connectionStrings', {})
+      default:
+        return showConnectionStrings ? data : null
+    }
+  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage, selectedOption, data, selectionType])
 
   useDeepCompareEffect(() => {
     refetchSettingsConnectors()
@@ -174,11 +191,17 @@ export default function AzureWebAppConfigSelection({
     refetchSettingsConnectors: refetchSettingsConnectors,
     isReadonly: readonly,
     deploymentType,
-    allowableTypes,
+    allowableTypes: environmentAllowableTypes ? environmentAllowableTypes : allowableTypes,
     selectedOption,
     setSelectedOption,
     applicationSettings,
-    connectionStrings
+    connectionStrings,
+    showApplicationSettings,
+    showConnectionStrings,
+    selectionType,
+    handleSubmitConfig,
+    handleDeleteConfig,
+    editServiceOverride
   }
   return (
     <Layout.Vertical>

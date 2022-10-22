@@ -15,20 +15,27 @@ declare const styles: {
   readonly configureOptions: string
   readonly connectorContainer: string
   readonly connectorForm: string
+  readonly customArtifactContainer: string
   readonly dockerSideCard: string
   readonly existingDocker: string
   readonly firstep: string
   readonly headerContainer: string
   readonly heading: string
   readonly imagePathContainer: string
+  readonly inputWidth: string
   readonly jenkinsFieldContainer: string
+  readonly label: string
+  readonly marginBottom: string
   readonly optionsViewContainer: string
   readonly optionsViewGrid: string
   readonly padSmall: string
+  readonly panel: string
   readonly radioGroup: string
   readonly squareCardContainer: string
   readonly tagGroup: string
   readonly tagInputButton: string
   readonly thumbnailSelect: string
+  readonly variables: string
+  readonly wrapping: string
 }
 export default styles

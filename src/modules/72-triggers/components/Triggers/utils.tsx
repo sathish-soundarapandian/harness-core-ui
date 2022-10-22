@@ -14,7 +14,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { NGVariable } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import type { AddConditionInterface } from '../AddConditionsSection/AddConditionsSection'
-import type { TriggerConfigDTO } from './WebhookTrigger/WizardInterface'
+import type { TriggerConfigDTO } from './TriggerWizardInterface'
 
 export const GitSourceProviders: Record<
   string,

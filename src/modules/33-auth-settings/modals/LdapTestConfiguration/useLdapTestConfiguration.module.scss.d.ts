@@ -9,5 +9,6 @@
 declare const styles: {
   readonly crossIcon: string
   readonly dialog: string
+  readonly layoutErrorMessage: string
 }
 export default styles

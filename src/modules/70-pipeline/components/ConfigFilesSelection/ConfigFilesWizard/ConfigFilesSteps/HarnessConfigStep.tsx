@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput } from '@harness/uicore'
+import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput, Label } from '@harness/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -28,6 +28,7 @@ interface ConfigFilesPropType {
   isEditMode: boolean
   listOfConfigFiles: any[]
   configFileIndex?: number
+  deploymentType?: string
 }
 export function HarnessConfigStep({
   stepName = 'step name',
@@ -37,10 +38,12 @@ export function HarnessConfigStep({
   expressions,
   isEditMode,
   listOfConfigFiles,
-  configFileIndex
+  configFileIndex,
+  deploymentType
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
   const { getString } = useStrings()
   const isEditState = defaultTo(prevStepData.isEditMode, isEditMode)
+  const fileIndex = defaultTo(prevStepData.configFileIndex, configFileIndex)
 
   const [initialValues, setInitialValues] = useState({
     identifier: '',
@@ -79,7 +82,6 @@ export function HarnessConfigStep({
               secretFiles
             }
           }
-          // configOverridePath: formData.configOverridePath
         }
       }
     }
@@ -94,7 +96,7 @@ export function HarnessConfigStep({
             getString('validation.duplicateIdError')
           )
           .required(getString('validation.identifierRequired'))
-      : listOfConfigFiles.map(({ configFile }) => configFile.identifier).indexOf(value) === configFileIndex
+      : listOfConfigFiles.map(({ configFile }) => configFile.identifier).indexOf(value) === fileIndex
       ? Yup.mixed().required(getString('validation.identifierRequired'))
       : Yup.mixed()
           .notOneOf(
@@ -106,7 +108,7 @@ export function HarnessConfigStep({
 
   return (
     <Container className={css.optionsViewContainer}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'xxlarge' }}>
         {stepName}
       </Text>
       {initialValues.store && (
@@ -133,9 +135,9 @@ export function HarnessConfigStep({
             return (
               <Form className={css.configContainer}>
                 <div className={css.headerContainer}>
+                  <Label htmlFor="identifier">{getString('pipeline.configFiles.identifierLabel')}</Label>
                   <FormInput.Text
                     name="identifier"
-                    label={getString('pipeline.configFiles.identifierLabel')}
                     className={css.identifierField}
                     onChange={e => {
                       const { value } = e.target as HTMLInputElement
@@ -145,23 +147,27 @@ export function HarnessConfigStep({
                     }}
                   />
                   {!isEditState && (
-                    <FormInput.RadioGroup
-                      name="fileType"
-                      className={css.selectFileType}
-                      radioGroup={{ inline: true }}
-                      disabled={isEditState}
-                      label={getString('pipeline.configFiles.selectFileType')}
-                      onChange={() => {
-                        formikProps.setFieldValue('files', [''])
-                      }}
-                      items={[
-                        {
-                          label: getString('resourcePage.fileStore'),
-                          value: FILE_TYPE_VALUES.FILE_STORE
-                        },
-                        { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
-                      ]}
-                    />
+                    <>
+                      <Label className={css.fileTypeLabel} htmlFor="fileType">
+                        {getString('pipeline.configFiles.selectFileType')}
+                      </Label>
+                      <FormInput.RadioGroup
+                        name="fileType"
+                        className={css.selectFileType}
+                        radioGroup={{ inline: true }}
+                        disabled={isEditState}
+                        onChange={() => {
+                          formikProps.setFieldValue('files', [''])
+                        }}
+                        items={[
+                          {
+                            label: getString('resourcePage.fileStore'),
+                            value: FILE_TYPE_VALUES.FILE_STORE
+                          },
+                          { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
+                        ]}
+                      />
+                    </>
                   )}
                   <div className={css.multiConfigFile}>
                     <MultiConfigSelectField
@@ -171,14 +177,15 @@ export function HarnessConfigStep({
                       expressions={expressions}
                       values={formikProps.values.files}
                       fileUsage={FileUsage.CONFIG}
+                      deploymentType={deploymentType}
                       multiTypeFieldSelectorProps={{
                         disableTypeSelection: false,
                         label: (
-                          <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
+                          <Label htmlFor="files" className={css.filesLabel}>
                             {formikProps.values.fileType === FILE_TYPE_VALUES.FILE_STORE
                               ? getString('fileFolderPathText')
                               : getString('pipeline.configFiles.encryptedFiles')}
-                          </Text>
+                          </Label>
                         )
                       }}
                     />

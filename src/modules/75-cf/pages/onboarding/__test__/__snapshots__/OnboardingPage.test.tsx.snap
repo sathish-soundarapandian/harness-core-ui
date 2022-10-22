@@ -100,7 +100,7 @@ exports[`OnboardingPage OnboardingPage should be rendered properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800 StyledProps--margin-bottom-huge"
             >
-              cf.onboarding.subtitle
+              cf.onboarding.subTitle
             </p>
             <div
               class="Layout--horizontal StyledProps--main"

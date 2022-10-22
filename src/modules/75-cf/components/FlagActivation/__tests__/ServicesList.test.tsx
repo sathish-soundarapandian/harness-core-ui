@@ -14,6 +14,7 @@ import * as useGetServiceDetailsMock from 'services/cd-ng'
 import * as cfServiceMock from 'services/cf'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockServiceList from './__data__/mockService'
+import mockPaginatedServiceList from './__data__/mockPaginationServices'
 import ServicesList from '../ServicesList'
 
 const refetchFlagMock = jest.fn()
@@ -29,14 +30,11 @@ const renderComponent = (): RenderResult => {
     </TestWrapper>
   )
 }
-
-beforeEach(() => {
-  const { clear } = useToaster()
-  clear()
-  jest.clearAllMocks()
-})
+const patchMock = jest.fn()
 describe('ServiceList', () => {
-  const patchMock = jest.fn()
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
 
   const useGetServiceListMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceList')
   const usePatchServicesMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
@@ -47,6 +45,11 @@ describe('ServiceList', () => {
       data: mockServiceList,
       refetch: jest.fn(),
       error: null
+    } as any)
+
+    usePatchServicesMock.mockReturnValue({
+      loading: false,
+      mutate: patchMock
     } as any)
 
     renderComponent()
@@ -110,7 +113,14 @@ describe('ServiceList', () => {
   })
 
   test('it should show error if patch fails', async () => {
-    usePatchServicesMock.mockReturnValueOnce({
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockServiceList,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
+    usePatchServicesMock.mockReturnValue({
       loading: false,
       mutate: patchMock.mockRejectedValue({ message: 'failed to patch services' })
     } as any)
@@ -140,6 +150,13 @@ describe('ServiceList', () => {
       mutate: patchMock.mockResolvedValue(undefined)
     } as any)
 
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockServiceList,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
     renderComponent()
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
@@ -151,6 +168,9 @@ describe('ServiceList', () => {
   })
 
   test('it should check removed and readded logic', async () => {
+    const { clear } = useToaster()
+    clear()
+
     usePatchServicesMock.mockReturnValue({
       loading: false,
       mutate: patchMock
@@ -191,7 +211,19 @@ describe('ServiceList', () => {
 })
 
 describe('EditServicesModal', () => {
+  beforeEach(() => {
+    const { clear } = useToaster()
+    clear()
+    jest.resetAllMocks()
+
+    usePatchServicesMock.mockReturnValue({
+      loading: false,
+      mutate: patchMock
+    } as any)
+  })
+
   const useGetServiceListMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceList')
+  const usePatchServicesMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
 
   test('it should open, close and render EditServicesModal correctly', async () => {
     useGetServiceListMock.mockReturnValue({
@@ -266,7 +298,7 @@ describe('EditServicesModal', () => {
       loading: false,
       data: mockServiceList,
       refetch: jest.fn(),
-      error: false
+      error: null
     } as any)
 
     renderComponent()
@@ -278,14 +310,14 @@ describe('EditServicesModal', () => {
   })
 
   test('it should show the spinner when loading search results', async () => {
-    renderComponent()
-
     useGetServiceListMock.mockReturnValue({
       data: null,
       loading: true,
       error: null,
       refetch: jest.fn()
     } as any)
+
+    renderComponent()
 
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
@@ -294,8 +326,49 @@ describe('EditServicesModal', () => {
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('it should return searched options', async () => {
+  test('it should show only checked services when selecting dropdown', async () => {
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockServiceList,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
+    renderComponent()
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    const dropdown = screen.getByPlaceholderText('- Select -')
+
+    userEvent.click(dropdown)
+
+    expect(screen.getByText('showAll')).toBeInTheDocument()
+    expect(screen.getByText('common.showSelected')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('common.showSelected'))
+
+    // Only services already associated with a flag should appear
+    await waitFor(() => {
+      expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'My Service 2' })).toBeInTheDocument()
+
+      expect(screen.queryByRole('checkbox', { name: 'Support' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Messages' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Account' })).not.toBeInTheDocument()
+    })
+
+    // searching amongst the already associated services
+    userEvent.type(screen.getByRole('searchbox'), 'My Service 1', { allAtOnce: true })
+
+    await waitFor(() => {
+      expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
+
+      expect(screen.queryByRole('checkbox', { name: 'My Service 2' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Support' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Messages' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Account' })).not.toBeInTheDocument()
+    })
+  })
+
+  test('it should switch between Show all and Show selected dropdown filters', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
       data: mockServiceList,
@@ -306,47 +379,88 @@ describe('EditServicesModal', () => {
     renderComponent()
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    const searchbox = screen.getByRole('searchbox')
-
     await waitFor(() => {
-      expect(searchbox).toBeInTheDocument()
-      expect(screen.getByRole('checkbox', { name: 'Support' })).toBeInTheDocument()
-      expect(screen.getByRole('checkbox', { name: 'Messages' })).toBeInTheDocument()
-      expect(screen.getByRole('checkbox', { name: 'Account' })).toBeInTheDocument()
-      expect(screen.getByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'My Service 2' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Support' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Messages' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'Account' })).toBeInTheDocument()
     })
 
-    userEvent.type(searchbox, 'Support', { allAtOnce: true })
-    expect(searchbox).toHaveValue('Support')
+    userEvent.click(screen.getByPlaceholderText('- Select -'))
 
-    // expect only the searched service to be returned
+    userEvent.click(screen.getByText('common.showSelected'))
+
     await waitFor(() => {
-      expect(screen.getByRole('checkbox', { name: 'Support' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
+      expect(screen.queryByRole('checkbox', { name: 'My Service 2' })).toBeInTheDocument()
 
+      expect(screen.queryByRole('checkbox', { name: 'Support' })).not.toBeInTheDocument()
       expect(screen.queryByRole('checkbox', { name: 'Messages' })).not.toBeInTheDocument()
       expect(screen.queryByRole('checkbox', { name: 'Account' })).not.toBeInTheDocument()
-      expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).not.toBeInTheDocument()
     })
   })
 
-  test('it should return no results message', async () => {
+  test('it should render correct empty state', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
-      data: mockServiceList,
+      data: [],
       refetch: jest.fn(),
-      error: false
+      error: null
+    } as any)
+
+    renderComponent()
+
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'cf.featureFlagDetail.noServices' })).toBeInTheDocument()
+      expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'plus newService' })).toBeInTheDocument()
+    })
+  })
+
+  test('it should render link to take user to create a new Service', async () => {
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: [],
+      refetch: jest.fn(),
+      error: null
     } as any)
 
     renderComponent()
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    const searchbox = screen.getByRole('searchbox')
-    await waitFor(() => expect(searchbox).toBeInTheDocument())
+    userEvent.click(await screen.findByRole('button', { name: 'plus newService' }))
 
-    userEvent.type(searchbox, 'Non existent Service Name', { allAtOnce: true })
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/account/dummy/cv/orgs/dummy/projects/dummy/monitoringservices/setup'
+    )
+  })
+
+  test('it should correctly go to selected paginated page', async () => {
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockPaginatedServiceList,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
+    renderComponent()
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    userEvent.click(screen.getByRole('button', { name: '2' }))
 
     await waitFor(() => {
-      expect(screen.getByText('cf.featureFlagDetail.noServices')).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: '2' })).toBeDisabled
+      expect(screen.getByRole('button', { name: '1' })).not.toBeDisabled
+    })
+
+    userEvent.click(screen.getByRole('button', { name: '1' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: '1' })).toBeDisabled
+      expect(screen.getByRole('button', { name: '2' })).not.toBeDisabled
     })
   })
 })

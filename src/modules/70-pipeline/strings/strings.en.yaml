@@ -1,6 +1,7 @@
 verificationResult: 'Verification result:'
 estimatedTimeRemaining: 'Estimated time remaining:'
 progressPercentage: 'Progress percentage:'
+piplineDiffTitle: pipeline.yaml (saved) ↔ pipeline.yaml (updated)
 clone: Clone Pipeline
 discard: '{{ $.common.discard }}'
 serviceDependencyText: Service Dependency
@@ -47,7 +48,7 @@ parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
 regionPlaceholder: Select Region
-repositoryPlaceholder: <repo-name>.azurecr.io/<image>
+repositoryPlaceholder: <container-registry-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days
 neverRan: This pipeline never ran
@@ -88,6 +89,9 @@ terraformStep:
   workspace: Enter Workspace
 kubernetesStep:
   workload: Enter Workload
+waitStep:
+  validation:
+    duration10SecMinimum: 'Minimum Duration is 10 seconds'
 approvalStep:
   message: 'Approval Message'
   approvers: 'Approver(s)'
@@ -130,8 +134,8 @@ jenkinsStep:
     jobName: Jobname is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
-  unstableStatusAsSuccess: Treat unstable Jenkins status as success
-  useConnectorUrlForJobExecution: Use this URL for job execution
+  unstableStatusAsSuccess: Treat unstable Job status as success
+  useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
@@ -266,6 +270,14 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+serviceNowImportSetStep:
+  stagingTable: Staging Table
+  jsonBody: JSON Body
+  validations:
+    stagingTableRequired: Staging Table is required
+    jsonRequired: JSON is required
+    invalidJson: JSON is not valid
+  fetchingStagingTableNamePlaceholder: Fetching Staging Table Name...
 commonApprovalStep:
   execution:
     allConditionsMsg: 'If all of the following conditions are met:'
@@ -347,6 +359,7 @@ manifestType:
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
+  addValuesYamlPath: Add Values.yaml
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
@@ -405,6 +418,12 @@ failureStrategies:
     StageRollback: Rollback Stage
     ManualIntervention: Manual Intervention
     MarkAsSuccess: Mark As Success
+    MarkedAsSuccess: Marked As Success
+    MarkAsFail: Mark As Fail
+    MarkedAsFail: Marked As Fail
+    PipelineRollback: Rollback Pipeline
+    ProceedWithDefaultValues: Proceed with Default Values
+    StepGroupRollback: Rollback Step Group
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -413,7 +432,7 @@ failureStrategies:
     DelegateProvisioning: Delegate Provisioning Errors
     Unknown: Unknown Errors
     PolicyEvaluationFailure: Policy Evaluation Failures
-    ExecutionInputTimeoutError: Execution-time Inputs Timeout Errors
+    InputTimeoutError: Execution-time Inputs Timeout Errors
   validation:
     arrayOrUndefined: Value must be an array if defined.
     strategyRequired: 'At least 1 strategy is required'
@@ -438,14 +457,15 @@ failureStrategies:
 loopingStrategy:
   title: Looping Strategy
   subTitle: 'Select 1 of the {{maxCount}} looping execution strategy below.'
-  warningText: All the configuration will be lost
+  warningText: All the configuration will be lost.
   learnMore: Learn more about Looping strategies
   deleteModal:
-    title: Are you sure, you want to remove the looping strategy?
-    content: '{{$.pipeline.loopingStrategy.warningText}}'
+    title: Remove looping strategy?
+    content: Are you sure you want to remove this looping strategy? {{$.pipeline.loopingStrategy.warningText}}
   toggleTypeModal:
-    title: Are you sure, you want to switch the looping strategy?
-    content: '{{$.pipeline.loopingStrategy.warningText}}'
+    title: Switch looping strategy?
+    content: Are you sure you want to switch lopping strategy? {{$.pipeline.loopingStrategy.warningText}}
+    switch: Switch
   matrix:
     label: Matrix
     helperText: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
@@ -469,6 +489,7 @@ createPipeline:
 selectOrCreateForm:
   description: '{{$.common.selectAVersion.description}}'
 execution:
+  elapsedTime: 'Elapsed time'
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '
@@ -570,8 +591,8 @@ conditionalExecution:
     success: Execute this {{entity}} if the {{parentEntity}} execution is successful thus far
     all: Always execute this {{entity}}
     failure: Execute this {{entity}} only if prior {{parentEntity}} or {{entity}} failed
-  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to True
-  conditionLabel: Execute only if the following JEXL Condition evaluates to True
+  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to true
+  conditionLabel: Execute only if the following JEXL Condition evaluates to true
   toolTip:
     stageTitle: Conditions for stage execution
     stepTitle: Conditions for step execution
@@ -591,6 +612,8 @@ releaseRepo: Release Repo
 addReleaseRepo: + Add Release Repo Manifest
 releaseRepoStore: Release Repo Store
 runtimeInputsSubmittedMsg: Inputs have been submitted successfully
+packageType: Package Type
+packageTypePlaceholder: Select Package Type
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
   automaticallyExtractedFromText: Automatically extracted from event payload
@@ -606,6 +629,8 @@ artifactTriggerConfigPanel:
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
+  defineArtifactSource: 'Define Artifact Source'
+  defineManifestSource: 'Define Manifest Source'
   selectAnArtifact: 'Select an Artifact Reference'
   selectAManifest: 'Select a Manifest Reference'
   configureArtifactRuntimeInputs: 'Configure {{artifact}} Runtime Inputs'
@@ -627,7 +652,7 @@ dashboards:
   activeDeployments: Active Deployments
   pendingDeployments: Pending Approval/Manual Intervention
   baselineTargets: Target Baselines
-  baselineActivityComingSoon: Baseline target activity coming soon!
+  noTargetBaselines: No Baseline Targets set
   noRepositories: No Repositories found
   noFailedBuilds: No Failed Builds found
   noActiveBuilds: No Active Builds found
@@ -710,7 +735,7 @@ testsReports:
   testCasesExecution: Tests Execution
   testExecutions: Test Executions
   noFailedTestsFound: No failed tests found
-  showOnlyFailedTests: Show only failed tests
+  showAllTests: Show all tests
   hangTight: Hang tight! Report is being generated...
   noTestResults: No test results
   testsWillAppear: Tests will appear here if they were reported or uploaded to Harness.
@@ -721,8 +746,7 @@ testsReports:
   searchByTestName: Search by Test Name
   tiCallToAction:
     header: Did you know you can save time using Test Intelligence?
-    upsellSubText: 'Optimize your tests cycle and reduce build time by using machine learning based Test Intelligence.'
-    utilizeTISubText: 'Reduce test cycle time of your Java application by using machine learning based Test Intelligence.'
+    utilizeTISubText: 'Reduce test cycle time of your Java, .NET, Scala, Kotlin applications by using machine learning based Test Intelligence.'
     addRunTestsStep: Add 'Run Tests step' to your Pipeline
     requiresEnterprisePlan: Requires Enterprise Plan to access Test Intelligence
 uniqueIdentifier: Identifier must be unique
@@ -770,6 +794,8 @@ pipelineSteps:
   deployStageDescription: Deploy services, Serverless functions, or other workloads.
   featureStageDescription: Enable or disable functionality remotely without redeploying code.
   approvalStageDescription: Approve or reject changes during Pipeline progress.
+pipelineChaining:
+  selectPipeline: Select Pipeline
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -780,22 +806,47 @@ infraSpecifications:
   initTimeoutPlaceholder: Enter Init Timeout
   validation:
     requiredExistingStage: Existing stage is a required field
+  selectOs: Select the Operating System
   os: OS
   osTypes:
     windows: Windows
     macos: MacOS
+  selectArchitecture: Select the Architecture
+  architecture: Architecture
+  architectureTypes:
+    amd64: AMD64
+    arm64: ARM64
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
+artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  artifactId: Artifact ID
+  artifactIdPlaceholder: Enter Artifact ID
+  groupId: Group ID
+  groupIdPlaceholder: Enter Group ID
+  extension: Extension
+  extensionPlaceholder: Enter Extension
+  classifier: Classifier
+  classifierPlaceholder: Enter Classifier
+  packageName: Package Name
+  addPrimaryArtifact: Add Primary Artifact
+  addArtifactSource: Add Artifact Source
+  addSidecar: Add Sidecar
+  artifactSourceName: Artifact Source Name
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
+  delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
   repositoryPort: Repository Port
+  artifactsArrayPath: Artifacts Array Path
+  versionPath: Version Path
+  versionPathPlaceholder: Enter Version Path
   repositoryPortPlaceholder: Enter Repository Port
   repositoryPlaceholder: Enter Repository
   artifactType: Artifact Type
   artifactDetails: Artifact Details
+  orgNamePlaceholder: Enter Organization Name
   versionDetails: Version Details
   versionPlaceholder: Enter Version
   versionRegex: Version Regex
@@ -810,21 +861,28 @@ artifactsSelection:
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
+  githubPackageRegistryTitle: Github Package Registry
+  azureArtifactRegistryTitle: Azure Artifact Registry
   existingDocker:
-    sidecarId: Sidecar Identifier
-    sidecarIdPlaceholder: Enter Artifact Identifier
+    sidecarId: Sidecar Name
+    sidecarIdPlaceholder: Enter Artifact Name
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
     noBuild: No build found with given details
+    packageType: Package Type is required
     versionRegex: Version Regex is required
+    packageName: Package Name is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
+    artifactId: Artifact ID is required
+    groupId: Group ID is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
     sidecarId: Sidecar Identifier is required
     repositoryPort: Repository Port is required
+    repositoryFormat: Repository Format is required
     repositoryUrl: Repository URL is required
     repositoryType: Repository Type is required
     artifactDirectory: Artifact Directory is required
@@ -941,12 +999,15 @@ mySecurityTestsText: My Security Tests
 myPipelineRunsText: My Pipeline Runs
 noRegions: No regions found
 noBuckets: No buckets found with given region
+noBucketsFound: No buckets found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
 stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
+  ShellScriptProvision: The Shell Script Provisioner supports custom provisioners or your existing shell script implementations.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
+  Wait: Suspend/Wait the execution for the given amount of time.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
   Queue: Queue pipeline executions to prevent multiple stages or pipelines from requesting the same deployment resources simultaneously.
   K8sRollingRollback: Roll back the workloads deployed by the stage.
@@ -992,10 +1053,19 @@ stepDescription:
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
   mergePR: Merge PR
+  updateReleaseRepo: Update Release Repo
+  fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
-  ECSRollingDeploy: Use a rolling update to schedule new aws instances on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
+  ECSRollingDeploy: Roll out a new ECS service version.
+  ECSRollingRollback: Roll back the ECS service version deployed using the ECS Rolling Deploy step.
+  ECSCanaryDeploy: Deploy a new ECS service version to one instance for validation.
+  ECSCanaryDelete: Delete the ECS service version deployed by the ECS Canary Deploy step.
+  ECSBlueGreenCreateService: Stage a new service version to a target group.
+  ECSBlueGreenSwapTargetGroups: Swap stage and prod routes for a Blue/Green deployment.
+  ECSBlueGreenRollback: Roll back the new ECS service version and upscale the old version to its previous task number.
+  ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
 executionStrategy:
@@ -1058,6 +1128,7 @@ deploymentFrequency: 'Deployment Frequency'
 executionFrequency: 'Execution Frequency'
 retryPipeline: Retry Failed Pipeline
 openInNewTab: Open in new tab
+openPipelineInNewTab: Open Pipeline in new tab
 stagetoRetryFrom: Select the stage that you would like to resume from
 runAllParallelstages: Run all parallel stages
 runFailedStages: Run only failed stages
@@ -1099,6 +1170,7 @@ runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
 noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
+numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironment}} Environment(s)'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
@@ -1173,6 +1245,9 @@ serviceDeploymentTypes:
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
+  customDeployment: Deployment Template
+  serverlessAwsType: Serverless Aws Lambda
+  customDeploy: Custom Deployment
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1204,13 +1279,13 @@ cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is in
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
-  unsyncedTemplateInfo: Some template(s) referenced in this {{entity}} have gone out of sync.
-  updatedTemplateInfo: Some template(s) referenced in this {{entity}} have been updated.
+  unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
+  updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:
   title: Template Error Inspection
   subtitle: Error Trace
-  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced templates.
-  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated templates.
+  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced entities.
+  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated entities.
   originalYamlLabel: Original
   refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
@@ -1259,6 +1334,7 @@ importSuccessMessage: '{{resourceType}} has been imported successfully'
 duplicateImport: This file is already in use. Do you still want to proceed?
 duplicateImportPipeline: This file is already in use by another pipeline. Do you still want to proceed?
 duplicateImportInputset: This file is already in use by another pipeline or input set. Do you still want to proceed?
+duplicateImportTemplate: This file is already in use by another Template. Do you still want to proceed?
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 fieldLabels:
@@ -1268,11 +1344,11 @@ fieldPlaceholders:
 traffic: Traffic
 trafficPercentage: '{{$.pipeline.traffic}} %'
 viewPipeline: View Pipeline
+viewExecution: View Execution
 codeSource: 'Code Source'
 recentExecutions: 'Recent Executions'
 mostRecentDirection: 'Latest one on right side'
 lastExecution: 'Last Execution'
-lastModified: 'Last Modified'
 executionId: Execution Id
 imageTag: 'image: {{image}}'
 fileSource: 'File Source'
@@ -1286,6 +1362,7 @@ appServiceConfig:
     fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Type'
+    overrides: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Overrides'
   connectionStrings:
     name: Connection Strings
     file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
@@ -1293,6 +1370,7 @@ appServiceConfig:
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
+    overrides: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Overrides'
 startupCommand:
   name: Startup Command
   subtitle: 'Specify Azure Web App Startup Command Store Type'
@@ -1305,7 +1383,6 @@ triggerInfo: 'Trigger Info'
 phasesForm:
   phases: 'Phases'
   phase: 'Phase'
-  packageType: 'Package Type'
   addPhase: '+ Add Phase'
   useVerification: 'Use Verification'
   errors:
@@ -1319,11 +1396,14 @@ phasesForm:
     war: 'War'
     rpm: 'Rpm'
     zip: 'Zip'
+  packageTypesWinrm:
+    application: 'IIS Application'
+    website: 'IIS Website'
+    virtualDir: 'IIS Virtual directory'
 draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
-preProduction: 'Pre-Production'
 azureWebApp:
   strategy:
     basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
@@ -1332,3 +1412,27 @@ azureWebApp:
 skipInstances:
   title: 'Skip instances with the same artifact version already deployed'
 selectiveStageExecution: 'Selective stage execution'
+customDeployment:
+  infraDefinitionVariablesTitle: 'Infrastructure Properties'
+  infraVariablesTitle: 'Define the variables to be used in your infrastructure'
+  updateInfraVariablesTitle: 'Update values for variables defined as part of used template'
+  emptyInfraVariablesTitle: 'No variables are defined as part of used template'
+  seeOnlyTemplatesFor: See only templates for {{name}}
+  instanceObjectArrayPath: 'Instance Object Array Path'
+  instanceAttributes: 'Instance Attributes'
+  newAttribute: 'New Attribute'
+  fetchInstancesScript: 'Fetch Instance Script'
+  fetchInstanceScriptHeader: 'Define your script inline or from File Store.'
+  fieldNameLabel: 'Field Name'
+  jsonPathRelativeLabel: 'JSON Path (relative)'
+  fieldNamePlaceholder: 'Enter Field Name'
+  errors:
+    fetchScriptRequired: 'Fetch Instances Script is required'
+    fetchScriptBodyRequired: 'Fetch Instances Script body is required'
+  validations:
+    nameUnique: Field Name should be unique
+step:
+  validation:
+    namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
+runDisabledOnFreeze: Cannot run pipeline due to an active freeze
+viewFreeze: View freeze details

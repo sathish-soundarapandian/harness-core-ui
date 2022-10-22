@@ -104,7 +104,7 @@ describe('EnvironmentDetailsBody', () => {
     renderComponent({ data: hasNoKeys })
 
     expect(screen.getByRole('button', { name: 'plus cf.environments.apiKeys.addKey' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'cf.environments.apiKeys.noKeysFoundTitle' })).toBeInTheDocument()
+    expect(screen.getByTestId('nodata-heading')).toBeInTheDocument()
   })
 
   test('it should not show the copy button and redaction warning when displaying existing keys', async () => {

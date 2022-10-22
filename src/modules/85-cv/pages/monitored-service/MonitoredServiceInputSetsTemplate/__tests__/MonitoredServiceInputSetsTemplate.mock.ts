@@ -79,3 +79,39 @@ export const templateYamlData = {
   metaData: null,
   status: 'SUCCESS'
 }
+
+export const templateYamlDataGCO = {
+  status: 'SUCCESS',
+  data: {
+    accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
+    orgIdentifier: 'cvng',
+    projectIdentifier: 'Template_testing',
+    identifier: 'gco_logs_runtime',
+    name: 'gco logs runtime',
+    description: '',
+    tags: {},
+    yaml: 'template:\n  name: gco logs runtime\n  type: MonitoredService\n  projectIdentifier: Template_testing\n  orgIdentifier: cvng\n  tags: {}\n  spec:\n    serviceRef: <+input>\n    environmentRef: qa3\n    type: Application\n    sources:\n      changeSources:\n        - name: Harness CD Next Gen\n          identifier: harness_cd_next_gen\n          type: HarnessCDNextGen\n          enabled: true\n          category: Deployment\n          spec: {}\n      healthSources:\n        - type: Stackdriver\n          identifier: metric\n          name: metric\n          spec:\n            connectorRef: <+input>\n            feature: Cloud Metrics\n            metricDefinitions:\n              - dashboardName: ""\n                dashboardPath: ""\n                metricName: test\n                metricTags:\n                  - ada\n                identifier: test\n                isManualQuery: true\n                jsonMetricDefinition: <+input>\n                riskProfile:\n                  thresholdTypes: []\n                sli:\n                  enabled: true\n                analysis:\n                  riskProfile:\n                    thresholdTypes: []\n                  liveMonitoring:\n                    enabled: false\n                  deploymentVerification:\n                    enabled: false\n    variables:\n      - name: query\n        type: String\n        value: resource.type="k8s_container" resource.labels.location="us-central1-c"\n  identifier: gco_logs_runtime\n  versionLabel: "1"\n',
+    versionLabel: '1',
+    templateEntityType: 'MonitoredService',
+    childType: 'Application',
+    templateScope: 'project',
+    version: 1,
+    gitDetails: {
+      objectId: null,
+      branch: null,
+      repoIdentifier: null,
+      rootFolder: null,
+      filePath: null,
+      repoName: null,
+      commitId: null,
+      fileUrl: null,
+      repoUrl: null
+    },
+    entityValidityDetails: { valid: true, invalidYaml: null },
+    lastUpdatedAt: 1663047103991,
+    storeType: 'INLINE',
+    stableTemplate: true
+  },
+  metaData: null,
+  correlationId: '458ea1a0-c04d-4180-8e22-5fa4a2511cb8'
+}

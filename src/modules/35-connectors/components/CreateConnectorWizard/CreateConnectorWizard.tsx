@@ -52,12 +52,15 @@ import CreateSumoLogicConnector from '../CreateConnector/SumoLogicConnector/Crea
 import CENGAwsConnector from '../CreateConnector/CENGAwsConnector/CreateCeAwsConnector'
 import CreateCeGcpConnector from '../CreateConnector/CEGcpConnector/CreateCeGcpConnector'
 import CreateCustomHealthConnector from '../CreateConnector/CustomHealthConnector/CreateCustomHealthConnector'
+import CreateElkHealthConnector from '../CreateConnector/ElkConnector/CreateElkConnector'
 import CreateErrorTrackingConnector from '../CreateConnector/ErrorTrackingConnector/CreateErrorTrackingConnector'
 import CreateAzureConnector from '../CreateConnector/AzureConnector/CreateAzureConnector'
 import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
 import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJenkinsConnector'
 import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmConnector'
 import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
+import CreateGCPSecretManager from '../CreateConnector/GCPSecretManager/CreateGCPSecretManager'
+import SpotConnector from '../CreateConnector/SpotConnector/SpotConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -106,7 +109,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { ERROR_TRACKING_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG, SPOT_ELASTIGROUP_NG } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -116,6 +119,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
   switch (type) {
     case Connectors.CUSTOM:
       return <CreateCustomHealthConnector {...commonProps} />
+    case Connectors.ELK:
+      return <CreateElkHealthConnector {...commonProps} />
     case Connectors.KUBERNETES_CLUSTER:
       return <CreateK8sConnector {...commonProps} />
     case Connectors.GIT:
@@ -147,6 +152,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.OciHelmRepo:
       return <OCIHelmConnector {...commonProps} />
     case Connectors.AWS:
+    case Connectors.CLOUD_WATCH:
       return <CreateAWSConnector {...commonProps} />
     case Connectors.AWS_CODECOMMIT:
       return <CreateAWSCodeCommitConnector {...commonProps} />
@@ -185,13 +191,17 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.SERVICE_NOW:
       return <ServiceNowConnector {...commonProps} />
     case Connectors.ERROR_TRACKING:
-      return ERROR_TRACKING_ENABLED ? <CreateErrorTrackingConnector {...commonProps} /> : null
+      return CVNG_ENABLED ? <CreateErrorTrackingConnector {...commonProps} /> : null
     case Connectors.AZURE:
       return <CreateAzureConnector {...commonProps} />
     case Connectors.JENKINS:
       return <CreateJenkinsConnector {...commonProps} />
     case Connectors.CUSTOM_SECRET_MANAGER:
       return <CreateCustomSMConnector {...commonProps} />
+    case Connectors.GcpSecretManager:
+      return PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG ? <CreateGCPSecretManager {...commonProps} /> : null
+    case Connectors.SPOT:
+      return SPOT_ELASTIGROUP_NG ? <SpotConnector {...commonProps} /> : null
     default:
       return null
   }

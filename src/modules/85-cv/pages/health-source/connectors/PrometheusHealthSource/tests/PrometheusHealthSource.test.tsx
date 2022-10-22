@@ -91,7 +91,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
     jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
     jest.spyOn(cvService, 'useGetLabelNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricNames').mockReturnValue({ data: { data: [] } } as any)
-    jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue({ data: { data: [] } } as any)
+    jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric').mockReturnValue({ data: [] } as any)
   })
   beforeEach(() => {
     jest.clearAllMocks()
@@ -140,11 +140,6 @@ describe('Unit tests for PrometheusHealthSource', () => {
 
     await waitFor(() => expect(container.querySelector('input[name="sli"')).toBeInTheDocument())
 
-    // Correct warning message is shown
-    // await waitFor(() =>
-    //   expect(getByText('cv.monitoringSources.gco.mapMetricsToServicesPage.validation.baseline')).not.toBeNull()
-    // )
-
     await waitFor(() =>
       expect(onSubmitMock).toHaveBeenCalledWith(MockManualQueryData, {
         identifier: 'prometheus',
@@ -159,7 +154,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
               analysis: {
                 deploymentVerification: { enabled: false, serviceInstanceFieldName: 'serviceInstanceFieldName' },
                 liveMonitoring: { enabled: false },
-                riskProfile: { category: '', metricType: undefined, thresholdTypes: [] }
+                riskProfile: {}
               },
               envFilter: [{ labelName: 'namespace', labelValue: 'cv-demo' }],
               groupName: 'group1',
@@ -308,7 +303,9 @@ describe('Unit tests for PrometheusHealthSource', () => {
       fireEvent.click(screen.getByText('cv.addNew'))
 
       //expect modal to show and fill out new name
-      await waitFor(() => expect(screen.getByText('cv.monitoringSources.appD.newGroupName')).not.toBeNull())
+      await waitFor(() =>
+        expect(screen.getByText('cv.monitoringSources.prometheus.newPrometheusGroupName')).not.toBeNull()
+      )
       await setFieldValue({
         container: document.body,
         type: InputTypes.TEXTFIELD,

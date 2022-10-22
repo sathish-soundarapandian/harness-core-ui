@@ -172,12 +172,15 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
           <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
         ) : null}
         {disableTypeSelection ? null : (
-          <MultiTypeSelectorButton
-            allowedTypes={allowedTypes}
-            type={type}
-            onChange={handleChange}
-            disabled={disableMultiSelectBtn}
-          />
+          <Container flex className={css.multiSelectContainerWrapper}>
+            <Container className={css.multiConfigBtnWrapper} />
+            <MultiTypeSelectorButton
+              allowedTypes={allowedTypes}
+              type={type}
+              onChange={handleChange}
+              disabled={disableMultiSelectBtn}
+            />
+          </Container>
         )}
       </Container>
     </FormGroup>

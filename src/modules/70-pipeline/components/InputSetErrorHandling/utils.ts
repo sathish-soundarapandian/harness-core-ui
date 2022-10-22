@@ -131,7 +131,7 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
                 queryParams: {
                   accountIdentifier: accountId,
                   orgIdentifier,
-                  pipelineIdentifier,
+                  pipelineIdentifier: pipelineIdentifier ?? get(inputSet, 'pipelineIdentifier'),
                   projectIdentifier,
                   ...(isGitSyncEnabled
                     ? {
@@ -155,7 +155,7 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
               queryParams: {
                 accountIdentifier: accountId,
                 orgIdentifier,
-                pipelineIdentifier,
+                pipelineIdentifier: pipelineIdentifier ?? get(inputSet, 'pipelineIdentifier'),
                 projectIdentifier,
                 ...(isGitSyncEnabled
                   ? {

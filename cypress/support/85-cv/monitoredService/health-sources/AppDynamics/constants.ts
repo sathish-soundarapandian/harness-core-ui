@@ -196,8 +196,10 @@ export const tiersResponse = {
   correlationId: 'c32f423f-f163-49d7-a812-94bfcf7f71a8'
 }
 
+export const basePathCallWithoutTierAndApp =
+  '/cv/api/appdynamics/base-folders?routingId=accountId&accountId=accountId&connectorIdentifier=appdtest&orgIdentifier=default&projectIdentifier=project1&*'
 export const basePathCall =
-  ' /cv/api/appdynamics/base-folders?routingId=accountId&accountId=accountId&connectorIdentifier=appdtest&orgIdentifier=default&projectIdentifier=project1&appName=cv-app&*'
+  '/cv/api/appdynamics/base-folders?routingId=accountId&accountId=accountId&connectorIdentifier=appdtest&orgIdentifier=default&projectIdentifier=project1&appName=cv-app&*'
 export const basePathResponse = {
   status: 'SUCCESS',
   data: [

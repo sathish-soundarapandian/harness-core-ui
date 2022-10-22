@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { QlceViewEntityStatsDataPoint } from 'services/ce/services'
 import PerspectiveGrid, { PerspectiveGridProps } from '../PerspectiveGrid'
@@ -34,5 +34,32 @@ describe('test cases for Perspective Grid', () => {
     expect(getByText('ce.gridColumnSelector')).toBeDefined()
     expect(container.querySelector('[class*="bp3-icon-arrow-down"]')).not.toBeNull()
     expect(container).toMatchSnapshot()
+  })
+
+  test('Should be able to navigate to service drilldown page', async () => {
+    const goToServiceDetails = jest.fn()
+
+    const { getByText } = render(
+      <TestWrapper pathParams={params}>
+        <PerspectiveGrid
+          {...({
+            ...MockResponse,
+            gridData: MockResponse.gridData as QlceViewEntityStatsDataPoint[],
+            groupBy: {
+              fieldId: 'cloudServiceName',
+              fieldName: 'ECS Service Id',
+              identifier: 'CLUSTER',
+              identifierName: 'Cluster'
+            },
+            isClusterOnly: true,
+            goToServiceDetails
+          } as PerspectiveGridProps)}
+        />
+      </TestWrapper>
+    )
+
+    fireEvent.click(getByText(MockResponse.gridData[3].name))
+
+    expect(goToServiceDetails).toHaveBeenCalledWith('ClusterName', 'BigQuery')
   })
 })

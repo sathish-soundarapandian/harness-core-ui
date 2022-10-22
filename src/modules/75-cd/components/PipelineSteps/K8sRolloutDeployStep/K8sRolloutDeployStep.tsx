@@ -19,10 +19,11 @@ import * as Yup from 'yup'
 
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
+import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -38,6 +39,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -127,18 +129,36 @@ function K8RolloutDeployWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
-              <div className={stepCss.divider} />
-              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                <FormMultiTypeCheckboxField
-                  multiTypeTextbox={{ expressions, allowableTypes }}
-                  name="spec.skipDryRun"
-                  label={getString('pipelineSteps.skipDryRun')}
-                  disabled={readonly}
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="optional-config"
+                  summary={getString('common.optionalConfig')}
+                  details={
+                    <>
+                      <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                        <FormMultiTypeCheckboxField
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          name="spec.skipDryRun"
+                          label={getString('pipelineSteps.skipDryRun')}
+                          disabled={readonly}
+                        />
+                      </div>
+                      <div className={cx(stepCss.formGroup, stepCss.md)}>
+                        <FormMultiTypeCheckboxField
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          name="spec.pruningEnabled"
+                          label={getString('cd.steps.common.enableKubernetesPruning')}
+                          disabled={readonly}
+                        />
+                      </div>
+                    </>
+                  }
                 />
-              </div>
+              </Accordion>
             </>
           )
         }}
@@ -154,7 +174,7 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
@@ -163,6 +183,8 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
               expressions,
               disabled: inputSetData?.readonly
             }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
             disabled={inputSetData?.readonly}
           />
         </div>
@@ -176,6 +198,20 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
             }}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
             label={getString('pipelineSteps.skipDryRun')}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.pruningEnabled) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.pruningEnabled`}
+            label={getString('cd.steps.common.enableKubernetesPruning')}
             disabled={inputSetData?.readonly}
             setToFalseWhenEmpty={true}
           />
@@ -302,7 +338,7 @@ export class K8RolloutDeployStep extends PipelineStep<K8RolloutDeployData> {
   protected stepName = 'K8s Rollout Deploy'
   protected stepIcon: IconName = 'rolling'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sRollingDeploy'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected referenceId = 'rollingDeploymentStep'
 
   protected defaultValues: K8RolloutDeployData = {
@@ -311,7 +347,8 @@ export class K8RolloutDeployStep extends PipelineStep<K8RolloutDeployData> {
     type: StepType.K8sRollingDeploy,
     timeout: '10m',
     spec: {
-      skipDryRun: false
+      skipDryRun: false,
+      pruningEnabled: false
     }
   }
 }

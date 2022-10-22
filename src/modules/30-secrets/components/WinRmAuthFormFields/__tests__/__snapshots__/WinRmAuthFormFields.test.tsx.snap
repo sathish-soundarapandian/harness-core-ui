@@ -315,20 +315,6 @@ exports[`Test WinRmAuthFormFields renders winrm form fields with Kerberos auth s
                   />
                   password
                 </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    class="RadioButton--input"
-                    name="tgtGenerationMethod"
-                    type="radio"
-                    value="None"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  secrets.sshAuthFormFields.optionKerbNone
-                </label>
               </div>
             </div>
           </div>
@@ -688,20 +674,6 @@ exports[`Test WinRmAuthFormFields renders winrm form fields with Kerberos auth s
                     class="RadioButton--radioIcon"
                   />
                   password
-                </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    class="RadioButton--input"
-                    name="tgtGenerationMethod"
-                    type="radio"
-                    value="None"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  secrets.sshAuthFormFields.optionKerbNone
                 </label>
               </div>
             </div>

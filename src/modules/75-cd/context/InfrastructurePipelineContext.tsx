@@ -190,7 +190,8 @@ export function InfrastructurePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
-        setTemplateServiceData: noop
+        setTemplateServiceData: noop,
+        setIntermittentLoading: noop
       }}
     >
       {children}

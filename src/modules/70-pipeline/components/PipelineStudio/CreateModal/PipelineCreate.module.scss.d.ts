@@ -8,8 +8,10 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly choosePipelineSetupHeader: string
+  readonly createPipelineButtons: string
   readonly gitSimplificationDivider: string
   readonly pipelineCardWrapper: string
   readonly pipelineCreateForm: string
+  readonly zeroMargin: string
 }
 export default styles

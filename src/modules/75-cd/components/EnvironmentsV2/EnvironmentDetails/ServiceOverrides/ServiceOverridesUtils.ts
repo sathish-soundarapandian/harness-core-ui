@@ -16,7 +16,9 @@ export enum VariableType {
 export enum ServiceOverrideTab {
   VARIABLE = 'variableoverride',
   CONFIG = 'configoverride',
-  MANIFEST = 'manifestoverride'
+  MANIFEST = 'manifestoverride',
+  APPLICATIONSETTING = 'applicationsetting',
+  CONNECTIONSTRING = 'connectionstring'
 }
 
 export const labelStringMap: Record<VariableType, StringKeys> = {

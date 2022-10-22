@@ -20,7 +20,7 @@ import {
   SelectOption
 } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -92,6 +92,7 @@ export default function BaseCustomApproval(props: {
               }
             }
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>
@@ -102,7 +103,6 @@ export default function BaseCustomApproval(props: {
           name="spec.shell"
           label={getString('common.scriptType')}
           placeholder={getString('common.scriptType')}
-          disabled
         />
       </div>
       <div className={cx(stepCss.formGroup)}>
@@ -173,6 +173,7 @@ export default function BaseCustomApproval(props: {
               }
             }
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>
@@ -199,6 +200,7 @@ export default function BaseCustomApproval(props: {
               }
             }
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>

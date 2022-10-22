@@ -46,9 +46,17 @@ module.exports = {
   '/cv/api': {
     target: targetLocalHost ? 'https://localhost:6060' : `${baseUrl}`
   },
+  '/cf/web': {
+    pathRewrite: { '^/cf/web': '' },
+    target: process.env.FF_UI_URL || 'http://localhost:9292'
+  },
   '/cf': {
     target: targetLocalHost ? 'http://localhost:3000' : baseUrl,
     pathRewrite: targetLocalHost ? { '^/cf': '/api/1.0' } : {}
+  },
+  '/ciui': {
+    pathRewrite: { '^/ciui': '' },
+    target: 'https://localhost:9100'
   },
   '/ci': {
     target: targetLocalHost ? 'https://localhost:7171' : baseUrl
@@ -120,12 +128,15 @@ module.exports = {
     pathRewrite: { '^/chaos': '' },
     target: process.env.CHAOS_UI_URL || 'https://localhost:8184'
   },
+  '/et/api': {
+    pathRewrite: { '^/et': '' },
+    target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'
+  },
   '/et': {
     pathRewrite: { '^/et': '' },
     target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'
   },
   '/audit/api': {
-    pathRewrite: { '^/audit/api': '/api' },
     target: targetLocalHost ? 'http://localhost:9005' : baseUrl
   },
   '/auth': {
@@ -135,5 +146,9 @@ module.exports = {
   '/ccmui': {
     pathRewrite: { '^/ccmui': '' },
     target: process.env.CCM_UI_URL || 'https://localhost:8183'
+  },
+  '/tiui': {
+    pathRewrite: { '^/tiui': '' },
+    target: process.env.TI_UI_URL || 'https://localhost:9200'
   }
 }

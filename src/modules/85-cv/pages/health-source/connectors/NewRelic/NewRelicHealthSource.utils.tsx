@@ -64,7 +64,7 @@ export const validateMapping = (
   let errors = {} as any
 
   const metricValueList = Object.values(values?.metricData).filter(val => val)
-  if (!metricValueList.length) {
+  if (!metricValueList.length && !values?.showCustomMetric) {
     errors['metricData'] = getString('cv.monitoringSources.appD.validations.selectMetricPack')
   }
 
@@ -319,10 +319,10 @@ export const shouldRunValidation = ({
 }): boolean =>
   isEdit && hasMetricPacks && validationStatus !== StatusOfValidation.IN_PROGRESS && !isConnectorRuntimeOrExpression
 
-export const shouldFetchApplication = (query?: string, isConnectorRuntimeOrExpression?: boolean) =>
-  query?.trim().length &&
+export const shouldFetchApplication = (query?: string, isConnectorRuntimeOrExpression?: boolean): boolean =>
+  Boolean(query?.trim().length) &&
   !isConnectorRuntimeOrExpression &&
-  getMultiTypeFromValue(query?.trim().length) === MultiTypeInputType.FIXED
+  getMultiTypeFromValue(query?.trim()) === MultiTypeInputType.FIXED
 
 export const persistCustomMetric = ({
   mappedMetrics,

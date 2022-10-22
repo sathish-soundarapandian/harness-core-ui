@@ -28,6 +28,7 @@ import css from './useCreateSSHCredModal.module.scss'
 
 export interface UseCreateSSHCredModalProps {
   onSuccess?: (secret: SecretDTOV2) => void
+  onClose?: () => void
 }
 
 export interface UseCreateSSHCredModalReturn {
@@ -57,14 +58,23 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
         }}
       >
         {view === Views.CREATE ? (
-          <CreateSSHCredWizard {...props} hideModal={hideModal} />
+          <CreateSSHCredWizard
+            {...props}
+            hideModal={() => {
+              props.onClose?.()
+              hideModal()
+            }}
+          />
         ) : (
           <CreateSSHCredWizard
             {...props}
             isEdit={true}
             detailsData={sshData?.detailsData}
             authData={sshData?.authData}
-            hideModal={hideModal}
+            hideModal={() => {
+              props.onClose?.()
+              hideModal()
+            }}
           />
         )}
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />

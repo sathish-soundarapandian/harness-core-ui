@@ -1,0 +1,67 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "accountId": "accountId",
+        "orgIdentifier": "default",
+        "projectIdentifier": "project1",
+        "identifier": "testStepTemplate_Cypress",
+        "name": "testStepTemplate_Cypress",
+        "description": "",
+        "tags": {},
+        "yaml": "template:\n  name: testStepTemplate_Cypress\n  type: Step\n  projectIdentifier: samarthproject\n  orgIdentifier: samarth_org\n  spec:\n    type: Http\n    timeout: 10s\n    spec:\n      url: <+input>\n      method: GET\n      headers: []\n      outputVariables: []\n  identifier: testStepTemplate_Cypress\n  versionLabel: \"212\"\n",
+        "versionLabel": "212",
+        "templateEntityType": "Step",
+        "childType": "Http",
+        "templateScope": "project",
+        "version": 0,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "lastUpdatedAt": 1664047838696,
+        "createdAt": 1664047838696,
+        "stableTemplate": true
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "sorted": true,
+        "unsorted": false,
+        "empty": false
+      },
+      "pageSize": 20,
+      "pageNumber": 0,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "totalPages": 1,
+    "last": true,
+    "totalElements": 2,
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "number": 0,
+    "first": true,
+    "numberOfElements": 2,
+    "size": 20,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "318951ef-13f4-4ff8-9881-69806293a957"
+}

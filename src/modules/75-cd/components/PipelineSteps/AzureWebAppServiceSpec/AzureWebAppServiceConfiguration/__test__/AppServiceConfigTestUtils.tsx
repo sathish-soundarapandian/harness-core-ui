@@ -11,6 +11,7 @@ import pipelineContextMock from '@pipeline/components/ManifestSelection/__tests_
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
 import {
   AzureWebAppSelectionProps,
+  AzureWebAppSelectionTypes,
   ConnectorTypes,
   ModalViewOption,
   WizardStepNames
@@ -21,7 +22,8 @@ export const props: AzureWebAppSelectionProps = {
   isPropagating: true,
   deploymentType: 'AzureWebApp' as any, //todo after swagger integration
   isReadonlyServiceMode: false,
-  readonly: false
+  readonly: false,
+  selectionType: AzureWebAppSelectionTypes.PIPELINE
 }
 export const getLabelProp = (): WizardStepNames => {
   return {
@@ -126,7 +128,9 @@ export const propListView = {
   deploymentType: props.deploymentType,
   selectedOption: ModalViewOption.APPLICATIONSETTING,
   setSelectedOption: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  showApplicationSettings: true,
+  showConnectionStrings: true
 } as any
 
 export const propStepTwo = {

@@ -8,10 +8,13 @@
 import { templatesListCall } from '../../../support/70-pipeline/constants'
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   connectorIdentifier,
   dataLogsIndexes,
@@ -80,38 +83,38 @@ describe('Configure Datadog health source', () => {
 
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
 
     cy.findByRole('button', { name: /Submit/i }).click()
     cy.contains('h3', 'Query Specifications').should('be.visible')
 
-    cy.wait('@getMetrics')
+    cy.wait('@riskCategoryCall')
     cy.wait('@getActiveMetrics')
 
     // Triggering validations.
     cy.findByRole('button', { name: /Submit/i }).click()
     cy.wait(1000)
     // Check for form validations
-    cy.contains('span', 'Group Name is required.').should('be.visible')
-    cy.contains('span', 'Metric is required.').should('be.visible')
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.contains('span', validations.metric).should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
 
     // Adding group name
     cy.addingGroupName('group-1')
 
     // Selecting metric name
     cy.get('input[name="metric"]').should('be.disabled')
-    cy.get('[data-id="metric-2"] input').should('be.disabled')
-    cy.get('[data-id="aggregator-3"] input').should('be.disabled')
-    cy.get('[data-id="metricTags-4"] input').should('be.disabled')
+    cy.get('input[name="aggregator"]').should('be.disabled')
+    cy.get('input[name="metricTags"]').should('be.disabled')
     cy.get('div[class="view-lines"]').type('datadog.agent.python.version{*}.rollup(avg, 60)')
     cy.contains('span', 'Fetch records').click()
     cy.wait(1000)
     cy.mapMetricToServices(true)
     cy.contains('span', 'Fetch records').click()
     // Creating the monitored service with Datadog health source.
-    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByRole('button', { name: /Submit/i }).click({ force: true })
   })
 
   it('Add new Datadog logs health source for a monitored service ', () => {
@@ -139,12 +142,12 @@ describe('Configure Datadog health source', () => {
 
     //triggering validations
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Query is required.').should('be.visible')
-    cy.contains('span', 'Service Instance is required.').should('be.visible')
+    cy.contains('span', validations.query).should('be.visible')
+    cy.contains('span', validations.serviceInstance).should('be.visible')
     cy.contains('p', 'Submit query to see records from Datadog Logs').should('be.visible')
 
     cy.get('div[class="view-lines"]').type('source:browser')
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     //Fetching records
     cy.contains('span', 'Fetch records').click()
@@ -159,7 +162,7 @@ describe('Configure Datadog health source', () => {
     cy.findByRole('button', { name: /Submit/i }).click()
 
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')

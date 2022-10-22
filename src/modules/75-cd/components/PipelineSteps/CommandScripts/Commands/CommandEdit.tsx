@@ -9,21 +9,22 @@ import React from 'react'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Container,
   Formik,
   FormikForm,
   FormInput,
-  AllowedTypes,
   SelectOption
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import { CommandType, commandTypeOptions, CommandUnitType } from '../CommandScriptsTypes'
+import { CommandType, commandTypeOptions, CommandUnitType, LocationType } from '../CommandScriptsTypes'
 import { CopyCommandEdit } from './CopyCommandEdit'
 import { ScriptCommandEdit } from './ScriptCommandEdit'
+import { DownloadArtifactCommandEdit } from './DownloadArtifactCommandEdit'
 import css from './CommandEdit.module.scss'
 
 interface CommandEditProps {
@@ -43,42 +44,61 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
   const validationSchema = Yup.object().shape({
     name: NameSchema({ requiredErrorMsg: getString('validation.nameRequired') }),
     type: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
-    spec: Yup.object().when('type', {
-      is: CommandType.Copy,
-      then: Yup.object().shape({
-        sourceType: Yup.string().trim().required(getString('cd.steps.commands.validation.sourceTypeRequired')),
-        destinationPath: Yup.string().trim().required(getString('cd.steps.commands.validation.destinationPathRequired'))
-      }),
-      otherwise: Yup.object().shape({
-        shell: Yup.string()
-          .trim()
-          .required(getString('common.validation.fieldIsRequired', { name: getString('common.scriptType') })),
-        source: Yup.object().shape({
-          type: Yup.string()
+    spec: Yup.object().when('type', (type: CommandType, schema: any) => {
+      if (type === CommandType.Copy) {
+        return Yup.object().shape({
+          sourceType: Yup.string().trim().required(getString('cd.steps.commands.validation.sourceTypeRequired')),
+          destinationPath: Yup.string()
             .trim()
-            .required(getString('common.validation.fieldIsRequired', { name: getString('typeLabel') })),
-          spec: Yup.object().shape({
-            script: Yup.string()
-              .trim()
-              .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') }))
-          })
-        }),
-        tailFiles: Yup.array().of(
-          Yup.object().shape({
-            tailFile: Yup.string()
-              .trim()
-              .required(
-                getString('common.validation.fieldIsRequired', { name: getString('cd.steps.commands.fileToTail') })
-              ),
+            .required(getString('cd.steps.commands.validation.destinationPathRequired'))
+        })
+      } else if (type === CommandType.DownloadArtifact) {
+        return Yup.object().shape({
+          destinationPath: Yup.string()
+            .trim()
+            .required(getString('cd.steps.commands.validation.destinationPathRequired'))
+        })
+      } else if (type === CommandType.Script) {
+        return Yup.object().shape({
+          shell: Yup.string()
+            .trim()
+            .required(getString('common.validation.fieldIsRequired', { name: getString('common.scriptType') })),
+          source: Yup.object().shape({
+            type: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
+            spec: Yup.object().when('type', {
+              is: LocationType.INLINE,
+              then: Yup.object().shape({
+                script: Yup.string()
+                  .trim()
+                  .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') }))
+              }),
+              otherwise: Yup.object().shape({
+                file: Yup.string()
+                  .trim()
+                  .required(getString('common.validation.fieldIsRequired', { name: getString('common.git.filePath') }))
+              })
+            })
+          }),
+          tailFiles: Yup.array().of(
+            Yup.object().shape({
+              tailFile: Yup.string()
+                .trim()
+                .required(
+                  getString('common.validation.fieldIsRequired', { name: getString('cd.steps.commands.fileToTail') })
+                ),
 
-            tailPattern: Yup.string()
-              .trim()
-              .required(
-                getString('common.validation.fieldIsRequired', { name: getString('cd.steps.commands.patternToSearch') })
-              )
-          })
-        )
-      })
+              tailPattern: Yup.string()
+                .trim()
+                .required(
+                  getString('common.validation.fieldIsRequired', {
+                    name: getString('cd.steps.commands.patternToSearch')
+                  })
+                )
+            })
+          )
+        })
+      }
+      return schema
     })
   })
 
@@ -93,7 +113,11 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
         <FormikForm>
           <Container
             className={css.commandUnitForm}
-            height={formik.values.type === CommandType.Copy ? '300px' : '636px'}
+            height={
+              [CommandType.DownloadArtifact, CommandType.Copy].includes(formik.values.type as CommandType)
+                ? '300px'
+                : '636px'
+            }
             data-testid="command-unit-form-container"
           >
             <Container width={320}>
@@ -116,6 +140,11 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
             {formik.values.type === CommandType.Copy && (
               <CopyCommandEdit formik={formik} allowableTypes={allowableTypes} />
             )}
+
+            {formik.values.type === CommandType.DownloadArtifact && (
+              <DownloadArtifactCommandEdit allowableTypes={allowableTypes} />
+            )}
+
             {formik.values.type === CommandType.Script && (
               <ScriptCommandEdit formik={formik} allowableTypes={allowableTypes} />
             )}

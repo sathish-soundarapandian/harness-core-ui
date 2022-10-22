@@ -10,6 +10,7 @@ import { Container, Icon } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { Column, Row } from 'react-table'
 import { isEqual } from 'lodash-es'
+import { useDeepCompareEffect } from '@common/hooks'
 import type { QlceViewFieldInputInput, QlceViewEntityStatsDataPoint, Maybe } from 'services/ce/services'
 import { ClusterFieldNames } from '@ce/utils/perspectiveUtils'
 import ColumnSelector from './ColumnSelector'
@@ -17,6 +18,23 @@ import { addLegendColorToRow, GridData, getGridColumnsByGroupBy, DEFAULT_COLS } 
 import Grid from './Grid'
 import './test.scss' // will find a alternative
 import css from './PerspectiveGrid.module.scss'
+
+const getColumnSequence = (
+  columnSequence: string[] | undefined,
+  gridData: GridData[],
+  searchParam?: string,
+  gridPageIndex?: number
+): string[] | undefined => {
+  if (searchParam) {
+    return columnSequence
+  }
+
+  if (gridPageIndex === 0) {
+    return gridData.slice(0, 12).map(row => row['id']) as string[]
+  } else {
+    return columnSequence
+  }
+}
 
 export interface PerspectiveGridProps {
   columnSequence?: string[]
@@ -39,7 +57,8 @@ export interface PerspectiveGridProps {
   goToNodeDetails?: (clusterName: string, nodeId: string) => void
   allowExportAsCSV?: boolean
   openDownloadCSVModal?: () => void
-  setGridSearchParam?: React.Dispatch<React.SetStateAction<string>>
+  setGridSearchParam?: (text: string) => void
+  gridSearchParam?: string
   isPerspectiveDetailsPage?: boolean
 }
 
@@ -64,7 +83,8 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
     openDownloadCSVModal,
     setGridSearchParam,
     isPerspectiveDetailsPage,
-    goToServiceDetails
+    goToServiceDetails,
+    gridSearchParam
   } = props
 
   const gridColumns = getGridColumnsByGroupBy(groupBy, isClusterOnly)
@@ -72,13 +92,14 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
 
   const gridData = useMemo(() => {
     if (!fetching && response?.length) {
-      return addLegendColorToRow(response as QlceViewEntityStatsDataPoint[])
+      return addLegendColorToRow(response as QlceViewEntityStatsDataPoint[], columnSequence)
     }
     return []
-  }, [response, fetching])
+  }, [response, fetching, JSON.stringify(columnSequence)])
 
-  useEffect(() => {
-    const newColumnSequence = gridData.slice(0, 12).map(row => row['id'])
+  useDeepCompareEffect(() => {
+    const newColumnSequence = getColumnSequence(columnSequence, gridData, gridSearchParam, gridPageIndex)
+
     if (!isEqual(columnSequence, newColumnSequence) && setColumnSequence) {
       setColumnSequence(newColumnSequence as string[])
     }

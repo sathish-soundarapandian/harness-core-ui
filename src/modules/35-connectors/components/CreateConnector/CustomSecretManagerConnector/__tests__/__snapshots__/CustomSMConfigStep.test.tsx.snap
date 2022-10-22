@@ -181,7 +181,12 @@ exports[`CustomSMConfigStep CustomSMConfigStep - input sets are empty 1`] = `
                 class="bp3-label"
                 for="executionTarget.connectorRef"
               >
-                sshConnector
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="customSMForm_executionTarget.connectorRef"
+                >
+                  sshConnector
+                </span>
                  
                 <span
                   class="bp3-text-muted"
@@ -1032,7 +1037,12 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
                 class="bp3-label"
                 for="executionTarget.connectorRef"
               >
-                sshConnector
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="customSMForm_executionTarget.connectorRef"
+                >
+                  sshConnector
+                </span>
                  
                 <span
                   class="bp3-text-muted"
@@ -1883,7 +1893,12 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
                 class="bp3-label"
                 for="executionTarget.connectorRef"
               >
-                sshConnector
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="customSMForm_executionTarget.connectorRef"
+                >
+                  sshConnector
+                </span>
                  
                 <span
                   class="bp3-text-muted"
@@ -2646,7 +2661,12 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                 class="bp3-label"
                 for="executionTarget.connectorRef"
               >
-                sshConnector
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="customSMForm_executionTarget.connectorRef"
+                >
+                  sshConnector
+                </span>
                  
                 <span
                   class="bp3-text-muted"
@@ -3621,7 +3641,12 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                 class="bp3-label"
                 for="executionTarget.connectorRef"
               >
-                sshConnector
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="customSMForm_executionTarget.connectorRef"
+                >
+                  sshConnector
+                </span>
                  
                 <span
                   class="bp3-text-muted"

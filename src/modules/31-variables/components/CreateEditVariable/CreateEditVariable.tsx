@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import {
   Button,
   ButtonVariation,
+  Container,
   Formik,
   FormikForm,
   FormInput,
@@ -34,7 +35,6 @@ import {
 
 import { useCreateVariable, useUpdateVariable, VariableDTO, VariableRequestDTO } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import VariableValidation from '../VariableValidation/VariableValidation'
 import css from './CreateEditVariable.module.scss'
 
 interface CreateEditVariableProps {
@@ -122,7 +122,11 @@ const CreateEditVariable: React.FC<CreateEditVariableProps> = props => {
                 label={getString('typeLabel')}
                 placeholder={getString('common.selectType')}
               />
-              <VariableValidation formik={formik} />
+              {/* {enable when all Validation Types are supported } */}
+              {/* <VariableValidation formik={formik} /> */}
+              <Container padding={{ top: 'small' }}>
+                <FormInput.Text name="fixedValue" label={getString('variables.fixedValue')} />
+              </Container>
             </Layout.Vertical>
             <Layout.Horizontal spacing="small" padding={{ top: 'small' }}>
               <Button

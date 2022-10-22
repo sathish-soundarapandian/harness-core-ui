@@ -10,7 +10,7 @@ import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } fr
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -68,6 +68,7 @@ export const NameTimeoutField = (props: NameTimeoutFieldProps): React.ReactEleme
               setFieldValue('timeout', value)
             }}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>

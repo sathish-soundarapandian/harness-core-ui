@@ -15,7 +15,8 @@ import {
   DataTooltipInterface,
   FormikTooltipContext,
   HarnessDocTooltip,
-  Tag
+  Tag,
+  FormError
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject, defaultTo } from 'lodash-es'
@@ -45,7 +46,7 @@ interface FormikFileStoreInput extends FileStoreSelectProps {
 
 export interface FileStoreFieldData {
   path: string
-  scope?: string
+  scope: string
 }
 
 function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
@@ -61,15 +62,6 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
         return `${path}`
     }
   }
-  const modalFileStore = useFileStoreModal({
-    applySelected: value => {
-      const { scope, path } = value
-      onChange?.(prepareFileStoreValue(scope, path))
-      formik.setFieldValue(name, prepareFileStoreValue(scope, path))
-    },
-    fileUsage
-  })
-  const placeholder_ = defaultTo(placeholder, getString('select'))
 
   const getScope = (fsValue: string): FileStoreFieldData => {
     const [scope, path] = (fsValue && fsValue.split(':')) || ['', '']
@@ -87,6 +79,18 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
         }
     }
   }
+  const modalFileStore = useFileStoreModal({
+    applySelected: value => {
+      const { scope, path } = value
+      const preparedValue = prepareFileStoreValue(scope, path)
+      onChange?.(preparedValue)
+      formik.setFieldValue(name, preparedValue)
+    },
+    fileUsage,
+    defaultTab: fileStoreValue ? getScope(fileStoreValue)?.scope : ''
+  })
+  const placeholder_ = defaultTo(placeholder, getString('select'))
+
   const { scope, path } = (fileStoreValue && getScope(fileStoreValue)) || {}
   const errorCheck = (): boolean =>
     ((get(formik?.touched, name) || (formik?.submitCount && formik?.submitCount > 0)) &&
@@ -99,11 +103,11 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
 
   return (
     <FormGroup
-      helperText={errorCheck() ? get(formik?.errors, name) : null}
+      helperText={errorCheck() ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null}
       intent={errorCheck() ? Intent.DANGER : Intent.NONE}
       style={{ width: '100%' }}
     >
-      <Layout.Vertical>
+      <Layout.Vertical data-testid="file-store-select">
         {label ? (
           <label className={'bp3-label'}>
             <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} />
@@ -112,6 +116,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
         <Container
           flex={{ alignItems: 'center', justifyContent: 'space-between' }}
           className={css.container}
+          data-testid="container-fs"
           onClick={() => {
             if (!readonly) {
               modalFileStore.openFileStoreModal()
@@ -129,9 +134,9 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
               - {placeholder_} -
             </Text>
           )}
-          <Container padding={{ right: 'small' }}>
+          <Container padding={{ right: 'medium' }}>
             {fileStoreValue && scope ? <Tag>{scope.toUpperCase()}</Tag> : null}
-            <Icon name="chevron-down" margin={{ right: 'small', left: 'small' }} />
+            <Icon name="chevron-down" size={15} color="grey300" margin={{ left: 'small' }} />
           </Container>
         </Container>
       </Layout.Vertical>

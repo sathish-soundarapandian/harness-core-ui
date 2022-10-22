@@ -58,7 +58,7 @@ export interface DashboardFolderModel {
 
 export interface DashboardModel {
   created_at: string
-  data_source: ('CD' | 'CE' | 'CF' | 'CI' | 'CI_TI' | 'CG_CD' | 'STO')[]
+  data_source: ('CI' | 'STO' | 'CE' | 'CD' | 'CF')[]
   description: string
   favorite_count: number
   folder: DashboardFolderModel
@@ -298,9 +298,9 @@ export const cloneDashboardPromise = (
 
 export interface GetFolderQueryParams {
   page?: number
-  pageSize?: number
   accountId: string
   isAdmin?: boolean
+  pageSize?: number
 }
 
 export type GetFolderProps = Omit<GetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>, 'path'>
@@ -611,11 +611,12 @@ export const deleteDashboardPromise = (
   )
 
 export interface GetFoldersQueryParams {
-  sortBy?: string
+  page: number
   pageSize: number
   searchTerm?: string
-  page: number
   accountId: string
+  permission?: 'core_dashboards_view' | 'core_dashboards_edit'
+  sortBy?: string
 }
 
 export type GetFoldersProps = Omit<GetProps<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>, 'path'>
@@ -660,14 +661,14 @@ export const getFoldersPromise = (
   )
 
 export interface SearchQueryParams {
-  customTag: string
-  sortBy?: string
-  pageSize: number
-  searchTerm?: string
-  tags: string
   page: number
   folderId: string
+  customTag: string
+  tags: string
+  pageSize: number
+  searchTerm?: string
   accountId: string
+  sortBy?: string
 }
 
 export type SearchProps = Omit<GetProps<SearchResponse, ErrorResponse, SearchQueryParams, void>, 'path'>
@@ -709,9 +710,9 @@ export const searchPromise = (
   )
 
 export interface CreateSignedUrlQueryParams {
-  dashboardId: string
   src: string
   accountId: string
+  dashboardId: string
 }
 
 export type CreateSignedUrlProps = Omit<

@@ -41,8 +41,11 @@ export function getServiceIdentifierFromStage(
   pipeline: PipelineInfoConfig
 ): string {
   let serviceId = ''
-  if (selectedStage?.stage?.spec?.serviceConfig?.useFromStage) {
-    const stageIdToDeriveServiceFrom = selectedStage?.stage?.spec?.serviceConfig?.useFromStage?.stage
+  const stageFromServiceConfig = selectedStage?.stage?.spec?.serviceConfig?.useFromStage
+  const stageFromService = selectedStage?.stage?.spec?.service?.useFromStage
+
+  if (stageFromServiceConfig || stageFromService) {
+    const stageIdToDeriveServiceFrom = stageFromServiceConfig?.stage || stageFromService?.stage
     const stageToDeriveServiceFrom = pipeline?.stages?.find(el => el?.stage?.identifier === stageIdToDeriveServiceFrom)
     serviceId = getServiceIdFromStage(stageToDeriveServiceFrom as StageElementWrapper<DeploymentStageElementConfig>)
   } else {

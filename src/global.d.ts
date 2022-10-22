@@ -71,6 +71,9 @@ declare interface Window {
   helpPanelAccessToken: string
   helpPanelSpace: string
   helpPanelEnvironment: 'QA' | 'master'
+  newNavContentfulAccessToken: string
+  newNavContetfulSpace: string
+  newNavContentfulEnvironment: 'master'
   stripeApiKey: string
 }
 
@@ -82,6 +85,11 @@ declare interface WindowEventMap {
 declare interface Document {
   msHidden: string
   webkitHidden: string
+  // these types are present in later versions on TS
+  fonts: {
+    check(opt: string): boolean
+    ready: Promise<void>
+  }
 }
 
 declare const monaco: any
@@ -102,6 +110,29 @@ declare module 'chaos/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'chaos/PipelineExperimentSelect' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'chaos/ExperimentPreview' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'chaos/ChaosStepExecution' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'ffui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'errortracking/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp
@@ -117,6 +148,16 @@ declare module 'stoV2/App' {
 }
 
 declare module 'ccmui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'ciui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'tiui/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
@@ -157,3 +198,7 @@ declare module 'scm/RepoResourceDetails' {
 }
 
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+
+declare type Mutable<T> = {
+  -readonly [K in keyof T]: T[K]
+}

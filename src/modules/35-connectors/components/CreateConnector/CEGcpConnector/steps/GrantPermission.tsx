@@ -24,13 +24,11 @@ import { useCreateConnector, useUpdateConnector, Failure } from 'services/cd-ng'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
-import { FeatureFlag } from '@common/featureFlags'
 import type { CEGcpConnectorDTO } from './OverviewStep'
 import css from '../CreateCeGcpConnector.module.scss'
 
@@ -53,7 +51,6 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
     queryParams: { accountIdentifier: accountId }
   })
 
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const {
     data,
@@ -94,7 +91,7 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
         if (response.status !== 'SUCCESS') {
           throw response as Failure
         }
-        if (opaFlagEnabled && response.data?.governanceMetadata) {
+        if (response.data?.governanceMetadata) {
           conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
             nextStep?.({ ...prevStepData, serviceAccount })
           })

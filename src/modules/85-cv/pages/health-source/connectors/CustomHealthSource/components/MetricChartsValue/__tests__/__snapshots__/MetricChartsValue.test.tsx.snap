@@ -152,30 +152,26 @@ exports[`Validate MetricChartsValue conponent JSON path component is disabled wh
       class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
     >
       <div
-        class="StyledProps--font StyledProps--main"
+        class="StyledProps--font StyledProps--main noDataContainer"
       >
         <div
-          class="StyledProps--font StyledProps--main noDataContainer"
+          class="StyledProps--font StyledProps--main NoDataCard--noDataCard StyledProps--flex StyledProps--flex-align-center-center"
         >
           <div
-            class="StyledProps--font StyledProps--main NoDataCard--noDataCard StyledProps--flex StyledProps--flex-align-center-center"
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            style="align-items: center; margin-top: -48px; width: 470px;"
           >
-            <div
-              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-              style="align-items: center; margin-top: -48px; width: 470px;"
+            <img
+              src="test-file-stub"
+            />
+            <p
+              class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
             >
-              <img
-                src="test-file-stub"
-              />
-              <p
-                class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
-              >
-                cv.changeSource.noDataAvaiableForCard
-              </p>
-              <div
-                class="NoDataCard--buttonContainer"
-              />
-            </div>
+              cv.changeSource.noDataAvaiableForCard
+            </p>
+            <div
+              class="NoDataCard--buttonContainer"
+            />
           </div>
         </div>
       </div>
@@ -336,30 +332,26 @@ exports[`Validate MetricChartsValue conponent should render MetricChartsValue 1`
       class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
     >
       <div
-        class="StyledProps--font StyledProps--main"
+        class="StyledProps--font StyledProps--main noDataContainer"
       >
         <div
-          class="StyledProps--font StyledProps--main noDataContainer"
+          class="StyledProps--font StyledProps--main NoDataCard--noDataCard StyledProps--flex StyledProps--flex-align-center-center"
         >
           <div
-            class="StyledProps--font StyledProps--main NoDataCard--noDataCard StyledProps--flex StyledProps--flex-align-center-center"
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            style="align-items: center; margin-top: -48px; width: 470px;"
           >
-            <div
-              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-              style="align-items: center; margin-top: -48px; width: 470px;"
+            <img
+              src="test-file-stub"
+            />
+            <p
+              class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
             >
-              <img
-                src="test-file-stub"
-              />
-              <p
-                class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
-              >
-                cv.changeSource.noDataAvaiableForCard
-              </p>
-              <div
-                class="NoDataCard--buttonContainer"
-              />
-            </div>
+              cv.changeSource.noDataAvaiableForCard
+            </p>
+            <div
+              class="NoDataCard--buttonContainer"
+            />
           </div>
         </div>
       </div>

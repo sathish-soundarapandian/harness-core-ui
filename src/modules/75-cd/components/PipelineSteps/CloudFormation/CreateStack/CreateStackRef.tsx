@@ -27,7 +27,7 @@ import {
   useToaster,
   AllowedTypes
 } from '@harness/uicore'
-import { map, get, isEmpty } from 'lodash-es'
+import { map, get, isEmpty, defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -36,7 +36,7 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -47,6 +47,7 @@ import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { TFMonaco } from '../../Common/Terraform/Editview/TFMonacoEditor'
 import CFRemoteWizard from './RemoteFilesForm/CFRemoteWizard'
 import { InlineParameterFile } from './InlineParameterFile'
@@ -296,7 +297,7 @@ export const CreateStack = (
       {formik => {
         setFormikRef(formikRef, formik)
         const { values, setFieldValue, errors } = formik
-        const config = values.spec.configuration
+        const config = values?.spec?.configuration
         const awsConnector = config?.connectorRef
         const templateFileType = config?.templateFile?.type
         const inlineTemplateFile = config?.templateFile?.spec?.templateBody
@@ -326,9 +327,22 @@ export const CreateStack = (
                 multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
                 disabled={readonly}
               />
+              {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={defaultTo(values.timeout, '')}
+                  type="String"
+                  variableName="timeout"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => formik.setFieldValue('timeout', value)}
+                  isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+                />
+              )}
             </div>
             <div className={css.divider} />
-            <div className={stepCss.formGroup}>
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
               <FormInput.MultiTextInput
                 name="spec.provisionerIdentifier"
                 label={getString('pipelineSteps.provisionerIdentifier')}
@@ -338,9 +352,9 @@ export const CreateStack = (
               />
               {
                 /* istanbul ignore next */
-                getMultiTypeFromValue(values.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
+                getMultiTypeFromValue(values?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values.spec?.provisionerIdentifier as string}
+                    value={values?.spec?.provisionerIdentifier as string}
                     type="String"
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
@@ -351,7 +365,7 @@ export const CreateStack = (
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
                     isReadonly={readonly}
-                    className={css.inputWidth}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )
               }
@@ -419,6 +433,20 @@ export const CreateStack = (
                   selectItems={regions}
                   placeholder={regionLoading ? getString('loading') : getString('select')}
                 />
+                {getMultiTypeFromValue(awsRegion) === MultiTypeInputType.RUNTIME && (
+                  <SelectConfigureOptions
+                    value={defaultTo(awsRegion, '')}
+                    options={regions}
+                    loading={false}
+                    type="String"
+                    variableName="spec.configuration.region"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    isReadonly={readonly}
+                    onChange={value => formik.setFieldValue('spec.configuration.region', value)}
+                  />
+                )}
               </Layout.Horizontal>
             </Layout.Vertical>
             <div className={css.divider} />
@@ -562,9 +590,9 @@ export const CreateStack = (
               />
               {
                 /* istanbul ignore next */
-                getMultiTypeFromValue(values.spec?.stackName) === MultiTypeInputType.RUNTIME && (
+                getMultiTypeFromValue(config?.stackName) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values?.spec?.stackName}
+                    value={config?.stackName}
                     type="String"
                     variableName="spec.configuration.stackName"
                     showRequiredField={false}
@@ -574,7 +602,7 @@ export const CreateStack = (
                       setFieldValue('spec.configuration.stackName', value)
                     }}
                     isReadonly={readonly}
-                    className={css.inputWidth}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )
               }
@@ -693,7 +721,7 @@ export const CreateStack = (
                         </div>
                       </div>
                     </Layout.Vertical>
-                    <Layout.Vertical>
+                    <Layout.Horizontal className={stepCss.formGroup}>
                       <FormInput.MultiTypeInput
                         label={getString('optionalField', { name: getString('connectors.awsKms.roleArnLabel') })}
                         name="spec.configuration.roleArn"
@@ -713,7 +741,21 @@ export const CreateStack = (
                         selectItems={awsRoles}
                         style={{ color: 'rgb(11, 11, 13)' }}
                       />
-                    </Layout.Vertical>
+                      {getMultiTypeFromValue(config?.roleArn) === MultiTypeInputType.RUNTIME && (
+                        <SelectConfigureOptions
+                          value={defaultTo(config?.roleArn, '')}
+                          options={awsRoles}
+                          loading={false}
+                          type="String"
+                          variableName="spec.configuration.roleArn"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          isReadonly={readonly}
+                          onChange={value => formik.setFieldValue('spec.configuration.roleArn', value)}
+                        />
+                      )}
+                    </Layout.Horizontal>
                     <MultiTypeFieldSelector
                       name="spec.configuration.capabilities"
                       label={

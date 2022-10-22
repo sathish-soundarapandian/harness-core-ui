@@ -28,7 +28,7 @@ export default function CFSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
   const history = useHistory()
-  const { updateAppStore, supportingGitSimplification } = useAppStore()
+  const { updateAppStore, isGitSimplificationEnabled } = useAppStore()
   const { withActiveEnvironment } = useActiveEnvironment()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const events = useFeatureFlagTelemetry()
@@ -51,7 +51,7 @@ export default function CFSideNav(): React.ReactElement {
       })
     } else {
       history.push(
-        routes.toCFFeatureFlags({
+        routes.toCFConfigurePath({
           projectIdentifier: data.identifier,
           orgIdentifier: data.orgIdentifier || '',
           accountId
@@ -92,7 +92,7 @@ export default function CFSideNav(): React.ReactElement {
                 to={routes.toAccessControl({ ...params, module: 'cf' })}
                 label={getString('accessControl')}
               />
-              {FF_GITSYNC && !supportingGitSimplification && (
+              {FF_GITSYNC && !isGitSimplificationEnabled && (
                 <>
                   <SidebarLink
                     label={getString('connectorsLabel')}

@@ -8,6 +8,7 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { findByText, fireEvent, render, waitFor } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
 import CORoutingTable from '../CORoutingTable'
 
 jest.mock('lodash-es', () => ({
@@ -33,12 +34,20 @@ const records = [
 
 describe('Routing Table Tests', () => {
   test('render table with default columns', () => {
-    const { container } = render(<CORoutingTable routingRecords={records} setRoutingRecords={jest.fn()} />)
+    const { container } = render(
+      <TestWrapper>
+        <CORoutingTable routingRecords={records} setRoutingRecords={jest.fn()} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
 
   test('fill in details for a route', async () => {
-    const { container } = render(<CORoutingTable routingRecords={records} setRoutingRecords={jest.fn()} />)
+    const { container } = render(
+      <TestWrapper>
+        <CORoutingTable routingRecords={records} setRoutingRecords={jest.fn()} />
+      </TestWrapper>
+    )
 
     const protocolCaret = container
       .querySelector(`input[value="http"] + [class*="bp3-input-action"]`)
@@ -78,7 +87,11 @@ describe('Routing Table Tests', () => {
   })
 
   test('render additional columns for redirection rule', async () => {
-    const { container, getByTestId } = render(<CORoutingTable routingRecords={records} setRoutingRecords={jest.fn()} />)
+    const { container, getByTestId } = render(
+      <TestWrapper>
+        <CORoutingTable routingRecords={records} setRoutingRecords={jest.fn()} />
+      </TestWrapper>
+    )
 
     const actionCaret = container
       .querySelector(`input[value="Forward"] + [class*="bp3-input-action"]`)

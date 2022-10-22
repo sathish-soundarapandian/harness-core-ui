@@ -29,7 +29,7 @@ import {
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { PageSpinner, useToaster, NavigationCheck } from '@common/components'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
@@ -59,7 +59,7 @@ export default function Configurations(
 
   const { showWarning, showError, showSuccess } = useToaster()
   const history = useHistory()
-  const { isTemplate } = useMonitoredServiceContext()
+  const { isTemplate, templateScope } = useMonitoredServiceContext()
   const { expressions } = useVariablesExpression()
   const { orgIdentifier, projectIdentifier, accountId, identifier, templateIdentifier } = useParams<
     ProjectPathProps & { identifier: string; templateIdentifier?: string }
@@ -201,7 +201,8 @@ export default function Configurations(
         defaultMonitoredService,
         isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
         isTemplate,
-        isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService
+        isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService,
+        templateScope
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [

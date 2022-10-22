@@ -1,4 +1,5 @@
 import { featureFlagsCall } from '../../support/70-pipeline/constants'
+import { validations } from '../../support/85-cv/monitoredService/constants'
 import {
   applicationCall,
   applicationsResponse,
@@ -84,42 +85,6 @@ describe('Verify Step Addition', () => {
     cy.contains('span', 'Apply Changes').click()
   })
 
-  it('should be able to add Configured Monitored Service in Verify Step', () => {
-    cy.apiMocksForVerifyStep()
-    // adding new step
-    cy.findByText(/Add step/i).should('be.visible')
-    cy.findByText(/Add step/i).click()
-    cy.findByTestId('addStepPipeline').should('be.visible')
-    cy.findByTestId('addStepPipeline').click()
-
-    cy.wait('@pipelineSteps')
-
-    // click verify step
-    cy.findByText(/Verify/i).click()
-    cy.wait('@monitoredServices')
-    cy.get("input[name='spec.monitoredServiceRef']").should('have.value', 'appd_prod')
-    cy.get("input[name='spec.monitoredServiceRef']").should('be.disabled')
-    cy.findByText(/^Health Sources$/i).should('exist')
-    cy.findByTestId(/healthSourceTable_appd-test/i).should('exist')
-
-    cy.fillName('test_verify')
-    cy.configureStaticFieldsVerifyStep()
-
-    cy.get('input[name="spec.monitoredService.type"]').click({ force: true })
-    cy.contains('p', 'Configured').click({ force: true })
-
-    // should show validations.
-    cy.contains('span', 'Apply Changes').click()
-    cy.contains('span', 'Monitored service is required').should('be.visible')
-
-    cy.get('input[name="spec.monitoredService.spec.monitoredServiceRef"]').click({ force: true })
-    cy.contains('p', 'orders_prod').click({ force: true })
-
-    cy.wait('@monitoredServiceResponse')
-
-    cy.contains('span', 'Apply Changes').click()
-  })
-
   it('should be able to select templatised monitored service in Verify Step', () => {
     cy.apiMocksForVerifyStep()
     // adding new step
@@ -177,35 +142,6 @@ describe('Verify Step Addition', () => {
 
     cy.get('input[name="spec.monitoredService.type"]').click({ force: true })
     cy.contains('p', 'Default').click({ force: true })
-    cy.contains('span', 'Save').click()
-    cy.get('button[type="submit"]').click()
-  })
-
-  it('should be able to create a verify step template with configured monitored service', () => {
-    cy.apiMocksForVerifyStep()
-
-    cy.contains('p', 'Project Setup').click()
-    cy.contains('p', 'Templates').click()
-
-    cy.contains('span', 'New Template').click()
-    cy.contains('p', 'Step').click()
-
-    cy.get("input[name='name']").type('step-template')
-    cy.get("input[name='versionLabel']").type('1')
-    cy.contains('span', 'Start').click()
-
-    cy.findByText(/Verify/i).click()
-
-    cy.configureStaticFieldsVerifyStepInStepTemplate()
-
-    cy.get('input[name="spec.monitoredService.type"]').click({ force: true })
-    cy.contains('p', 'Configured').click({ force: true })
-
-    cy.get('input[name="spec.monitoredService.spec.monitoredServiceRef"]').click({ force: true })
-    cy.contains('p', 'orders_prod').click({ force: true })
-
-    cy.wait('@monitoredServiceResponse')
-
     cy.contains('span', 'Save').click()
     cy.get('button[type="submit"]').click()
   })
@@ -291,10 +227,10 @@ describe('Verify Step Addition', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('input[name="appdApplication"]').click()
     cy.contains('p', 'cv-app').click({ force: true })

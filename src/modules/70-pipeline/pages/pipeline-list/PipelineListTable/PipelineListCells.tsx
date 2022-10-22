@@ -8,7 +8,7 @@
 
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Icon, Layout, Popover, Text, Container, TagsPopover } from '@harness/uicore'
+import { Button, Icon, Layout, Popover, Text, Container, TagsPopover, ButtonVariation } from '@harness/uicore'
 import defaultTo from 'lodash-es/defaultTo'
 import { useParams, Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
@@ -35,18 +35,19 @@ import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelp
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
+import { killEvent } from '@common/utils/eventUtils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
 import css from './PipelineListTable.module.scss'
 
-const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
+export const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
   return (
     <Layout.Horizontal spacing="xsmall">
-      <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
+      <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
         {label}:
       </Text>
-      <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+      <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
         {value}
       </Text>
     </Layout.Horizontal>
@@ -69,8 +70,8 @@ export const PipelineNameCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
-        <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'center' }}>
+      <div data-testid={data.identifier}>
+        <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
           <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
             <Text
               font={{ variation: FontVariation.LEAD }}
@@ -83,6 +84,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
                   {data.description && <LabeValue label={getString('description')} value={data.description} />}
                 </Layout.Vertical>
               }
+              lineClamp={1}
             >
               {data.name}
             </Text>
@@ -96,10 +98,10 @@ export const PipelineNameCell: CellType = ({ row }) => {
             />
           ) : null}
         </Layout.Horizontal>
-        <Text color={Color.GREY_600} font="xsmall">
+        <Text color={Color.GREY_600} font="xsmall" lineClamp={1}>
           {getString('idLabel', { id: data.identifier })}
         </Text>
-      </Layout.Vertical>
+      </div>
       {data?.entityValidityDetails?.valid === false && (
         <Container margin={{ left: 'large' }}>
           <Badge
@@ -142,13 +144,13 @@ export const CodeSourceCell: CellType = ({ row }) => {
           <Layout.Vertical spacing="small" padding="large" style={{ maxWidth: 400 }}>
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Icon name="github" size={14} color={Color.GREY_200} />
-              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
                 {gitDetails?.repoName || gitDetails?.repoIdentifier}
               </Text>
             </Layout.Horizontal>
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Icon name="remotefile" size={14} color={Color.GREY_200} />
-              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
                 {gitDetails?.filePath}
               </Text>
             </Layout.Horizontal>
@@ -177,33 +179,35 @@ export const LastExecutionCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-      <div className={cx(css.avatar, executor ? css.trigger : css.neverRan)}>
-        {executor ? (
-          isAutoTrigger ? (
-            <Link
-              to={routes.toTriggersDetailPage({
-                ...getRouteProps(pathParams, data),
-                triggerIdentifier: executorInfo?.username || ''
-              })}
-            >
-              <Icon
-                size={12}
-                name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
-                aria-label="trigger"
-                className={css.icon}
-              />
-            </Link>
+      <div>
+        <div className={cx(css.avatar, executor ? css.trigger : css.neverRan)} onClick={killEvent}>
+          {executor ? (
+            isAutoTrigger ? (
+              <Link
+                to={routes.toTriggersDetailPage({
+                  ...getRouteProps(pathParams, data),
+                  triggerIdentifier: executorInfo?.username || ''
+                })}
+              >
+                <Icon
+                  size={12}
+                  name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+                  aria-label="trigger"
+                  className={css.icon}
+                />
+              </Link>
+            ) : (
+              executor?.charAt(0)
+            )
           ) : (
-            executor?.charAt(0)
-          )
-        ) : (
-          <Icon size={12} name="ci-build-pipeline" aria-label="trigger" color={Color.GREY_400} />
-        )}
+            <Icon size={12} name="ci-build-pipeline" aria-label="trigger" color={Color.GREY_400} />
+          )}
+        </div>
       </div>
 
       {executor && startTs ? (
         <div>
-          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
             {executor}
           </Text>
           <Text color={Color.GREY_600} font={{ variation: FontVariation.TINY }} className={css.timeAgo}>
@@ -231,7 +235,6 @@ export const LastModifiedCell: CellType = ({ row }) => {
 export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
   const pathParams = useParams<PipelineListPagePathParams>()
-  const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<{
     projectIdentifier: string
@@ -273,17 +276,10 @@ export const MenuCell: CellType = ({ row, column }) => {
   })
 
   return (
-    <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
-      <Popover
-        isOpen={menuOpen}
-        onInteraction={nextOpenState => {
-          setMenuOpen(nextOpenState)
-        }}
-        className={Classes.DARK}
-        position={Position.LEFT}
-      >
-        <Button minimal icon="Options" onClick={() => setMenuOpen(true)} />
-        <Menu style={{ minWidth: 'unset', backgroundColor: 'unset' }}>
+    <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
+      <Popover className={Classes.DARK} position={Position.LEFT}>
+        <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
+        <Menu style={{ backgroundColor: 'unset' }}>
           <RbacMenuItem
             icon="play"
             text={getString('runPipelineText')}
@@ -316,7 +312,6 @@ export const MenuCell: CellType = ({ row, column }) => {
             disabled={isGitSyncEnabled}
             onClick={() => {
               column.onClonePipeline(data)
-              setMenuOpen(false)
             }}
           />
           <Menu.Item
@@ -325,7 +320,6 @@ export const MenuCell: CellType = ({ row, column }) => {
             disabled={!canDelete}
             onClick={() => {
               confirmDelete()
-              setMenuOpen(false)
             }}
           />
         </Menu>
@@ -361,43 +355,45 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
   })
 
   return (
-    <StatusHeatMap
-      className={css.recentExecutions}
-      data={recentExecutions}
-      getId={(i, index) => defaultTo(i.planExecutionId, index)}
-      getStatus={i => i.status as ExecutionStatus}
-      getLinkProps={i => (i.planExecutionId ? getLinkProps(i.planExecutionId) : undefined)}
-      getPopoverProps={i => ({
-        position: Position.TOP,
-        interactionKind: PopoverInteractionKind.HOVER,
-        content: (
-          <Layout.Vertical padding="large" spacing="medium">
-            <div className={css.statusLabel}>
-              <ExecutionStatusLabel status={i.status as ExecutionStatus} />
-            </div>
-            {i.startTs && (
-              <>
-                <LabeValue label={getString('pipeline.executionId')} value={i.runSequence || i.planExecutionId} />
-                <LabeValue
-                  label={getString('common.executedBy')}
-                  value={
-                    <Layout.Horizontal spacing="xsmall" color={Color.WHITE} font="normal">
-                      <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
-                      <span>|</span>
-                      <ReactTimeago date={i.startTs} />
-                    </Layout.Horizontal>
-                  }
-                />
-                <LabeValue
-                  label={getString('common.triggerName')}
-                  value={getString(mapTriggerTypeToStringID(i.executorInfo?.triggerType))}
-                />
-              </>
-            )}
-          </Layout.Vertical>
-        ),
-        className: Classes.DARK
-      })}
-    />
+    <div onClick={killEvent}>
+      <StatusHeatMap
+        className={css.recentExecutions}
+        data={recentExecutions}
+        getId={(i, index) => defaultTo(i.planExecutionId, index)}
+        getStatus={i => i.status as ExecutionStatus}
+        getLinkProps={i => (i.planExecutionId ? getLinkProps(i.planExecutionId) : undefined)}
+        getPopoverProps={i => ({
+          position: Position.TOP,
+          interactionKind: PopoverInteractionKind.HOVER,
+          content: (
+            <Layout.Vertical padding="large" spacing="medium">
+              <div className={css.statusLabel}>
+                <ExecutionStatusLabel status={i.status as ExecutionStatus} />
+              </div>
+              {i.startTs && (
+                <>
+                  <LabeValue label={getString('pipeline.executionId')} value={i.runSequence || i.planExecutionId} />
+                  <LabeValue
+                    label={getString('common.executedBy')}
+                    value={
+                      <Layout.Horizontal spacing="xsmall" color={Color.WHITE} font="normal">
+                        <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
+                        <span>|</span>
+                        <ReactTimeago date={i.startTs} />
+                      </Layout.Horizontal>
+                    }
+                  />
+                  <LabeValue
+                    label={getString('common.triggerName')}
+                    value={getString(mapTriggerTypeToStringID(i.executorInfo?.triggerType))}
+                  />
+                </>
+              )}
+            </Layout.Vertical>
+          ),
+          className: Classes.DARK
+        })}
+      />
+    </div>
   )
 }

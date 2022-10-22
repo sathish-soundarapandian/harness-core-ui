@@ -6,13 +6,14 @@
  */
 
 import React, { useContext } from 'react'
-import { debounce, defaultTo, isEmpty, isEqual, noop, set, unset } from 'lodash-es'
-import { Card, Container, Formik, FormikForm, Heading, Layout, PageError, Text } from '@wings-software/uicore'
+import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
+import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
+import { produce } from 'immer'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { Error, StageElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -35,9 +36,9 @@ import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { stringify } from '@common/utils/YamlHelperMethods'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -49,18 +50,23 @@ declare global {
 export const TemplateStageSpecifications = (): JSX.Element => {
   const {
     state: {
-      selectionState: { selectedStageId = '' }
+      selectionState: { selectedStageId = '' },
+      storeMetadata
     },
     allowableTypes,
     updateStage,
     isReadonly,
-    getStageFromPipeline
+    getStageFromPipeline,
+    setIntermittentLoading
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
-  const scope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
+  const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
+  const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
+  const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(stage?.stage)
+  const [allValues, setAllValues] = React.useState<StageElementConfig>()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { submitFormsForTab } = useContext(StageErrorContext)
@@ -82,21 +88,18 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   } = useGetTemplate({
     templateIdentifier: templateRef,
     queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, scope),
-      versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      ...getScopeBasedProjectPathParams(queryParams, templateScope),
+      versionLabel: templateVersionLabel,
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
-  const allValues = React.useMemo(
-    () => ({
+  React.useEffect(() => {
+    setAllValues({
       ...parse(defaultTo(templateResponse?.data?.yaml, ''))?.template.spec,
       identifier: stage?.stage?.identifier
-    }),
-    [templateResponse?.data?.yaml]
-  )
+    })
+  }, [templateResponse?.data?.yaml])
 
   const {
     data: templateInputSetYaml,
@@ -106,11 +109,9 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   } = useGetTemplateInputSetYaml({
     templateIdentifier: templateRef,
     queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, scope),
+      ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
@@ -119,7 +120,13 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     [templateInputSetYaml?.data]
   )
 
-  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
+  const updateFormValues = (newTemplateInputs?: StageElementConfig) => {
+    const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
+    })
+    setFormValues(updatedStage)
+    updateStage(updatedStage)
+  }
 
   React.useEffect(() => {
     if (!isEmpty(templateInputs)) {
@@ -135,23 +142,26 @@ export const TemplateStageSpecifications = (): JSX.Element => {
           }
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
-            const mergedTemplateInputs = parse(defaultTo(response.data?.mergedTemplateInputs, ''))
-            set(stage?.stage as StageElementConfig, TEMPLATE_INPUT_PATH, mergedTemplateInputs)
-            updateStage(stage?.stage as StageElementConfig)
+            setLoadingMergedTemplateInputs(false)
+            updateFormValues(parse(defaultTo(response.data?.mergedTemplateInputs, '')))
           } else {
             throw response
           }
         })
       } catch (error) {
-        set(stage?.stage as StageElementConfig, TEMPLATE_INPUT_PATH, templateInputs)
-        updateStage(stage?.stage as StageElementConfig)
+        setLoadingMergedTemplateInputs(false)
+        updateFormValues(templateInputs)
       }
-      setLoadingMergedTemplateInputs(false)
     } else if (!templateInputSetLoading) {
-      unset(stage?.stage as StageElementConfig, TEMPLATE_INPUT_PATH)
-      updateStage(stage?.stage as StageElementConfig)
+      updateFormValues(undefined)
     }
   }, [templateInputs])
+
+  React.useEffect(() => {
+    if (templateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [templateInputSetLoading])
 
   React.useEffect(() => {
     subscribeForm({ tab: TemplateTabs.OVERVIEW, form: formikRef })
@@ -194,6 +204,20 @@ export const TemplateStageSpecifications = (): JSX.Element => {
 
   const error = defaultTo(templateInputSetError, templateError)
 
+  /**
+   * This effect disables/enables Save button on Pipeline and Template Studio
+   * For gitx, template resolution takes a long time
+   * If user clicks on Save button before resolution, template exception occurs
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
+
   return (
     <Container className={css.serviceOverrides} height={'100%'} background={Color.FORM_BG}>
       <ErrorsStripBinded domRef={formRefDom} />
@@ -210,10 +234,12 @@ export const TemplateStageSpecifications = (): JSX.Element => {
             onRemoveTemplate={removeTemplate}
             onOpenTemplateSelector={addOrUpdateTemplate}
             className={css.templateBar}
+            isReadonly={isReadonly}
+            storeMetadata={storeMetadata}
           />
         )}
         <Formik<StageElementConfig>
-          initialValues={stage?.stage as StageElementConfig}
+          initialValues={formValues as StageElementConfig}
           formName="templateStageOverview"
           onSubmit={noop}
           validate={validateForm}
@@ -243,11 +269,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                 <Container className={css.inputsContainer}>
                   {isLoading && <PageSpinner />}
                   {!isLoading && error && (
-                    <Container height={300}>
-                      <PageError
-                        message={defaultTo((error?.data as Error)?.message, error?.message)}
-                        onClick={() => refetch()}
-                      />
+                    <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                      <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                     </Container>
                   )}
                   {!isLoading && !error && templateInputs && allValues && (
@@ -256,24 +279,15 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                       padding={{ top: 'large', bottom: 'large' }}
                       spacing={'large'}
                     >
-                      <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-                        <Heading level={5} color={Color.BLACK}>
-                          {getString('pipeline.templateInputs')}
-                        </Heading>
-                        <Text font={{ size: 'normal' }}>
-                          {getString('templatesLibrary.inputsCount', { count: templateInputsCount })}
-                        </Text>
-                      </Layout.Horizontal>
+                      <Heading level={5} color={Color.BLACK}>
+                        {getString('pipeline.templateInputs')}
+                      </Heading>
                       <StageForm
-                        key={`${formik.values.template?.templateRef}-${defaultTo(
-                          formik.values.template?.versionLabel,
-                          ''
-                        )}`}
                         template={{ stage: templateInputs }}
                         allValues={{ stage: allValues }}
                         path={TEMPLATE_INPUT_PATH}
                         readonly={isReadonly}
-                        viewType={StepViewType.InputSet}
+                        viewType={StepViewType.TemplateUsage}
                         hideTitle={true}
                         stageClassName={css.stageCard}
                         allowableTypes={allowableTypes}

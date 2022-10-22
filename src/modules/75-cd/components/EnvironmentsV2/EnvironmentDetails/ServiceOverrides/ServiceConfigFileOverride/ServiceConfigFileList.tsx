@@ -38,11 +38,24 @@ function ServiceConfigFileList({
         files: initValues?.secretFiles?.length ? initValues?.secretFiles : initValues?.files,
         secretFiles: initValues?.secretFiles,
         fileType: initValues?.secretFiles?.length ? FILE_TYPE_VALUES.ENCRYPTED : FILE_TYPE_VALUES.FILE_STORE,
-        isEditMode: true
+        isEditMode: true,
+        configFileIndex: index
       })
     },
     [nextStep, prevStepData, serviceConfigFileList]
   )
+
+  const addServiceConfigFileOverride = (): void => {
+    nextStep?.({
+      ...prevStepData,
+      isEditMode: false,
+      identifier: '',
+      configFileIndex: serviceConfigFileList.length,
+      fileType: FILE_TYPE_VALUES.FILE_STORE,
+      secretFiles: [''],
+      files: ['']
+    })
+  }
 
   return (
     <Layout.Vertical height={'inherit'}>
@@ -63,7 +76,7 @@ function ServiceConfigFileList({
           variation={ButtonVariation.LINK}
           className={css.addOverrideBtn}
           text={getString('cd.serviceOverrides.newConfigFile')}
-          onClick={() => nextStep?.({ ...prevStepData, isEditMode: false })}
+          onClick={addServiceConfigFileOverride}
           minimal
         />
       </Layout.Vertical>

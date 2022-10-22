@@ -40,6 +40,7 @@ import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { AzureWebAppInfrastructureUI } from './AzureWebAppInfrastructureStep'
 import {
   AzureWebAppInfrastructureSpecEditableProps,
@@ -341,8 +342,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                 />
                 {getMultiTypeFromValue(getValue(formik.values.subscriptionId)) === MultiTypeInputType.RUNTIME &&
                   !readonly && (
-                    <ConfigureOptions
-                      value={!loadingSubscriptions && formik.values.subscriptionId}
+                    <SelectConfigureOptions
+                      value={getValue(formik.values.subscriptionId)}
                       type="String"
                       variableName="subscriptionId"
                       showRequiredField={false}
@@ -355,6 +356,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       }
                       isReadonly={readonly}
                       className={css.marginTop}
+                      loading={loadingSubscriptions}
+                      options={subscriptions}
                     />
                   )}
               </Layout.Horizontal>
@@ -406,8 +409,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                 />
                 {getMultiTypeFromValue(getValue(formik.values.resourceGroup)) === MultiTypeInputType.RUNTIME &&
                   !readonly && (
-                    <ConfigureOptions
-                      value={!loadingResourceGroups && formik.values.resourceGroup}
+                    <SelectConfigureOptions
+                      value={getValue(formik.values.resourceGroup)}
                       type="String"
                       variableName="resourceGroup"
                       showRequiredField={false}
@@ -420,6 +423,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       }
                       isReadonly={readonly}
                       className={css.marginTop}
+                      loading={loadingResourceGroups}
+                      options={resourceGroups}
                     />
                   )}
               </Layout.Horizontal>

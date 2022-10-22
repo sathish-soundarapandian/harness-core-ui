@@ -35,7 +35,9 @@ import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { getCommonConnectorsValidationSchema } from '../../CreateConnectorUtils'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepAzureRepoAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -54,6 +56,7 @@ interface AzureRepoAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface AzureRepoFormInterface {
@@ -84,21 +87,27 @@ const defaultInitialFormData: AzureRepoFormInterface = {
   apiAuthType: GitAPIAuthTypes.TOKEN
 }
 
-const RenderAzureRepoAuthForm: React.FC<FormikProps<AzureRepoFormInterface>> = props => {
-  const { getString } = useStrings()
-  return (
-    <>
-      <TextReference
-        name="username"
-        stringId="username"
-        type={props.values.username ? props.values.username?.type : ValueType.TEXT}
-      />
-      <SecretInput name="accessToken" label={getString('personalAccessToken')} />
-    </>
-  )
-}
+const RenderAzureRepoAuthForm: React.FC<{ formikProps: FormikProps<AzureRepoFormInterface>; scope?: ScopedObjectDTO }> =
+  props => {
+    const { formikProps, scope } = props
+    const { getString } = useStrings()
+    return (
+      <>
+        <TextReference
+          name="username"
+          stringId="username"
+          type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
+        />
+        <SecretInput name="accessToken" label={getString('personalAccessToken')} scope={scope} />
+      </>
+    )
+  }
 
-const RenderAPIAccessFormWrapper: React.FC<FormikProps<AzureRepoFormInterface>> = props => {
+const RenderAPIAccessFormWrapper: React.FC<{
+  formikProps: FormikProps<AzureRepoFormInterface>
+  scope?: ScopedObjectDTO
+}> = props => {
+  const { formikProps, scope } = props
   const { getString } = useStrings()
 
   const apiAuthOptions: Array<SelectOption> = [
@@ -109,7 +118,7 @@ const RenderAPIAccessFormWrapper: React.FC<FormikProps<AzureRepoFormInterface>> 
   ]
 
   useEffect(() => {
-    props.setFieldValue('apiAuthType', GitAPIAuthTypes.TOKEN)
+    formikProps.setFieldValue('apiAuthType', GitAPIAuthTypes.TOKEN)
   }, [])
 
   return (
@@ -123,7 +132,7 @@ const RenderAPIAccessFormWrapper: React.FC<FormikProps<AzureRepoFormInterface>> 
           value={apiAuthOptions[0]}
         />
       </Container>
-      <SecretInput name="apiAccessToken" label={getString('personalAccessToken')} />
+      <SecretInput name="apiAccessToken" label={getString('personalAccessToken')} scope={scope} />
     </>
   )
 }
@@ -135,6 +144,10 @@ const StepAzureRepoAuthentication: React.FC<
   const { prevStepData, nextStep, accountId } = props
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
+
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
 
   const authOptions: Array<SelectOption> = [
     {
@@ -160,6 +173,13 @@ const StepAzureRepoAuthentication: React.FC<
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepAzureRepoAuthenticationProps)
   }
+
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
 
   return loadingConnectorSecrets ? (
     <PageSpinner />
@@ -227,7 +247,7 @@ const StepAzureRepoAuthentication: React.FC<
                       />
                     </Container>
 
-                    <RenderAzureRepoAuthForm {...formikProps} />
+                    <RenderAzureRepoAuthForm formikProps={{ ...formikProps }} scope={scope} />
                   </Container>
                 )}
 
@@ -239,7 +259,9 @@ const StepAzureRepoAuthentication: React.FC<
                 <Text font="small" className={commonCss.bottomMargin4}>
                   {getString('common.git.APIAccessDescription')}
                 </Text>
-                {formikProps.values.enableAPIAccess ? <RenderAPIAccessFormWrapper {...formikProps} /> : null}
+                {formikProps.values.enableAPIAccess ? (
+                  <RenderAPIAccessFormWrapper formikProps={{ ...formikProps }} scope={scope} />
+                ) : null}
               </Container>
 
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

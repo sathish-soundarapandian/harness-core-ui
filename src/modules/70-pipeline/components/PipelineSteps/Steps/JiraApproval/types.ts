@@ -63,14 +63,17 @@ export interface JiraFormContentInterface {
   formik: FormikProps<JiraApprovalData>
   refetchProjects: (props: UseGetJiraProjectsProps) => Promise<void>
   refetchProjectMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
   fetchingProjects: boolean
   stepViewType: StepViewType
   allowableTypes: AllowedTypes
   fetchingProjectMetadata: boolean
   projectsResponse: ResponseListJiraProjectBasicNG | null
   projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
+  issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
   projectsFetchError?: GetDataError<Failure | Error> | null
   projectMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueMetadataFetchError?: GetDataError<Failure | Error> | null
   isNewStep?: boolean
   readonly?: boolean
 }

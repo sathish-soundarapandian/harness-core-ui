@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { get, isEmpty } from 'lodash-es'
-import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { getServiceListPromise } from 'services/cd-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -21,9 +21,7 @@ import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { DeployServiceCustomStepPropType, DeployServiceData } from './DeployServiceInterface'
 import { ServiceRegex } from './DeployServiceUtils'
 import { DeployServiceInputStepFormik } from './DeployServiceInputStep'
-import { DeployServiceEntityInputStepFormik } from './DeployServiceEntityInputStep'
 import DeployServiceWidget from './DeployServiceWidget'
-import DeployServiceEntityWidget from './DeployServiceEntityWidget/DeployServiceEntityWidget'
 
 const logger = loggerFor(ModuleName.CD)
 
@@ -91,17 +89,6 @@ export class DeployServiceStep extends Step<DeployServiceData> {
       customStepProps
     } = props
     if (isTemplatizedView(stepViewType)) {
-      if (customStepProps?.isNewServiceEntity) {
-        return (
-          <DeployServiceEntityInputStepFormik
-            initialValues={initialValues}
-            readonly={readonly}
-            inputSetData={inputSetData}
-            allowableTypes={allowableTypes}
-            customStepProps={customStepProps}
-          />
-        )
-      }
       return (
         <DeployServiceInputStepFormik
           initialValues={initialValues}
@@ -111,17 +98,6 @@ export class DeployServiceStep extends Step<DeployServiceData> {
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
           customStepProps={customStepProps as DeployServiceCustomStepPropType}
-        />
-      )
-    }
-    if (initialValues.isNewServiceEntity) {
-      return (
-        <DeployServiceEntityWidget
-          readonly={readonly}
-          initialValues={initialValues}
-          onUpdate={onUpdate}
-          stepViewType={stepViewType}
-          allowableTypes={allowableTypes}
         />
       )
     }

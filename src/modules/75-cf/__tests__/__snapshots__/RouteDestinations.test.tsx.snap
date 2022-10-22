@@ -264,9 +264,7 @@ Array [
       }
     }
   >
-    <FFGitSyncProvider>
-      <EnvironmentDetails />
-    </FFGitSyncProvider>
+    <EnvironmentDetails />
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}
@@ -311,6 +309,28 @@ Array [
     }
   >
     <OnboardingDetailPage />
+  </RouteWithLayout>,
+  <RouteWithLayout
+    exact={true}
+    layout={[Function]}
+    licenseRedirectData={
+      Object {
+        "expiredTrialRedirect": [Function],
+        "licenseStateName": "FF_LICENSE_STATE",
+        "startTrialRedirect": [Function],
+      }
+    }
+    pageName="CFConfigurePath"
+    path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/configurePath"
+    sidebarProps={
+      Object {
+        "icon": "cf-main",
+        "navComponent": [Function],
+        "title": "Feature Flags",
+      }
+    }
+  >
+    <ConfigurePath />
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}

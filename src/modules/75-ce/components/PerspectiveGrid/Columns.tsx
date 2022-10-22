@@ -40,12 +40,15 @@ interface FixedDecimalDataOptions {
   returnValueType?: 'string' | 'number'
 }
 
-export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[]): GridData[] => {
+export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[], columnSequence?: string[]): GridData[] => {
   let idx = 0
   const colors = new Map()
 
   return data.map(({ name, id, clusterData = {}, storageDetails = {}, instanceDetails = {}, ...rest }) => {
     const key = id
+    const isAlreadyInChart = columnSequence?.includes(name || '')
+    const indexInChart = Number(columnSequence?.indexOf(name || ''))
+
     if (!colors.has(key)) {
       switch (name) {
         case 'Others':
@@ -55,7 +58,11 @@ export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[]): GridD
           colors.set(key, 'var(--primary-2)')
           break
         default:
-          colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
+          if (isAlreadyInChart) {
+            colors.set(key, CE_COLOR_CONST[indexInChart % CE_COLOR_CONST.length])
+          } else {
+            colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
+          }
           idx++
       }
     }

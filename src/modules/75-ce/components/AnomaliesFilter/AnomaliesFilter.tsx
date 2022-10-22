@@ -23,7 +23,7 @@ import AnomaliesFilterDrawer from './FilterDrawer/FilterDrawer'
 
 import css from '../../pages/anomalies-overview/AnomaliesOverviewPage.module.scss'
 
-interface AnomalyFiltersProps {
+export interface AnomalyFiltersProps {
   timeRange: {
     to: string
     from: string

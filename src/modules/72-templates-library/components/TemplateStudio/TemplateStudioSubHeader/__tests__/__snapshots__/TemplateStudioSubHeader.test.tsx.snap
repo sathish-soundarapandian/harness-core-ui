@@ -198,11 +198,16 @@ exports[`TemplateStudioSubHeader tests should match snapshot when template is up
         <div
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
         >
-          <p
-            class="StyledProps--font StyledProps--main tagRender StyledProps--color StyledProps--color-orange600 StyledProps--font-size-small"
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main tagRender StyledProps--intent-warning Button--with-current-color Button--variation Button--variation-link"
+            type="button"
           >
-            unsavedChanges
-          </p>
+            <span
+              class="bp3-button-text"
+            >
+              unsavedChanges
+            </span>
+          </button>
           <div
             class="StyledProps--font StyledProps--main"
           >

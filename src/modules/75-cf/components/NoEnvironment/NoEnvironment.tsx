@@ -6,25 +6,18 @@
  */
 
 import React from 'react'
-import { String, useStrings } from 'framework/strings'
-import EmptyContent from './EmptyContent.svg'
+import EnvironmentSectionNoData from '@cf/pages/environments/EnvironmentSectionNoData'
 import EnvironmentDialog, { EnvironmentDialogProps } from '../CreateEnvironmentDialog/EnvironmentDialog'
-import { NoData } from '../NoData/NoData'
 
 export interface NoEnvironmentProps {
   onCreated: EnvironmentDialogProps['onCreate']
+  isLinkVariation?: boolean
 }
 
 export const NoEnvironment: React.FC<NoEnvironmentProps> = ({ onCreated }) => {
-  const { getString } = useStrings()
-
   return (
-    <NoData
-      imageURL={EmptyContent}
-      message={getString('cf.noEnvironment.title')}
-      description={<String useRichText stringID="cf.noEnvironment.message" />}
-    >
-      <EnvironmentDialog onCreate={onCreated} />
-    </NoData>
+    <EnvironmentSectionNoData>
+      <EnvironmentDialog onCreate={onCreated} isLinkVariation />
+    </EnvironmentSectionNoData>
   )
 }

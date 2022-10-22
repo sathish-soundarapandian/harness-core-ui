@@ -12,6 +12,7 @@ import {
   Button,
   ButtonVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -20,7 +21,6 @@ import {
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import cx from 'classnames'
@@ -31,7 +31,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import type { InheritFromManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { filePathWidth } from '../ManifestUtils'
+import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface InheritFromManifestPropType {
@@ -69,7 +69,10 @@ function InheritFromManifest({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              }))
       }
     }
     return {
@@ -131,7 +134,7 @@ function InheritFromManifest({
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: InheritFromManifestDataType }) => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -189,7 +192,7 @@ function InheritFromManifest({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

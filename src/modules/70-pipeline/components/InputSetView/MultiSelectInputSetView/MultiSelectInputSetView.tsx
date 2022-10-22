@@ -25,6 +25,7 @@ interface MultiSelectInputSetViewProps {
   readonly?: boolean
   tooltipProps?: DataTooltipInterface
   multiSelectTypeInputProps: Omit<MultiSelectTypeInputProps, 'name'>
+  useValue?: boolean
 }
 
 export function MultiSelectInputSetView(props: MultiSelectInputSetViewProps): JSX.Element {
@@ -39,7 +40,8 @@ export function MultiSelectInputSetView(props: MultiSelectInputSetViewProps): JS
     readonly,
     tooltipProps,
     helperText,
-    multiSelectTypeInputProps
+    multiSelectTypeInputProps,
+    useValue
   } = props
 
   const { getMultiSelectTypeInputWithAllowedValues } = useRenderMultiSelectTypeInputWithAllowedValues({
@@ -69,6 +71,7 @@ export function MultiSelectInputSetView(props: MultiSelectInputSetViewProps): JS
       multiSelectTypeInputProps={multiSelectTypeInputProps}
       selectItems={selectItems}
       helperText={helperText}
+      useValue={useValue}
     />
   )
 }

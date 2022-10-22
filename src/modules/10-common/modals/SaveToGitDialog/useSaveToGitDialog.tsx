@@ -25,7 +25,7 @@ import { EntityGitDetails, ResponseMessage, useCreatePR, useCreatePRV2 } from 's
 import { String, useStrings } from 'framework/strings'
 import type { GovernanceMetadata } from 'services/cd-ng'
 import { ProgressOverlay, StepStatus } from '../ProgressOverlay/ProgressOverlay'
-import { useGitDiffEditorDialog } from '../GitDiffEditor/useGitDiffEditorDialog'
+import { GitData, useGitDiffEditorDialog } from '../GitDiffEditor/useGitDiffEditorDialog'
 import css from './useSaveToGitDialog.module.scss'
 
 export interface UseSaveSuccessResponse {
@@ -36,7 +36,7 @@ export interface UseSaveSuccessResponse {
 
 export interface UseSaveToGitDialogProps<T> {
   onSuccess?: (
-    data: SaveToGitFormInterface | SaveToGitFormV2Interface,
+    data: GitData,
     payload?: T,
     objectId?: EntityGitDetails['objectId'],
     isEdit?: boolean,
@@ -164,7 +164,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   }
 
   const handleCreateUpdateError = (e: any, data: SaveToGitFormInterface | SaveToGitFormV2Interface): void => {
-    if (e.code === SCHEMA_VALIDATION_FAILED) {
+    if (e.code === SCHEMA_VALIDATION_FAILED && resource.type === Entities.PIPELINES) {
       if (data?.createPr) {
         hideCreateUpdateWithPRCreationModal()
       } else {
@@ -373,8 +373,9 @@ export function useSaveToGitDialog<T = Record<string, string>>(
     } else {
       showCreateUpdateModal()
     }
+
     props
-      .onSuccess?.(data, diffData, objectId, isEditMode)
+      .onSuccess?.({ ...data, lastCommitId: resource?.gitDetails?.commitId }, diffData, objectId, isEditMode)
       .then(async response => {
         createPRHandler(data, response)
       })
@@ -383,11 +384,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
       })
   }
 
-  const handleSuccessV2 = (
-    data: SaveToGitFormV2Interface,
-    diffData?: T,
-    objectId?: EntityGitDetails['objectId']
-  ): void => {
+  const handleSuccessV2 = (data: GitData, diffData?: T, objectId?: EntityGitDetails['objectId']): void => {
     setPRMetaData({ branch: data?.branch, targetBranch: data?.targetBranch, isNewBranch: data?.isNewBranch })
     setCreateUpdateStatus('IN_PROGRESS')
     if (data?.createPr) {
@@ -396,8 +393,15 @@ export function useSaveToGitDialog<T = Record<string, string>>(
     } else {
       showCreateUpdateModal()
     }
+
     props
-      .onSuccess?.(data, diffData, objectId, isEditMode, resource?.storeMetadata)
+      .onSuccess?.(
+        { ...data, lastCommitId: resource?.gitDetails?.commitId },
+        diffData,
+        objectId,
+        isEditMode,
+        resource?.storeMetadata
+      )
       .then(async response => {
         createPRHandlerV2(data, response)
       })

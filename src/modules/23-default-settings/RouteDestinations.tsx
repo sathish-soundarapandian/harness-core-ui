@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import * as Yup from 'yup'
 import { RouteWithLayout } from '@common/router'
 import SettingsList from '@default-settings/pages/SettingsList'
 import routes from '@common/RouteDefinitions'
@@ -22,7 +23,24 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { String } from 'framework/strings'
+import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
+import { SettingType } from './interfaces/SettingType.types'
+import {
+  DefaultSettingCheckBoxWithTrueAndFalse,
+  DefaultSettingRadioBtnWithTrueAndFalse
+} from './components/ReusableHandlers'
 
+DefaultSettingsFactory.registerCategory('CORE', {
+  icon: 'cog',
+  label: 'common.module.core',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'scm', 'sto']
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {
+  label: 'common.accountSetting.connector.disableBISMHeading',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CORE'
+})
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'
@@ -47,6 +65,32 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SETTING, {
     [PermissionIdentifier.VIEW_CORE_SETTING]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_CORE_SETTING]: <String stringID="rbac.permissionLabels.createEdit" />
   }
+})
+
+DefaultSettingsFactory.registerCategory('CD', {
+  icon: 'cd-main',
+  label: 'deploymentsText',
+  settingsAndGroupDisplayOrder: [SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CD],
+  modulesWhereCategoryWillBeDisplayed: ['cd']
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CD, {
+  label: 'defaultSettings.mandateWebhookSecretsGithubTriggers',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CD'
+})
+
+DefaultSettingsFactory.registerCategory('CI', {
+  icon: 'ci-main',
+  label: 'buildsText',
+  settingsAndGroupDisplayOrder: [SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CI],
+  modulesWhereCategoryWillBeDisplayed: ['ci']
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CI, {
+  label: 'defaultSettings.mandateWebhookSecretsGithubTriggers',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CI'
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {

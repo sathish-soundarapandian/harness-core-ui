@@ -29,7 +29,6 @@ import { useToaster } from '@common/exports'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import WinRmAuthFormFields from '@secrets/components/WinRmAuthFormFields/WinRmAuthFormFields'
 import type { WinRmCredSharedObj } from '../CreateWinRmCredWizard'
 
@@ -62,7 +61,6 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
   const [saving, setSaving] = useState(false)
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
-  const { OPA_SECRET_GOVERNANCE } = useFeatureFlags()
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
     considerWarningAsError: false,
     errorHeaderMsg: 'secrets.policyEvaluations.failedToSave',
@@ -105,14 +103,11 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
       // finally create the connector
       const response = isEdit ? await editSecret(dataToSubmit) : await createSecret(dataToSubmit)
       setSaving(false)
-      conditionallyOpenGovernanceErrorModal(
-        OPA_SECRET_GOVERNANCE ? response?.data?.governanceMetadata : undefined,
-        () => {
-          isEdit ? showSuccess(getString('ssh.editmessageSuccess')) : showSuccess(getString('ssh.createmessageSuccess'))
-          onSuccess?.(dataToSubmit.secret)
-          nextStep?.({ ...prevStepData, authData: formData, isEdit: true })
-        }
-      )
+      conditionallyOpenGovernanceErrorModal(response?.data?.governanceMetadata, () => {
+        isEdit ? showSuccess(getString('ssh.editmessageSuccess')) : showSuccess(getString('ssh.createmessageSuccess'))
+        onSuccess?.(dataToSubmit.secret)
+        nextStep?.({ ...prevStepData, authData: formData, isEdit: true })
+      })
     } catch (err) {
       setSaving(false)
       modalErrorHandler?.show(err.data)

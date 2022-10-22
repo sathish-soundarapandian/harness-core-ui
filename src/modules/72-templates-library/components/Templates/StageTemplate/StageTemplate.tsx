@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { IconName } from '@wings-software/uicore'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { StageTemplateCanvasWrapperWithRef } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvasWrapper'
@@ -31,6 +31,6 @@ export class StageTemplate extends Template {
   }
 
   renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <TemplateInputs template={props.template} />
+    return <TemplateInputs template={props.template} storeMetadata={props.storeMetadata} />
   }
 }

@@ -1,12 +1,38 @@
 homepage:
   chaosHomePageTitle: Chaos Engineering
-  slogan: Take your software build process to the next level using our Harness Chaos Engineering.
+  slogan: Run controlled 'chaos' experiments to understand how real-world stress and failures impact your systems. Create more reliable applications and infrastructure.
   learnMore: Learn more about Chaos Engineering
+trial:
+  modal:
+    title: You're ready to go
+    welcome: Your trial of Harness Chaos Engineering has started.
+    description: You are one step away from creating more reliable applications and infrastructure and running controlled 'chaos' experiments to understand how real-world stress and failures impact your systems.
 chaosHub: ChaosHub
-chaosScenario: Chaos Scenario
-chaosDelegate: Chaos Delegate
-chaosGitops: Chaos Gitops
+chaosExperiment: Chaos Experiment
+chaosInfrastructure: Chaos Infrastructure
+chaosGameday: Chaos Gameday
+chaosTrialHomePage:
+  description: Start 14 day Chaos Enterprise trial
 navLabels:
-  chaosScenarios: Chaos Scenarios
-  chaosHubs: ChaosHubs
-  chaosDelegates: Chaos Delegates
+  chaosExperiments: Chaos Experiments
+  chaosHubs: Chaos Hubs
+environments:
+  pageTitle: '[{{projectName}}] Environments'
+  create:
+    title: Create a new environment
+    description: An environment is the place where you will deploy your cluster for chaos testing
+    envTypeLabel: Select Environment Type
+    duplicateName: Environment with this name already exists. Please use another name
+  delete:
+    message: 'If you want to delete environment <strong>{{name}}</strong>, the chaos infrastructures for this environment will also be deleted. Delete environment <strong>{{name}}</strong>?'
+    title: '{{ $.common.deleteEnvironment.title }}?'
+    toastMessage: Successfully deleted environment {{environmentId}}
+noEnvironment:
+  title: There are no environments in this project
+  message: Environments are the different places you run your application where you can configure chaos infrastrutures
+pipelineStep:
+  experimentRefLabel: Experiment Reference
+  expectedResiliencyScoreLabel: Expected Resiliency Score
+  description: Chaos Experiment Step Description Placeholder
+viewDetailedExecution: View Detailed Execution
+selectChaosExperiment: Select Chaos Experiment

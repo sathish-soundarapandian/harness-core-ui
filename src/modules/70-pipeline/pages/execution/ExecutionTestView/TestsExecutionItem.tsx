@@ -519,7 +519,7 @@ export function TestsExecutionItem({
       padding="medium"
       ref={containerRef}
     >
-      <Container flex className={css.headingContainer}>
+      <Container flex className={css.headingContainer} onClick={() => onExpand?.()}>
         <Text
           className={cx(css.testSuiteHeading, css.main)}
           color={Color.GREY_500}
@@ -527,10 +527,10 @@ export function TestsExecutionItem({
         >
           {!isUngroupedList && (
             <>
-              <Button minimal large icon={expanded ? 'chevron-down' : 'chevron-right'} onClick={() => onExpand?.()} />
+              <Button minimal large icon={expanded ? 'chevron-down' : 'chevron-right'} />
               <Layout.Horizontal>
                 <Text width={titleWidth} style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                  <CopyText iconName="clipboard-alt" textToCopy={executionSummary.name || ''}>
+                  <CopyText iconName="clipboard-alt" stopPropagation textToCopy={executionSummary.name || ''}>
                     <Text tooltip={<Container padding="small">{executionSummary.name}</Container>}>
                       <span className={css.testSuiteName}>
                         {getString('pipeline.testsReports.testSuite')} {executionSummary.name}

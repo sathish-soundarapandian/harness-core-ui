@@ -32,6 +32,8 @@ export function healthSourceTypeToLogo(healthSourceType: TransactionMetricInfo['
       return 'service-custom-connector'
     case 'DYNATRACE':
       return 'service-dynatrace'
+    case 'CLOUDWATCH_METRICS':
+      return 'service-aws'
     default:
       return 'circle'
   }

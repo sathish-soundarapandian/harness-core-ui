@@ -29,11 +29,13 @@ import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@comm
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetYamlDiffDelResponse } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
-import { PipelineResponse as PipelineDetailsMockResponse } from '../../pipeline-details/__tests__/PipelineDetailsMocks'
+import {
+  PipelineResponse as PipelineDetailsMockResponse,
+  PipelineDetailsResponse
+} from '../../pipeline-details/__tests__/PipelineDetailsMocks'
 import InputSetList from '../InputSetList'
 import {
   TemplateResponse,
-  PipelineResponse,
   ConnectorResponse,
   GetInputSetsResponse,
   GetInputSetEdit,
@@ -86,7 +88,7 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetPipeline: jest.fn(() => PipelineResponse),
+  useGetPipeline: jest.fn(() => PipelineDetailsResponse),
   useGetPipelineSummary: jest.fn(() => PipelineDetailsMockResponse),
   useGetTemplateFromPipeline: jest.fn(() => TemplateResponse),
   useGetStagesExecutionList: jest.fn(() => ({})),

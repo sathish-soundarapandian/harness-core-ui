@@ -72,7 +72,7 @@ export const stageMockData: Array<PipelineStageProps> = [
     hoverIcon: 'custom-stage-icon',
     isDisabled: true,
     title: 'Custom Stage',
-    isComingSoon: false,
+    isComingSoon: true,
     description: 'pipeline.pipelineSteps.customStage',
     isHidden: false,
     isApproval: false

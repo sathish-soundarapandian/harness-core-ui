@@ -8,9 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly crossIcon: string
-  readonly main: string
+  readonly link: string
   readonly modalContent: string
-  readonly more: string
   readonly runPipelineDialog: string
 }
 export default styles

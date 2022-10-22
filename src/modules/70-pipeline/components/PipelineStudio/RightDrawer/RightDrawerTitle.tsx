@@ -18,11 +18,12 @@ export function RightDrawerTitle(props: {
   helpPanelVisible: boolean
   toolTipType: string
   stepData: StepData | null | undefined
+  disabled: boolean
   discardChanges: () => void
   applyChanges: () => void
 }): JSX.Element {
   const { stepsFactory } = usePipelineContext()
-  const { stepType, toolTipType, stepData, helpPanelVisible } = props
+  const { stepType, toolTipType, stepData, helpPanelVisible, disabled } = props
   const { getString } = useStrings()
   return (
     <div className={css.stepConfig}>
@@ -49,6 +50,7 @@ export function RightDrawerTitle(props: {
           variation={ButtonVariation.SECONDARY}
           size={ButtonSize.SMALL}
           className={css.applyChanges}
+          disabled={disabled}
           text={getString('applyChanges')}
           onClick={props.applyChanges}
         />

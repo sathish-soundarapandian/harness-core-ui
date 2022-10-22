@@ -385,11 +385,16 @@ exports[`Validate SelectHealthSourceServices should render RiskProfile when cont
                 >
                   cv.monitoringSources.serviceInstanceIdentifier
                 </p>
-                <p
-                  class="StyledProps--font StyledProps--main secondaryLabel"
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="healthSourceMetricsServiceInstanceId"
                 >
-                  cv.monitoringSources.optionalServiceInstanceLabel
-                </p>
+                  <p
+                    class="StyledProps--font StyledProps--main secondaryLabel"
+                  >
+                    cv.monitoringSources.optionalServiceInstanceLabel
+                  </p>
+                </div>
               </div>
             </span>
              

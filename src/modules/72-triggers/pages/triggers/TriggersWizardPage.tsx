@@ -72,9 +72,10 @@ import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import useGitAwareForTriggerEnabled from '@triggers/components/Triggers/useGitAwareForTriggerEnabled'
+import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -161,7 +162,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     },
     body: {
       stageIdentifiers: []
@@ -186,18 +189,16 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     }
   })
 
-  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
-  const { supportingGitSimplification } = useAppStore()
-  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.GIT_WEBHOOK_POLLING)
+  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
+  const isSpgNgGithubWebhookAuthenticationEnabled = useFeatureFlag(FeatureFlag.SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION)
 
-  const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && supportingGitSimplification,
-    [isGitSyncEnabled, supportingGitSimplification]
-  )
+  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
 
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
@@ -276,6 +277,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       })
     }
   })
+
+  const isGithubWebhookAuthenticationEnabled = useIsGithubWebhookAuthenticationEnabled()
+
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     if (values.triggerType === TriggerTypes.WEBHOOK) {
       const res = getWebhookTriggerYaml({ values, persistIncomplete: true })
@@ -515,7 +519,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       jexlCondition,
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
-      pollInterval
+      pollInterval,
+      encryptedWebhookSecretIdentifier: { referenceString } = { referenceString: '' }
     } = val
     const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
 
@@ -580,6 +585,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         name,
         identifier,
         enabled: enabledStatus,
+        ...(formikValueSourceRepo === GitSourceProviders.GITHUB.value &&
+          isSpgNgGithubWebhookAuthenticationEnabled && {
+            encryptedWebhookSecretIdentifier: referenceString
+          }),
         description,
         tags,
         orgIdentifier,
@@ -720,7 +729,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
                 }
               }
             },
-            pipelineBranchName = getDefaultPipelineReferenceBranch(TriggerTypes.WEBHOOK, event)
+            pipelineBranchName = getDefaultPipelineReferenceBranch(TriggerTypes.WEBHOOK, event),
+            encryptedWebhookSecretIdentifier
           }
         } = triggerResponseJson
 
@@ -766,6 +776,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           identifier,
           description,
           tags,
+          ...(sourceRepo === GitSourceProviders.GITHUB.value &&
+            isSpgNgGithubWebhookAuthenticationEnabled && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
           sourceRepo,
           triggerType: TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
@@ -1207,6 +1219,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
   // TriggerConfigDTO is NGTriggerConfigV2 with optional identifier
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
+    setErrorToasterMessage('')
+
     if (gitAwareForTriggerEnabled) {
       delete triggerYaml.inputYaml
 
@@ -1351,6 +1365,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         sourceRepo: sourceRepoOnNew,
         identifier: '',
         tags: {},
+        ...(sourceRepoOnNew === GitSourceProviders.GITHUB.value &&
+          isSpgNgGithubWebhookAuthenticationEnabled && { encryptedWebhookSecretIdentifier: '' }),
         pipeline: newPipeline,
         originalPipeline,
         resolvedPipeline,
@@ -1794,7 +1810,11 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           onSubmit: (val: FlatValidWebhookFormikValuesInterface) => handleWebhookSubmit(val),
           validationSchema: getValidationSchema(
             TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
-            getString
+            getString,
+            isGitWebhookPollingEnabled &&
+              (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
+                (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value),
+            isGithubWebhookAuthenticationEnabled
           ),
           validate: validateTriggerPipeline,
           validateOnChange: true,

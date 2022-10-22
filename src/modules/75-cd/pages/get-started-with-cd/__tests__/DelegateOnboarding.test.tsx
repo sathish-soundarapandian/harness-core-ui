@@ -7,8 +7,8 @@
 
 import React from 'react'
 
-import { render, waitFor } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { render, waitFor, getByText as getByTextBody, fireEvent } from '@testing-library/react'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as servicePortal from 'services/portal'
 import * as serviceCDNG from 'services/cd-ng'
 import GetStartedWithCD from '../GetStartedWithCD'
@@ -59,7 +59,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    const createPipelineBtn = getByText('cd.installDelegate')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const kubernetesBtn = getByText('kubernetesText') as HTMLElement
@@ -88,7 +88,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
     await waitFor(() => expect(getByText('cd.miniKube')).toBeInTheDocument())
     const backBtn = getByText('back') as HTMLElement
     backBtn.click()
-    const mainScreenBtn = getByText('cd.delegateInstallBtnText')
+    const mainScreenBtn = getByText('cd.installDelegate')
     await waitFor(() => expect(mainScreenBtn).toBeInTheDocument())
   })
   test('go to create pipeline flow', async () => {
@@ -101,7 +101,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    const createPipelineBtn = getByText('cd.installDelegate')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const kubernetesBtn = getByText('kubernetesText') as HTMLElement
@@ -115,6 +115,11 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
     expect(global.URL.createObjectURL).toBeCalled()
     const createPipeline = getByText('ci.getStartedWithCI.createPipeline') as HTMLElement
     createPipeline.click()
+    const dialog = findDialogContainer() as HTMLElement
+    await waitFor(() => getByTextBody(dialog, 'Create Pipeline'))
+    await waitFor(() => getByTextBody(dialog, 'cd.getStartedWithCD.delegateRequiredWarning'))
+    const continueBtn = getByTextBody(dialog, 'continue')
+    fireEvent.click(continueBtn)
     await waitFor(() => expect(getByText('cd.delegateWarning')).toBeInTheDocument())
   })
   test('failure API call', async () => {
@@ -130,7 +135,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    const createPipelineBtn = getByText('cd.installDelegate')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const kubernetesBtn = getByText('kubernetesText') as HTMLElement
@@ -151,7 +156,7 @@ describe('Test the initial flow for docker delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    const createPipelineBtn = getByText('cd.installDelegate')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement
@@ -184,7 +189,7 @@ describe('Test the initial flow for docker delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    const createPipelineBtn = getByText('cd.installDelegate')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement
@@ -206,7 +211,7 @@ describe('Test the initial flow for docker delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    const createPipelineBtn = getByText('cd.installDelegate')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement

@@ -489,38 +489,31 @@ export const dataforMS = {
                 {
                   identifier: 'appdMetric_101',
                   metricName: 'appdMetric 101',
-                  riskProfile: { category: 'Errors', metricType: null, thresholdTypes: [] },
+                  riskProfile: {
+                    riskCategory: 'Performance_Throughput',
+                    thresholdTypes: []
+                  },
                   analysis: {
                     liveMonitoring: { enabled: false },
-                    deploymentVerification: {
-                      enabled: false,
-                      serviceInstanceFieldName: null,
-                      serviceInstanceMetricPath: null
-                    },
-                    riskProfile: { category: 'Errors', metricType: null, thresholdTypes: [] }
+                    deploymentVerification: { enabled: false },
+                    riskProfile: { riskCategory: 'Performance_Throughput', thresholdTypes: [] }
                   },
                   sli: { enabled: true },
                   groupName: 'Group 1',
-                  baseFolder: 'Overall Application Performance',
-                  metricPath: 'Calls per Minute'
+                  completeMetricPath: 'Overall Application Performance|docker-tier|Calls per Minute'
                 },
                 {
                   identifier: 'appdMetric_10',
                   metricName: 'appdMetric 10',
-                  riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] },
+                  riskProfile: { riskCategory: 'Performance_Throughput', thresholdTypes: ['ACT_WHEN_HIGHER'] },
                   analysis: {
                     liveMonitoring: { enabled: true },
-                    deploymentVerification: {
-                      enabled: false,
-                      serviceInstanceFieldName: null,
-                      serviceInstanceMetricPath: null
-                    },
-                    riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
+                    deploymentVerification: { enabled: false },
+                    riskProfile: { riskCategory: 'Performance_Throughput', thresholdTypes: ['ACT_WHEN_HIGHER'] }
                   },
                   sli: { enabled: true },
                   groupName: 'Group 2',
-                  baseFolder: 'Overall Application Performance',
-                  metricPath: 'Calls per Minute'
+                  completeMetricPath: 'Overall Application Performance|docker-tier|Calls per Minute'
                 }
               ]
             }
@@ -689,3 +682,46 @@ export const newRelicServiceResponse = {
 
 export const countOfServiceAPI =
   '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
+
+export const validations = {
+  groupName: 'Group Name is required',
+  metricPack: 'Please select atleast one metric pack',
+  assign: 'One selection is required.',
+  query: 'Query is required.',
+  metric: 'Metric is required',
+  serviceInstance: 'Service Instance is required',
+  serviceInstanceIdentifier: 'Service Instance Identifier is required.',
+  riskCategory: 'Risk Category is required.'
+}
+
+export const riskCategoryMock = {
+  metaData: {},
+  resource: [
+    { identifier: 'Errors', displayName: 'Errors', timeSeriesMetricType: 'ERROR', cvMonitoringCategory: 'Errors' },
+    {
+      identifier: 'Infrastructure',
+      displayName: 'Infrastructure',
+      timeSeriesMetricType: 'INFRA',
+      cvMonitoringCategory: 'Infrastructure'
+    },
+    {
+      identifier: 'Performance_Throughput',
+      displayName: 'Performance/Throughput',
+      timeSeriesMetricType: 'THROUGHPUT',
+      cvMonitoringCategory: 'Performance'
+    },
+    {
+      identifier: 'Performance_Other',
+      displayName: 'Performance/Other',
+      timeSeriesMetricType: 'OTHER',
+      cvMonitoringCategory: 'Performance'
+    },
+    {
+      identifier: 'Performance_ResponseTime',
+      displayName: 'Performance/Response Time',
+      timeSeriesMetricType: 'RESP_TIME',
+      cvMonitoringCategory: 'Performance'
+    }
+  ],
+  responseMessages: []
+}

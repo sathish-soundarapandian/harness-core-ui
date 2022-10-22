@@ -16,7 +16,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { ConnectorResponse } from '@pipeline/components/InputSetForm/__tests__/InputSetMocks'
 
-import { PipelineStudio } from '../PipelineStudio'
+import { PipelineStudioInternal } from '../PipelineStudioInternal/PipelineStudioInternal'
 import { PipelineContext } from '../PipelineContext/PipelineContext'
 import pipelineContextMock from '../PipelineCanvas/__tests__/PipelineCanvasGitSyncTestHelper'
 
@@ -102,7 +102,7 @@ function PipelineStudioTestWrapper({
         }}
         defaultAppStoreValues={{ isGitSyncEnabled: true }}
       >
-        <PipelineStudio
+        <PipelineStudioInternal
           routePipelineStudio={routes.toPipelineStudio}
           routePipelineDetail={routes.toPipelineDetail}
           routePipelineList={routes.toPipelines}

@@ -35,7 +35,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { CFSideNavProps } from '@cf/constants'
 import CFPipelineDeploymentList from '@cf/pages/pipeline-deployment-list/CFPipelineDeploymentList'
-import CFPipelineStudio from '@cf/pages/pipeline-studio/CFPipelineStudio'
+import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -51,7 +51,7 @@ import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
-import { CFTemplateStudioWrapper } from '@cf/components/TemplateStudio/CFTemplateStudioWrapper/CFTemplateStudioWrapper'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -65,6 +65,8 @@ import { OnboardingDetailPage } from './pages/onboarding/OnboardingDetailPage'
 import CFTrialHomePage from './pages/home/CFTrialHomePage'
 import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPage'
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
+import ConfigurePath from './pages/onboarding/ConfigurePath'
+import FFUIApp from './pages/FFUIApp/FFUIApp'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -93,7 +95,7 @@ const RedirectToCFProject = (): React.ReactElement => {
   const { selectedProject } = useAppStore()
 
   if (selectedProject?.modules?.includes(ModuleName.CF)) {
-    return <Redirect to={routes.toCFFeatureFlags(params)} />
+    return <Redirect to={routes.toCFConfigurePath(params)} />
   } else {
     return <Redirect to={routes.toCFHome(params)} />
   }
@@ -146,7 +148,7 @@ registerFeatureFlagPipelineStage()
 registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
-  const { FF_PIPELINE, FFM_1512, FFM_1827, NG_SETTINGS } = useFeatureFlags()
+  const { FF_PIPELINE, FFM_1512, FFM_1827, NG_SETTINGS, FFM_3959_FF_MFE_Environment_Detail } = useFeatureFlags()
 
   return (
     <>
@@ -291,9 +293,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.EnvironmentDetails}
       >
-        <FFGitSyncProvider>
-          <EnvironmentDetails />
-        </FFGitSyncProvider>
+        {FFM_3959_FF_MFE_Environment_Detail ? <FFUIApp /> : <EnvironmentDetails />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -319,6 +319,16 @@ const CFRoutes: FC = () => {
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
         sidebarProps={CFSideNavProps}
+        path={routes.toCFConfigurePath({ ...accountPathProps, ...projectPathProps, ...environmentPathProps })}
+        exact
+        pageName={PAGE_NAME.CFConfigurePath}
+      >
+        <ConfigurePath />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={CFSideNavProps}
         path={routes.toCFWorkflows({ ...accountPathProps, ...projectPathProps })}
         exact
         pageName={PAGE_NAME.CFWorkflowsPage}
@@ -328,7 +338,7 @@ const CFRoutes: FC = () => {
 
       <Route path="/account/:accountId/:module(cf)">
         <TemplateRouteDestinations
-          templateStudioComponent={CFTemplateStudioWrapper}
+          templateStudioComponent={TemplateStudio}
           templateStudioPageName={PAGE_NAME.CFTemplateStudioWrapper}
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}
@@ -369,7 +379,7 @@ const CFRoutes: FC = () => {
         {FF_PIPELINE && (
           <>
             <PipelineRouteDestinations
-              pipelineStudioComponent={CFPipelineStudio}
+              pipelineStudioComponent={PipelineStudio}
               pipelineDeploymentListComponent={CFPipelineDeploymentList}
               moduleParams={moduleParams}
               licenseRedirectData={licenseRedirectData}

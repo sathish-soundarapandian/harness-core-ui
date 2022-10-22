@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { IconName } from '@wings-software/uicore'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { StepTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/StepTemplateCanvas/StepTemplateCanvas'
@@ -30,7 +30,7 @@ export class StepTemplate extends Template {
     return <StepTemplateCanvasWithRef ref={formikRef} />
   }
 
-  renderTemplateInputsForm({ template }: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <TemplateInputs template={template} />
+  renderTemplateInputsForm({ template, storeMetadata }: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={template} storeMetadata={storeMetadata} />
   }
 }

@@ -6,16 +6,24 @@
  */
 
 import React from 'react'
-import { Button, Popover, ButtonProps, useConfirmationDialog, getErrorInfoFromErrorObject } from '@harness/uicore'
+import {
+  Button,
+  Popover,
+  ButtonProps,
+  useConfirmationDialog,
+  getErrorInfoFromErrorObject,
+  Layout,
+  ButtonSize,
+  ButtonVariation
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps, Intent, Menu, MenuItem } from '@blueprintjs/core'
+import { Classes, Dialog, IDialogProps, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
 import { Link, useLocation, matchPath } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
 import { HandleInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
-import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import {
   isExecutionComplete,
@@ -29,20 +37,19 @@ import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipeline
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import RbacButton from '@rbac/components/Button/Button'
+import { killEvent } from '@common/utils/eventUtils'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
-  minimal: true,
-  small: true,
+  variation: ButtonVariation.ICON,
   tooltipProps: {
     isDark: true
-  },
-  withoutBoxShadow: true
+  }
 }
 
 export interface ExecutionActionsProps {
@@ -69,7 +76,9 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
+  menuOnlyActions?: boolean
 }
+
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
@@ -128,7 +137,8 @@ function getSuccessMessage(
   }
 }
 
-export default function ExecutionActions(props: ExecutionActionsProps): React.ReactElement {
+// eslint-disable-next-line react/function-component-definition
+const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   const {
     executionStatus,
     params,
@@ -143,7 +153,8 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     showEditButton = true,
     isPipelineInvalid,
     onViewCompiledYaml,
-    onCompareExecutions
+    onCompareExecutions,
+    menuOnlyActions
   } = props
   const {
     orgIdentifier,
@@ -193,7 +204,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
 
   const interruptMethod = stageId ? stageInterrupt : interrupt
 
-  const executionPipelineViewRoute = routes.toExecutionPipelineView({
+  const executionDetailsView = routes.toExecutionPipelineView({
     source,
     orgIdentifier,
     pipelineIdentifier,
@@ -202,8 +213,21 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     accountId,
     module
   })
-  const isExecutionPipelineViewPage = !!matchPath(location.pathname, {
-    path: executionPipelineViewRoute
+  const pipelineDetailsView = routes.toPipelineStudio({
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    accountId,
+    module,
+    branch,
+    repoIdentifier,
+    connectorRef,
+    repoName,
+    storeType
+  })
+
+  const isExecutionDetailsView = !!matchPath(location.pathname, {
+    path: executionDetailsView
   })
 
   async function executeAction(interruptType: HandleInterruptQueryParams['interruptType']): Promise<void> {
@@ -241,9 +265,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const retryPipeline = (): void => {
     showRetryPipelineModal()
   }
-  const showRetryPipeline = (): boolean => {
-    return isRetryPipelineAllowed(executionStatus) && canRetry
-  }
+  const showRetryPipelineOption = isRetryPipelineAllowed(executionStatus) && canRetry
 
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
@@ -296,85 +318,86 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
 
-  function killEvent(e: React.MouseEvent<HTMLDivElement>): void {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-
   return (
-    <div className={css.main} onClick={killEvent}>
-      {canResume ? (
-        <Button
-          icon="play"
-          tooltip={getString(resumeText)}
-          onClick={resumePipeline}
-          {...commonButtonProps}
-          disabled={!canExecute}
-        />
-      ) : null}
-      {!stageId && canRerun ? (
-        <RbacButton
-          icon="repeat"
-          tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
-          onClick={reRunPipeline}
-          {...commonButtonProps}
-          disabled={!canExecute || isPipelineInvalid}
-          featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
-        />
-      ) : null}
-      {canPause ? (
-        <Button
-          icon="pause"
-          tooltip={getString(pauseText)}
-          onClick={pausePipeline}
-          {...commonButtonProps}
-          disabled={!canExecute}
-        />
-      ) : null}
-      {canAbort ? (
-        <Button
-          icon="stop"
-          tooltip={getString(abortText)}
-          onClick={openAbortDialog}
-          {...commonButtonProps}
-          disabled={!canExecute}
-        />
-      ) : null}
-      {noMenu ? null : (
-        <Popover position="bottom-right" minimal>
-          <Button icon="more" {...commonButtonProps} className={css.more} />
-          <Menu>
-            {!isExecutionPipelineViewPage && (
-              <Link
-                className="bp3-menu-item"
-                target="_blank"
-                to={executionPipelineViewRoute}
-                onClick={e => e.stopPropagation()}
-              >
-                {getString('pipeline.openInNewTab')}
-              </Link>
+    <Layout.Horizontal onClick={killEvent}>
+      {!menuOnlyActions && (
+        <>
+          {canResume && (
+            <Button
+              size={ButtonSize.SMALL}
+              icon="play"
+              tooltip={getString(resumeText)}
+              onClick={resumePipeline}
+              {...commonButtonProps}
+              disabled={!canExecute}
+            />
+          )}
+
+          {!stageId && canRerun && (
+            <RbacButton
+              icon="repeat"
+              tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
+              onClick={reRunPipeline}
+              {...commonButtonProps}
+              disabled={!canExecute || isPipelineInvalid}
+              featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+            />
+          )}
+
+          {canPause && (
+            <Button
+              size={ButtonSize.SMALL}
+              icon="pause"
+              tooltip={getString(pauseText)}
+              onClick={pausePipeline}
+              {...commonButtonProps}
+              disabled={!canExecute}
+            />
+          )}
+
+          {canAbort && (
+            <Button
+              size={ButtonSize.SMALL}
+              icon="stop"
+              tooltip={getString(abortText)}
+              onClick={openAbortDialog}
+              {...commonButtonProps}
+              disabled={!canExecute}
+            />
+          )}
+        </>
+      )}
+
+      {!noMenu && (
+        <Popover className={Classes.DARK} position={Position.LEFT}>
+          <Button icon="Options" {...commonButtonProps} aria-label="execution menu actions" />
+          <Menu style={{ backgroundColor: 'unset' }}>
+            {showRetryPipelineOption && (
+              <RbacMenuItem
+                data-test-id="retry-failed-pipeline"
+                featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
+                text={getString('pipeline.retryPipeline')}
+                onClick={retryPipeline}
+                disabled={!canRerun || isPipelineInvalid}
+              />
             )}
-            {showEditButton ? (
-              <Link
-                className={`bp3-menu-item${!canEdit ? ' bp3-disabled' : ''}`}
-                to={routes.toPipelineStudio({
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier,
-                  accountId,
-                  module,
-                  branch,
-                  repoIdentifier,
-                  connectorRef,
-                  repoName,
-                  storeType
-                })}
-                onClick={e => !canEdit && e.preventDefault()}
-              >
-                {getString('editPipeline')}
-              </Link>
-            ) : null}
-            {stageId ? null : (
+            {!isExecutionDetailsView && (
+              <Menu.Item
+                className={css.link}
+                text={<Link to={executionDetailsView}>{getString('pipeline.viewExecution')}</Link>}
+              />
+            )}
+            <Menu.Item
+              hidden={!showEditButton}
+              disabled={!canEdit}
+              className={css.link}
+              text={
+                <Link to={pipelineDetailsView}>
+                  {canEdit ? getString('editPipeline') : getString('pipeline.viewPipeline')}
+                </Link>
+              }
+            />
+            {!stageId && (
               <RbacMenuItem
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
                 text={getString(rerunText)}
@@ -382,32 +405,29 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
                 onClick={reRunPipeline}
               />
             )}
-            <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
+            <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
             <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
-            {onViewCompiledYaml && (
-              <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
+            {!isExecutionDetailsView && (
+              <>
+                <MenuItem
+                  text={getString('pipeline.execution.actions.viewCompiledYaml')}
+                  onClick={onViewCompiledYaml}
+                  hidden={!!onViewCompiledYaml}
+                />
+                <MenuItem
+                  text={getString('pipeline.execution.actions.compareExecutions')}
+                  onClick={onCompareExecutions}
+                  disabled={isCompareMode}
+                  hidden={!!onCompareExecutions}
+                />
+              </>
             )}
-            {onCompareExecutions && (
-              <MenuItem
-                text={getString('pipeline.execution.actions.compareExecutions')}
-                onClick={onCompareExecutions}
-                disabled={isCompareMode}
-              />
-            )}
-            {showRetryPipeline() && (
-              <RbacMenuItem
-                featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
-                text={getString('pipeline.retryPipeline')}
-                onClick={retryPipeline}
-                data-testid="retry-pipeline-menu"
-                disabled={isPipelineInvalid}
-              />
-            )}
-            {/* {stageId ? null : <MenuItem text={getString('pipeline.execution.actions.downloadLogs')} disabled />} */}
           </Menu>
         </Popover>
       )}
-    </div>
+    </Layout.Horizontal>
   )
 }
+
+export default ExecutionActions

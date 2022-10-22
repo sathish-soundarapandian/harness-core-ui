@@ -260,6 +260,7 @@ type ECSRecommendationDTO {
   current: Map_String_StringScalar
   id: String
   lastDayCost: Cost
+  launchType: LaunchType
   memoryHistogram: HistogramExp
   percentileBased: Map_String_Map_String_StringScalar
   serviceArn: String
@@ -486,6 +487,7 @@ type Query {
   perspectiveForecastCost(
     aggregateFunction: [QLCEViewAggregationInput]
     filters: [QLCEViewFilterWrapperInput]
+    groupBy: [QLCEViewGroupByInput]
     isClusterQuery: Boolean
   ): PerspectiveTrendStats
   "Table for perspective"
@@ -522,12 +524,15 @@ type Query {
   perspectiveTrendStats(
     aggregateFunction: [QLCEViewAggregationInput]
     filters: [QLCEViewFilterWrapperInput]
+    groupBy: [QLCEViewGroupByInput]
     isClusterQuery: Boolean
   ): PerspectiveTrendStats
   "Fetch perspectives for account"
   perspectives(folderId: String, sortCriteria: QLCEViewSortCriteriaInput): PerspectiveData
   "recommendation details/drillDown"
   recommendationDetails(
+    "defaults to zero"
+    bufferPercentage: Int = 0
     "defaults to Now()"
     endTime: OffsetDateTime
     id: String!
@@ -577,6 +582,8 @@ type RecommendationItemDTO {
   namespace: String
   "recommendation details/drillDown"
   recommendationDetails(
+    "defaults to zero"
+    bufferPercentage: Int = 0
     "defaults to Now()"
     endTime: OffsetDateTime
     "defaults to Now().minusDays(7)"
@@ -743,6 +750,12 @@ enum InstanceCategory {
   SPOT
 }
 
+enum LaunchType {
+  EC2
+  EXTERNAL
+  FARGATE
+}
+
 enum QLCESortOrder {
   ASCENDING
   DESCENDING
@@ -901,6 +914,12 @@ input NodePoolIdInput {
   nodepoolname: String!
 }
 
+input QLCEInExpressionFilterInput {
+  fields: [QLCEViewFieldInputInput]!
+  nullValueField: String
+  values: [[String]]!
+}
+
 input QLCEViewAggregationInput {
   columnName: String!
   operationType: QLCEViewAggregateOperation!
@@ -921,6 +940,7 @@ input QLCEViewFilterInput {
 
 input QLCEViewFilterWrapperInput {
   idFilter: QLCEViewFilterInput
+  inExpressionFilter: QLCEInExpressionFilterInput
   ruleFilter: QLCEViewRuleInput
   timeFilter: QLCEViewTimeFilterInput
   viewMetadataFilter: QLCEViewMetadataFilterInput

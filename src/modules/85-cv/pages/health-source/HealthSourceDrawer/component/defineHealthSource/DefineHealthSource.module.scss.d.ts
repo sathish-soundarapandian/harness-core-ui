@@ -11,6 +11,7 @@ declare const styles: {
   readonly container: string
   readonly disabled: string
   readonly formFullheight: string
+  readonly healthSourceListContainer: string
   readonly healthSourceName: string
   readonly squareCard: string
   readonly squareCardContainer: string

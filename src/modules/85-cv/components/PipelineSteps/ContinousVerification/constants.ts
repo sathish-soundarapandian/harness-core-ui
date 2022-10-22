@@ -8,6 +8,7 @@
 import type { SelectOption } from '@wings-software/uicore'
 import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { ManualInterventionFailureActionConfig } from 'services/pipeline-ng'
 import type { ContinousVerificationData } from './types'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 
@@ -34,6 +35,13 @@ export const durationOptions: SelectOption[] = [
   { label: '10 min', value: '10m' },
   { label: '15 min', value: '15m' },
   { label: '30 min', value: '30m' }
+]
+
+export const extendedDurationOptions: SelectOption[] = [
+  { label: '45 min', value: '45m' },
+  { label: '1 hr', value: '60m' },
+  { label: '1 hr 30 min', value: '90m' },
+  { label: '2 hrs', value: '120m' }
 ]
 
 export const trafficSplitPercentageOptions: SelectOption[] = [
@@ -85,7 +93,7 @@ export const cvDefaultValues: ContinousVerificationData = {
               }
             }
           }
-        }
+        } as ManualInterventionFailureActionConfig
       }
     },
     {
@@ -101,7 +109,7 @@ export const cvDefaultValues: ContinousVerificationData = {
               }
             }
           }
-        }
+        } as ManualInterventionFailureActionConfig
       }
     }
   ]

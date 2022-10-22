@@ -36,6 +36,8 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import TextReference, { ValueType, TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
+import { URLValidationSchema } from '@common/utils/Validation'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './Stepk8ClusterDetails.module.scss'
@@ -118,101 +120,128 @@ const CLIENT_KEY_ALGO_OPTIONS: SelectOption[] = [
   }
 ]
 
-const RenderK8AuthForm: React.FC<FormikProps<KubeFormInterface> & { isEditMode: boolean }> = props => {
-  const { getString } = useStrings()
+const RenderK8AuthForm: React.FC<FormikProps<KubeFormInterface> & { isEditMode: boolean } & ScopedObjectDTO> =
+  props => {
+    const { orgIdentifier, projectIdentifier } = props
+    const { getString } = useStrings()
+    const scope = props.isEditMode ? { orgIdentifier, projectIdentifier } : undefined
 
-  switch (props.values.authType) {
-    case AuthTypes.USER_PASSWORD:
-      return (
-        <Container width={'42%'}>
-          <TextReference
-            name="username"
-            stringId="username"
-            type={props.values.username ? props.values.username?.type : ValueType.TEXT}
-          />
-          <SecretInput name={'password'} label={getString('password')} />
-        </Container>
-      )
-    case AuthTypes.SERVICE_ACCOUNT:
-      return (
-        <Container className={css.formFieldWidth}>
-          <SecretInput name={'serviceAccountToken'} label={getString('connectors.k8.serviceAccountToken')} />
-          <SecretInput name={'clientKeyCACertificate'} label={getString('connectors.k8.clientKeyCACertificate')} />
-        </Container>
-      )
-    case AuthTypes.OIDC:
-      return (
-        <>
-          <FormInput.Text
-            name="oidcIssuerUrl"
-            label={getString('connectors.k8.OIDCIssuerUrl')}
-            className={css.formFieldWidth}
-          />
-          <Container flex={{ justifyContent: 'flex-start' }}>
-            <Container width={'42%'}>
-              <TextReference
-                name="oidcUsername"
-                stringId="connectors.k8.OIDCUsername"
-                type={props.values.oidcUsername ? props.values.oidcUsername.type : ValueType.TEXT}
-              />
-
-              <SecretInput name={'oidcPassword'} label={getString('connectors.k8.OIDCPassword')} />
-            </Container>
-
-            <Container width={'42%'} margin={{ top: 'medium', left: 'xxlarge' }}>
-              <SecretInput name={'oidcCleintId'} label={getString('connectors.k8.OIDCClientId')} />
-              <SecretInput name={'oidcCleintSecret'} label={getString('connectors.k8.clientSecretOptional')} />
-            </Container>
+    switch (props.values.authType) {
+      case AuthTypes.USER_PASSWORD:
+        return (
+          <Container width={'42%'}>
+            <TextReference
+              name="username"
+              stringId="username"
+              type={props.values.username ? props.values.username?.type : ValueType.TEXT}
+            />
+            <SecretInput name={'password'} label={getString('password')} scope={scope} />
           </Container>
-
-          <FormInput.Text
-            name="oidcScopes"
-            label={getString('connectors.k8.OIDCScopes')}
-            className={css.formFieldWidth}
-          />
-        </>
-      )
-
-    case AuthTypes.CLIENT_KEY_CERT:
-      return (
-        <>
-          <Container flex={{ justifyContent: 'flex-start' }}>
-            <Container className={css.formFieldWidth}>
-              <SecretInput name={'clientKey'} label={getString('connectors.k8.clientKey')} />
-              <SecretInput name={'clientKeyCertificate'} label={getString('connectors.k8.clientCertificate')} />
-            </Container>
-
-            <Container className={css.formFieldWidth} margin={{ left: 'xxlarge' }}>
-              <SecretInput name={'clientKeyPassphrase'} label={getString('connectors.k8.clientKeyPassphrase')} />
-              <FormInput.Select
-                items={CLIENT_KEY_ALGO_OPTIONS}
-                name="clientKeyAlgo"
-                label={getString('connectors.k8.clientKeyAlgorithm')}
-                value={
-                  // If we pass the value as undefined, formik will kick in and value will be updated as per uicore logic
-                  // If we've added a custom value, then just add it as a label value pair
-                  CLIENT_KEY_ALGO_OPTIONS.find(opt => opt.value === props.values.clientKeyAlgo)
-                    ? undefined
-                    : { label: props.values.clientKeyAlgo, value: props.values.clientKeyAlgo }
-                }
-                selectProps={{
-                  allowCreatingNewItems: true,
-                  inputProps: {
-                    placeholder: getString('connectors.k8.clientKeyAlgorithmPlaceholder')
-                  }
-                }}
-              />
-            </Container>
-          </Container>
+        )
+      case AuthTypes.SERVICE_ACCOUNT:
+        return (
           <Container className={css.formFieldWidth}>
-            <SecretInput name={'clientKeyCACertificate'} label={getString('connectors.k8.clientKeyCACertificate')} />
+            <SecretInput
+              name={'serviceAccountToken'}
+              label={getString('connectors.k8.serviceAccountToken')}
+              scope={scope}
+            />
+            <SecretInput
+              name={'clientKeyCACertificate'}
+              label={getString('connectors.k8.clientKeyCACertificate')}
+              scope={scope}
+            />
           </Container>
-        </>
-      )
-    default:
-      return null
+        )
+      case AuthTypes.OIDC:
+        return (
+          <>
+            <FormInput.Text
+              name="oidcIssuerUrl"
+              label={getString('connectors.k8.OIDCIssuerUrl')}
+              className={css.formFieldWidth}
+            />
+            <Container flex={{ justifyContent: 'flex-start' }}>
+              <Container width={'42%'}>
+                <TextReference
+                  name="oidcUsername"
+                  stringId="connectors.k8.OIDCUsername"
+                  type={props.values.oidcUsername ? props.values.oidcUsername.type : ValueType.TEXT}
+                />
+
+                <SecretInput name={'oidcPassword'} label={getString('connectors.k8.OIDCPassword')} scope={scope} />
+              </Container>
+
+              <Container width={'42%'} margin={{ top: 'medium', left: 'xxlarge' }}>
+                <SecretInput name={'oidcCleintId'} label={getString('connectors.k8.OIDCClientId')} scope={scope} />
+                <SecretInput
+                  name={'oidcCleintSecret'}
+                  label={getString('connectors.k8.clientSecretOptional')}
+                  scope={scope}
+                />
+              </Container>
+            </Container>
+
+            <FormInput.Text
+              name="oidcScopes"
+              label={getString('connectors.k8.OIDCScopes')}
+              className={css.formFieldWidth}
+            />
+          </>
+        )
+
+      case AuthTypes.CLIENT_KEY_CERT:
+        return (
+          <>
+            <Container flex={{ justifyContent: 'flex-start' }}>
+              <Container className={css.formFieldWidth}>
+                <SecretInput name={'clientKey'} label={getString('connectors.k8.clientKey')} scope={scope} />
+                <SecretInput
+                  name={'clientKeyCertificate'}
+                  label={getString('connectors.k8.clientCertificate')}
+                  scope={scope}
+                />
+              </Container>
+
+              <Container className={css.formFieldWidth} margin={{ left: 'xxlarge' }}>
+                <SecretInput
+                  name={'clientKeyPassphrase'}
+                  label={getString('connectors.k8.clientKeyPassphrase')}
+                  scope={scope}
+                />
+                <FormInput.Select
+                  items={CLIENT_KEY_ALGO_OPTIONS}
+                  name="clientKeyAlgo"
+                  label={getString('connectors.k8.clientKeyAlgorithm')}
+                  value={
+                    // If we pass the value as undefined, formik will kick in and value will be updated as per uicore logic
+                    // If we've added a custom value, then just add it as a label value pair
+                    CLIENT_KEY_ALGO_OPTIONS.find(opt => opt.value === props.values.clientKeyAlgo)
+                      ? undefined
+                      : { label: props.values.clientKeyAlgo, value: props.values.clientKeyAlgo }
+                  }
+                  selectProps={{
+                    allowCreatingNewItems: true,
+                    inputProps: {
+                      placeholder: getString('connectors.k8.clientKeyAlgorithmPlaceholder')
+                    }
+                  }}
+                />
+              </Container>
+            </Container>
+            <Container className={css.formFieldWidth}>
+              <SecretInput
+                name={'clientKeyCACertificate'}
+                label={getString('connectors.k8.clientKeyCACertificate')}
+                scope={scope}
+              />
+            </Container>
+          </>
+        )
+      default:
+        return null
+    }
   }
-}
 
 const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8ClusterDetailsProps> = props => {
   const { accountId, prevStepData, nextStep } = props
@@ -255,7 +284,7 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
       .nullable()
       .when('delegateType', {
         is: delegateType => delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER,
-        then: Yup.string().required(getString('validation.masterUrl'))
+        then: URLValidationSchema({ requiredMessage: getString('validation.masterUrl') })
       }),
     delegateType: Yup.string().required(
       getString('connectors.chooseMethodForConnection', { name: getString('connectors.k8sConnection') })
@@ -340,12 +369,17 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
     }
   }, [loadingConnectorSecrets])
 
-  const handleSubmit = (formData: ConnectorConfigDTO) => {
+  const handleSubmit = (formData: ConnectorConfigDTO): void => {
     trackEvent(ConnectorActions.DetailsStepSubmit, {
       category: Category.CONNECTOR,
       connector_type: Connectors.K8
     })
-    nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as Stepk8ClusterDetailsProps)
+    nextStep?.({
+      ...props.connectorInfo,
+      ...prevStepData,
+      ...formData,
+      ...(typeof formData.masterUrl === 'string' && { masterUrl: formData.masterUrl.trim() })
+    } as Stepk8ClusterDetailsProps)
   }
   useConnectorWizard({ helpPanel: { referenceId: 'KubernetesConnectorDetails', contentWidth: 1100 } })
   const { trackEvent } = useTelemetry()
@@ -416,7 +450,12 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
                     />
                   </Container>
 
-                  <RenderK8AuthForm {...formikProps} isEditMode={props.isEditMode} />
+                  <RenderK8AuthForm
+                    {...formikProps}
+                    isEditMode={props.isEditMode}
+                    orgIdentifier={prevStepData?.orgIdentifier}
+                    projectIdentifier={prevStepData?.projectIdentifier}
+                  />
                 </>
               ) : (
                 <></>

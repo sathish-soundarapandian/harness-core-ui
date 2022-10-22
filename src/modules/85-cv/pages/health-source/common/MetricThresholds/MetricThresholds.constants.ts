@@ -27,10 +27,15 @@ export const MetricCriteriaValues: Record<string, 'Absolute' | 'Percentage'> = {
 export const MetricTypeValues = {
   Performance: 'Performance',
   Custom: 'Custom',
-  Errors: 'Errors'
+  Errors: 'Errors',
+  Infrastructure: 'Infrastructure'
 }
 
-export const MetricTypesForTransactionTextField = [MetricTypeValues.Performance, MetricTypeValues.Errors]
+export const MetricTypesForTransactionTextField = [
+  MetricTypeValues.Performance,
+  MetricTypeValues.Errors,
+  MetricTypeValues.Infrastructure
+]
 
 export const CustomMetricDropdownOption: SelectItem = {
   label: MetricTypeValues.Custom,

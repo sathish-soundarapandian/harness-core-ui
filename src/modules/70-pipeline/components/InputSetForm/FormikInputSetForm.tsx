@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, omit, isUndefined, get } from 'lodash-es'
+import { defaultTo, isEmpty, omit, isUndefined, get, omitBy } from 'lodash-es'
 import {
   Button,
   Container,
@@ -76,6 +76,18 @@ export const isYamlPresent = (
 ): string | undefined => {
   return template?.data?.inputSetTemplateYaml && pipeline?.data?.yamlPipeline
 }
+
+const OMITTED_FIELDS = [
+  'inputSetReferences',
+  'repo',
+  'branch',
+  'outdated',
+  'connectorRef',
+  'repoName',
+  'filePath',
+  'storeType',
+  'inputSetErrorWrapper'
+]
 
 type InputSetDTOGitDetails = InputSetDTO & GitContextProps & StoreMetadata
 interface FormikInputSetFormProps {
@@ -468,17 +480,9 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
                         existingJSON={{
-                          inputSet: omit(
+                          inputSet: omitBy(
                             formikProps?.values,
-                            'inputSetReferences',
-                            'repo',
-                            'branch',
-                            'outdated',
-                            'connectorRef',
-                            'repoName',
-                            'filePath',
-                            'storeType',
-                            'inputSetErrorWrapper'
+                            (_val, key) => OMITTED_FIELDS.includes(key) || key.startsWith('_')
                           )
                         }}
                         bind={setYamlHandler}

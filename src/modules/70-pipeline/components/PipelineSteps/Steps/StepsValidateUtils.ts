@@ -13,7 +13,6 @@ import { get, set, uniq, uniqBy, isEmpty, isUndefined } from 'lodash-es'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import {
   illegalIdentifiers,
   keyRegexIdentifier,
@@ -22,13 +21,9 @@ import {
   serviceDependencyIdRegex
 } from '@common/utils/StringUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import {
-  IdentifierSchema,
-  IdentifierSchemaWithoutHook,
-  NameSchema,
-  NameSchemaWithoutHook
-} from '@common/utils/Validation'
+import { IdentifierSchema, IdentifierSchemaWithoutHook, NameSchema } from '@common/utils/Validation'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { CIBuildInfrastructureType, stepNameRegex, stepIdentifierRegex } from '@pipeline/utils/constants'
 
 export enum Types {
   Text,
@@ -116,7 +111,11 @@ function generateSchemaForIdentifier({
 }
 
 function generateSchemaForName({ getString }: GenerateSchemaDependencies): StringSchema {
-  return NameSchemaWithoutHook(getString) as StringSchema
+  return yup
+    .string()
+    .trim()
+    .required(getString('common.validation.nameIsRequired'))
+    .matches(stepNameRegex, getString('pipeline.step.validation.namePatternIsNotValid')) as StringSchema
 }
 
 function generateSchemaForList(
@@ -336,6 +335,8 @@ function generateSchemaForOutputVariables(
 }
 
 export function generateSchemaForLimitMemory({ getString, isRequired = false }: GenerateSchemaDependencies): Lazy {
+  // requires suffix
+  const pattern = /^(([0-9]*[.])?[0-9]+)([GM]i?)|^$/
   return yup.lazy(value => {
     if (isRequired) {
       return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
@@ -343,22 +344,14 @@ export function generateSchemaForLimitMemory({ getString, isRequired = false }: 
             .string()
             .required()
             // ^$ in the end is to pass empty string because otherwise it will fail
-            // .matches(/^\d+$|^\d+(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$|^$/, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
-            .matches(
-              /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/,
-              getString('pipeline.stepCommonFields.validation.invalidLimitMemory')
-            )
+            .matches(pattern, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
         : yup.string().required()
     }
     return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
       ? yup
           .string()
           // ^$ in the end is to pass empty string because otherwise it will fail
-          // .matches(/^\d+$|^\d+(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$|^$/, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
-          .matches(
-            /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/,
-            getString('pipeline.stepCommonFields.validation.invalidLimitMemory')
-          )
+          .matches(pattern, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
       : yup.string()
   })
 }
@@ -433,7 +426,7 @@ export function generateSchemaFields(
   fields: Field[],
   { initialValues, steps, serviceDependencies, getString }: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: K8sDirectInfraYaml['type']
+  buildInfrastructureType?: CIBuildInfrastructureType
 ): SchemaField[] {
   return fields.map(field => {
     const { name, type, label, isRequired, isActive } = field
@@ -497,7 +490,12 @@ export function generateSchemaFields(
           getString('fieldRequired', { field: getString(label as StringKeys) })
         )
         if (type === Types.Identifier) {
-          if (buildInfrastructureType === 'VM') {
+          if (
+            buildInfrastructureType &&
+            [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+              buildInfrastructureType
+            )
+          ) {
             validationRule = validationRule.matches(
               serviceDependencyIdRegex,
               getString('pipeline.ci.validations.serviceDependencyIdentifier', {
@@ -505,7 +503,7 @@ export function generateSchemaFields(
               })
             )
           } else {
-            validationRule = validationRule.matches(regexIdentifier, getString('validation.validIdRegex'))
+            validationRule = validationRule.matches(stepIdentifierRegex, getString('validation.validIdRegex'))
           }
           validationRule = validationRule.notOneOf(illegalIdentifiers)
         }
@@ -535,7 +533,7 @@ export function validate(
   config: Field[],
   dependencies: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: K8sDirectInfraYaml['type']
+  buildInfrastructureType?: CIBuildInfrastructureType
 ): FormikErrors<any> {
   const errors = {}
   if (isEmpty(dependencies.steps)) {

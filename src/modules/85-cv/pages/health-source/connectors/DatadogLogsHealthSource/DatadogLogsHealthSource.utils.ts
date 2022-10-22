@@ -9,11 +9,15 @@ import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectO
 import type {
   DatadogLogsHealthSpec,
   DatadogLogsInfo,
+  DatadogLogsQueryDefinition,
   DatadogLogsSetupSource,
   SelectedAndMappedMetrics,
   UpdateSelectedMetricsMap
 } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/DatadogLogsHealthSource.type'
-import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type {
+  SourceDataInterface,
+  UpdatedHealthSource
+} from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import type { UseStringsReturn } from 'framework/strings'
@@ -73,8 +77,11 @@ export function updateSelectedMetricsMap({
   return { selectedMetric: updatedMetric, mappedMetrics: updatedMap }
 }
 
-export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData: any): DatadogLogsSetupSource {
-  const existingHealthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
+export function transformDatadogHealthSourceToDatadogLogsSetupSource(
+  sourceData: SourceDataInterface & DatadogLogsSetupSource,
+  isTemplate?: boolean
+): DatadogLogsSetupSource {
+  const existingHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
   )
 
@@ -84,7 +91,8 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData:
       healthSourceIdentifier: sourceData.healthSourceIdentifier,
       logsDefinitions: new Map<string, DatadogLogsInfo>(),
       healthSourceName: sourceData.healthSourceName,
-      connectorRef: sourceData.connectorRef.value || sourceData.connectorRef,
+      connectorRef:
+        typeof sourceData.connectorRef === 'string' ? sourceData.connectorRef : sourceData.connectorRef?.value,
       product: { label: DatadogProduct.CLOUD_LOGS, value: DatadogProduct.CLOUD_LOGS }
     }
   }
@@ -103,7 +111,7 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData:
       setupSource.logsDefinitions.set(logQueryDefinition.name, {
         metricName: logQueryDefinition.name,
         query: logQueryDefinition.query || '',
-        serviceInstanceIdentifierTag: logQueryDefinition.serviceInstanceIdentifier,
+        serviceInstanceIdentifierTag: getServiceInstanceTag(logQueryDefinition, isTemplate),
         indexes:
           getMultiTypeFromValue(logQueryDefinition?.indexes) !== MultiTypeInputType.FIXED
             ? (logQueryDefinition?.indexes as unknown as SelectOption[])
@@ -117,6 +125,24 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData:
   }
 
   return setupSource
+}
+
+const getServiceInstanceTag = (
+  logQueryDefinition: DatadogLogsQueryDefinition,
+  isTemplate?: boolean
+): string | SelectOption | undefined => {
+  const { serviceInstanceIdentifier } = logQueryDefinition
+  if (!isTemplate) {
+    return serviceInstanceIdentifier
+  } else if (isTemplate && typeof serviceInstanceIdentifier === 'string') {
+    if (getMultiTypeFromValue(serviceInstanceIdentifier) === MultiTypeInputType.FIXED) {
+      return {
+        label: serviceInstanceIdentifier,
+        value: serviceInstanceIdentifier
+      }
+    }
+  }
+  return serviceInstanceIdentifier
 }
 
 export function transformDatadogLogsSetupSourceToHealthSource(
@@ -146,7 +172,10 @@ export function transformDatadogLogsSetupSourceToHealthSource(
       query,
       name: metricName,
       identifier: metricName.split(' ').join('_'),
-      serviceInstanceIdentifier: serviceInstanceIdentifierTag,
+      serviceInstanceIdentifier:
+        typeof serviceInstanceIdentifierTag === 'string'
+          ? serviceInstanceIdentifierTag
+          : (serviceInstanceIdentifierTag?.value as string),
       indexes:
         typeof indexes === 'string' ? indexes : indexes?.map(logIndexOption => logIndexOption.value as string) || []
     })

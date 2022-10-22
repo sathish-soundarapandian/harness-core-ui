@@ -43,8 +43,7 @@ export const DynatraceHealthSourceSpecMock: DynatraceHealthSourceSpec = {
           enabled: true
         },
         riskProfile: {
-          category: 'Performance',
-          metricType: 'INFRA',
+          riskCategory: 'Performance_Throughput',
           thresholdTypes: []
         }
       }
@@ -80,7 +79,7 @@ const mockMetricInfosMap: Map<string, DynatraceMetricInfo> = new Map([
       sli: true,
       continuousVerification: false,
       healthScore: true,
-      riskCategory: 'Performance/INFRA',
+      riskCategory: 'Performance_Throughput',
       lowerBaselineDeviation: false,
       higherBaselineDeviation: false,
       isManualQuery: undefined,
@@ -134,7 +133,9 @@ export const MockTemplateMetricData: DynatraceFormDataInterface = {
   metricPacks: [{ identifier: 'Infrastructure' }, { identifier: 'Performance' }],
   metricData: { Infrastructure: true, Performance: true },
   serviceMethods: [],
-  customMetrics: templateCustomMetric
+  customMetrics: templateCustomMetric,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const MockDynatraceMetricData: DynatraceFormDataInterface = {
@@ -152,7 +153,9 @@ export const MockDynatraceMetricData: DynatraceFormDataInterface = {
   metricData: {
     Performance: true
   },
-  customMetrics: mockMetricInfosMap
+  customMetrics: mockMetricInfosMap,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const MockDynatraceMetricDataWithCustomMetric: DynatraceFormDataInterface = {
@@ -165,7 +168,9 @@ export const MockDynatraceMetricDataWithCustomMetric: DynatraceFormDataInterface
   metricPacks: [{ identifier: 'Performance' }, { identifier: 'Infrastructure' }],
   metricData: { Performance: true, Infrastructure: true },
   serviceMethods: ['SERVICE_METHOD-F3988BEE84FF7388'],
-  customMetrics: mockCustomMetricMap
+  customMetrics: mockCustomMetricMap,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const ServiceListMock: DynatraceServiceDTO[] = [

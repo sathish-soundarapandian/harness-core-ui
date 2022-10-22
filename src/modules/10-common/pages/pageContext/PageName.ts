@@ -61,6 +61,7 @@ export enum PAGE_NAME {
   TemplateStudioWrapper = 'TemplateStudioWrapper',
   CDHomePage = 'CDHomePage',
   CDTrialHomePage = 'CDTrialHomePage',
+  ChaosTrialHomePage = 'ChaosTrialHomePage',
   Services = 'Services',
   ServiceDetails = 'ServiceDetails',
   ServiceStudio = 'ServiceStudio',
@@ -133,5 +134,6 @@ export enum PAGE_NAME {
   SCMCommitDetails = 'SCMCommitDetails',
   SCMPullRequests = 'SCMPullRequests',
   SCMPullRequestDetails = 'SCMPullRequestDetails',
-  ExecutionList = 'ExecutionList'
+  ExecutionList = 'ExecutionList',
+  CFConfigurePath = 'CFConfigurePath'
 }

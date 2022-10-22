@@ -22,7 +22,8 @@ export default function IgnoreThresholdsFieldArray<T>({
   formValues,
   metricPacks,
   groupedCreatedMetrics,
-  isOnlyCustomMetricHealthSource
+  isOnlyCustomMetricHealthSource,
+  alwaysShowCustomMetricType
 }: IgnoreThresholdsFieldArrayInterface<T>): JSX.Element {
   const { getString } = useStrings()
 
@@ -117,7 +118,8 @@ export default function IgnoreThresholdsFieldArray<T>({
                       groupedCreatedMetrics,
                       metricPacks,
                       formValues.metricData,
-                      isOnlyCustomMetricHealthSource
+                      isOnlyCustomMetricHealthSource,
+                      alwaysShowCustomMetricType
                     )}
                     key={`${data?.metricType}`}
                     disabled={isOnlyCustomMetricHealthSource}
@@ -126,7 +128,6 @@ export default function IgnoreThresholdsFieldArray<T>({
                       handleMetricTypeUpdate(index, value as string, props.replace.bind(null, index))
                     }}
                   />
-                  {/* <ErrorMessage name={`ignoreThresholds.${index}.${FieldName.METRIC_THRESHOLD_METRIC_TYPE}`} /> */}
 
                   {/* ==== ⭐️ Group ==== */}
                   {!isOnlyCustomMetricHealthSource && (
@@ -151,7 +152,7 @@ export default function IgnoreThresholdsFieldArray<T>({
                       data.groupName,
                       isOnlyCustomMetricHealthSource
                     )}
-                    key={`${data?.metricType}-${data.groupName}`}
+                    key={`${data.metricType}-${data.groupName}-${data.metricName}`}
                     name={`ignoreThresholds.${index}.${FieldName.METRIC_THRESHOLD_METRIC_NAME}`}
                   />
 

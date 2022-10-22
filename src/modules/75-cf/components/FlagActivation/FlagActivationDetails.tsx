@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Container, FlexExpander, Heading, Layout, Text } from '@harness/uicore'
@@ -29,6 +29,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlagTypeToStringMapping } from '@cf/utils/CFUtils'
 
 import type { UseGitSync } from '@cf/hooks/useGitSync'
+import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { FlagTypeVariations } from '../CreateFlagDialog/FlagDialogUtils'
@@ -43,7 +44,6 @@ import css from './FlagActivationDetails.module.scss'
 interface FlagActivationDetailsProps {
   featureFlag: Feature
   gitSync: UseGitSync
-  gitSyncActionsComponent?: ReactElement
   refetchFlag: () => void
   setGovernanceMetadata: (governanceMetadata: any) => void
 }
@@ -128,7 +128,7 @@ const VariationsList: React.FC<{
 }
 
 const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
-  const { featureFlag, refetchFlag, gitSyncActionsComponent, gitSync, setGovernanceMetadata } = props
+  const { featureFlag, refetchFlag, gitSync, setGovernanceMetadata } = props
   const { getString } = useStrings()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { withActiveEnvironment } = useActiveEnvironment()
@@ -204,12 +204,6 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
         />
       </Layout.Horizontal>
 
-      {gitSyncActionsComponent && (
-        <Container flex={{ justifyContent: 'space-between', alignItems: 'center' }} width={230}>
-          {gitSyncActionsComponent}
-        </Container>
-      )}
-
       <Container>
         <Heading level={4}>
           <Text inline lineClamp={1} color={Color.BLACK} font={{ variation: FontVariation.H4 }}>
@@ -222,6 +216,14 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
             {featureFlag.description}
           </Text>
         )}
+
+        <Container
+          flex={{ justifyContent: 'space-between', alignItems: 'center' }}
+          width={230}
+          margin={{ top: 'small' }}
+        >
+          <GitSyncActions isLoading={gitSync.isGitSyncActionsEnabled && gitSync.gitSyncLoading} />
+        </Container>
 
         <Layout.Vertical margin={{ top: 'medium', bottom: 'xlarge' }}>
           {renderTime(featureFlag.createdAt, 'cf.featureFlags.createdDate')}

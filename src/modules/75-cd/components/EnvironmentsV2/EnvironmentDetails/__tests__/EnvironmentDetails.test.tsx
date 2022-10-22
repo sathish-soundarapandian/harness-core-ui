@@ -52,7 +52,18 @@ jest.mock('services/cd-ng', () => ({
       refetch: jest.fn()
     }
   }),
-  useDeleteCluster: jest.fn().mockResolvedValue({})
+  useDeleteCluster: jest.fn().mockResolvedValue({}),
+  useGetConnectorListV2: jest.fn().mockImplementation(() => ({
+    mutate: async () => {
+      return {
+        status: 'SUCCESS',
+        data: {
+          pageItemCount: 0,
+          content: []
+        }
+      }
+    }
+  }))
 }))
 
 describe('EnvironmentDetails tests', () => {

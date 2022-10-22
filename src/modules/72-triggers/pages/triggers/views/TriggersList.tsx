@@ -23,9 +23,6 @@ import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInter
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
@@ -40,7 +37,7 @@ interface TriggersListPropsInterface {
 }
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
-  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled, pipeline } = props
+  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
   const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
@@ -53,12 +50,6 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   >()
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
-
-  const { AZURE_REPO_CONNECTOR, NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
-  const isNewService = isNewServiceEnvEntity(
-    NG_SVC_ENV_REDESIGN,
-    pipeline?.stages?.[0]?.stage as DeploymentStageElementConfig
-  )
 
   const {
     data: triggerListResponse,
@@ -174,14 +165,15 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           triggerType: val.categoryValue,
           sourceRepo: (val.categoryValue === TriggerTypes.WEBHOOK && val.value) || undefined,
           artifactType: (val.categoryValue === TriggerTypes.ARTIFACT && val.value) || undefined,
-          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined
+          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined,
+          scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && val.value) || undefined
         })
       }
     }
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, isNewService, AZURE_REPO_CONNECTOR)}
+        addDrawerMap={getCategoryItems(getString, false)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}

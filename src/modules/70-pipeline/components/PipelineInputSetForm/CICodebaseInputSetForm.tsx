@@ -53,6 +53,7 @@ import {
   CodebaseTypes,
   getCodebaseRepoNameFromConnector,
   getConnectorRefWidth,
+  GIT_EXTENSION,
   isCodebaseFieldsRuntimeInputs,
   isRuntimeInput
 } from '@pipeline/utils/CIUtils'
@@ -81,8 +82,8 @@ const TriggerTypes = {
 export enum ConnectionType {
   Repo = 'Repo',
   Account = 'Account',
-  Region = 'Region', // awscodecommit
-  Project = 'Project' // Azure Repos
+  Region = 'Region', // Used for AWS CodeCommit
+  Project = 'Project' // Project level Azure Repo connector is the same as an Account level GitHub/GitLab connector
 }
 
 export const buildTypeInputNames: Record<string, string> = {
@@ -133,6 +134,7 @@ export const handleCIConnectorRefOnChange = ({
   connectorRefType,
   setConnectionType,
   setConnectorUrl,
+  setConnectorType,
   setFieldValue,
   setIsConnectorExpression,
   setGitAuthProtocol,
@@ -144,6 +146,7 @@ export const handleCIConnectorRefOnChange = ({
   connectorRefType: MultiTypeInputType
   setConnectionType: Dispatch<SetStateAction<string>>
   setConnectorUrl: Dispatch<SetStateAction<string>>
+  setConnectorType?: Dispatch<SetStateAction<string>> // only used for Add CI Stage to render getCompleteConnectorUrl
   setFieldValue: (field: string, value: unknown) => void
   setGitAuthProtocol?: React.Dispatch<React.SetStateAction<GitAuthenticationProtocol>>
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
@@ -163,6 +166,7 @@ export const handleCIConnectorRefOnChange = ({
       setConnectionType(ConnectionType.Account)
       setConnectorUrl(newConnectorRef.record?.spec?.url || '')
       setFieldValue(codeBaseInputFieldFormName?.repoName || 'repoName', '')
+      setConnectorType?.(newConnectorRef.record?.spec?.type || '')
     } else if (
       connectionType &&
       [ConnectionType.Repo, ConnectionType.Region, ConnectionType.Project].includes(connectionType as ConnectionType)
@@ -269,13 +273,20 @@ function CICodebaseInputSetFormInternal({
   const showSetContainerResources = isCpuLimitRuntimeInput || isMemoryLimitRuntimeInput
   const [isConnectorExpression, setIsConnectorExpression] = useState<boolean>(false)
   const containerWidth = viewTypeMetadata?.isTemplateDetailDrawer ? '100%' : '50%' // drawer view is much smaller 50% would cut out
-  const savedValues = useRef<Record<string, string>>({
-    branch: '',
-    tag: '',
-    PR: ''
-  })
+  const prefix = isEmpty(path) ? '' : `${path}.`
+  const buildTypeValue = get(formik?.values, `${prefix}properties.ci.codebase.build.type`)
+  const previousBuildTypeSpecValue = get(formik?.values, `${prefix}properties.ci.codebase.build.spec.${buildTypeValue}`)
+  const savedValues = useRef<Record<string, string>>(
+    Object.assign(
+      {
+        branch: '',
+        tag: '',
+        PR: ''
+      },
+      { [buildTypeValue]: previousBuildTypeSpecValue || '' }
+    )
+  )
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const formattedPath = isEmpty(path) ? '' : `${path}.`
@@ -374,13 +385,16 @@ function CICodebaseInputSetFormInternal({
                 accountIdentifier: accountId,
                 orgIdentifier,
                 projectIdentifier,
-                repoName: encodeURI(repoName),
+                repoName: encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName),
                 size: 1
               }
             })
               .then((result: ResponseGitBranchesResponseDTO) => {
                 setIsFetchingBranches(false)
-                formik.setFieldValue(codeBaseInputFieldFormName.branch, result.data?.defaultBranch?.name || '')
+                const branchName = result.data?.defaultBranch?.name || ''
+                formik.setFieldValue(codeBaseInputFieldFormName.branch, branchName)
+                savedValues.current.branch = branchName as string
+
                 if (result.data?.defaultBranch?.name) {
                   setIsDefaultBranchSet(true)
                 }
@@ -458,11 +472,7 @@ function CICodebaseInputSetFormInternal({
           : connectorDetails?.data?.connector.spec.type
       )
       setConnectorUrl(connectorDetails?.data?.connector.spec.url)
-      if (
-        [ConnectionType.Project, ConnectionType.Repo, ConnectionType.Region].includes(
-          connectorDetails?.data?.connector?.spec?.type
-        )
-      ) {
+      if ([ConnectionType.Repo, ConnectionType.Region].includes(connectorDetails?.data?.connector?.spec?.type)) {
         formik.setFieldValue(codeBaseInputFieldFormName.repoName, undefined)
       }
     }
@@ -595,7 +605,10 @@ function CICodebaseInputSetFormInternal({
           }}
           placeholder={triggerIdentifier && isNotScheduledTrigger ? placeholderValues[type] : ''}
           disabled={readonly || shouldDisableBranchTextInput}
-          onChange={() => setIsInputTouched(true)}
+          onChange={val => {
+            setIsInputTouched(true)
+            savedValues.current[type] = (val || '') as string
+          }}
           className={shouldDisableBranchTextInput ? css.width90 : css.width100}
         />
         {shouldDisableBranchTextInput ? <Icon name="steps-spinner" size={20} padding={{ top: 'xsmall' }} /> : null}

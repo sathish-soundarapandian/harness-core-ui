@@ -6,8 +6,15 @@
  */
 
 import React, { useMemo } from 'react'
-import { noop } from 'lodash-es'
-import { Container, MultiTypeInput, MultiTypeInputType, Select, SelectOption } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
+import {
+  AllowedTypes,
+  Container,
+  MultiTypeInput,
+  MultiTypeInputType,
+  Select,
+  SelectOption
+} from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -30,6 +37,7 @@ export interface ServiceSelectOrCreateProps {
   customLoading?: boolean
   isMultiType?: boolean
   isTemplate?: boolean
+  allowableTypes?: AllowedTypes
 }
 export function generateOptions(response?: ServiceResponseDTO[]): SelectOption[] {
   return response
@@ -49,7 +57,8 @@ export const ServiceSelectOrCreate: React.FC<ServiceSelectOrCreateProps> = props
     skipServiceCreateOrUpdate,
     loading,
     name,
-    customLoading
+    customLoading,
+    allowableTypes
   } = props
 
   const selectOptions = useMemo(
@@ -71,7 +80,6 @@ export const ServiceSelectOrCreate: React.FC<ServiceSelectOrCreateProps> = props
     data: { name: '', identifier: '', orgIdentifier, projectIdentifier },
     isService: true,
     isEdit: false,
-    onClose: noop,
     onCreateOrUpdate: onSubmit,
     modalTitle,
     skipServiceCreateOrUpdate,
@@ -100,7 +108,7 @@ export const ServiceSelectOrCreate: React.FC<ServiceSelectOrCreateProps> = props
           selectProps={{
             items: selectOptions
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+          allowableTypes={defaultTo(allowableTypes, [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME])}
           value={props.item}
           style={{ width: '400px' }}
           onChange={(val: any) => onSelectChange(val)}

@@ -17,9 +17,9 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -33,7 +33,7 @@ import type { HelmWithOCIDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
 import { ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
-import { filePathWidth, handleCommandFlagsSubmitData } from '../ManifestUtils'
+import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
@@ -80,7 +80,10 @@ function HelmWithOCI({
           /* istanbul ignore next */
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
-            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(initialValues?.spec?.valuesPaths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -188,7 +191,7 @@ function HelmWithOCI({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: HelmWithOCIDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <Layout.Horizontal flex spacing="huge">
                 <div className={helmcss.halfWidth}>
@@ -345,7 +348,7 @@ function HelmWithOCI({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

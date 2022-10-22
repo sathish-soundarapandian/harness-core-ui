@@ -9,7 +9,6 @@ import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import get from 'lodash/get'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import { Connectors } from '@connectors/constants'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -22,6 +21,7 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './DockerHubStepFunctionConfigs'
 import type { DockerHubStepProps, DockerHubStepData, DockerHubStepDataUI } from './DockerHubStep'
 import { CIStep } from '../CIStep/CIStep'
@@ -51,7 +51,9 @@ export const DockerHubStepBase = (
   //   pullOptions
   // })
 
-  const buildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type') as K8sDirectInfraYaml['type']
+  const buildInfrastructureType =
+    (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
+    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
 
   return (
     <Formik
@@ -117,13 +119,25 @@ export const DockerHubStepBase = (
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
-                        'spec.optimize': { shouldHide: buildInfrastructureType === 'VM' },
+                        'spec.optimize': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
+                        },
                         'spec.dockerfile': {},
                         'spec.context': {},
                         'spec.labels': {},
                         'spec.buildArgs': {},
                         'spec.target': { tooltipId: 'target' },
-                        'spec.remoteCacheRepo': { shouldHide: buildInfrastructureType === 'VM' }
+                        'spec.remoteCacheRepo': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
+                        }
                       }}
                     />
                     <StepCommonFields disabled={readonly} buildInfrastructureType={buildInfrastructureType} />

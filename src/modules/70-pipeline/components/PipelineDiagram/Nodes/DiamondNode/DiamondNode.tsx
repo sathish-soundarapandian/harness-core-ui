@@ -19,6 +19,7 @@ import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../type
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './DiamondNode.module.scss'
 
@@ -37,6 +38,8 @@ export function DiamondNodeWidget(props: any): JSX.Element {
   )
   const isTemplateNode = props?.data?.isTemplateNode
   const showMarkers = defaultTo(props?.showMarkers, true)
+
+  const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
   return (
     <div
       className={cx(cssDefault.defaultNode, 'diamond-node')}
@@ -63,7 +66,6 @@ export function DiamondNodeWidget(props: any): JSX.Element {
         className={cx(
           cssDefault.defaultCard,
           css.diamond,
-
           {
             [cssDefault.selected]: isSelected,
             [cssDefault.failed]: stepStatus === ExecutionStatusEnum.Failed,
@@ -73,6 +75,9 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           },
           { [css.top]: props?.data?.graphType === PipelineGraphType.STAGE_GRAPH }
         )}
+        style={{
+          ...props?.customNodeStyle
+        }}
         draggable={true}
         onDragStart={event => {
           event.stopPropagation()
@@ -161,7 +166,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             {...secondaryIconProps}
           />
         )}
-        {props.skipCondition && (
+        {props?.skipCondition && (
           <div className={css.conditional}>
             <Text
               tooltip={`Skip condition:\n${props.skipCondition}`}
@@ -169,7 +174,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}
@@ -181,7 +186,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}
@@ -237,8 +242,9 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {matrixNodeName ? <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} /> : props.name}
           </Text>
         </div>
       )}
@@ -259,7 +265,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               [cssDefault.show]: showAddLink
             },
             {
-              [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+              ['stepAddIcon']: props.data?.graphType === PipelineGraphType.STEP_GRAPH
             },
             {
               [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
@@ -285,7 +291,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             className={cx(
               cssDefault.addNodeIcon,
               {
-                [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                ['stepAddIcon']: props.data?.graphType === PipelineGraphType.STEP_GRAPH
               },
               {
                 [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH

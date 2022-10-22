@@ -48,6 +48,7 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import {
   ConnectorSecretScope,
   getCommonConnectorsValidationSchema,
@@ -55,6 +56,7 @@ import {
   OAuthEventProcessingResponse,
   OAUTH_PLACEHOLDER_VALUE
 } from '../../CreateConnectorUtils'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGitlabAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -74,6 +76,7 @@ interface GitlabAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface GitlabFormInterface {
@@ -108,55 +111,68 @@ const defaultInitialFormData: GitlabFormInterface = {
   apiAuthType: GitAPIAuthTypes.TOKEN
 }
 
-const RenderGitlabAuthForm: React.FC<{ formikProps: FormikProps<GitlabFormInterface>; gitAuthType?: GitAuthTypes }> =
+const RenderGitlabAuthForm: React.FC<{
+  formikProps: FormikProps<GitlabFormInterface>
+  gitAuthType?: GitAuthTypes
+  scope?: ScopedObjectDTO
+}> = props => {
+  const { formikProps, gitAuthType, scope } = props
+  const { getString } = useStrings()
+  switch (gitAuthType) {
+    case GitAuthTypes.USER_PASSWORD:
+      return (
+        <>
+          <TextReference
+            name="username"
+            stringId="username"
+            type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
+          />
+          <SecretInput name="password" label={getString('password')} scope={scope} />
+        </>
+      )
+    case GitAuthTypes.USER_TOKEN:
+      return (
+        <>
+          <TextReference
+            name="username"
+            stringId="username"
+            type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
+          />
+          <SecretInput name="accessToken" label={getString('personalAccessToken')} scope={scope} />
+        </>
+      )
+    case GitAuthTypes.KERBEROS:
+      return (
+        <>
+          <SSHSecretInput name="kerberosKey" label={getString('kerberos')} />
+        </>
+      )
+    default:
+      return null
+  }
+}
+
+const RenderAPIAccessForm: React.FC<FormikProps<GitlabFormInterface> & ScopedObjectDTO & { isEditMode: boolean }> =
   props => {
-    const { formikProps, gitAuthType } = props
+    const { orgIdentifier, projectIdentifier } = props
     const { getString } = useStrings()
-    switch (gitAuthType) {
-      case GitAuthTypes.USER_PASSWORD:
+    switch (props.values.apiAuthType) {
+      case GitAPIAuthTypes.TOKEN:
         return (
-          <>
-            <TextReference
-              name="username"
-              stringId="username"
-              type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
-            />
-            <SecretInput name="password" label={getString('password')} />
-          </>
-        )
-      case GitAuthTypes.USER_TOKEN:
-        return (
-          <>
-            <TextReference
-              name="username"
-              stringId="username"
-              type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
-            />
-            <SecretInput name="accessToken" label={getString('personalAccessToken')} />
-          </>
-        )
-      case GitAuthTypes.KERBEROS:
-        return (
-          <>
-            <SSHSecretInput name="kerberosKey" label={getString('kerberos')} />
-          </>
+          <SecretInput
+            name="apiAccessToken"
+            label={getString('personalAccessToken')}
+            scope={props.isEditMode ? { projectIdentifier, orgIdentifier } : undefined}
+          />
         )
       default:
         return null
     }
   }
 
-const RenderAPIAccessForm: React.FC<FormikProps<GitlabFormInterface>> = props => {
-  const { getString } = useStrings()
-  switch (props.values.apiAuthType) {
-    case GitAPIAuthTypes.TOKEN:
-      return <SecretInput name="apiAccessToken" label={getString('personalAccessToken')} />
-    default:
-      return null
-  }
-}
-
-const RenderAPIAccessFormWrapper: React.FC<FormikProps<GitlabFormInterface>> = formikProps => {
+const RenderAPIAccessFormWrapper: React.FC<
+  FormikProps<GitlabFormInterface> & ScopedObjectDTO & { isEditMode: boolean }
+> = formikProps => {
   const { getString } = useStrings()
 
   const apiAuthOptions: Array<SelectOption> = [
@@ -215,6 +231,10 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
       //   value: GitAuthTypes.KERBEROS
       // }
     ]
+
+    useConnectorWizard({
+      helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+    })
 
     enabledHostedBuildsForFreeUsers &&
       authOptions.push({ label: getString('common.oAuthLabel'), value: GitAuthTypes.OAUTH })
@@ -425,7 +445,18 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
                           }}
                         />
                       </Container>
-                      <RenderGitlabAuthForm formikProps={formikProps} gitAuthType={gitAuthType} />
+                      <RenderGitlabAuthForm
+                        formikProps={formikProps}
+                        gitAuthType={gitAuthType}
+                        scope={
+                          props.isEditMode
+                            ? {
+                                orgIdentifier: prevStepData?.orgIdentifier,
+                                projectIdentifier: prevStepData?.projectIdentifier
+                              }
+                            : undefined
+                        }
+                      />
                     </Container>
                   )}
                   {gitAuthType === GitAuthTypes.OAUTH && enabledHostedBuildsForFreeUsers ? (
@@ -452,7 +483,14 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
                       <Text font="small" className={commonCss.bottomMargin4}>
                         {getString('common.git.APIAccessDescription')}
                       </Text>
-                      {formikProps.values.enableAPIAccess ? <RenderAPIAccessFormWrapper {...formikProps} /> : null}
+                      {formikProps.values.enableAPIAccess ? (
+                        <RenderAPIAccessFormWrapper
+                          {...formikProps}
+                          orgIdentifier={prevStepData?.orgIdentifier}
+                          projectIdentifier={prevStepData?.projectIdentifier}
+                          isEditMode={props.isEditMode}
+                        />
+                      ) : null}
                     </>
                   )}
                 </Container>

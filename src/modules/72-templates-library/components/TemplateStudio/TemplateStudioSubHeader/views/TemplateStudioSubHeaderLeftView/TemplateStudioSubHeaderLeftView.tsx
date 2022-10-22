@@ -54,6 +54,8 @@ import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Template
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
 
 export interface TemplateStudioSubHeaderLeftViewProps {
@@ -245,7 +247,9 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
           <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
             <Icon name="template-library" size={20} />
             <Text
-              className={css.templateName}
+              className={classNames(css.templateName, {
+                [css.shortened]: storeMetadata?.storeType === StoreType.REMOTE
+              })}
               color={Color.GREY_700}
               font={{ weight: 'bold' }}
               tooltip={template?.name}
@@ -253,7 +257,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
               {template.name}
             </Text>
             {!isNil(template?.tags) && !isEmpty(template?.tags) && <TagsPopover tags={template.tags} />}
-            {(isGitSyncEnabled || supportingTemplatesGitx) && onGitBranchChange && (
+            {isGitSyncEnabled && onGitBranchChange && (
               <StudioGitPopover
                 connectorRef={storeMetadata?.connectorRef}
                 gitDetails={gitDetails}
@@ -323,6 +327,17 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
               text={getString('common.setAsStable')}
             />
           )
+        )}
+        {storeMetadata?.storeType === StoreType.REMOTE && (
+          <>
+            <span className={css.separator}></span>
+            <GitPopoverV2
+              storeMetadata={storeMetadata!}
+              gitDetails={gitDetails}
+              isReadonly={isReadonly || templateIdentifier === DefaultNewTemplateId}
+              onGitBranchChange={onGitBranchChange!}
+            />
+          </>
         )}
       </Layout.Horizontal>
     </Container>

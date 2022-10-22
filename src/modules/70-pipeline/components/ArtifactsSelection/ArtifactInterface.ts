@@ -19,23 +19,28 @@ import type {
   Failure,
   Error,
   ArtifactoryBuildDetailsDTO,
-  ServiceDefinition
+  ServiceDefinition,
+  ArtifactSource
 } from 'services/cd-ng'
+import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
+import type { ModalViewFor } from './ArtifactHelper'
 
 export interface ArtifactListViewProps {
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
-  primaryArtifact: PrimaryArtifact
+  primaryArtifact: PrimaryArtifact | ArtifactSource[]
   sideCarArtifact: SidecarArtifactWrapper[] | undefined
-  addNewArtifact: (view: number) => void
-  editArtifact: (view: number, type: ArtifactType, index?: number) => void
-  removePrimary: () => void
+  addNewArtifact: (view: ModalViewFor) => void
+  editArtifact: (view: ModalViewFor, type?: ArtifactType, index?: number) => void
   removeSidecar: (index: number) => void
   fetchedConnectorResponse: PageConnectorResponse | undefined
   accountId: string
   refetchConnectors: () => void
   isReadonly: boolean
-  isAdditionAllowed: boolean
+  removePrimary?: () => void
+  removeArtifactSource?: (index: number) => void
   isSidecarAllowed?: boolean
+  isMultiArtifactSource?: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -44,17 +49,8 @@ export interface ArtifactsSelectionProps {
   readonly: boolean
 }
 
-export type ArtifactType =
-  | 'DockerRegistry'
-  | 'Gcr'
-  | 'Ecr'
-  | 'Nexus3Registry'
-  | 'ArtifactoryRegistry'
-  | 'CustomArtifact'
-  | 'Acr'
-  | 'Jenkins'
-  | 'AmazonS3'
-  | 'GoogleArtifactRegistry'
+export type ArtifactType = Required<PrimaryArtifact>['type']
+
 export interface OrganizationCreationType {
   type: ArtifactType
 }
@@ -73,22 +69,52 @@ export interface InitialArtifactDataType {
 export interface ImagePathTypes {
   identifier: string
   imagePath?: string
-  artifactPath?: string
+  artifactPath?: SelectOption | string
   tag: any
   tagRegex: any
   tagType: TagTypes
   registryHostname?: string
   region?: any
   repositoryPort?: number | string
-  repository?: string | SelectOption
+  repository?: SelectOption | string
   repositoryUrl?: string
   repositoryPortorRepositoryURL?: string
   artifactDirectory?: string
   repositoryFormat?: string
 }
 
-export interface CustomArtifactSource extends ImagePathTypes {
-  version: string
+export interface VariableInterface {
+  value: number | string
+  id: string
+  name?: string
+  type?: 'String' | 'Number'
+}
+
+export interface CustomArtifactSource {
+  type?: string
+  identifier?: string
+  spec?: {
+    version: string
+    delegateSelectors?: SelectOption | string[] | string
+    inputs?: VariableInterface[]
+    timeout?: string
+    scripts: {
+      fetchAllArtifacts?: {
+        artifactsArrayPath?: string
+        attributes?: VariableInterface[]
+        versionPath?: string
+        spec: {
+          shell?: ScriptType
+          source: {
+            spec: {
+              script?: string
+            }
+            type?: string
+          }
+        }
+      }
+    }
+  }
 }
 
 export interface AmazonS3InitialValuesType {
@@ -112,6 +138,7 @@ export interface ImagePathProps<T> {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   selectedDeploymentType: string
+  isMultiArtifactSource?: boolean
 }
 
 export interface AmazonS3ArtifactProps {
@@ -125,6 +152,34 @@ export interface AmazonS3ArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
+export interface GithubPackageRegistryInitialValuesType {
+  identifier?: string
+  versionType?: TagTypes
+  spec: {
+    connectorRef: string
+    packageType: string
+    org: string
+    packageName: string
+    version: string
+    versionRegex: string
+  }
+}
+
+export interface GithubPackageRegistryProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: GithubPackageRegistryInitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
 }
 
 export interface ACRArtifactProps {
@@ -138,6 +193,7 @@ export interface ACRArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
 }
 
 export interface JenkinsArtifactProps {
@@ -151,6 +207,7 @@ export interface JenkinsArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
 }
 
 export interface GoogleArtifactRegistryInitialValuesType {
@@ -179,6 +236,42 @@ export interface GoogleArtifactRegistryProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
+export interface Nexus2ArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: Nexus2InitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
+export interface Nexus2InitialValuesType {
+  identifier: string
+  tagType?: string
+  connectorRef: string
+  tag: SelectOption & string
+  tagRegex: string
+  repository: string
+  repositoryFormat: string
+  spec: {
+    artifactId?: string
+    groupId?: string
+    extension?: string
+    classifier?: string
+    packageName?: string
+    artifactPath?: string
+    repositoryUrl?: string
+    repositoryPort?: string
+    repositoryPortorRepositoryURL?: string
+  }
 }
 
 export interface JenkinsArtifactType {
@@ -211,6 +304,10 @@ export interface ArtifactTagHelperText {
   subscription?: string
   registry?: string
   subscriptionId?: string
+  repositoryFormat?: RepositoryFormatTypes
+  artifactId?: string
+  groupId?: string
+  packageName?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType
@@ -226,6 +323,7 @@ export interface ArtifactImagePathTagViewProps {
   tagError: GetDataError<Failure | Error> | null
   tagDisabled: boolean
   isArtifactPath?: boolean
+  isImagePath?: boolean
   isServerlessDeploymentTypeSelected?: boolean
 }
 

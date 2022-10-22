@@ -19,7 +19,6 @@ import {
   delegateConfigProps,
   delegatePathProps,
   orgPathProps,
-  pipelineModuleParams,
   projectPathProps,
   resourceGroupPathProps,
   rolePathProps,
@@ -66,15 +65,31 @@ import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/Create
 import { validateYAMLWithSchema } from '@common/utils/YamlUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import PipelineStudioFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import ExecFactory from '@pipeline/factories/ExecutionFactory'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import SettingsList from '@default-settings/pages/SettingsList'
+import ChaosEnvironments from '@chaos/pages/environments/EnvironmentsPage'
+import { MinimalLayout } from '@common/layouts'
+import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
+import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
+import ChaosTrialHomePage from './pages/home/ChaosTrialHomePage'
+import { ChaosExperimentStep } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentStep'
+import { ChaosExperimentExecView } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentExecutionView/ChaosExperimentExecView'
 
 // eslint-disable-next-line import/no-unresolved
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))
+
+ExecFactory.registerStepDetails(StepType.ChaosExperiment, {
+  component: React.memo(ChaosExperimentExecView)
+})
 
 const ChaosSideNavProps: SidebarContext = {
   navComponent: ChaosSideNav,
@@ -107,16 +122,16 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_HUB, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_EXPERIMENT, {
   moduleIcon: {
     name: 'chaos-main'
   },
-  moduleLabel: 'chaos.chaosScenario',
-  resourceLabel: 'chaos.chaosScenario',
+  moduleLabel: 'chaos.chaosExperiment',
+  resourceLabel: 'chaos.chaosExperiment',
   resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toChaosScenario({
+    return routes.toChaosExperiment({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
@@ -125,16 +140,16 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_DELEGATE, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
   moduleIcon: {
     name: 'chaos-main'
   },
-  moduleLabel: 'chaos.chaosDelegate',
-  resourceLabel: 'chaos.chaosDelegate',
+  moduleLabel: 'chaos.chaosInfrastructure',
+  resourceLabel: 'chaos.chaosInfrastructure',
   resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toChaosDelegates({
+    return routes.toChaosEnvironments({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier
@@ -142,12 +157,12 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_DELEGATE, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GITOPS, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GAMEDAY, {
   moduleIcon: {
     name: 'chaos-main'
   },
-  moduleLabel: 'chaos.chaosGitops',
-  resourceLabel: 'chaos.chaosGitops'
+  moduleLabel: 'chaos.chaosGameday',
+  resourceLabel: 'chaos.chaosGameday'
 })
 
 // RedirectToAccessControlHome: redirects to users page in access control
@@ -182,6 +197,8 @@ export default function ChaosRoutes(): React.ReactElement {
 
   // Register Chaos into RBAC Factory and AuditTrail only when Feature Flag is enabled
   if (isChaosEnabled) {
+    // Pipeline registrations
+    PipelineStudioFactory.registerStep(new ChaosExperimentStep())
     // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
       icon: 'chaos-main',
@@ -199,47 +216,80 @@ export default function ChaosRoutes(): React.ReactElement {
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SCENARIO, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_EXPERIMENT, {
       icon: 'chaos-main',
-      label: 'chaos.chaosScenario',
+      label: 'chaos.chaosExperiment',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_SCENARIO]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="delete" />
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_DELEGATE, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
       icon: 'chaos-main',
-      label: 'chaos.chaosDelegate',
+      label: 'chaos.chaosInfrastructure',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_DELEGATE]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="delete" />
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GITOPS, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
       icon: 'chaos-main',
-      label: 'chaos.chaosGitops',
+      label: 'chaos.chaosGameday',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_GITOPS]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_GITOPS]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
+        [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
       }
     })
   }
 
+  const RedirectToModuleTrialHome = (): React.ReactElement => {
+    const { accountId } = useParams<{
+      accountId: string
+    }>()
+
+    return (
+      <Redirect
+        to={routes.toModuleTrialHome({
+          accountId,
+          module: 'chaos'
+        })}
+      />
+    )
+  }
+
+  const RedirectToDelegatesHome = (): React.ReactElement => {
+    const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+    return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier, module })} />
+  }
+
+  const licenseRedirectData: LicenseRedirectProps = {
+    licenseStateName: LICENSE_STATE_NAMES.CHAOS_LICENSE_STATE,
+    startTrialRedirect: RedirectToModuleTrialHome,
+    expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CHAOS)
+  }
+
   return (
     <>
-      <RouteWithLayout sidebarProps={ChaosSideNavProps} path={routes.toChaos({ ...accountPathProps })} exact>
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toChaos({ ...accountPathProps })}
+        exact
+      >
         <RedirectToChaosProject />
       </RouteWithLayout>
 
       {/* Chaos Routes */}
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={routes.toModuleHome({ ...projectPathProps, ...chaosModuleParams })}
         exact
@@ -248,8 +298,18 @@ export default function ChaosRoutes(): React.ReactElement {
         <ChaosHomePage />
       </RouteWithLayout>
 
+      <RouteWithLayout
+        layout={MinimalLayout}
+        path={routes.toModuleTrialHome({ ...accountPathProps, module: 'chaos' })}
+        exact
+        pageName={PAGE_NAME.ChaosTrialHomePage}
+      >
+        <ChaosTrialHomePage />
+      </RouteWithLayout>
+
       {/* Access Control */}
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toConnectors({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
@@ -257,6 +317,7 @@ export default function ChaosRoutes(): React.ReactElement {
         <ConnectorsPage />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toCreateConnectorFromYaml({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
@@ -265,6 +326,7 @@ export default function ChaosRoutes(): React.ReactElement {
         <CreateConnectorFromYamlPage />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toCreateConnectorFromYaml({ ...accountPathProps, ...orgPathProps })}
@@ -273,6 +335,7 @@ export default function ChaosRoutes(): React.ReactElement {
         <CreateConnectorFromYamlPage />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toSecrets({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
@@ -281,6 +344,7 @@ export default function ChaosRoutes(): React.ReactElement {
         <SecretsPage />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toVariables({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
@@ -288,38 +352,41 @@ export default function ChaosRoutes(): React.ReactElement {
         <VariablesPage />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toConnectorDetails({
           ...accountPathProps,
           ...projectPathProps,
           ...connectorPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.ConnectorDetailsPage}
       >
         <ConnectorDetailsPage />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toSecretDetails({
           ...accountPathProps,
           ...projectPathProps,
           ...secretPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
       >
         <RedirectToSecretDetailHome />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toSecretDetailsOverview({
           ...accountPathProps,
           ...projectPathProps,
           ...secretPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.SecretDetails}
       >
@@ -328,13 +395,14 @@ export default function ChaosRoutes(): React.ReactElement {
         </SecretDetailsHomePage>
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toSecretDetailsReferences({
           ...accountPathProps,
           ...projectPathProps,
           ...secretPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.SecretReferences}
       >
@@ -342,13 +410,24 @@ export default function ChaosRoutes(): React.ReactElement {
           <SecretReferences />
         </SecretDetailsHomePage>
       </RouteWithLayout>
+
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDelegates({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
+        exact
+      >
+        <RedirectToDelegatesHome />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toDelegateList({
           ...accountPathProps,
           ...projectPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.DelegateListing}
       >
@@ -357,12 +436,13 @@ export default function ChaosRoutes(): React.ReactElement {
         </DelegatesPage>
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toDelegateConfigs({
           ...accountPathProps,
           ...projectPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.DelegateConfigurations}
       >
@@ -371,19 +451,21 @@ export default function ChaosRoutes(): React.ReactElement {
         </DelegatesPage>
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={routes.toDelegatesDetails({
           ...accountPathProps,
           ...projectPathProps,
           ...delegatePathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.DelegateDetails}
       >
         <DelegateDetails />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={[
@@ -391,13 +473,13 @@ export default function ChaosRoutes(): React.ReactElement {
             ...accountPathProps,
             ...projectPathProps,
             ...delegateConfigProps,
-            ...pipelineModuleParams
+            ...chaosModuleParams
           }),
           routes.toEditDelegateConfigsDetails({
             ...accountPathProps,
             ...projectPathProps,
             ...delegateConfigProps,
-            ...pipelineModuleParams
+            ...chaosModuleParams
           })
         ]}
         pageName={PAGE_NAME.DelegateProfileDetails}
@@ -406,13 +488,14 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={ChaosSideNavProps}
         path={[
           routes.toDelegateTokens({
             ...accountPathProps,
             ...projectPathProps,
-            ...pipelineModuleParams
+            ...chaosModuleParams
           })
         ]}
         pageName={PAGE_NAME.DelegateTokens}
@@ -422,12 +505,13 @@ export default function ChaosRoutes(): React.ReactElement {
         </DelegatesPage>
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={routes.toCreateSecretFromYaml({
           ...accountPathProps,
           ...projectPathProps,
           ...orgPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         exact
         pageName={PAGE_NAME.CreateSecretFromYamlPage}
@@ -435,6 +519,7 @@ export default function ChaosRoutes(): React.ReactElement {
         <CreateSecretFromYamlPage />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={routes.toAccessControl({ ...projectPathProps, ...chaosModuleParams })}
         exact
@@ -442,6 +527,7 @@ export default function ChaosRoutes(): React.ReactElement {
         <RedirectToAccessControlHome />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={[routes.toUsers({ ...projectPathProps, ...chaosModuleParams })]}
         exact
@@ -453,6 +539,7 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={routes.toUserDetails({ ...projectPathProps, ...chaosModuleParams, ...userPathProps })}
         exact
@@ -462,6 +549,7 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={[routes.toUserGroups({ ...projectPathProps, ...chaosModuleParams })]}
         exact
@@ -473,6 +561,7 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={routes.toUserGroupDetails({ ...projectPathProps, ...chaosModuleParams, ...userGroupPathProps })}
         exact
@@ -482,6 +571,7 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={routes.toServiceAccounts({ ...projectPathProps, ...chaosModuleParams })}
         exact
@@ -493,6 +583,7 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={routes.toServiceAccountDetails({ ...projectPathProps, ...chaosModuleParams, ...serviceAccountProps })}
         exact
@@ -502,6 +593,7 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={[routes.toResourceGroups({ ...projectPathProps, ...chaosModuleParams })]}
         exact
@@ -513,6 +605,7 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={[routes.toRoles({ ...projectPathProps, ...chaosModuleParams })]}
         exact
@@ -524,6 +617,20 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDefaultSettings({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...chaosModuleParams
+        })}
+      >
+        <SettingsList />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={[routes.toRoleDetails({ ...projectPathProps, ...chaosModuleParams, ...rolePathProps })]}
         exact
@@ -532,6 +639,7 @@ export default function ChaosRoutes(): React.ReactElement {
         <RoleDetails />
       </RouteWithLayout>
       <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
         path={[routes.toResourceGroupDetails({ ...projectPathProps, ...chaosModuleParams, ...resourceGroupPathProps })]}
         exact
@@ -540,8 +648,22 @@ export default function ChaosRoutes(): React.ReactElement {
         <ResourceGroupDetails />
       </RouteWithLayout>
 
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toChaosEnvironments({ ...projectPathProps, ...chaosModuleParams })}
+        pageName={PAGE_NAME.Environments}
+      >
+        <ChaosEnvironments />
+      </RouteWithLayout>
+
       {/* Loads the Chaos MicroFrontend */}
-      <RouteWithLayout sidebarProps={ChaosSideNavProps} path={routes.toChaosMicroFrontend({ ...projectPathProps })}>
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toChaosMicroFrontend({ ...projectPathProps })}
+      >
         <ChildAppMounter<ChaosCustomMicroFrontendProps>
           ChildApp={ChaosMicroFrontend}
           customComponents={{

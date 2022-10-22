@@ -32,7 +32,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
   }
 
   protected referenceId = 'jiraUpdateStep'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected type = StepType.JiraUpdate
   protected stepName = 'Jira Update'
   protected stepIcon: IconName = 'jira-update'
@@ -107,7 +107,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
     return errors
   }
 
-  processFormData(values: JiraUpdateData) {
+  processFormData(values: JiraUpdateData): JiraUpdateData {
     return processFormData(values)
   }
 

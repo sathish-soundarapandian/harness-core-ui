@@ -167,6 +167,42 @@
                 "stepCategories": []
               }
             ]
+          },
+          {
+            "name": "AzureProvisioner",
+            "stepsData": [
+              {
+                "name": "Rollback Azure ARM Resources",
+                "type": "AzureARMRollback",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_ROLLBACK_ARM_RESOURCE"
+              },
+              {
+                "name": "Create Azure ARM Resources",
+                "type": "AzureCreateARMResource",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_CREATE_ARM_RESOURCE"
+              },
+              {
+                "name": "Create Azure BP Resources",
+                "type": "AzureCreateBPResource",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_CREATE_BP_RESOURCE"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Shell Script Provisioner",
+            "stepsData": [
+              {
+                "name": "Shell Script Provision",
+                "type": "ShellScriptProvision",
+                "disabled": false,
+                "featureRestrictionName": "SHELL_SCRIPT_PROVISION"
+              }
+            ],
+            "stepCategories": []
           }
         ]
       },

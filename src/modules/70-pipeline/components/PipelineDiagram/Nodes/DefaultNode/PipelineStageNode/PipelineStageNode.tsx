@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
@@ -19,13 +19,14 @@ import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
 import { getPositionOfAddIcon } from '../../utils'
+import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
 const TEMPLATE_ICON: IconName = 'template-library'
 interface PipelineStageNodeProps {
-  getNode: (node: NodeType) => { component: React.FC<any> }
-  fireEvent: FireEventMethod
+  getNode?: (node: NodeType) => { component: React.FC<any> }
+  fireEvent?: FireEventMethod
   status: string
   data: any
   readonly: boolean
@@ -34,15 +35,17 @@ interface PipelineStageNodeProps {
   isSelected: boolean
   icon: string
   identifier: string
-  name: JSX.Element
+  name: JSX.Element | string
   defaultSelected: any
   parentIdentifier?: string
   isParallelNode: boolean
   prevNodeIdentifier?: string
-  nextNode: any
+  nextNode?: any
   allowAdd?: boolean
   selectedNodeId?: string
   showMarkers?: boolean
+  matrixNodeName?: boolean
+  customNodeStyle?: CSSProperties
 }
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const { getString } = useStrings()
@@ -139,7 +142,8 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         })}
         style={{
           width: 90,
-          height: 40
+          height: 40,
+          ...props.customNodeStyle
         }}
         onMouseOver={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           e.stopPropagation()
@@ -260,8 +264,13 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: props?.matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {props?.matrixNodeName ? (
+              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as unknown as string} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}
@@ -273,7 +282,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               isDark: true
             }}
           >
-            <Icon size={26} name={'conditional-skip-new'} color="white" />
+            <Icon size={26} name={'conditional-skip-new'} />
           </Text>
         </div>
       )}
@@ -323,7 +332,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           isParallelNode={props.isParallelNode}
           readonly={props.readonly}
           data={props}
-          fireEvent={props.fireEvent}
+          fireEvent={props?.fireEvent}
           style={{ left: getPositionOfAddIcon(props) }}
           identifier={props.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}

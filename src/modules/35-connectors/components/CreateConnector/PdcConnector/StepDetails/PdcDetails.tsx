@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useMemo } from 'react'
+import get from 'lodash-es/get'
 import {
   Layout,
   Button,
@@ -38,6 +39,7 @@ interface PdcDetailsProps {
 
 export interface uploadHostItem {
   hostname: string
+  attributes?: string
 }
 interface StepConfigureProps {
   closeModal?: () => void
@@ -50,8 +52,10 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
   const { prevStepData, nextStep } = props
   const { getString } = useStrings()
 
-  const [hostsJSON, setHostsJSON] = useState([] as uploadHostItem[])
-  const [selectionType, setSelectionType] = useState<SelectionType>(SelectionType.MANUAL)
+  const [hostsJSON, setHostsJSON] = useState(prevStepData?.spec?.hosts || ([] as uploadHostItem[]))
+  const [selectionType, setSelectionType] = useState<SelectionType>(
+    get(prevStepData, 'spec.hosts', []).length > 0 ? SelectionType.JSON : SelectionType.MANUAL
+  )
 
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     const data = { ...formData }
@@ -64,7 +68,11 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
   const initialFormValues = useMemo(() => {
     const hosts = prevStepData?.hosts || prevStepData?.spec?.hosts
     return {
-      hosts: typeof hosts === 'string' ? hosts : hosts?.map?.((host: any) => host.hostname).join('\n')
+      hosts:
+        typeof hosts === 'string'
+          ? hosts
+          : (hosts?.map?.((host: any) => host.hostname).join('\n') as string | string[]),
+      hostsJson: JSON.stringify(hosts, undefined, 4)
     }
   }, [])
 
@@ -124,6 +132,8 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
                   setJsonValue={json => {
                     setHostsJSON(json)
                   }}
+                  formikProps={formikProps}
+                  previousHosts={prevStepData?.spec?.hosts}
                 />
               )}
             </Container>

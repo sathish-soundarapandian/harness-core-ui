@@ -15,7 +15,7 @@ import {
   TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { buildAWSSecretManagerPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import AwsSecretManagerConfig from './views/AwsSecretManagerConfig'
@@ -58,7 +58,7 @@ const CreateAwsSecretManagerConnector: React.FC<CreateConnectorModalProps> = pro
         helpPanelReferenceId="ConnectorDelegatesSetup"
         disableGitSync={true}
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

@@ -12,6 +12,7 @@ import {
   Button,
   ButtonVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -21,7 +22,6 @@ import {
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { defaultTo, get, set } from 'lodash-es'
@@ -37,7 +37,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
-import { filePathWidth } from '../ManifestUtils'
+import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface CustomRemoteManifestPropType {
@@ -91,11 +91,17 @@ function CustomRemoteManifest({
         valuesPaths:
           typeof valuesPaths === 'string'
             ? valuesPaths
-            : defaultTo(valuesPaths, []).map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(defaultTo(valuesPaths, []))?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         paramsPaths:
           typeof paramsPaths === 'string'
             ? paramsPaths
-            : defaultTo(paramsPaths, []).map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : removeEmptyFieldsFromStringArray(defaultTo(paramsPaths, []))?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              }))
       }
     }
     return {
@@ -185,7 +191,7 @@ function CustomRemoteManifest({
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: CustomManifestManifestDataType }) => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -375,7 +381,7 @@ function CustomRemoteManifest({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

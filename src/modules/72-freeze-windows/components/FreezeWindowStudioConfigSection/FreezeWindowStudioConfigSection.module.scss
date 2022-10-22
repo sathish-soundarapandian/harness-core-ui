@@ -1,0 +1,73 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.sectionCard {
+  width: 1024px;
+  margin-top: var(--spacing-3);
+  .separator {
+    width: 100%;
+    border: 0.5px solid var(--grey-200);
+    margin: var(--spacing-medium) 0 !important;
+  }
+}
+
+.tickButton {
+  background-color: var(--grey-0) !important;
+  border: 1px solid var(--primary-7) !important;
+  :global {
+    svg {
+      fill: var(--primary-7) !important;
+    }
+  }
+}
+
+.crossButton {
+  background-color: var(--grey-0) !important;
+  border: 1px solid var(--red-500) !important;
+  :global {
+    svg {
+      fill: var(--red-500) !important;
+    }
+  }
+}
+
+.configFormContainer {
+  border: 1px solid var(--grey-200);
+  min-height: 100px;
+  &.isEditView {
+    background-color: var(--primary-1) !important;
+  }
+}
+
+.addNewRuleButton {
+  margin-top: var(--spacing-large) !important;
+  margin-left: -20px !important; // padding left of Add Button
+}
+
+.badge {
+  background-color: var(--primary-2);
+  border-radius: 4px;
+  color: var(--grey-1000);
+  font-size: var(--font-size-small);
+  font-weight: 400;
+  height: 24px;
+  line-height: 20px;
+  padding: 2px var(--spacing-3);
+  margin-left: var(--spacing-3);
+}
+
+.viewRowNode {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 18px;
+  margin-bottom: var(--spacing-4);
+  &.marginSmaller {
+    margin-bottom: var(--spacing-2);
+  }
+}

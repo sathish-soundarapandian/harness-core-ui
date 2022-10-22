@@ -10,5 +10,7 @@ declare const styles: {
   readonly gitText: string
   readonly overflow: string
   readonly table: string
+  readonly tableWithNoSpace: string
+  readonly tableWithSpace: string
 }
 export default styles

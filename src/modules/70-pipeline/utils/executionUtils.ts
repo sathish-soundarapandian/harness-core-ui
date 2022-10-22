@@ -26,7 +26,8 @@ import type {
   ExecutionGraph,
   ExecutionNode,
   ExecutionNodeAdjacencyList,
-  ResponsePipelineExecutionDetail
+  ResponsePipelineExecutionDetail,
+  InterruptEffectDTO
 } from 'services/pipeline-ng'
 import {
   ExecutionPipelineNode,
@@ -76,12 +77,16 @@ export enum NodeType {
   INFRASTRUCTURE_SECTION = 'INFRASTRUCTURE_SECTION',
   DEPLOYMENT_STAGE_STEP = 'DEPLOYMENT_STAGE_STEP',
   APPROVAL_STAGE = 'APPROVAL_STAGE',
+  CUSTOM_STAGE = 'CUSTOM_STAGE',
   NG_SECTION_WITH_ROLLBACK_INFO = 'NG_SECTION_WITH_ROLLBACK_INFO',
   NG_EXECUTION = 'NG_EXECUTION',
   StepGroupNode = 'StepGroupNode',
   'GITOPS_CLUSTERS' = 'GITOPS CLUSTERS',
   STRATEGY = 'STRATEGY',
-  RUNTIME_INPUT = 'RUNTIME_INPUT' // virtual node
+  RUNTIME_INPUT = 'RUNTIME_INPUT', // virtual node
+  INFRASTRUCTURE_V2 = 'INFRASTRUCTURE_V2',
+  INFRASTRUCTURE_TASKSTEP_V2 = 'INFRASTRUCTURE_TASKSTEP_V2',
+  SERVICE_V3 = 'SERVICE_V3'
 }
 
 export const NonSelectableNodes: NodeType[] = [
@@ -89,6 +94,7 @@ export const NonSelectableNodes: NodeType[] = [
   NodeType.FORK,
   NodeType.DEPLOYMENT_STAGE_STEP,
   NodeType.APPROVAL_STAGE,
+  NodeType.CUSTOM_STAGE,
   NodeType.NG_EXECUTION
 ]
 
@@ -103,6 +109,7 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   SERVICE: 'services',
   SERVICE_CONFIG: 'services',
   SERVICE_SECTION: 'services',
+  SERVICE_V3: 'services',
   GENERIC_SECTION: 'step-group',
   NG_SECTION_WITH_ROLLBACK_INFO: 'step-group',
   NG_SECTION: 'step-group',
@@ -111,9 +118,12 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   INFRASTRUCTURE_SECTION: 'step-group',
   STEP_GROUP: 'step-group',
   INFRASTRUCTURE: 'infrastructure',
+  INFRASTRUCTURE_V2: 'infrastructure',
+  INFRASTRUCTURE_TASKSTEP_V2: 'infrastructure',
   NG_FORK: 'fork',
   DEPLOYMENT_STAGE_STEP: 'circle',
   APPROVAL_STAGE: 'approval-stage-icon',
+  CUSTOM_STAGE: 'custom-stage-icon',
   StepGroupNode: 'step-group',
   'GITOPS CLUSTERS': 'gitops-clusters',
   STRATEGY: 'step-group',
@@ -142,7 +152,32 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   InterventionWaiting: 'waiting',
   ApprovalWaiting: 'waiting',
   Pausing: 'pause',
-  InputWaiting: 'waiting'
+  InputWaiting: 'waiting',
+  WaitStepRunning: 'waiting'
+}
+
+export type InterruptType = InterruptEffectDTO['interruptType']
+
+export const Interrupt: Record<InterruptType, InterruptType> = {
+  UNKNOWN: 'UNKNOWN',
+  ABORT: 'ABORT',
+  ABORT_ALL: 'ABORT_ALL',
+  PAUSE: 'PAUSE',
+  PAUSE_ALL: 'PAUSE_ALL',
+  RESUME: 'RESUME',
+  RESUME_ALL: 'RESUME_ALL',
+  RETRY: 'RETRY',
+  IGNORE: 'IGNORE',
+  WAITING_FOR_MANUAL_INTERVENTION: 'WAITING_FOR_MANUAL_INTERVENTION',
+  MARK_FAILED: 'MARK_FAILED',
+  MARK_SUCCESS: 'MARK_SUCCESS',
+  NEXT_STEP: 'NEXT_STEP',
+  END_EXECUTION: 'END_EXECUTION',
+  MARK_EXPIRED: 'MARK_EXPIRED',
+  CUSTOM_FAILURE: 'CUSTOM_FAILURE',
+  EXPIRE_ALL: 'EXPIRE_ALL',
+  PROCEED_WITH_DEFAULT: 'PROCEED_WITH_DEFAULT',
+  UNRECOGNIZED: 'UNRECOGNIZED'
 }
 
 /**
@@ -861,9 +896,8 @@ export const getChildNodeDataForMatrix = (
   if (isNodeTypeMatrixOrFor(parentNode?.nodeType)) {
     parentNode?.edgeLayoutList?.currentNodeChildren?.forEach(item => {
       const nodeDataItem = layoutNodeMap[item]
-      const matrixNodeName =
-        nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-        `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+      const matrixNodeName = nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues
+
       childData.push({
         id: nodeDataItem.nodeExecutionId as string, // matrix node nodeExecId(unique) + stageNodeId (nodeUUID) commo
         stageNodeId: nodeDataItem?.nodeUuid as string,
@@ -952,9 +986,7 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
         const childData: PipelineGraphState[] = []
         currentNodeChildren.forEach(item => {
           const nodeDataItem = layoutNodeMap[item]
-          const matrixNodeName =
-            nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-            `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(' ')}): `
+          const matrixNodeName = nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues
           childData.push({
             id: nodeDataItem.nodeExecutionId as string,
             stageNodeId: nodeDataItem?.nodeUuid as string,
@@ -1002,7 +1034,15 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
           type: nodedata.nodeType as string,
           name: nodedata.name as string,
           icon: 'cross',
-          data: nodedata as any,
+          data: {
+            ...(nodedata as any),
+            ...(isNodeTypeMatrixOrFor(nodedata?.nodeType) && {
+              children: getChildNodeDataForMatrix(nodedata, layoutNodeMap),
+              graphType: PipelineGraphType.STAGE_GRAPH,
+              id: nodedata?.nodeUuid,
+              maxParallelism: nodedata?.moduleInfo?.maxConcurrency?.value
+            })
+          },
           children: []
         })
         nodeDetails = layoutNodeMap[nodeDetails.edgeLayoutList?.nextIds?.[0] || '']
@@ -1227,4 +1267,15 @@ export const processForCIData = ({
   })
 
   return newNodeMap
+}
+
+export function isMultiSvcOrMultiEnv(type?: string): boolean {
+  return !!type && ['MULTI_SERVICE_DEPLOYMENT', 'MULTI_ENV_DEPLOYMENT', 'MULTI_SERVICE_ENV_DEPLOYMENT'].includes(type)
+}
+
+export function getInterruptHistoriesFromType(
+  interruptHistories: InterruptEffectDTO[] | undefined,
+  interruptType: InterruptType
+): InterruptEffectDTO[] {
+  return defaultTo(interruptHistories, []).filter(row => row.interruptType === interruptType)
 }

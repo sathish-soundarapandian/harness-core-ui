@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { Container, MultiTypeInput, MultiTypeInputType, Select, SelectOption } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
+import {
+  AllowedTypes,
+  Container,
+  MultiTypeInput,
+  MultiTypeInputType,
+  Select,
+  SelectOption
+} from '@wings-software/uicore'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { ADD_NEW_VALUE } from '@cv/constants'
@@ -22,6 +30,7 @@ export interface EnvironmentSelectOrCreateProps {
   onNewCreated(value: EnvironmentResponseDTO): void
   isMultiType?: boolean
   isTemplate?: boolean
+  allowableTypes?: AllowedTypes
 }
 
 export const EnvironmentTypes = [
@@ -50,7 +59,8 @@ export function EnvironmentSelectOrCreate({
   disabled,
   onNewCreated,
   className,
-  isMultiType = false
+  isMultiType = false,
+  allowableTypes
 }: EnvironmentSelectOrCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -77,7 +87,7 @@ export function EnvironmentSelectOrCreate({
           selectProps={{
             items: environmentOptions
           }}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+          allowableTypes={defaultTo(allowableTypes, [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME])}
           value={item}
           style={{ width: '400px' }}
           expressions={expressions}

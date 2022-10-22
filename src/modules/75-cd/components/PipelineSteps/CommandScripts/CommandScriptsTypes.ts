@@ -16,7 +16,9 @@ import type {
   ShellScriptSourceWrapper,
   CommandUnitWrapper,
   StepElementConfig,
-  StepSpecType
+  StepSpecType,
+  HarnessFileStoreSource,
+  DownloadArtifactCommandUnitSpec
 } from 'services/cd-ng'
 
 // Copy Command Unit type
@@ -24,9 +26,13 @@ export interface CopyCommandUnit extends CommandUnitWrapper {
   spec: CopyCommandUnitSpec
 }
 
+export interface DownloadArtifactCommandUnit extends CommandUnitWrapper {
+  spec: DownloadArtifactCommandUnitSpec
+}
+
 // Script Command Unit
 interface CustomShellScriptSourceWrapper extends ShellScriptSourceWrapper {
-  spec: ShellScriptInlineSource
+  spec: ShellScriptInlineSource & HarnessFileStoreSource
 }
 export interface CustomScriptCommandUnitSpec extends ScriptCommandUnitSpec {
   source: CustomShellScriptSourceWrapper
@@ -36,7 +42,7 @@ export interface CustomScriptCommandUnit extends CommandUnitWrapper {
 }
 
 // Overall Command Unit Type
-export type CommandUnitType = CopyCommandUnit | CustomScriptCommandUnit
+export type CommandUnitType = CopyCommandUnit | DownloadArtifactCommandUnit | CustomScriptCommandUnit
 
 export interface CommandScriptStepVariable {
   value: number | string
@@ -67,6 +73,11 @@ export interface CommandScriptsFormData extends StepElementConfig {
   }
 }
 
+export enum LocationType {
+  HARNESS = 'Harness',
+  INLINE = 'Inline'
+}
+
 export const scriptInputType: SelectOption[] = [
   { label: 'String', value: 'String' },
   { label: 'Number', value: 'Number' }
@@ -74,12 +85,14 @@ export const scriptInputType: SelectOption[] = [
 
 export enum CommandType {
   Copy = 'Copy',
-  Script = 'Script'
+  Script = 'Script',
+  DownloadArtifact = 'DownloadArtifact'
 }
 
 export const commandTypeOptions: SelectOption[] = [
   { label: 'Copy', value: 'Copy' },
-  { label: 'Script', value: 'Script' }
+  { label: 'Script', value: 'Script' },
+  { label: 'Download Artifact', value: 'DownloadArtifact' }
 ]
 
 export const sourceTypeOptions: RadioButtonProps[] = [
@@ -107,5 +120,33 @@ export const variableSchema = (
       name: Yup.string().required(getString('common.validation.nameIsRequired')),
       value: Yup.string().required(getString('common.validation.valueIsRequired')),
       type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
+    })
+  )
+
+export const commandUnitSchema = (
+  getString: UseStringsReturn['getString']
+): Yup.NotRequiredArraySchema<unknown | undefined> =>
+  Yup.array().of(
+    Yup.object({
+      type: Yup.string(),
+      spec: Yup.object().when('type', {
+        is: val => val === 'Script',
+        then: Yup.object({
+          source: Yup.object({
+            spec: Yup.object({
+              script: Yup.string().required(
+                getString?.('common.validation.fieldIsRequired', { name: getString('common.script') })
+              )
+            })
+          })
+        }),
+        otherwise: Yup.object({
+          destinationPath: Yup.string().required(
+            getString?.('common.validation.fieldIsRequired', {
+              name: getString('cd.steps.commands.destinationPath')
+            })
+          )
+        })
+      })
     })
   )

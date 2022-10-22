@@ -11,7 +11,7 @@ import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import OverviewStep, { CEAwsConnectorDTO } from './steps/OverviewStep'
@@ -39,7 +39,7 @@ const CreateCeAwsConnector: React.FC<CreateConnectorModalProps> = props => {
         <CostUsageStep name={getString('connectors.ceAws.steps.cur')} />
         <CrossAccountRoleStep1 name={getString('connectors.ceAws.steps.req')} />
         <CrossAccountRoleStep2 name={getString('connectors.ceAws.steps.roleARN')} />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.ceAws.testConnection.heading')}
           connectorInfo={props.connectorInfo}
           isStep={true}

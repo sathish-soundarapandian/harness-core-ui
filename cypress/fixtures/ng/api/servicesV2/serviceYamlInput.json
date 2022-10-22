@@ -1,0 +1,14 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "serviceV2YamlMetadataList": [
+      {
+        "serviceIdentifier": "testService",
+        "serviceYaml": "service:\n  name: testService\n  identifier: testService\n  tags: {}\n  serviceDefinition:\n    spec:\n      manifests:\n        - manifest:\n            identifier: testManifestName\n            type: K8sManifest\n            spec:\n              store:\n                type: Github\n                spec:\n                  connectorRef: <+input>\n                  gitFetchType: Branch\n                  paths:\n                    - root/bin/\n                  repoName: <+input>\n                  branch: master\n              skipResourceVersioning: false\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            imagePath: <+input>\n            tag: <+input>\n          type: DockerRegistry\n    type: Kubernetes\n  gitOpsEnabled: false\n",
+        "inputSetTemplateYaml": "serviceInputs:\n  serviceDefinition:\n    type: \"Kubernetes\"\n    spec:\n      manifests:\n      - manifest:\n          identifier: \"testManifestName\"\n          type: \"K8sManifest\"\n          spec:\n            store:\n              type: \"Github\"\n              spec:\n                connectorRef: \"<+input>\"\n                repoName: \"<+input>\"\n      artifacts:\n        primary:\n          type: \"DockerRegistry\"\n          spec:\n            connectorRef: \"<+input>\"\n            imagePath: \"<+input>\"\n            tag: \"<+input>\"\n"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "49aeb88d-c4fe-40d1-81d0-c3179e09dfd8"
+}

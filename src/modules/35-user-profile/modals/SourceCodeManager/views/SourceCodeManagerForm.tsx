@@ -44,9 +44,6 @@ import {
   SourceCodeTypes
 } from '@user-profile/utils/utils'
 import type { TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-
 import Authentication from './Authentication'
 import css from '../useSourceCodeManager.module.scss'
 
@@ -151,7 +148,6 @@ const SourceCodeManagerForm: React.FC<SourceCodeManagerProps> = props => {
   const { onSubmit, onClose, initialValues } = props
   const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
-  const bitBucketSupported = useFeatureFlag(FeatureFlag.GIT_SYNC_WITH_BITBUCKET)
 
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { accountId } = useParams<AccountPathProps>()
@@ -167,16 +163,13 @@ const SourceCodeManagerForm: React.FC<SourceCodeManagerProps> = props => {
       text: getString('common.repo_provider.githubLabel'),
       value: SourceCodeTypes.GITHUB,
       icon: getIconBySCM(SourceCodeTypes.GITHUB)
-    }
-  ]
-
-  if (bitBucketSupported) {
-    sourceCodeManagers.push({
+    },
+    {
       text: getString('common.repo_provider.bitbucketLabel'),
       value: SourceCodeTypes.BITBUCKET,
       icon: getIconBySCM(SourceCodeTypes.BITBUCKET)
-    })
-  }
+    }
+  ]
 
   const [selected, setSelected] = useState<SourceCodeType | undefined>(
     getDefaultSCMType(sourceCodeManagers, initialValues?.type)

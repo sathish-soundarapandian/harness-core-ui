@@ -66,6 +66,7 @@ describe('GenericExecutionStepEdit tests', () => {
           onUpdate={onUpdate}
           onChange={onChange}
           ref={formikRef}
+          formikFormName={'genericExecutionStepForm'}
         />
       </TestWrapper>
     )
@@ -127,6 +128,7 @@ describe('GenericExecutionStepEdit tests', () => {
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={formikRef}
+          formikFormName={'genericExecutionStepForm'}
         />
       </TestWrapper>
     )
@@ -172,6 +174,7 @@ describe('GenericExecutionStepEdit tests', () => {
           onUpdate={onUpdate}
           onChange={onChange}
           ref={formikRef}
+          formikFormName={'genericExecutionStepForm'}
         />
       </TestWrapper>
     )
@@ -190,6 +193,7 @@ describe('GenericExecutionStepEdit tests', () => {
           stepViewType={StepViewType.Edit}
           onChange={onChange}
           ref={formikRef}
+          formikFormName={'genericExecutionStepForm'}
         />
       </TestWrapper>
     )

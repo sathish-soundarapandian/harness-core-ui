@@ -14,12 +14,7 @@ import {
 } from '@wings-software/uicore'
 import { clone, cloneDeep, defaultTo, isEmpty, isEqual, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import type {
-  PrometheusFilter,
-  PrometheusHealthSourceSpec,
-  TimeSeriesMetricDefinition,
-  TimeSeriesMetricPackDTO
-} from 'services/cv'
+import type { PrometheusFilter, PrometheusHealthSourceSpec } from 'services/cv'
 import type { StringsMap } from 'stringTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import {
@@ -27,7 +22,6 @@ import {
   PrometheusMonitoringSourceFieldNames,
   SelectedAndMappedMetrics,
   PrometheusSetupSource,
-  RiskProfileCatgory,
   MapPrometheusQueryToService,
   PrometheusProductNames
 } from './PrometheusHealthSource.constants'
@@ -42,9 +36,12 @@ import {
   MetricThresholdTypes,
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
-import { validateCommonFieldsForMetricThreshold } from '../../common/MetricThresholds/MetricThresholds.utils'
-import type { AvailableThresholdTypes } from '../../common/MetricThresholds/MetricThresholds.types'
+import {
+  getFilteredMetricThresholdValues,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
 import type { PersistMappedMetricsType, PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 
 type UpdateSelectedMetricsMap = {
   updatedMetric: string
@@ -328,21 +325,6 @@ function generateMultiSelectOptionListFromPrometheusFilter(filters?: PrometheusF
   return options
 }
 
-export function getFilteredMetricThresholdValues(
-  thresholdName: AvailableThresholdTypes,
-  metricPacks: TimeSeriesMetricPackDTO[]
-): PrometheusMetricThresholdType[] {
-  const customMetricThresholdDetails = metricPacks.find(metricPack => metricPack.identifier === MetricTypeValues.Custom)
-
-  if (!customMetricThresholdDetails) {
-    return []
-  }
-
-  return (customMetricThresholdDetails?.metricThresholds as PrometheusMetricThresholdType[])?.filter(
-    (metricThreshold: PrometheusMetricThresholdType) => metricThreshold.type === thresholdName
-  )
-}
-
 export function transformPrometheusHealthSourceToSetupSource(
   sourceData: any,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
@@ -409,10 +391,7 @@ export function transformPrometheusHealthSourceToSetupSource(
         envFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.envFilter),
         additionalFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.additionalFilters),
         aggregator: metricDefinition.aggregation,
-        riskCategory:
-          metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
-            ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
-            : '',
+        riskCategory: metricDefinition?.analysis?.riskProfile?.riskCategory,
         serviceInstance:
           isTemplate && !isConnectorRuntimeOrExpression
             ? {
@@ -483,14 +462,14 @@ export function transformPrometheusSetupSourceToHealthSource(
       continue
     }
 
-    const [category, metricType] = riskCategory?.split('/') || []
-    const thresholdTypes: TimeSeriesMetricDefinition['thresholdType'][] = []
-    if (lowerBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_LOWER')
-    }
-    if (higherBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_HIGHER')
-    }
+    const assignComponentPayload = createPayloadForAssignComponentV2({
+      sli,
+      riskCategory,
+      healthScore,
+      continuousVerification,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
+    })
 
     ;(dsConfig.spec as any).metricDefinitions.push({
       prometheusMetric,
@@ -503,16 +482,11 @@ export function transformPrometheusSetupSourceToHealthSource(
       additionalFilters: transformLabelToPrometheusFilter(additionalFilter),
       aggregation: aggregator,
       groupName: groupName.value as string,
-      sli: { enabled: Boolean(sli) },
+      ...assignComponentPayload,
       analysis: {
-        riskProfile: {
-          category: category as RiskProfileCatgory,
-          metricType: metricType,
-          thresholdTypes
-        },
-        liveMonitoring: { enabled: Boolean(healthScore) },
+        ...assignComponentPayload.analysis,
         deploymentVerification: {
-          enabled: Boolean(continuousVerification),
+          ...assignComponentPayload.analysis?.deploymentVerification,
           serviceInstanceFieldName: typeof serviceInstance === 'string' ? serviceInstance : serviceInstance?.value
         }
       }

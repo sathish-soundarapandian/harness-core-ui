@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
 import {
@@ -19,7 +19,8 @@ import {
   Text,
   StepProps,
   SelectOption,
-  Tag
+  Tag,
+  HarnessDocTooltip
 } from '@wings-software/uicore'
 import type { FormikProps, FormikHelpers } from 'formik'
 import {
@@ -45,10 +46,10 @@ import { DelegateSize, isHelmDelegateEnabled } from '@delegates/constants'
 import { useCreateTokenModal } from '@delegates/components/DelegateTokens/modals/useCreateTokenModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SelectDelegateType, { FormikForSelectDelegateType } from './components/SelectDelegateType'
 import DelegateSizes from '../../components/DelegateSizes/DelegateSizes'
 import { DelegateType, k8sPermissionType } from './DelegateSetupStep.types'
-
 import { validateDelegateSetupDetails } from './DelegateSetupStep.utils'
 import css from './DelegateSetupStep.module.scss'
 
@@ -113,6 +114,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
       size: DelegateSize.LAPTOP,
       sesssionIdentifier: '',
       tokenName: '',
+      runAsRoot: true,
       k8sConfigDetails: {
         k8sPermissionType: k8sPermissionType.CLUSTER_ADMIN,
         namespace: ''
@@ -123,7 +125,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const IS_HELM_DELEGATE_ENABLED: boolean = isHelmDelegateEnabled(true)
-
+  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
   const { mutate: createKubernetesYaml } = useValidateKubernetesYaml({
     queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier }
   })
@@ -235,7 +237,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
       formikActions.setFieldError('name', getString('delegates.delegateNameNotUnique'))
     }
   }
-
+  const [rootAccess, setRootAccess] = useState(true)
   const delegateTokenOptions = useMemo(() => formatTokenOptions(tokensResponse), [tokensResponse])
 
   return (
@@ -280,7 +282,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           formikProps={formikProps as unknown as FormikProps<FormikForSelectDelegateType>}
                         />
                       )}
-                      {profileOptions?.length > 0 && (
+                      {!USE_IMMUTABLE_DELEGATE && profileOptions?.length > 0 && (
                         <div className={`${css.formGroup} ${css.profileSelect}`}>
                           <FormInput.Select
                             items={profileOptions}
@@ -290,7 +292,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                         </div>
                       )}
 
-                      {formikProps.values.delegateConfigurationId && selectors && (
+                      {!USE_IMMUTABLE_DELEGATE && formikProps.values.delegateConfigurationId && selectors && (
                         <Container className={css.profileSelectors}>
                           <Text>{getString('delegate.tagsFromDelegateConfig')}</Text>
                           <div className={css.profileSelectorsItemsContainer}>
@@ -319,9 +321,22 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           text={getString('add')}
                         />
                       </Layout.Horizontal>
+                      {USE_IMMUTABLE_DELEGATE ? (
+                        <Layout.Horizontal className={css.runAsRootCheckbox}>
+                          <FormInput.CheckBox
+                            name="runAsRoot"
+                            label={getString('delegates.runAsRoot')}
+                            onChange={() => setRootAccess(!rootAccess)}
+                          />
+                        </Layout.Horizontal>
+                      ) : null}
                     </Layout.Vertical>
                     <Layout.Vertical className={css.rightPanel}>
-                      <div className={css.permissionsTitle}>{getString('delegates.delegatePermissions.title')}</div>
+                      <div className={css.permissionsTitle} data-tooltip-id="delegatePermissions">
+                        {getString('delegates.delegatePermissions.title')}
+                        <HarnessDocTooltip tooltipId="delegatePermissions" useStandAlone={true}></HarnessDocTooltip>
+                      </div>
+
                       <CardSelect
                         cardClassName={css.permissionSelect}
                         cornerSelected={true}

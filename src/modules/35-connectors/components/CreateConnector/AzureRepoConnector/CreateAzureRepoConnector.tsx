@@ -14,7 +14,7 @@ import {
   CreateConnectorModalProps,
   GIT_TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -54,6 +54,7 @@ const CreateAzureRepoConnector = (props: CreateConnectorModalProps): JSX.Element
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         mock={props.mock}
+        helpPanelReferenceId="AzureReposConnectorOverview"
       />
       <GitDetailsStep
         type={Connectors.AZURE_REPO}
@@ -61,12 +62,14 @@ const CreateAzureRepoConnector = (props: CreateConnectorModalProps): JSX.Element
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         mock={props.mock}
+        helpPanelReferenceId="AzureReposConnectorDetails"
       />
       <StepAzureRepoAuthentication
         name={getString('credentials')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="AzureReposConnectorCredentials"
       />
       <ConnectivityModeStep
         name={getString('connectors.selectConnectivityMode')}
@@ -80,6 +83,7 @@ const CreateAzureRepoConnector = (props: CreateConnectorModalProps): JSX.Element
         setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="ConnectorConnectToTheProvider"
       />
       {props.connectivityMode === ConnectivityModeType.Delegate ? (
         <DelegateSelectorStep
@@ -94,7 +98,7 @@ const CreateAzureRepoConnector = (props: CreateConnectorModalProps): JSX.Element
           helpPanelReferenceId="ConnectorDelegatesSetup"
         />
       ) : null}
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         type={Connectors.AZURE_REPO}
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
@@ -102,6 +106,7 @@ const CreateAzureRepoConnector = (props: CreateConnectorModalProps): JSX.Element
         isLastStep={true}
         onClose={props.onClose}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

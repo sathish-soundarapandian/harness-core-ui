@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -44,7 +44,8 @@ const VAR_REGEX = /.*<\+.*?/
 
 export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React.ReactElement {
   const { scriptType, formik, name, disabled, expressions, title, className, editorOptions } = props
-  const [isFullScreen, setFullScreen] = React.useState(false)
+  const [isFullScreen, setFullScreen] = useState(false)
+  const [lineCount, setLineCount] = useState(0)
   const { getString } = useStrings()
   const value = get(formik.values, name) || ''
 
@@ -90,6 +91,13 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
     }
   }, [expressions])
 
+  const getHeight = (): number => {
+    if (lineCount <= 5) {
+      return 80
+    }
+    return 200
+  }
+
   const editor = (
     <div
       className={cx(css.monacoWrapper, !isFullScreen && className)}
@@ -100,10 +108,11 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
       }}
     >
       <MonacoEditor
-        height={isFullScreen ? '70vh' : 200}
+        height={isFullScreen ? '70vh' : getHeight()}
         value={value}
         name={name}
         language={langMap[scriptType] as string}
+        setLineCount={setLineCount}
         options={
           {
             fontFamily: "'Roboto Mono', monospace",

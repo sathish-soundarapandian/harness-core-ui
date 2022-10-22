@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { Formik, FormInput } from '@harness/uicore'
+import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -16,7 +16,7 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { AzureWebAppRollbackProps } from './Rollback.types'
@@ -78,6 +78,21 @@ export const AzureWebAppRollbackRef = (
                 multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
                 disabled={readonly}
               />
+              {getMultiTypeFromValue(formik.values?.timeout) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={formik.values?.timeout as string}
+                  type="String"
+                  variableName="step.timeout"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => {
+                    formik.setFieldValue('timeout', value)
+                  }}
+                  isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+                />
+              )}
             </div>
           </>
         )

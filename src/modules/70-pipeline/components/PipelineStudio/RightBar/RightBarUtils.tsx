@@ -83,7 +83,10 @@ export const renderConnectorAndRepoName = ({
   connectorAndRepoNamePath,
   allowableTypes,
   codeBaseInputFieldFormName,
-  onConnectorChange
+  onConnectorChange,
+  setConnectorType,
+  connectorType,
+  fixRepoNameWidth
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -109,13 +112,18 @@ export const renderConnectorAndRepoName = ({
   allowableTypes: AllowedTypes // expression can be used for repoName
   codeBaseInputFieldFormName?: { [key: string]: string }
   onConnectorChange?: () => void // refetch onEdit connector
+  setConnectorType?: Dispatch<SetStateAction<string>>
+  connectorType?: string // required for getCompleteConnectorUrl on initial Add CI Stage
+  fixRepoNameWidth?: boolean
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
   const repoNameFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.repoName` : 'repoName'
   const repoNameValue = get(values, repoNameFieldName)
   const repoNameWidth =
-    connectorWidth && isRuntimeInput(repoNameValue) ? connectorWidth + runtimeInputGearWidth : connectorWidth
+    connectorWidth && isRuntimeInput(repoNameValue) && !fixRepoNameWidth
+      ? connectorWidth + runtimeInputGearWidth
+      : connectorWidth
 
   return (
     <>
@@ -151,6 +159,7 @@ export const renderConnectorAndRepoName = ({
               connectorRefType,
               setConnectionType,
               setConnectorUrl,
+              setConnectorType,
               setFieldValue,
               codeBaseInputFieldFormName,
               onConnectorChange
@@ -208,7 +217,7 @@ export const renderConnectorAndRepoName = ({
                 {getCompleteConnectorUrl({
                   partialUrl: connectorUrl,
                   repoName: repoNameValue,
-                  connectorType: get(connector, 'type'),
+                  connectorType: get(connector, 'type') || connectorType,
                   gitAuthProtocol: get(connector, 'spec.authentication.type')
                 })}
               </Text>

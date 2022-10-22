@@ -5,7 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ConfigFileWrapper, ManifestConfigWrapper } from 'services/cd-ng'
+import type {
+  ApplicationSettingsConfiguration,
+  ConfigFileWrapper,
+  ConnectionStringsConfiguration,
+  ManifestConfigWrapper
+} from 'services/cd-ng'
 
 export interface VariableOverride {
   name?: string
@@ -19,4 +24,6 @@ export interface AddEditServiceOverrideFormProps {
   variables?: VariableOverride[]
   manifests?: ManifestConfigWrapper[]
   configFiles?: ConfigFileWrapper[]
+  applicationSettings?: ApplicationSettingsConfiguration
+  connectionStrings?: ConnectionStringsConfiguration
 }

@@ -11,7 +11,7 @@ import { PatchFeatureQueryParams, PatchOperation, usePatchFeature, Variation } f
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { showToaster } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import useResponseError from '@cf/hooks/useResponseError'
 import { useGovernance } from '@cf/hooks/useGovernance'
@@ -169,7 +169,7 @@ const usePatchFeatureFlag = ({
       saveWithGit({
         featureFlagName,
         featureFlagIdentifier,
-        autoCommitMessage: AUTO_COMMIT_MESSAGES.UPDATED_FLAG_TARGETING,
+        commitMessage: GIT_COMMIT_MESSAGES.UPDATED_FLAG_TARGETING,
         patchInstructions,
         onSave: handleSave
       })

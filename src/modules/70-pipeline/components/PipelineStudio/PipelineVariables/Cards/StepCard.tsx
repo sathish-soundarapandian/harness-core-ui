@@ -140,9 +140,27 @@ export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
         data={{ name: stepGroupName }}
         originalData={{ name: stepGroupOriginalName }}
         metadataMap={metadataMap}
-        className={css.variablePaddingL3}
+        className={css.variablePaddingL1}
       />
-      {steps.map(row => {
+      {steps.map((row: any) => {
+        if (row.type === 'StepGroupRenderData') {
+          return (
+            <StepGroupCardPanel
+              key={row.path}
+              steps={row.steps}
+              stepGroupIdentifier={row.identifier}
+              stepGroupName={row.name}
+              path={row.path}
+              allowableTypes={allowableTypes}
+              stepGroupOriginalName={row.originalName}
+              metadataMap={metadataMap}
+              readonly={readonly}
+              stageIdentifier={stageIdentifier}
+              onUpdateStep={onUpdateStep}
+              stepsFactory={stepsFactory}
+            />
+          )
+        }
         const { step, originalStep, path } = row
         return (
           <StepCardPanel
@@ -172,6 +190,7 @@ export function StepGroupCardPanel(props: StepGroupCardProps): React.ReactElemen
       collapseProps={{
         keepChildrenMounted: true
       }}
+      panelClassName={css.accordianSummaryL1}
       id={`${props.path}.StepGroup.${props.stepGroupIdentifier}`}
       summary={
         <VariableAccordionSummary>

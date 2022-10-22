@@ -10,21 +10,17 @@ import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 
-import {
-  Button,
-  ButtonVariation,
-  Container,
-  getErrorInfoFromErrorObject,
-  Heading,
-  Layout,
-  TableV2,
-  useToaster
-} from '@harness/uicore'
+import { ButtonVariation, Container, Heading, Layout, TableV2, useToaster } from '@harness/uicore'
 
 import { InfrastructureResponse, useDeleteInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacButton from '@rbac/components/Button/Button'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { InfrastructureMenu, InfrastructureName, LastUpdatedBy, withInfrastructure } from './InfrastructureListColumns'
 
@@ -40,12 +36,13 @@ export default function InfrastructureList({
   showModal: () => void
   refetch: () => void
   setSelectedInfrastructure: (infrastructureYaml: string) => void
-}) {
+}): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const { mutate: deleteInfrastructure } = useDeleteInfrastructure({
     queryParams: {
@@ -56,17 +53,17 @@ export default function InfrastructureList({
     }
   })
 
-  const onEdit = (yaml: string) => {
+  const onEdit = (yaml: string): void => {
     setSelectedInfrastructure(yaml)
   }
 
-  const onDelete = async (identifier: string) => {
+  const onDelete = async (identifier: string): Promise<void> => {
     try {
       await deleteInfrastructure(identifier, { headers: { 'content-type': 'application/json' } })
       showSuccess(getString('cd.infrastructure.deleted', { identifier }))
       refetch()
-    } catch (e: any) {
-      showError(getErrorInfoFromErrorObject(e))
+    } catch (error) {
+      showError(getRBACErrorMessage(error))
     }
   }
 
@@ -95,6 +92,7 @@ export default function InfrastructureList({
         }
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getString]
   )
 
@@ -105,7 +103,12 @@ export default function InfrastructureList({
     <>
       {hasInfrastructure && (
         <Container padding={{ top: 'small' }} margin={{ top: 'medium' }} border={{ top: true }}>
-          <TableV2<InfrastructureResponse> columns={infrastructureColumns} data={defaultTo(list, [])} sortable />
+          <TableV2<InfrastructureResponse>
+            columns={infrastructureColumns}
+            data={defaultTo(list, [])}
+            sortable
+            onRowClick={rowItem => onEdit(defaultTo(rowItem.infrastructure?.yaml, '{}'))}
+          />
         </Container>
       )}
       {emptyEnvironment && (
@@ -114,11 +117,17 @@ export default function InfrastructureList({
           <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
             {getString('cd.infrastructure.noInfrastructureInEnvironment')}
           </Heading>
-          <Button
+          <RbacButton
             text={getString('pipelineSteps.deploy.infrastructure.infraDefinition')}
             icon="plus"
             onClick={showModal}
             variation={ButtonVariation.PRIMARY}
+            permission={{
+              resource: {
+                resourceType: ResourceType.ENVIRONMENT
+              },
+              permission: PermissionIdentifier.EDIT_ENVIRONMENT
+            }}
           />
         </Layout.Vertical>
       )}

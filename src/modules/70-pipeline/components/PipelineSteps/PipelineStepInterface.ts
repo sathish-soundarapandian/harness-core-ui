@@ -12,6 +12,7 @@ export enum StepType {
   StageRuntimeInput = 'StageRuntimeInput', // UI level step, only used in execution view
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
+  GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
   Command = 'Command',
   CustomApproval = 'CustomApproval',
   Barrier = 'Barrier',
@@ -25,9 +26,14 @@ export enum StepType {
   K8sCanaryDelete = 'K8sCanaryDelete',
   K8sDelete = 'K8sDelete',
   StepGroup = 'StepGroup',
+  DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',
   DeployEnvironment = 'DeployEnvironment',
+  DeployEnvironmentGroup = 'DeployEnvironmentGroup',
+  DeployEnvironmentEntity = 'DeployEnvironmentEntity',
   DeployInfrastructure = 'DeployInfrastructure',
+  DeployInfrastructureEntity = 'DeployInfrastructureEntity',
+  DeployClusterEntity = 'DeployClusterEntity',
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
@@ -60,6 +66,7 @@ export enum StepType {
   ServiceNowApproval = 'ServiceNowApproval',
   ServiceNowCreate = 'ServiceNowCreate',
   ServiceNowUpdate = 'ServiceNowUpdate',
+  ServiceNowImportSet = 'ServiceNowImportSet',
   Verify = 'Verify',
   JiraCreate = 'JiraCreate',
   JiraUpdate = 'JiraUpdate',
@@ -101,7 +108,18 @@ export enum StepType {
   EcsCanaryDelete = 'EcsCanaryDelete',
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
-  AzureBlueprint = 'AzureCreateBPResource'
+  AzureBlueprint = 'AzureCreateBPResource',
+  EcsRunTask = 'EcsRunTask',
+  EcsBlueGreenCreateService = 'EcsBlueGreenCreateService',
+  EcsBlueGreenSwapTargetGroups = 'EcsBlueGreenSwapTargetGroups',
+  EcsBlueGreenRollback = 'EcsBlueGreenRollback',
+  CreateAzureARMResource = 'AzureCreateARMResource',
+  CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
+  CustomDeployment = 'CustomDeployment',
+  FetchInstanceScript = 'FetchInstanceScript',
+  Wait = 'Wait',
+  ShellScriptProvision = 'ShellScriptProvision',
+  ChaosExperiment = 'Chaos' //todoChaos
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

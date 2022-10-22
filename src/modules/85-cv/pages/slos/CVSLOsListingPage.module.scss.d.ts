@@ -14,6 +14,8 @@ declare const styles: {
   readonly currentTimeRange: string
   readonly errorBudgetGaugeContainer: string
   readonly errorBudgetRemaining: string
+  readonly errorBudgetRemainingContainer: string
+  readonly errorBudgetRisk: string
   readonly flexGrowOne: string
   readonly menuIcon: string
   readonly noSloData: string
@@ -29,5 +31,6 @@ declare const styles: {
   readonly sloRiskFilterCard: string
   readonly sloTags: string
   readonly timelineSlider: string
+  readonly titleInSloTable: string
 }
 export default styles

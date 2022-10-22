@@ -32,7 +32,7 @@ export class JiraCreate extends PipelineStep<JiraCreateData> {
   }
 
   protected referenceId = 'jiraCreateStep'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected type = StepType.JiraCreate
   protected stepName = 'Jira Create'
   protected stepIcon: IconName = 'jira-create'
@@ -164,6 +164,7 @@ export class JiraCreate extends PipelineStep<JiraCreateData> {
         allowableTypes={allowableTypes}
         onChange={(values: JiraCreateData) => onChange?.(values)}
         initialValues={processInitialValues(initialValues)}
+        unprocessedInitialValues={initialValues}
         onUpdate={(values: JiraCreateData) => onUpdate?.(values)}
         isNewStep={isNewStep}
         readonly={readonly}

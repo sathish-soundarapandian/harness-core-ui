@@ -6,12 +6,14 @@
  */
 
 import React, { useEffect } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
+import type { GetDataError } from 'restful-react'
 import { Card, Color, FontVariation, Icon, PageError, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetTemplate } from 'services/template-ng'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import type { Failure } from 'services/cv'
+import type { ResponseTemplateResponse } from 'services/template-ng'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import HealthSourceInputsetTable from './components/HealthSourceInputsetTable/HealthSourceInputsetTable'
 import HealthSourceInputsetForm from './components/HealthSourceInputsetForm/HealthSourceInputsetForm'
@@ -26,31 +28,23 @@ interface HealthSourceInputsetInterface {
   templateRefData: TemplateDataInterface
   healthSourcesWithRuntimeList: string[]
   isReadOnlyInputSet?: boolean
+  data: ResponseTemplateResponse | null
+  loading: boolean
+  error: GetDataError<Failure | Error> | null
+  refetch: () => Promise<void>
 }
 
 export default function HealthSourceInputset({
   templateRefData,
   isReadOnlyInputSet,
-  healthSourcesWithRuntimeList
+  healthSourcesWithRuntimeList,
+  data: msTemplateResponse,
+  loading: msTemplateLoading,
+  error: msTemplateError,
+  refetch: msTemplateRefetch
 }: HealthSourceInputsetInterface): JSX.Element {
   const { getString } = useStrings()
   const [monitoredServiceYaml, setMonitoredServiceYaml] = React.useState<MonitoredServiceTemplateInterface>()
-  // Complete Yaml of Template
-  const {
-    data: msTemplateResponse,
-    loading: msTemplateLoading,
-    error: msTemplateError,
-    refetch: msTemplateRefetch
-  } = useGetTemplate({
-    templateIdentifier: templateRefData?.identifier,
-    queryParams: {
-      accountIdentifier: templateRefData?.accountId,
-      orgIdentifier: templateRefData?.orgIdentifier,
-      projectIdentifier: templateRefData?.projectIdentifier,
-      versionLabel: defaultTo(templateRefData?.versionLabel, ''),
-      getDefaultFromOtherRepo: true
-    }
-  })
 
   useEffect(() => {
     msTemplateRefetch()

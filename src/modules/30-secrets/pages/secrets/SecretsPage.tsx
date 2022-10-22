@@ -159,7 +159,7 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
         {SSH_NG && (
           <Menu.Item
             labelClassName="menu-item-label"
-            text={getString('secrets.secret.winrmCredential')}
+            text={getString('secrets.typeWinRM')}
             labelElement={<Icon name="command-winrm" />}
             onClick={/* istanbul ignore next */ () => openCreateWinRmCredModal()}
           />

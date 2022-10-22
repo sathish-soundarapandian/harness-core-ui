@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Formik,
   Layout,
@@ -16,10 +16,11 @@ import {
   MultiTypeInputType,
   SelectOption,
   getMultiTypeFromValue,
-  FormInput
+  FormInput,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
-import { Form, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
@@ -28,7 +29,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
   getConnectorIdValue,
-  getGoogleArtifactRegistryFormData,
+  getArtifactFormData,
   helperTextData,
   isFieldFixedAndNonEmpty
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -39,13 +40,20 @@ import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { ConnectorConfigDTO, GARBuildDetailsDTO, useGetBuildDetailsForGoogleArtifactRegistry } from 'services/cd-ng'
+import {
+  ConnectorConfigDTO,
+  GARBuildDetailsDTO,
+  RegionGar,
+  useGetBuildDetailsForGoogleArtifactRegistry,
+  useGetRegionsForGoogleArtifactRegistry
+} from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
-import { ArtifactIdentifierValidation, ModalViewFor, regions, tagOptions } from '../../../ArtifactHelper'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../ArtifactConnector.module.scss'
@@ -63,7 +71,7 @@ export const repositoryType: SelectOption[] = [
 function FormComponent(
   props: StepProps<ConnectorConfigDTO> &
     GoogleArtifactRegistryProps & { formik: FormikProps<GoogleArtifactRegistryInitialValuesType> }
-) {
+): React.ReactElement {
   const {
     context,
     expressions,
@@ -73,10 +81,12 @@ function FormComponent(
     initialValues,
     isReadonly = false,
     formik,
-    selectedArtifact
+    selectedArtifact,
+    isMultiArtifactSource
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [regions, setRegions] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const commonParams = {
     accountIdentifier: accountId,
@@ -85,12 +95,11 @@ function FormComponent(
     repoIdentifier,
     branch
   }
-
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
-  const packageValue = getGenuineValue(formik.values.spec.package || initialValues.spec?.package)
-  const projectValue = getGenuineValue(formik.values.spec.project || initialValues.spec?.project)
-  const regionValue = getGenuineValue(formik.values.spec.region || initialValues.spec?.region)
-  const repositoryNameValue = getGenuineValue(formik.values.spec.repositoryName || initialValues.spec?.repositoryName)
+  const packageValue = getGenuineValue(formik.values.spec.package || initialValues?.spec?.package)
+  const projectValue = getGenuineValue(formik.values.spec.project || initialValues?.spec?.project)
+  const regionValue = getGenuineValue(formik.values.spec.region || initialValues?.spec?.region)
+  const repositoryNameValue = getGenuineValue(formik.values?.spec.repositoryName || initialValues?.spec?.repositoryName)
 
   const {
     data: buildDetails,
@@ -108,6 +117,17 @@ function FormComponent(
       repositoryName: repositoryNameValue
     }
   })
+  const { data: regionsData } = useGetRegionsForGoogleArtifactRegistry({})
+
+  useEffect(() => {
+    if (regionsData?.data) {
+      setRegions(
+        regionsData?.data?.map((item: RegionGar) => {
+          return { label: item.name, value: item.value } as SelectOption
+        })
+      )
+    }
+  }, [regionsData])
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -151,8 +171,9 @@ function FormComponent(
   }
 
   return (
-    <Form>
+    <FormikForm>
       <div className={css.artifactForm}>
+        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
@@ -289,6 +310,7 @@ function FormComponent(
           <div className={css.jenkinsFieldContainer}>
             <FormInput.MultiTypeInput
               selectItems={getBuilds()}
+              disabled={!isAllFieldsAreFixed()}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="spec.version"
@@ -316,7 +338,13 @@ function FormComponent(
                   items: getBuilds(),
                   allowCreatingNewItems: true
                 },
-                onFocus: () => {
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
                   if (isAllFieldsAreFixed()) {
                     refetchBuildDetails({
                       queryParams: {
@@ -388,7 +416,7 @@ function FormComponent(
           rightIcon="chevron-right"
         />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 
@@ -397,12 +425,13 @@ export function GoogleArtifactRegistry(
 ): React.ReactElement {
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const getInitialValues = (): GoogleArtifactRegistryInitialValuesType => {
-    return getGoogleArtifactRegistryFormData(
+    return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as GoogleArtifactRegistryInitialValuesType
   }
 
@@ -415,12 +444,11 @@ export function GoogleArtifactRegistry(
         : {
             versionRegex: defaultTo(formData.spec.versionRegex, '')
           }
-    const identifierData =
-      context === ModalViewFor.SIDECAR
-        ? {
-            identifier: formData.identifier
-          }
-        : {}
+    const identifierData = isIdentifierAllowed
+      ? {
+          identifier: formData.identifier
+        }
+      : {}
     handleSubmit({
       ...identifierData,
       spec: {
@@ -455,7 +483,7 @@ export function GoogleArtifactRegistry(
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -472,7 +500,7 @@ export function GoogleArtifactRegistry(
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={formData => {
           submitFormData(
             {

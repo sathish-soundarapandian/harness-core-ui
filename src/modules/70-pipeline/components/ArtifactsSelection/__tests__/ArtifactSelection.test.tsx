@@ -36,6 +36,13 @@ const getContextValue = (): PipelineContextInterface => {
 const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 
 jest.mock('services/cd-ng', () => ({
+  useGetImagePathsForArtifactory: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      error: null,
+      loading: false
+    }
+  }),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useGetConnector: jest.fn().mockImplementation(() => {
@@ -46,6 +53,15 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
+    return { data: { data: ['bucket1'] }, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: { data: ['region1'] }, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
@@ -105,7 +121,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryArtifact = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryArtifact = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryArtifact).toBeDefined()
   })
 
@@ -133,7 +149,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -153,7 +169,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -198,8 +214,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: undefined,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
 
     const { container } = render(
@@ -225,8 +240,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>
@@ -268,8 +282,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>
@@ -301,8 +314,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>
@@ -334,8 +346,7 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false,
-      isAdditionAllowed: true
+      isReadonly: false
     }
     const { container } = render(
       <TestWrapper>
@@ -378,7 +389,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -406,7 +417,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -434,7 +445,7 @@ describe('ArtifactsSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -468,7 +479,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryButton).toBeDefined()
     fireEvent.click(addPrimaryButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -510,7 +521,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -552,7 +563,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryButton).toBeInTheDocument()
     fireEvent.click(addPrimaryButton)
 
@@ -587,7 +598,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { ECS_NG: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_SVC_ENV_REDESIGN: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -600,7 +611,7 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryButton).toBeInTheDocument()
     fireEvent.click(addPrimaryButton)
     await testArtifactTypeList()
@@ -617,7 +628,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { ECS_NG: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_SVC_ENV_REDESIGN: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -630,9 +641,44 @@ describe('ArtifactsSelection tests', () => {
       </TestWrapper>
     )
 
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeInTheDocument()
     fireEvent.click(addSidecarButton)
     await testArtifactTypeList()
+  })
+
+  test('clicking on New AWS Connector should show create view when deployment type is Azure Web App', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="AzureWebApp" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
+    expect(await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')).toBeInTheDocument()
+    fireEvent.click(addPrimaryButton)
+
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    userEvent.click(getByText(portal, 'pipeline.artifactsSelection.amazonS3Title')!)
+    const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(continueButton).not.toBeDisabled())
+    userEvent.click(continueButton)
+
+    const artifactRepoLabel = await findByText(portal, 'AWS connector')
+    expect(artifactRepoLabel).toBeDefined()
+    userEvent.click(getByText(portal, 'newLabel AWS connector')!)
+
+    const overviewTitle = await findAllByText(portal, 'overview')
+    expect(overviewTitle).toHaveLength(2)
+    expect(getByText(portal, 'name')).toBeDefined()
   })
 })

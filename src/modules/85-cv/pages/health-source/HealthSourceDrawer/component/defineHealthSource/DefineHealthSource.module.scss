@@ -41,6 +41,10 @@
     right: calc(-1 * var(--spacing-small));
   }
 
+  span[data-tooltip-id='selectHealthSourceConnector'] {
+    align-items: normal;
+  }
+
   button[data-testid='cr-field-connectorRef'] div {
     position: relative !important;
     right: calc(-1 * var(--spacing-small));
@@ -65,4 +69,10 @@
   min-height: calc(100% - 120px);
   position: relative;
   overflow-y: scroll;
+}
+
+.healthSourceListContainer {
+  flex-wrap: wrap;
+  gap: var(--spacing-xxxlarge) var(--spacing-small);
+  margin: 0 var(--spacing-xxxlarge) var(--spacing-large) !important;
 }

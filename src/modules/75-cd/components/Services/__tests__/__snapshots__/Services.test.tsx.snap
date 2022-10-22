@@ -436,7 +436,7 @@ exports[`Services should render Services 1`] = `
                               data-testid="dropdown-value"
                               style="--text-line-clamp: 1;"
                             >
-                              pipeline.lastModified
+                              common.lastModified
                             </p>
                           </div>
                           <div

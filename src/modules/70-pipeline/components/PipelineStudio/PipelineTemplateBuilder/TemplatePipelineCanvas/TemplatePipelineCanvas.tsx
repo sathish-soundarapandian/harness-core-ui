@@ -11,15 +11,10 @@ import { defaultTo, get, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { PageSpinner } from '@harness/uicore'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { useStageBuilderCanvasState } from '@pipeline/components/PipelineStudio/StageBuilder/useStageBuilderCanvasState'
-import { CanvasWidget, createEngine } from '@pipeline/components/Diagram'
-import { StageBuilderModel } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderModel'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
-import { useStrings } from 'framework/strings'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import { CanvasButtons } from '@pipeline/components/CanvasButtons/CanvasButtons'
 import {
   getIdentifierFromValue,
   getScopeFromValue,
@@ -27,47 +22,48 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTemplate } from 'services/template-ng'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { BaseReactComponentProps, DiagramFactory, NodeType } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
+import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
+import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
+import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
+import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './TemplatePipelineCanvas.module.scss'
 
 export function TemplatePipelineCanvas(): React.ReactElement {
   const {
-    state: { pipeline, templateTypes, templateServiceData, gitDetails },
-    stagesMap,
+    state: { pipeline, templateTypes, templateServiceData, gitDetails, storeMetadata },
     setTemplateTypes,
     setTemplateServiceData
   } = usePipelineContext()
   const canvasRef = React.useRef<HTMLDivElement | null>(null)
-  const { getString } = useStrings()
   const { errorMap } = useValidationErrors()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const queryParams = useParams<ProjectPathProps>()
+  const { supportingTemplatesGitx } = useAppStore()
 
-  const model = React.useMemo(() => new StageBuilderModel(), [])
-  const engine = React.useMemo(() => createEngine({}), [])
-  engine.setModel(model)
+  const diagram = new DiagramFactory('graph')
+  const CDPipelineStudioNew = diagram.render()
+  diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
+  diagram.registerNode('Approval', DiamondNodeWidget)
+  diagram.registerNode(NodeType.EndNode, EndNodeStage)
+  diagram.registerNode(NodeType.StartNode, StartNodeStage)
 
-  const addUpdateGraph = () => {
-    model.addUpdateGraph({
-      data: resolvedPipeline || { name: '', identifier: '' },
-      listeners: {
-        nodeListeners: {},
-        linkListeners: {}
-      },
-      zoomLevel: model.getZoomLevel(),
-      stagesMap,
-      getString,
-      isReadonly: true,
-      splitPaneSize: canvasRef.current?.offsetHeight,
-      parentPath: 'pipeline.stages',
-      errorMap,
-      templateTypes
+  if (diagram) diagram.registerListeners({})
+
+  const stageData = React.useMemo(() => {
+    return getPipelineGraphData({
+      data: resolvedPipeline?.stages as StageElementWrapperConfig[],
+      templateTypes: templateTypes,
+      serviceDependencies: undefined,
+      errorMap: errorMap,
+      parentPath: `pipeline.stages`
     })
-  }
-
-  addUpdateGraph()
-
-  useStageBuilderCanvasState(engine, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedPipeline?.stages, JSON.stringify(templateTypes), errorMap])
 
   const {
     data: pipelineTemplateResponse,
@@ -79,9 +75,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(pipeline.template?.versionLabel, ''),
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     }
   })
 
@@ -97,7 +91,9 @@ export function TemplatePipelineCanvas(): React.ReactElement {
         branch: gitDetails.branch,
         getDefaultFromOtherRepo: true
       },
-      templateRefs
+      templateRefs,
+      storeMetadata,
+      supportingTemplatesGitx
     ).then(resp => {
       setTemplateTypes(merge(templateTypes, resp.templateTypes))
       setTemplateServiceData(merge(templateServiceData, resp.templateServiceData))
@@ -124,8 +120,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
         />
       )}
       <Tag className={css.readOnlyTag}>READ ONLY</Tag>
-      <CanvasWidget engine={engine} />
-      <CanvasButtons tooltipPosition="left" engine={engine} callback={addUpdateGraph} />
+      <CDPipelineStudioNew readonly={true} data={stageData} graphLinkClassname={css.graphLink} />
     </div>
   )
 }

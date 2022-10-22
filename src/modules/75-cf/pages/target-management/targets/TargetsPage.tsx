@@ -31,7 +31,6 @@ import {
   StackedCircleContainer
 } from '@cf/components/StackedCircleContainer/StackedCircleContainer'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
-import { NoEnvironment } from '@cf/components/NoEnvironment/NoEnvironment'
 import TargetManagementHeader from '@cf/components/TargetManagementHeader/TargetManagementHeader'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
@@ -319,26 +318,17 @@ export const TargetsPage: React.FC = () => {
     }
   }, [clear])
 
-  const content = noEnvironmentExists ? (
-    <Container flex={{ align: 'center-center' }} height="100%">
-      <NoEnvironment
-        onCreated={response => {
-          const { location } = window
-          location.replace(`${location.href}?activeEnvironment=${response?.data?.identifier}`)
-          refetchEnvs()
+  const content =
+    noEnvironmentExists || noTargetExists ? (
+      <NoTargetsView
+        onNewTargetsCreated={() => {
+          setPageNumber(0)
+          refetchTargets({ queryParams: { ...queryParams, pageNumber: 0 } })
+          showToaster(getString('cf.messages.targetCreated'))
         }}
+        noEnvironment={noEnvironmentExists}
       />
-    </Container>
-  ) : noTargetExists ? (
-    <NoTargetsView
-      onNewTargetsCreated={() => {
-        setPageNumber(0)
-        refetchTargets({ queryParams: { ...queryParams, pageNumber: 0 } })
-        showToaster(getString('cf.messages.targetCreated'))
-      }}
-    />
-  ) : (
-    <>
+    ) : (
       <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
         <TableV2<Target>
           columns={columns}
@@ -348,8 +338,7 @@ export const TargetsPage: React.FC = () => {
           }}
         />
       </Container>
-    </>
-  )
+    )
 
   const displayToolbar = !noEnvironmentExists && (!noTargetExists || searchTerm)
 

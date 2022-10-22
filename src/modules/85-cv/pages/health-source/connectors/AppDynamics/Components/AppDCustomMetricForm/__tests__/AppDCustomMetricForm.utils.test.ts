@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/GroupName.utils'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { getBasePathValue, getMetricPathValue } from '../AppDCustomMetricForm.utils'
 import { appdMetric, mappedMetricsMap } from './AppDCustomMetricForm.mock'
 

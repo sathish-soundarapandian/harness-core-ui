@@ -16,7 +16,10 @@ export enum PackageTypeItems {
   JAR = 'JAR',
   ZIP = 'ZIP',
   TAR = 'TAR',
-  OTHERS = 'OTHER'
+  OTHERS = 'OTHER',
+  APPLICATION = 'IIS_APP',
+  VIRTUAL_DIRECTORY = 'IIS_VirtualDirectory',
+  WEBSITE = 'IIS'
 }
 export enum ExecutionType {
   BASIC = 'Basic',
@@ -29,6 +32,25 @@ export interface PackageTypeItem {
   label: keyof StringsMap
   value: PackageTypeItems
 }
+
+export const packageTypeItemsWinrm: PackageTypeItem[] = [
+  {
+    label: 'pipeline.phasesForm.packageTypesWinrm.application',
+    value: PackageTypeItems.APPLICATION
+  },
+  {
+    label: 'pipeline.phasesForm.packageTypesWinrm.virtualDir',
+    value: PackageTypeItems.VIRTUAL_DIRECTORY
+  },
+  {
+    label: 'pipeline.phasesForm.packageTypesWinrm.website',
+    value: PackageTypeItems.WEBSITE
+  },
+  {
+    label: 'common.other',
+    value: PackageTypeItems.OTHERS
+  }
+]
 
 export const packageTypeItems: PackageTypeItem[] = [
   {
@@ -85,4 +107,10 @@ export const onPhaseFieldChange = (
     return
   }
   formikProps.setFieldValue(`${fieldName}[${index}]`, { ...value })
+}
+
+export const getPackageLabel = (packageTypes: PackageTypeItem[], value: string): keyof StringsMap => {
+  const packageType = packageTypes.find((p: PackageTypeItem) => p.value === value)
+
+  return packageType ? packageType.label : 'common.other'
 }

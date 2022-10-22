@@ -18,6 +18,7 @@ import { useToaster } from '@common/components'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams } from '@common/hooks'
@@ -33,6 +34,7 @@ const CETrialHomePage: React.FC = () => {
   const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
   const module = 'ce'
   const moduleType = 'CE'
+  const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)
 
   const { openModal } = useCreateConnector({
     onSuccess: () => {
@@ -48,11 +50,14 @@ const CETrialHomePage: React.FC = () => {
       accountIdentifier: accountId
     }
   })
-
+  const refererURL = getSavedRefererURL()
+  const gaClientID = getGaClientID()
   const { mutate: startFreePlan } = useStartFreeLicense({
     queryParams: {
       accountIdentifier: accountId,
-      moduleType
+      moduleType,
+      ...(refererURL ? { referer: refererURL } : {}),
+      ...(gaClientID ? { gaClientID } : {})
     },
     requestOptions: {
       headers: {
@@ -95,7 +100,7 @@ const CETrialHomePage: React.FC = () => {
       }
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module as Module, updatedLicenseInfo)
-      showModal()
+      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId })) : showModal()
     } catch (error) {
       showError(error.data?.message)
     }

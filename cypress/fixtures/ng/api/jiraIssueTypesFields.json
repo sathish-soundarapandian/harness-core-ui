@@ -1,0 +1,48 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "projects": {
+      "ART": {
+        "id": "10244",
+        "key": "ART",
+        "name": "ART",
+        "issuetypes": {
+          "Bug": {
+            "id": "10103",
+            "name": "Bug",
+            "description": "A problem or error.",
+            "statuses": [],
+            "fields": {
+              "Description": {
+                "key": "description",
+                "name": "Description",
+                "required": true,
+                "schema": {
+                  "array": false,
+                  "typeStr": "string",
+                  "type": "string",
+                  "customType": null
+                },
+                "allowedValues": [],
+                "custom": false
+              },
+              "Summary": {
+                "key": "summary",
+                "name": "Summary",
+                "required": true,
+                "schema": {
+                  "array": false,
+                  "typeStr": "string",
+                  "type": "string",
+                  "customType": null
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "metaData": null,
+  "correlationId": "f0850dd3-b9c5-4782-b2d3-b461de32d746"
+}

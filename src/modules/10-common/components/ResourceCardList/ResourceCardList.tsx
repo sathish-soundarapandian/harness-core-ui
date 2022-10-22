@@ -13,6 +13,7 @@ import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
+import { isOnPrem } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
@@ -37,8 +38,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { NG_FILE_STORE, NG_SETTINGS } = useFeatureFlags()
-  const DEPLOYMENT_FREEZE = false
+  const { NG_SETTINGS } = useFeatureFlags()
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
@@ -46,7 +46,10 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
-  const showGitOpsCard = useMemo(() => history?.location?.pathname.includes('resources'), [history?.location?.pathname])
+  const showGitOpsCard = useMemo(
+    () => history?.location?.pathname.includes('resources') && !isOnPrem(),
+    [history?.location?.pathname]
+  )
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,
@@ -100,16 +103,6 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     } as ResourceOption
   ]
 
-  const deploymentFreezeCard: ResourceOption[] = [
-    {
-      label: <String stringID="common.freezeWindows" />,
-      icon: 'nav-settings',
-      colorClass: css.freezeWindows,
-      route: routes.toFreezeWindows({ accountId, orgIdentifier }),
-      selectable: true
-    } as ResourceOption
-  ]
-
   const options: ResourceOption[] = items || [
     {
       label: <String stringID="connectorsLabel" />,
@@ -129,16 +122,12 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       colorClass: css.secrets,
       route: routes.toSecrets({ accountId, orgIdentifier })
     },
-    ...(NG_FILE_STORE
-      ? [
-          {
-            label: <String stringID="resourcePage.fileStore" />,
-            colorClass: css.filestore,
-            icon: 'filestore',
-            route: routes.toFileStore({ accountId, orgIdentifier })
-          } as ResourceOption
-        ]
-      : []),
+    {
+      label: <String stringID="resourcePage.fileStore" />,
+      colorClass: css.filestore,
+      icon: 'filestore',
+      route: routes.toFileStore({ accountId, orgIdentifier })
+    } as ResourceOption,
     ...(!orgIdentifier ? smtpResource : []),
     {
       label: <String stringID="common.templates" />,
@@ -154,8 +143,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       route: routes.toVariables({ accountId, orgIdentifier })
     } as ResourceOption,
     ...(showGitOpsCard ? gitOpsCard : []),
-    ...(NG_SETTINGS ? defaultSettingsCard : []),
-    ...(DEPLOYMENT_FREEZE && !orgIdentifier ? deploymentFreezeCard : [])
+    ...(NG_SETTINGS ? defaultSettingsCard : [])
   ]
 
   const gitOpsEntities = [

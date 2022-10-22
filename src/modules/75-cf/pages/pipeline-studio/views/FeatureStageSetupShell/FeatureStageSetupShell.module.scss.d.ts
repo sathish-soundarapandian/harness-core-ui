@@ -13,6 +13,7 @@ declare const styles: {
   readonly stepGroup: string
   readonly tab: string
   readonly tabExecution: string
+  readonly tabPanel: string
   readonly tabsFullHeight: string
 }
 export default styles

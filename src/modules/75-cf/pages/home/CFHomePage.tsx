@@ -162,7 +162,7 @@ const CFHomePage: React.FC = () => {
 
   if (selectedProject && !experience) {
     history.push(
-      routes.toCFFeatureFlags({
+      routes.toCFConfigurePath({
         projectIdentifier: selectedProject.identifier,
         orgIdentifier: selectedProject.orgIdentifier || '',
         accountId: accountIdentifier

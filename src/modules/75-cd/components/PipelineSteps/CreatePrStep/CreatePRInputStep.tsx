@@ -12,10 +12,10 @@ import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type { CreatePRStepData } from './CreatePrStep'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -42,7 +42,7 @@ export default function CreatePRInputStep(props: CreatePrInputStepProps): React.
     <FormikForm>
       {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
@@ -52,6 +52,8 @@ export default function CreatePRInputStep(props: CreatePrInputStepProps): React.
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}.timeout`}
             disabled={readonly}
+            fieldPath={'timeout'}
+            template={template}
           />
         </div>
       )}

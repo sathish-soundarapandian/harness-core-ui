@@ -56,7 +56,12 @@ export default function K8sChangeEventCard({ data }: { data: ChangeEventDTO }): 
     <Card className={changeEventCardCss.main}>
       <Container>
         <Layout.Horizontal spacing="small" flex>
-          <Text lineClamp={1} font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK_100}>
+          <Text
+            lineClamp={1}
+            font={{ size: 'medium', weight: 'semi-bold' }}
+            color={Color.BLACK_100}
+            padding={{ bottom: 'small' }}
+          >
             Workload: {data.metadata.workload} - Namespace: {data.metadata.namespace}
           </Text>
         </Layout.Horizontal>

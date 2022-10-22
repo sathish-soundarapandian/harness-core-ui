@@ -49,7 +49,7 @@ function ConnectorField({
             {connectorName ?? connectorRef}
           </Text>
           {getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED && (
-            <Icon name="full-circle" size={8} color={connectorColor} />
+            <Icon name="full-circle" size={8} color={connectorColor} padding={{ left: 'small' }} />
           )}
         </>
       ) : (

@@ -16,6 +16,7 @@ steps:
     releaseNamePlaceholder: Enter Release Name
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
+    enableKubernetesPruning: 'Enable Kubernetes Pruning'
   commands:
     runTheCommands: Run the following commands
     addCommand: Add Command
@@ -28,6 +29,8 @@ steps:
     fileToTail: File to Tail
     patternToSearch: Pattern to Search
     fileToTailPlaceholder: Enter File to Tail
+    selectScriptLocation: Select script location
+    locationFileStore: Harness File Store
     patternToSearchPlaceholder: Enter Pattern to Search
     runOnDelegate: Run on Delegate
     validation:
@@ -53,6 +56,7 @@ steps:
     hostsOptional: Hosts (Optional)
     previewHosts: Preview Hosts
     noHosts: No hosts provided
+    title: Select Hosts
   azureInfraStep:
     azure: 'Microsoft Azure'
     subscription: '{{ $.common.subscriptionId }}'
@@ -90,7 +94,22 @@ steps:
       useAwsInstanceFilter: Use AWS Instance Filter
       hostName: Host Name Convention
       vpcs: VPCs
-      loadBalancer: Load  Balancer
+  ecsRunTaskStep:
+    ecsRunTaskDefinition: ECS Run Task Definition
+    runTaskDefinition: Run Task Definition
+    ecsRunTaskRequestDefinition: ECS Run Task Request Definition
+    runTaskRequestDefinition: Run Task Request Definition
+    skipSteadyStateCheck: Skip Steady-State Check
+  ecsBGCreateServiceStep:
+    sectionHeaders:
+      configureProductionService: Configure your Production Service
+      configureStageService: Configure your Stage Service
+    labels:
+      elasticLoadBalancer: Elastic Load Balancer
+      prodListener: Prod Listener
+      prodListenerRuleARN: Prod Listener Rule ARN
+      stageListener: Stage Listener
+      stageListenerRuleARN: Stage Listener Rule ARN
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -100,7 +119,7 @@ serviceCreated: '{{ $.common.serviceCreated }}'
 serviceUpdated: '{{ $.common.serviceUpdated }}'
 environmentCreated: '{{ $.common.environmentCreated }}'
 environmentUpdated: '{{ $.common.environmentUpdated }}'
-preProduction: '{{ $.pipeline.preProduction }}'
+preProduction: '{{ $.common.preProduction }}'
 preProductionType: 'Pre-Prod'
 environmentDelete: '{{ $.common.deleteEnvironment.title }}'
 environmentDeleteMessage: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
@@ -145,33 +164,64 @@ secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
   environmentTab:
     specifyYourEnvironment: Specify Environment
+    specifyYourEnvironments: Specify Environments
     specifyYourEnvironmentGroup: Specify Environment Group
     specifyYourInfrastructure: Specify Infrastructure
+    specifyYourInfrastructures: Specify Infrastructures
     specifyEnvironmentOrGroup: Specify environment or environment group
+    specifyGitOpsCluster: Specify GitOps Cluster
     specifyGitOpsClusters: Specify GitOps Clusters
     selectEnvironment: '- Select Environment -'
+    selectEnvironments: '- Select Environments -'
     selectEnvironmentGroup: '- Select Environment Group -'
     selectInfrastructure: '- Select Infrastructure -'
+    selectInfrastructures: '- Select Infrastructures -'
+    allInfrastructures: 'All Infrastructures'
     selectInfrastructureType: 'Select Infrastructure Type'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
     deployToAll: Deploy in parallel on all infrastructure
     environmentOrEnvGroupAsRuntime: Which of Environment or Environment Group should be marked as runtime?
     allClustersSelected: All Clusters in Environment
-    allEnvironmentsInEnvGroupSelected: All Environments
     environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
+    environmentsAreRequired: Environments are required
     infrastructureIsRequired: 'Infrastructure is required'
+    infrastructuresAreRequired: 'Infrastructures are required'
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
-    clusterIsRequired: 'Clusters are required'
+    environmentGroupIsRequired: 'Environment Group is required'
+    clusterIsRequired: 'Cluster is required'
+    multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
+    envGroupToggleText: 'Deploy to Environment Group'
+    viewEnvironmentInputs: View environment inputs
+    hideEnvironmentInputs: Hide environment inputs
+    viewInfrastructureInputs: View infrastructure inputs
+    hideInfrastructureInputs: Hide infrastructure inputs
+    multiEnvironmentsParallelDeployLabel: Deploy environments in parallel?
+    environmentGroupDialogTitleText: Deploy to environment group?
+    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group?. If you choose to proceed, your existing environments will be lost.
+    multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
+    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures?. If you choose to proceed, your existing environment will be migrated automatically.
+    singleEnvironmentDialogTitleText: Deploy to single environment?
+    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment?. If you choose to proceed, your existing environments will be lost.
+    deleteEnvironmentFromListDialogTitleText: Remove Environment from list?
+    deleteEnvironmentFromListConfirmationText: Are you sure you want to remove Environment - {{name}} from the list?
+    deleteInfrastructureFromListDialogTitleText: Remove Infrastructure from list?
+    deleteInfrastructureFromListConfirmationText: Are you sure you want to remove Infrastructure - {{name}} from the list?
+    deleteClusterFromListDialogTitleText: Remove Cluster from list?
+    deleteClusterFromListConfirmationText: Are you sure you want to remove Cluster - {{name}} from the list?
+    deleteEnvironmentGroupFromListDialogTitleText: Remove Environment Group from list?
+    deleteEnvironmentGroupFromListConfirmationText: Are you sure you want to remove Environment Group - {{name}} from the list?
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage
     deploymentTypeRequired: Deployment type selection is required
     propagateFrom: Propagate from
     differentService: Deploy different Service
-    specifyYourService: Select Service
+    specifyYourService: '{{$.common.selectService}}'
+    specifyYourServices: '{{$.common.selectServices}}'
     selectService: '- Select Service -'
+    selectServices: '- Select Services -'
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
@@ -179,9 +229,19 @@ pipelineSteps:
     manifest:
       taskDefinition: Task Definition
       serviceDefinition: Service Definition
-      scallingPolicy: Scalling Policy
+      scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
     newServiceOverride: New configuration overrides
+    multiServicesText: Deploy to multiple Services
+    multiServicesTitleText: Deploy to multiple services?
+    multiServicesParallelDeployLabel: Deploy services in parallel?
+    multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
+    singleServicesTitleText: Deploy to single service?
+    singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.
+    deleteServiceFromListTitleText: Remove service from list?
+    deleteServiceFromListText: Are you sure you want to remove {{name}} service from the list?
+    viewServiceInputs: View service inputs
+    hideServiceInputs: Hide service inputs
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector
@@ -217,7 +277,7 @@ serviceDashboard:
   headers:
     artifactVersion: Artifact Version
     environment: '{{$.environment}}'
-    infrastructures: Infrastructures
+    infrastructures: '{{$.common.infrastructures}}'
     infras: Infras
     clusters: '{{$.common.clusters}}'
     instances: '{{$.instanceFieldOptions.instances}}'
@@ -246,6 +306,7 @@ serviceDashboard:
   taskDefinitionArn: Task Definition ARN
   taskArn: Task ARN
   awsRegion: AWS Region
+  containerList: containerList
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -317,6 +378,7 @@ configFileStoreTitle: 'Config File'
 selectRepository: Select a repository
 selectArtifact: Select an artifact
 artifactName: Artifact Name
+selectArtifactSource: Select Artifact Source
 artifactFormErrors:
   artifactFilePath: Enter the artifact path. You can use wildcards such as `todo/*/*`
   repositoryName: Repository name is required
@@ -360,7 +422,7 @@ infrastructure:
   sshWinRmAzure:
     cloudProvider: Cloud Provider
     hostConnectionAttributes: Host Connection Attributes
-    usePublicDns: Use Public DNS connection
+    hostConnectionType: Host Connection Type
     noTagsAzure: No Tags found with given Connector and Subscription Id
 cloudFormation:
   createDescription: Provision resources using a CloudFormation template.
@@ -441,10 +503,13 @@ getStartedWithCD:
   infraName: Infrastructure Name
   setupDelegate: Setup Delegate
   delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
+ecsBGSwapTargetGroupsStep:
+  doNotDownsizeOldService: Do not downsize old service
 serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
@@ -465,11 +530,11 @@ azureBlueprint:
   assignmentNameError: Assignment Name Required
   configuration: Azure Blueprint Configuration
   managementGroup: Management Group
+  templateFolderPath: Template Folder Path
 validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 delegateInstallation: Install the Delegate to deploy your cluster
-delegateInstallBtnText: Install the Delegate
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate
 installDelegate: Install Delegate
@@ -511,3 +576,27 @@ miniKubeCmd1: curl -LO https://storage.googleapis.com/minikube/releases/latest/m
 miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
 miniKubeCmd3: minikube start
 miniKubeCmd4: kubectl get pods -A
+deploymentSteps: Deployment Steps
+useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
+removeStepTemplate: Remove Step Template
+removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+azureArm:
+  description: Deploy resources using Azure Resource Manager (ARM).
+  location: Location
+  templateFile: ARM Template File
+  templateFileSource: '{{ $.cd.azureBlueprint.templateFileSource }}'
+  templateFileDetails: '{{ $.cd.azureBlueprint.templateFileDetails }}'
+  paramFileSource: Parameter File Source
+  specifyTemplateFile: Specify ARM Template File
+  specifyTemplateFileSource: Specify Template File Source
+  paramFile: ARM Parameter File
+  paramFilePath: Parameter File Path
+  specifyParameterFile: Specify ARM Parameter File
+  managementGroup: '{{ $.cd.azureBlueprint.managementGroup }}'
+  tenant: Tenant
+  required: '{{name}} is Required'
+removeStepTemplateSuccess: Step Template has been successfully removed
+createAndUseTemplate: Create and Use Template
+ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
+artifactVersion: 'Version :'
+artifactPath: 'Path :'

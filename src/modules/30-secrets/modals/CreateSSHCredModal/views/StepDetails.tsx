@@ -33,7 +33,7 @@ const StepSSHDetails: React.FC<StepProps<SSHCredSharedObj> & SSHCredSharedObj> =
       </Text>
       <Formik<DetailsForm>
         onSubmit={values => {
-          nextStep?.({ detailsData: values, authData, isEdit: isEdit, ...prevStepData })
+          nextStep?.({ authData, ...prevStepData, detailsData: values, isEdit: isEdit })
         }}
         formName="sshStepDetailsForm"
         validationSchema={Yup.object().shape({

@@ -18,15 +18,18 @@ export interface SkipInstancesProps {
   selectedStage?: SkipInstancesConfig
   isReadonly: boolean
   onUpdate(check: boolean): void
+  name: string
+  value?: string | boolean
 }
 
 function SkipInstances(props: SkipInstancesProps): JSX.Element {
   const { getString } = useStrings()
-  const { isReadonly, onUpdate, selectedStage } = props
+  const { isReadonly, onUpdate, value, name } = props
   return (
     <Layout.Horizontal>
       <Checkbox
-        checked={!!selectedStage?.skipInstances}
+        checked={!!value}
+        name={name}
         disabled={isReadonly}
         data-testid="skip-instances-check"
         labelElement={<Text>{getString('pipeline.skipInstances.title')}</Text>}

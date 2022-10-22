@@ -3,7 +3,7 @@
 exports[`Azure Web App config tests Should match snapshot for application settings 1`] = `
 <div>
   <div
-    class="nopadLeft accordionSummary"
+    class="nopadLeft configSection"
     id="Stage.stage-0.Service.AzureWebAppConfig"
   >
     <div
@@ -17,7 +17,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
         data-name="azureWebAppConfig-applicationSettings"
       >
         <div
-          class="verticalSpacingInput"
+          class="connectorInputSpacing"
           data-name="connectorRefContainer"
         >
           <div
@@ -25,7 +25,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -106,7 +106,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -165,7 +165,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -224,7 +224,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -291,7 +291,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
 exports[`Azure Web App config tests Should match snapshot for connection strings 1`] = `
 <div>
   <div
-    class="nopadLeft accordionSummary"
+    class="nopadLeft configSection"
     id="Stage.stage-0.Service.AzureWebAppConfig"
   >
     <div
@@ -305,7 +305,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
         data-name="azureWebAppConfig-connectionStrings"
       >
         <div
-          class="verticalSpacingInput"
+          class="connectorInputSpacing"
           data-name="connectorRefContainer"
         >
           <div
@@ -313,7 +313,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -394,7 +394,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -453,7 +453,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -512,7 +512,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -579,7 +579,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
 exports[`Azure Web App config tests Should match snapshot for startup script 1`] = `
 <div>
   <div
-    class="nopadLeft accordionSummary"
+    class="nopadLeft configSection"
     id="Stage.stage-0.Service.AzureWebAppConfig"
   >
     <div
@@ -593,7 +593,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
         data-name="azureWebAppConfig-startupCommand"
       >
         <div
-          class="verticalSpacingInput"
+          class="connectorInputSpacing"
           data-name="connectorRefContainer"
         >
           <div
@@ -601,7 +601,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -682,7 +682,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -741,7 +741,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"
@@ -800,7 +800,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           </div>
         </div>
         <div
-          class="verticalSpacingInput"
+          class="inputSpacing"
         >
           <div
             class="bp3-form-group bp3-disabled"

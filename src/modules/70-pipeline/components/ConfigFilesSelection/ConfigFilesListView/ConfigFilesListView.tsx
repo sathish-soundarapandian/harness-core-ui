@@ -40,7 +40,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
@@ -119,7 +119,8 @@ function ConfigFilesListView({
     orgIdentifier,
     projectIdentifier,
     connectorInfo: undefined,
-    configFileIndex
+    configFileIndex,
+    deploymentType
   }
 
   const getInitialValues = (): ConfigInitStepData => {
@@ -273,7 +274,7 @@ function ConfigFilesListView({
               buildPayload={buildPayload}
               connectorInfo={undefined}
             />
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               name={getString('connectors.stepThreeName')}
               connectorInfo={undefined}
               isStep={true}
@@ -342,7 +343,7 @@ function ConfigFilesListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
-            types={allowedConfigFilesTypes[deploymentType]}
+            stores={allowedConfigFilesTypes[deploymentType]}
             newConnectorView={newConnectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
@@ -353,8 +354,6 @@ function ConfigFilesListView({
             lastSteps={getLastSteps()}
             deploymentType={deploymentType}
             iconsProps={getIconProps()}
-            selectedConfig={selectedConfig}
-            changeConfigFileType={setSelectedConfig}
             isReadonly={isReadonly}
             isNewFile={isNewFile}
             configFileIndex={configFileIndex}
@@ -481,6 +480,7 @@ function ConfigFilesListView({
             id="add-config-file"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
+            className={css.addConfig}
             data-test-id="addConfigFile"
             onClick={addNewConfigFile}
             icon="plus"

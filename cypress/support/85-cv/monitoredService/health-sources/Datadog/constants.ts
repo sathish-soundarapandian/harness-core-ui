@@ -348,7 +348,7 @@ export const dataDogMonitoredService = {
                 {
                   identifier: 'DD metric',
                   metricName: 'DD metric',
-                  riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] },
+                  riskProfile: { riskCategory: 'Errors', thresholdTypes: ['ACT_WHEN_HIGHER'] },
                   analysis: {
                     liveMonitoring: { enabled: false },
                     deploymentVerification: {
@@ -356,7 +356,7 @@ export const dataDogMonitoredService = {
                       serviceInstanceFieldName: '',
                       serviceInstanceMetricPath: null
                     },
-                    riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
+                    riskProfile: { riskCategory: 'Errors', thresholdTypes: ['ACT_WHEN_HIGHER'] }
                   },
                   serviceInstanceIdentifierTag: 'agent_version_major',
                   sli: { enabled: false },

@@ -19,10 +19,11 @@ import { FeatureActions, Category } from '@common/constants/TrackingConstants'
 export interface CreateFlagButtonProps {
   disabled?: boolean
   showModal: () => void
+  isLinkVariation?: boolean
 }
 
 const CreateFlagButton = (props: CreateFlagButtonProps): ReactElement => {
-  const { disabled, showModal } = props
+  const { disabled, showModal, isLinkVariation } = props
 
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
@@ -44,13 +45,14 @@ const CreateFlagButton = (props: CreateFlagButtonProps): ReactElement => {
       text={getString('cf.featureFlags.newFlag')}
       icon="plus"
       intent="primary"
-      variation={ButtonVariation.PRIMARY}
+      variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
       onClick={() => {
         trackEvent(FeatureActions.AddNewFeatureFlag, {
           category: Category.FEATUREFLAG
         })
         showModal()
       }}
+      margin={isLinkVariation ? { top: 'xlarge' } : {}}
       permission={{
         permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
         resource: { resourceType: ResourceType.FEATUREFLAG }

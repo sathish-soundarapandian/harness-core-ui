@@ -18,11 +18,11 @@ import type { StoreConfigWrapper } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-import { AzureWebAppConfigProps, AzureWebAppConfigType } from '../AzureWebAppServiceSpecInterface.types'
+import { ApplicationConfigProps, AzureWebAppConfigType } from '../AzureWebAppServiceSpecInterface.types'
 import { fileTypes } from '../AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
 import css from './RuntimeAzureWebAppConfig.module.scss'
 
-const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.ReactElement | null => {
+const AzureWebAppConfigInputField = (props: ApplicationConfigProps): React.ReactElement | null => {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
@@ -45,7 +45,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
   if (props.azureWebAppConfig?.store?.type === 'Harness') {
     if (props.azureWebAppConfig?.store.spec.secretFiles) {
       return (
-        <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+        <Layout.Vertical className={cx(css.inputWidth, css.fileStoreVerticalSpacing)}>
           <FileStoreList
             name={`${props.path}.${props.type}.store.spec.secretFiles`}
             type={fileTypes.ENCRYPTED}
@@ -56,7 +56,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
       )
     }
     return (
-      <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+      <Layout.Vertical className={cx(css.inputWidth, css.fileStoreVerticalSpacing)}>
         <FileStoreList
           name={`${props.path}.${props.type}.store.spec.files`}
           type={fileTypes.FILE_STORE}
@@ -83,7 +83,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
     </div>
   )
 }
-export function AzureWebAppConfig(props: AzureWebAppConfigProps): React.ReactElement {
+export function ApplicationConfig(props: ApplicationConfigProps): React.ReactElement {
   const { getString } = useStrings()
 
   const getPathLabel = (type: AzureWebAppConfigType | undefined): string => {
@@ -115,7 +115,7 @@ export function AzureWebAppConfig(props: AzureWebAppConfigProps): React.ReactEle
   }
   return (
     <div
-      className={cx(css.nopadLeft, css.accordionSummary)}
+      className={cx(css.nopadLeft, css.configSection)}
       id={`Stage.${props.stageIdentifier}.Service.AzureWebAppConfig`}
     >
       {!props.fromTrigger && <div className={css.subheading}>{getHeading(props.type)}</div>}

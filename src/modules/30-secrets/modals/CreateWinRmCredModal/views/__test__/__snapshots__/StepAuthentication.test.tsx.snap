@@ -2508,20 +2508,6 @@ exports[`Create WinRm Cred Wizard Step Authentication should render form Kerbero
                     />
                     password
                   </label>
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      class="RadioButton--input"
-                      name="tgtGenerationMethod"
-                      type="radio"
-                      value="None"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    secrets.sshAuthFormFields.optionKerbNone
-                  </label>
                 </div>
               </div>
             </div>

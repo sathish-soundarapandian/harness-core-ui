@@ -19,7 +19,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import { ECSRollingDeployStepEditRef } from './ECSRollingDeployStepEdit'
-import { ECSRollingDeployStepInputSet } from './ECSRollingDeployStepInputSet'
+import { GenericExecutionStepInputSet } from '../Common/GenericExecutionStep/GenericExecutionStepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface ECSRollingDeployVariableStepProps {
@@ -35,12 +35,16 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
   protected stepName = 'ECS Rolling Deploy'
   protected stepIcon: IconName = 'rolling'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECSRollingDeploy'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
     type: StepType.EcsRollingDeploy,
-    timeout: '10m'
+    timeout: '10m',
+    spec: {
+      sameAsAlreadyRunningInstances: false,
+      forceNewDeployment: false
+    }
   }
 
   constructor() {
@@ -63,13 +67,10 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ECSRollingDeployStepInputSet
-          initialValues={initialValues}
-          onUpdate={onUpdate}
+        <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
-          stepViewType={stepViewType}
           inputSetData={inputSetData as InputSetData<StepElementConfig>}
         />
       )

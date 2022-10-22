@@ -321,6 +321,43 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
       set(errors, 'artifacts.primary.spec.connectorRef', getString?.('fieldRequired', { field: 'ConnectorRef' }))
     }
     if (
+      isEmpty(data?.artifacts?.primary?.primaryArtifactRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.artifacts?.primary?.primaryArtifactRef) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'artifacts.primary.primaryArtifactRef',
+        getString?.('fieldRequired', { field: 'Primary Artifact Ref' })
+      )
+    }
+    if (
+      isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec?.connectorRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.artifacts?.primary?.sources?.[0]?.spec?.connectorRef) ===
+        MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'artifacts.primary.sources[0].spec.connectorRef',
+        getString?.('fieldRequired', { field: 'ConnectorRef' })
+      )
+    }
+    if (
+      isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec?.tag) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.artifacts?.primary?.sources?.[0]?.spec?.tag) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, 'artifacts.primary.sources[0].spec.tag', getString?.('fieldRequired', { field: 'Tag' }))
+    }
+    if (
+      isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec?.imagePath) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.artifacts?.primary?.sources?.[0]?.spec?.imagePath) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, 'artifacts.primary.sources[0].spec.imagePath', getString?.('fieldRequired', { field: 'Image Path' }))
+    }
+    if (
       isEmpty(data?.artifacts?.primary?.spec?.imagePath) &&
       isRequired &&
       getMultiTypeFromValue(template?.artifacts?.primary?.spec?.imagePath) === MultiTypeInputType.RUNTIME

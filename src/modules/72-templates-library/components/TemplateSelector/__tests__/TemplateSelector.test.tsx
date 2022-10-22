@@ -14,6 +14,10 @@ import type { TemplateSelectorLeftViewProps } from '@templates-library/component
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import type { TemplateDetailsProps } from '@templates-library/components/TemplateDetails/TemplateDetails'
 import { templateSelectorContextMock } from 'framework/Templates/TemplateSelectorContext/stateMocks'
+import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
+import { StageTemplate } from '@templates-library/components/Templates/StageTemplate/StageTemplate'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateSelector } from '../TemplateSelector'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -49,6 +53,12 @@ jest.mock('@templates-library/components/TemplateDetails/TemplateDetails', () =>
 describe('<TemplateSelector /> tests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+    templateFactory.registerTemplate(new StageTemplate())
+    templateFactory.registerTemplate(new PipelineTemplate())
   })
 
   test('should match snapshot when selected template is not set', async () => {

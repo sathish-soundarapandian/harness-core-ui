@@ -39,6 +39,21 @@ const AddResourceModal: React.FC<RoleModalData> = ({
 
   if (!resourceHandler) return <Page.Error />
   const label = resource === ResourceType['DASHBOARDS'] ? resourceHandler.labelOverride : resourceHandler.label
+  const ctaLabelVars = {
+    count: selectedItems.length,
+    resource: resourceHandler.labelSingular
+      ? getString(resourceHandler.labelSingular)
+      : getString(resourceHandler.label)
+  }
+  const ctaLabelForAttr =
+    selectedItems.length === 1
+      ? getString('rbac.addResourceModal.modalCtaLabelSingular', ctaLabelVars)
+      : getString('rbac.addResourceModal.modalCtaLabelPlural', ctaLabelVars)
+  const ctaLabel = `${getString('add')} ${selectedItems.length} ${
+    resource === ResourceType['DASHBOARDS']
+      ? getString(resourceHandler.labelOverride || 'dashboards.homePage.folders')
+      : getString(resourceHandler.label)
+  } `
   const addModalBody = isAttributeFilter
     ? resourceHandler?.addAttributeModalBody?.({
         onSelectChange: items => {
@@ -87,11 +102,7 @@ const AddResourceModal: React.FC<RoleModalData> = ({
         <Layout.Horizontal spacing="small">
           <Button
             variation={ButtonVariation.PRIMARY}
-            text={`${getString('add')} ${selectedItems.length} ${
-              resource === ResourceType['DASHBOARDS']
-                ? getString(resourceHandler.labelOverride || 'dashboards.homePage.folders')
-                : getString(resourceHandler.label)
-            } ${isAttributeFilter ? getString('common.types') : ''}`}
+            text={isAttributeFilter ? ctaLabelForAttr : ctaLabel}
             onClick={() => onSuccess(selectedItems)}
           />
           <Button text={getString('cancel')} onClick={onClose} />

@@ -16,7 +16,7 @@ import type { CloudMetricsHealthSourceProps } from '@cv/components/CloudMetricsH
 import type { DatadogDashboardDetail } from 'services/cv'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import * as cvService from 'services/cv'
-import type { GroupNameProps } from '@cv/components/GroupName/GroupName'
+import type { GroupNameProps } from '@cv/components/GroupName/GroupName.types'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { mockDatadogData, MockSampleData, mockWidgetSelectedData, SourceTabsData } from './mock'

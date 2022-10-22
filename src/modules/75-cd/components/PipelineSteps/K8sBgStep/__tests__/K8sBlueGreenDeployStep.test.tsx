@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import userEvent from '@testing-library/user-event'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -183,7 +184,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
     const onChange = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
 
-    const { container, queryByText } = render(
+    const { container } = render(
       <TestStepWidget
         initialValues={{
           type: 'K8sBlueGreenDeploy',
@@ -204,23 +205,46 @@ describe('Test K8sBlueGreenDeployStep', () => {
 
     //change
     fireEvent.change(container.querySelector('input[value="Test A"]') as HTMLElement, { target: { value: 'newName' } })
-    fireEvent.change(container.querySelector('input[value="1s"]') as HTMLElement, { target: { value: '5s' } })
+    fireEvent.change(container.querySelector('input[value="1s"]') as HTMLElement, { target: { value: '1m' } })
 
-    await ref.current?.submitForm()
-    expect(onChange).toHaveBeenCalledWith({
-      type: 'K8sBlueGreenDeploy',
-      name: 'newName',
-      identifier: 'newName',
-      timeout: '5s',
-      spec: {
-        skipDryRun: RUNTIME_INPUT_VALUE
-      }
-    })
+    userEvent.click(screen.getByTestId('optional-config-summary'))
 
-    //timeout validation on submit
-    fireEvent.change(container.querySelector('input[value="5s"]') as HTMLElement, { target: { value: '' } })
+    const pruningCheckbox = await screen.findByRole('checkbox', { name: 'cd.steps.common.enableKubernetesPruning' })
+
+    userEvent.click(pruningCheckbox)
+
+    await waitFor(() =>
+      expect(onChange).toHaveBeenCalledWith({
+        type: 'K8sBlueGreenDeploy',
+        name: 'newName',
+        identifier: 'newName',
+        timeout: '1m',
+        spec: {
+          skipDryRun: RUNTIME_INPUT_VALUE,
+          pruningEnabled: true
+        }
+      })
+    )
+
+    await act(async () => ref.current?.submitForm())
+
+    await waitFor(() =>
+      expect(onUpdate).toHaveBeenCalledWith({
+        type: 'K8sBlueGreenDeploy',
+        name: 'newName',
+        identifier: 'newName',
+        timeout: '1m',
+        spec: {
+          skipDryRun: RUNTIME_INPUT_VALUE,
+          pruningEnabled: true
+        }
+      })
+    )
+
+    // timeout validation on submit
+    fireEvent.change(container.querySelector('input[value="1m"]') as HTMLElement, { target: { value: '' } })
 
     await act(() => ref.current?.submitForm()!)
-    expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy()
+    expect(screen.queryByText('validation.timeout10SecMinimum')).toBeTruthy()
   })
 })

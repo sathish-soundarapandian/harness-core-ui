@@ -30,6 +30,7 @@ declare const styles: {
   readonly stepContainer: string
   readonly stepCtaContainer: string
   readonly stepQueryContainer: string
+  readonly stepScheduleContainer: string
   readonly userSettingsList: string
   readonly verticalStretch: string
   readonly wizardContainer: string

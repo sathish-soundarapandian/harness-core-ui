@@ -12,6 +12,8 @@ import { NoData } from '@cf/components/NoData/NoData'
 import { useStrings, String } from 'framework/strings'
 import noFlagsImg from '@cf/images/Feature_Flags_Teepee.svg'
 import noResultsImg from '@cf/images/EmptySearchResults.svg'
+import GetStartedWithFF from '@cf/components/GetStartedWithFF/GetStartedWithFF'
+import FlagsSectionNoData from './FlagsSectionNoData'
 import css from './NoFeatureFlags.module.scss'
 
 export interface NoFeatureFlagsProps {
@@ -34,11 +36,10 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
   const { getString } = useStrings()
 
   const mainMessage = (): string => {
-    if (hasFeatureFlags) {
-      if (hasFlagFilter) return getString('common.filters.noMatchingFilterData')
-      if (hasSearchTerm) return getString('cf.noResultMatch')
-    }
-    return getString('cf.featureFlags.noFlagsInProject')
+    if (hasFlagFilter) return getString('common.filters.noMatchingFilterData')
+    if (hasSearchTerm) return getString('cf.noResultMatch')
+
+    return ''
   }
 
   const buttonText = (): string => {
@@ -76,28 +77,38 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
       return (
         <>
           <div className={css.noFlagsDescription}>
-            <String stringID="cf.featureFlags.noFlagsDescription" />
+            <String stringID="cf.featureFlags.flagsDescription" />
           </div>
           <div className={css.noFlagsToGetStarted}>
             <String useRichText stringID="cf.featureFlags.noFlagsToGetStarted" />
           </div>
-          <FlagDialog environment={environmentIdentifier} />
+          <GetStartedWithFF />
+          <FlagDialog environment={environmentIdentifier} isLinkVariation />
         </>
       )
     }
   }
 
+  if (hasSearchTerm || hasFlagFilter) {
+    return (
+      <Container flex={{ justifyContent: 'center' }} padding="xxxlarge">
+        <NoData
+          imageURL={hasFeatureFlags && (hasSearchTerm || hasFlagFilter) ? noResultsImg : noFlagsImg}
+          message={mainMessage()}
+          description={additionalContent()}
+          buttonText={buttonText()}
+          buttonProps={buttonProps()}
+          padding="xxxlarge"
+          width="570px"
+        />
+      </Container>
+    )
+  }
   return (
-    <Container flex={{ justifyContent: 'center' }} padding="xxxlarge">
-      <NoData
-        imageURL={hasFeatureFlags && (hasSearchTerm || hasFlagFilter) ? noResultsImg : noFlagsImg}
-        message={mainMessage()}
-        description={additionalContent()}
-        buttonText={buttonText()}
-        buttonProps={buttonProps()}
-        padding="xxxlarge"
-        width="570px"
-      />
+    <Container flex={{ align: 'center-center' }} style={{ paddingTop: '150px' }}>
+      <FlagsSectionNoData>
+        <FlagDialog environment={environmentIdentifier} isLinkVariation />
+      </FlagsSectionNoData>
     </Container>
   )
 }

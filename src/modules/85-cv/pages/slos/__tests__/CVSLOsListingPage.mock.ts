@@ -6,10 +6,11 @@
  */
 
 import type {
-  ResponsePageSLODashboardWidget,
+  ResponsePageSLOHealthListView,
   ResponsePageUserJourneyResponse,
   RestResponseListSLOErrorBudgetResetDTO,
-  SLODashboardWidget
+  SLODashboardWidget,
+  SLOHealthListView
 } from 'services/cv'
 import type { TestWrapperProps } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -29,6 +30,31 @@ export const pathParams = {
 export const testWrapperProps: TestWrapperProps = {
   path: routes.toCVSLOs({ ...projectPathProps, module: 'cv' }),
   pathParams
+}
+
+export const dashboardWidgetsContentData: SLOHealthListView = {
+  burnRate: 90,
+  errorBudgetRemaining: 60,
+  errorBudgetRemainingPercentage: 60,
+  errorBudgetRisk: RiskValues.HEALTHY,
+  healthSourceIdentifier: 'health_source_identifier',
+  healthSourceName: 'Health Source Name',
+  monitoredServiceIdentifier: 'monitored_service_identifier',
+  monitoredServiceName: 'Monitored Service Name',
+  sloIdentifier: 'slo_identifier',
+  sloTargetPercentage: 60,
+  sloTargetType: PeriodTypes.ROLLING,
+  tags: {},
+  name: 'Title',
+  totalErrorBudget: 100,
+  serviceIdentifier: 'service',
+  environmentIdentifier: 'env',
+  environmentName: 'env',
+  serviceName: 'serviceName',
+  noOfActiveAlerts: 0,
+  noOfMaximumAlerts: 5,
+  userJourneyIdentifier: 'userJourney',
+  userJourneyName: 'userJourney'
 }
 
 export const dashboardWidgetsContent: SLODashboardWidget = {
@@ -64,14 +90,14 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
   serviceName: 'serviceName'
 }
 
-export const dashboardWidgetsResponse: ResponsePageSLODashboardWidget = {
+export const dashboardWidgetsResponse: ResponsePageSLOHealthListView = {
   data: {
     totalItems: 1,
     totalPages: 1,
     pageIndex: 0,
     pageItemCount: 1,
     pageSize: 4,
-    content: [dashboardWidgetsContent]
+    content: [dashboardWidgetsContentData]
   }
 }
 
@@ -150,3 +176,44 @@ export const mockedSLORiskCountsData = [
   { count: 0, displayName: 'Observe', identifier: 'OBSERVE' },
   { count: 0, displayName: 'Healthy', identifier: 'HEALTHY' }
 ]
+
+export const mockSLODashboardWidgetsData = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 10,
+    pageSize: 10,
+    content: [
+      {
+        sloIdentifier: 'SLO4',
+        name: 'SLO-4',
+        monitoredServiceIdentifier: 'service_appd_env_appd',
+        monitoredServiceName: 'service_appd_env_appd',
+        healthSourceIdentifier: 'appd',
+        healthSourceName: 'appd',
+        serviceIdentifier: 'service_appd',
+        environmentIdentifier: 'env_appd',
+        environmentName: 'env_appd',
+        serviceName: 'service_appd',
+        tags: {},
+        description: 'Tracks SLO error rate',
+        userJourneyIdentifier: 'Journey3',
+        userJourneyName: 'Journey-3',
+        burnRate: 0.0,
+        errorBudgetRemainingPercentage: 100.0,
+        errorBudgetRemaining: 43,
+        totalErrorBudget: 43,
+        sloTargetType: 'Rolling',
+        sloTargetPercentage: 97.0,
+        noOfActiveAlerts: 12,
+        noOfMaximumAlerts: 5,
+        errorBudgetRisk: 'HEALTHY'
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  metaData: null,
+  correlationId: '8d19830f-e176-4957-83a1-9d898144ae00'
+}

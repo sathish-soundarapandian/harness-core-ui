@@ -67,14 +67,31 @@ export const getRecommendationYaml: (
   return `limits:\n  memory: ${memLimitVal}${cpuLimitVal}\nrequests:\n  memory: ${memReqVal}\n  cpu: ${cpuReqVal}\n`
 }
 
+export const getECSRecommendationYaml: (cpuReqVal: string | number, memReqVal: string | number) => string = (
+  cpuReqVal,
+  memReqVal
+) => {
+  return `requests:\n  memory: ${memReqVal}\n  cpu: ${cpuReqVal}\n`
+}
+
 export const getMemoryValueInGBFromExpression: (val: string | number) => number = val => {
   const stringVal = `${val}`
   if (stringVal.includes('Gi')) {
     return Number(stringVal.split('Gi')[0])
   } else if (stringVal.includes('Mi')) {
     return Number(stringVal.split('Mi')[0]) / 1000
+  } else if (stringVal.includes('M')) {
+    return Number(stringVal.split('M')[0]) / 1000
   }
   return Number(val) / BYTES_IN_A_GB
+}
+
+export const getECSMemValueFromExpression: (val: string | number) => number = val => {
+  const stringVal = `${val}`
+  if (stringVal.includes('M')) {
+    return Number(stringVal.split('M')[0])
+  }
+  return Number(val)
 }
 
 export const getCPUValueInCPUFromExpression: (val: string | number) => number = val => {

@@ -12,10 +12,11 @@ import { useToaster } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { UpdateDashboardResponse, useUpdateDashboard } from 'services/custom-dashboards'
+import { FolderModel, UpdateDashboardResponse, useUpdateDashboard } from 'services/custom-dashboards'
 import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
 
 interface UpdateDashboardFormProps {
+  editableFolders: FolderModel[]
   hideModal: () => void
   reloadDashboards: () => void
   formData?: {
@@ -26,7 +27,12 @@ interface UpdateDashboardFormProps {
   }
 }
 
-const UpdateDashboardForm: React.FC<UpdateDashboardFormProps> = ({ hideModal, reloadDashboards, formData }) => {
+const UpdateDashboardForm: React.FC<UpdateDashboardFormProps> = ({
+  editableFolders,
+  hideModal,
+  reloadDashboards,
+  formData
+}) => {
   const { getString } = useStrings()
   const { accountId } = useParams<DashboardPathProps>()
   const history = useHistory()
@@ -66,8 +72,8 @@ const UpdateDashboardForm: React.FC<UpdateDashboardFormProps> = ({ hideModal, re
   return (
     <DashboardForm
       title={getString('dashboards.editModal.editDashboard')}
-      modalErrorHandler={modalErrorHandler}
       setModalErrorHandler={setModalErrorHandler}
+      editableFolders={editableFolders}
       formData={{
         folderId: formData?.resourceIdentifier || '',
         name: formData?.title || '',
@@ -75,6 +81,7 @@ const UpdateDashboardForm: React.FC<UpdateDashboardFormProps> = ({ hideModal, re
       }}
       loading={loading}
       onComplete={onComplete}
+      mode="EDIT"
     />
   )
 }

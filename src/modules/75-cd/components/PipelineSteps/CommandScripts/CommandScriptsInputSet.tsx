@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash-es'
 import { AllowedTypes, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { InputOutputVariablesInputSet } from '../Common/InputOutputVariablesInputSet/InputOutputVariablesInputSet'
@@ -40,7 +40,7 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
     <FormikForm data-testid="command-scripts-input-set-form">
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
@@ -50,6 +50,8 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
               disabled: inputSetData.readonly
             }}
             disabled={inputSetData.readonly}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}

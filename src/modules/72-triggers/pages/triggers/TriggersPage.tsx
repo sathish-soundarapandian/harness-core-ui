@@ -31,7 +31,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
   const history = useHistory()
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const onNewTriggerClick = (val: TriggerDataInterface): void => {
-    const { triggerType, sourceRepo, manifestType, artifactType } = val
+    const { triggerType, sourceRepo, manifestType, artifactType, scheduleType } = val
     history.push(
       routes.toTriggersWizardPage({
         accountId,
@@ -43,6 +43,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
         sourceRepo,
         manifestType,
         artifactType,
+        scheduleType,
         module,
         repoIdentifier,
         connectorRef,
@@ -71,7 +72,9 @@ const TriggersPage: React.FC = (): React.ReactElement => {
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
   const resolvedPipeline = parse(pipelineResponse?.data?.yamlPipeline || '')

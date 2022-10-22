@@ -8,7 +8,7 @@
 import React from 'react'
 
 import { ModuleName } from 'framework/types/ModuleName'
-import { useCITrialModal } from '@ci/modals/CITrial/useCITrialModal'
+import { useCITrialModal } from '@pipeline/components/PipelineStudio/CITrial/useCITrialModal'
 import HomePageByModule from '@pipeline/components/HomePageByModule/HomePageByModule'
 import bgImageURL from './images/ci.svg'
 

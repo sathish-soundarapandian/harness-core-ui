@@ -9,16 +9,16 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, FormikForm, Text, Color } from '@harness/uicore'
+import { FormikForm, Text, Color } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
-
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import { TemplateInputStep } from './TemplateInput'
 
@@ -36,7 +36,7 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
         /* istanbul ignore next */
         isValueRuntimeInput(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -46,23 +46,8 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
                 expressions,
                 disabled: readonly
               }}
-            />
-          </div>
-        )
-      }
-      {
-        /* istanbul ignore next */
-        isValueRuntimeInput(inputSetData?.template?.spec?.provisionerIdentifier as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
-              name={`${path}.spec.provisionerIdentifier`}
-              label={getString('pipelineSteps.provisionerIdentifier')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              data-testid={`${path}.spec.provisionerIdentifier`}
+              fieldPath={'timeout'}
+              template={inputSetData?.template}
             />
           </div>
         )
@@ -72,8 +57,8 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
         isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.connectorRef as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             <FormMultiTypeConnectorField
-              label={<Text color={Color.GREY_900}>{getString('pipelineSteps.awsConnectorLabel')}</Text>}
-              type={Connectors.AWS}
+              label={<Text color={Color.GREY_900}>{getString('common.azureConnector')}</Text>}
+              type={Connectors.AZURE}
               name={`${path}.spec.configuration.connectorRef`}
               placeholder={getString('select')}
               accountIdentifier={accountId}
@@ -92,7 +77,7 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
         /* istanbul ignore next */
         isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.assignmentName as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.assignmentName`}
               label={getString('cd.azureBlueprint.assignmentName')}
               disabled={readonly}
@@ -101,6 +86,8 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
                 allowableTypes
               }}
               data-testid={`${path}.spec.configuration.assignmentName`}
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.assignmentName'}
             />
           </div>
         )

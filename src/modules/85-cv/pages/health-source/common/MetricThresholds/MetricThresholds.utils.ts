@@ -299,9 +299,8 @@ export function checkDuplicate(
   })
 }
 
-const getTheValuesExistsAndItIsValid = (value?: number): boolean => {
-  return typeof value !== 'undefined' && value < 1
-}
+const getIsAbsoluteValueIsZero = (type?: string, value?: number): boolean =>
+  type === MetricCriteriaValues.Absolute && value === 0
 
 /**
  *  Common validation for thresholds
@@ -348,12 +347,11 @@ export function validateCommonFieldsForMetricThreshold(
         errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
       }
 
-      // Greater than and less than should have value greater than 0
-      if (getTheValuesExistsAndItIsValid(value.criteria?.spec?.greaterThan)) {
+      if (getIsAbsoluteValueIsZero(value?.criteria?.type, value?.criteria?.spec?.greaterThan)) {
         errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('cv.required')
       }
 
-      if (getTheValuesExistsAndItIsValid(value.criteria?.spec?.lessThan)) {
+      if (getIsAbsoluteValueIsZero(value?.criteria?.type, value?.criteria?.spec?.lessThan)) {
         errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
       }
 
@@ -396,15 +394,23 @@ export function validateCommonFieldsForMetricThreshold(
 export const getIsMetricPacksSelected = (metricData: { [key: string]: boolean }): boolean => {
   if (!metricData) return false
 
-  return Object.keys(metricData).some(metricPackKey => metricData[metricPackKey])
+  return Object.keys(metricData).some(
+    metricPackKey => metricPackKey !== MetricTypeValues.Custom && metricData[metricPackKey]
+  )
 }
 
 export function getMetricTypeItems(
   groupedCreatedMetrics: GroupedCreatedMetrics,
   metricPacks?: MetricPackDTO[],
   metricData?: Record<string, boolean>,
-  isOnlyCustomMetricHealthSource?: boolean
+  isOnlyCustomMetricHealthSource?: boolean,
+  alwaysShowCustomMetricType?: boolean
 ): SelectItem[] {
+  // this scenario only for GCO, where GCO doesn't have metric group.
+  if (alwaysShowCustomMetricType) {
+    return [CustomMetricDropdownOption]
+  }
+
   if ((!metricPacks || !metricPacks.length) && !isOnlyCustomMetricHealthSource) return []
 
   const options: SelectItem[] = []
@@ -495,6 +501,8 @@ export function getDefaultMetricTypeValue(
     return MetricTypeValues.Performance
   } else if (metricData[MetricTypeValues.Errors]) {
     return MetricTypeValues.Errors
+  } else if (metricData[MetricTypeValues.Infrastructure]) {
+    return MetricTypeValues.Infrastructure
   }
 
   return undefined

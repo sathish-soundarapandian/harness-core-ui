@@ -35,7 +35,7 @@ interface MappedComponentInterface {
   index: number
 }
 
-export const shouldShowTextField = (selectedField: JiraFieldNG) => {
+export const shouldShowTextField = (selectedField: JiraFieldNG): boolean => {
   if (
     selectedField.schema.type === 'string' ||
     selectedField.schema.type === 'date' ||
@@ -50,13 +50,13 @@ export const shouldShowTextField = (selectedField: JiraFieldNG) => {
   return false
 }
 
-export const shouldShowMultiSelectField = (selectedField: JiraFieldNG) =>
-  selectedField.allowedValues && selectedField.schema.type === 'option' && selectedField.schema.array
+export const shouldShowMultiSelectField = (selectedField: JiraFieldNG): boolean =>
+  selectedField.allowedValues && selectedField.schema.type === 'option' && !!selectedField.schema.array
 
-export const shouldShowMultiTypeField = (selectedField: JiraFieldNG) =>
+export const shouldShowMultiTypeField = (selectedField: JiraFieldNG): boolean =>
   selectedField.allowedValues && selectedField.schema.type === 'option'
 
-export const shouldShowJiraUserField = (selectedField: JiraFieldNG) => selectedField.schema.type === 'user'
+export const shouldShowJiraUserField = (selectedField: JiraFieldNG): boolean => selectedField.schema.type === 'user'
 
 function GetMappedFieldComponent({
   selectedField,
@@ -64,7 +64,7 @@ function GetMappedFieldComponent({
   expressions,
   index,
   renderRequiredFields
-}: MappedComponentInterface) {
+}: MappedComponentInterface): React.ReactElement | null {
   const { ALLOW_USER_TYPE_FIELDS_JIRA } = useFeatureFlags()
   const formikFieldPath = renderRequiredFields
     ? `spec.selectedRequiredFields[${index}].value`
@@ -122,7 +122,7 @@ function GetMappedFieldComponent({
   return null
 }
 
-export function JiraFieldsRenderer(props: JiraFieldsRendererProps) {
+export function JiraFieldsRenderer(props: JiraFieldsRendererProps): React.ReactElement | null {
   const { expressions } = useVariablesExpression()
   const { readonly, selectedFields, renderRequiredFields, onDelete } = props
   return selectedFields ? (

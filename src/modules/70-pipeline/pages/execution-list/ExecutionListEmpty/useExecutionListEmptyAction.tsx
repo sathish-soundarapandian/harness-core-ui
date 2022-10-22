@@ -52,6 +52,9 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
     <RbacButton
       loading={loading}
       intent="primary"
+      tooltipProps={{
+        dataTooltipId: hasNoPipelines ? 'addPipeline' : 'runAPipeline'
+      }}
       text={hasNoPipelines ? getString('common.createPipeline') : getString('pipeline.runAPipeline')}
       disabled={isPipelineInvalid}
       tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}

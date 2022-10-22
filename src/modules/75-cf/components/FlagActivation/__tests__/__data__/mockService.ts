@@ -72,6 +72,21 @@ const mockServiceList = {
         },
         createdAt: 1659516285757,
         lastModifiedAt: 1659516285757
+      },
+      {
+        service: {
+          accountId: 'zEaak-FLS425IEO7OLzMUg',
+          identifier: 'service2Id',
+          orgIdentifier: 'default',
+          projectIdentifier: 'crystalfongtest',
+          name: 'My Service 2',
+          description: undefined,
+          deleted: false,
+          tags: {},
+          yaml: 'service:\n  name: "Account"\n  identifier: "Account"\n  tags: {}\n'
+        },
+        createdAt: 1659516285757,
+        lastModifiedAt: 1659516285757
       }
     ],
 

@@ -25,7 +25,7 @@ import { useStrings } from 'framework/strings'
 import { IdentifierSchema } from '@common/utils/Validation'
 import { FooterRenderer } from '@filestore/common/ModalComponents/ModalComponents'
 import { NGTag, useCreate, useUpdate } from 'services/cd-ng'
-import { getFileUsageNameByType, getMimeTypeByName } from '@filestore/utils/FileStoreUtils'
+import { getFileUsageNameByType, prepareFileValues } from '@filestore/utils/FileStoreUtils'
 import { FileStoreNodeTypes, FileUsage, NewFileDTO, NewFileFormDTO } from '@filestore/interfaces/FileStore'
 import type { FileStoreContextState, FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FILE_STORE_ROOT, SEARCH_FILES } from '@filestore/utils/constants'
@@ -64,7 +64,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
     name: '',
     description: '',
     identifier: '',
-    fileUsage: null,
+    fileUsage: fileUsage ?? null,
     content: '',
     tags: []
   })
@@ -95,44 +95,12 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
 
   const handleSubmit = async (values: any): Promise<void> => {
-    const data = new FormData()
-    Object.keys(values).forEach(prop => {
-      if (prop === 'fileUsage' && !values.fileUsage) {
-        return
-      }
-      if (prop === 'tags') {
-        data.append(
-          prop,
-          JSON.stringify(
-            Object.keys(values[prop]).map(key => ({
-              key,
-              value: values[prop][key]
-            }))
-          )
-        )
-        return
-      }
-      if (notCurrentNode && prop === 'content') {
-        return
-      }
-      data.append(prop, values[prop])
-    })
-    data.append('type', FileStoreNodeTypes.FILE)
+    const data = prepareFileValues(values, currentNode, notCurrentNode)
 
-    if (currentNode?.parentIdentifier && currentNode.type !== FileStoreNodeTypes.FOLDER) {
-      data.append('parentIdentifier', currentNode.parentIdentifier)
-    } else {
-      if (currentNode.identifier === SEARCH_FILES) {
-        data.append('parentIdentifier', FILE_STORE_ROOT)
-      } else {
-        data.append('parentIdentifier', currentNode.identifier)
-      }
-    }
-
-    data.append('mimeType', getMimeTypeByName(values.name))
     try {
       if (!tempNode && editMode) {
         const { data: updateResponse, status } = await updateNode(data as any)
+
         if (status === 'SUCCESS' && updateResponse) {
           showSuccess(getString('filestore.fileSuccessSaved', { name: values.name }))
           updateCurrentNode({
@@ -270,6 +238,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                       fileUsage: e.value as FileUsage
                     })
                   }}
+                  usePortal
                 />
               </Container>
               <FooterRenderer

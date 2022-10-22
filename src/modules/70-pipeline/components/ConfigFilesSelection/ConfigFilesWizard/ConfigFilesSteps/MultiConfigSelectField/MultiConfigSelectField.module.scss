@@ -82,10 +82,14 @@
   }
 }
 .selectFieldContainer {
+  position: relative;
   :global {
     .bp3-input-group {
       width: 340px;
     }
+  }
+  .containerLinkText {
+    padding: 0px !important;
   }
 }
 
@@ -104,4 +108,20 @@
 }
 .listFieldsWrapper {
   overflow: scroll;
+}
+
+.multiConfigBtnWrapper {
+  height: 100%;
+  width: var(--spacing-3);
+  transform: translateX(-18px);
+  background: var(--white) !important;
+  border-radius: var(--spacing-2);
+  border-right: 1px solid var(--bp3-intent-color, var(--grey-200));
+  position: absolute;
+  right: 10px;
+}
+
+.multiSelectContainerWrapper {
+  position: absolute;
+  right: 0px;
 }

@@ -31,7 +31,7 @@ interface ColumnSelectorProps {
   openDownloadCSVModal?: () => void
   allowExportAsCSV?: boolean
   groupBy: QlceViewFieldInputInput
-  setGridSearchParam?: React.Dispatch<React.SetStateAction<string>>
+  setGridSearchParam?: (text: string) => void
   isPerspectiveDetailsPage?: boolean
 }
 

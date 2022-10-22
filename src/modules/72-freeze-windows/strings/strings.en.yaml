@@ -1,2 +1,48 @@
 freezeWindowsPage:
-  noFreezeWindows: There are no freeze windows in your {{scope}}.
+  noFreezeWindows: No Freeze Windows in your <b>{{scope}}</b>
+  aboutFeezeWindows: Freeze Window is a Harness Governance feature that stops deployment based on the configuration. This helps ensure stability during periods of low engineering and support activity, such as holidays, trade shows, or company events.
+  newFreezeWindow: New Freeze Window
+  createFreezeWindow: Create a Freeze Window
+  editFreezeWindow: Edit Freeze Window
+  confirmDeleteTitle: Delete Freeze Window(s)
+  confirmDeleteText: Are you sure you want to delete the freeze window(s)? This action cannot be undone.
+  deleteSuccess: Freeze window(s) deleted
+  deleteFailure: Failed to delete freeze window(s)
+  updateStatusSuccess: Freeze Window(s) {{value}}
+  updateStatusFailure: Failed to update Freeze Window(s)
+
+freezeStudio:
+  freezeConfiguration: Freeze Configuration
+  freezeOverview: Freeze Overview
+  freezeSchedule: Freeze Schedule
+  defineResources: Define which resources you want to include in this freeze window
+  excludeOrgs: Exclude specific Organizations
+  excludeProjects: Exclude specific Projects
+  allOrganizations: All Organizations
+  excludeFollowingProject: Exclude the following Project
+  excludeFollowingProjects: Exclude the following Projects
+  excludeFollowingOrg: Exclude the following Organization
+  excludeFollowingOrgs: Exclude the following Organizations
+  freezeCreatedSuccessfully: Freeze window created successfully
+  freezeUpdatedSuccessfully: Freeze window updated successfully
+
+globalFreeze:
+  disabled: Freeze disabled on all deployments for this
+  disableFreezeTitle: Disable Freeze on all deployments for this {{scope}}
+  disableFreezeText: For any deployments frozen, you will have to manually go back and resume them.
+  disableFreezeSuccess: Freeze disabled on all deployments for this {{scope}}
+  disableFreezeFailure: Failed to disable freeze
+  enabled: Freeze enabled on all deployments for this
+  enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
+  enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
+  enableFreezeFailure: Failed to enable freeze
+
+freezeNotifications:
+  windowEnabled: Freeze window is enabled
+  rejectedDeployments: Deployments are rejected due to freeze window
+  rejectedInvocations: Trigger invocations are rejected due to freeze window
+
+deploymentFreeze: Deployment Freeze
+
+rbac:
+  global: Global

@@ -35,6 +35,7 @@
 }
 .addArtifact {
   padding: 0px !important;
+  margin-top: var(--spacing-medium) !important;
 }
 .artifactId {
   color: var(--pipeline-color-dark-grey);
@@ -81,6 +82,14 @@
     border-bottom: solid 1px var(--grey-100);
     padding-bottom: var(--spacing-medium);
     text-transform: uppercase;
+  }
+}
+.sidecarList {
+  width: 100%;
+  .primaryArtifactRef {
+    border: 1px solid var(--grey-100);
+    padding: var(--spacing-xsmall) var(--spacing-large);
+    background-color: var(--form-bg);
   }
 }
 

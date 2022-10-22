@@ -23,18 +23,39 @@ transformHealthSourceMap.set('CustomHealth Metric 101', mappedValue)
 
 describe('Validate utils', () => {
   test('verify transformPrometheusHealthSourceToSetupSource', () => {
-    expect(transformCustomHealthSourceToSetupSource(customHealthSourceData)).toEqual(transformedSetupSource)
+    expect(transformCustomHealthSourceToSetupSource(customHealthSourceData, false)).toEqual(transformedSetupSource)
   })
 
   test('verify transformCustomSetupSourceToHealthSource', () => {
     expect(
-      transformCustomSetupSourceToHealthSource({
-        isEdit: true,
-        connectorRef: 'customhealth',
-        healthSourceIdentifier: 'New_Custom',
-        healthSourceName: 'New Custom',
-        mappedServicesAndEnvs: transformHealthSourceMap
-      })
+      transformCustomSetupSourceToHealthSource(
+        {
+          isEdit: true,
+          connectorRef: 'customhealth',
+          healthSourceIdentifier: 'New_Custom',
+          healthSourceName: 'New Custom',
+          mappedServicesAndEnvs: transformHealthSourceMap,
+          ignoreThresholds: [
+            {
+              criteria: { spec: { greaterThan: 15, lessThan: 122 }, type: 'Absolute' },
+              metricName: 'Prometheus Metric',
+              metricType: 'Custom',
+              spec: { action: 'Ignore' },
+              type: 'IgnoreThreshold'
+            }
+          ],
+          failFastThresholds: [
+            {
+              criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 1222 }, type: 'Percentage' },
+              metricName: 'Prometheus Metric',
+              metricType: 'Custom',
+              spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },
+              type: 'FailImmediately'
+            }
+          ]
+        },
+        true
+      )
     ).toEqual(mockedHealthSourcePayload)
   })
 

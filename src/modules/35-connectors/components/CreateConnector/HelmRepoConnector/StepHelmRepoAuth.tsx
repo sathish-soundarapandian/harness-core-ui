@@ -32,6 +32,7 @@ import { useStrings } from 'framework/strings'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/TrackingConstants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './HelmRepoConnector.module.scss'
 
@@ -125,6 +126,13 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
     category: Category.CONNECTOR,
     connector_type: ConnectorTypes.Helm
   })
+
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
 
   return loadingConnectorSecrets ? (
     <PageSpinner />
@@ -229,6 +237,7 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
                     tooltipProps={{
                       dataTooltipId: isOCIHelm ? toolTipIds.Oci.Password : toolTipIds.Http.Password
                     }}
+                    scope={scope}
                   />
                 </>
               ) : null}

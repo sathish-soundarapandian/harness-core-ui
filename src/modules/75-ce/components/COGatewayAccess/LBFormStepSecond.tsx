@@ -31,11 +31,6 @@ interface LBFormStepSecondProps {
 }
 
 export interface FormValue {
-  //   cloudConnector?: {
-  //     label?: string
-  //     value?: string
-  //     scope?: Scope
-  //   }
   securityGroups?: Array<SelectOption>
   accessPointRegion?: string
   certificate?: string

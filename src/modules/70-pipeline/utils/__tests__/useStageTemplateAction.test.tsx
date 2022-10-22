@@ -115,7 +115,9 @@ describe('useStageTemplateAction Test', () => {
     })
     expect(useTemplateSelector().getTemplate).toBeCalledWith({
       templateType: 'Stage',
-      allChildTypes: ['CI'],
+      filterProperties: {
+        childTypes: ['CI']
+      },
       gitDetails: {},
       storeMetadata: {}
     })

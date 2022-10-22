@@ -63,7 +63,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
   beforeAll(() => {
     jest.spyOn(cvService, 'useGetLabelNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricNames').mockReturnValue({ data: { data: [] } } as any)
-    jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue({ data: { data: [] } } as any)
+    jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric').mockReturnValue({ data: [] } as any)
   })
   beforeEach(() => {
     jest.clearAllMocks()

@@ -17,10 +17,11 @@ import {
   Formik,
   ButtonVariation,
   Icon,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
-import { Form, FieldArray, FieldArrayRenderProps } from 'formik'
+import { FieldArray, FieldArrayRenderProps } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -43,7 +44,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { getRepositoryName } from '../ManifestUtils'
+import { getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -287,7 +288,7 @@ function KustomizePatchDetails({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
                 id: uuid('', nameSpace()),
                 path: path
               }))
@@ -357,7 +358,7 @@ function KustomizePatchDetails({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: KustomizePatchDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <Layout.Horizontal flex spacing="huge">
                 <div className={helmcss.halfWidth}>
@@ -483,7 +484,7 @@ function KustomizePatchDetails({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

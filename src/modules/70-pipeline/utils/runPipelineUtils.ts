@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, defaultTo, get, isEmpty, set, trim } from 'lodash-es'
-import type { SelectOption } from '@wings-software/uicore'
+import { cloneDeep, defaultTo, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
+import type { SelectOption } from '@harness/uicore'
 
+import type { AllowedTypes, MultiTypeInputType } from '@wings-software/uicore'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -15,6 +16,8 @@ import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
@@ -70,7 +73,7 @@ function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
       ? get(matchedStageInInputSet.stage, `${templateStageDefaultPath}.variables`)
       : get(matchedStageInInputSet.stage, `stage.variables`)
 
-    if (stageVariables && stageInputSetVariables) {
+    if (stageVariables || stageInputSetVariables) {
       const updatedStageVars = getMergedVariables({
         variables: defaultTo(stageVariables, []) as AllNGVariables[],
         inputSetVariables: defaultTo(stageInputSetVariables, []) as AllNGVariables[],
@@ -85,7 +88,7 @@ function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
         updatedStageVars
       )
     }
-    //This is to set default value for Service variables in formik
+    // This is to set default value for Service variables in formik
     const serviceVariables = isStageTemplate
       ? get(stage, `${templateStageDefaultPath}.${serviceVariablePath}`)
       : get(stage, `stage.${serviceVariablePath}`)
@@ -93,7 +96,7 @@ function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
       ? get(matchedStageInInputSet.stage, `${templateStageDefaultPath}.${serviceVariablePath}`)
       : get(matchedStageInInputSet.stage, `stage.${serviceVariablePath}`)
 
-    if (serviceVariables && inputSetServiceVariables) {
+    if (serviceVariables || inputSetServiceVariables) {
       const updatedStageServiceVars = getMergedVariables({
         variables: defaultTo(serviceVariables, []) as AllNGVariables[],
         inputSetVariables: defaultTo(inputSetServiceVariables, []) as AllNGVariables[],
@@ -108,6 +111,7 @@ function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
         updatedStageServiceVars
       )
     }
+
     return matchedStageInInputSet.stage
   }
 
@@ -184,6 +188,14 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
         })
       )
     }
+
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).delegateSelectors) {
+      set(
+        toBeUpdated,
+        'pipeline.template.templateInputs.delegateSelectors',
+        (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).delegateSelectors
+      )
+    }
   } else {
     if (Array.isArray(mergedStages)) {
       toBeUpdated.pipeline.stages = mergedStages
@@ -213,6 +225,10 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
         allVariables: defaultTo(allValues.pipeline.variables, []) as AllNGVariables[],
         shouldUseDefaultValues
       })
+    }
+
+    if (inputSetPortion.pipeline.delegateSelectors) {
+      toBeUpdated.pipeline.delegateSelectors = inputSetPortion.pipeline.delegateSelectors
     }
   }
   return toBeUpdated
@@ -255,6 +271,10 @@ export const getMergedVariables = (props: GetMergedVariablesProps): AllNGVariabl
   const { inputSetVariables, variables, allVariables, shouldUseDefaultValues } = props
   // create a map of input set variables values for easier lookup
   // we use "name" of the varibale as the key
+  const variablesMap: Record<string, AllNGVariables> = variables.reduce(
+    (acc, curr) => ({ ...acc, [defaultTo(curr.name, '')]: curr }),
+    {}
+  )
   const inputSetVariablesMap: Record<string, AllNGVariables> = inputSetVariables.reduce(
     (acc, curr) => ({ ...acc, [defaultTo(curr.name, '')]: curr }),
     {}
@@ -264,9 +284,18 @@ export const getMergedVariables = (props: GetMergedVariablesProps): AllNGVariabl
     {}
   )
 
-  // loop over existing variables and update their values from input sets
-  const finalVariables: AllNGVariables[] = variables.map((variable): AllNGVariables => {
-    const { name = '', type } = variable
+  // find all the unique variables from both template and the input set values
+  // There might be case where a variable is missing in either of them
+  // This scenario will happen only when variables are added or removed after an execution
+  // and the user is trying to re-run an old execution
+  const mergedVariableNames = uniqBy([...variables, ...inputSetVariables], v => v.name)
+    .filter(v => v.name)
+    .map(v => v.name) as string[]
+
+  // loop over all the uniq variables and update their values from input sets
+  const finalVariables: AllNGVariables[] = mergedVariableNames.map((name): AllNGVariables => {
+    const variable = variablesMap[name]
+    const type = defaultTo(variable?.type, 'String')
 
     // if a variable with same name exists in input set variables
     if (name in inputSetVariablesMap) {
@@ -286,14 +315,25 @@ export const getMergedVariables = (props: GetMergedVariablesProps): AllNGVariabl
         value = varFromAllVars.default
       }
 
+      value = defaultTo(value, '')
+
       return {
-        ...variable,
+        name,
+        type,
         value
       } as AllNGVariables
     }
 
-    // else return original varibale
-    return variable
+    // return the original variable
+    if (variable) {
+      return variable
+    }
+
+    return {
+      name,
+      type: 'String',
+      value: ''
+    } as AllNGVariables
   })
 
   const remainingVariables = Object.values(inputSetVariablesMap)
@@ -373,4 +413,10 @@ export function getStageIdentifierFromStageData(selectedStageData: StageSelectio
   return selectedStageData.allStagesSelected
     ? []
     : selectedStageData.selectedStageItems.map(stageData => stageData.value as string)
+}
+
+export function getFilteredAllowableTypes(allowableTypes: AllowedTypes, viewType: StepViewType): AllowedTypes {
+  return viewType === StepViewType.TemplateUsage
+    ? allowableTypes
+    : ((allowableTypes as MultiTypeInputType[]).filter(allowedType => !isMultiTypeRuntime(allowedType)) as AllowedTypes)
 }

@@ -15,7 +15,7 @@ import { Experiences } from '@common/constants/Utils'
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import type { DeploymentTypeItem } from './DeploymentInterface'
+import type { DeploymentTypeItem } from '@cd/utils/deploymentUtils'
 import css from './DeployServiceSpecifications.module.scss'
 
 interface PropsInterface {

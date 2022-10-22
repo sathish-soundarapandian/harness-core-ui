@@ -59,7 +59,7 @@ describe('Unit tests for CreateDynatraceConnector', () => {
     // click submit and verify validation string is visible
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => expect(getByText('connectors.dynatrace.urlValidation')).not.toBeNull())
-    expect(getByText('connectors.dynatrace.apiTokenValidation')).not.toBeNull()
+    expect(getByText('connectors.apiTokenValidation')).not.toBeNull()
     expect(onNextMock).not.toHaveBeenCalled()
   })
 

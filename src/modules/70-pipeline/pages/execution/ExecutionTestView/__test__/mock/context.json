@@ -1,0 +1,2222 @@
+{
+  "pipelineExecutionDetail": {
+    "pipelineExecutionSummary": {
+      "pipelineIdentifier": "mtranjhttp",
+      "planExecutionId": "zRKfRlLUQ1q-W7u6ITyP2g",
+      "name": "mtran-jhttp",
+      "status": "Success",
+      "tags": [],
+      "executionTriggerInfo": {
+        "triggerType": "MANUAL",
+        "triggeredBy": {
+          "uuid": "ziwlbnNpSaq6E1mN6MfhjQ",
+          "identifier": "rutvij.mehta@harness.io",
+          "extraInfo": {
+            "email": "rutvij.mehta@harness.io"
+          }
+        },
+        "isRerun": false
+      },
+      "governanceMetadata": {
+        "id": "0",
+        "deny": false,
+        "details": [],
+        "message": "",
+        "timestamp": "1663898623118",
+        "status": "pass",
+        "accountId": "uy6FLHeWTBOOPZA8xchgZA",
+        "orgId": "default",
+        "projectId": "Default_Project_1657212353481",
+        "entity": "accountIdentifier%3Auy6FLHeWTBOOPZA8xchgZA%2ForgIdentifier%3Adefault%2FprojectIdentifier%3ADefault_Project_1657212353481%2FpipelineIdentifier%3Amtranjhttp",
+        "type": "pipeline",
+        "action": "onrun",
+        "created": "1663898623103"
+      },
+      "moduleInfo": {
+        "ci": {
+          "__recast": "io.harness.ci.plan.creator.execution.CIPipelineModuleInfo",
+          "branch": "main",
+          "ciExecutionInfoDTO": {
+            "__recast": "io.harness.ci.pipeline.executions.beans.CIWebhookInfoDTO",
+            "event": "branch",
+            "branch": {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildBranchHook",
+              "commits": [
+                {
+                  "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                  "id": "db2d73c020be7708e1c2c6d9094c9633b60063f4",
+                  "link": "https://github.com/rutvijmehta-harness/jhttp-rutvij/commit/db2d73c020be7708e1c2c6d9094c9633b60063f4",
+                  "message": "Merge pull request #11 from rutvijmehta-harness/rutvijmehta-harness-patch-4\n\nUpdate surefire plugin",
+                  "ownerName": "Rutvij Mehta",
+                  "ownerId": "rutvijmehta-harness",
+                  "ownerEmail": "rutvij.mehta@harness.io",
+                  "timeStamp": 1663056625000
+                }
+              ]
+            }
+          },
+          "imageDetailsList": [
+            {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIImageDetails",
+              "imageName": "harness/drone-git",
+              "imageTag": "1.2.4-rootless"
+            },
+            {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIImageDetails",
+              "imageName": "maven",
+              "imageTag": "3.8-openjdk-8"
+            }
+          ],
+          "infraDetailsList": [
+            {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIInfraDetails",
+              "infraType": "KubernetesDirect",
+              "infraOSType": "Linux",
+              "infraHostType": "Self Hosted"
+            }
+          ],
+          "isPrivateRepo": true,
+          "repoName": "jhttp-rutvij",
+          "scmDetailsList": [
+            {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIScmDetails",
+              "scmUrl": "https://github.com/rutvijmehta-harness/jhttp-rutvij.git",
+              "scmProvider": "Github",
+              "scmAuthType": "Http",
+              "scmHostType": "SaaS"
+            }
+          ],
+          "tiBuildDetailsList": [
+            {
+              "__recast": "io.harness.ci.pipeline.executions.beans.TIBuildDetails",
+              "buildTool": "Maven",
+              "language": "Java"
+            }
+          ],
+          "buildType": "branch"
+        }
+      },
+      "layoutNodeMap": {
+        "jj8hQt4lTvy7akjAurypSA": {
+          "nodeType": "CI",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "Build",
+          "name": "Build",
+          "nodeUuid": "jj8hQt4lTvy7akjAurypSA",
+          "status": "Success",
+          "module": "ci",
+          "moduleInfo": {
+            "ci": {
+              "__recast": "io.harness.ci.plan.creator.execution.CIStageModuleInfo"
+            }
+          },
+          "startTs": 1663898623460,
+          "endTs": 1663898761661,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "JOBwvF4iQeW5BF8J34n7wg",
+          "executionInputConfigured": false
+        }
+      },
+      "modules": ["ci"],
+      "startingNodeId": "jj8hQt4lTvy7akjAurypSA",
+      "startTs": 1663898623118,
+      "endTs": 1663898761787,
+      "createdAt": 1663898623176,
+      "canRetry": true,
+      "showRetryHistory": false,
+      "runSequence": 2,
+      "successfulStagesCount": 1,
+      "runningStagesCount": 0,
+      "failedStagesCount": 0,
+      "totalStagesCount": 1,
+      "storeType": "INLINE",
+      "executionInputConfigured": false,
+      "allowStageExecutions": false,
+      "stagesExecution": false
+    },
+    "executionGraph": {
+      "rootNodeId": "JOBwvF4iQeW5BF8J34n7wg",
+      "nodeMap": {
+        "23gi89XURBepTKzo9GFc6A": {
+          "uuid": "23gi89XURBepTKzo9GFc6A",
+          "setupId": "R2S5ddISQl6UjnHzmgu3Qg",
+          "name": "ti",
+          "identifier": "ti",
+          "baseFqn": "pipeline.stages.Build.spec.execution.steps.ti",
+          "outcomes": {
+            "output": {
+              "outputVariables": {}
+            }
+          },
+          "stepParameters": {
+            "identifier": "ti",
+            "name": "ti",
+            "timeout": "10h",
+            "type": "RunTests",
+            "spec": {
+              "uuid": "7ov-DOghT7-1a34UNmsggw",
+              "retry": 0,
+              "args": "-Dmaven.repo.local=/addon test",
+              "language": "JAVA",
+              "buildTool": "MAVEN",
+              "packages": "io.harness",
+              "testAnnotations": "io.harness.myOwnHarnessTest",
+              "reports": {
+                "__recast": "io.harness.beans.yaml.extended.reports.UnitTestReport",
+                "uuid": "i_sUYvPZQcmdwX0FQ9ZN2A",
+                "type": "JUNIT",
+                "spec": {
+                  "__recast": "io.harness.beans.yaml.extended.reports.JUnitTestReport",
+                  "paths": {
+                    "__recast": "parameterField",
+                    "__encodedValue": {
+                      "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                      "expression": false,
+                      "valueDoc": {
+                        "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                        "value": ["**/*.xml"]
+                      },
+                      "valueClass": "java.util.List",
+                      "typeString": false,
+                      "skipAutoEvaluation": false,
+                      "jsonResponseField": false
+                    }
+                  }
+                }
+              },
+              "runOnlySelectedTests": true,
+              "image": "maven:3.8-openjdk-8",
+              "connectorRef": "account.harnessImage",
+              "resources": {
+                "uuid": "zUuZVwSTTFiiwWJLZEX5eA",
+                "limits": {
+                  "uuid": "yW8yDQ7tQASg40GtbP6Zpg",
+                  "memory": "1Gi",
+                  "cpu": "1"
+                }
+              },
+              "envVariables": {
+                "__recast": "java.util.LinkedHashMap",
+                "HARNESS_STAGE_TOTAL": "1",
+                "HARNESS_NODE_INDEX": "null",
+                "HARNESS_NODE_TOTAL": "null",
+                "HARNESS_STAGE_INDEX": "0",
+                "HARNESS_STEP_INDEX": "0",
+                "HARNESS_STEP_TOTAL": "1"
+              }
+            }
+          },
+          "startTs": 1663898671282,
+          "endTs": 1663898711117,
+          "stepType": "RunTests",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "async": {
+                "callbackIds": ["a5WmSUU9TKOsw5_N9tdH0A", "o8vYJHoIS46DuhkVyKNyrQ"],
+                "logKeys": [
+                  "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:ti"
+                ],
+                "units": [],
+                "timeout": 0
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "YZgVC6Q-RIe6b37r22Wb3g": {
+          "uuid": "YZgVC6Q-RIe6b37r22Wb3g",
+          "setupId": "04CIR0p5Rfa9tvn6aHWE0Q",
+          "name": "ti3",
+          "identifier": "ti3",
+          "baseFqn": "pipeline.stages.Build.spec.execution.steps.ti3",
+          "outcomes": {
+            "output": {
+              "outputVariables": {}
+            }
+          },
+          "stepParameters": {
+            "identifier": "ti3",
+            "name": "ti3",
+            "timeout": "10h",
+            "type": "RunTests",
+            "spec": {
+              "uuid": "kQVcbQfxSKq3fl1H-RwzUw",
+              "retry": 0,
+              "args": "-Dmaven.repo.local=/addon test",
+              "language": "JAVA",
+              "buildTool": "MAVEN",
+              "packages": "io.harness",
+              "testAnnotations": "io.harness.myOwnHarnessTest",
+              "reports": {
+                "__recast": "io.harness.beans.yaml.extended.reports.UnitTestReport",
+                "uuid": "lmHkV0X7QLyKw1tr_xEgxg",
+                "type": "JUNIT",
+                "spec": {
+                  "__recast": "io.harness.beans.yaml.extended.reports.JUnitTestReport",
+                  "paths": {
+                    "__recast": "parameterField",
+                    "__encodedValue": {
+                      "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                      "expression": false,
+                      "valueDoc": {
+                        "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                        "value": ["**/*.xml"]
+                      },
+                      "valueClass": "java.util.List",
+                      "typeString": false,
+                      "skipAutoEvaluation": false,
+                      "jsonResponseField": false
+                    }
+                  }
+                }
+              },
+              "runOnlySelectedTests": true,
+              "image": "maven:3.8-openjdk-8",
+              "connectorRef": "account.harnessImage",
+              "resources": {
+                "uuid": "VkQ-9vJcSgOVjnRYYb6Tpg",
+                "limits": {
+                  "uuid": "27cktjY_QCmeHD60bQW-bg",
+                  "memory": "1Gi",
+                  "cpu": "1"
+                }
+              },
+              "envVariables": {
+                "__recast": "java.util.LinkedHashMap",
+                "HARNESS_STAGE_TOTAL": "1",
+                "HARNESS_NODE_INDEX": "null",
+                "HARNESS_NODE_TOTAL": "null",
+                "HARNESS_STAGE_INDEX": "0",
+                "HARNESS_STEP_INDEX": "0",
+                "HARNESS_STEP_TOTAL": "1"
+              }
+            }
+          },
+          "startTs": 1663898742033,
+          "endTs": 1663898761290,
+          "stepType": "RunTests",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "async": {
+                "callbackIds": ["xtRw5fSrTKOXRPIh5dDdMQ", "K-gwMSs9SmGdup4DRZ5uTw"],
+                "logKeys": [
+                  "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:ti3"
+                ],
+                "units": [],
+                "timeout": 0
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "CWNAJWTpRcKld94K5r00yA": {
+          "uuid": "CWNAJWTpRcKld94K5r00yA",
+          "setupId": "qQQ871wAQUullkQK1diJqA",
+          "name": "ti2",
+          "identifier": "ti2",
+          "baseFqn": "pipeline.stages.Build.spec.execution.steps.ti2",
+          "outcomes": {
+            "output": {
+              "outputVariables": {}
+            }
+          },
+          "stepParameters": {
+            "identifier": "ti2",
+            "name": "ti2",
+            "timeout": "10h",
+            "type": "RunTests",
+            "spec": {
+              "uuid": "ZtmDPvQxRSazbsvzqQ_4ww",
+              "retry": 0,
+              "args": "-Dmaven.repo.local=/addon test",
+              "language": "JAVA",
+              "buildTool": "MAVEN",
+              "packages": "io.harness",
+              "testAnnotations": "io.harness.myOwnHarnessTest",
+              "reports": {
+                "__recast": "io.harness.beans.yaml.extended.reports.UnitTestReport",
+                "uuid": "nBdnLAwoTm6ET5z1p9Rj2Q",
+                "type": "JUNIT",
+                "spec": {
+                  "__recast": "io.harness.beans.yaml.extended.reports.JUnitTestReport",
+                  "paths": {
+                    "__recast": "parameterField",
+                    "__encodedValue": {
+                      "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                      "expression": false,
+                      "valueDoc": {
+                        "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                        "value": ["**/*.xml"]
+                      },
+                      "valueClass": "java.util.List",
+                      "typeString": false,
+                      "skipAutoEvaluation": false,
+                      "jsonResponseField": false
+                    }
+                  }
+                }
+              },
+              "runOnlySelectedTests": true,
+              "image": "maven:3.8-openjdk-8",
+              "connectorRef": "account.harnessImage",
+              "resources": {
+                "uuid": "hhXVY736TLa1RIsUhYdYmw",
+                "limits": {
+                  "uuid": "1NLjbaxRRSS3J-9ltvs36w",
+                  "memory": "1Gi",
+                  "cpu": "1"
+                }
+              },
+              "envVariables": {
+                "__recast": "java.util.LinkedHashMap",
+                "HARNESS_STAGE_TOTAL": "1",
+                "HARNESS_NODE_INDEX": "null",
+                "HARNESS_NODE_TOTAL": "null",
+                "HARNESS_STAGE_INDEX": "0",
+                "HARNESS_STEP_INDEX": "0",
+                "HARNESS_STEP_TOTAL": "1"
+              }
+            }
+          },
+          "startTs": 1663898711501,
+          "endTs": 1663898741682,
+          "stepType": "RunTests",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "async": {
+                "callbackIds": ["eJ67ClXDSh6kFvT5e4OwSg", "8ui99MnLThSS8hloNolXLA"],
+                "logKeys": [
+                  "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:ti2"
+                ],
+                "units": [],
+                "timeout": 0
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "V5PnbKLPTrySWIgGf3YIAQ": {
+          "uuid": "V5PnbKLPTrySWIgGf3YIAQ",
+          "setupId": "b0sb0SZFRKuqb9Nc3feeqA",
+          "name": "Execution",
+          "identifier": "execution",
+          "baseFqn": "pipeline.stages.Build.spec.execution",
+          "outcomes": {},
+          "stepParameters": {
+            "childNodeId": "b0sb0SZFRKuqb9Nc3feeqAsteps",
+            "logMessage": "Execution Element"
+          },
+          "startTs": 1663898654000,
+          "endTs": 1663898761468,
+          "stepType": "NG_EXECUTION",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "b0sb0SZFRKuqb9Nc3feeqAsteps",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "WEjF5EFNTxyfmFctQ3esCA": {
+          "uuid": "WEjF5EFNTxyfmFctQ3esCA",
+          "setupId": "N7-6BanNSfm6KUYvhTZZNg",
+          "name": "Initialize",
+          "identifier": "liteEngineTask",
+          "baseFqn": "pipeline.stages.Build.spec.execution.steps.liteEngineTask",
+          "outcomes": {
+            "podDetailsOutcome": {
+              "ipAddress": "10.80.2.11",
+              "namespace": "harness-delegate-ng-qa-new"
+            },
+            "dependencies": {
+              "serviceDependencyList": []
+            }
+          },
+          "stepParameters": {
+            "identifier": "liteEngineTask",
+            "name": "liteEngineTask",
+            "timeout": "10m",
+            "type": "liteEngineTask",
+            "spec": {
+              "timeout": 0,
+              "retry": 0,
+              "executionElementConfig": {
+                "steps": [
+                  {
+                    "uuid": "Il_cTkc8RgKnxxe0Ubz1aw",
+                    "step": {
+                      "type": "Plugin",
+                      "identifier": "harness-git-clone",
+                      "name": "Clone codebase",
+                      "timeout": "1h",
+                      "__uuid": "sIKeuft3T_-FKDktU8CSGg",
+                      "spec": {
+                        "settings": {
+                          "depth": "50"
+                        },
+                        "image": "harness/drone-git:1.2.4-rootless",
+                        "entrypoint": ["/usr/local/bin/clone"],
+                        "harnessManagedImage": true,
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "1",
+                          "HARNESS_NODE_INDEX": "0",
+                          "HARNESS_NODE_TOTAL": "1",
+                          "HARNESS_STAGE_INDEX": "0",
+                          "HARNESS_STEP_INDEX": "0",
+                          "HARNESS_STEP_TOTAL": "1"
+                        }
+                      }
+                    },
+                    "parallel": {},
+                    "stepGroup": {}
+                  },
+                  {
+                    "uuid": "8LnjZ8YpRuSEqUSS_t13PQ",
+                    "step": {
+                      "identifier": "ti",
+                      "type": "RunTests",
+                      "name": "ti",
+                      "spec": {
+                        "connectorRef": "account.harnessImage",
+                        "image": "maven:3.8-openjdk-8",
+                        "language": "Java",
+                        "buildTool": "Maven",
+                        "args": "-Dmaven.repo.local=/addon test",
+                        "packages": "io.harness",
+                        "runOnlySelectedTests": true,
+                        "testAnnotations": "io.harness.myOwnHarnessTest",
+                        "reports": {
+                          "type": "JUnit",
+                          "spec": {
+                            "paths": ["**/*.xml"],
+                            "__uuid": "i3g7oO-QSEqoZxwokUVTcQ"
+                          },
+                          "__uuid": "i_sUYvPZQcmdwX0FQ9ZN2A"
+                        },
+                        "resources": {
+                          "limits": {
+                            "memory": "1Gi",
+                            "cpu": "1",
+                            "__uuid": "yW8yDQ7tQASg40GtbP6Zpg"
+                          },
+                          "__uuid": "zUuZVwSTTFiiwWJLZEX5eA"
+                        },
+                        "__uuid": "7ov-DOghT7-1a34UNmsggw",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "1",
+                          "HARNESS_NODE_INDEX": "0",
+                          "HARNESS_NODE_TOTAL": "1",
+                          "HARNESS_STAGE_INDEX": "0",
+                          "HARNESS_STEP_INDEX": "0",
+                          "HARNESS_STEP_TOTAL": "1"
+                        }
+                      },
+                      "__uuid": "R2S5ddISQl6UjnHzmgu3Qg"
+                    },
+                    "parallel": {},
+                    "stepGroup": {}
+                  },
+                  {
+                    "uuid": "4uDzAf-pRuCuEvPViwM6Ww",
+                    "step": {
+                      "identifier": "ti2",
+                      "type": "RunTests",
+                      "name": "ti2",
+                      "spec": {
+                        "connectorRef": "account.harnessImage",
+                        "image": "maven:3.8-openjdk-8",
+                        "language": "Java",
+                        "buildTool": "Maven",
+                        "args": "-Dmaven.repo.local=/addon test",
+                        "packages": "io.harness",
+                        "runOnlySelectedTests": true,
+                        "testAnnotations": "io.harness.myOwnHarnessTest",
+                        "reports": {
+                          "type": "JUnit",
+                          "spec": {
+                            "paths": ["**/*.xml"],
+                            "__uuid": "5KL6k1bIQxOTSJ-0ws-usw"
+                          },
+                          "__uuid": "nBdnLAwoTm6ET5z1p9Rj2Q"
+                        },
+                        "resources": {
+                          "limits": {
+                            "memory": "1Gi",
+                            "cpu": "1",
+                            "__uuid": "1NLjbaxRRSS3J-9ltvs36w"
+                          },
+                          "__uuid": "hhXVY736TLa1RIsUhYdYmw"
+                        },
+                        "__uuid": "ZtmDPvQxRSazbsvzqQ_4ww",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "1",
+                          "HARNESS_NODE_INDEX": "0",
+                          "HARNESS_NODE_TOTAL": "1",
+                          "HARNESS_STAGE_INDEX": "0",
+                          "HARNESS_STEP_INDEX": "0",
+                          "HARNESS_STEP_TOTAL": "1"
+                        }
+                      },
+                      "__uuid": "qQQ871wAQUullkQK1diJqA"
+                    },
+                    "parallel": {},
+                    "stepGroup": {}
+                  },
+                  {
+                    "uuid": "dEuzy4YeS7W8i2cQTZgoCQ",
+                    "step": {
+                      "identifier": "ti3",
+                      "type": "RunTests",
+                      "name": "ti3",
+                      "spec": {
+                        "connectorRef": "account.harnessImage",
+                        "image": "maven:3.8-openjdk-8",
+                        "language": "Java",
+                        "buildTool": "Maven",
+                        "args": "-Dmaven.repo.local=/addon test",
+                        "packages": "io.harness",
+                        "runOnlySelectedTests": true,
+                        "testAnnotations": "io.harness.myOwnHarnessTest",
+                        "reports": {
+                          "type": "JUnit",
+                          "spec": {
+                            "paths": ["**/*.xml"],
+                            "__uuid": "-3wuT-0QQOmf05W8K-G-zA"
+                          },
+                          "__uuid": "lmHkV0X7QLyKw1tr_xEgxg"
+                        },
+                        "resources": {
+                          "limits": {
+                            "memory": "1Gi",
+                            "cpu": "1",
+                            "__uuid": "27cktjY_QCmeHD60bQW-bg"
+                          },
+                          "__uuid": "VkQ-9vJcSgOVjnRYYb6Tpg"
+                        },
+                        "__uuid": "kQVcbQfxSKq3fl1H-RwzUw",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "1",
+                          "HARNESS_NODE_INDEX": "0",
+                          "HARNESS_NODE_TOTAL": "1",
+                          "HARNESS_STAGE_INDEX": "0",
+                          "HARNESS_STEP_INDEX": "0",
+                          "HARNESS_STEP_TOTAL": "1"
+                        }
+                      },
+                      "__uuid": "04CIR0p5Rfa9tvn6aHWE0Q"
+                    },
+                    "parallel": {},
+                    "stepGroup": {}
+                  }
+                ]
+              },
+              "ciCodebase": {
+                "uuid": "0xvtBpZSQHKrxdA-mVuZgg",
+                "connectorRef": "rutvijconn",
+                "build": {
+                  "__recast": "io.harness.yaml.extended.ci.codebase.Build",
+                  "type": "BRANCH",
+                  "spec": {
+                    "__recast": "io.harness.yaml.extended.ci.codebase.impl.BranchBuildSpec",
+                    "branch": {
+                      "__recast": "parameterField",
+                      "__encodedValue": {
+                        "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                        "expression": false,
+                        "valueDoc": {
+                          "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                          "value": "main"
+                        },
+                        "valueClass": "java.lang.String",
+                        "typeString": true,
+                        "skipAutoEvaluation": false,
+                        "jsonResponseField": false
+                      }
+                    }
+                  }
+                }
+              },
+              "executionSource": {
+                "branch": "main"
+              },
+              "stageIdentifier": "Build",
+              "stageElementConfig": {
+                "uuid": "ZHowJXYNTMGQ3rlTJcpDLA",
+                "sharedPaths": [""],
+                "execution": {
+                  "uuid": "b0sb0SZFRKuqb9Nc3feeqA",
+                  "steps": [
+                    {
+                      "uuid": "8LnjZ8YpRuSEqUSS_t13PQ",
+                      "step": {
+                        "identifier": "ti",
+                        "type": "RunTests",
+                        "name": "ti",
+                        "spec": {
+                          "connectorRef": "account.harnessImage",
+                          "image": "maven:3.8-openjdk-8",
+                          "language": "Java",
+                          "buildTool": "Maven",
+                          "args": "-Dmaven.repo.local=/addon test",
+                          "packages": "io.harness",
+                          "runOnlySelectedTests": true,
+                          "testAnnotations": "io.harness.myOwnHarnessTest",
+                          "reports": {
+                            "type": "JUnit",
+                            "spec": {
+                              "paths": ["**/*.xml"],
+                              "__uuid": "i3g7oO-QSEqoZxwokUVTcQ"
+                            },
+                            "__uuid": "i_sUYvPZQcmdwX0FQ9ZN2A"
+                          },
+                          "resources": {
+                            "limits": {
+                              "memory": "1Gi",
+                              "cpu": "1",
+                              "__uuid": "yW8yDQ7tQASg40GtbP6Zpg"
+                            },
+                            "__uuid": "zUuZVwSTTFiiwWJLZEX5eA"
+                          },
+                          "__uuid": "7ov-DOghT7-1a34UNmsggw",
+                          "envVariables": {
+                            "HARNESS_STAGE_TOTAL": "1",
+                            "HARNESS_NODE_INDEX": "null",
+                            "HARNESS_NODE_TOTAL": "null",
+                            "HARNESS_STAGE_INDEX": "0",
+                            "HARNESS_STEP_INDEX": "0",
+                            "HARNESS_STEP_TOTAL": "1"
+                          }
+                        },
+                        "failureStrategies": [],
+                        "__uuid": "R2S5ddISQl6UjnHzmgu3Qg"
+                      },
+                      "parallel": {},
+                      "stepGroup": {}
+                    },
+                    {
+                      "uuid": "4uDzAf-pRuCuEvPViwM6Ww",
+                      "step": {
+                        "identifier": "ti2",
+                        "type": "RunTests",
+                        "name": "ti2",
+                        "spec": {
+                          "connectorRef": "account.harnessImage",
+                          "image": "maven:3.8-openjdk-8",
+                          "language": "Java",
+                          "buildTool": "Maven",
+                          "args": "-Dmaven.repo.local=/addon test",
+                          "packages": "io.harness",
+                          "runOnlySelectedTests": true,
+                          "testAnnotations": "io.harness.myOwnHarnessTest",
+                          "reports": {
+                            "type": "JUnit",
+                            "spec": {
+                              "paths": ["**/*.xml"],
+                              "__uuid": "5KL6k1bIQxOTSJ-0ws-usw"
+                            },
+                            "__uuid": "nBdnLAwoTm6ET5z1p9Rj2Q"
+                          },
+                          "resources": {
+                            "limits": {
+                              "memory": "1Gi",
+                              "cpu": "1",
+                              "__uuid": "1NLjbaxRRSS3J-9ltvs36w"
+                            },
+                            "__uuid": "hhXVY736TLa1RIsUhYdYmw"
+                          },
+                          "__uuid": "ZtmDPvQxRSazbsvzqQ_4ww",
+                          "envVariables": {
+                            "HARNESS_STAGE_TOTAL": "1",
+                            "HARNESS_NODE_INDEX": "null",
+                            "HARNESS_NODE_TOTAL": "null",
+                            "HARNESS_STAGE_INDEX": "0",
+                            "HARNESS_STEP_INDEX": "0",
+                            "HARNESS_STEP_TOTAL": "1"
+                          }
+                        },
+                        "failureStrategies": [],
+                        "__uuid": "qQQ871wAQUullkQK1diJqA"
+                      },
+                      "parallel": {},
+                      "stepGroup": {}
+                    },
+                    {
+                      "uuid": "dEuzy4YeS7W8i2cQTZgoCQ",
+                      "step": {
+                        "identifier": "ti3",
+                        "type": "RunTests",
+                        "name": "ti3",
+                        "spec": {
+                          "connectorRef": "account.harnessImage",
+                          "image": "maven:3.8-openjdk-8",
+                          "language": "Java",
+                          "buildTool": "Maven",
+                          "args": "-Dmaven.repo.local=/addon test",
+                          "packages": "io.harness",
+                          "runOnlySelectedTests": true,
+                          "testAnnotations": "io.harness.myOwnHarnessTest",
+                          "reports": {
+                            "type": "JUnit",
+                            "spec": {
+                              "paths": ["**/*.xml"],
+                              "__uuid": "-3wuT-0QQOmf05W8K-G-zA"
+                            },
+                            "__uuid": "lmHkV0X7QLyKw1tr_xEgxg"
+                          },
+                          "resources": {
+                            "limits": {
+                              "memory": "1Gi",
+                              "cpu": "1",
+                              "__uuid": "27cktjY_QCmeHD60bQW-bg"
+                            },
+                            "__uuid": "VkQ-9vJcSgOVjnRYYb6Tpg"
+                          },
+                          "__uuid": "kQVcbQfxSKq3fl1H-RwzUw",
+                          "envVariables": {
+                            "HARNESS_STAGE_TOTAL": "1",
+                            "HARNESS_NODE_INDEX": "null",
+                            "HARNESS_NODE_TOTAL": "null",
+                            "HARNESS_STAGE_INDEX": "0",
+                            "HARNESS_STEP_INDEX": "0",
+                            "HARNESS_STEP_TOTAL": "1"
+                          }
+                        },
+                        "failureStrategies": [],
+                        "__uuid": "04CIR0p5Rfa9tvn6aHWE0Q"
+                      },
+                      "parallel": {},
+                      "stepGroup": {}
+                    }
+                  ]
+                },
+                "infrastructure": {
+                  "type": "KUBERNETES_DIRECT",
+                  "spec": {
+                    "uuid": "xfgnpcmYQaues7zLFusD5w",
+                    "connectorRef": "kubcon",
+                    "namespace": "harness-delegate-ng-qa-new",
+                    "nodeSelector": {
+                      "__recast": "java.util.LinkedHashMap",
+                      "__uuid": "QvYjdw3NQ4ePCuchGpIEbw"
+                    },
+                    "automountServiceAccountToken": true,
+                    "os": "Linux"
+                  },
+                  "uuid": "PrIGLFSRTEuqqnxb8d32Qw"
+                },
+                "cloneCodebase": true
+              },
+              "skipGitClone": false,
+              "infrastructure": {
+                "type": "KUBERNETES_DIRECT",
+                "spec": {
+                  "uuid": "xfgnpcmYQaues7zLFusD5w",
+                  "connectorRef": "kubcon",
+                  "namespace": "harness-delegate-ng-qa-new",
+                  "nodeSelector": {
+                    "__recast": "java.util.LinkedHashMap",
+                    "__uuid": "QvYjdw3NQ4ePCuchGpIEbw"
+                  },
+                  "automountServiceAccountToken": true,
+                  "os": "Linux"
+                },
+                "uuid": "PrIGLFSRTEuqqnxb8d32Qw"
+              },
+              "strategyExpansionMap": {
+                "Il_cTkc8RgKnxxe0Ubz1aw": {
+                  "maxConcurrency": 1
+                },
+                "dEuzy4YeS7W8i2cQTZgoCQ": {
+                  "maxConcurrency": 1
+                },
+                "4uDzAf-pRuCuEvPViwM6Ww": {
+                  "maxConcurrency": 1
+                },
+                "8LnjZ8YpRuSEqUSS_t13PQ": {
+                  "maxConcurrency": 1
+                }
+              }
+            }
+          },
+          "startTs": 1663898654977,
+          "endTs": 1663898662988,
+          "stepType": "liteEngineTask",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "task": {
+                "taskId": "ZPIK-O3vRmW0v3u3SIpbew",
+                "taskCategory": "DELEGATE_TASK_V2",
+                "logKeys": [
+                  "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:liteEngineTask"
+                ],
+                "units": [],
+                "taskName": "INITIALIZATION_PHASE"
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [
+            {
+              "id": null,
+              "name": null,
+              "taskId": "ZPIK-O3vRmW0v3u3SIpbew",
+              "taskName": "INITIALIZATION_PHASE"
+            }
+          ],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "JOBwvF4iQeW5BF8J34n7wg": {
+          "uuid": "JOBwvF4iQeW5BF8J34n7wg",
+          "setupId": "jj8hQt4lTvy7akjAurypSA",
+          "name": "Build",
+          "identifier": "Build",
+          "baseFqn": "pipeline.stages.Build",
+          "outcomes": {},
+          "stepParameters": {
+            "uuid": "jj8hQt4lTvy7akjAurypSA",
+            "identifier": "Build",
+            "name": "Build",
+            "variables": {
+              "__recast": "java.util.LinkedHashMap"
+            },
+            "tags": {},
+            "type": "CI",
+            "specConfig": {
+              "infrastructure": {
+                "type": "KUBERNETES_DIRECT",
+                "spec": {
+                  "uuid": "xfgnpcmYQaues7zLFusD5w",
+                  "connectorRef": "kubcon",
+                  "namespace": "harness-delegate-ng-qa-new",
+                  "nodeSelector": {
+                    "__recast": "java.util.LinkedHashMap",
+                    "__uuid": "QvYjdw3NQ4ePCuchGpIEbw"
+                  },
+                  "automountServiceAccountToken": true,
+                  "os": "Linux"
+                },
+                "uuid": "PrIGLFSRTEuqqnxb8d32Qw"
+              },
+              "sharedPaths": [""],
+              "enableCloneRepo": true,
+              "buildStatusUpdateParameter": {
+                "identifier": "Build",
+                "name": "Build",
+                "connectorIdentifier": "rutvijconn"
+              },
+              "stepIdentifiers": ["ti", "ti2", "ti3"],
+              "childNodeID": "ZHowJXYNTMGQ3rlTJcpDLA"
+            }
+          },
+          "startTs": 1663898623460,
+          "endTs": 1663898761661,
+          "stepType": "IntegrationStageStepPMS",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "ZHowJXYNTMGQ3rlTJcpDLA",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "K1TVXISOT0m7oSIflfnQvw": {
+          "uuid": "K1TVXISOT0m7oSIflfnQvw",
+          "setupId": "sIKeuft3T_-FKDktU8CSGg",
+          "name": "Clone codebase",
+          "identifier": "harness-git-clone",
+          "baseFqn": "pipeline.stages.Build.spec.execution.steps.harness-git-clone",
+          "outcomes": {
+            "output": {
+              "outputVariables": {}
+            },
+            "artifact-harness-git-clone": {
+              "stepArtifacts": {
+                "publishedFileArtifacts": [],
+                "publishedImageArtifacts": []
+              }
+            }
+          },
+          "stepParameters": {
+            "identifier": "harness-git-clone",
+            "name": "Clone codebase",
+            "timeout": "1h",
+            "type": "Plugin",
+            "spec": {
+              "retry": 1,
+              "settings": {
+                "__recast": "java.util.LinkedHashMap",
+                "depth": {
+                  "__recast": "com.fasterxml.jackson.databind.node.TextNode",
+                  "__encodedValue": "50"
+                }
+              },
+              "image": "harness/drone-git:1.2.4-rootless",
+              "entrypoint": ["/usr/local/bin/clone"],
+              "envVariables": {
+                "HARNESS_STAGE_TOTAL": "1",
+                "HARNESS_NODE_INDEX": "null",
+                "HARNESS_NODE_TOTAL": "null",
+                "HARNESS_STAGE_INDEX": "0",
+                "HARNESS_STEP_INDEX": "0",
+                "HARNESS_STEP_TOTAL": "1"
+              },
+              "harnessManagedImage": true
+            }
+          },
+          "startTs": 1663898663340,
+          "endTs": 1663898670994,
+          "stepType": "Plugin",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "async": {
+                "callbackIds": ["hUTSXQ43TayXKrUtV7FLVg", "USVhiElQRx6Msvge_nM7oA"],
+                "logKeys": [
+                  "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:harness-git-clone"
+                ],
+                "units": [],
+                "timeout": 0
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "23gi89XURBepTKzo9GFc6A": {
+          "children": [],
+          "nextIds": ["CWNAJWTpRcKld94K5r00yA"]
+        },
+        "YZgVC6Q-RIe6b37r22Wb3g": {
+          "children": [],
+          "nextIds": []
+        },
+        "CWNAJWTpRcKld94K5r00yA": {
+          "children": [],
+          "nextIds": ["YZgVC6Q-RIe6b37r22Wb3g"]
+        },
+        "V5PnbKLPTrySWIgGf3YIAQ": {
+          "children": ["WEjF5EFNTxyfmFctQ3esCA"],
+          "nextIds": []
+        },
+        "WEjF5EFNTxyfmFctQ3esCA": {
+          "children": [],
+          "nextIds": ["K1TVXISOT0m7oSIflfnQvw"]
+        },
+        "JOBwvF4iQeW5BF8J34n7wg": {
+          "children": ["V5PnbKLPTrySWIgGf3YIAQ"],
+          "nextIds": []
+        },
+        "K1TVXISOT0m7oSIflfnQvw": {
+          "children": [],
+          "nextIds": ["23gi89XURBepTKzo9GFc6A"]
+        }
+      },
+      "representationStrategy": "camelCase"
+    }
+  },
+  "allNodeMap": {
+    "23gi89XURBepTKzo9GFc6A": {
+      "uuid": "23gi89XURBepTKzo9GFc6A",
+      "setupId": "R2S5ddISQl6UjnHzmgu3Qg",
+      "name": "ti",
+      "identifier": "ti",
+      "baseFqn": "pipeline.stages.Build.spec.execution.steps.ti",
+      "outcomes": {
+        "output": {
+          "outputVariables": {}
+        }
+      },
+      "stepParameters": {
+        "identifier": "ti",
+        "name": "ti",
+        "timeout": "10h",
+        "type": "RunTests",
+        "spec": {
+          "uuid": "7ov-DOghT7-1a34UNmsggw",
+          "retry": 0,
+          "args": "-Dmaven.repo.local=/addon test",
+          "language": "JAVA",
+          "buildTool": "MAVEN",
+          "packages": "io.harness",
+          "testAnnotations": "io.harness.myOwnHarnessTest",
+          "reports": {
+            "__recast": "io.harness.beans.yaml.extended.reports.UnitTestReport",
+            "uuid": "i_sUYvPZQcmdwX0FQ9ZN2A",
+            "type": "JUNIT",
+            "spec": {
+              "__recast": "io.harness.beans.yaml.extended.reports.JUnitTestReport",
+              "paths": {
+                "__recast": "parameterField",
+                "__encodedValue": {
+                  "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                  "expression": false,
+                  "valueDoc": {
+                    "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                    "value": ["**/*.xml"]
+                  },
+                  "valueClass": "java.util.List",
+                  "typeString": false,
+                  "skipAutoEvaluation": false,
+                  "jsonResponseField": false
+                }
+              }
+            }
+          },
+          "runOnlySelectedTests": true,
+          "image": "maven:3.8-openjdk-8",
+          "connectorRef": "account.harnessImage",
+          "resources": {
+            "uuid": "zUuZVwSTTFiiwWJLZEX5eA",
+            "limits": {
+              "uuid": "yW8yDQ7tQASg40GtbP6Zpg",
+              "memory": "1Gi",
+              "cpu": "1"
+            }
+          },
+          "envVariables": {
+            "__recast": "java.util.LinkedHashMap",
+            "HARNESS_STAGE_TOTAL": "1",
+            "HARNESS_NODE_INDEX": "null",
+            "HARNESS_NODE_TOTAL": "null",
+            "HARNESS_STAGE_INDEX": "0",
+            "HARNESS_STEP_INDEX": "0",
+            "HARNESS_STEP_TOTAL": "1"
+          }
+        }
+      },
+      "startTs": 1663898671282,
+      "endTs": 1663898711117,
+      "stepType": "RunTests",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "async": {
+            "callbackIds": ["a5WmSUU9TKOsw5_N9tdH0A", "o8vYJHoIS46DuhkVyKNyrQ"],
+            "logKeys": [
+              "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:ti"
+            ],
+            "units": [],
+            "timeout": 0
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "YZgVC6Q-RIe6b37r22Wb3g": {
+      "uuid": "YZgVC6Q-RIe6b37r22Wb3g",
+      "setupId": "04CIR0p5Rfa9tvn6aHWE0Q",
+      "name": "ti3",
+      "identifier": "ti3",
+      "baseFqn": "pipeline.stages.Build.spec.execution.steps.ti3",
+      "outcomes": {
+        "output": {
+          "outputVariables": {}
+        }
+      },
+      "stepParameters": {
+        "identifier": "ti3",
+        "name": "ti3",
+        "timeout": "10h",
+        "type": "RunTests",
+        "spec": {
+          "uuid": "kQVcbQfxSKq3fl1H-RwzUw",
+          "retry": 0,
+          "args": "-Dmaven.repo.local=/addon test",
+          "language": "JAVA",
+          "buildTool": "MAVEN",
+          "packages": "io.harness",
+          "testAnnotations": "io.harness.myOwnHarnessTest",
+          "reports": {
+            "__recast": "io.harness.beans.yaml.extended.reports.UnitTestReport",
+            "uuid": "lmHkV0X7QLyKw1tr_xEgxg",
+            "type": "JUNIT",
+            "spec": {
+              "__recast": "io.harness.beans.yaml.extended.reports.JUnitTestReport",
+              "paths": {
+                "__recast": "parameterField",
+                "__encodedValue": {
+                  "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                  "expression": false,
+                  "valueDoc": {
+                    "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                    "value": ["**/*.xml"]
+                  },
+                  "valueClass": "java.util.List",
+                  "typeString": false,
+                  "skipAutoEvaluation": false,
+                  "jsonResponseField": false
+                }
+              }
+            }
+          },
+          "runOnlySelectedTests": true,
+          "image": "maven:3.8-openjdk-8",
+          "connectorRef": "account.harnessImage",
+          "resources": {
+            "uuid": "VkQ-9vJcSgOVjnRYYb6Tpg",
+            "limits": {
+              "uuid": "27cktjY_QCmeHD60bQW-bg",
+              "memory": "1Gi",
+              "cpu": "1"
+            }
+          },
+          "envVariables": {
+            "__recast": "java.util.LinkedHashMap",
+            "HARNESS_STAGE_TOTAL": "1",
+            "HARNESS_NODE_INDEX": "null",
+            "HARNESS_NODE_TOTAL": "null",
+            "HARNESS_STAGE_INDEX": "0",
+            "HARNESS_STEP_INDEX": "0",
+            "HARNESS_STEP_TOTAL": "1"
+          }
+        }
+      },
+      "startTs": 1663898742033,
+      "endTs": 1663898761290,
+      "stepType": "RunTests",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "async": {
+            "callbackIds": ["xtRw5fSrTKOXRPIh5dDdMQ", "K-gwMSs9SmGdup4DRZ5uTw"],
+            "logKeys": [
+              "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:ti3"
+            ],
+            "units": [],
+            "timeout": 0
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "CWNAJWTpRcKld94K5r00yA": {
+      "uuid": "CWNAJWTpRcKld94K5r00yA",
+      "setupId": "qQQ871wAQUullkQK1diJqA",
+      "name": "ti2",
+      "identifier": "ti2",
+      "baseFqn": "pipeline.stages.Build.spec.execution.steps.ti2",
+      "outcomes": {
+        "output": {
+          "outputVariables": {}
+        }
+      },
+      "stepParameters": {
+        "identifier": "ti2",
+        "name": "ti2",
+        "timeout": "10h",
+        "type": "RunTests",
+        "spec": {
+          "uuid": "ZtmDPvQxRSazbsvzqQ_4ww",
+          "retry": 0,
+          "args": "-Dmaven.repo.local=/addon test",
+          "language": "JAVA",
+          "buildTool": "MAVEN",
+          "packages": "io.harness",
+          "testAnnotations": "io.harness.myOwnHarnessTest",
+          "reports": {
+            "__recast": "io.harness.beans.yaml.extended.reports.UnitTestReport",
+            "uuid": "nBdnLAwoTm6ET5z1p9Rj2Q",
+            "type": "JUNIT",
+            "spec": {
+              "__recast": "io.harness.beans.yaml.extended.reports.JUnitTestReport",
+              "paths": {
+                "__recast": "parameterField",
+                "__encodedValue": {
+                  "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                  "expression": false,
+                  "valueDoc": {
+                    "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                    "value": ["**/*.xml"]
+                  },
+                  "valueClass": "java.util.List",
+                  "typeString": false,
+                  "skipAutoEvaluation": false,
+                  "jsonResponseField": false
+                }
+              }
+            }
+          },
+          "runOnlySelectedTests": true,
+          "image": "maven:3.8-openjdk-8",
+          "connectorRef": "account.harnessImage",
+          "resources": {
+            "uuid": "hhXVY736TLa1RIsUhYdYmw",
+            "limits": {
+              "uuid": "1NLjbaxRRSS3J-9ltvs36w",
+              "memory": "1Gi",
+              "cpu": "1"
+            }
+          },
+          "envVariables": {
+            "__recast": "java.util.LinkedHashMap",
+            "HARNESS_STAGE_TOTAL": "1",
+            "HARNESS_NODE_INDEX": "null",
+            "HARNESS_NODE_TOTAL": "null",
+            "HARNESS_STAGE_INDEX": "0",
+            "HARNESS_STEP_INDEX": "0",
+            "HARNESS_STEP_TOTAL": "1"
+          }
+        }
+      },
+      "startTs": 1663898711501,
+      "endTs": 1663898741682,
+      "stepType": "RunTests",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "async": {
+            "callbackIds": ["eJ67ClXDSh6kFvT5e4OwSg", "8ui99MnLThSS8hloNolXLA"],
+            "logKeys": [
+              "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:ti2"
+            ],
+            "units": [],
+            "timeout": 0
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "V5PnbKLPTrySWIgGf3YIAQ": {
+      "uuid": "V5PnbKLPTrySWIgGf3YIAQ",
+      "setupId": "b0sb0SZFRKuqb9Nc3feeqA",
+      "name": "Execution",
+      "identifier": "execution",
+      "baseFqn": "pipeline.stages.Build.spec.execution",
+      "outcomes": {},
+      "stepParameters": {
+        "childNodeId": "b0sb0SZFRKuqb9Nc3feeqAsteps",
+        "logMessage": "Execution Element"
+      },
+      "startTs": 1663898654000,
+      "endTs": 1663898761468,
+      "stepType": "NG_EXECUTION",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": null,
+      "executableResponses": [
+        {
+          "child": {
+            "childNodeId": "b0sb0SZFRKuqb9Nc3feeqAsteps",
+            "logKeys": [],
+            "units": []
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "WEjF5EFNTxyfmFctQ3esCA": {
+      "uuid": "WEjF5EFNTxyfmFctQ3esCA",
+      "setupId": "N7-6BanNSfm6KUYvhTZZNg",
+      "name": "Initialize",
+      "identifier": "liteEngineTask",
+      "baseFqn": "pipeline.stages.Build.spec.execution.steps.liteEngineTask",
+      "outcomes": {
+        "podDetailsOutcome": {
+          "ipAddress": "10.80.2.11",
+          "namespace": "harness-delegate-ng-qa-new"
+        },
+        "dependencies": {
+          "serviceDependencyList": []
+        }
+      },
+      "stepParameters": {
+        "identifier": "liteEngineTask",
+        "name": "liteEngineTask",
+        "timeout": "10m",
+        "type": "liteEngineTask",
+        "spec": {
+          "timeout": 0,
+          "retry": 0,
+          "executionElementConfig": {
+            "steps": [
+              {
+                "uuid": "Il_cTkc8RgKnxxe0Ubz1aw",
+                "step": {
+                  "type": "Plugin",
+                  "identifier": "harness-git-clone",
+                  "name": "Clone codebase",
+                  "timeout": "1h",
+                  "__uuid": "sIKeuft3T_-FKDktU8CSGg",
+                  "spec": {
+                    "settings": {
+                      "depth": "50"
+                    },
+                    "image": "harness/drone-git:1.2.4-rootless",
+                    "entrypoint": ["/usr/local/bin/clone"],
+                    "harnessManagedImage": true,
+                    "envVariables": {
+                      "HARNESS_STAGE_TOTAL": "1",
+                      "HARNESS_NODE_INDEX": "0",
+                      "HARNESS_NODE_TOTAL": "1",
+                      "HARNESS_STAGE_INDEX": "0",
+                      "HARNESS_STEP_INDEX": "0",
+                      "HARNESS_STEP_TOTAL": "1"
+                    }
+                  }
+                },
+                "parallel": {},
+                "stepGroup": {}
+              },
+              {
+                "uuid": "8LnjZ8YpRuSEqUSS_t13PQ",
+                "step": {
+                  "identifier": "ti",
+                  "type": "RunTests",
+                  "name": "ti",
+                  "spec": {
+                    "connectorRef": "account.harnessImage",
+                    "image": "maven:3.8-openjdk-8",
+                    "language": "Java",
+                    "buildTool": "Maven",
+                    "args": "-Dmaven.repo.local=/addon test",
+                    "packages": "io.harness",
+                    "runOnlySelectedTests": true,
+                    "testAnnotations": "io.harness.myOwnHarnessTest",
+                    "reports": {
+                      "type": "JUnit",
+                      "spec": {
+                        "paths": ["**/*.xml"],
+                        "__uuid": "i3g7oO-QSEqoZxwokUVTcQ"
+                      },
+                      "__uuid": "i_sUYvPZQcmdwX0FQ9ZN2A"
+                    },
+                    "resources": {
+                      "limits": {
+                        "memory": "1Gi",
+                        "cpu": "1",
+                        "__uuid": "yW8yDQ7tQASg40GtbP6Zpg"
+                      },
+                      "__uuid": "zUuZVwSTTFiiwWJLZEX5eA"
+                    },
+                    "__uuid": "7ov-DOghT7-1a34UNmsggw",
+                    "envVariables": {
+                      "HARNESS_STAGE_TOTAL": "1",
+                      "HARNESS_NODE_INDEX": "0",
+                      "HARNESS_NODE_TOTAL": "1",
+                      "HARNESS_STAGE_INDEX": "0",
+                      "HARNESS_STEP_INDEX": "0",
+                      "HARNESS_STEP_TOTAL": "1"
+                    }
+                  },
+                  "__uuid": "R2S5ddISQl6UjnHzmgu3Qg"
+                },
+                "parallel": {},
+                "stepGroup": {}
+              },
+              {
+                "uuid": "4uDzAf-pRuCuEvPViwM6Ww",
+                "step": {
+                  "identifier": "ti2",
+                  "type": "RunTests",
+                  "name": "ti2",
+                  "spec": {
+                    "connectorRef": "account.harnessImage",
+                    "image": "maven:3.8-openjdk-8",
+                    "language": "Java",
+                    "buildTool": "Maven",
+                    "args": "-Dmaven.repo.local=/addon test",
+                    "packages": "io.harness",
+                    "runOnlySelectedTests": true,
+                    "testAnnotations": "io.harness.myOwnHarnessTest",
+                    "reports": {
+                      "type": "JUnit",
+                      "spec": {
+                        "paths": ["**/*.xml"],
+                        "__uuid": "5KL6k1bIQxOTSJ-0ws-usw"
+                      },
+                      "__uuid": "nBdnLAwoTm6ET5z1p9Rj2Q"
+                    },
+                    "resources": {
+                      "limits": {
+                        "memory": "1Gi",
+                        "cpu": "1",
+                        "__uuid": "1NLjbaxRRSS3J-9ltvs36w"
+                      },
+                      "__uuid": "hhXVY736TLa1RIsUhYdYmw"
+                    },
+                    "__uuid": "ZtmDPvQxRSazbsvzqQ_4ww",
+                    "envVariables": {
+                      "HARNESS_STAGE_TOTAL": "1",
+                      "HARNESS_NODE_INDEX": "0",
+                      "HARNESS_NODE_TOTAL": "1",
+                      "HARNESS_STAGE_INDEX": "0",
+                      "HARNESS_STEP_INDEX": "0",
+                      "HARNESS_STEP_TOTAL": "1"
+                    }
+                  },
+                  "__uuid": "qQQ871wAQUullkQK1diJqA"
+                },
+                "parallel": {},
+                "stepGroup": {}
+              },
+              {
+                "uuid": "dEuzy4YeS7W8i2cQTZgoCQ",
+                "step": {
+                  "identifier": "ti3",
+                  "type": "RunTests",
+                  "name": "ti3",
+                  "spec": {
+                    "connectorRef": "account.harnessImage",
+                    "image": "maven:3.8-openjdk-8",
+                    "language": "Java",
+                    "buildTool": "Maven",
+                    "args": "-Dmaven.repo.local=/addon test",
+                    "packages": "io.harness",
+                    "runOnlySelectedTests": true,
+                    "testAnnotations": "io.harness.myOwnHarnessTest",
+                    "reports": {
+                      "type": "JUnit",
+                      "spec": {
+                        "paths": ["**/*.xml"],
+                        "__uuid": "-3wuT-0QQOmf05W8K-G-zA"
+                      },
+                      "__uuid": "lmHkV0X7QLyKw1tr_xEgxg"
+                    },
+                    "resources": {
+                      "limits": {
+                        "memory": "1Gi",
+                        "cpu": "1",
+                        "__uuid": "27cktjY_QCmeHD60bQW-bg"
+                      },
+                      "__uuid": "VkQ-9vJcSgOVjnRYYb6Tpg"
+                    },
+                    "__uuid": "kQVcbQfxSKq3fl1H-RwzUw",
+                    "envVariables": {
+                      "HARNESS_STAGE_TOTAL": "1",
+                      "HARNESS_NODE_INDEX": "0",
+                      "HARNESS_NODE_TOTAL": "1",
+                      "HARNESS_STAGE_INDEX": "0",
+                      "HARNESS_STEP_INDEX": "0",
+                      "HARNESS_STEP_TOTAL": "1"
+                    }
+                  },
+                  "__uuid": "04CIR0p5Rfa9tvn6aHWE0Q"
+                },
+                "parallel": {},
+                "stepGroup": {}
+              }
+            ]
+          },
+          "ciCodebase": {
+            "uuid": "0xvtBpZSQHKrxdA-mVuZgg",
+            "connectorRef": "rutvijconn",
+            "build": {
+              "__recast": "io.harness.yaml.extended.ci.codebase.Build",
+              "type": "BRANCH",
+              "spec": {
+                "__recast": "io.harness.yaml.extended.ci.codebase.impl.BranchBuildSpec",
+                "branch": {
+                  "__recast": "parameterField",
+                  "__encodedValue": {
+                    "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                    "expression": false,
+                    "valueDoc": {
+                      "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                      "value": "main"
+                    },
+                    "valueClass": "java.lang.String",
+                    "typeString": true,
+                    "skipAutoEvaluation": false,
+                    "jsonResponseField": false
+                  }
+                }
+              }
+            }
+          },
+          "executionSource": {
+            "branch": "main"
+          },
+          "stageIdentifier": "Build",
+          "stageElementConfig": {
+            "uuid": "ZHowJXYNTMGQ3rlTJcpDLA",
+            "sharedPaths": [""],
+            "execution": {
+              "uuid": "b0sb0SZFRKuqb9Nc3feeqA",
+              "steps": [
+                {
+                  "uuid": "8LnjZ8YpRuSEqUSS_t13PQ",
+                  "step": {
+                    "identifier": "ti",
+                    "type": "RunTests",
+                    "name": "ti",
+                    "spec": {
+                      "connectorRef": "account.harnessImage",
+                      "image": "maven:3.8-openjdk-8",
+                      "language": "Java",
+                      "buildTool": "Maven",
+                      "args": "-Dmaven.repo.local=/addon test",
+                      "packages": "io.harness",
+                      "runOnlySelectedTests": true,
+                      "testAnnotations": "io.harness.myOwnHarnessTest",
+                      "reports": {
+                        "type": "JUnit",
+                        "spec": {
+                          "paths": ["**/*.xml"],
+                          "__uuid": "i3g7oO-QSEqoZxwokUVTcQ"
+                        },
+                        "__uuid": "i_sUYvPZQcmdwX0FQ9ZN2A"
+                      },
+                      "resources": {
+                        "limits": {
+                          "memory": "1Gi",
+                          "cpu": "1",
+                          "__uuid": "yW8yDQ7tQASg40GtbP6Zpg"
+                        },
+                        "__uuid": "zUuZVwSTTFiiwWJLZEX5eA"
+                      },
+                      "__uuid": "7ov-DOghT7-1a34UNmsggw",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "1",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "0",
+                        "HARNESS_STEP_INDEX": "0",
+                        "HARNESS_STEP_TOTAL": "1"
+                      }
+                    },
+                    "failureStrategies": [],
+                    "__uuid": "R2S5ddISQl6UjnHzmgu3Qg"
+                  },
+                  "parallel": {},
+                  "stepGroup": {}
+                },
+                {
+                  "uuid": "4uDzAf-pRuCuEvPViwM6Ww",
+                  "step": {
+                    "identifier": "ti2",
+                    "type": "RunTests",
+                    "name": "ti2",
+                    "spec": {
+                      "connectorRef": "account.harnessImage",
+                      "image": "maven:3.8-openjdk-8",
+                      "language": "Java",
+                      "buildTool": "Maven",
+                      "args": "-Dmaven.repo.local=/addon test",
+                      "packages": "io.harness",
+                      "runOnlySelectedTests": true,
+                      "testAnnotations": "io.harness.myOwnHarnessTest",
+                      "reports": {
+                        "type": "JUnit",
+                        "spec": {
+                          "paths": ["**/*.xml"],
+                          "__uuid": "5KL6k1bIQxOTSJ-0ws-usw"
+                        },
+                        "__uuid": "nBdnLAwoTm6ET5z1p9Rj2Q"
+                      },
+                      "resources": {
+                        "limits": {
+                          "memory": "1Gi",
+                          "cpu": "1",
+                          "__uuid": "1NLjbaxRRSS3J-9ltvs36w"
+                        },
+                        "__uuid": "hhXVY736TLa1RIsUhYdYmw"
+                      },
+                      "__uuid": "ZtmDPvQxRSazbsvzqQ_4ww",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "1",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "0",
+                        "HARNESS_STEP_INDEX": "0",
+                        "HARNESS_STEP_TOTAL": "1"
+                      }
+                    },
+                    "failureStrategies": [],
+                    "__uuid": "qQQ871wAQUullkQK1diJqA"
+                  },
+                  "parallel": {},
+                  "stepGroup": {}
+                },
+                {
+                  "uuid": "dEuzy4YeS7W8i2cQTZgoCQ",
+                  "step": {
+                    "identifier": "ti3",
+                    "type": "RunTests",
+                    "name": "ti3",
+                    "spec": {
+                      "connectorRef": "account.harnessImage",
+                      "image": "maven:3.8-openjdk-8",
+                      "language": "Java",
+                      "buildTool": "Maven",
+                      "args": "-Dmaven.repo.local=/addon test",
+                      "packages": "io.harness",
+                      "runOnlySelectedTests": true,
+                      "testAnnotations": "io.harness.myOwnHarnessTest",
+                      "reports": {
+                        "type": "JUnit",
+                        "spec": {
+                          "paths": ["**/*.xml"],
+                          "__uuid": "-3wuT-0QQOmf05W8K-G-zA"
+                        },
+                        "__uuid": "lmHkV0X7QLyKw1tr_xEgxg"
+                      },
+                      "resources": {
+                        "limits": {
+                          "memory": "1Gi",
+                          "cpu": "1",
+                          "__uuid": "27cktjY_QCmeHD60bQW-bg"
+                        },
+                        "__uuid": "VkQ-9vJcSgOVjnRYYb6Tpg"
+                      },
+                      "__uuid": "kQVcbQfxSKq3fl1H-RwzUw",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "1",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "0",
+                        "HARNESS_STEP_INDEX": "0",
+                        "HARNESS_STEP_TOTAL": "1"
+                      }
+                    },
+                    "failureStrategies": [],
+                    "__uuid": "04CIR0p5Rfa9tvn6aHWE0Q"
+                  },
+                  "parallel": {},
+                  "stepGroup": {}
+                }
+              ]
+            },
+            "infrastructure": {
+              "type": "KUBERNETES_DIRECT",
+              "spec": {
+                "uuid": "xfgnpcmYQaues7zLFusD5w",
+                "connectorRef": "kubcon",
+                "namespace": "harness-delegate-ng-qa-new",
+                "nodeSelector": {
+                  "__recast": "java.util.LinkedHashMap",
+                  "__uuid": "QvYjdw3NQ4ePCuchGpIEbw"
+                },
+                "automountServiceAccountToken": true,
+                "os": "Linux"
+              },
+              "uuid": "PrIGLFSRTEuqqnxb8d32Qw"
+            },
+            "cloneCodebase": true
+          },
+          "skipGitClone": false,
+          "infrastructure": {
+            "type": "KUBERNETES_DIRECT",
+            "spec": {
+              "uuid": "xfgnpcmYQaues7zLFusD5w",
+              "connectorRef": "kubcon",
+              "namespace": "harness-delegate-ng-qa-new",
+              "nodeSelector": {
+                "__recast": "java.util.LinkedHashMap",
+                "__uuid": "QvYjdw3NQ4ePCuchGpIEbw"
+              },
+              "automountServiceAccountToken": true,
+              "os": "Linux"
+            },
+            "uuid": "PrIGLFSRTEuqqnxb8d32Qw"
+          },
+          "strategyExpansionMap": {
+            "Il_cTkc8RgKnxxe0Ubz1aw": {
+              "maxConcurrency": 1
+            },
+            "dEuzy4YeS7W8i2cQTZgoCQ": {
+              "maxConcurrency": 1
+            },
+            "4uDzAf-pRuCuEvPViwM6Ww": {
+              "maxConcurrency": 1
+            },
+            "8LnjZ8YpRuSEqUSS_t13PQ": {
+              "maxConcurrency": 1
+            }
+          }
+        }
+      },
+      "startTs": 1663898654977,
+      "endTs": 1663898662988,
+      "stepType": "liteEngineTask",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "task": {
+            "taskId": "ZPIK-O3vRmW0v3u3SIpbew",
+            "taskCategory": "DELEGATE_TASK_V2",
+            "logKeys": [
+              "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:liteEngineTask"
+            ],
+            "units": [],
+            "taskName": "INITIALIZATION_PHASE"
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [
+        {
+          "id": null,
+          "name": null,
+          "taskId": "ZPIK-O3vRmW0v3u3SIpbew",
+          "taskName": "INITIALIZATION_PHASE"
+        }
+      ],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "JOBwvF4iQeW5BF8J34n7wg": {
+      "uuid": "JOBwvF4iQeW5BF8J34n7wg",
+      "setupId": "jj8hQt4lTvy7akjAurypSA",
+      "name": "Build",
+      "identifier": "Build",
+      "baseFqn": "pipeline.stages.Build",
+      "outcomes": {},
+      "stepParameters": {
+        "uuid": "jj8hQt4lTvy7akjAurypSA",
+        "identifier": "Build",
+        "name": "Build",
+        "variables": {
+          "__recast": "java.util.LinkedHashMap"
+        },
+        "tags": {},
+        "type": "CI",
+        "specConfig": {
+          "infrastructure": {
+            "type": "KUBERNETES_DIRECT",
+            "spec": {
+              "uuid": "xfgnpcmYQaues7zLFusD5w",
+              "connectorRef": "kubcon",
+              "namespace": "harness-delegate-ng-qa-new",
+              "nodeSelector": {
+                "__recast": "java.util.LinkedHashMap",
+                "__uuid": "QvYjdw3NQ4ePCuchGpIEbw"
+              },
+              "automountServiceAccountToken": true,
+              "os": "Linux"
+            },
+            "uuid": "PrIGLFSRTEuqqnxb8d32Qw"
+          },
+          "sharedPaths": [""],
+          "enableCloneRepo": true,
+          "buildStatusUpdateParameter": {
+            "identifier": "Build",
+            "name": "Build",
+            "connectorIdentifier": "rutvijconn"
+          },
+          "stepIdentifiers": ["ti", "ti2", "ti3"],
+          "childNodeID": "ZHowJXYNTMGQ3rlTJcpDLA"
+        }
+      },
+      "startTs": 1663898623460,
+      "endTs": 1663898761661,
+      "stepType": "IntegrationStageStepPMS",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnPipelineSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnPipelineSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "child": {
+            "childNodeId": "ZHowJXYNTMGQ3rlTJcpDLA",
+            "logKeys": [],
+            "units": []
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "K1TVXISOT0m7oSIflfnQvw": {
+      "uuid": "K1TVXISOT0m7oSIflfnQvw",
+      "setupId": "sIKeuft3T_-FKDktU8CSGg",
+      "name": "Clone codebase",
+      "identifier": "harness-git-clone",
+      "baseFqn": "pipeline.stages.Build.spec.execution.steps.harness-git-clone",
+      "outcomes": {
+        "output": {
+          "outputVariables": {}
+        },
+        "artifact-harness-git-clone": {
+          "stepArtifacts": {
+            "publishedFileArtifacts": [],
+            "publishedImageArtifacts": []
+          }
+        }
+      },
+      "stepParameters": {
+        "identifier": "harness-git-clone",
+        "name": "Clone codebase",
+        "timeout": "1h",
+        "type": "Plugin",
+        "spec": {
+          "retry": 1,
+          "settings": {
+            "__recast": "java.util.LinkedHashMap",
+            "depth": {
+              "__recast": "com.fasterxml.jackson.databind.node.TextNode",
+              "__encodedValue": "50"
+            }
+          },
+          "image": "harness/drone-git:1.2.4-rootless",
+          "entrypoint": ["/usr/local/bin/clone"],
+          "envVariables": {
+            "HARNESS_STAGE_TOTAL": "1",
+            "HARNESS_NODE_INDEX": "null",
+            "HARNESS_NODE_TOTAL": "null",
+            "HARNESS_STAGE_INDEX": "0",
+            "HARNESS_STEP_INDEX": "0",
+            "HARNESS_STEP_TOTAL": "1"
+          },
+          "harnessManagedImage": true
+        }
+      },
+      "startTs": 1663898663340,
+      "endTs": 1663898670994,
+      "stepType": "Plugin",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "async": {
+            "callbackIds": ["hUTSXQ43TayXKrUtV7FLVg", "USVhiElQRx6Msvge_nM7oA"],
+            "logKeys": [
+              "accountId:uy6FLHeWTBOOPZA8xchgZA/orgId:default/projectId:Default_Project_1657212353481/pipelineId:mtranjhttp/runSequence:2/level0:pipeline/level1:stages/level2:Build/level3:spec/level4:execution/level5:steps/level6:harness-git-clone"
+            ],
+            "units": [],
+            "timeout": 0
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    }
+  },
+  "pipelineStagesMap": {},
+  "isPipelineInvalid": false,
+  "selectedStageId": "jj8hQt4lTvy7akjAurypSA",
+  "selectedStepId": "YZgVC6Q-RIe6b37r22Wb3g",
+  "selectedStageExecutionId": "",
+  "loading": false,
+  "isDataLoadedForSelectedStage": true,
+  "queryParams": {},
+  "logsToken": "",
+  "stepsGraphCanvasState": {
+    "offsetX": 5,
+    "offsetY": 0,
+    "zoom": 100
+  }
+}

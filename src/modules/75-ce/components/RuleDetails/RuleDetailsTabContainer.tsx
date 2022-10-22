@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { isEmpty, defaultTo, get } from 'lodash-es'
 import {
   Accordion,
@@ -243,6 +243,22 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
   const cloudProvider = connectorData?.type && ceConnectorTypes[connectorData?.type]
   const provider = useMemo(() => allProviders.find(item => item.value === cloudProvider), [cloudProvider])
   const iconName = defaultTo(provider?.icon, 'spinner') as IconName
+  const hasCustomDomains = (service.custom_domains?.length as number) > 0
+  const getClickableLink = useCallback(
+    (withoutProtocol = false) => {
+      const hasHttpsConfig = !isEmpty(
+        service.routing?.ports?.find(portConfig => portConfig.protocol?.toLowerCase() === 'https')
+      )
+      const protocol = Utils.getConditionalResult(hasHttpsConfig, 'https', 'http')
+      const link = isK8sRule
+        ? service.routing?.k8s?.CustomDomain
+        : hasCustomDomains
+        ? service.custom_domains?.[0]
+        : service.host_name
+      return withoutProtocol ? link : `${protocol}://${link}`
+    },
+    [service]
+  )
 
   return (
     <Container>
@@ -280,11 +296,7 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
                 value={get(service, 'routing.container_svc.service', '')}
               />
             )}
-            <DetailRow
-              label={getString('ce.co.ruleDetailsHeader.hostName')}
-              value={<LinkWithCopy url={defaultTo(service.host_name, '')} protocol={domainProtocol} />}
-            />
-            {!isEmpty(service.custom_domains) && (
+            {hasCustomDomains ? (
               <DetailRow
                 label={getString('ce.co.ruleDetailsHeader.customDomain')}
                 value={
@@ -295,7 +307,12 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
                   </Container>
                 }
               />
-            )}
+            ) : getClickableLink(true) ? (
+              <DetailRow
+                label={getString('ce.co.ruleDetailsHeader.hostName')}
+                value={<LinkWithCopy url={defaultTo(getClickableLink(true), '')} protocol={domainProtocol} />}
+              />
+            ) : null}
             <DetailRow
               label={getString('connector')}
               value={
@@ -309,7 +326,7 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
             {isK8sRule ? (
               <DetailRow label={getString('common.smtp.port')} value={get(k8sYaml, 'spec.service.port', '')} />
             ) : isEcsRule ? null : (
-              <DetailRow label={getString('ce.co.accessPoint.loadbalancer')} value={get(accessPointData, 'name', '')} />
+              <DetailRow label={getString('common.loadBalancer')} value={get(accessPointData, 'name', '')} />
             )}
             {resources && (
               <DetailRow

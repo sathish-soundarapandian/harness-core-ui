@@ -10148,7 +10148,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                 color="black"
               >
                 <div
-                  class="name"
+                  class="name flex"
                 >
                   <span
                     class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black"
@@ -10159,7 +10159,8 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     :
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    style="--text-line-clamp: 1;"
                   />
                 </div>
               </div>
@@ -10346,21 +10347,12 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="https://github.com/vardanbansal-harness/vscode-yaml.git"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="https://github.com/vardanbansal-harness/vscode-yaml.git"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      https://github.com/vardanbansal-harness/vscode-yaml.git
-                    </span>
-                  </a>
+                    https://github.com/vardanbansal-harness/vscode-yaml.git
+                  </p>
                 </div>
               </div>
             </div>
@@ -10512,21 +10504,12 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="https://github.com/vardanbansal-harness/vscode-yaml.git"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="https://github.com/vardanbansal-harness/vscode-yaml.git"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      https://github.com/vardanbansal-harness/vscode-yaml.git
-                    </span>
-                  </a>
+                    https://github.com/vardanbansal-harness/vscode-yaml.git
+                  </p>
                 </div>
               </div>
             </div>
@@ -10729,21 +10712,12 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="www.google.com"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="www.google.com"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      www.google.com
-                    </span>
-                  </a>
+                    www.google.com
+                  </p>
                 </div>
               </div>
             </div>
@@ -10986,21 +10960,12 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="www.docker.com"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="www.docker.com"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      www.docker.com
-                    </span>
-                  </a>
+                    www.docker.com
+                  </p>
                 </div>
               </div>
             </div>
@@ -11235,21 +11200,12 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="dbhgj"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="dbhgj"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      dbhgj
-                    </span>
-                  </a>
+                    dbhgj
+                  </p>
                 </div>
               </div>
             </div>
@@ -11485,21 +11441,12 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="sample.google.com"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="sample.google.com"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      sample.google.com
-                    </span>
-                  </a>
+                    sample.google.com
+                  </p>
                 </div>
               </div>
             </div>
@@ -11948,7 +11895,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                 color="black"
               >
                 <div
-                  class="name"
+                  class="name flex"
                 >
                   <span
                     class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black"
@@ -11959,7 +11906,8 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     :
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    style="--text-line-clamp: 1;"
                   />
                 </div>
               </div>
@@ -12238,21 +12186,12 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="https://github.com/vardanbansal-harness/vscode-yaml.git"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="https://github.com/vardanbansal-harness/vscode-yaml.git"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      https://github.com/vardanbansal-harness/vscode-yaml.git
-                    </span>
-                  </a>
+                    https://github.com/vardanbansal-harness/vscode-yaml.git
+                  </p>
                 </div>
               </div>
             </div>
@@ -12496,21 +12435,12 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="https://github.com/vardanbansal-harness/vscode-yaml.git"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="https://github.com/vardanbansal-harness/vscode-yaml.git"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      https://github.com/vardanbansal-harness/vscode-yaml.git
-                    </span>
-                  </a>
+                    https://github.com/vardanbansal-harness/vscode-yaml.git
+                  </p>
                 </div>
               </div>
             </div>
@@ -12672,21 +12602,12 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="www.google.com"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="www.google.com"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      www.google.com
-                    </span>
-                  </a>
+                    www.google.com
+                  </p>
                 </div>
               </div>
             </div>
@@ -12888,21 +12809,12 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="www.docker.com"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="www.docker.com"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      www.docker.com
-                    </span>
-                  </a>
+                    www.docker.com
+                  </p>
                 </div>
               </div>
             </div>
@@ -13096,21 +13008,12 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="dbhgj"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="dbhgj"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      dbhgj
-                    </span>
-                  </a>
+                    dbhgj
+                  </p>
                 </div>
               </div>
             </div>
@@ -13305,21 +13208,12 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     </span>
                     :
                   </span>
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main link StyledProps--margin-left-xsmall Button--with-current-color Button--link"
-                    href="sample.google.com"
-                    rel="noreferrer noopener"
-                    role="button"
-                    tabindex="0"
-                    target="_blank"
-                    title="sample.google.com"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-left-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      sample.google.com
-                    </span>
-                  </a>
+                    sample.google.com
+                  </p>
                 </div>
               </div>
             </div>

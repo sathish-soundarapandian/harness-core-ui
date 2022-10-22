@@ -27,7 +27,7 @@ export default function FileView(): React.ReactElement {
   return (
     <Container
       background={Color.WHITE}
-      style={{ width: '100%', height: isModalView ? 530 : 'calc(100vh - 200px)' }}
+      style={{ width: '100%', height: isModalView ? 530 : 'calc(100vh - 120px)' }}
       className={css.mainFileView}
     >
       {error ? (

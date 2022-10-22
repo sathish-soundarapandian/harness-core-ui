@@ -10,7 +10,7 @@ import { StepWizard } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
 import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -45,7 +45,7 @@ const CreateCEK8sConnector: React.FC<CreateConnectorModalProps> = props => {
         />
         {isOptimizationSelected ? <SecretCreationStep name="Secret Creation" /> : null}
         <ProvidePermissions {...props} name={'Provide permissions'} />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.verifyConnection')}
           onClose={() => {
             trackEvent(CCM_CONNECTOR_SAVE_EVENT, { type: Connectors.CE_KUBERNETES })

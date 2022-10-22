@@ -14,6 +14,7 @@ declare const styles: {
   readonly inputWidth: string
   readonly inputheader: string
   readonly layoutVerticalSpacing: string
+  readonly listHeader: string
   readonly listLabel: string
   readonly manifestInfoTooltip: string
   readonly nestedAccordions: string

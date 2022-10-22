@@ -9,7 +9,10 @@ import type { IconName } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
-import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
+import {
+  getConditionalExecutionFlag,
+  getStatusProps
+} from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { Event } from '@pipeline/components/Diagram'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -35,6 +38,7 @@ interface ProcessParalellNodeArgs {
   rootNodes: Array<PipelineGraphState>
   items: Array<PipelineGraphState>
   id: string
+  isNestedGroup?: boolean
 }
 
 interface StepPipelineGraphState {
@@ -123,7 +127,13 @@ export const processLiteEngineTask = (
     id: nodeData?.uuid as string,
     status: nodeData?.status as ExecutionStatus,
     type: nodeData?.stepType as string,
-    data: { ...nodeData, when: nodeData?.nodeRunInfo, ...iconData, icon: 'initialize-step' },
+    data: {
+      ...nodeData,
+      when: nodeData?.nodeRunInfo,
+      ...iconData,
+      icon: 'initialize-step',
+      conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData?.nodeRunInfo)
+    },
     icon: 'initialize-step'
   }
 
@@ -135,7 +145,8 @@ const processParallelNodeData = ({
   nodeMap,
   nodeAdjacencyListMap,
   id,
-  rootNodes
+  rootNodes,
+  isNestedGroup = false
 }: ProcessParalellNodeArgs): void => {
   const [parentNodeId, ...childNodeIds] = nodeAdjacencyListMap?.[id].children as string[]
   const parentNodeData = nodeMap?.[parentNodeId]
@@ -156,6 +167,7 @@ const processParallelNodeData = ({
       ...iconData,
       ...(parentNodeData?.stepType === NodeType.STEP_GROUP
         ? {
+            isNestedGroup,
             stepGroup: {
               name: parentNodeData?.name || /* istanbul ignore next */ '',
               identifier: parentNodeData?.identifier,
@@ -163,7 +175,6 @@ const processParallelNodeData = ({
               skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
                 ? parentNodeData.skipInfo.skipCondition
                 : undefined,
-              when: parentNodeData?.nodeRunInfo,
               status: parentNodeData?.status as ExecutionStatus,
               type: parentNodeData?.stepType,
               data: parentNodeData,
@@ -179,7 +190,6 @@ const processParallelNodeData = ({
               skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
                 ? parentNodeData.skipInfo.skipCondition
                 : undefined,
-              when: parentNodeData?.nodeRunInfo,
               status: parentNodeData?.status as ExecutionStatus,
               type: nodeStrategyType,
               nodeType: nodeStrategyType,
@@ -195,14 +205,15 @@ const processParallelNodeData = ({
             skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
               ? parentNodeData.skipInfo.skipCondition
               : undefined,
-            when: parentNodeData?.nodeRunInfo,
             status: parentNodeData?.status as ExecutionStatus,
             type: parentNodeData?.stepType,
             data: parentNodeData
           }),
       nodeType: nodeStrategyType,
       maxParallelism: parentNodeData?.stepParameters?.maxConcurrency,
-      graphType: PipelineGraphType.STEP_GRAPH
+      graphType: PipelineGraphType.STEP_GRAPH,
+      conditionalExecutionEnabled: getConditionalExecutionFlag(parentNodeData?.nodeRunInfo),
+      when: parentNodeData?.nodeRunInfo
     },
     children: processNodeDataV1(childNodeIds || /* istanbul ignore next */ [], nodeMap, nodeAdjacencyListMap, rootNodes)
   })
@@ -213,8 +224,15 @@ interface ProcessStepGroupStepsArgs {
   nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap']
   rootNodes: Array<PipelineGraphState>
   id: string
+  isNestedGroup?: boolean
 }
-const processStepGroupSteps = ({ nodeAdjacencyListMap, id, nodeMap, rootNodes }: ProcessStepGroupStepsArgs): any[] => {
+const processStepGroupSteps = ({
+  nodeAdjacencyListMap,
+  id,
+  nodeMap,
+  rootNodes,
+  isNestedGroup = false
+}: ProcessStepGroupStepsArgs): any[] => {
   const steps: any[] = []
   nodeAdjacencyListMap?.[id].children?.forEach((childId: string): void => {
     const nodeData = nodeMap?.[childId] as ExecutionNode
@@ -223,7 +241,8 @@ const processStepGroupSteps = ({ nodeAdjacencyListMap, id, nodeMap, rootNodes }:
         nodeAdjacencyListMap[childId].children || [],
         nodeMap,
         nodeAdjacencyListMap,
-        rootNodes
+        rootNodes,
+        isNestedGroup
       )
       if (nodeData.name === 'parallel') {
         steps.push({
@@ -249,14 +268,19 @@ const processStepGroupSteps = ({ nodeAdjacencyListMap, id, nodeMap, rootNodes }:
             nodeAdjacencyListMap,
             id: nodeData?.uuid as string,
             nodeMap,
-            rootNodes
+            rootNodes,
+            isNestedGroup
           })
         : nodeStrategyType === NodeType.STEP_GROUP
-        ? processStepGroupSteps({ nodeAdjacencyListMap, id: nodeData?.uuid as string, nodeMap, rootNodes })
+        ? processStepGroupSteps({
+            nodeAdjacencyListMap,
+            id: nodeData?.uuid as string,
+            nodeMap,
+            rootNodes,
+            isNestedGroup
+          })
         : []
-      const matrixNodeName =
-        nodeData?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-        `(${Object.values(nodeData?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+      const matrixNodeName = nodeData?.strategyMetadata?.matrixmetadata?.matrixvalues
 
       steps.push({
         step: {
@@ -288,7 +312,7 @@ const processStepGroupSteps = ({ nodeAdjacencyListMap, id, nodeMap, rootNodes }:
                 }
               }
             : {
-                data: { ...nodeData }
+                data: { ...nodeData, isNestedGroup }
               })
         }
       })
@@ -336,7 +360,7 @@ const processSingleItem = ({
     when: nodeData?.nodeRunInfo,
     status: nodeData?.status as ExecutionStatus,
     type: nodeData?.stepType,
-    data: { ...nodeData },
+    data: { ...nodeData, conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData.nodeRunInfo) },
     showInLabel
   }
   const nodeStrategyType =
@@ -377,7 +401,8 @@ const processSingleItem = ({
           }
         : { step: item }),
       nodeType: nodeStrategyType,
-      maxParallelism: nodeData?.stepParameters?.maxConcurrency
+      maxParallelism: nodeData?.stepParameters?.maxConcurrency,
+      conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData.nodeRunInfo)
     }
   }
   items.push(finalItem)
@@ -387,14 +412,15 @@ export const processNodeDataV1 = (
   children: string[],
   nodeMap: ExecutionGraph['nodeMap'],
   nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap'],
-  rootNodes: Array<PipelineGraphState>
+  rootNodes: Array<PipelineGraphState>,
+  isNestedGroup = false
 ): Array<PipelineGraphState> => {
   const items: Array<PipelineGraphState> = []
   children?.forEach(item => {
     const nodeData = nodeMap?.[item]
     const isRollback = nodeData?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
     if (nodeData?.stepType === NodeType.FORK) {
-      processParallelNodeData({ items, id: item, nodeAdjacencyListMap, nodeMap, rootNodes })
+      processParallelNodeData({ items, id: item, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup })
     } else if (
       nodeData?.stepType === NodeType.STEP_GROUP ||
       nodeData?.stepType === NodeType.NG_SECTION ||
@@ -469,14 +495,16 @@ ProcessGroupItemArgs): void => {
               ? ((stepNodeData?.stepParameters?.strategyType || 'MATRIX') as string)
               : (stepNodeData?.stepType as string)
 
-          const stepData = isNodeTypeMatrixOrFor(nodeStrategyType)
-            ? processStepGroupSteps({
-                nodeAdjacencyListMap,
-                id: stepNodeData?.uuid as string,
-                nodeMap,
-                rootNodes
-              })
-            : []
+          const stepData =
+            isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP
+              ? processStepGroupSteps({
+                  nodeAdjacencyListMap,
+                  id: stepNodeData?.uuid as string,
+                  nodeMap,
+                  rootNodes,
+                  isNestedGroup
+                })
+              : []
 
           return {
             step: {
@@ -486,10 +514,12 @@ ProcessGroupItemArgs): void => {
               type: nodeStrategyType,
               nodeType: nodeStrategyType,
               graphType: PipelineGraphType.STEP_GRAPH,
+              isNestedGroup,
               data: {
                 ...stepNodeData,
                 graphType: PipelineGraphType.STEP_GRAPH,
-                ...(isNodeTypeMatrixOrFor(nodeStrategyType) && {
+                conditionalExecutionEnabled: getConditionalExecutionFlag(stepNodeData?.nodeRunInfo),
+                ...((isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP) && {
                   isNestedGroup: true, // strategy in step_group
                   type: nodeStrategyType,
                   nodeType: nodeStrategyType,
@@ -529,6 +559,7 @@ ProcessGroupItemArgs): void => {
             data: {
               id: childStep?.uuid as string,
               isNestedGroup: true,
+              conditionalExecutionEnabled: getConditionalExecutionFlag(childStep?.nodeRunInfo),
               stepGroup: {
                 ...childStep,
                 ...childSecondaryIconProps,
@@ -557,9 +588,7 @@ ProcessGroupItemArgs): void => {
               rootNodes
             })
           : []
-        const matrixNodeName =
-          childStep?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-          `(${Object.values(childStep?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+        const matrixNodeName = childStep?.strategyMetadata?.matrixmetadata?.matrixvalues
 
         steps.push({
           step: {
@@ -576,6 +605,7 @@ ProcessGroupItemArgs): void => {
               ...childSecondaryIconProps,
               matrixNodeName,
               graphType: PipelineGraphType.STEP_GRAPH,
+              conditionalExecutionEnabled: getConditionalExecutionFlag(childStep?.nodeRunInfo),
               ...(isNodeTypeMatrixOrFor(nodeStrategyType) && {
                 isNestedGroup: true, // strategy in step_group
                 type: nodeStrategyType,
@@ -618,6 +648,7 @@ ProcessGroupItemArgs): void => {
     status: nodeData?.status as ExecutionStatus,
     type: nodeData?.stepType,
     id: nodeData.uuid as string,
+    isNestedGroup,
     data: { ...nodeData, id: nodeData.uuid as string }
   }
 
@@ -675,11 +706,13 @@ ProcessGroupItemArgs): void => {
           }
         : item),
       nodeType: nodeStrategyType,
-      maxParallelism: nodeData?.stepParameters?.maxConcurrency
+      maxParallelism: nodeData?.stepParameters?.maxConcurrency,
+      conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData?.nodeRunInfo)
     }
   }
   items.push(finalDataItem)
 }
+
 interface ProcessNextNodesParams {
   nextIds: string[]
   nodeMap: ExecutionGraph['nodeMap']
@@ -699,7 +732,7 @@ export const processNextNodes = ({
     const nodeDataNext = nodeMap?.[id]
     const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
     if (nodeDataNext?.stepType === NodeType.FORK) {
-      processParallelNodeData({ items: result, id, nodeAdjacencyListMap, nodeMap, rootNodes })
+      processParallelNodeData({ items: result, id, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup })
     } else if (nodeDataNext?.stepType === NodeType.STEP_GROUP || (isRollbackNext && nodeDataNext)) {
       processGroupItem({ items: result, id, isRollbackNext, nodeMap, nodeAdjacencyListMap, rootNodes, isNestedGroup })
     } else {
@@ -707,7 +740,7 @@ export const processNextNodes = ({
     }
     const nextLevels = nodeAdjacencyListMap?.[id].nextIds
     if (nextLevels) {
-      result.push(...processNodeDataV1(nextLevels, nodeMap, nodeAdjacencyListMap, rootNodes))
+      result.push(...processNodeDataV1(nextLevels, nodeMap, nodeAdjacencyListMap, rootNodes, isNestedGroup))
     }
   })
   return result

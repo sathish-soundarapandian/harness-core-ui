@@ -14,5 +14,6 @@ declare const styles: {
   readonly squareCard: string
   readonly stageCreate: string
   readonly tabHeading: string
+  readonly titleHeading: string
 }
 export default styles

@@ -29,6 +29,9 @@
     margin: var(--spacing-medium) 0 var(--spacing-large) 0;
     text-transform: uppercase;
   }
+  :global(.descriptionRow) {
+    height: 32px !important;
+  }
 
   .value-row {
     display: grid;

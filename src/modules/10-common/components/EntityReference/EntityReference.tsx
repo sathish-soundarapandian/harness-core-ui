@@ -25,7 +25,7 @@ import {
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Classes } from '@blueprintjs/core'
-import { debounce, isEmpty } from 'lodash-es'
+import { debounce } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Scope, PrincipalScope } from '@common/interfaces/SecretsInterface'
 import { useStrings, UseStringsReturn } from 'framework/strings'
@@ -35,22 +35,11 @@ import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/Rout
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { CollapsableList } from '../CollapsableList/CollapsableList'
+import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
+import { EntityReferenceResponse, getScopeFromDTO, ScopedObjectDTO, TAB_ID } from './EntityReference.types'
 import css from './EntityReference.module.scss'
 
-export interface ScopedObjectDTO {
-  accountIdentifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export function getScopeFromDTO<T extends ScopedObjectDTO>(obj: T): Scope {
-  if (obj.projectIdentifier) {
-    return Scope.PROJECT
-  } else if (obj.orgIdentifier) {
-    return Scope.ORG
-  }
-  return Scope.ACCOUNT
-}
+export * from './EntityReference.types'
 
 export function getPrincipalScopeFromDTO<T extends ScopedObjectDTO>(obj: T): PrincipalScope {
   if (obj.projectIdentifier) {
@@ -115,19 +104,15 @@ export function getIdentifierFromValue(value: string): string {
   return value
 }
 
-export type EntityReferenceResponse<T> = {
-  name: string
-  identifier: string
-  record: T
-}
-
-export interface EntityReferenceProps<T> {
+export interface EntityReferenceProps<T extends ScopedObjectDTO> {
   onSelect: (reference: T, scope: Scope) => void
   fetchRecords: (
-    scope: Scope,
     done: (records: EntityReferenceResponse<T>[]) => void,
     searchTerm: string,
-    page: number
+    page: number,
+    scope?: Scope,
+    signal?: AbortSignal,
+    allTabSelected?: boolean
   ) => void
   recordRender: (args: { item: EntityReferenceResponse<T>; selectedScope: Scope; selected?: boolean }) => JSX.Element
   collapsedRecordRender?: (args: {
@@ -148,28 +133,48 @@ export interface EntityReferenceProps<T> {
   pagination: PaginationProps
   disableCollapse?: boolean
   input?: any
+  isMultiSelect?: boolean
+  selectedRecords?: ScopeAndIdentifier[]
+  onMultiSelect?: (selected: ScopeAndIdentifier[]) => void
+  showAllTab?: boolean
 }
 
-function getDefaultScope(orgIdentifier?: string, projectIdentifier?: string): Scope {
-  if (!isEmpty(projectIdentifier)) {
-    return Scope.PROJECT
-  } else if (!isEmpty(orgIdentifier)) {
-    return Scope.ORG
+export const tabIdToScopeMap: Record<TAB_ID, Scope | undefined> = {
+  [TAB_ID.ACCOUNT]: Scope.ACCOUNT,
+  [TAB_ID.ORGANIZATION]: Scope.ORG,
+  [TAB_ID.PROJECT]: Scope.PROJECT,
+  [TAB_ID.ALL]: undefined
+}
+
+const scopeToTabMap: Record<Scope, TAB_ID> = {
+  [Scope.ACCOUNT]: TAB_ID.ACCOUNT,
+  [Scope.ORG]: TAB_ID.ORGANIZATION,
+  [Scope.PROJECT]: TAB_ID.PROJECT
+}
+
+function getDefaultSelectedTab(
+  defaultScope?: Scope,
+  projectIdentifier?: string,
+  orgIdentifier?: string,
+  showAllTab = false
+): TAB_ID {
+  if (defaultScope) {
+    return scopeToTabMap[defaultScope]
   }
-  return Scope.ACCOUNT
+  if ((projectIdentifier || orgIdentifier) && showAllTab) {
+    return TAB_ID.ALL
+  }
+  if (projectIdentifier) {
+    return TAB_ID.PROJECT
+  }
+  if (orgIdentifier) {
+    return TAB_ID.ORGANIZATION
+  }
+
+  return TAB_ID.ACCOUNT
 }
 
-const enum TAB_ID {
-  PROJECT = 'project',
-  ORGANIZATION = 'organization',
-  ACCOUNT = 'account'
-}
-
-function getDefaultTab(projectIdentifier: string | undefined, orgIdentifier: string | undefined) {
-  return projectIdentifier ? TAB_ID.PROJECT : orgIdentifier ? TAB_ID.ORGANIZATION : TAB_ID.ACCOUNT
-}
-
-export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element {
+export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenceProps<T>): JSX.Element {
   const { getString } = useStrings()
   const {
     defaultScope,
@@ -183,11 +188,14 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
     noDataCard,
     renderTabSubHeading = false,
     disableCollapse,
-    input
+    input,
+    isMultiSelect,
+    selectedRecords: selectedRecordsFromProps,
+    showAllTab = false
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [selectedScope, setSelectedScope] = useState<Scope>(
-    defaultScope || getDefaultScope(orgIdentifier, projectIdentifier)
+  const [selectedTab, setSelectedTab] = useState<TAB_ID>(
+    getDefaultSelectedTab(defaultScope, projectIdentifier, orgIdentifier, showAllTab)
   )
   const { accountId } = useParams<AccountPathProps>()
   const {
@@ -201,45 +209,57 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
   const [error, setError] = useState<string | null>()
   const [selectedRecord, setSelectedRecord] = useState<T>()
 
-  React.useEffect(() => {
-    setSelectedScope(getDefaultScope(orgIdentifier, projectIdentifier))
-  }, [projectIdentifier, orgIdentifier])
+  // used for multiselect
+  const [selectedRecords, setSelectedRecords] = useState<ScopeAndIdentifier[]>(selectedRecordsFromProps ?? [])
 
   const delayedFetchRecords = useRef(debounce((fn: () => void) => fn(), 300)).current
 
   const inputRef = useRef()
   const firstUpdate = useRef(true)
+  const controllerRef = useRef<AbortController>()
 
-  const fetchData = (resetPageIndex: boolean, inputChange = false) => {
+  const fetchData = (resetPageIndex: boolean, inputChange = false): void => {
     try {
+      if (controllerRef.current) controllerRef.current.abort()
+      controllerRef.current = new AbortController()
+
       setError(null)
+
+      if (resetPageIndex && props.pagination.pageIndex !== 0) {
+        props.pagination.gotoPage?.(0)
+      }
+      const pageNo = resetPageIndex ? 0 : props.pagination.pageIndex
+
       if (!searchTerm && !inputChange) {
+        // cancel pending debounced requests to prevent rendering stale data
+        delayedFetchRecords.cancel()
+
         setLoading(true)
         fetchRecords(
-          selectedScope,
           records => {
             setData(records)
             setLoading(false)
           },
           searchTerm,
-          props.pagination.pageIndex as number
+          pageNo as number,
+          tabIdToScopeMap[selectedTab],
+          controllerRef.current?.signal,
+          selectedTab === TAB_ID.ALL
         )
       } else {
-        if (resetPageIndex && props.pagination.pageIndex !== 0) {
-          props.pagination.gotoPage?.(0)
-        }
-        const pageNo = resetPageIndex ? 0 : props.pagination.pageIndex
         delayedFetchRecords(() => {
           setLoading(true)
           setSelectedRecord(undefined)
           fetchRecords(
-            selectedScope,
             records => {
               setData(records)
               setLoading(false)
             },
             searchTerm,
-            pageNo as number
+            pageNo as number,
+            tabIdToScopeMap[selectedTab],
+            controllerRef.current?.signal,
+            selectedTab === TAB_ID.ALL
           )
         })
       }
@@ -255,7 +275,7 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
       fetchData(true, true)
       inputRef.current = input
     }
-  }, [selectedScope, delayedFetchRecords, searchTerm, input])
+  }, [selectedTab, delayedFetchRecords, searchTerm, input])
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -265,16 +285,9 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
     }
   }, [props.pagination.pageIndex])
 
-  const onScopeChange = (scope: Scope): void => {
-    setSelectedRecord(undefined)
-    setSelectedScope(scope)
-  }
-
   const iconProps = {
     size: 14
   }
-
-  const defaultTab = getDefaultTab(projectIdentifier, orgIdentifier)
 
   const RenderList = () => {
     return (
@@ -302,12 +315,14 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
           <CollapsableList<T>
             selectedRecord={selectedRecord}
             setSelectedRecord={setSelectedRecord}
+            selectedRecords={selectedRecords}
+            setSelectedRecords={setSelectedRecords}
             data={data}
             recordRender={recordRender}
             collapsedRecordRender={collapsedRecordRender}
-            selectedScope={selectedScope}
             pagination={{ ...props.pagination, hidePageNumbers: true }}
             disableCollapse={disableCollapse}
+            isMultiSelect={isMultiSelect}
           />
         ) : (
           <Container padding={{ top: 'xlarge' }} flex={{ align: 'center-center' }} className={css.noDataContainer}>
@@ -321,22 +336,19 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
   const renderTab = (
     show: boolean,
     id: string,
-    scope: Scope,
-    icon: IconName,
     title: StringKeys,
+    icon?: IconName,
     tabDesc = ''
   ): React.ReactElement | null => {
     return show ? (
       <Tab
-        className={css.tabClass}
         id={id}
         title={
           <Layout.Horizontal
-            onClick={() => onScopeChange(scope)}
             flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
             padding={{ left: 'xsmall', right: 'xsmall' }}
           >
-            <Icon name={icon} {...iconProps} className={css.tabIcon} />
+            {icon && <Icon name={icon} {...iconProps} className={css.tabIcon} />}
 
             <Text lineClamp={1} font={{ variation: FontVariation.H6, weight: 'light' }}>
               {getString(title)}
@@ -369,17 +381,18 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
   return (
     <Container className={cx(css.container, className)}>
       <div className={css.tabsContainer}>
-        <Tabs id={'selectScope'} defaultSelectedTabId={defaultTab}>
-          {renderTab(
-            !!projectIdentifier,
-            TAB_ID.PROJECT,
-            Scope.PROJECT,
-            'projects-wizard',
-            'projectLabel',
-            selectedProject?.name
-          )}
-          {renderTab(!!orgIdentifier, TAB_ID.ORGANIZATION, Scope.ORG, 'diagram-tree', 'orgLabel', selectedOrg?.name)}
-          {renderTab(true, TAB_ID.ACCOUNT, Scope.ACCOUNT, 'layers', 'account', selectedAccount?.accountName)}
+        <Tabs
+          id="selectScope"
+          selectedTabId={selectedTab}
+          onChange={newTabId => {
+            setSelectedRecord(undefined)
+            setSelectedTab(newTabId as TAB_ID)
+          }}
+        >
+          {renderTab(showAllTab && !!(projectIdentifier || orgIdentifier), TAB_ID.ALL, 'common.all')}
+          {renderTab(!!projectIdentifier, TAB_ID.PROJECT, 'projectLabel', 'projects-wizard', selectedProject?.name)}
+          {renderTab(!!orgIdentifier, TAB_ID.ORGANIZATION, 'orgLabel', 'diagram-tree', selectedOrg?.name)}
+          {renderTab(true, TAB_ID.ACCOUNT, 'account', 'layers', selectedAccount?.accountName)}
         </Tabs>
       </div>
 
@@ -388,14 +401,18 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
           variation={ButtonVariation.PRIMARY}
           text={getString('entityReference.apply')}
           onClick={() => {
-            props.onSelect(selectedRecord as T, selectedScope)
-            trackEvent(StageActions.ApplySelectedConnector, {
-              category: Category.STAGE,
-              selectedRecord,
-              selectedScope
-            })
+            if (isMultiSelect) {
+              props.onMultiSelect?.(selectedRecords)
+            } else {
+              props.onSelect(selectedRecord as T, getScopeFromDTO(selectedRecord as ScopedObjectDTO))
+              trackEvent(StageActions.ApplySelectedConnector, {
+                category: Category.STAGE,
+                selectedRecord,
+                selectedScope: getScopeFromDTO(selectedRecord as ScopedObjectDTO)
+              })
+            }
           }}
-          disabled={!selectedRecord}
+          disabled={isMultiSelect ? !selectedRecords.length : !selectedRecord}
           className={cx(Classes.POPOVER_DISMISS)}
         />
         {props.onCancel && (
@@ -404,11 +421,13 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
             text={getString('cancel')}
             onClick={() => {
               props.onCancel?.()
-              trackEvent(StageActions.CancelSelectConnector, {
-                category: Category.STAGE,
-                selectedRecord,
-                selectedScope
-              })
+              if (!isMultiSelect) {
+                trackEvent(StageActions.CancelSelectConnector, {
+                  category: Category.STAGE,
+                  selectedRecord,
+                  selectedScope: getScopeFromDTO(selectedRecord as ScopedObjectDTO)
+                })
+              }
             }}
           />
         )}

@@ -148,4 +148,5 @@ export interface PersistCustomMetricInterface {
   nonCustomFeilds: NonCustomFeildsInterface
   formikValues: AppDynamicsFomikFormInterface
   setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
+  isTemplate?: boolean
 }

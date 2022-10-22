@@ -80,6 +80,7 @@ const DashboardViewPage: React.FC = () => {
           lookerDashboardFilterChangedEvent(lookerEvent as DashboardFiltersChangedEvent)
           break
         case LookerEventType.DASHBOARD_LOADED:
+        case LookerEventType.DASHBOARD_RUN_COMPLETE:
           setDashboardLoading(false)
           break
       }

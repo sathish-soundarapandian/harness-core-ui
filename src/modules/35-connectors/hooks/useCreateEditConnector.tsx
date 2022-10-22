@@ -26,8 +26,6 @@ import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
 export interface BuildPayloadProps {
   projectIdentifier?: string
@@ -55,7 +53,6 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const [connectorPayload, setConnectorPayload] = useState<Connector>({})
   const [connectorResponse, setConnectorResponse] = useState<UseSaveSuccessResponse>()
@@ -117,17 +114,13 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
         })
       : await createConnector(data, { queryParams: queryParams })
     setConnectorResponse(response)
-    let { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
+    const { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
       response.data?.governanceMetadata
     )
-    if (!opaFlagEnabled) {
-      governanceMetaDataHasError = false
-      governanceMetaDataHasWarning = false
-    }
     const onSuccessGovernanceCall = () => {
       props.afterSuccessHandler(response)
     }
-    if (opaFlagEnabled && response.data?.governanceMetadata) {
+    if (response.data?.governanceMetadata) {
       conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessGovernanceCall)
     }
     const returnVal: UseSaveSuccessResponse = {

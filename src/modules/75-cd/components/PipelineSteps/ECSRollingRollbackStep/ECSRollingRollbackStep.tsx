@@ -34,8 +34,8 @@ export class ECSRollingRollbackStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.EcsRollingRollback
   protected stepName = 'ECS Rolling Rollback'
   protected stepIcon: IconName = 'undo'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sRollingRollback'
-  protected isHarnessSpecific = true
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECSRollingRollback'
+  protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
@@ -63,7 +63,7 @@ export class ECSRollingRollbackStep extends PipelineStep<StepElementConfig> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
@@ -92,6 +92,7 @@ export class ECSRollingRollbackStep extends PipelineStep<StepElementConfig> {
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
+        formikFormName={'ecsRollingRollbackStepForm'}
       />
     )
   }

@@ -30,6 +30,7 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../NexusConnector/StepAuth/StepNexusConnector.module.scss'
 
@@ -113,6 +114,13 @@ const StepArtifactoryAuthentication: React.FC<
     connector_type: Connectors.Artifactory
   })
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
@@ -176,7 +184,7 @@ const StepArtifactoryAuthentication: React.FC<
                     stringId="username"
                     type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
                   />
-                  <SecretInput name={'password'} label={getString('password')} />
+                  <SecretInput name={'password'} label={getString('password')} scope={scope} />
                 </Container>
               ) : null}
             </Layout.Vertical>

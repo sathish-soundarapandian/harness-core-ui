@@ -19,7 +19,8 @@ import cx from 'classnames'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -89,6 +90,7 @@ export default function HttpStepBase(props: {
             showAdvanced={true}
             onChange={value => setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>
@@ -113,6 +115,7 @@ export default function HttpStepBase(props: {
             showAdvanced={true}
             onChange={value => setFieldValue('spec.url', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.URL}
           />
         )}
       </div>
@@ -125,7 +128,9 @@ export default function HttpStepBase(props: {
           name="spec.method"
         />
         {getMultiTypeFromValue(formValues.spec.method) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <SelectConfigureOptions
+            options={httpStepType}
+            loading={false}
             value={formValues.spec.method as string}
             type="String"
             variableName="spec.method"

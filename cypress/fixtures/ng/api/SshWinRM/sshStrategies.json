@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "NativeHelm": ["Rolling", "Default"],
+    "ServerlessAwsLambda": ["Basic", "Default"],
+    "Kubernetes": ["Rolling", "BlueGreen", "Canary", "Default"],
+    "Ssh": ["Default", "Basic", "Rolling", "Canary"],
+    "WinRm": ["Default", "Basic", "Rolling", "Canary"],
+    "AzureWebApp": ["Basic", "BlueGreen", "Canary", "Default"],
+    "CustomDeployment": ["Default"],
+    "ECS": ["Rolling", "Canary", "Default"]
+  },
+  "metaData": null,
+  "correlationId": "4fdda5c6-f705-4d05-967b-77d1bf16d68b"
+}

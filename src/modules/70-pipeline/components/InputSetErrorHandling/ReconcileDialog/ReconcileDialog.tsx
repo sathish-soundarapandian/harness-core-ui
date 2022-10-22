@@ -22,6 +22,7 @@ import { useQueryParams } from '@common/hooks'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { EntityGitDetails } from 'services/pipeline-ng'
 
 interface ReconcileDialogProps {
   inputSet: InputSetDTO
@@ -34,6 +35,7 @@ interface ReconcileDialogProps {
   onClose: () => void
   isOverlayInputSet?: boolean
   handleSubmit: (inputSetObjWithGitInfo: InputSetDTO, storeMetadata?: StoreMetadata) => Promise<void>
+  yamlDiffGitDetails?: EntityGitDetails
 }
 
 export function ReconcileDialog({
@@ -46,7 +48,8 @@ export function ReconcileDialog({
   updateLoading,
   onClose,
   isOverlayInputSet,
-  handleSubmit
+  handleSubmit,
+  yamlDiffGitDetails
 }: ReconcileDialogProps): React.ReactElement {
   const { getString } = useStrings()
   const [renderCount, setRenderCount] = useState<boolean>(true)
@@ -60,11 +63,11 @@ export function ReconcileDialog({
   const identifier = overlayInputSetIdentifier ?? get(inputSet, 'identifier')
   const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
   const storeMetadata = {
-    branch: defaultTo(branch, ''),
-    connectorRef: defaultTo(connectorRef, ''),
-    repoName: defaultTo(repoName, ''),
-    storeType: defaultTo(storeType, StoreType.INLINE),
-    filePath: defaultTo(get(inputSet, 'gitDetails.filePath'), defaultFilePath)
+    branch: defaultTo(branch, get(yamlDiffGitDetails, 'branch')),
+    connectorRef: defaultTo(connectorRef, get(inputSet, 'connectorRef')),
+    repoName: defaultTo(repoName, get(yamlDiffGitDetails, 'repoName')),
+    storeType: defaultTo(storeType, get(inputSet, 'storeType', StoreType.INLINE)),
+    filePath: defaultTo(get(yamlDiffGitDetails, 'filePath'), defaultFilePath)
   }
 
   useEffect(() => {

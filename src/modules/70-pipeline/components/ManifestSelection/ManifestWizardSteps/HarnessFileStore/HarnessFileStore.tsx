@@ -12,15 +12,16 @@ import {
   Button,
   ButtonVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
   StepProps,
-  Text
+  Text,
+  Color
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -32,6 +33,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
+import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface HarnessFileStorePropType {
@@ -43,6 +45,7 @@ interface HarnessFileStorePropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  showIdentifierField?: boolean
 }
 
 const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
@@ -66,7 +69,8 @@ function HarnessFileStore({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly
+  isReadonly,
+  showIdentifierField = true
 }: StepProps<ConnectorConfigDTO> & HarnessFileStorePropType): React.ReactElement {
   const { getString } = useStrings()
 
@@ -133,7 +137,9 @@ function HarnessFileStore({
         initialValues={getInitialValues()}
         formName="harnessFileStore"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...(showIdentifierField
+            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+            : {}),
           files: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
               return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
@@ -150,19 +156,21 @@ function HarnessFileStore({
       >
         {formik => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
               >
                 <div className={css.manifestStepWidth}>
-                  <div className={css.halfWidth}>
-                    <FormInput.Text
-                      name="identifier"
-                      label={getString('pipeline.manifestType.manifestIdentifier')}
-                      placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
-                    />
-                  </div>
+                  {showIdentifierField && (
+                    <div className={css.halfWidth}>
+                      <FormInput.Text
+                        name="identifier"
+                        label={getString('pipeline.manifestType.manifestIdentifier')}
+                        placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                      />
+                    </div>
+                  )}
                   <div className={css.halfWidth}>
                     <MultiConfigSelectField
                       name="files"
@@ -174,8 +182,13 @@ function HarnessFileStore({
                       values={formik.values.files}
                       multiTypeFieldSelectorProps={{
                         disableTypeSelection: false,
-                        label: <Text>{getString('fileFolderPathText')}</Text>
+                        label: (
+                          <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
+                            {getString('fileFolderPathText')}
+                          </Text>
+                        )
                       }}
+                      restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
                     />
                   </div>
                   {showValuesPaths(selectedManifest as ManifestTypes) && (
@@ -190,8 +203,13 @@ function HarnessFileStore({
                         values={formik.values.valuesPaths}
                         multiTypeFieldSelectorProps={{
                           disableTypeSelection: false,
-                          label: <Text>{getString('pipeline.manifestType.valuesYamlPath')}</Text>
+                          label: (
+                            <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
+                              {getString('pipeline.manifestType.valuesYamlPath')}
+                            </Text>
+                          )
                         }}
+                        restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
                       />
                     </div>
                   )}
@@ -209,6 +227,7 @@ function HarnessFileStore({
                           disableTypeSelection: false,
                           label: <Text>{getString('pipeline.manifestType.paramsYamlPath')}</Text>
                         }}
+                        restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
                       />
                     </div>
                   )}
@@ -270,7 +289,7 @@ function HarnessFileStore({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

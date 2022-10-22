@@ -99,7 +99,8 @@ export class DeployInfrastructureStep extends Step<DeployStageConfig> {
       inputSetData,
       readonly = false,
       allowableTypes,
-      customStepProps
+      customStepProps,
+      factory
     } = props
 
     if (isTemplatizedView(stepViewType)) {
@@ -112,6 +113,7 @@ export class DeployInfrastructureStep extends Step<DeployStageConfig> {
           allowableTypes={allowableTypes}
           inputSetData={inputSetData}
           customStepProps={customStepProps as CustomStepProps}
+          factory={factory}
         />
       )
     }

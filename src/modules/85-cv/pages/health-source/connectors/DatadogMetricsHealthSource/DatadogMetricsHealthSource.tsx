@@ -74,7 +74,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const transformedData = useMemo(
     () => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data, isMetricThresholdEnabled),
@@ -329,6 +329,12 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
     getString
   )
 
+  const handleOnManualMetricDelete = (metricIdToBeDeleted: string): void => {
+    metricHealthDetailsData.delete(metricIdToBeDeleted)
+    setMetricHealthDetailsData(new Map(metricHealthDetailsData))
+    setCurrentTimeseriesData(null)
+  }
+
   return (
     <Formik<DatadogMetricInfo>
       enableReinitialize={true}
@@ -384,6 +390,9 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
               onWidgetMetricSelected={selectedWidgetMetricData =>
                 handleOnMetricSelected(selectedWidgetMetricData, formikProps)
               }
+              onDeleteManualMetric={metricIdToBeDeleted =>
+                metricIdToBeDeleted && handleOnManualMetricDelete(metricIdToBeDeleted)
+              }
               serviceInstanceList={serviceInstanceList}
               isTemplate={isTemplate}
               expressions={expressions}
@@ -405,6 +414,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
                   isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 />
               }
+              showMetricDetailsContent={Boolean(metricHealthDetailsData?.size)}
             />
             {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
               <MetricThresholdProvider

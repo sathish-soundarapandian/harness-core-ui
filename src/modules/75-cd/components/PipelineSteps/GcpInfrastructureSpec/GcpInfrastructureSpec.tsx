@@ -63,6 +63,9 @@ import { useQueryParams } from '@common/hooks'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 import css from './GcpInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -299,7 +302,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                 />
                 {getMultiTypeFromValue(getClusterValue(formik.values.cluster)) === MultiTypeInputType.RUNTIME &&
                   !readonly && (
-                    <ConfigureOptions
+                    <SelectConfigureOptions
                       value={getClusterValue(formik.values.cluster)}
                       type="String"
                       variableName="cluster"
@@ -311,6 +314,8 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                       }}
                       isReadonly={readonly}
                       className={css.marginTop}
+                      loading={loadingClusterNames}
+                      options={clusterOptions}
                     />
                   )}
               </Layout.Horizontal>
@@ -376,6 +381,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                             formik.setFieldValue('releaseName', value)
                           }}
                           isReadonly={readonly}
+                          className={css.marginTop}
                         />
                       )}
                     </Layout.Horizontal>
@@ -574,7 +580,7 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
       )}
       {getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.clusterInputWrapper)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             name={`${path}.cluster`}
             disabled={loadingClusterNames || loadingClusterNamesForInfra || readonly}
             placeholder={
@@ -603,12 +609,14 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
               expressions,
               allowableTypes
             }}
+            fieldPath="cluster"
+            template={template}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.namespace) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.namespace`}
             label={getString('common.namespace')}
             disabled={readonly}
@@ -617,12 +625,14 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
               expressions
             }}
             placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
+            fieldPath="namespace"
+            template={template}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.releaseName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.releaseName`}
             multiTextInputProps={{
               allowableTypes,
@@ -631,6 +641,8 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
             label={getString('common.releaseName')}
             disabled={readonly}
             placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+            fieldPath="releaseName"
+            template={template}
           />
         </div>
       )}

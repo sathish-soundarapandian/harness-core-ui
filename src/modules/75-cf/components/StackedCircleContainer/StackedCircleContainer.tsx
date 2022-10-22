@@ -28,8 +28,6 @@ export interface StackedCircleContainerProps<T> extends Omit<ContainerProps, 'co
   backgroundColor?: (itemOrOther: T | boolean) => string
 }
 
-export const StackedCircleContainerClasses = css
-
 export function StackedCircleContainer<T>({
   items,
   diameter = DEFAULT_DIAMETER,

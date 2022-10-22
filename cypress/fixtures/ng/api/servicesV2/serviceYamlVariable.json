@@ -1,0 +1,22 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "service": {
+        "accountId": "accountId",
+        "identifier": "testService",
+        "orgIdentifier": "default",
+        "projectIdentifier": "project1",
+        "name": "testService",
+        "description": null,
+        "deleted": false,
+        "tags": {},
+        "yaml": null
+      },
+      "createdAt": 1662099973244,
+      "lastModifiedAt": 1662101517118
+    }
+  ],
+  "metaData": null,
+  "correlationId": "70225a88-49a4-4450-848c-dbdab16294d9"
+}

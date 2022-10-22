@@ -9,7 +9,10 @@
   :global {
     .ModalDialog--body {
       padding: 0 !important;
-      overflow: hidden;
+    }
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
     }
   }
 }

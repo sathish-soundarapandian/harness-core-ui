@@ -73,7 +73,7 @@ exports[`Jiracreateupdate view test  output snapshot if  not array 1`] = `
           <tbody>
             <tr>
               <th>
-                startedAt
+                startedAt:
               </th>
               <td>
                 -
@@ -81,7 +81,7 @@ exports[`Jiracreateupdate view test  output snapshot if  not array 1`] = `
             </tr>
             <tr>
               <th>
-                endedAt
+                endedAt:
               </th>
               <td>
                 -
@@ -89,7 +89,7 @@ exports[`Jiracreateupdate view test  output snapshot if  not array 1`] = `
             </tr>
             <tr>
               <th>
-                pipeline.duration
+                pipeline.duration:
               </th>
               <td>
                 <span
@@ -269,7 +269,7 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
           <tbody>
             <tr>
               <th>
-                startedAt
+                startedAt:
               </th>
               <td>
                 -
@@ -277,7 +277,7 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
             </tr>
             <tr>
               <th>
-                endedAt
+                endedAt:
               </th>
               <td>
                 -
@@ -285,7 +285,7 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
             </tr>
             <tr>
               <th>
-                pipeline.duration
+                pipeline.duration:
               </th>
               <td>
                 <span
@@ -298,7 +298,8 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
             </tr>
             <tr>
               <th>
-                pipeline.jiraApprovalStep.issueKey
+                pipeline.jiraApprovalStep.issueKey:
+                :
               </th>
               <td>
                 <a

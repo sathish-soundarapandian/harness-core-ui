@@ -10,6 +10,8 @@ declare const styles: {
   readonly createTemplateDialog: string
   readonly dropdown: string
   readonly gitCreateTemplateDialog: string
+  readonly separator: string
+  readonly shortened: string
   readonly subHeaderLeftView: string
   readonly templateName: string
   readonly versionDropDown: string

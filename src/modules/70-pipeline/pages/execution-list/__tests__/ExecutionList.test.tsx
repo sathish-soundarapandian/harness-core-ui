@@ -5,31 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import {
-  render,
-  waitFor,
-  queryByAttribute,
-  fireEvent,
-  findByText as findByTextGlobal,
-  act,
-  screen
-} from '@testing-library/react'
-import { useLocation } from 'react-router-dom'
+import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
-import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
+import { cloneDeep } from 'lodash-es'
+import React from 'react'
+import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import { useGetListOfExecutions, useGetExecutionData } from 'services/pipeline-ng'
+import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
-import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
+import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'
+import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
+import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
 import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
-import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
-import pipelines from '../../../components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
+import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
+import { useGetExecutionData, useGetListOfExecutions } from 'services/pipeline-ng'
 import { ExecutionList } from '../ExecutionList'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -51,7 +43,7 @@ jest.mock('services/pipeline-ng', () => ({
   })),
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
-    return { mutate: jest.fn(() => Promise.resolve(pipelines)), cancel: jest.fn(), loading: false }
+    return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
   }),
   useHandleInterrupt: jest.fn(() => ({})),
   useGetExecutionData: jest.fn().mockImplementation(() => ({
@@ -104,30 +96,49 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-function ComponentWrapper(): React.ReactElement {
-  const location = useLocation()
-  return (
-    <React.Fragment>
-      <ExecutionList onRunPipeline={jest.fn()} />
-      <div data-testid="location">{`${location.pathname}${location.search}`}</div>
-    </React.Fragment>
-  )
-}
+const commonRequest = (): any =>
+  cloneDeep({
+    body: { filterType: 'PipelineExecution' },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
+    queryParams: {
+      accountIdentifier: 'accountId',
+      module: 'cd',
+      orgIdentifier: 'orgIdentifier',
+      projectIdentifier: 'projectIdentifier',
+      page: 0,
+      size: 20,
+      sort: 'startTs,DESC',
+      searchTerm: undefined,
+      status: undefined,
+      pipelineIdentifier: undefined,
+      myDeployments: undefined
+    }
+  })
 
-const testWrapperProps: TestWrapperProps = {
-  path: routes.toDeployments({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
-  pathParams: {
-    accountId: 'testAcc',
-    orgIdentifier: 'testOrg',
-    projectIdentifier: 'testProject',
-    module: 'cd'
-  },
-  defaultAppStoreValues
-}
+const getModuleParams = (module = 'cd') => ({
+  accountId: 'accountId',
+  orgIdentifier: 'orgIdentifier',
+  projectIdentifier: 'projectIdentifier',
+  module
+})
+
+const TEST_PATH = routes.toDeployments({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
+
+const renderExecutionPage = (module = 'cd'): RenderResult =>
+  render(
+    <TestWrapper
+      path={TEST_PATH}
+      pathParams={getModuleParams(module)}
+      defaultAppStoreValues={defaultAppStoreValues}
+      queryParams={{ listview: true }}
+    >
+      <ExecutionList onRunPipeline={jest.fn()} />
+    </TestWrapper>
+  )
+
 jest.useFakeTimers()
 
-// eslint-disable-next-line jest/no-disabled-tests
-describe('Test Pipeline Deployment list', () => {
+describe('Execution List', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
   })
@@ -135,311 +146,133 @@ describe('Test Pipeline Deployment list', () => {
     jest.spyOn(global.Date, 'now').mockReset()
   })
 
-  test('should render deployment list', async () => {
-    const { container, findAllByText } = render(
-      <TestWrapper
-        path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        pathParams={{
-          accountId: 'testAcc',
-          orgIdentifier: 'testOrg',
-          projectIdentifier: 'testProject',
-          pipelineIdentifier: 'testPipeline',
-          module: 'cd'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <ExecutionList onRunPipeline={jest.fn()} />
-      </TestWrapper>
+  test('should have relevant navigation links for CD execution', async () => {
+    renderExecutionPage()
+    const rows = await screen.findAllByRole('row')
+    const cdExecutionRow = rows[4]
+
+    // should navigate to execution details as primary link
+    expect(
+      within(cdExecutionRow).getByRole('link', {
+        name: 'MultipleStage CD Running'
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toExecutionPipelineView({
+        ...getModuleParams(),
+        source: 'deployments',
+        pipelineIdentifier: 'MultipleStage',
+        executionIdentifier: 'U8o-JcvwTEuGb227RUXOvA'
+      } as any)
     )
-    await waitFor(() => findAllByText('http_pipeline', { selector: '.pipelineName' }))
-    expect(container).toMatchSnapshot()
+
+    // navigable to trigger details
+    expect(
+      within(cdExecutionRow).getByRole('link', {
+        name: /trigger/i
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toTriggersDetailPage({
+        ...getModuleParams(),
+        pipelineIdentifier: 'MultipleStage',
+        triggerIdentifier: 'daily_twice',
+        triggerType: 'SCHEDULER_CRON'
+      } as any)
+    )
   })
 
-  // TODO:PMS enable search once with actual API
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('search works', () => {
-    const { container, getByTestId } = render(
-      <TestWrapper {...testWrapperProps}>
-        <ComponentWrapper />
-      </TestWrapper>
-    )
+  test('should be able to toggle stage view with matrix stages', async () => {
+    renderExecutionPage()
+    const rows = await screen.findAllByRole('row')
+    const matrixExecutionRow = rows[1]
+    await screen.findByRole('link', {
+      name: /MultipleStage CD Running/i
+    })
+    const toggle = within(matrixExecutionRow).getByRole('button', { name: /toggle row expanded/i })
+    userEvent.click(toggle)
+    const expandedMatrixStage = screen.getByText(/s1_0_0/i)
+    expect(expandedMatrixStage).toBeInTheDocument()
+    // userEvent.click(toggle)
+    // TODO: this works on UI but assertion is somehow not passing. check why.
+    //expect(expandedMatrixStage).not.toBeInTheDocument()
+  })
 
-    const search = queryByAttribute('type', container, 'search')!
+  test('should be able to filter my executions', async () => {
+    renderExecutionPage()
+    const myExecutions = await waitFor(() => screen.getByText('pipeline.myDeploymentsText'))
+    userEvent.click(myExecutions)
 
-    fireEvent.change(search, { target: { value: 'my search term' } })
+    const request = commonRequest()
+    request.queryParams.myDeployments = true
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
+
+    // deselect
+    userEvent.click(myExecutions)
+    request.queryParams.myDeployments = undefined
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
+  })
+
+  test('should be able to search by pipeline name and identifier', async () => {
+    renderExecutionPage()
+    await screen.findByText('filters.executions.pipelineName')
+    userEvent.type(screen.getByRole('searchbox'), 'my search term')
     jest.runOnlyPendingTimers()
 
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?query=my%20search%20term
-      </div>
-    `)
-
-    expect(useGetListOfExecutions).toHaveBeenLastCalledWith({
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
-      queryParams: {
-        accountIdentifier: 'testAcc',
-        executionStatuses: undefined,
-        orgIdentifier: 'testOrg',
-        page: 0,
-        pipelineIdentifiers: undefined,
-        projectIdentifier: 'testProject',
-        searchTerm: 'my search term'
-      }
-    })
-
-    const clear = queryByAttribute('data-icon', container, 'small-cross')!.closest('button')!
-    fireEvent.click(clear)
-
-    jest.runOnlyPendingTimers()
-
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?query=
-      </div>
-    `)
-
-    expect(useGetListOfExecutions).toHaveBeenLastCalledWith({
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
-      queryParams: {
-        accountIdentifier: 'testAcc',
-        executionStatuses: undefined,
-        orgIdentifier: 'testOrg',
-        page: 0,
-        pipelineIdentifiers: undefined,
-        projectIdentifier: 'testProject',
-        searchTerm: ''
-      }
-    })
+    const request = commonRequest()
+    request.queryParams.searchTerm = 'my search term'
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
 
-  test('Status selection works', async () => {
-    const { getByTestId } = render(
-      <TestWrapper {...testWrapperProps}>
-        <ComponentWrapper />
-      </TestWrapper>
-    )
+  test('should be able to filter by execution status', async () => {
+    renderExecutionPage()
+    const select = await waitFor(() => screen.getByTestId('status-select')!)
+    userEvent.click(select)
+    const menuContent = findPopoverContainer() as HTMLElement
+    const optionFailed = within(menuContent).getByText('pipeline.executionFilters.labels.Failed')
+    userEvent.click(optionFailed)
+    const optionExpired = within(menuContent).getByText('pipeline.executionFilters.labels.Expired')
+    userEvent.click(optionExpired)
 
-    const select = await waitFor(() => getByTestId('status-select')!)
+    const request = commonRequest()
+    request.queryParams.status = ['Failed', 'Expired']
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
 
-    fireEvent.click(select)
+    // deselect all
+    userEvent.click(optionFailed)
+    userEvent.click(optionExpired)
 
-    await waitFor(() => queryByAttribute('class', document.body, 'bp3-popover-content'))
-    const optionFailed = await findByTextGlobal(document.body, 'pipeline.executionFilters.labels.Failed', {
-      selector: '[class*="menuItem"]'
-    })
-
-    fireEvent.click(optionFailed)
-
-    const optionExpired = await findByTextGlobal(document.body, 'pipeline.executionFilters.labels.Expired', {
-      selector: '[class*="menuItem"]'
-    })
-
-    fireEvent.click(optionExpired)
-
-    await act(async () => {
-      jest.runOnlyPendingTimers()
-    })
-
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?status%5B0%5D=Failed&status%5B1%5D=Expired&page=0
-      </div>
-    `)
-
-    expect(useGetListOfExecutions).toHaveBeenLastCalledWith({
-      body: {
-        filterType: 'PipelineExecution'
-      },
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
-      queryParams: {
-        accountIdentifier: 'testAcc',
-        orgIdentifier: 'testOrg',
-        page: 0,
-        size: 20,
-        pipelineIdentifier: undefined,
-        projectIdentifier: 'testProject',
-        status: ['Failed', 'Expired'],
-        sort: 'startTs,DESC',
-        filterIdentifier: undefined,
-        module: 'cd',
-        myDeployments: undefined,
-        repoIdentifier: undefined,
-        searchTerm: undefined,
-        branch: undefined
-      }
-    })
-
-    fireEvent.click(optionFailed)
-
-    fireEvent.click(optionExpired)
-
-    await act(async () => {
-      jest.runOnlyPendingTimers()
-    })
-
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?page=0
-      </div>
-    `)
-
-    expect(useGetListOfExecutions).toHaveBeenLastCalledWith({
-      body: {
-        filterType: 'PipelineExecution'
-      },
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
-      queryParams: {
-        accountIdentifier: 'testAcc',
-        orgIdentifier: 'testOrg',
-        page: 0,
-        size: 20,
-        pipelineIdentifier: undefined,
-        projectIdentifier: 'testProject',
-        filterIdentifier: undefined,
-        module: 'cd',
-        myDeployments: undefined,
-        repoIdentifier: undefined,
-        searchTerm: undefined,
-        status: undefined,
-        sort: 'startTs,DESC',
-        branch: undefined
-      }
-    })
+    request.queryParams.status = undefined
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
 
-  test('Pipeline selection works', async () => {
-    const { getByTestId } = render(
-      <TestWrapper {...testWrapperProps}>
-        <ComponentWrapper />
-      </TestWrapper>
-    )
+  test('should be able to filter by pipeline name', async () => {
+    renderExecutionPage()
+    const select = await waitFor(() => screen.getByTestId('pipeline-select'))
+    userEvent.click(select)
+    const pipelineSelect = findPopoverContainer() as HTMLElement
+    const pipeline1 = within(pipelineSelect).getByText('NG Docker Image')
+    userEvent.click(pipeline1)
 
-    const select = await waitFor(() => getByTestId('pipeline-select')!)
-
-    fireEvent.click(select)
-
-    await waitFor(() => queryByAttribute('class', document.body, 'bp3-popover-content'))
-
-    const option1 = await findByTextGlobal(document.body, 'pipeline1', { selector: '[class*="menuItem"]' })
-
-    fireEvent.click(option1)
-
-    await act(async () => {
-      jest.runOnlyPendingTimers()
-    })
-
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?pipelineIdentifier=pipeline1&page=0
-      </div>
-    `)
-
-    expect(useGetListOfExecutions).toHaveBeenLastCalledWith({
-      body: {
-        filterType: 'PipelineExecution'
-      },
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
-      queryParams: {
-        accountIdentifier: 'testAcc',
-        orgIdentifier: 'testOrg',
-        page: 0,
-        size: 20,
-        pipelineIdentifier: 'pipeline1',
-        projectIdentifier: 'testProject',
-        status: undefined,
-        sort: 'startTs,DESC',
-        filterIdentifier: undefined,
-        module: 'cd',
-        myDeployments: undefined,
-        repoIdentifier: undefined,
-        searchTerm: undefined,
-        branch: undefined
-      }
-    })
-
-    const option2 = select.getElementsByTagName('button')[0]
-
-    fireEvent.click(option2)
-
-    await act(async () => {
-      jest.runOnlyPendingTimers()
-    })
-
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?page=0
-      </div>
-    `)
-
-    expect(useGetListOfExecutions).toHaveBeenLastCalledWith({
-      body: {
-        filterType: 'PipelineExecution'
-      },
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
-      queryParams: {
-        accountIdentifier: 'testAcc',
-        orgIdentifier: 'testOrg',
-        page: 0,
-        pipelineIdentifier: undefined,
-        projectIdentifier: 'testProject',
-        status: undefined,
-        sort: 'startTs,DESC',
-        filterIdentifier: undefined,
-        module: 'cd',
-        myDeployments: undefined,
-        repoIdentifier: undefined,
-        searchTerm: undefined,
-        size: 20,
-        branch: undefined
-      }
-    })
+    const request = commonRequest()
+    request.queryParams.pipelineIdentifier = 'NG_Docker_Image'
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
 
-  test('Polling works with 5s interval', async () => {
-    const useGetListOfExecutionsMock = useGetListOfExecutions as jest.MockedFunction<any>
-    const mutateListOfExecutions = jest.fn(() => Promise.resolve(executionList))
-    useGetListOfExecutionsMock.mockReturnValue({
-      mutate: mutateListOfExecutions,
-      loading: false,
-      cancel: jest.fn()
-    })
-
-    render(
-      <TestWrapper {...testWrapperProps}>
-        <ComponentWrapper />
-      </TestWrapper>
-    )
-    expect(mutateListOfExecutions).toHaveBeenCalledTimes(1)
-    await screen.findAllByText('http_pipeline')
-    jest.advanceTimersByTime(5000)
-    expect(mutateListOfExecutions).toHaveBeenCalledTimes(2) // gets called in 5 seconds
+  test('should poll with with 5s interval for executions', async () => {
+    renderExecutionPage()
+    expect(useGetListOfExecutions).toHaveBeenCalledWith(commonRequest())
+    await screen.findByText('filters.executions.pipelineName')
+    jest.advanceTimersByTime(5000) // simulate 5 seconds poll interval
+    expect(useGetListOfExecutions).toHaveBeenCalledWith(commonRequest())
   })
 
-  test('should compare executions of various deployments', async () => {
-    render(
-      <TestWrapper {...testWrapperProps}>
-        <ComponentWrapper />
-      </TestWrapper>
-    )
-    await waitFor(() => screen.findAllByText('http_pipeline', { selector: '.pipelineName' }))
-
-    const moreOptions = screen.getAllByRole('button', {
-      name: /more/i
-    })[0]
-    expect(moreOptions).toBeInTheDocument()
+  test('should be able to compare YAMLs of any two executions', async () => {
+    renderExecutionPage()
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /execution menu actions/i
+    })
     userEvent.click(moreOptions)
     const compareExecutions = await screen.findByText('pipeline.execution.actions.compareExecutions')
     userEvent.click(compareExecutions)
@@ -462,5 +295,38 @@ describe('Test Pipeline Deployment list', () => {
     userEvent.click(compareButton) // click happened with compare being enabled
     expect(useGetExecutionData).toHaveBeenCalled()
     expect(screen.getByTestId('execution-compare-yaml-viewer')).toBeInTheDocument()
+  })
+
+  test('should have proper menu actions', async () => {
+    renderExecutionPage()
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[4]).getByRole('button', {
+      name: /execution menu actions/i
+    })
+    userEvent.click(moreOptions)
+
+    const menuContent = findPopoverContainer() as HTMLElement
+
+    const viewExecutionFromMenu = within(menuContent).getByRole('link', {
+      name: 'pipeline.viewExecution'
+    })
+    const viewPipelineFromMenu = within(menuContent).getByRole('link', {
+      name: 'editPipeline'
+    })
+
+    expect(viewExecutionFromMenu).toHaveAttribute(
+      'href',
+      routes.toExecutionPipelineView({
+        ...getModuleParams(),
+        source: 'deployments',
+        pipelineIdentifier: 'MultipleStage',
+        executionIdentifier: 'U8o-JcvwTEuGb227RUXOvA'
+      } as any)
+    )
+
+    expect(viewPipelineFromMenu).toHaveAttribute(
+      'href',
+      routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: 'MultipleStage' } as any)
+    )
   })
 })

@@ -313,7 +313,7 @@ export const useModuleSelectModal = ({
           </Layout.Horizontal>
           <Container className={css.moduleActionDiv} padding={{ left: 'huge' }}>
             {selectedModuleName
-              ? ModuleSelectionFactory.getModuleSelectionEle(selectedModuleName) || (
+              ? ModuleSelectionFactory.getModuleSelectionPanel(selectedModuleName, projectData) || (
                   <Layout.Vertical spacing="medium">
                     <Text font={{ variation: FontVariation.H4 }}>
                       {getString(getModuleFullLengthTitle(selectedModuleName))}

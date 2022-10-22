@@ -11,6 +11,7 @@ import { Formik, FormikForm } from '@wings-software/uicore'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import GroupName from '@cv/components/GroupName/GroupName'
+import { validate } from '../GroupName.utils'
 
 describe('Unit tests for GroupName', () => {
   test('Ensure that a new group name can be added', async () => {
@@ -89,5 +90,15 @@ describe('Unit tests for GroupName', () => {
     )
 
     await waitFor(() => expect(container.querySelector('input[value="Brand new groupname"]')).not.toBeNull())
+  })
+
+  test('should verify validate', () => {
+    const validationError = { name: 'cv.onboarding.selectProductScreen.validationText.name' }
+    expect(validate({ name: '' }, [], val => val)).toEqual({ ...validationError })
+    expect(validate({ name: 'Group 1' }, [], val => val)).toEqual({})
+    expect(validate({ name: 'Group 1' }, [{ label: 'Group 2', value: 'Group 2' }], val => val)).toEqual({})
+    expect(validate({ name: 'Group 1' }, [{ label: 'Group 1', value: 'Group 1' }], val => val)).toEqual({
+      name: 'cv.monitoringSources.prometheus.validation.uniqueName'
+    })
   })
 })

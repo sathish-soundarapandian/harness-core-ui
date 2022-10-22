@@ -19,7 +19,7 @@ import {
 } from '@testing-library/react'
 import { Formik, FormikForm, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
-import * as cdng from 'services/cd-ng'
+import { useMutateAsGet } from '@common/hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
@@ -44,13 +44,20 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorsData.data.content[0], refetch: fetchConnectors, loading: false }
   }),
-  useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
+  useListBucketsWithServiceV2: jest.fn().mockImplementation(() => {
     return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
   })
 }))
 jest.mock('services/portal', () => ({
   useListAwsRegions: jest.fn().mockImplementation(() => {
     return { data: awsRegionsData, error: null, loading: false }
+  })
+}))
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
   })
 }))
 
@@ -80,6 +87,7 @@ export const props: Omit<ArtifactSourceRenderProps, 'formik'> = {
     primary: {
       type: 'AmazonS3',
       spec: {
+        region: '',
         connectorRef: '',
         bucketName: '',
         filePath: ''
@@ -90,6 +98,7 @@ export const props: Omit<ArtifactSourceRenderProps, 'formik'> = {
     identifier: '',
     type: 'AmazonS3',
     spec: {
+      region: RUNTIME_INPUT_VALUE,
       connectorRef: RUNTIME_INPUT_VALUE,
       bucketName: RUNTIME_INPUT_VALUE,
       filePath: RUNTIME_INPUT_VALUE
@@ -118,12 +127,8 @@ const renderComponent = (passedProps?: Omit<ArtifactSourceRenderProps, 'formik'>
 
 describe('AmazonS3ArtifactSource tests', () => {
   beforeEach(() => {
-    jest.spyOn(cdng, 'useGetV2BucketListForS3').mockImplementation((): any => {
-      return {
-        loading: false,
-        data: bucketListData,
-        refetch: fetchBuckets
-      }
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
     })
     fetchBuckets.mockReset()
   })
@@ -173,20 +178,18 @@ describe('AmazonS3ArtifactSource tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const connnectorRefInput = queryByAttribute('data-testid', container, /connectorRef/)
+    const regionInput = queryByNameAttribute(`${artifactCommonPath}.artifacts.primary.spec.region`)
     const bucketNameInput = queryByNameAttribute(`${artifactCommonPath}.artifacts.primary.spec.bucketName`)
     const filePathInput = queryByNameAttribute(`${artifactCommonPath}.artifacts.primary.spec.filePath`)
+    expect(regionInput).toBeDisabled()
     expect(connnectorRefInput).toBeDisabled()
     expect(bucketNameInput).toBeDisabled()
     expect(filePathInput).toBeDisabled()
   })
 
   test(`clicking on Bucket Name field should call fetchBuckets function and display no buckets option when bucket data is not present`, async () => {
-    jest.spyOn(cdng, 'useGetV2BucketListForS3').mockImplementation((): any => {
-      return {
-        loading: false,
-        data: null,
-        refetch: fetchBuckets
-      }
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return { data: null, refetch: fetchBuckets, error: null, loading: false }
     })
 
     const { container } = renderComponent({
@@ -196,6 +199,7 @@ describe('AmazonS3ArtifactSource tests', () => {
         type: 'AmazonS3',
         spec: {
           connectorRef: 'AWSX',
+          region: RUNTIME_INPUT_VALUE,
           bucketName: RUNTIME_INPUT_VALUE,
           filePath: RUNTIME_INPUT_VALUE
         }
@@ -206,23 +210,19 @@ describe('AmazonS3ArtifactSource tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
 
-    const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
     fireEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBuckets')
+    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBucketsFound')
     expect(noBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
   })
 
-  test(`clicking on Bucket Name field should NOT call fetchBuckets function when bucket data is already fetched`, async () => {
-    jest.spyOn(cdng, 'useGetV2BucketListForS3').mockImplementation((): any => {
-      return {
-        loading: false,
-        data: bucketListData,
-        refetch: fetchBuckets
-      }
+  test(`clicking on Bucket Name field should NOT call fetchBuckets function when loading is already true`, async () => {
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return { data: null, refetch: fetchBuckets, error: null, loading: true }
     })
 
     const { container } = renderComponent({
@@ -232,6 +232,7 @@ describe('AmazonS3ArtifactSource tests', () => {
         type: 'AmazonS3',
         spec: {
           connectorRef: 'AWSX',
+          region: RUNTIME_INPUT_VALUE,
           bucketName: RUNTIME_INPUT_VALUE,
           filePath: RUNTIME_INPUT_VALUE
         }
@@ -242,23 +243,15 @@ describe('AmazonS3ArtifactSource tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
 
-    const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
-    fireEvent.click(bucketNameDropDownButton!)
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
+    userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
-    const dropdownPortalDiv = portalDivs[0]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const firstOption = await findByText(selectListMenu as HTMLElement, 'tdp-tdp2-1rc6irugmilkh')
-    expect(firstOption).toBeDefined()
     await waitFor(() => expect(fetchBuckets).not.toHaveBeenCalled())
   })
 
   test(`selecting connector should reset bucketName value`, async () => {
-    jest.spyOn(cdng, 'useGetV2BucketListForS3').mockImplementation((): any => {
-      return {
-        loading: false,
-        data: bucketListData,
-        refetch: fetchBuckets
-      }
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
     })
 
     const { container } = renderComponent({
@@ -296,9 +289,9 @@ describe('AmazonS3ArtifactSource tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
-    const bucketNameDropDownIcon = dropdownIcons[1]
+    const bucketNameDropDownIcon = dropdownIcons[2]
     fireEvent.click(bucketNameDropDownIcon!)
-    expect(fetchBuckets).toHaveBeenCalledTimes(0)
+    expect(fetchBuckets).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
@@ -325,14 +318,13 @@ describe('AmazonS3ArtifactSource tests', () => {
         fireEvent.click(applySelected)
       })
     })
-    expect(fetchBuckets).toBeCalled()
     expect(fetchBuckets).toHaveBeenCalledTimes(1)
     // Expect bucketName field values to be empty after switching connector
     expect(bucketNameInput.value).toBe('')
 
     // Choose second option for bucketName from dropdown
     expect(portalDivs.length).toBe(2)
-    fireEvent.click(bucketNameDropDownIcon!)
+    userEvent.click(bucketNameDropDownIcon!)
     expect(fetchBuckets).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(2)
     const bucketNameDropdownPortalDiv = portalDivs[0]
@@ -341,5 +333,68 @@ describe('AmazonS3ArtifactSource tests', () => {
     expect(secondOption).toBeDefined()
     userEvent.click(secondOption)
     expect(bucketNameInput.value).toBe('cdng-terraform-state')
+  })
+
+  test(`on change of region, existing bucketName should be cleared`, async () => {
+    const { container } = renderComponent({
+      ...props,
+      artifacts: {
+        primary: {
+          type: 'AmazonS3',
+          spec: {
+            connectorRef: 'Git_CTR',
+            bucketName: '',
+            region: '',
+            filePath: ''
+          }
+        }
+      },
+      artifact: {
+        identifier: '',
+        type: 'AmazonS3',
+        spec: {
+          connectorRef: 'Git_CTR',
+          region: RUNTIME_INPUT_VALUE,
+          bucketName: RUNTIME_INPUT_VALUE,
+          filePath: RUNTIME_INPUT_VALUE
+        }
+      },
+      template: templateAmazonS3Artifact
+    })
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const bucketNameSelect = queryByNameAttribute(
+      `${artifactCommonPath}.artifacts.primary.spec.bucketName`
+    ) as HTMLInputElement
+
+    // Select bucketName from dropdown
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
+    fireEvent.click(bucketNameDropDownButton!)
+    expect(portalDivs.length).toBe(1)
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+    const selectItem = await findByText(selectListMenu as HTMLElement, 'prod-bucket-339')
+    act(() => {
+      fireEvent.click(selectItem)
+    })
+    expect(bucketNameSelect.value).toBe('prod-bucket-339')
+
+    // Select region from dropdown
+    const regionDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
+    fireEvent.click(regionDropDownButton!)
+    expect(portalDivs.length).toBe(2)
+    const dropdownPortalDivRegion = portalDivs[1]
+    const selectListMenuRegion = dropdownPortalDivRegion.querySelector('.bp3-menu')
+    const selectItemRegion = await findByText(selectListMenuRegion as HTMLElement, 'GovCloud (US-West)')
+    act(() => {
+      fireEvent.click(selectItemRegion)
+    })
+    const regionSelect = queryByNameAttribute(`${artifactCommonPath}.artifacts.primary.spec.region`) as HTMLInputElement
+    expect(regionSelect.value).toBe('GovCloud (US-West)')
+    await waitFor(() => expect(bucketNameSelect.value).toBe(''))
   })
 })

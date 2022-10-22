@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Infrastructure Reconcile render Reconcile Dialog and header 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main mainContainer"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+    >
+      <span
+        class="bp3-icon bp3-icon-warning-sign StyledProps--main StyledProps--intent-danger"
+        icon="warning-sign"
+      >
+        <svg
+          data-icon="warning-sign"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            warning-sign
+          </desc>
+          <path
+            d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-red600"
+      >
+        pipeline.outOfSyncErrorStrip.updatedTemplateInfo
+      </p>
+      <button
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          pipeline.outOfSyncErrorStrip.reconcile
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

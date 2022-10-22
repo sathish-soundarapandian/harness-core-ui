@@ -7,6 +7,7 @@
 
 import { Icon, Layout } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
+import cx from 'classnames'
 import React from 'react'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { PipelineGraphState } from '../types'
@@ -14,9 +15,10 @@ import css from './NodeStatusIndicator.module.scss'
 
 interface NodeStatusIndicatorProps {
   nodeState: PipelineGraphState[]
+  className?: string
 }
 export function NodeStatusIndicator(props: NodeStatusIndicatorProps): JSX.Element {
-  const { nodeState } = props
+  const { nodeState, className = '' } = props
   let successfulStagesCount = 0
   let failedStagesCount = 0
   let runningStagesCount = 0
@@ -33,7 +35,7 @@ export function NodeStatusIndicator(props: NodeStatusIndicatorProps): JSX.Elemen
     }
   })
   return (
-    <Layout.Horizontal padding={0} className={css.stepCountWrapper}>
+    <Layout.Horizontal padding={0} className={cx(css.stepCountWrapper, className)}>
       <div className={css.stepCount} data-status="success">
         <Icon name={'success-tick'} size={14} />
         {successfulStagesCount}
@@ -45,7 +47,7 @@ export function NodeStatusIndicator(props: NodeStatusIndicatorProps): JSX.Elemen
         </div>
       )}
       <div className={css.stepCount} data-status="failed">
-        <Icon name={'execution-warning'} size={16} data-status="failed" />
+        <Icon name={'warning-sign'} size={14} data-status="failed" />
         {failedStagesCount}
       </div>
     </Layout.Horizontal>

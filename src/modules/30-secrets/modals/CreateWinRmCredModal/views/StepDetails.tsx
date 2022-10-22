@@ -33,7 +33,7 @@ const StepWinRmDetails: React.FC<StepProps<WinRmCredSharedObj> & WinRmCredShared
       </Text>
       <Formik<DetailsForm>
         onSubmit={values => {
-          nextStep?.({ detailsData: values, authData, isEdit: isEdit, ...prevStepData })
+          nextStep?.({ authData, ...prevStepData, detailsData: values, isEdit: isEdit })
         }}
         formName="winRmStepDetailsForm"
         validationSchema={Yup.object().shape({

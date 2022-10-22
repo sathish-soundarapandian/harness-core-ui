@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import type { FormikValues } from 'formik'
-import { defaultTo, get, memoize } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
 import {
@@ -18,24 +18,29 @@ import {
   SelectOption,
   Text
 } from '@wings-software/uicore'
-import { BucketResponse, SidecarArtifact, useGetV2BucketListForS3 } from 'services/cd-ng'
+import { BucketResponse, SidecarArtifact, useListBucketsWithServiceV2 } from 'services/cd-ng'
+import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
-import {
-  ConnectorReferenceDTO,
-  FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useMutateAsGet } from '@common/hooks'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { useListAwsRegions } from 'services/portal'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
-  isArtifactSourceRuntime,
-  isFieldfromTriggerTabDisabled
+  getFqnPath,
+  getYamlData,
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
+  shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
@@ -70,29 +75,35 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    isBucketSelectionDisabled
+    isBucketSelectionDisabled,
+    pipelineIdentifier,
+    serviceIdentifier,
+    stepViewType
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
-  const fixedConnectorValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
-    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+  const fixedConnectorValue = defaultTo(
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`),
+    artifact?.spec?.connectorRef
+  )
+  const fixedRegionValue = defaultTo(
+    get(initialValues?.artifacts, `${artifactPath}.spec.region`),
+    artifact?.spec?.region
+  )
+  const fixedFilePathRegexValue = defaultTo(
+    get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`),
+    artifact?.spec?.filePathRegex
   )
 
-  const fixedFilePathRegexValue = getDefaultQueryParam(
-    artifact?.spec?.filePathRegex,
-    get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`, '')
-  )
-
-  const fixedRegionValue = getDefaultQueryParam(
-    artifact?.spec?.region,
-    get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
-  )
-
-  const [connectorRef, setConnectorRef] = React.useState<string>()
   const [regions, setRegions] = React.useState<SelectOption[]>([])
+  const [lastQueryData, setLastQueryData] = React.useState({
+    connectorRef: '',
+    region: ''
+  })
 
   const {
     data: regionData,
@@ -113,41 +124,99 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     setRegions(regionValues as SelectOption[])
   }, [regionData?.resource])
 
+  const bucketListAPIQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorRef: fixedConnectorValue,
+    region: getFinalQueryParamValue(fixedRegionValue),
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      defaultTo(
+        isSidecar
+          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+          : artifactPath,
+        ''
+      ),
+      'bucketName'
+    )
+  }
+
   const {
     data: bucketData,
     error,
     loading,
     refetch: refetchBuckets
-  } = useGetV2BucketListForS3({
+  } = useMutateAsGet(useListBucketsWithServiceV2, {
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...bucketListAPIQueryParams
+    },
     lazy: true,
     debounce: 300
   })
 
-  const fetchBuckets = (): void => {
-    refetchBuckets({
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
-        connectorRef: fixedConnectorValue,
-        region: getFinalQueryParamValue(fixedRegionValue)
-      }
-    })
-  }
-
   const selectItems = useMemo(() => {
-    return bucketData?.data?.map((bucket: BucketResponse) => ({
-      value: defaultTo(bucket.bucketName, ''),
-      label: defaultTo(bucket.bucketName, '')
-    }))
+    return defaultTo(
+      bucketData?.data?.map((bucket: BucketResponse) => ({
+        value: defaultTo(bucket.bucketName, ''),
+        label: defaultTo(bucket.bucketName, '')
+      })),
+      []
+    )
   }, [bucketData?.data])
 
-  const getBuckets = (): { label: string; value: string }[] => {
+  const getBuckets = React.useCallback((): { label: string; value: string }[] => {
     if (loading) {
       return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
     }
     return defaultTo(selectItems, [])
-  }
+  }, [loading, selectItems])
+
+  const canFetchBuckets = React.useCallback((): boolean => {
+    if (NG_SVC_ENV_REDESIGN) {
+      let shouldFetchBuckets = false
+      if (isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template)) {
+        shouldFetchBuckets = !!(
+          lastQueryData.connectorRef !== fixedConnectorValue && shouldFetchTagsSource([fixedConnectorValue])
+        )
+      }
+      if (!shouldFetchBuckets && isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template)) {
+        // Checking if fixedRegionValue is empty because region is not required to get buckets
+        if (!isEmpty(fixedRegionValue)) {
+          shouldFetchBuckets = !!(
+            lastQueryData.region !== fixedRegionValue && shouldFetchTagsSource([fixedRegionValue])
+          )
+        }
+      }
+      return shouldFetchBuckets || isNil(bucketData?.data)
+    } else {
+      return !!(
+        (lastQueryData.connectorRef != fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
+        shouldFetchTagsSource([fixedConnectorValue])
+      )
+    }
+    return true
+  }, [NG_SVC_ENV_REDESIGN, template, lastQueryData, fixedConnectorValue, fixedRegionValue, bucketData?.data])
+
+  const fetchBuckets = React.useCallback((): void => {
+    if (canFetchBuckets()) {
+      setLastQueryData({
+        connectorRef: fixedConnectorValue,
+        region: fixedRegionValue
+      })
+      refetchBuckets()
+    }
+  }, [canFetchBuckets, refetchBuckets, fixedConnectorValue, fixedRegionValue])
 
   const isFieldDisabled = (fieldName: string, isBucket = false): boolean => {
     /* instanbul ignore else */
@@ -171,8 +240,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
       <Menu.Item
@@ -207,27 +275,16 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
                 expressions
               }}
-              onChange={(selected, _typeValue, type) => {
+              onChange={(selected, _typeValue) => {
                 const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
-                if (type === MultiTypeInputType.FIXED) {
-                  const connectorRefValue =
-                    item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
-                      ? `${item.scope}.${item?.record?.identifier}`
-                      : item.record?.identifier
-                  refetchBuckets({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      orgIdentifier,
-                      projectIdentifier,
-                      connectorRef: defaultTo(connectorRefValue, fixedConnectorValue),
-                      ...(getFinalQueryParamValue(fixedRegionValue) && {
-                        region: getFinalQueryParamValue(fixedRegionValue)
-                      })
-                    }
-                  })
-                  setConnectorRef(connectorRefValue)
+                const connectorRefValue =
+                  item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                    ? `${item.scope}.${item?.record?.identifier}`
+                    : item.record?.identifier
+
+                if (connectorRefValue !== fixedConnectorValue) {
+                  resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
                 }
-                resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
               }}
               className={css.connectorMargin}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
@@ -240,25 +297,15 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
             <FormInput.MultiTypeInput
-              name="region"
+              name={`${path}.artifacts.${artifactPath}.spec.region`}
               selectItems={regions}
               useValue
+              disabled={(!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.region`)) || loading}
               multiTypeInputProps={{
                 onChange: selected => {
-                  if (
-                    getMultiTypeFromValue(defaultTo(connectorRef, fixedConnectorValue)) === MultiTypeInputType.FIXED
-                  ) {
-                    refetchBuckets({
-                      queryParams: {
-                        accountIdentifier: accountId,
-                        orgIdentifier,
-                        projectIdentifier,
-                        connectorRef: defaultTo(connectorRef, fixedConnectorValue),
-                        region: defaultTo((selected as any).value, fixedRegionValue)
-                      }
-                    })
+                  if (fixedRegionValue !== (selected as any).value) {
+                    resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
                   }
-                  resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
                 },
                 selectProps: {
                   items: regions,
@@ -269,7 +316,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                   )
                 }
               }}
-              label={getString('regionLabel')}
+              label={getString('optionalField', { name: getString('regionLabel') })}
               placeholder={loadingRegions ? getString('loading') : getString('select')}
             />
           )}
@@ -280,7 +327,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
               label={getString('pipeline.manifestType.bucketName')}
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
-              disabled={(!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)) || loading}
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)}
               helperText={
                 !get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`)?.length &&
                 getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
@@ -292,16 +339,23 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 allowableTypes,
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={500} height={100}>
-                      {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
+                    <Text lineClamp={1} width={500} height={100} padding="small">
+                      {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                     </Text>
                   ),
                   itemRenderer: itemRenderer,
                   items: getBuckets(),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  addClearBtn: true
                 },
-                onFocus: () => {
-                  if (!bucketData?.data && fixedConnectorValue?.length) {
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  if (!loading) {
                     fetchBuckets()
                   }
                 }

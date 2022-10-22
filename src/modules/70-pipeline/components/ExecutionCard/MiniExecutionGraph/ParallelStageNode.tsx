@@ -39,11 +39,12 @@ const StagePriority: Record<ExecutionStatus, number> = {
   ApprovalWaiting: 26,
   InterventionWaiting: 27,
   Pausing: 23,
-  InputWaiting: 0
+  InputWaiting: 0,
+  WaitStepRunning: 2
 }
 const STEP_DETAILS_LIMIT = 4
 
-export interface ParallelNodeProps extends PipelinePathProps, ModulePathParams {
+export interface ParallelNodeProps extends PipelinePathProps, Partial<ModulePathParams> {
   stages: GraphLayoutNode[]
   planExecutionId: string
   source: ExecutionPathProps['source']

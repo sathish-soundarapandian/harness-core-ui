@@ -31,7 +31,7 @@ import {
   ErrorDetail
 } from 'services/cd-ng'
 
-import { StepIndex, STEP } from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import { StepIndex, STEP } from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import type { StepDetails } from '@connectors/interfaces/ConnectorInterface'
 import { ConnectorStatus } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

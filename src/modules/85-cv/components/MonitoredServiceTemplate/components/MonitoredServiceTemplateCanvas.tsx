@@ -7,12 +7,15 @@
 
 import React, { useCallback } from 'react'
 import { isEqual } from 'lodash-es'
+import { useParams } from 'react-router-dom'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ConfigurationsWithRef } from '@cv/pages/monitored-service/components/Configurations/Configurations'
 import type { MonitoredServiceForm } from '@cv/pages/monitored-service/components/Configurations/components/Service/Service.types'
 import type { JsonNode, NGTemplateInfoConfig } from 'services/template-ng'
 import { MonitoredServiceProvider } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { createdInitTemplateValue } from './MonitoredServiceTemplateCanvas.utils'
 
 const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef<unknown>) => {
@@ -46,9 +49,11 @@ const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateForm
   )
 
   const initialTemplate = createdInitTemplateValue(template)
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const templateScope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
 
   return (
-    <MonitoredServiceProvider isTemplate>
+    <MonitoredServiceProvider isTemplate templateScope={templateScope}>
       <ConfigurationsWithRef templateValue={initialTemplate} ref={formikRef} updateTemplate={onUpdate} />
     </MonitoredServiceProvider>
   )

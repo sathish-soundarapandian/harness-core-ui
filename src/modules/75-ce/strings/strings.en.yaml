@@ -24,8 +24,12 @@ common:
   hoverWarningHeader: 'WARNING {{message}}'
   interval: 'Interval'
   protocol: 'Protocol'
+  targetProtocol: 'Target Protocol'
+  targetPort: 'Target Port'
+  redirectUrl: 'Redirect url'
+  serverName: 'Server name'
+  pathMatch: 'Path match'
 allRegions: 'All Regions'
-allClusters: 'All Clusters'
 enforcementMessage:
   exceededSpendLimit: You have exceeded your cloud spend subscription limit. Consider increasing your limits to manage higher cloud spend.
   exceededSpendLimitFreePlan: 'You have used {{ usage }} / {{ limit }} free cloud spend incuded in your current plan. Consider upgrading to manage higher cloud spend.'
@@ -319,7 +323,18 @@ co:
           info: 'Background tasks description of how it works in accessing gateways'
         ip:
           info: 'IP addresses if the instances managed by this AutoStopping Rule are currently accessed by an IP.'
-
+      customExclusion:
+        exclude: 'exclude'
+        include: 'include'
+        heading: 'Custom Exclusions / Inclusions'
+        description: 'You can specify to <span>exclude</span> or <span>include</span> certain types of HTTP/HTTPS traffic from being considered as activity and consequently warm-up AutoStopping Rules'
+        option1Label: 'Path-based match'
+        option2Label: 'Header-based match'
+        option3Label: 'Source IP based match'
+        option1Placeholder: 'Enter Path(s)'
+        option2Placeholder: 'Enter Header name'
+        option2ValuePlaceholder: 'Enter Header value'
+        option3Placeholder: 'Enter comma seperated IP address OR as xx.xxx.xx - xx for range'
     save: 'Save Rule'
     confirm:
       disableTitle: 'Disable Rule {{name}}'
@@ -332,7 +347,6 @@ co:
 
   accessPoint:
     ap: 'Access Point'
-    loadbalancer: 'Load Balancer'
     aps: 'Access Points'
     loadbalancers: 'Load Balancers'
     new: 'New Load Balancer'
@@ -531,6 +545,13 @@ co:
       managedVmTableHeaders:
         name: 'Name/ID'
         ip: 'Public/Private IP'
+    customTab:
+      includedPathHeader: 'Included Paths'
+      excludedPathHeader: 'Excluded Paths'
+      includedHeaders: 'Included Headers'
+      excludedHeaders: 'Excluded Headers'
+      includedIp: 'Included IP adressess'
+      excludedIp: 'Excluded IP adressess'
     sshTab:
       header: 'You can access VMs/Instances via SSH/RDP'
       cli: 'SSH/RDP via Harness CLI '

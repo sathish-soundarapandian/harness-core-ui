@@ -117,7 +117,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
   >
     <div
       class="StyledProps--font StyledProps--main"
-      style="margin-bottom: 5px;"
+      data-test-id="connectorTooltip"
     >
       connector
     </div>

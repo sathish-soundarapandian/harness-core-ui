@@ -95,7 +95,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.manifestList.addManifest')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -121,7 +121,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.manifestList.addManifest')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -151,7 +151,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.manifestList.addManifest')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
     expect(addFileButton).toBeDefined()
 
     const listOfManifests =
@@ -174,7 +174,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.manifestList.addManifest')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -215,7 +215,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.manifestList.addManifest')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]

@@ -7,12 +7,16 @@
 
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type {
+  ArtifactTriggerConfig,
   GetActionsListQueryParams,
+  ManifestTriggerConfig,
   NGTriggerConfigV2,
   NGTriggerSourceV2,
-  PipelineInfoConfig
+  PipelineInfoConfig,
+  WebhookTriggerConfigV2
 } from 'services/pipeline-ng'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 
 export interface ConnectorRefInterface {
@@ -44,6 +48,8 @@ export interface FlatInitialValuesInterface {
   selectedScheduleTab?: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  // Triggers authentication
+  encryptedWebhookSecretIdentifier?: string
 }
 
 export interface FlatOnEditValuesInterface {
@@ -54,6 +60,7 @@ export interface FlatOnEditValuesInterface {
   tags?: {
     [key: string]: string
   }
+  source?: NGTriggerSourceV2
   pipeline: PipelineInfoConfig
   triggerType: NGTriggerSourceV2['type']
   manifestType?: string
@@ -99,6 +106,7 @@ export interface FlatOnEditValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   pollInterval?: string
+  encryptedWebhookSecretIdentifier?: string
 }
 
 export interface FlatValidWebhookFormikValuesInterface {
@@ -133,6 +141,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   pollInterval?: string
+  encryptedWebhookSecretIdentifier?: SecretReference
 }
 
 export interface FlatValidScheduleFormikValuesInterface {
@@ -169,13 +178,14 @@ export interface FlatValidArtifactFormikValuesInterface {
 
 export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> {
   identifier?: string
+  encryptedWebhookSecretIdentifier?: string
 }
 
 export interface TriggerGitQueryParams extends GitQueryParams {
   triggerType?: NGTriggerSourceV2['type']
-  sourceRepo?: string
-  manifestType?: string
-  artifactType?: string
+  sourceRepo?: WebhookTriggerConfigV2['type']
+  manifestType?: ManifestTriggerConfig['type']
+  artifactType?: ArtifactTriggerConfig['type']
 }
 
 export interface artifactManifestData {

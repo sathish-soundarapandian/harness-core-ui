@@ -1,0 +1,65 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 2,
+    "totalItems": 17,
+    "pageItemCount": 10,
+    "pageSize": 10,
+    "content": [
+      {
+        "connector": {
+          "name": "testAWSConnector",
+          "identifier": "testAWSConnector",
+          "description": "",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Aws",
+          "spec": {
+            "credential": {
+              "crossAccountAccess": null,
+              "type": "ManualConfig",
+              "spec": {
+                "accessKey": "AKIAW7HFSAHLRPFRIXHR",
+                "accessKeyRef": null,
+                "secretKeyRef": "account.testAWSSecretKeyXztmyxxjW8"
+              },
+              "region": null
+            },
+            "delegateSelectors": [],
+            "executeOnDelegate": true
+          }
+        },
+        "createdAt": 1663058168849,
+        "lastModifiedAt": 1663058168844,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1664350191709,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1664350191709
+        },
+        "activityDetails": { "lastActivityTime": 1663058168874 },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": { "valid": true, "invalidYaml": null },
+        "governanceMetadata": null
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "d6dc7411-eb96-4a20-af49-d29778901846"
+}

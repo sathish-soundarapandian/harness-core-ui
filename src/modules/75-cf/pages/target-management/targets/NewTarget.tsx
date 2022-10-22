@@ -11,13 +11,15 @@ import { useToaster } from '@common/exports'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { CreateTargetQueryParams, useCreateTarget, useUploadTargets } from 'services/cf'
-import CreateTargetModal, { TargetData } from './CreateTargetModal'
+import CreateTargetModal from './components/CreateTargetModal/CreateTargetModal'
+import type { TargetData } from './components/CreateTargetModal/types'
 
 export interface NewTargetsProps {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
   onCreated: () => void
+  isLinkVariation?: boolean
 }
 
 type SettledTarget = {
@@ -29,7 +31,8 @@ export const NewTargets: React.FC<NewTargetsProps> = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
-  onCreated
+  onCreated,
+  isLinkVariation
 }) => {
   const { showError, clear } = useToaster()
   const [loadingBulk, setLoadingBulk] = useState<boolean>(false)
@@ -127,6 +130,7 @@ export const NewTargets: React.FC<NewTargetsProps> = ({
       loading={loadingCreateTarget || loadingBulk || loadingUploadTarget}
       onSubmitTargets={handleTargetCreation}
       onSubmitTargetFile={handleTargetFileCreation}
+      isLinkVariation={isLinkVariation}
     />
   )
 }

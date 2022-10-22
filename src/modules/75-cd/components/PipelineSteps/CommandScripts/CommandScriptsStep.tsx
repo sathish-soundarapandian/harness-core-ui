@@ -22,7 +22,7 @@ import type { StringsMap } from 'stringTypes'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import { CommandScriptsData, variableSchema, CommandScriptsFormData } from './CommandScriptsTypes'
+import { CommandScriptsData, variableSchema, CommandScriptsFormData, commandUnitSchema } from './CommandScriptsTypes'
 import { CommandScriptsEdit } from './CommandScriptsEdit'
 import { CommandScriptsInputSet } from './CommandScriptsInputSet'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -121,6 +121,24 @@ export class CommandScriptsStep extends PipelineStep<CommandScriptsData> {
       }
     }
 
+    if (isArray(template?.spec?.commandUnits) && isRequired && getString) {
+      try {
+        const schema = Yup.object().shape({
+          spec: Yup.object().shape({
+            commandUnits: commandUnitSchema(getString)
+          })
+        })
+        schema.validateSync(data, { abortEarly: false })
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+
+          Object.assign(errors, err)
+        }
+      }
+    }
+
     /* istanbul ignore else */
     if (
       (isArray(template?.spec?.environmentVariables) || isArray(template?.spec?.outputVariables)) &&
@@ -153,7 +171,7 @@ export class CommandScriptsStep extends PipelineStep<CommandScriptsData> {
   protected stepIcon: IconName = 'command-shell-script'
   protected stepIconColor = Color.GREY_700
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SHELLSCRIPT'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected invocationMap: Map<
     RegExp,
     (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>

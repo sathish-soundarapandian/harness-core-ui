@@ -38,7 +38,7 @@ const Error: React.FC<ErrorProps> = ({ code, message }) => {
       return (
         <>
           <Text>{getString('common.genericErrors.inviteExpired')}</Text>
-          <Link to={routes.toHome({ accountId })}>{getString('goToHome')}</Link>
+          <Link to={routes.toMainDashboard({ accountId })}>{getString('goToHome')}</Link>
           <Icon name="harness-logo-black" size={200} />
         </>
       )

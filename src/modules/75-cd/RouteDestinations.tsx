@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Route, useParams, Redirect } from 'react-router-dom'
+import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { RouteWithLayout } from '@common/router'
 import { MinimalLayout } from '@common/layouts'
@@ -32,7 +33,6 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import CDHomePage from '@cd/pages/home/CDHomePage'
 import CDDashboardPage from '@cd/pages/dashboard/CDDashboardPage'
-import CDPipelineStudio from '@cd/pages/pipeline-studio/CDPipelineStudio'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
 import { FileStoreRouteDestinations } from '@filestore/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
@@ -48,7 +48,7 @@ import CDPipelineDeploymentList from '@cd/pages/pipeline-deployment-list/CDPipel
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { Services } from '@cd/components/Services/Services'
-import './components/SecretManagerTemplate'
+import './components/Templates'
 import './components/PipelineSteps'
 import './components/PipelineStudio/DeployStage'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
@@ -59,13 +59,13 @@ import TriggerFactory from '@pipeline/factories/ArtifactTriggerInputFactory/inde
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { useGetCommunity } from '@common/utils/utils'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { ModuleListCardProps } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import { FeatureFlag } from '@common/featureFlags'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
-import { CDTemplateStudioWrapper } from '@cd/components/TemplateStudio/CDTemplateStudioWrapper/CDTemplateStudioWrapper'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -369,7 +369,7 @@ export default (
     }
     {
       PipelineRouteDestinations({
-        pipelineStudioComponent: CDPipelineStudio,
+        pipelineStudioComponent: PipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CDPipelineStudio,
         pipelineDeploymentListComponent: CDPipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CDPipelineDeploymentList,
@@ -437,7 +437,7 @@ export default (
 
     {
       TemplateRouteDestinations({
-        templateStudioComponent: CDTemplateStudioWrapper,
+        templateStudioComponent: TemplateStudio,
         templateStudioPageName: PAGE_NAME.CDTemplateStudioWrapper,
         moduleParams,
         licenseRedirectData,

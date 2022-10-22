@@ -35,7 +35,7 @@ export const Success: React.FC<SuccessProps> = ({ module, subscriptionProps, inv
         edition
       )} ${getString('common.plans.subscription')}`}</Text>
       {invoiceData.items.map(item => {
-        const isTaxItem = item.description === 'Sales Tax (Avatax)'
+        const isTaxItem = item.description?.includes('Sales Tax')
         return isTaxItem ? null : (
           <Text color={Color.BLACK_100} icon="main-tick" iconProps={{ color: Color.GREEN_700 }} key={item.description}>
             {item.description}

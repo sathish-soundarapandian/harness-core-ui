@@ -34,16 +34,18 @@ export default function MetricChart({
   const debounceRefetch = useCallback(debounce(v2Refetch, 500), [])
 
   useEffect(() => {
-    debounceRefetch({
-      queryParams: {
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        connectorIdentifier,
-        appName,
-        completeMetricPath
-      }
-    })
+    if (completeMetricPath) {
+      debounceRefetch({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          connectorIdentifier,
+          appName,
+          completeMetricPath
+        }
+      })
+    }
   }, [appName, completeMetricPath, connectorIdentifier])
 
   const dataPoints = v2Data?.data?.dataPoints

@@ -6,12 +6,18 @@
  */
 
 import type { WinRmConfigFormData } from '@secrets/modals/CreateWinRmCredModal/views/StepAuthentication'
-import type {
+import {
   KerberosWinRmConfigDTO,
   NTLMConfigDTO,
   TGTKeyTabFilePathSpecDTO,
-  TGTPasswordSpecDTO
-} from '../../../services/cd-ng'
+  TGTPasswordSpecDTO,
+  WinRmCredentialsSpecDTO,
+  getSecretV2Promise,
+  KerberosConfigDTO,
+  SecretDTOV2
+} from 'services/cd-ng'
+
+import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 
 function buildKerberosConfig(data: WinRmConfigFormData): KerberosWinRmConfigDTO {
   switch (data.tgtGenerationMethod) {
@@ -63,5 +69,47 @@ export function buildAuthConfig(data: WinRmConfigFormData): NTLMConfigDTO | Kerb
       } as NTLMConfigDTO
     case 'Kerberos':
       return buildKerberosConfig(data)
+  }
+}
+
+export const getSecretReferencesForWinRm = async (
+  secret: SecretDTOV2,
+  pathParams: {
+    accountIdentifier: string
+    orgIdentifier?: string
+    projectIdentifier?: string
+  }
+): Promise<{
+  keySecret?: SecretReference
+  passwordSecret?: SecretReference
+  encryptedPassphraseSecret?: SecretReference
+}> => {
+  let password, passwordSecret
+  const secretSpec = secret.spec as WinRmCredentialsSpecDTO
+  const authScheme = secretSpec.auth.type
+  if (authScheme === 'NTLM') {
+    const ntlmConfig = secretSpec.auth.spec as NTLMConfigDTO
+    password = ntlmConfig?.password
+  } else if (authScheme === 'Kerberos') {
+    const kerberosConfig = secretSpec.auth.spec as KerberosConfigDTO
+    if (kerberosConfig.tgtGenerationMethod === 'Password') {
+      password = kerberosConfig.spec?.password
+    }
+  }
+
+  if (password) {
+    const secretId = password.indexOf('.') < 0 ? password : password.split('.')[1]
+    const data = await getSecretV2Promise({
+      identifier: secretId,
+      queryParams: pathParams
+    })
+    passwordSecret = {
+      ...data.data?.secret,
+      referenceString: password
+    } as SecretReference
+  }
+
+  return {
+    passwordSecret
   }
 }

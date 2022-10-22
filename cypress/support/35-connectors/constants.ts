@@ -16,7 +16,7 @@ export const connectorStats = `/ng/api/connectors/stats?routingId=${accountId}&p
 export const connectorInfo = `/ng/api/connectors/${connectorName}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const accountConnectorInfo = `/ng/api/connectors/${connectorName}?routingId=${accountId}&accountIdentifier=${accountId}`
 export const accountConnectorStats = `/ng/api/connectors/stats?routingId=${accountId}&accountIdentifier=${accountId}`
-export const jenkinsSecretKeys = `/ng/api/v2/secrets?accountIdentifier=${accountId}&type=SecretText&searchTerm=&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&pageIndex=0&pageSize=10`
+export const jenkinsSecretKeys = `/ng/api/v2/secrets?accountIdentifier=${accountId}&type=SecretText&searchTerm=&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&pageIndex=0&pageSize=10&includeAllSecretsAccessibleAtScope=true`
 export const delegatesList = `/api/setup/delegates/delegate-selectors-up-the-hierarchy?routingId=${accountId}&accountId=${accountId}&orgId=${orgIdentifier}&projectId=${projectId}`
 export const delegatesInfo = `/api/setup/delegates/v2/up-the-hierarchy?routingId=${accountId}&accountId=${accountId}&orgId=${orgIdentifier}&projectId=${projectId}`
 export const addConnector = `/ng/api/connectors?routingId=${accountId}&accountIdentifier=${accountId}`

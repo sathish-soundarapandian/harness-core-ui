@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { CustomHandlerType, HandlerKind } from '@ce/constants'
 import type {
   AccessPoint,
   AccessPointCore,
@@ -27,6 +28,16 @@ interface CloudAccount {
   name: string
 }
 
+export interface Handler {
+  kind: HandlerKind
+  value: string
+}
+
+export interface GatewayDetailsSourceFilters {
+  type: CustomHandlerType
+  filters: Handler[]
+}
+
 export interface Routing {
   instance: Instance
   lb: string
@@ -40,6 +51,7 @@ export interface Routing {
   container_svc?: ContainerSvc
   database?: RDSDatabase
   override_dns_record?: boolean
+  source_filters?: GatewayDetailsSourceFilters
 }
 
 interface ServiceOpts {

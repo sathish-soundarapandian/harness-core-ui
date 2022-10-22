@@ -26,7 +26,7 @@ describe('Pipeline Execution History', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(executionHistoryRoute, {
+    cy.visit(`${executionHistoryRoute}?listview=true`, {
       timeout: 30000
     })
   })
@@ -241,7 +241,7 @@ describe('Pipeline Execution History', () => {
     cy.visitPageAssertion()
     cy.wait('@executionListSummary')
     cy.findAllByRole('button', {
-      name: /more/i
+      name: /execution menu actions/i
     })
       .first()
       .click()

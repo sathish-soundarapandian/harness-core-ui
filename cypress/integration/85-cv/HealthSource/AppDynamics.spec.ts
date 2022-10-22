@@ -7,10 +7,12 @@
 
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   dataforMS,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   applicationCall,
@@ -22,8 +24,10 @@ import {
   basePathCall,
   basePathResponse,
   metricStructureCall,
-  metricStructureResponse
+  metricStructureResponse,
+  basePathCallWithoutTierAndApp
 } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Create empty monitored service', () => {
@@ -40,6 +44,7 @@ describe('Create empty monitored service', () => {
 
   it('Add new AppDynamics monitored service ', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
@@ -67,10 +72,10 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('input[name="appdApplication"]').click()
     cy.contains('p', 'cv-app').click({ force: true })
@@ -102,6 +107,7 @@ describe('Create empty monitored service', () => {
   it('Add new AppDynamics monitored service with custom metric', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -127,17 +133,17 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.contains('span', 'Add Metric').click()
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.contains('div', 'Assign').click({ force: true })
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
     cy.contains('span', 'Please select base path').scrollIntoView().should('be.visible')
-    cy.contains('span', 'One selection is required.').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.assign).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })
@@ -176,6 +182,7 @@ describe('Create empty monitored service', () => {
   it('Add new AppDynamics monitored service with multiple custom metric', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -202,17 +209,17 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.contains('span', 'Add Metric').click()
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.contains('div', 'Assign').click({ force: true })
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
     cy.contains('span', 'Please select base path').scrollIntoView().should('be.visible')
-    cy.contains('span', 'One selection is required.').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.assign).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })
@@ -286,10 +293,47 @@ describe('Create empty monitored service', () => {
     cy.findByText('Monitored Service created').should('be.visible')
   })
 
+  it('should delete values in AppDynamics healthsource edit mode', () => {
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', dataforMS).as('monitoredServiceCall')
+    cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
+    cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
+    cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
+    cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
+
+    cy.wait(2000)
+
+    cy.get('span[data-icon="Options"]').click()
+    cy.contains('div', 'Edit service').click()
+
+    cy.wait('@monitoredServiceCall')
+
+    cy.contains('div', 'AppD Edit Mode').click({ force: true })
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+
+    cy.wait('@ApplicationCall')
+    cy.wait('@MetricPackCall')
+    cy.wait(1000)
+
+    cy.get('input[name="appDTier"]').should('have.value', 'docker-tier')
+    cy.get('input[name="appdApplication"]').should('have.value', 'cv-app')
+
+    cy.intercept('GET', basePathCallWithoutTierAndApp, { ...basePathResponse, data: [] }).as('basePathCall')
+
+    cy.get('[class*="tierDropdown"] [icon="cross"]').click({ force: true })
+    cy.get('input[name="appDTier"]').should('have.value', '')
+    cy.get('[class*="applicationDropdown"] [icon="cross"]').click({ force: true })
+    cy.get('input[name="appdApplication"]').should('have.value', '')
+    cy.get('input[name="appDTier"]').should('not.exist')
+  })
+
   it('should populate AppDynamics healthsource edit mode', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', dataforMS).as('monitoredServiceCall')
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -331,6 +375,7 @@ describe('Create empty monitored service', () => {
 
     // Update values and verify
     cy.get('input[name="metricName"]').scrollIntoView().type(' updated')
+    cy.contains('label', 'Select the path from the AppD metric').click()
     cy.get('input[name="metricPathDropdown"]').click()
     cy.contains('p', 'Calls per Minute').click({ force: true })
 
@@ -418,6 +463,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should test metric thresholds renders correctly and should hide metric thresholds if no metric packs are selected', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -452,6 +498,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should add thresholds and do all the operations as expected', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -584,6 +631,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should show prompt, if metric packs containing metric thresholds are being removed', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -627,6 +675,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should show prompt, if custom metrics containing metric thresholds are being deleted', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')

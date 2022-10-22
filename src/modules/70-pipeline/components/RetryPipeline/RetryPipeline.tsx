@@ -196,7 +196,9 @@ function RetryPipeline({
       projectIdentifier,
       repoIdentifier,
       branch,
-      getTemplatesResolvedPipeline: true
+      getTemplatesResolvedPipeline: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 
@@ -232,7 +234,7 @@ function RetryPipeline({
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      moduleType: module,
+      moduleType: module || '',
       planExecutionId: planExecutionIdentifier,
       retryStages: (!isParallelStage
         ? [selectedStage?.value]
@@ -297,7 +299,9 @@ function RetryPipeline({
       pipelineIdentifier: pipelineId,
       repoIdentifier,
       branch,
-      getDefaultFromOtherRepo: true
+      getDefaultFromOtherRepo: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
   /*------------------------------------------------API Calls------------------------------*/

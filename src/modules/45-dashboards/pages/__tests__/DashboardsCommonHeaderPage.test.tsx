@@ -25,6 +25,7 @@ describe('DashboardsHeader', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     useDashboardsContextMock.mockReturnValue({
+      editableFolders: [],
       includeBreadcrumbs: jest.fn(),
       breadcrumbs: [
         { label: 'Home', url: 'path/to/link' },
@@ -47,6 +48,7 @@ describe('DashboardsHeader', () => {
 
   test('it should include default breadcrumb in breadcrumbs and title', async () => {
     useDashboardsContextMock.mockReturnValue({
+      editableFolders: [],
       includeBreadcrumbs: jest.fn(),
       breadcrumbs: []
     })

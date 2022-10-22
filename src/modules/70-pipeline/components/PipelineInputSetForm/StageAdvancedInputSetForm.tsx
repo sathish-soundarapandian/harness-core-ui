@@ -24,6 +24,8 @@ import type { StageElementConfig } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
+import SkipInstancesField from '@pipeline/components/PipelineStudio/SkipInstances/SkipInstances'
+
 import { useStrings } from 'framework/strings'
 import { getDefaultMonacoConfig } from '@common/components/MonacoTextField/MonacoTextField'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
@@ -38,6 +40,7 @@ interface StageAdvancedInputSetFormProps {
   stageIdentifier?: string
   allowableTypes?: AllowedTypes
   delegateSelectors?: string[] | string
+  skipInstances?: string | boolean
 }
 
 interface ConditionalExecutionFormProps {
@@ -85,6 +88,37 @@ function ConditionalExecutionFormInternal(props: ConditionalExecutionFormProps):
 }
 
 export const ConditionalExecutionForm = connect(ConditionalExecutionFormInternal)
+
+interface SkipInstancesFormProps {
+  readonly?: boolean
+  path: string
+  allowableTypes?: AllowedTypes
+  formik?: FormikContextType<any>
+}
+
+function SkipInstancesFormInternal(props: SkipInstancesFormProps): React.ReactElement {
+  const { readonly, path, formik } = props
+  const skipInstancesValue = get(formik?.values, path)
+
+  return (
+    <Container margin={{ bottom: 'medium' }}>
+      <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+        <Container width="100%">
+          <SkipInstancesField
+            name={path}
+            isReadonly={!!readonly}
+            value={skipInstancesValue}
+            onUpdate={value => {
+              formik?.setFieldValue(path, value)
+            }}
+          />
+        </Container>
+      </Layout.Vertical>
+    </Container>
+  )
+}
+
+export const SkipInstancesForm = connect(SkipInstancesFormInternal)
 
 export interface StrategyFormInternalProps {
   readonly?: boolean
@@ -160,9 +194,11 @@ export function StageAdvancedInputSetForm({
   readonly,
   stageIdentifier,
   allowableTypes,
-  delegateSelectors = []
+  delegateSelectors = [],
+  skipInstances
 }: StageAdvancedInputSetFormProps): React.ReactElement {
   const { getString } = useStrings()
+
   return (
     <>
       <div id={`Stage.${stageIdentifier}.Advanced`} className={cx(css.accordionSummary)}>
@@ -189,6 +225,11 @@ export function StageAdvancedInputSetForm({
         {!isEmpty(deploymentStageTemplate?.strategy) && (
           <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
             <StrategyForm readonly={readonly} path={`${path}.strategy`} />
+          </div>
+        )}
+        {!isEmpty(skipInstances) && (
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+            <SkipInstancesForm readonly={readonly} path={`${path}.skipInstances`} />
           </div>
         )}
       </div>

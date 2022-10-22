@@ -33,11 +33,7 @@ jest.mock('services/cd-ng', () => ({
 describe('Test SourceCodeManagerForm', () => {
   test('Should render SourceCodeManagerForm for new User with default state', async () => {
     const { container, getByText } = render(
-      <TestWrapper
-        path={routes.toUserProfile(accountPathProps)}
-        pathParams={pathParams}
-        defaultAppStoreValues={{ featureFlags: { GIT_SYNC_WITH_BITBUCKET: true } }}
-      >
+      <TestWrapper path={routes.toUserProfile(accountPathProps)} pathParams={pathParams}>
         <SourceCodeManagerForm onSubmit={noop} onClose={noop} />
       </TestWrapper>
     )
@@ -60,11 +56,7 @@ describe('Test SourceCodeManagerForm', () => {
 
   test('Should render SourceCodeManagerForm for existing User with bitBucket SCM', async () => {
     const { container } = render(
-      <TestWrapper
-        path={routes.toUserProfile(accountPathProps)}
-        pathParams={pathParams}
-        defaultAppStoreValues={{ featureFlags: { GIT_SYNC_WITH_BITBUCKET: true } }}
-      >
+      <TestWrapper path={routes.toUserProfile(accountPathProps)} pathParams={pathParams}>
         <SourceCodeManagerForm onSubmit={noop} onClose={noop} initialValues={mockBitBucketSCM} />
       </TestWrapper>
     )

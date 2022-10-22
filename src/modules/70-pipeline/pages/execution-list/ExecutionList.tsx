@@ -9,7 +9,7 @@ import { Container, PageSpinner } from '@wings-software/uicore'
 import React from 'react'
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useGetCommunity } from '@common/utils/utils'
@@ -22,6 +22,9 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -55,16 +58,14 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     searchTerm,
     pipelineIdentifier: pipelineIdentifierFromQueryParam
   } = queryParams
+  const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
 
   const { module = 'cd' } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
-
   const location = useLocation()
-
-  const isExecutionListPage = !!matchPath(location.pathname, {
-    path: routes.toExecutions({ projectIdentifier, orgIdentifier, accountId, module })
-  })
-  const Executions = isExecutionListPage ? MemoisedExecutionListTable : ExecutionListCards
+  // TODO: Temporary, remove once released
+  const { listview } = useQueryParams<{ listview?: boolean }>({ decoder: queryParamDecodeAll() })
+  const Executions = listview === true || NEW_EXECUTION_LIST_VIEW ? MemoisedExecutionListTable : ExecutionListCards
 
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({

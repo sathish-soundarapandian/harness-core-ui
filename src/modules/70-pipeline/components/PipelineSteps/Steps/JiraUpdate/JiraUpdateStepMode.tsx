@@ -43,8 +43,9 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraCreateFieldType } from '../JiraCreate/types'
@@ -244,6 +245,7 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>
@@ -328,14 +330,23 @@ function FormContent({
                       ? getString('pipeline.jiraUpdateStep.fetchingStatus')
                       : getString('pipeline.jiraUpdateStep.selectStatus')
                   }
+                  useValue
                   multiTypeInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    selectProps: {
+                      addClearBtn: !readonly,
+                      items: fetchingStatuses
+                        ? [{ label: getString('pipeline.jiraUpdateStep.fetchingStatus'), value: '' }]
+                        : statusOptions
+                    }
                   }}
                   disabled={isApprovalStepFieldDisabled(readonly)}
                 />
                 {getMultiTypeFromValue(formik.values.spec.transitionTo?.status) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
+                  <SelectConfigureOptions
+                    options={statusOptions}
+                    loading={fetchingStatuses}
                     value={formik.values.spec.transitionTo?.status as string}
                     type="String"
                     variableName="spec.transitionTo.status"

@@ -21,7 +21,8 @@ import {
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, unset } from 'lodash-es'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { TemplateTags } from '@templates-library/components/TemplateTags/TemplateTags'
@@ -34,7 +35,6 @@ import {
 import { useMutateAsGet } from '@common/hooks'
 import {
   Error,
-  NGTemplateInfoConfig,
   TemplateMetadataSummaryResponse,
   TemplateResponse,
   TemplateSummaryResponse,
@@ -52,8 +52,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
-import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
+import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import {
@@ -62,15 +61,17 @@ import {
 } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
 export interface TemplateDetailsProps {
   template: TemplateSummaryResponse
-  allowStableSelection?: boolean
   setTemplate?: (template: TemplateSummaryResponse) => void
-  allowBranchChange?: boolean
   storeMetadata?: StoreMetadata
+  isStandAlone?: boolean
+  disableVersionChange?: boolean
 }
 
 export enum TemplateTabs {
@@ -99,7 +100,7 @@ const getTemplateEntityIdentifier = ({ selectedTemplate, templates }: Params): s
 }
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
-  const { template, allowStableSelection = false, setTemplate, allowBranchChange = true, storeMetadata } = props
+  const { template, setTemplate, storeMetadata, isStandAlone = false, disableVersionChange = false } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
@@ -113,19 +114,15 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | TemplateResponse>()
   const [selectedParentTab, setSelectedParentTab] = React.useState<ParentTemplateTabs>(ParentTemplateTabs.BASIC)
   const [selectedTab, setSelectedTab] = React.useState<TemplateTabs>(TemplateTabs.INPUTS)
-  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const params = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
+  const gitPopoverBranch = isStandAlone ? storeMetadata?.branch : selectedBranch
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
       ?.versionLabel
   }, [templates])
-
-  const parentEntityIds = {
-    parentEntityAccountIdentifier: accountId,
-    parentEntityOrgIdentifier: orgIdentifier,
-    parentEntityProjectIdentifier: projectIdentifier
-  }
 
   const {
     data: templateYamlData,
@@ -139,10 +136,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       orgIdentifier: selectedTemplate?.orgIdentifier,
       projectIdentifier: selectedTemplate?.projectIdentifier,
       versionLabel: selectedTemplate?.versionLabel,
-      parentEntityConnectorRef: storeMetadata?.connectorRef,
-      parentEntityRepoName: storeMetadata?.repoName,
-      branch: storeMetadata?.branch,
-      ...(!isEmpty(storeMetadata?.connectorRef) ? parentEntityIds : {})
+      ...getGitQueryParamsWithParentScope(storeMetadata, params)
     },
     lazy: true
   })
@@ -178,14 +172,14 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   React.useEffect(() => {
     if (templateData?.data?.content) {
       const allVersions = [...templateData.data.content]
-      if (allowStableSelection) {
+      if (isStandAlone) {
         const templateStableVersion = { ...allVersions.find(item => item.stableTemplate) }
         delete templateStableVersion.versionLabel
         allVersions.unshift(templateStableVersion)
       }
       setTemplates(allVersions)
     }
-  }, [allowStableSelection, templateData])
+  }, [isStandAlone, templateData])
 
   React.useEffect(() => {
     const newVersionOptions: SelectOption[] = (templates as TemplateSummaryResponse[]).map(item => {
@@ -211,13 +205,19 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   }, [selectedTemplate])
 
   React.useEffect(() => {
-    if (templateYamlData) {
-      setSelectedTemplate(templateYamlData?.data)
+    if (templateYamlData?.data) {
+      const templateWithYaml = produce(templateYamlData.data, draft => {
+        if (isEmpty(selectedTemplate?.versionLabel)) {
+          unset(draft, 'versionLabel')
+        }
+      })
+      setSelectedTemplate(templateWithYaml)
     }
-  }, [templateYamlData])
+  }, [templateYamlData?.data])
 
   const onChange = React.useCallback(
     (option: SelectOption): void => {
+      setSelectedBranch(undefined)
       const version = defaultTo(option.value?.toString(), '')
       if (version === DefaultStableVersionValue) {
         setSelectedTemplate((templates as TemplateSummaryResponse[]).find(item => !item.versionLabel))
@@ -248,8 +248,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
           orgIdentifier: selectedTemplate?.orgIdentifier,
           projectIdentifier: selectedTemplate?.projectIdentifier,
           versionLabel: selectedTemplate?.versionLabel,
-          parentEntityConnectorRef: storeMetadata?.connectorRef,
-          parentEntityRepoName: storeMetadata?.repoName,
           branch
         }
       })
@@ -258,26 +256,31 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
 
   const goToTemplateStudio = (): void => {
     if (selectedTemplate) {
-      history.push(
-        routes.toTemplateStudio({
-          projectIdentifier: selectedTemplate.projectIdentifier,
-          orgIdentifier: selectedTemplate.orgIdentifier,
-          accountId: defaultTo(selectedTemplate.accountId, ''),
-          module,
-          templateType: selectedTemplate.templateEntityType,
-          templateIdentifier: selectedTemplate.identifier,
-          versionLabel: selectedTemplate.versionLabel,
-          repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
-          branch: allowBranchChange ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
-        })
-      )
+      const url = routes.toTemplateStudio({
+        projectIdentifier: selectedTemplate.projectIdentifier,
+        orgIdentifier: selectedTemplate.orgIdentifier,
+        accountId: defaultTo(selectedTemplate.accountId, ''),
+        module,
+        templateType: selectedTemplate.templateEntityType,
+        templateIdentifier: selectedTemplate.identifier,
+        versionLabel: selectedTemplate.versionLabel,
+        repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
+        branch: !isStandAlone ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
+      })
+
+      if (isStandAlone) {
+        window.open(`#${url}`, '_blank')
+      } else {
+        history.push(url)
+      }
     }
   }
 
   const ErrorPanel = (
     <Container className={css.errorPanel}>
-      {allowBranchChange ? (
+      {!isStandAlone ? (
         <NoEntityFound
+          errorPlacement={ErrorPlacement.BOTTOM}
           identifier={selectedTemplate?.identifier as string}
           entityType={'template'}
           errorObj={templateYamlError?.data as Error}
@@ -302,7 +305,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   ) : !isEmpty(selectedTemplate?.yaml) && selectedTemplate ? (
     templateFactory.getTemplate(selectedTemplate.templateEntityType || '')?.renderTemplateInputsForm({
       template: selectedTemplate,
-      accountId: defaultTo(template.accountId, '')
+      accountId: defaultTo(template.accountId, ''),
+      storeMetadata
     })
   ) : (
     <PageBody className={css.yamlLoader} loading />
@@ -335,27 +339,22 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                 padding={{ top: 'large', left: 'xxlarge', bottom: 'large', right: 'xxlarge' }}
                 border={{ bottom: true }}
               >
-                <Layout.Horizontal className={css.shrink} spacing={'small'}>
+                <Layout.Horizontal className={css.shrink} spacing={'small'} flex={{ alignItems: 'center' }}>
                   <Text lineClamp={1} font={{ size: 'medium', weight: 'bold' }} color={Color.GREY_800}>
                     {selectedTemplate.name}
                   </Text>
                   {supportingTemplatesGitx && (
-                    <StudioGitPopover
-                      connectorRef={(selectedTemplate as TemplateResponse).connectorRef}
-                      gitDetails={defaultTo(
-                        {
-                          ...selectedTemplate.gitDetails,
-                          branch: allowBranchChange
-                            ? selectedTemplate.gitDetails?.branch || selectedBranch
-                            : storeMetadata?.branch
-                        },
-                        {}
-                      )}
+                    <GitPopoverV2
+                      storeMetadata={{
+                        ...storeMetadata,
+                        connectorRef: (selectedTemplate as TemplateResponse).connectorRef,
+                        storeType: (selectedTemplate as TemplateResponse).storeType,
+                        branch: gitPopoverBranch
+                      }}
+                      gitDetails={selectedTemplate.gitDetails!}
                       onGitBranchChange={onGitBranchChange}
-                      identifier={defaultTo(selectedTemplate?.identifier, '')}
-                      isReadonly={!allowBranchChange}
-                      entityData={selectedTemplate as NGTemplateInfoConfig}
-                      entityType={defaultTo(selectedTemplate?.templateEntityType, '')}
+                      isReadonly={isStandAlone}
+                      forceFetch
                     />
                   )}
                   {isGitSyncEnabled && (
@@ -442,6 +441,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                   width={300}
                                   popoverClassName={css.dropdown}
                                   stableVersion={stableVersion}
+                                  disabled={disableVersionChange}
                                 />
                               </Layout.Vertical>
                             </Container>

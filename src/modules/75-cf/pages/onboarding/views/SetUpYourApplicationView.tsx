@@ -6,20 +6,20 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Container, Heading, Layout, Text } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
-import { String, useStrings } from 'framework/strings'
-import type { ApiKey, FeatureFlagRequestRequestBody } from 'services/cf'
+import { Container, Heading, Layout, Text, RadioButtonGroup } from '@harness/uicore'
+import { StringKeys, useStrings } from 'framework/strings'
+import type { ApiKey, Feature } from 'services/cf'
 import { LanguageSelection, PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import { OnboardingSelectedFlag } from '../OnboardingSelectedFlag'
 import { SetUpAppInfoView } from './SetUpAppInfoView'
 import { SelectEnvironmentView } from './SelectEnvironmentView'
 import { SetUpYourCodeView } from './SetUpYourCodeView'
 import css from './SetUpYourApplicationView.module.scss'
 
 export interface SetUpYourApplicationViewProps {
-  flagInfo: FeatureFlagRequestRequestBody
+  flagInfo: Feature
   language: PlatformEntry | undefined
   setLanguage: (language: PlatformEntry) => void
   apiKey: ApiKey | undefined
@@ -33,6 +33,8 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
   const [language, setLanguage] = useState<PlatformEntry | undefined>(props.language)
   const [apiKey, setApiKey] = useState<ApiKey | undefined>(props.apiKey)
   const { trackEvent } = useTelemetry()
+  const [currentOption, setCurrentOption] = useState<StringKeys>('cf.onboarding.android')
+  const [currentReadme, setcurrentReadme] = useState<StringKeys>('cf.onboarding.readme.xamarinAndroid')
 
   useEffect(() => {
     trackEvent(FeatureActions.SetUpYourApplicationView, {
@@ -40,16 +42,11 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   return (
     <Container height="100%">
       <Container className={css.container} width="calc(100% - 400px)" height="calc(100vh - 140px)">
-        <Text inline color={Color.BLACK} className={css.successLabel}>
-          <String
-            stringID="cf.onboarding.successLabel"
-            vars={{ name: flagInfo.name, identifier: flagInfo.identifier }}
-            useRichText
-          />
-        </Text>
+        {flagInfo && <OnboardingSelectedFlag selectedFlag={flagInfo} />}
         <Heading level={2} className={css.setUpLabel}>
           {getString('cf.onboarding.setupLabel')}
         </Heading>
@@ -75,24 +72,17 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
         </Container>
 
         {language && (
-          <Container margin={{ top: 'large' }}>
-            <Layout.Vertical spacing="xsmall">
-              <Text className={css.selectEnvironment}>{getString('cf.onboarding.selectEnvironment')}</Text>
-              <Container className={css.environmentContainer}>
-                <SelectEnvironmentView
-                  apiKey={apiKey}
-                  setApiKey={key => {
-                    setApiKey(key)
-                    props.setApiKey(key)
-                  }}
-                  setEnvironmentIdentifier={environmentIdentifier => {
-                    props.setEnvironmentIdentifier(environmentIdentifier)
-                  }}
-                  language={language}
-                />
-              </Container>
-            </Layout.Vertical>
-          </Container>
+          <SelectEnvironmentView
+            apiKey={apiKey}
+            setApiKey={key => {
+              setApiKey(key)
+              props.setApiKey(key)
+            }}
+            setEnvironmentIdentifier={environmentIdentifier => {
+              props.setEnvironmentIdentifier(environmentIdentifier)
+            }}
+            language={language}
+          />
         )}
 
         {language && apiKey && (
@@ -100,7 +90,39 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
             <Layout.Vertical spacing="xsmall">
               <Text className={css.setUpYourCode}>{getString('cf.onboarding.setUpYourCode')}</Text>
               <Container className={css.setUpYourCodeContainer}>
-                <SetUpYourCodeView apiKey={apiKey} language={language} />
+                {language.name === getString('cf.onboarding.android') ||
+                  (getString('cf.onboarding.ios') && (
+                    <RadioButtonGroup
+                      padding={{ top: 'small' }}
+                      asPills
+                      selectedValue={currentOption}
+                      onChange={() => {
+                        if (currentOption === 'cf.onboarding.android') {
+                          setCurrentOption('cf.onboarding.ios')
+                          setcurrentReadme('cf.onboarding.readme.xamarinIOS')
+                        } else {
+                          setCurrentOption('cf.onboarding.android')
+                          setcurrentReadme('cf.onboarding.readme.xamarinAndroid')
+                        }
+                      }}
+                      options={[
+                        {
+                          label: getString('cf.onboarding.android'),
+                          value: 'cf.onboarding.android'
+                        },
+                        {
+                          label: getString('cf.onboarding.ios'),
+                          value: 'cf.onboarding.ios'
+                        }
+                      ]}
+                    />
+                  ))}
+                <SetUpYourCodeView
+                  apiKey={apiKey}
+                  language={language}
+                  flagName={flagInfo.name}
+                  readmeOverrideString={currentReadme}
+                />
               </Container>
             </Layout.Vertical>
           </Container>

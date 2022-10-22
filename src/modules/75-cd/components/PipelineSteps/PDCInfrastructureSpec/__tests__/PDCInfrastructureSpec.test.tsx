@@ -18,6 +18,7 @@ import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
 import { mockListSecrets } from './mock/Secrets.mock'
 import { parseAttributes } from '../PDCInfrastructureInterface'
+import { formFilterValue } from '../PDCInfrastructureSpecInputForm'
 
 const getYaml = (): string => `pipeline:
     stages:
@@ -145,6 +146,21 @@ const updateHostsInput = async (container: any) => {
 describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
   beforeEach(() => {
     factory.registerStep(new PDCInfrastructureSpec())
+  })
+
+  test('test empty initial values', async () => {
+    const onUpdateHandler = jest.fn()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={{}}
+        type={StepType.PDC}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdateHandler}
+      />
+    )
+    await checkForFormInit(container)
+    await openPreviewHosts(getByText)
+    expect(getByText('1.2.3.4')).toBeDefined()
   })
 
   test('should call onUpdate if valid values entered - inputset', async () => {
@@ -433,6 +449,20 @@ describe('test custom functions', () => {
   test('test parseAttributes fn', () => {
     expect(parseAttributes('hostType:DB\nregion:west')).toEqual({ hostType: 'DB', region: 'west' })
   })
+  test('test formFilterValue fn', () => {
+    expect(formFilterValue('localhost, 1.2.3.4', 'HostNames')).toEqual({
+      type: 'HostNames',
+      spec: {
+        value: ['localhost', '1.2.3.4']
+      }
+    })
+    expect(formFilterValue('dbType:type, host:someHost', 'HostAttributes')).toEqual({
+      type: 'HostAttributes',
+      spec: {
+        value: { dbType: 'type', host: 'someHost' }
+      }
+    })
+  })
 })
 
 describe('test different stepViewType', () => {
@@ -488,7 +518,12 @@ describe('test different stepViewType', () => {
         onUpdate={jest.fn()}
       />
     )
-    expect(container).toMatchSnapshot()
+    const hostsArea = queryByAttribute('name', container, '.hosts')
+    act(() => {
+      fireEvent.change(hostsArea!, { target: { value: '1.2.3.4' } })
+      fireEvent.blur(hostsArea!)
+    })
+    expect(hostsArea).toBeDefined()
   })
 
   test('render runtimeview when Preconfigured with attribute filter', () => {

@@ -300,7 +300,7 @@ exports[`Resource Groups Page render data 1`] = `
                   <span
                     class="bp3-control-indicator"
                   />
-                  rbac.resourceGroup.all
+                  common.all
                 </label>
                 <label
                   class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--inline"
@@ -585,7 +585,7 @@ exports[`Resource Groups Page render data 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        rbac.resourceGroup.all
+                        common.all
                       </label>
                     </div>
                     <div
@@ -693,7 +693,7 @@ exports[`Resource Groups Page render data 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        rbac.resourceGroup.all
+                        common.all
                       </label>
                     </div>
                     <div

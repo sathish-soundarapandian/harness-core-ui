@@ -14,8 +14,7 @@ import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
-  Layout,
-  SelectOption
+  Layout
 } from '@harness/uicore'
 import { Form } from 'formik'
 import { useModalHook } from '@harness/use-modal'
@@ -49,6 +48,11 @@ const DIALOG_PROPS: IDialogProps = {
   canOutsideClickClose: false
 }
 
+export interface VariableOptionsProps {
+  label: string
+  value: string
+  type?: 'String' | 'Number' | 'Secret'
+}
 function ServiceVariableOverride({
   serviceList,
   selectedService,
@@ -60,7 +64,7 @@ function ServiceVariableOverride({
   const { getString } = useStrings()
   const [variableIndex, setEditIndex] = useState(0)
 
-  const getVariableOptions = (): SelectOption[] => {
+  const getVariableOptions = (): VariableOptionsProps[] => {
     if (!isEmpty(selectedService)) {
       const serviceSelected = serviceList.find(serviceObj => serviceObj.service?.identifier === selectedService)
       if (serviceSelected) {
@@ -68,7 +72,8 @@ function ServiceVariableOverride({
         const serviceVars = defaultTo(parsedServiceYaml?.serviceDefinition?.spec?.variables, [])
         return serviceVars?.map(variable => ({
           label: defaultTo(variable.name, ''),
-          value: defaultTo(variable.name, '')
+          value: defaultTo(variable.name, ''),
+          type: defaultTo(variable.type, undefined)
         }))
       }
     }
@@ -78,7 +83,7 @@ function ServiceVariableOverride({
 
   const variableListItems = useMemo(() => {
     const serviceOverideVars = variableOverrides.map(varOverride => varOverride.name)
-    const serviceServiceVars = variablesOptions.map(option => option.value)
+    const serviceServiceVars = variablesOptions.map((option: { value: string }) => option.value)
     const finalList = new Set([...serviceOverideVars, ...serviceServiceVars] as string[])
 
     return Array.from(finalList).map(list => ({
@@ -139,6 +144,12 @@ function ServiceVariableOverride({
                   items={variableListItems}
                   label={getString('variableNameLabel')}
                   placeholder={getString('common.selectName', { name: getString('variableLabel') })}
+                  onChange={value => {
+                    const overrideType = variablesOptions.find(
+                      (svcOverride: VariableOptionsProps) => svcOverride.value === value?.value
+                    )?.type
+                    overrideType && formik.setFieldValue('type', overrideType)
+                  }}
                 />
                 <FormInput.Select
                   name="type"
@@ -197,7 +208,8 @@ function ServiceVariableOverride({
       />
 
       <RbacButton
-        text={getString('common.plusNewName', { name: getString('common.override') })}
+        icon={'plus'}
+        text={`${getString('common.newName', { name: getString('variableLabel') })} ${getString('common.override')}`}
         size={ButtonSize.SMALL}
         variation={ButtonVariation.LINK}
         className={css.addOverrideBtn}

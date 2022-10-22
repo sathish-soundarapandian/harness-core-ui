@@ -10,12 +10,13 @@ import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { getScopeOptions, QueueProps } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-function QueueInputStep({ inputSetData, readonly, allowableTypes }: QueueProps) {
+function QueueInputStep({ inputSetData, readonly, allowableTypes }: QueueProps): React.ReactElement {
   const { expressions } = useVariablesExpression()
   const path = inputSetData?.path || ''
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -26,7 +27,7 @@ function QueueInputStep({ inputSetData, readonly, allowableTypes }: QueueProps) 
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
@@ -36,17 +37,21 @@ function QueueInputStep({ inputSetData, readonly, allowableTypes }: QueueProps) 
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}timeout`}
             disabled={readonly}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.key) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={getString('pipeline.queueStep.resourceKey')}
             name={`${prefix}spec.key`}
             multiTextInputProps={{ expressions, allowableTypes }}
             placeholder={getString('pipeline.queueStep.keyPlaceholder')}
             disabled={!!readonly}
+            fieldPath={'spec.key'}
+            template={inputSetData?.template}
           />
         </div>
       )}

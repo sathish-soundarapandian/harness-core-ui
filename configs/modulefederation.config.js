@@ -9,7 +9,7 @@ const packageJSON = require('../package.json')
 const { pick, omit, mapValues } = require('lodash')
 
 /**
- * These packages must be stricly shared with exact versions
+ * These packages must be strictly shared with exact versions
  */
 const ExactSharedPackages = [
   'react-dom',
@@ -23,7 +23,16 @@ const ExactSharedPackages = [
   'urql'
 ]
 
-module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enableSCM }) => {
+module.exports = ({
+  enableGitOpsUI,
+  enableSTO,
+  enableChaosUI,
+  enableCCMUI,
+  enableSCM,
+  enableFFUI,
+  enableCIUI,
+  enableTIUI
+}) => {
   const remotes = {}
 
   if (enableGitOpsUI) {
@@ -51,6 +60,18 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enabl
 
   if (enableSCM) {
     remotes.scm = "scmRemote@[window.getApiBaseUrl('scm/remoteEntry.js')]"
+  }
+
+  if (enableFFUI) {
+    remotes.ffui = "ffui@[window.getApiBaseUrl('cf/web/remoteEntry.js')]"
+  }
+
+  if (enableCIUI) {
+    remotes.ciui = "ciui@[window.getApiBaseUrl('ciui/remoteEntry.js')]"
+  }
+
+  if (enableTIUI) {
+    remotes.tiui = "tiui@[window.getApiBaseUrl('tiui/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {

@@ -8,10 +8,13 @@
 import type { SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import type { HealthSourceSpec } from 'services/cv'
-import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type {
+  SourceDataInterface,
+  UpdatedHealthSource
+} from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export interface DatadogLogsHealthSourceProps {
-  data: any
+  data: SourceDataInterface & DatadogLogsSetupSource
   onSubmit: (formdata: DatadogLogsSetupSource, updatedHealthSource: UpdatedHealthSource) => Promise<void>
   isTemplate?: boolean
   expressions?: string[]
@@ -19,7 +22,7 @@ export interface DatadogLogsHealthSourceProps {
 
 export type DatadogLogsInfo = {
   metricName: string
-  serviceInstanceIdentifierTag?: string
+  serviceInstanceIdentifierTag?: string | SelectOption
   indexes?: SelectOption[] | string
   query: string
 }

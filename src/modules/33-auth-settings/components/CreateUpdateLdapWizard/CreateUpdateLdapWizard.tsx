@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { StepWizard, useToaster } from '@wings-software/uicore'
+import { Layout, StepWizard } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -20,10 +20,13 @@ import {
   useCreateLdapSettings,
   useUpdateLdapSettings
 } from 'services/cd-ng'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import StepOverview, { LdapOverview } from './views/StepOverview'
 import StepConnectionSettings from './views/StepConnectionSettings'
 import StepUserQueries from './views/StepUserQueries'
 import StepGroupQueries from './views/StepGroupQueries'
+import StepSyncSchedule from './views/StepSyncSchedule'
+import { DEFAULT_LDAP_SYNC_CRON_EXPRESSION, getErrorMessageFromException } from './utils'
 import css from './CreateUpdateLdapWizard.module.scss'
 
 export interface CreateUpdateLdapWizardProps {
@@ -45,20 +48,50 @@ export interface CreateUpdateLdapWizardProps {
   onSuccess: () => void
 }
 
+interface CreateUpdateSettingsActionProps {
+  /**
+   * Contains error message from previous update attempt
+   */
+  createUpdateError?: ReactElement
+  /**
+   * Create/Update action in progress
+   */
+  isUpdateInProgress: boolean
+  /**
+   * Triggers the back end API call to save data populated in wizard; concludes the wizard flow
+   * */
+  triggerSaveData: () => void
+  /**
+   * Needed as few components which are returned from utils don't have router context
+   */
+  accountId: string
+}
+
 export interface LdapWizardStepProps<T> {
   stepData?: T
   updateStepData: (val: T) => void
   closeWizard?: () => void
-  /** Triggers the back end API call to save data populated in wizard; concludes the wizard flow */
-  triggerSaveData?: () => void
+  /**
+   * Following is to be provided to final step
+   */
+  createUpdateActionProps?: CreateUpdateSettingsActionProps
   auxilliaryData?: Partial<LDAPSettings>
+}
+
+interface LdapOverviewBackend {
+  disabled?: boolean
+  displayName?: string
 }
 
 const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
   const { getString } = useStrings()
   const { ldapSettings, isEdit } = props
-  const { connectionSettings, displayName, identifier, userSettingsList, groupSettingsList } = ldapSettings || {}
-  const [ldapOverviewState, setLdapOverviewState] = useState<LdapOverview>({ displayName })
+  const { connectionSettings, displayName, disabled, identifier, userSettingsList, groupSettingsList } =
+    ldapSettings || {}
+  const [ldapOverviewState, setLdapOverviewState] = useState<LdapOverviewBackend>({
+    displayName,
+    disabled
+  })
   const [connectionSettingsState, setConnectionSettingsState] = useState<LdapConnectionSettings | undefined>(
     connectionSettings
   )
@@ -66,9 +99,13 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
   const [groupSettingsListState, setGroupSettingsListState] = useState<LdapGroupSettings[] | undefined>(
     groupSettingsList
   )
+  const [cronExpression, setCronExpression] = useState<string>(
+    ldapSettings?.cronExpression || DEFAULT_LDAP_SYNC_CRON_EXPRESSION
+  )
   const [triggerSaveData, setTriggerSaveData] = useState<boolean>(false)
+  const [wiardUpdateError, setWizardUpdateError] = useState<ReactElement>()
+  const [isUpdateInProgress, setIsUpdateInProgress] = useState<boolean>(false)
   const { accountId } = useParams<AccountPathProps>()
-  const { showError } = useToaster()
   const { mutate: updateLdapSettings } = useUpdateLdapSettings({
     queryParams: {
       accountIdentifier: accountId
@@ -86,11 +123,14 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
       connectionSettings: connectionSettingsState,
       userSettingsList: userSettingsListState,
       groupSettingsList: groupSettingsListState,
+      cronExpression,
       settingsType: 'LDAP'
     } as LDAPSettings)
 
   const saveStepsData = async (): Promise<void> => {
     let saved
+    setIsUpdateInProgress(true)
+    setWizardUpdateError(undefined)
 
     try {
       if (isEdit) {
@@ -103,7 +143,15 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         props.onSuccess()
       }
     } catch (e) /* istanbul ignore next */ {
-      showError(getString('authSettings.ldap.updateStepFailMessage'))
+      setWizardUpdateError(
+        <Layout.Vertical margin={{ bottom: 'medium' }}>
+          <ErrorHandler
+            responseMessages={getErrorMessageFromException(e, getString('authSettings.ldap.updateStepFailMessage'))}
+          />
+        </Layout.Vertical>
+      )
+      setTriggerSaveData(false)
+      setIsUpdateInProgress(false)
     }
   }
 
@@ -121,8 +169,10 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
     >
       <StepOverview
         name={getString('overview')}
-        stepData={ldapOverviewState}
-        updateStepData={(val: LdapOverview) => setLdapOverviewState(val)}
+        stepData={{ displayName: ldapOverviewState.displayName, authorizationEnabled: !ldapOverviewState.disabled }}
+        updateStepData={(val: LdapOverview) =>
+          setLdapOverviewState({ displayName: val.displayName, disabled: !val.authorizationEnabled })
+        }
         closeWizard={props.closeWizard}
       />
       <StepConnectionSettings
@@ -146,7 +196,17 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         stepData={groupSettingsListState}
         updateStepData={(val: LdapGroupSettings[]) => setGroupSettingsListState(val)}
         auxilliaryData={{ ...ldapOverviewState, connectionSettings: connectionSettingsState, identifier }}
-        triggerSaveData={() => setTriggerSaveData(true)}
+      />
+      <StepSyncSchedule
+        name={getString('authSettings.ldap.userSyncSchedule')}
+        stepData={{ cronExpression, isEdit }}
+        updateStepData={(val: { cronExpression: string }) => setCronExpression(val.cronExpression)}
+        createUpdateActionProps={{
+          isUpdateInProgress,
+          createUpdateError: wiardUpdateError,
+          triggerSaveData: () => setTriggerSaveData(true),
+          accountId
+        }}
       />
     </StepWizard>
   )

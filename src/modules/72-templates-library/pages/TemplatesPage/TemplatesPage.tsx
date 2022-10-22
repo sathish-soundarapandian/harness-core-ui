@@ -44,6 +44,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
+import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
@@ -68,7 +70,7 @@ export default function TemplatesPage(): React.ReactElement {
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
+  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const { enabled: templateFeatureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -76,7 +78,8 @@ export default function TemplatesPage(): React.ReactElement {
   })
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
     [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
-    [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE
+    [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
+    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN
   }).filter(item => !item.disabled)
 
   useDocumentTitle([getString('common.templates')])
@@ -150,6 +153,12 @@ export default function TemplatesPage(): React.ReactElement {
     [templateIdentifierToSettings, reloadTemplates]
   )
 
+  const { showImportResourceModal } = useImportResource({
+    resourceType: ResourceType.TEMPLATE,
+    modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.template.label') }),
+    onSuccess: reloadTemplates
+  })
+
   const goToTemplateStudio = (template: TemplateSummaryResponse): void => {
     history.push(
       routes.toTemplateStudio({
@@ -188,7 +197,7 @@ export default function TemplatesPage(): React.ReactElement {
       />
       <Page.SubHeader className={css.templatesPageSubHeader}>
         <Layout.Horizontal spacing={'medium'}>
-          <NewTemplatePopover />
+          <NewTemplatePopover onImportTemplateClick={showImportResourceModal} />
           <DropDown
             onChange={item => {
               updateQueryParams({ templateType: (item.value || []) as TemplateType })

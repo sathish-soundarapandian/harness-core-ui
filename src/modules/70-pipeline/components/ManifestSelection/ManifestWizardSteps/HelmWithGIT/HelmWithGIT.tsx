@@ -17,11 +17,11 @@ import {
   StepProps,
   Accordion,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { get, isEmpty, set } from 'lodash-es'
@@ -41,7 +41,12 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { filePathWidth, getRepositoryName, handleCommandFlagsSubmitData } from '../ManifestUtils'
+import {
+  filePathWidth,
+  getRepositoryName,
+  handleCommandFlagsSubmitData,
+  removeEmptyFieldsFromStringArray
+} from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from './HelmWithGIT.module.scss'
@@ -100,7 +105,10 @@ function HelmWithGIT({
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
-            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(initialValues?.spec?.valuesPaths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -223,7 +231,7 @@ function HelmWithGIT({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: HelmWithGITDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <FormInput.Text
                 name="identifier"
@@ -409,7 +417,7 @@ function HelmWithGIT({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

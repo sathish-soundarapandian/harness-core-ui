@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { queryByAttribute, render, RenderResult } from '@testing-library/react'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
-import { TestWrapper } from '@common/utils/testUtils'
+import { fireEvent, queryByAttribute, render, RenderResult, screen } from '@testing-library/react'
+import { act } from 'react-test-renderer'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getResourceTypeHandlerMock } from '@rbac/utils/RbacFactoryMockData'
 import ResourcesCard from '../ResourcesCard'
@@ -18,15 +18,12 @@ jest.mock('@rbac/factories/RbacFactory', () => ({
 }))
 describe('Resource Card', () => {
   let renderObj: RenderResult
-  test('it should render attribute selection option if feature flag is enabled and required methods are provided', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      ATTRIBUTE_TYPE_ACL_ENABLED: true
-    })
+  test('it should render attribute selection option if required methods are provided', async () => {
     renderObj = render(
       <TestWrapper pathParams={{ accountId: 'dummy' }}>
         <ResourcesCard
           resourceType={ResourceType.ENVIRONMENT}
-          resourceValues={{ attributeName: 'test', attributeValues: ['testVal'] }}
+          resourceValues={{ attributeName: 'test', attributeValues: ['testVal', 'testVal2'] }}
           onResourceSelectionChange={jest.fn()}
           disableSpecificResourcesSelection={false}
         />
@@ -35,15 +32,19 @@ describe('Resource Card', () => {
 
     const { container } = renderObj
     expect(queryByAttribute('data-testid', container, 'attr-ENVIRONMENT')).not.toBeNull()
-  })
-  test('it should not render attribute selection option if feature flag is disabled', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      ATTRIBUTE_TYPE_ACL_ENABLED: false
+    const addResources = queryByAttribute('data-testid', container, 'addResources-ENVIRONMENT')
+    await act(async () => {
+      addResources && fireEvent.click(addResources)
     })
+    const wizardDialog = findDialogContainer()
+    expect(wizardDialog).toMatchSnapshot()
+  })
+
+  test('it should render attribute selection option with singular labels in AddResourceModal', async () => {
     renderObj = render(
       <TestWrapper pathParams={{ accountId: 'dummy' }}>
         <ResourcesCard
-          resourceType={ResourceType.ENVIRONMENT}
+          resourceType={ResourceType.CONNECTOR}
           resourceValues={{ attributeName: 'test', attributeValues: ['testVal'] }}
           onResourceSelectionChange={jest.fn()}
           disableSpecificResourcesSelection={false}
@@ -51,7 +52,9 @@ describe('Resource Card', () => {
       </TestWrapper>
     )
 
-    const { container } = renderObj
-    expect(queryByAttribute('data-testid', container, 'attr-ENVIRONMENT')).toBeNull()
+    const { getByTestId } = renderObj
+    const addResources = getByTestId('addResources-CONNECTOR')
+    addResources && fireEvent.click(addResources)
+    expect(await screen.findByText('rbac.addResourceModal.modalCtaLabelSingular')).toBeInTheDocument()
   })
 })

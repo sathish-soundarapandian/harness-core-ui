@@ -20,7 +20,7 @@ exports[`<CustomApprovalTab/> tests expired scenario 1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -28,7 +28,7 @@ exports[`<CustomApprovalTab/> tests expired scenario 1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -36,7 +36,7 @@ exports[`<CustomApprovalTab/> tests expired scenario 1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>
@@ -270,7 +270,7 @@ exports[`<CustomApprovalTab/> tests failed scenario 1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -278,7 +278,7 @@ exports[`<CustomApprovalTab/> tests failed scenario 1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -286,7 +286,7 @@ exports[`<CustomApprovalTab/> tests failed scenario 1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>
@@ -686,7 +686,7 @@ exports[`<CustomApprovalTab/> tests not in waiting state  1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -694,7 +694,7 @@ exports[`<CustomApprovalTab/> tests not in waiting state  1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -702,7 +702,7 @@ exports[`<CustomApprovalTab/> tests not in waiting state  1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>
@@ -905,7 +905,7 @@ exports[`<CustomApprovalTab/> tests rejected scenario 1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -913,7 +913,7 @@ exports[`<CustomApprovalTab/> tests rejected scenario 1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -921,7 +921,7 @@ exports[`<CustomApprovalTab/> tests rejected scenario 1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>

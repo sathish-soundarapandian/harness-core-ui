@@ -8,7 +8,7 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@wings-software/uicore'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
@@ -25,14 +25,20 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { Error, ResponseMessage } from 'services/pipeline-ng'
 import type { Error as TemplateError } from 'services/template-ng'
+import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
+export enum ErrorPlacement {
+  TOP = 'TOP',
+  BOTTOM = 'BOTTOM'
+}
 interface NoEntityFoundProps {
   identifier: string
   entityType: 'pipeline' | 'inputSet' | 'template'
   errorObj?: Error | TemplateError
   gitDetails?: GitRemoteDetailsProps
+  errorPlacement?: ErrorPlacement
 }
 
 const entityTypeLabelMapping = {
@@ -42,7 +48,7 @@ const entityTypeLabelMapping = {
 }
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
-  const { identifier, entityType, errorObj, gitDetails } = props
+  const { identifier, entityType, errorObj, gitDetails, errorPlacement = ErrorPlacement.TOP } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
 
@@ -128,15 +134,14 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
     [repoIdentifier, branch, identifier, orgIdentifier, projectIdentifier, accountId, module]
   )
 
+  const Error = !isEmpty(errorObj?.responseMessages) && (
+    <ErrorHandler responseMessages={errorObj?.responseMessages as ResponseMessage[]} className={css.errorHandler} />
+  )
+
   return (
     <div className={css.noPipelineFoundContainer}>
       <Layout.Vertical spacing="small" flex={{ justifyContent: 'center', alignItems: 'center' }}>
-        {!isEmpty(errorObj?.responseMessages) && (
-          <ErrorHandler
-            responseMessages={errorObj?.responseMessages as ResponseMessage[]}
-            className={css.errorHandler}
-          />
-        )}
+        {errorPlacement === ErrorPlacement.TOP && Error}
         <img src={noEntityFoundImage} className={css.noPipelineFoundImage} />
         <Text className={css.noPipelineFound} margin={{ top: 'medium', bottom: 'small' }}>
           <String
@@ -163,9 +168,32 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
             branchSelectClassName={css.branchSelector}
           />
         )}
+        {errorPlacement === ErrorPlacement.BOTTOM && Error}
       </Layout.Vertical>
     </div>
   )
+}
+
+export const handleEntityNotFound = (fetchError?: Error): JSX.Element => {
+  return (
+    <Container margin={{ top: 'huge' }}>
+      <GenericErrorHandler errStatusCode={fetchError?.code || fetchError?.status} errorMessage={fetchError?.message} />
+    </Container>
+  )
+}
+
+export const handleFetchFailure = (
+  entityType: NoEntityFoundProps['entityType'],
+  identifier: string,
+  isInline: boolean,
+  fetchError?: Error
+): JSX.Element => {
+  if (isInline || fetchError?.code === 'ENTITY_NOT_FOUND') {
+    return handleEntityNotFound(fetchError)
+  } else {
+    // This is for remote entities with support to change branch
+    return <NoEntityFound identifier={identifier} entityType={entityType} errorObj={fetchError} />
+  }
 }
 
 export default NoEntityFound

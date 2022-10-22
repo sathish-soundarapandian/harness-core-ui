@@ -71,6 +71,7 @@ const getTagProps = ({ formik, setInputValue, allowedValuesValidator, inputValue
         }
       }
     },
+    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e?.target?.value || ''),
     inputValue
   }
 }
@@ -110,6 +111,17 @@ export const RenderField = ({
         setInputValue,
         allowedValuesValidator: allowedValuesValidator || VALIDATORS[allowedValuesType](getString),
         fieldKey: 'url'
+      })
+      break
+    }
+
+    case ALLOWED_VALUES_TYPE.NUMBER: {
+      extraProps.tagsProps = getTagProps({
+        formik,
+        inputValue,
+        setInputValue,
+        allowedValuesValidator: allowedValuesValidator || VALIDATORS[allowedValuesType](getString),
+        fieldKey: 'numberTypeField'
       })
       break
     }

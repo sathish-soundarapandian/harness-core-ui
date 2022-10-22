@@ -82,7 +82,8 @@ const props = {
     when: { condition: '<+input>' }
   },
   path: 'stages[1].stage',
-  delegateSelectors: '<+input>'
+  delegateSelectors: '<+input>',
+  skipInstances: '<+input>'
 } as any
 
 describe('StageAdvancedInputSetForm tests', () => {

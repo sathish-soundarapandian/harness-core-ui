@@ -32,11 +32,11 @@ import {
   NewRelicMetricDefinition,
   TimeSeriesSampleDTO,
   useFetchParsedSampleData,
-  useGetMetricPacks,
+  useGetRiskCategoryForCustomHealthMetric,
   useGetSampleDataForNRQL
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/GroupName.utils'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { NewRelicHealthSourceFieldNames } from '../../NewRelicHealthSource.constants'
 import { getOptionsForChart } from './NewRelicCustomMetricForm.utils'
 import type { NewRelicCustomFormInterface } from './NewRelicCustomMetricForm.types'
@@ -50,9 +50,7 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'NEW_RELIC' }
-  })
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const [newRelicGroupName, setNewRelicGroupName] = useState<SelectOption[]>(
     initializeGroupNames(mappedMetrics, getString)
@@ -199,7 +197,11 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                       : getString('cv.healthSource.connectors.NewRelic.submitQueryNoRecords')
                   }
                   records={[sampleRecord] as Record<string, any>[]}
-                  fetchRecords={!isConnectorRuntimeOrExpression ? fetchNewRelicResponse : noop}
+                  fetchRecords={
+                    shouldFetchApplication(formikValues?.query, isConnectorRuntimeOrExpression)
+                      ? fetchNewRelicResponse
+                      : noop
+                  }
                   loading={loading}
                   error={error}
                   query={query}
@@ -291,7 +293,7 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                     healthScore: !!formikValues?.healthScore,
                     continuousVerification: !!formikValues?.continuousVerification
                   }}
-                  metricPackResponse={metricPackResponse}
+                  riskProfileResponse={riskProfileResponse}
                   hideServiceIdentifier={true}
                 />
               </>

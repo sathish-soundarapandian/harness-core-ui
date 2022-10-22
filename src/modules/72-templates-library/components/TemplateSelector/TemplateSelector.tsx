@@ -13,6 +13,7 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { TemplateSelectorLeftView } from '@templates-library/components/TemplateSelector/TemplateSelectorLeftView/TemplateSelectorLeftView'
 import { areTemplatesEqual, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
@@ -24,7 +25,13 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
   const {
     state: { selectorData }
   } = useTemplateSelectorContext()
-  const { onSubmit, selectedTemplate: defaultTemplate, storeMetadata } = selectorData || {}
+  const {
+    onSubmit,
+    selectedTemplate: defaultTemplate,
+    storeMetadata,
+    disableVersionChange = false,
+    allowedUsages = [TemplateUsage.USE, TemplateUsage.COPY]
+  } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -36,15 +43,15 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
         <TemplateDetails
           template={selectedTemplate}
           setTemplate={setSelectedTemplate}
-          allowStableSelection
-          allowBranchChange={false}
           storeMetadata={storeMetadata}
+          disableVersionChange={disableVersionChange}
+          isStandAlone
         />
       )
     } else {
       return <></>
     }
-  }, [selectedTemplate, storeMetadata])
+  }, [selectedTemplate, storeMetadata, disableVersionChange])
 
   const onUseTemplateConfirm = React.useCallback(
     (isCopied = false) => {
@@ -115,6 +122,9 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
     }
   }, [defaultTemplate, openCopyTemplateDialog, onUseTemplateConfirm])
 
+  const showUseTemplate = React.useMemo(() => allowedUsages.includes(TemplateUsage.USE), [allowedUsages])
+  const showCopyTemplate = React.useMemo(() => allowedUsages.includes(TemplateUsage.COPY), [allowedUsages])
+
   return (
     <Container height={'100%'} className={css.container}>
       <Layout.Horizontal height={'100%'}>
@@ -137,17 +147,21 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
                     className={css.btnContainer}
                     spacing={'small'}
                   >
-                    <Button
-                      variation={ButtonVariation.PRIMARY}
-                      text={getString('templatesLibrary.useTemplateLabel')}
-                      disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
-                      onClick={onUseTemplateClick}
-                    />
-                    <Button
-                      variation={ButtonVariation.LINK}
-                      text={getString('templatesLibrary.copyTemplateLabel')}
-                      onClick={onCopyTemplateClick}
-                    />
+                    {showUseTemplate && (
+                      <Button
+                        variation={ButtonVariation.PRIMARY}
+                        text={getString('templatesLibrary.useTemplateLabel')}
+                        disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
+                        onClick={onUseTemplateClick}
+                      />
+                    )}
+                    {showCopyTemplate && (
+                      <Button
+                        variation={ButtonVariation.LINK}
+                        text={getString('templatesLibrary.copyTemplateLabel')}
+                        onClick={onCopyTemplateClick}
+                      />
+                    )}
                   </Layout.Horizontal>
                 </Container>
               )}

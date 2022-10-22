@@ -34,8 +34,8 @@ export class ECSCanaryDeployStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.EcsCanaryDeploy
   protected stepName = 'ECS Canary Deploy'
   protected stepIcon: IconName = 'canary'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sCanaryDeploy'
-  protected isHarnessSpecific = true
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECSCanaryDeploy'
+  protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
@@ -63,7 +63,7 @@ export class ECSCanaryDeployStep extends PipelineStep<StepElementConfig> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
@@ -92,6 +92,7 @@ export class ECSCanaryDeployStep extends PipelineStep<StepElementConfig> {
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
+        formikFormName={'ecsCanaryDeployStepForm'}
       />
     )
   }

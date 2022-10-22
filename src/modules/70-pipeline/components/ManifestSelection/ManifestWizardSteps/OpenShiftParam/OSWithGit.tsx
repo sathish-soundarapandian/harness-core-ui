@@ -16,12 +16,12 @@ import {
   Text,
   StepProps,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 
 import { get, isEmpty, set } from 'lodash-es'
@@ -42,7 +42,7 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import templateCss from './OpenShiftParam.module.scss'
 import css from '../ManifestWizardSteps.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -93,7 +93,10 @@ function OpenShiftParamWithGit({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         repoName: getRepositoryName(prevStepData, initialValues)
       }
       return values
@@ -186,7 +189,7 @@ function OpenShiftParamWithGit({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: OpenShiftParamDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={templateCss.templateForm}>
               <FormInput.Text
                 name="identifier"
@@ -316,7 +319,7 @@ function OpenShiftParamWithGit({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

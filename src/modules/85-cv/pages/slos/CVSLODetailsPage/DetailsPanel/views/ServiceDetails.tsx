@@ -69,7 +69,10 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
               : 'cv.slos.slis.type.latency'
           )}
         />
-        <KeyValuePair keyText={getString('cv.healthScore')} value={sloDashboardWidget.healthSourceName} />
+        <KeyValuePair
+          keyText={getString('pipeline.verification.healthSourceLabel')}
+          value={sloDashboardWidget.healthSourceName}
+        />
         <KeyValuePair
           keyText={getString('cv.slos.sloTargetAndBudget.periodType')}
           value={getString(

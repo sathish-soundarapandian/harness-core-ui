@@ -12,28 +12,32 @@ exports[`<ExecutionInputsView /> tests snapshot test 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <div
-          class="Layout--vertical StyledProps--main"
+          class="OverlaySpinner--overlaySpinner"
         >
           <div
-            class="runModalFormContentExecutionView"
-            data-testid="runPipelineVisualView"
+            class="Layout--vertical StyledProps--main"
           >
-            <form
-              action="#"
-              class="FormikForm--main"
+            <div
+              class="runModalFormContentExecutionView"
+              data-testid="runPipelineVisualView"
             >
-              <div>
-                <div
-                  class="Layout--horizontal StyledProps--main StyledProps--padding-medium StyledProps--margin-medium"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main"
+              <form
+                action="#"
+                class="FormikForm--main"
+              >
+                <div>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--padding-medium StyledProps--margin-medium"
                   >
-                    pipeline.inputSets.noRuntimeInputsWhileExecution
-                  </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      pipeline.inputSets.noRuntimeInputsWhileExecution
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,36 @@
+environments:
+  metadata:
+    parallel: true
+  values:
+    - environmentRef: Env_1
+      environmentInputs:
+        variables:
+          - name: var1
+            type: String
+            value: test1
+      serviceOverrideInputs:
+        # - serviceRef: Svc_1
+        variables:
+          - name: var2
+            type: String
+            value: test2
+      deployToAll: true
+    - environmentRef: Env_2
+      environmentInputs:
+        variables:
+          - name: var3
+            type: String
+            value: test3
+      serviceOverrideInputs:
+        # - serviceRef: Svc_2
+        variables:
+          - name: var4
+            type: String
+            value: test4
+      deployToAll: false
+      infrastructureDefinitions:
+        - identifier: Infra_1
+          inputs:
+            connectorRef: connector_1
+            namespace: default
+            releaseName: <+input>

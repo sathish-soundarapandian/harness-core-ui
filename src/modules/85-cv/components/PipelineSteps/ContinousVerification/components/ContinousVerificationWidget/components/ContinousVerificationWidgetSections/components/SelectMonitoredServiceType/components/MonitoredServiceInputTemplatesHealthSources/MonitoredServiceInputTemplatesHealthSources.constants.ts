@@ -7,6 +7,7 @@
 
 export const spacingMedium = 'var(--spacing-medium)'
 export const IDENTIFIER = 'identifier'
+export const INDEXES = 'indexes'
 export const NAME = 'name'
 export const METRIC_DEFINITIONS = 'metricDefinitions'
 export const QUERIES = 'queries'

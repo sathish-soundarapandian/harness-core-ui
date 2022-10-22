@@ -28,6 +28,7 @@ interface SelectEncryptedProps {
   placeholder?: string
   allowSelection?: boolean
   value: string
+  isSshWinRm?: boolean
 }
 
 interface FormikFileSelectInput extends SelectEncryptedProps {
@@ -41,12 +42,12 @@ interface EncryptedData {
 
 function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactElement {
   const { getString } = useStrings()
-  const { formik, name, readonly = false, onChange, value = '' } = props
+  const { formik, name, readonly = false, onChange, value = '', isSshWinRm = false } = props
   const secretValue = get(formik.values, name) || ''
 
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
-      type: 'SecretFile',
+      type: isSshWinRm ? 'SecretFile' : undefined,
       onSuccess: secretVal => {
         const { projectIdentifier, orgIdentifier, identifier } = secretVal
         let result = `${Scope.ACCOUNT}.${identifier}`

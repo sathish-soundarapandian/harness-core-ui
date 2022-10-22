@@ -41,6 +41,12 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
         >
           <div>
             <div
+              class="tabHeading"
+              id="serviceBasicInfo"
+            >
+              cd.pipelineSteps.serviceTab.aboutYourService
+            </div>
+            <div
               class="bp3-card bp3-elevation-0 Card--card sectionCard"
             >
               <div
@@ -222,7 +228,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
           class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
         >
           <div
-            class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+            class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -295,7 +301,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
           </div>
         </div>
         <label
-          class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main"
+          class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
         >
           <input
             disabled=""
@@ -445,6 +451,12 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 class="FormikForm--main"
               >
                 <div>
+                  <div
+                    class="tabHeading"
+                    id="serviceBasicInfo"
+                  >
+                    cd.pipelineSteps.serviceTab.aboutYourService
+                  </div>
                   <div
                     class="bp3-card bp3-elevation-0 Card--card sectionCard"
                   >
@@ -627,7 +639,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
               >
                 <div
-                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -802,7 +814,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 </div>
               </div>
               <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
               >
                 <input
                   name="gitOpsEnabled"
@@ -1107,6 +1119,12 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
               >
                 <div>
                   <div
+                    class="tabHeading"
+                    id="serviceBasicInfo"
+                  >
+                    cd.pipelineSteps.serviceTab.aboutYourService
+                  </div>
+                  <div
                     class="bp3-card bp3-elevation-0 Card--card sectionCard"
                   >
                     <div
@@ -1288,7 +1306,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
                 class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
               >
                 <div
-                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -1463,7 +1481,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
                 </div>
               </div>
               <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
               >
                 <input
                   name="gitOpsEnabled"

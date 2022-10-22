@@ -23,7 +23,11 @@ const StepVerify: React.FC<StepProps<SSHCredSharedObj> & StepVerifyProps> = ({ p
       <Text margin={{ bottom: 'xlarge' }} font={{ size: 'medium' }} color={Color.BLACK}>
         {getString('secrets.stepTitleVerify')}
       </Text>
-      <VerifyConnection closeModal={closeModal} identifier={prevStepData?.detailsData?.identifier as string} />
+      <VerifyConnection
+        closeModal={closeModal}
+        identifier={prevStepData?.detailsData?.identifier as string}
+        showFinishBtn={true}
+      />
     </Container>
   )
 }

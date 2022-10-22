@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly card: string
+  readonly cardsWrapper: string
   readonly modal: string
+  readonly white: string
 }
 export default styles

@@ -22,7 +22,6 @@ import {
 import type {
   HelmVersionOptions,
   ManifestStores,
-  ManifestStoreTypeWithoutConnector,
   ManifestStoreWithoutConnector,
   ManifestTypes,
   PrimaryManifestType
@@ -122,7 +121,8 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsServiceDefinition,
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
-  ]
+  ],
+  CustomDeployment: []
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -243,10 +243,7 @@ export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorIn
   Gcs: Connectors.GCP
 }
 
-export const ManifestToConnectorLabelMap: Record<
-  Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>,
-  StringKeys
-> = {
+export const ManifestToConnectorLabelMap: Record<ManifestStoreWithoutConnector, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',

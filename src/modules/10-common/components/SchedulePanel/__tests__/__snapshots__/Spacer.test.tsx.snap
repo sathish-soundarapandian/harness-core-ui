@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Spacer styling Test Spacer with all layout props 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main spacer"
+    style="width: 90%;"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    />
+  </div>
+</div>
+`;

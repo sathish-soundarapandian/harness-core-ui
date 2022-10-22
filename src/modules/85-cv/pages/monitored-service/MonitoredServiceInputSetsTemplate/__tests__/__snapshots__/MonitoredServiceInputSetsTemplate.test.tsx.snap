@@ -1344,7 +1344,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
               class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
               style="flex-grow: 1;"
             >
-              Using Template: Demo Template  (Stable)
+              Using Template: Demo Template  (1)
             </p>
             <span
               class="bp3-popover-wrapper main"
@@ -1963,6 +1963,497 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                         autocomplete="off"
                         class="bp3-input"
                         name="sources.healthSources.1.spec.metricDefinitions.0.analysis.deploymentVerification.serviceInstanceMetricPath"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card cardStyle"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-card-title"
+          >
+            common.variables
+          </p>
+          <div
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
+          >
+            <img
+              src="test-file-stub"
+              width="117px"
+            />
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
+            >
+              No Runtime inputs variables available
+            </p>
+          </div>
+        </div>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main cardStyle Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            submit
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms inputset for GCO metric having runtime query 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/undefined/settings"
+            >
+              <span
+                class="bp3-icon bp3-icon-cog StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+                icon="cog"
+              >
+                <svg
+                  data-icon="cog"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    cog
+                  </desc>
+                  <path
+                    d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.accountSettings
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                cv.monitoredServices.title
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <h2
+        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold"
+        level="2"
+      >
+        Monitored service inputset
+      </h2>
+    </div>
+  </div>
+  <div
+    class="inputsetContainer"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <div
+        class="Layout--vertical StyledProps--main inputSetForm"
+      >
+        <div
+          class="StyledProps--font StyledProps--main container cardStyle StyledProps--padding-top-small StyledProps--padding-right-medium StyledProps--padding-bottom-small StyledProps--padding-left-medium StyledProps--background-primary6 StyledProps--border"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+              data-icon="template-library"
+            >
+              <svg
+                height="11"
+                viewBox="0 0 12 13"
+                width="11"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs>
+                  <path
+                    d="M1.8 13c.2 0 .4-.3.4-.6V.6C2.2.3 2 0 1.8 0H.4C.2 0 0 .3 0 .6v11.7c0 .4.2.7.4.7h1.4zm8.8 0l.9-.3c.3-.1.5-.4.4-.8L8.9.6C8.8.3 8.5.1 8.1.2l-.9.3c-.4 0-.5.4-.5.7l3.1 11.3c.1.4.5.6.8.5zm-5 0c.2 0 .4-.3.4-.7V.6c0-.3-.2-.6-.4-.6H4.2c-.2 0-.4.3-.4.6v11.7c0 .4.2.7.4.7h1.4z"
+                    id="template-library_svg__a"
+                  />
+                </defs>
+                <clippath
+                  id="template-library_svg__b"
+                >
+                  <use
+                    overflow="visible"
+                    xlink:href="#template-library_svg__a"
+                  />
+                </clippath>
+                <path
+                  clip-path="url(#template-library_svg__b)"
+                  d="M-5-5h22v23H-5z"
+                  fill="#25a6f7"
+                />
+              </svg>
+            </span>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+              style="flex-grow: 1;"
+            >
+              Using Template: gco logs runtime (1)
+            </p>
+            <span
+              class="bp3-popover-wrapper main"
+            >
+              <span
+                class="bp3-popover-target"
+              >
+                <span
+                  class="bp3-icon bp3-icon-more StyledProps--main actionButton StyledProps--color StyledProps--color-white"
+                  icon="more"
+                >
+                  <svg
+                    data-icon="more"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      more
+                    </desc>
+                    <path
+                      d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card cardStyle"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title StyledProps--color StyledProps--color-black"
+          >
+            cv.monitoredServices.serviceAndEnvironment
+          </p>
+          <div
+            class="StyledProps--font StyledProps--main"
+          >
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main addService Button--with-current-color Button--iconOnly"
+              type="button"
+            />
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card cardStyle"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title StyledProps--color StyledProps--color-black"
+          >
+            cv.templates.healthSourceDetails
+          </p>
+          <div
+            class="TableV2--table"
+          >
+            <div
+              class="TableV2--header"
+              role="row"
+            >
+              <div
+                class="TableV2--cell"
+                colspan="1"
+                role="columnheader"
+                style="width: 150px;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  Health Source
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                colspan="1"
+                role="columnheader"
+                style="width: 150px;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  Connector
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                colspan="1"
+                role="columnheader"
+                style="width: 150px;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  Feature
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--body"
+            >
+              <div
+                class="TableV2--row TableV2--card"
+                role="row"
+              >
+                <div
+                  class="TableV2--cells"
+                >
+                  <div
+                    class="TableV2--cell"
+                    role="cell"
+                    style="width: 150px;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        data-icon="service-stackdriver"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 14 12"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.3.2c.1-.1.1 0 .1.1.7 1.1 1.3 2.3 2 3.4.4.7.9 1.5 1.3 2.2.1.1.1.2 0 .3-1.1 1.9-2.2 3.7-3.3 5.6 0 0 0 .2-.1.1-.2-.1-.2-.3-.3-.5-1-1.7-1.9-3.4-2.9-5 0-.2-.1-.3-.1-.4 0-.2.2-.3.3-.5 1-1.7 1.9-3.3 2.9-5 0-.1 0-.2.1-.3z"
+                            fill="#8bc53f"
+                          />
+                          <path
+                            d="M10.3.2c-.2.4-.4.8-.6 1.1-.6 1.1-1.3 2.2-1.9 3.3-.3.5-.5.9-.8 1.4H.5c-.1 0-.2 0-.3-.1.2-.4.4-.8.6-1.1L3.5.3c0-.1.1-.1.2-.1h6.6z"
+                            fill="#39b44a"
+                          />
+                          <path
+                            d="M.2 6H7c.1.1 0 .1 0 .2-.6.9-1.1 1.8-1.6 2.7s-1.1 1.8-1.6 2.8c0 .1-.1.1-.1.2-.1 0-.1-.1-.1-.1C2.7 10.2 1.7 8.6.8 7 .5 6.6.3 6.3.2 6z"
+                            fill="#006837"
+                          />
+                          <path
+                            d="M3.6 11.8c.4-.7.8-1.4 1.2-2.2.5-.8.9-1.6 1.4-2.4.2-.4.4-.7.6-1.1.1 0 .2 0 .2-.1l3.3 5.7s0 .1.1.1H3.6z"
+                            fill="#009145"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        metric
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--cell"
+                    role="cell"
+                    style="width: 150px;"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                    >
+                      &lt;+input&gt;
+                    </p>
+                  </div>
+                  <div
+                    class="TableV2--cell"
+                    role="cell"
+                    style="width: 150px;"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      Cloud Metrics
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bp3-card bp3-elevation-0 Card--card healthSourceInputSet"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-normal StyledProps--color StyledProps--color-black"
+            >
+              cv.healthSource.nameLabel
+              : 
+              metric
+            </p>
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="selectHealthSourceConnector"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-small StyledProps--margin-bottom-small"
+                  >
+                    connectors.selectConnector
+                  </p>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                  data-testid="cr-field-sources.healthSources.0.spec.connectorRef"
+                  style="width: 400px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    <span
+                      class="placeholder"
+                    >
+                      cv.healthSource.connectors.selectConnector
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-normal StyledProps--color StyledProps--color-black"
+              >
+                cv.monitoringSources.metricLabel
+                : 
+                test
+              </p>
+              <div
+                class="bp3-form-group"
+              >
+                <label
+                  class="bp3-label"
+                  for="sources.healthSources.0.spec.metricDefinitions.0.jsonMetricDefinition"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="MonitoredServiceForm_sources.healthSources.0.spec.metricDefinitions.0.jsonMetricDefinition"
+                  >
+                    cv.query
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="sources.healthSources.0.spec.metricDefinitions.0.jsonMetricDefinition"
                         type="text"
                         value=""
                       />

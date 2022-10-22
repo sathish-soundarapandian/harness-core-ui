@@ -30,11 +30,24 @@ const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
 // TODO: change condition to !== 'false' upon GA
 const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
+const enableCIUI = process.env.ENABLE_CI_UI === 'true'
+const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableSCM = process.env.ENABLE_SCM === 'true'
+const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 
 console.log('Common build flags')
-console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO, enableSCM })
+console.table({
+  enableGovernance,
+  enableGitOpsUI,
+  enableChaosUI,
+  enableCCMUI,
+  enableCIUI,
+  enableTIUI,
+  enableSTO,
+  enableSCM,
+  enableFFUI
+})
 
 const config = {
   context: CONTEXT,
@@ -52,7 +65,7 @@ const config = {
         type: 'javascript/auto'
       },
       {
-        test: /\.(j|t)sx?$/,
+        test: /\.[jt]sx?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -181,7 +194,17 @@ const config = {
   plugins: [
     new ExternalRemotesPlugin(),
     new ModuleFederationPlugin(
-      moduleFederationConfig({ enableGovernance, enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enableSCM })
+      moduleFederationConfig({
+        enableGovernance,
+        enableGitOpsUI,
+        enableSTO,
+        enableChaosUI,
+        enableCCMUI,
+        enableCIUI,
+        enableTIUI,
+        enableSCM,
+        enableFFUI
+      })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new webpack.DefinePlugin({
@@ -208,9 +231,22 @@ if (!enableCCMUI) {
   config.resolve.alias['ccmui/MicroFrontendApp'] = ChildAppError
 }
 
+if (!enableCIUI) {
+  // render a mock app when CI MF is disabled
+  config.resolve.alias['ciui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableTIUI) {
+  // render a mock app when TI MF is disabled
+  config.resolve.alias['tiui/MicroFrontendApp'] = ChildAppError
+}
+
 if (!enableChaosUI) {
   // render a mock app when Chaos MF is disabled
   config.resolve.alias['chaos/MicroFrontendApp'] = ChildAppError
+  config.resolve.alias['chaos/PipelineExperimentSelect'] = ChildAppError
+  config.resolve.alias['chaos/ExperimentPreview'] = ChildAppError
+  config.resolve.alias['chaos/ChaosStepExecution'] = ChildAppError
 }
 
 if (!enableSTO) {
@@ -225,6 +261,10 @@ if (!enableSTO) {
 if (!enableSCM) {
   const scmModules = ['scm/App', 'scm/Welcome', 'scm/Repos', 'scm/RepoResources', 'scm/RepoResourceDetails']
   scmModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
+}
+
+if (!enableFFUI) {
+  config.resolve.alias['ffui/MicroFrontendApp'] = ChildAppError
 }
 
 module.exports = config

@@ -12,15 +12,23 @@ import { useModalHook } from '@harness/use-modal'
 
 import { pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import type { KerberosConfigDTO, NTLMConfigDTO, SecretDTOV2, WinRmCredentialsSpecDTO } from 'services/cd-ng'
-import { getSecretReferencesforSSH } from '@secrets/utils/SSHAuthUtils'
+import type {
+  KerberosConfigDTO,
+  NTLMConfigDTO,
+  SecretDTOV2,
+  TGTGenerationSpecDTO,
+  WinRmCredentialsSpecDTO
+} from 'services/cd-ng'
+
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getSecretReferencesForWinRm } from '@secrets/utils/WinRmAuthUtils'
 import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import CreateWinRmCredWizard, { WinRmCredSharedObj } from './CreateWinRmCredWizard'
 import css from './useCreateWinRmCredModal.module.scss'
 
 export interface UseCreateWinRmCredModalProps {
   onSuccess?: (secret: SecretDTOV2) => void
+  onClose?: () => void
 }
 
 export interface UseCreateWinRmCredModalReturn {
@@ -50,14 +58,23 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
         }}
       >
         {view === Views.CREATE ? (
-          <CreateWinRmCredWizard {...props} hideModal={hideModal} />
+          <CreateWinRmCredWizard
+            {...props}
+            hideModal={() => {
+              props.onClose?.()
+              hideModal()
+            }}
+          />
         ) : (
           <CreateWinRmCredWizard
             {...props}
             isEdit={true}
             detailsData={winrmData?.detailsData}
             authData={winrmData?.authData}
-            hideModal={hideModal}
+            hideModal={() => {
+              props.onClose?.()
+              hideModal()
+            }}
           />
         )}
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />
@@ -74,7 +91,7 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
       )
 
       if (_winrmData) {
-        const response = await getSecretReferencesforSSH(_winrmData, params)
+        const response = await getSecretReferencesForWinRm(_winrmData, params)
         setwinrmData({
           detailsData: {
             ...pick(_winrmData, 'name', 'identifier', 'description', 'tags')
@@ -97,7 +114,10 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
               ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).skipCertChecks,
             principal: ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).principal,
             realm: ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).realm,
-            keyPath: ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).keyPath,
+            keyPath: (
+              ((_winrmData.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO)
+                .spec as TGTGenerationSpecDTO
+            )?.keyPath,
             port: (_winrmData.spec as WinRmCredentialsSpecDTO).port || 5985,
             password: response.passwordSecret
           }

@@ -1,9 +1,13 @@
+import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
 import { metricPackResponse } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   dashboardDetailsAPI,
   dashboardDetailsResponse,
@@ -55,6 +59,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.contains('p', '+ Manually input query').click()
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.contains('h4', 'Add your Google Cloud Operations query').should('be.visible')
     cy.fillField('metricName', 'GCO Metric')
@@ -80,24 +85,24 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.wait('@sampleDataResponse')
 
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
     cy.get('input[name="sli"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="healthScore"]').click({ force: true })
 
-    cy.contains('span', 'Risk Category is required.').should('exist')
+    cy.contains('span', validations.riskCategory).should('exist')
     cy.contains('label', 'Errors').click()
-    cy.contains('span', 'Risk Category is required.').should('not.exist')
+    cy.contains('span', validations.riskCategory).should('not.exist')
 
-    cy.contains('span', 'One selection is required.').should('exist')
+    cy.contains('span', validations.assign).should('exist')
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
-    cy.contains('span', 'Service Instance Identifier is required.').should('exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('exist')
     cy.fillField('serviceInstanceField', 'gco_service')
-    cy.contains('span', 'Service Instance Identifier is required.').should('not.exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('not.exist')
 
     cy.findByRole('button', { name: /Submit/i }).click()
 
@@ -130,6 +135,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.contains('p', 'TestDashboard').click()
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', dashboardDetailsAPI, dashboardDetailsResponse)
 
     cy.findAllByRole('button', { name: /Next/g }).last().click()
@@ -142,24 +148,24 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.wait('@sampleDataResponse')
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
     cy.get('input[name="sli"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="healthScore"]').click({ force: true })
 
-    cy.contains('span', 'Risk Category is required.').should('exist')
+    cy.contains('span', validations.riskCategory).should('exist')
     cy.contains('label', 'Errors').click()
-    cy.contains('span', 'Risk Category is required.').should('not.exist')
+    cy.contains('span', validations.riskCategory).should('not.exist')
 
-    cy.contains('span', 'One selection is required.').should('exist')
+    cy.contains('span', validations.assign).should('exist')
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
-    cy.contains('span', 'Service Instance Identifier is required.').should('exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('exist')
     cy.fillField('serviceInstanceField', 'gco_service')
-    cy.contains('span', 'Service Instance Identifier is required.').should('not.exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('not.exist')
 
     cy.findByRole('button', { name: /Submit/i }).click()
 
@@ -185,9 +191,9 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.contains('span', 'Query is required.').should('be.visible')
+    cy.contains('span', validations.query).should('be.visible')
     cy.fillField('query', '{}')
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     cy.contains('p', 'Submit query to see records from Stackdriver Logs').should('be.visible')
 
@@ -201,11 +207,11 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('not.exist')
 
-    cy.contains('span', 'Service Instance is required.').should('be.visible')
+    cy.contains('span', validations.serviceInstance).should('be.visible')
     cy.findByRole('button', { name: /Select path for service instance/i }).click()
     cy.contains('p', 'Select path for service instance').should('be.visible')
     cy.contains('span', 'logName').click()
-    cy.contains('span', 'Service Instance is required.').should('not.exist')
+    cy.contains('span', validations.serviceInstance).should('not.exist')
 
     cy.contains('span', 'Message Identifier is required.').should('be.visible')
     cy.findByRole('button', { name: /Select path for message identifier/i }).click()
@@ -256,6 +262,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.findByText('Monitored Service updated').should('be.visible')
   })
 
+  // Skipping this because it keeps failing in the PRs, Deepesh will be fixing it soon
   it.skip('should be able to edit an existing GCO health source with a Dashboard query', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', monitoredService)
 
@@ -284,5 +291,169 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.findByRole('button', { name: /Next/i }).click()
 
     cy.get('textarea[name="query"]').should('not.be.empty')
+  })
+})
+describe('GCO metric thresholds', () => {
+  beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'CVNG_METRIC_THRESHOLD',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+
+    cy.on('uncaught:exception', () => {
+      return false
+    })
+    cy.login('test', 'test')
+    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+    cy.intercept(
+      'GET',
+      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
+      { allServicesCount: 1, servicesAtRiskCount: 0 }
+    )
+    cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
+  })
+
+  it('should render metric thresholds only if any group is created', () => {
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', monitoredService)
+    cy.intercept('GET', dashboardsAPI, dashboardsResponse).as('dashboardsResponse')
+    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
+
+    cy.populateDefineHealthSource(Connectors.GCP, 'gcp-qa-target', 'Google Cloud Operations')
+
+    cy.get('input[name="product"]').click({ force: true })
+    cy.contains('p', 'Cloud Metrics').click()
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.wait('@dashboardsResponse')
+
+    cy.findAllByRole('button', { name: /Next/i }).last().click()
+
+    cy.contains('span', '+ Manually input query').click()
+
+    cy.get('input[name="metricName"]').clear()
+
+    cy.contains('h4', 'Add your Google Cloud Operations query').should('be.visible')
+    cy.fillField('metricName', 'GCO Metric')
+    cy.get('.ManualInputModal button[type="submit"]').click()
+
+    cy.contains('span', 'Continuous Verification').click()
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
+  })
+
+  it('should render metric thresholds and perform its features', () => {
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', monitoredService)
+    cy.intercept('GET', dashboardsAPI, dashboardsResponse).as('dashboardsResponse')
+    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.populateDefineHealthSource(Connectors.GCP, 'gcp-qa-target', 'Google Cloud Operations')
+
+    cy.get('input[name="product"]').click({ force: true })
+    cy.contains('p', 'Cloud Metrics').click()
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.wait('@dashboardsResponse')
+
+    cy.findAllByRole('button', { name: /Next/i }).last().click()
+
+    cy.contains('span', '+ Manually input query').click()
+
+    cy.get('input[name="metricName"]').clear()
+
+    cy.contains('h4', 'Add your Google Cloud Operations query').should('be.visible')
+    cy.fillField('metricName', 'GCO Metric')
+    cy.get('.ManualInputModal button[type="submit"]').click()
+
+    cy.contains('h3', 'Query Specifications').should('be.visible')
+
+    cy.contains('span', 'Continuous Verification').click({ force: true })
+
+    cy.contains('span', '+ Manually input query').click()
+
+    cy.contains('h4', 'Add your Google Cloud Operations query').should('be.visible')
+
+    cy.get('.ManualInputModal input[name="metricName"]').should('exist')
+    cy.get('.ManualInputModal input[name="metricName"]').type('GCO Metric 2')
+    cy.get('.ManualInputModal button[type="submit"]').click()
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('be.disabled')
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Custom')
+
+    // validations
+    cy.findByRole('button', { name: /Submit/i }).click()
+
+    cy.findAllByText('Required').should('have.length', 3)
+
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'GCO Metric')
+
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    // testing criteria
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").should('have.value', 'Absolute Value')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    // greater than should be smaller than lesser than value
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").type('12')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('1')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").click()
+    cy.contains('p', 'Percentage Deviation').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('not.exist')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.criteriaPercentageType']").click()
+    cy.contains('p', 'Lesser than').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('not.exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('12')
+
+    // Fail fast thresholds
+    cy.contains('div', 'Fail-Fast Thresholds (0)').click()
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.get("input[name='failFastThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'GCO Metric')
+
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('be.disabled')
+
+    cy.get("input[name='failFastThresholds.0.spec.action']").click()
+    cy.contains('p', 'Fail after multiple occurrences').click()
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('not.be.disabled')
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").type('4')
+
+    cy.get("input[name='failFastThresholds.0.criteria.spec.greaterThan']").type('21')
+    cy.get("input[name='failFastThresholds.0.criteria.spec.lessThan']").type('78')
   })
 })

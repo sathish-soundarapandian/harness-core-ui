@@ -68,7 +68,6 @@ describe('Resource Groups Page', () => {
       <TestWrapper
         path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
         pathParams={{ accountId: 'dummy', resourceGroupIdentifier: 'dummyResourceGroupIdentifier' }}
-        defaultFeatureFlagValues={{ ATTRIBUTE_TYPE_ACL_ENABLED: true }}
       >
         <ResourceGroupDetails />
       </TestWrapper>
@@ -89,7 +88,7 @@ describe('Resource Groups Page', () => {
     act(() => {
       fireEvent.click(connector!)
     })
-    expect(getAllByText('rbac.resourceGroup.all')[1]).toBeTruthy()
+    expect(getAllByText('common.all')[1]).toBeTruthy()
     await act(async () => {
       fireEvent.click(getByText(container, 'save'))
     })

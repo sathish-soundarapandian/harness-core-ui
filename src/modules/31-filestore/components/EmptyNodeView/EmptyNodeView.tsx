@@ -29,7 +29,7 @@ export default function EmptyNodeView({ title, description = '' }: EmptyNodeView
   }, [currentNode])
   return (
     <Container className={isModalView ? css.noViewContainerModal : css.noViewContainer}>
-      <Layout.Vertical spacing={'xxlarge'} height={'100%'} flex={{ align: 'center-center' }}>
+      <Layout.Vertical spacing={isModalView ? 'medium' : 'xxlarge'} height={'100%'} flex={{ align: 'center-center' }}>
         <img src={filestoreIllustration} width={'220px'} />
         <Container>
           <Text font={{ weight: 'bold', size: 'medium', align: 'center' }} color={Color.GREY_600}>

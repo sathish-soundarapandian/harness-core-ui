@@ -29,7 +29,9 @@ const commonProps = {
     }
   ],
   selectedScope: 'account' as any,
-  pagination: { itemCount: 1, pageSize: 10, pageCount: 1, pageIndex: 0 }
+  pagination: { itemCount: 1, pageSize: 10, pageCount: 1, pageIndex: 0 },
+  selectedRecords: [],
+  setSelectedRecords: jest.fn()
 }
 
 const setSelectedRecordMock = jest.fn()

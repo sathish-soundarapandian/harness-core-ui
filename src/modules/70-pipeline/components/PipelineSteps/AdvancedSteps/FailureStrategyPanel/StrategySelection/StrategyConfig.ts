@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Strategy, ErrorType, FailureErrorType } from '@pipeline/utils/FailureStrategyUtils'
+import { Strategy, StrategyType, ErrorType, FailureErrorType } from '@pipeline/utils/FailureStrategyUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 
-export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, Strategy[]> = (
+export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, StrategyType[]> = (
   domain = StageType.DEPLOY
 ) => {
   switch (domain) {
@@ -20,7 +20,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
@@ -29,7 +30,13 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.MarkAsSuccess,
           Strategy.Abort
         ],
-        [Modes.STAGE]: [Strategy.Ignore, Strategy.Retry, Strategy.MarkAsSuccess, Strategy.Abort]
+        [Modes.STAGE]: [
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
+        ]
       }
     case StageType.CUSTOM:
       return {
@@ -39,7 +46,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
@@ -55,7 +63,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
         ]
       }
     case StageType.DEPLOY:
@@ -67,7 +76,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
         ],
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
@@ -83,7 +93,8 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
-          Strategy.Abort
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
         ]
       }
   }
@@ -100,9 +111,9 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.Verification,
     ErrorType.PolicyEvaluationFailure,
     ErrorType.AllErrors,
-    ErrorType.ExecutionInputTimeoutError
+    ErrorType.InputTimeoutError
   ],
-  [StageType.BUILD]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.AllErrors],
+  [StageType.BUILD]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
   [StageType.APPROVAL]: [
     ErrorType.Authentication,
     ErrorType.Authorization,
@@ -112,11 +123,23 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.Unknown,
     ErrorType.Verification,
     ErrorType.AllErrors,
-    ErrorType.PolicyEvaluationFailure
+    ErrorType.PolicyEvaluationFailure,
+    ErrorType.InputTimeoutError
   ],
-  [StageType.FEATURE]: [],
+  [StageType.FEATURE]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
   [StageType.SECURITY]: [],
-  [StageType.PIPELINE]: [],
+  [StageType.PIPELINE]: [
+    ErrorType.Authentication,
+    ErrorType.Authorization,
+    ErrorType.Connectivity,
+    ErrorType.DelegateProvisioning,
+    ErrorType.Timeout,
+    ErrorType.Unknown,
+    ErrorType.Verification,
+    ErrorType.AllErrors,
+    ErrorType.PolicyEvaluationFailure,
+    ErrorType.InputTimeoutError
+  ],
   [StageType.CUSTOM]: [
     ErrorType.Authentication,
     ErrorType.Authorization,
@@ -126,7 +149,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.Unknown,
     ErrorType.Verification,
     ErrorType.AllErrors,
-    ErrorType.PolicyEvaluationFailure
+    ErrorType.PolicyEvaluationFailure,
+    ErrorType.InputTimeoutError
   ],
   [StageType.Template]: [],
   [StageType.MATRIX]: [],

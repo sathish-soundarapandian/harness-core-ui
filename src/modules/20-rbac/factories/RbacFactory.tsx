@@ -40,6 +40,7 @@ export interface RbacAttributeModalProps {
 export interface ResourceHandler {
   icon: IconName
   label: keyof StringsMap
+  labelSingular?: keyof StringsMap
   labelOverride?: keyof StringsMap | undefined
   permissionLabels?: {
     [key in PermissionIdentifier]?: string | React.ReactElement

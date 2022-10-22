@@ -18,8 +18,8 @@ import {
   Heading
 } from '@harness/uicore'
 import React, { useCallback, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useStrings } from 'framework/strings'
+import { useParams, useHistory } from 'react-router-dom'
+import { useStrings, String } from 'framework/strings'
 import {
   FeatureAvailablePipeline,
   FeaturePipeline,
@@ -33,8 +33,12 @@ import { showToaster } from '@cf/utils/CFUtils'
 import useResponseError from '@cf/hooks/useResponseError'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import imageUrl from '@cf/images/pipeline_flags_empty_state.svg'
+import routes from '@common/RouteDefinitions'
+import { NoData } from '@cf/components/NoData/NoData'
 import PipelineCard from '../pipeline-card/PipelineCard'
 import css from './AvailablePipelinesDrawer.module.scss'
+
 interface AvailablePipelinesDrawerProps {
   isOpen: boolean
   flagIdentifier: string
@@ -50,6 +54,7 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
   isOpen,
   onClose
 }) => {
+  const history = useHistory()
   const { getString } = useStrings()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { handleResponseError } = useResponseError()
@@ -134,11 +139,12 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
     [queryParams, refetchAvailablePipelines]
   )
 
+  const pipelinesAvailable = !!availableFeaturePipelines?.availablePipelines.length
   const isLoading = getAvailablePipelinesLoading || patchFeaturePiplineLoading || createFeaturePiplineLoading
 
   return (
     <Drawer position={Position.RIGHT} isOpen={isOpen} onClose={onClose} className={css.drawer}>
-      <Layout.Vertical padding="xxlarge" spacing="medium">
+      <Layout.Vertical padding="xxlarge" spacing="medium" className={css.drawerContent}>
         <Container flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <Heading level={3} font={{ variation: FontVariation.H3 }}>
             {getString('cf.featureFlags.flagPipeline.drawerTitle')}
@@ -152,35 +158,56 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
             aria-label={getString('close')}
           />
         </Container>
-        <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500}>
-          {getString('cf.featureFlags.flagPipeline.drawerDescription')}
+        <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500} tag="div">
+          <String stringID="cf.featureFlags.flagPipeline.drawerDescription" useRichText />
         </Text>
-        <Container flex={{ justifyContent: 'space-between' }}>
-          <Text font={{ variation: FontVariation.BODY2 }} className={css.envTag}>
-            {getString('cf.featureFlags.flagPipeline.envText', { env: environmentIdentifier })}
-          </Text>
-          <ExpandingSearchInput alwaysExpanded onChange={onSearchInputChanged} />
-        </Container>
+        {pipelinesAvailable && (
+          <Container flex={{ justifyContent: 'space-between' }}>
+            <Text font={{ variation: FontVariation.BODY2 }} className={css.envTag}>
+              {getString('cf.featureFlags.flagPipeline.envText', { env: environmentIdentifier })}
+            </Text>
+            <ExpandingSearchInput alwaysExpanded onChange={onSearchInputChanged} />
+          </Container>
+        )}
+
         {isLoading ? (
           <ContainerSpinner height="100%" flex={{ align: 'center-center' }} />
         ) : (
-          <Container className={css.pipelineCardsGrid} role="list">
-            {availableFeaturePipelines?.availablePipelines.length ? (
-              availableFeaturePipelines.availablePipelines.map(pipeline => (
-                <PipelineCard
-                  key={pipeline.identifier}
-                  pipelineName={pipeline.name}
-                  pipelineDescription={pipeline.description}
-                  isSelected={selectedPipeline?.identifier === pipeline.identifier}
-                  onClick={() => setSelectedPipeline(pipeline)}
-                />
-              ))
+          <>
+            {pipelinesAvailable ? (
+              <Container className={css.pipelineCardsGrid} role="list">
+                {availableFeaturePipelines?.availablePipelines.map(pipeline => (
+                  <PipelineCard
+                    key={pipeline.identifier}
+                    pipelineName={pipeline.name}
+                    pipelineDescription={pipeline.description}
+                    isSelected={selectedPipeline?.identifier === pipeline.identifier}
+                    onClick={() => setSelectedPipeline(pipeline)}
+                  />
+                ))}
+              </Container>
             ) : (
-              <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500}>
-                {getString('cf.featureFlags.flagPipeline.noAvailablePipelines')}
-              </Text>
+              <Container className={css.noDataContainer}>
+                <NoData
+                  message={getString('cf.featureFlags.flagPipeline.noAvailablePipelinesMessage')}
+                  buttonText={getString('common.createPipeline')}
+                  description={getString('cf.featureFlags.flagPipeline.noAvailablePipelinesDescription')}
+                  imageURL={imageUrl}
+                  onClick={() => {
+                    history.push(
+                      routes.toPipelines({
+                        accountId: accountIdentifier,
+                        orgIdentifier,
+                        module: 'cf',
+                        projectIdentifier
+                      })
+                    )
+                  }}
+                  imgWidth={650}
+                />
+              </Container>
             )}
-          </Container>
+          </>
         )}
       </Layout.Vertical>
       {(configuredPipelineDetails || selectedPipeline) && (

@@ -8,7 +8,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, PageHeader, Dialog, PageSpinner } from '@wings-software/uicore'
 import { useParams, useHistory } from 'react-router-dom'
-import { camelCase } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import type { IDialogProps } from '@blueprintjs/core'
 import moment from 'moment'
@@ -37,7 +36,13 @@ import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailV
 import BuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/BuildExecutionsChart'
 import RepositoryCard from '@pipeline/components/Dashboards/BuildCards/RepositoryCard'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
-import { ActiveStatus, FailedStatus, useErrorHandler, useRefetchCall } from '@pipeline/components/Dashboards/shared'
+import {
+  ActiveStatus,
+  FailedStatus,
+  mapToExecutionStatus,
+  useErrorHandler,
+  useRefetchCall
+} from '@pipeline/components/Dashboards/shared'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { CardVariant } from '@pipeline/utils/constants'
@@ -92,9 +97,7 @@ function buildInfoToExecutionSummary(buildInfo: BuildActiveInfo | BuildFailureIn
     startTs: buildInfo.startTs,
     endTs: typeof buildInfo.endTs === 'number' && buildInfo.endTs > 0 ? buildInfo.endTs : undefined,
     name: buildInfo.piplineName,
-    status: (buildInfo.status
-      ? buildInfo.status.charAt(0).toUpperCase() + camelCase(buildInfo.status).slice(1)
-      : '') as any,
+    status: mapToExecutionStatus(buildInfo.status),
     planExecutionId: (buildInfo as any).planExecutionId, // TODO: fix once BE changes are merged
     pipelineIdentifier: buildInfo.pipelineIdentifier,
     moduleInfo: {

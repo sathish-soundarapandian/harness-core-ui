@@ -24,6 +24,7 @@ module.exports = {
     '!src/framework/app/App.tsx',
     '!src/framework/strings/languageLoader.ts',
     '!src/framework/AppStore/AppStoreContext.tsx',
+    '!src/microfrontends/index.ts',
     '!src/**/*.d.ts',
     '!src/**/*.test.{ts,tsx}',
     '!src/**/*.stories.{ts,tsx}',
@@ -46,7 +47,8 @@ module.exports = {
     '!src/modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext.tsx',
     '!src/modules/70-pipeline/components/PipelineStudio/ExecutionGraph/**',
     '!src/modules/25-governance/**', // 25-governance will be moved to a separate micro-frontend repository shortly
-    '!src/modules/75-cd/factory/**'
+    '!src/modules/75-cd/factory/**',
+    '!src/framework/tooltip/TooltipContext.tsx'
   ],
   coverageReporters: ['lcov', 'json-summary', 'json'],
   transform: {

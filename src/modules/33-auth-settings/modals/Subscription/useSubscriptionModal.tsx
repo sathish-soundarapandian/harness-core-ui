@@ -36,6 +36,7 @@ interface UseSubscribeModalReturns {
   openSubscribeModal: ({ _plan, _module, _time }: OpenSubscribeModalProps) => void
   closeSubscribeModal: () => void
 }
+type SetStateMethod = (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
 
 interface OpenSubscribeModalProps {
   _module: Module
@@ -71,7 +72,6 @@ interface LeftViewProps {
 interface KVPair {
   [key: string]: any
 }
-
 const stripePromise = window.stripeApiKey ? loadStripe(window.stripeApiKey) : Promise.resolve(null)
 
 const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, countries, states }) => {
@@ -161,6 +161,7 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
           subscriptionDetails={subscriptionProps}
           setSubscriptionDetails={setSubscriptionProps}
           module={module}
+          canChangePaymentFrequency={view < SubscribeViews.PAYMENT_METHOD}
         />
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -226,7 +227,7 @@ const LeftView = ({
           module={module}
           setView={setView}
           subscriptionProps={subscriptionProps}
-          setSubscriptionProps={setSubscriptionProps}
+          setSubscriptionProps={setSubscriptionProps as SetStateMethod}
           className={css.leftView}
           onPriceSkewsLoad={onPriceSkewsLoad}
         />

@@ -11,7 +11,7 @@ import cx from 'classnames'
 import { FormikForm, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AzureWebAppRollbackData, AzureWebAppRollbackProps } from './Rollback.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -31,7 +31,7 @@ export function AzureWebAppRollbackInputStepRef<T extends AzureWebAppRollbackDat
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -41,6 +41,8 @@ export function AzureWebAppRollbackInputStepRef<T extends AzureWebAppRollbackDat
                 expressions,
                 disabled: readonly
               }}
+              fieldPath={'timeout'}
+              template={inputSetData?.template}
             />
           </div>
         )

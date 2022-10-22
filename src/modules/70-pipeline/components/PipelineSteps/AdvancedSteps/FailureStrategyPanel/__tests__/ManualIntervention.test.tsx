@@ -14,7 +14,7 @@ import {
   queryAllByAttribute as queryAllByAttributeGlobal
 } from '@testing-library/react'
 
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { Strategy, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { Basic } from '../FailureStrategyPanel.stories'
 
@@ -26,7 +26,7 @@ describe('Failure Strategy: ManualIntervention', () => {
 
     const queryByAttribute = (name: string, id: string): HTMLElement | null =>
       queryByAttributeGlobal(name, container, id)
-    const queryFieldAndStrategy = (name: string, strategy: Strategy): HTMLElement | null =>
+    const queryFieldAndStrategy = (name: string, strategy: StrategyType): HTMLElement | null =>
       container.querySelector(`input[name="${name}"][value=${strategy}]`)
 
     const selection = queryFieldAndStrategy('failureStrategies[0].onFailure.action.type', Strategy.ManualIntervention)!
@@ -75,7 +75,7 @@ describe('Failure Strategy: ManualIntervention', () => {
       <Basic data={{ failureStrategies: [{ onFailure: { errors: [], action: {} as any } }] }} mode={Modes.STEP} />
     )
 
-    const queryFieldAndStrategy = (name: string, strategy: Strategy): HTMLElement | null =>
+    const queryFieldAndStrategy = (name: string, strategy: StrategyType): HTMLElement | null =>
       container.querySelector(`input[name="${name}"][value=${strategy}]`)
 
     const selection = queryFieldAndStrategy('failureStrategies[0].onFailure.action.type', Strategy.ManualIntervention)!

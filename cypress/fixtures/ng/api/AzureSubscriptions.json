@@ -1,0 +1,8 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "subscriptions": [{ "subscriptionName": "Azure subscription 1", "subscriptionId": "1111-1111-1111-1111-1111" }]
+  },
+  "metaData": null,
+  "correlationId": "320fcf62-4890-4746-9cee-8637d8f7caae"
+}

@@ -23,7 +23,7 @@ describe('Load service health dashboard', () => {
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.visitChangeIntelligence()
   })
-  it.skip('Load dashboard', () => {
+  it('Load dashboard', () => {
     cy.intercept('GET', '/cv/api/monitored-service/appd_prod?*', monitoredServiceData).as('monitoredServiceCall')
     cy.intercept('GET', heatlhScore.url, heatlhScore.data).as('heatlhScoreCall')
     cy.intercept('GET', heatlhScoreTimeLine.url, heatlhScoreTimeLine.data).as('heatlhScoreTimeLineCall')
@@ -34,8 +34,8 @@ describe('Load service health dashboard', () => {
     cy.intercept('GET', serviceScreenLogsRadarClusterURL, serviceScreenLogsRadarClusterData).as(
       'serviceScreenLogsRadarClusterCall'
     )
-
-    cy.contains('div', 'appd').click()
+    cy.contains('p', 'Monitored Services').click({ force: true })
+    cy.contains('p', 'appd').click()
     cy.wait('@monitoredServiceCall')
     cy.contains('div', 'Service Health').click()
     cy.wait('@heatlhScoreCall')

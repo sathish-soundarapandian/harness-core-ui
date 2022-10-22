@@ -131,8 +131,9 @@ export function processFormData(
     accountIdentifier: accountId
   }
 
+  queryParams.storeType = formData.storeType
+
   if (formData.storeType === StoreType.REMOTE) {
-    queryParams.storeType = formData.storeType
     queryParams.repoName = formData.repo
     queryParams.branch = formData.branch
     queryParams.filePath = formData.filePath

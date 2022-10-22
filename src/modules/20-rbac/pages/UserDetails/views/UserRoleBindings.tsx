@@ -65,15 +65,19 @@ const RenderColumnAssignedAt: Renderer<CellProps<RoleAssignmentAggregate>> = ({ 
   }
 
   const organization = (
-    <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} icon="nav-organization">
+    <Text lineClamp={1} font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} icon="nav-organization">
       {scope?.orgName}
     </Text>
   )
 
   if (scope.projectName) {
     return (
-      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} icon="nav-project">
+      <Layout.Horizontal
+        padding={{ right: 'medium' }}
+        spacing="small"
+        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      >
+        <Text lineClamp={1} font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} icon="nav-project">
           {scope.projectName}
         </Text>
         <Text font={{ variation: FontVariation.TINY }} color={Color.GREY_600}>

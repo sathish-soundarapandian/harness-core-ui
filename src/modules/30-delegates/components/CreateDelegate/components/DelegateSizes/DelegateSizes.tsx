@@ -25,10 +25,10 @@ interface DelegateSizeProps {
 }
 
 const delegateSizeUpto = {
-  [DelegateSize.LAPTOP]: 2,
-  [DelegateSize.SMALL]: 10,
-  [DelegateSize.MEDIUM]: 20,
-  [DelegateSize.LARGE]: 40
+  [DelegateSize.LAPTOP]: 25,
+  [DelegateSize.SMALL]: 50,
+  [DelegateSize.MEDIUM]: 100,
+  [DelegateSize.LARGE]: 200
 }
 
 const filterDelegatesize = (delegateSizes: any, size: any) => {

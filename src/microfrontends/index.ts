@@ -6,27 +6,43 @@
  */
 
 import type React from 'react'
-import type ReactMonacoEditor from 'react-monaco-editor'
-import type { MonacoDiffEditor } from 'react-monaco-editor'
-import type { PermissionsContextProps } from 'framework/rbac/PermissionsContext'
-import type { LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
-import type { AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
-import type { UseLogoutReturn } from 'framework/utils/SessionUtils'
-import type { NGBreadcrumbsProps } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+
+// component types
+import type { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import type RbacButton from '@rbac/components/Button/Button'
+import type RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import type MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
+import type YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import type MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
+import type RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
+import type LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
+
+// hook types
+import type { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import type { useTelemetry } from '@common/hooks/useTelemetry'
+import type { useLogout } from 'framework/utils/SessionUtils'
+import type useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import type { usePermission } from '@rbac/hooks/usePermission'
+import type useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import type { useFeature } from '@common/hooks/useFeatures'
+
+// parent context types
+import type { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
+import type { PermissionsContext, PermissionsContextProps } from 'framework/rbac/PermissionsContext'
+import type { LicenseStoreContext, LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
+import type { TooltipContext } from 'framework/tooltip/TooltipContext'
+
+// enums
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { ButtonProps } from '@rbac/components/Button/Button'
-import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
-import type { Title, UseDocumentTitleReturn } from '@common/hooks/useDocumentTitle'
-import type { ExtendedMonacoEditorProps } from '@common/components/MonacoEditor/MonacoEditor'
-import type { ExtendedMonacoDiffEditorProps } from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
-import type { PageParams, TelemetryReturnType } from '@common/hooks/useTelemetry'
-import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
+
+// MFE prop types
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
+import type { TIUIAppCustomProps } from '@pipeline/pages/execution/ExecutionTestView/interfaces/TIUIApp.types'
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
-import type { RbacErrorReturn } from '@rbac/utils/useRBACError/useRBACError'
+import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 
 export interface Scope {
   accountId?: string
@@ -35,30 +51,34 @@ export interface Scope {
 }
 
 export interface CommonComponents {
-  NGBreadcrumbs: React.ComponentType<Partial<NGBreadcrumbsProps>>
-  RbacButton: React.ComponentType<ButtonProps>
-  RbacMenuItem: React.ComponentType<RbacMenuItemProps>
-  MonacoEditor: React.ForwardRefExoticComponent<ExtendedMonacoEditorProps & React.RefAttributes<ReactMonacoEditor>>
-  YAMLBuilder: React.FC<YamlBuilderProps>
-  MonacoDiffEditor: React.ForwardRefExoticComponent<
-    ExtendedMonacoDiffEditorProps & React.RefAttributes<MonacoDiffEditor>
-  >
+  NGBreadcrumbs: typeof NGBreadcrumbs
+  RbacButton: typeof RbacButton
+  RbacMenuItem: typeof RbacMenuItem
+  MonacoEditor: typeof MonacoEditor
+  YAMLBuilder: typeof YAMLBuilder
+  MonacoDiffEditor: typeof MonacoDiffEditor
+  RBACTooltip?: typeof RBACTooltip
+  LevelUpBanner?: typeof LevelUpBanner
 }
 
 export interface Hooks {
-  useDocumentTitle(title: Title, accountLevel?: boolean): UseDocumentTitleReturn
-  useTelemetry?: (pageParams: PageParams) => TelemetryReturnType
-  useLogout?: () => UseLogoutReturn
-  useRBACError?: () => RbacErrorReturn
+  useDocumentTitle: typeof useDocumentTitle
+  useTelemetry?: typeof useTelemetry
+  useLogout?: typeof useLogout
+  useRBACError?: typeof useRBACError
+  usePermission?: typeof usePermission
+  useCreateConnectorModal?: typeof useCreateConnectorModal
+  useFeature?: typeof useFeature
 }
 
 /**
  * Parent contexts which consists of all the context used in the parent app
  */
 export interface ParentContext {
-  appStoreContext: React.Context<AppStoreContextProps>
-  permissionsContext: React.Context<PermissionsContextProps>
-  licenseStoreProvider: React.Context<LicenseStoreContextProps>
+  appStoreContext: typeof AppStoreContext
+  permissionsContext: typeof PermissionsContext
+  licenseStoreProvider: typeof LicenseStoreContext
+  tooltipContext?: typeof TooltipContext
 }
 
 export interface ChildAppProps {
@@ -86,5 +106,7 @@ export {
   GitOpsCustomMicroFrontendProps,
   STOAppCustomProps,
   CCMUIAppCustomProps,
-  ChaosCustomMicroFrontendProps
+  TIUIAppCustomProps,
+  ChaosCustomMicroFrontendProps,
+  FFCustomMicroFrontendProps
 }

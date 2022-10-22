@@ -8,9 +8,10 @@
 import React, { useMemo } from 'react'
 import type { CellProps, Renderer } from 'react-table'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { Container, Layout, Popover, Text, PageError, useToaster } from '@wings-software/uicore'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import { HTMLTable, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import ReactTimeago from 'react-timeago'
 import { useParams } from 'react-router-dom'
@@ -27,6 +28,7 @@ import css from './ActiveServiceInstances.module.scss'
 let TOTAL_VISIBLE_INSTANCES = 7
 export interface TableRowData {
   artifactVersion?: string
+  artifactPath?: string
   envId?: string
   envName?: string
   infraIdentifier?: string
@@ -59,6 +61,7 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
           env.instanceGroupedByInfraList?.forEach((infra, infraIndex) => {
             tableData.push({
               artifactVersion: artifactVersion,
+              artifactPath: defaultTo(artifact.artifactPath, ''),
               showArtifact: envShow && !infraIndex,
               envId: env.envId,
               envName: env.envName,
@@ -87,17 +90,22 @@ export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedB
       let envShow = true
       artifact.instanceGroupedByEnvironmentList?.forEach(env => {
         let totalInstancesPerEnv = 0
+        let totalInfraPerEnv = 0
         if (env.envId && env.envName) {
           env.instanceGroupedByInfraList?.forEach(infra => {
             totalInstancesPerEnv += infra.count || 0
+            if (infra.infraIdentifier) {
+              totalInfraPerEnv += 1
+            }
           })
           tableData.push({
             artifactVersion: artifact.artifactVersion,
+            artifactPath: defaultTo(artifact.artifactPath, ''),
             showArtifact: envShow,
             envId: env.envId,
             envName: env.envName,
             showEnv: true,
-            totalInfras: env.instanceGroupedByInfraList?.length,
+            totalInfras: totalInfraPerEnv,
             instanceCount: totalInstancesPerEnv,
             tableType: TableType.PREVIEW
           })
@@ -112,6 +120,7 @@ export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedB
 export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
   let artifactVersion: string | undefined
+  let artifactPath: string | undefined
   let envName: string | undefined
   let infraName: string | undefined
   let totalEnvs = 0
@@ -121,6 +130,7 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
   instanceGroupedByArtifact?.forEach(artifact => {
     if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
       artifactVersion ??= artifact.artifactVersion
+      artifactPath ??= artifact.artifactPath
       artifact.instanceGroupedByEnvironmentList?.forEach(env => {
         if (env.envId && env.envName) {
           totalEnvs++
@@ -141,6 +151,7 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
   if (totalEnvs && artifactVersion) {
     tableData.push({
       artifactVersion: artifactVersion,
+      artifactPath: defaultTo(artifactPath, ''),
       showArtifact: true,
       envName: envName,
       showEnv: true,
@@ -157,18 +168,52 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
 
 export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { artifactVersion, showArtifact }
+    original: { artifactVersion, showArtifact, artifactPath }
   }
 }) => {
+  const { getString } = useStrings()
+
+  const popoverTable = (
+    <HTMLTable small style={{ fontSize: 'small' }}>
+      <thead>
+        <tr>
+          <th>{getString('pipeline.artifactTriggerConfigPanel.artifact')}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {artifactVersion ? (
+          <tr>
+            <td>{getString('cd.artifactVersion')}</td>
+            <td>{artifactVersion}</td>
+          </tr>
+        ) : null}
+        {artifactPath ? (
+          <tr>
+            <td>{getString('cd.artifactPath')}</td>
+            <td>{artifactPath}</td>
+          </tr>
+        ) : null}
+      </tbody>
+    </HTMLTable>
+  )
+
   return showArtifact ? (
-    <Text
-      style={{ maxWidth: '200px', paddingRight: 'var(--spacing-5)' }}
-      font={{ size: 'small', weight: 'semi-bold' }}
-      lineClamp={1}
-      color={Color.GREY_800}
+    <Popover
+      interactionKind="hover"
+      modifiers={{ preventOverflow: { escapeWithReference: true } }}
+      position={Position.RIGHT}
     >
-      {artifactVersion}
-    </Text>
+      <Text
+        style={{ maxWidth: '200px', paddingRight: 'var(--spacing-5)' }}
+        font={{ size: 'small', weight: 'semi-bold' }}
+        lineClamp={1}
+        tooltipProps={{ disabled: true }}
+        color={Color.GREY_800}
+      >
+        {artifactVersion}
+      </Text>
+      {popoverTable}
+    </Popover>
   ) : (
     <></>
   )
@@ -255,7 +300,7 @@ export const RenderInfraCount: Renderer<CellProps<TableRowData>> = ({
       </Text>
     </Container>
   ) : (
-    <></>
+    <Text className={css.textStyle}>{'-'}</Text>
   )
 }
 

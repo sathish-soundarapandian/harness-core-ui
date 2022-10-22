@@ -245,6 +245,7 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -424,12 +425,6 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
-    | 'MEDIA_NOT_SUPPORTED'
-    | 'AWS_ECS_ERROR'
-    | 'AWS_APPLICATION_AUTO_SCALING'
-    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
-    | 'AWS_ECS_CLIENT_ERROR'
-    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -594,6 +589,7 @@ export interface ErrorMetadata {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -773,12 +769,6 @@ export interface ErrorMetadata {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
-    | 'MEDIA_NOT_SUPPORTED'
-    | 'AWS_ECS_ERROR'
-    | 'AWS_APPLICATION_AUTO_SCALING'
-    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
-    | 'AWS_ECS_CLIENT_ERROR'
-    | 'AWS_STS_ERROR'
   errorMessage?: string
 }
 
@@ -985,6 +975,7 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1164,12 +1155,6 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
-    | 'MEDIA_NOT_SUPPORTED'
-    | 'AWS_ECS_ERROR'
-    | 'AWS_APPLICATION_AUTO_SCALING'
-    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
-    | 'AWS_ECS_CLIENT_ERROR'
-    | 'AWS_STS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1436,6 +1421,7 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1615,12 +1601,6 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
-    | 'MEDIA_NOT_SUPPORTED'
-    | 'AWS_ECS_ERROR'
-    | 'AWS_APPLICATION_AUTO_SCALING'
-    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
-    | 'AWS_ECS_CLIENT_ERROR'
-    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1804,6 +1784,8 @@ export const getNGDashboardHealthStatusPromise = (
 
 export interface GetDeploymentStatsOverviewQueryParams {
   accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   groupBy: 'DAY' | 'WEEK' | 'MONTH'
@@ -1873,6 +1855,8 @@ export const getDeploymentStatsOverviewPromise = (
 
 export interface GetCountsQueryParams {
   accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
 }

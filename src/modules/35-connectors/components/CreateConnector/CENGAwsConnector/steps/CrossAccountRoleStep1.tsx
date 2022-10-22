@@ -6,6 +6,8 @@
  */
 
 import React, { useRef, useState } from 'react'
+import { uniq } from 'lodash-es'
+import cx from 'classnames'
 import { Button, Layout, StepProps, CardSelect, Icon, IconName, Container, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -16,34 +18,44 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import css from '../CreateCeAwsConnector.module.scss'
 
-enum Features {
-  VISIBILITY,
-  OPTIMIZATION,
-  BILLING
+export enum Features {
+  VISIBILITY = 'VISIBILITY',
+  OPTIMIZATION = 'OPTIMIZATION',
+  BILLING = 'BILLING'
 }
 
-export type FeaturesString = keyof typeof Features
 interface CardData {
   icon: IconName
   text: string
-  value: FeaturesString
+  value: Features
   heading: string
   prefix: string
   features: string[]
   footer: React.ReactNode
 }
 
-interface DefaultCardType extends Omit<CardData, 'value'> {
-  value: 'DEFAULT'
-}
-
-const useSelectedCards = (featuresEnabled: FeaturesString[]) => {
+const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
   const FeatureCards = useRef<CardData[]>([
     {
       icon: 'ce-visibility',
       text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-      value: 'VISIBILITY',
+      value: Features.BILLING,
+      heading: getString('connectors.costVisibility'),
+      prefix: getString('common.aws'),
+      features: [
+        getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat5')
+      ],
+      footer: getString('connectors.ceAws.crossAccountRoleStep1.default.footer')
+    },
+    {
+      icon: 'ce-visibility',
+      text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+      value: Features.VISIBILITY,
       heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
       prefix: getString('connectors.ceAws.crossAccountRoleStep1.visible.prefix'),
       features: [
@@ -68,7 +80,7 @@ const useSelectedCards = (featuresEnabled: FeaturesString[]) => {
     {
       icon: 'nav-settings',
       text: getString('connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
-      value: 'OPTIMIZATION',
+      value: Features.OPTIMIZATION,
       heading: getString('common.ce.autostopping'),
       prefix: getString('connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
       features: [
@@ -112,13 +124,16 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   const { getString } = useStrings()
   const { prevStepData, nextStep, previousStep } = props
   const featuresEnabled = prevStepData?.spec?.featuresEnabled || []
-  const { selectedCards, setSelectedCards, FeatureCards } = useSelectedCards(featuresEnabled)
+  const isGovCloudAccount = prevStepData?.spec?.isAWSGovCloudAccount
+  const defaultSelectedFeature = isGovCloudAccount ? Features.OPTIMIZATION : Features.BILLING
+  const { selectedCards, setSelectedCards, FeatureCards } = useSelectedCards(
+    uniq([...featuresEnabled, defaultSelectedFeature]) as Features[]
+  )
 
   useStepLoadTelemetry(CE_AWS_CONNECTOR_CREATION_EVENTS.LOAD_CHOOSE_REQUIREMENTS)
 
   const handleSubmit = () => {
-    const features: FeaturesString[] = selectedCards.map(card => card.value)
-    if (prevStepData?.includeBilling) features.push('BILLING')
+    const features: Features[] = selectedCards.map(card => card.value)
     const newspec = {
       crossAccountAccess: { crossAccountRoleArn: '' },
       ...prevStepData?.spec,
@@ -139,6 +154,7 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   }
 
   const handleCardSelection = (item: CardData) => {
+    if (item.value === defaultSelectedFeature) return
     const sc = [...selectedCards]
     const index = sc.indexOf(item)
     if (index > -1) {
@@ -174,20 +190,17 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
           </Text>
         </Layout.Horizontal>
         <div style={{ flex: 1 }}>
-          <div className={css.cards}>
-            <DefaultCard />
-            <CardSelect
-              data={FeatureCards}
-              selected={selectedCards}
-              multi={true}
-              className={css.grid}
-              onChange={item => {
-                handleCardSelection(item)
-              }}
-              cornerSelected={true}
-              renderItem={item => <Card {...item} />}
-            />
-          </div>
+          <CardSelect
+            data={FeatureCards}
+            selected={selectedCards}
+            multi={true}
+            className={css.cards}
+            onChange={item => {
+              handleCardSelection(item)
+            }}
+            cornerSelected={true}
+            renderItem={item => <Card {...item} isDefault={defaultSelectedFeature === item.value} />}
+          />
           <Layout.Horizontal className={css.buttonPanel} spacing="small">
             <Button text={getString('previous')} icon="chevron-left" onClick={handleprev}></Button>
             <Button
@@ -205,10 +218,18 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   )
 }
 
-const Card = (props: CardData | DefaultCardType) => {
-  const { prefix, icon, heading, features, footer } = props
+interface CardProps extends CardData {
+  isDefault: boolean
+}
+
+const Card = (props: CardProps) => {
+  const { prefix, icon, heading, features, footer, isDefault } = props
   return (
-    <Container className={css.featureCard}>
+    <Container
+      className={cx(css.featureCard, {
+        [css.defaultCard]: isDefault
+      })}
+    >
       <Layout.Vertical spacing="medium" padding={{ left: 'large', right: 'large' }}>
         <Layout.Horizontal spacing="small">
           <Icon name={icon} size={32} />
@@ -244,36 +265,6 @@ const Card = (props: CardData | DefaultCardType) => {
         </Text>
       </Container>
     </Container>
-  )
-}
-
-const DefaultCard = () => {
-  const { getString } = useStrings()
-  const card: DefaultCardType = {
-    icon: 'ce-visibility',
-    text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-    value: 'DEFAULT',
-    heading: getString('connectors.costVisibility'),
-    prefix: getString('common.aws'),
-    features: [
-      getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
-      getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
-      getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
-      getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
-      getString('connectors.ceAzure.chooseRequirements.billing.feat5')
-    ],
-    footer: getString('connectors.ceAws.crossAccountRoleStep1.default.footer')
-  }
-
-  return (
-    <CardSelect
-      data={[card]}
-      selected={card}
-      onChange={() => void 0}
-      cornerSelected={true}
-      renderItem={item => <Card {...item} />}
-      cardClassName={css.defaultCard}
-    />
   )
 }
 

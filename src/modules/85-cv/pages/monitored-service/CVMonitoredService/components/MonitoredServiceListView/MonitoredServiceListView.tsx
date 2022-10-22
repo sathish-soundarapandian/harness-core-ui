@@ -8,8 +8,11 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
-import { Container, Text, Layout, TableV2, NoDataCard, Heading, Utils } from '@wings-software/uicore'
+import { Container, Text, Layout, TableV2, NoDataCard, Heading, Utils, TagsPopover } from '@wings-software/uicore'
+import { Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
+import { isEmpty } from 'lodash-es'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -21,7 +24,6 @@ import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
 import FilterCard from '@cv/components/FilterCard/FilterCard'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
 import type { MonitoredServiceListItemDTO } from 'services/cv'
-import type { ExtendedMonitoredServiceDTO } from '@cv/pages/monitored-service/components/Configurations/Configurations.utils'
 import { EnvironmentToolTipDisplay } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentToolTipDisplay'
 import IconGrid from '../IconGrid/IconGrid'
 import {
@@ -43,45 +45,55 @@ const CategoryProps: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }
 
 const RenderServiceName: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const monitoredService = row.original
+  const { identifier, serviceName, tags = {}, environmentRefList, type, environmentRef } = row.original || {}
 
-  const envRefList = (monitoredService as ExtendedMonitoredServiceDTO)?.environmentRefList
+  const envRefList = environmentRefList
 
   return (
     <Layout.Vertical>
-      <Link
-        to={routes.toCVAddMonitoringServicesEdit({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          identifier: monitoredService.identifier,
-          module: 'cv'
-        })}
-      >
-        <Text
-          color={Color.PRIMARY_7}
-          className={css.monitoredServiceName}
-          title={monitoredService.serviceName}
-          font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start', justifyContent: 'start' }}>
+        <Link
+          to={routes.toCVAddMonitoringServicesEdit({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            identifier,
+            module: 'cv'
+          })}
         >
-          {monitoredService.serviceName}
-        </Text>
-      </Link>
+          <Text
+            color={Color.PRIMARY_7}
+            className={css.monitoredServiceName}
+            title={serviceName}
+            font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+          >
+            {serviceName}
+          </Text>
+        </Link>
+        {!isEmpty(tags) ? (
+          <TagsPopover
+            tags={tags}
+            iconProps={{ size: 12, color: Color.GREY_600 }}
+            popoverProps={{ className: Classes.DARK }}
+            className={css.tags}
+          />
+        ) : null}
+      </Layout.Horizontal>
       <Link
         to={routes.toCVAddMonitoringServicesEdit({
           accountId,
           projectIdentifier,
           orgIdentifier,
-          identifier: monitoredService.identifier,
+          identifier,
           module: 'cv'
         })}
       >
         <EnvironmentToolTipDisplay
-          type={monitoredService?.type}
+          type={type}
           color={Color.PRIMARY_7}
           font={{ align: 'left', size: 'xsmall' }}
           envRefList={envRefList}
-          environmentRef={monitoredService?.environmentRef}
+          environmentRef={environmentRef}
         />
       </Link>
     </Layout.Vertical>
@@ -217,47 +229,50 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
     }
 
     return (
-      <Layout.Horizontal flex={{ alignItems: 'center' }}>
-        <ToggleOnOff
-          disabled={!canToggle}
-          checked={Boolean(monitoredService.healthMonitoringEnabled)}
-          loading={healthMonitoringFlagLoading}
-          onChange={checked => {
-            onToggleService(monitoredService.identifier as string, checked)
-          }}
-        />
-        <ContextMenuActions
-          titleText={getString('common.delete', { name: monitoredService.serviceName })}
-          contentText={<ServiceDeleteContext serviceName={monitoredService.serviceName} />}
-          confirmButtonText={getString('yes')}
-          deleteLabel={getString('cv.monitoredServices.deleteService')}
-          onDelete={() => {
-            onDeleteService(monitoredService.identifier as string)
-          }}
-          editLabel={getString('cv.monitoredServices.editService')}
-          onEdit={() => {
-            onEditService(monitoredService.identifier as string)
-          }}
-          copyLabel={getString('cv.monitoredServices.copyET')}
-          onCopy={onCopy}
-          RbacPermissions={{
-            edit: {
-              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
+      <>
+        <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
+        <Layout.Horizontal flex={{ alignItems: 'center' }}>
+          <ToggleOnOff
+            disabled={!canToggle}
+            checked={Boolean(monitoredService.healthMonitoringEnabled)}
+            loading={healthMonitoringFlagLoading}
+            onChange={checked => {
+              onToggleService(monitoredService.identifier as string, checked)
+            }}
+          />
+          <ContextMenuActions
+            titleText={getString('common.delete', { name: monitoredService.serviceName })}
+            contentText={<ServiceDeleteContext serviceName={monitoredService.serviceName} />}
+            confirmButtonText={getString('yes')}
+            deleteLabel={getString('cv.monitoredServices.deleteService')}
+            onDelete={() => {
+              onDeleteService(monitoredService.identifier as string)
+            }}
+            editLabel={getString('cv.monitoredServices.editService')}
+            onEdit={() => {
+              onEditService(monitoredService.identifier as string)
+            }}
+            copyLabel={getString('cv.monitoredServices.copyET')}
+            onCopy={onCopy}
+            RbacPermissions={{
+              edit: {
+                permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                resource: {
+                  resourceType: ResourceType.MONITOREDSERVICE,
+                  resourceIdentifier: projectIdentifier
+                }
+              },
+              delete: {
+                permission: PermissionIdentifier.DELETE_MONITORED_SERVICE,
+                resource: {
+                  resourceType: ResourceType.MONITOREDSERVICE,
+                  resourceIdentifier: projectIdentifier
+                }
               }
-            },
-            delete: {
-              permission: PermissionIdentifier.DELETE_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
-              }
-            }
-          }}
-        />
-      </Layout.Horizontal>
+            }}
+          />
+        </Layout.Horizontal>
+      </>
     )
   }
 
@@ -291,12 +306,12 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
               },
               {
                 Header: getString('name'),
-                width: '12.5%',
+                width: '13.5%',
                 Cell: RenderServiceName
               },
               {
                 Header: getString('cv.monitoredServices.sloErrorBudget'),
-                width: '14%',
+                width: '13%',
                 Cell: RenderSLOErrorBudgetData
               },
               {

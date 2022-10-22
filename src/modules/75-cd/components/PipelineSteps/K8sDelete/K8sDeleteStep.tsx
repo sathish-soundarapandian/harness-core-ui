@@ -39,7 +39,7 @@ import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -54,6 +54,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import List from '@common/components/List/List'
 import type { StringsMap } from 'stringTypes'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './K8sDelete.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -294,6 +295,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                         formikProps.setFieldValue('timeout', value)
                       }}
                       isReadonly={isDisabled}
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                     />
                   )}
                 </Layout.Horizontal>
@@ -462,7 +464,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                     }}
                     flex={{ justifyContent: 'flex-start' }}
                   >
-                    <Icon name="warning-icon" intent={Intent.DANGER} margin={{ right: 'small' }} />
+                    <Icon name="warning-icon" intent={Intent.WARNING} margin={{ right: 'small' }} />
                     <Text font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}>
                       {getString('pipelineSteps.deleteNamespaceWarning')}
                     </Text>
@@ -484,13 +486,15 @@ const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, 
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
               expressions,
               disabled: readonly
             }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             disabled={readonly}
@@ -860,7 +864,7 @@ export class K8sDeleteStep extends PipelineStep<K8sDeleteFormData> {
   protected stepName = 'K8s Delete'
   protected stepIcon: IconName = 'delete'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sDelete'
-  protected isHarnessSpecific = true
+  protected isHarnessSpecific = false
   protected referenceId = 'k8sDeleteStep'
 
   protected defaultValues: K8sDeleteFormData = {

@@ -20,6 +20,7 @@ import { getTemplateContextMock } from '@templates-library/components/TemplateSt
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import { SaveTemplatePopoverWithRef, SaveTemplatePopoverProps } from '../SaveTemplatePopover'
 
+jest.useFakeTimers()
 jest.mock('@common/hooks/CommentModal/useCommentModal', () => ({
   __esModule: true,
   default: () => {
@@ -31,8 +32,25 @@ jest.mock('@common/hooks/CommentModal/useCommentModal', () => ({
 
 jest.mock('@pipeline/utils/useSaveTemplate', () => ({
   useSaveTemplate: jest.fn().mockReturnValue({
-    saveAndPublish: jest.fn()
+    saveAndPublish: jest.fn().mockImplementation(() => {
+      return new Promise(resolve => {
+        setTimeout(resolve, 100)
+      })
+    })
   })
+}))
+
+const openTemplateErrorsModalMock = jest.fn()
+
+jest.mock('@pipeline/components/TemplateErrors/useTemplateErrors', () => ({
+  __esModule: true,
+  default: () => {
+    return {
+      openTemplateErrorsModal: jest.fn().mockImplementation(() => {
+        openTemplateErrorsModalMock()
+      })
+    }
+  }
 }))
 
 const PATH = routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...pipelineModuleParams })
@@ -223,5 +241,72 @@ describe('<SaveTemplatePopover /> tests', () => {
 
     const dialogContainer = findDialogContainer() as HTMLElement
     expect(dialogContainer).toBeTruthy()
+  })
+
+  test('show loading indicator when inline templates are saved', async () => {
+    const updatedStepTemplateContextMock = produce(stepTemplateContextMock, draft => {
+      set(draft, 'state.isUpdated', true)
+    })
+
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplateContext.Provider value={updatedStepTemplateContextMock}>
+          <SaveTemplatePopoverWithRef {...baseProps} />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+    const updateButton = getByText(container, 'save')
+    await act(async () => {
+      fireEvent.click(updateButton)
+    })
+
+    await waitFor(() => {
+      const spinner = container.querySelector('.bp3-spinner')
+      expect(spinner).toBeInTheDocument()
+    })
+
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
+  })
+
+  test('should openTemplateErrorsModal if save threw exception', async () => {
+    ;(useSaveTemplate as jest.Mock).mockReturnValue({
+      saveAndPublish: jest.fn().mockImplementation(() => {
+        return new Promise((_, reject) => {
+          reject({
+            metadata: {
+              errorNodeSummary: ['test']
+            }
+          })
+        })
+      })
+    })
+
+    const updatedStepTemplateContextMock = produce(stepTemplateContextMock, draft => {
+      set(draft, 'state.isUpdated', true)
+    })
+
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplateContext.Provider value={updatedStepTemplateContextMock}>
+          <SaveTemplatePopoverWithRef {...baseProps} />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+    const updateButton = getByText(container, 'save')
+    await act(async () => {
+      fireEvent.click(updateButton)
+    })
+
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
+
+    await waitFor(() => expect(openTemplateErrorsModalMock).toBeCalled())
   })
 })

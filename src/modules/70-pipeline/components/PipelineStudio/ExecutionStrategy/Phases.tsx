@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import {
   Container,
   Formik,
@@ -15,18 +16,20 @@ import {
   Text,
   FormError,
   ButtonVariation,
-  useToaster
+  useToaster,
+  MultiTypeInputType
 } from '@harness/uicore'
 import { Switch } from '@blueprintjs/core'
-
 import { Form, FieldArray } from 'formik'
 import produce from 'immer'
 import * as Yup from 'yup'
 import { get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+
 import { useStrings } from 'framework/strings'
 import { parse } from '@common/utils/YamlHelperMethods'
-
+import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { FormInstanceDropdown } from '@common/components'
 import { InstanceTypes } from '@common/components/InstanceDropdownField/InstanceDropdownField'
 import type { InstanceFieldValue } from '@common/components/InstanceDropdownField/InstanceDropdownField'
@@ -43,7 +46,9 @@ import {
   ExecutionType,
   PackageTypeItem,
   PackageTypeItems,
-  onPhaseFieldChange
+  onPhaseFieldChange,
+  packageTypeItemsWinrm,
+  getPackageLabel
 } from './ExecutionStrategyHelpers'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -112,9 +117,14 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [isVerifyEnabled, setIsVerifyEnabled] = React.useState(false)
+  const isWinRm = isWinRmDeploymentType(serviceDefinitionType())
+  const { accountId } = useParams<AccountPathProps>()
 
+  const packageTypes = React.useMemo(() => {
+    return isWinRm ? packageTypeItemsWinrm : packageTypeItems
+  }, [isWinRm])
   const [initialValues, setInitialValues] = React.useState<PhasesValues>({
-    packageType: PackageTypeItems.JAR,
+    packageType: isWinRm ? PackageTypeItems.APPLICATION : PackageTypeItems.JAR,
     phases: [
       {
         type: InstanceTypes.Instances,
@@ -131,7 +141,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
       return
     }
     setInitialValues({
-      packageType: PackageTypeItems.JAR,
+      packageType: isWinRm ? PackageTypeItems.APPLICATION : PackageTypeItems.JAR,
       phases: [
         {
           type: InstanceTypes.Instances,
@@ -159,6 +169,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
 
   const { mutate, loading } = usePostExecutionStrategyYaml({
     queryParams: {
+      accountIdentifier: accountId,
       serviceDefinitionType: serviceDefinitionType(),
       strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : ExecutionType.ROLLING,
       ...(isVerifyEnabled && { includeVerify: true })
@@ -273,17 +284,19 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
                   value={
                     formikProps?.values?.packageType
                       ? {
-                          label: formikProps?.values?.packageType,
+                          label: getString(getPackageLabel(packageTypes, formikProps?.values?.packageType)),
                           value: formikProps?.values?.packageType
                         }
                       : null
                   }
-                  items={packageTypeItems.map((item: PackageTypeItem) => ({
+                  items={packageTypes.map((item: PackageTypeItem) => ({
                     ...item,
-                    label: getString(item.label).toUpperCase()
+                    label: getString(item.label)
                   }))}
                   name="packageType"
-                  label={getString('pipeline.phasesForm.packageType')}
+                  label={
+                    isWinRm ? getString('pipeline.artifactsSelection.artifactType') : getString('pipeline.packageType')
+                  }
                 />
                 {selectedStrategy === ExecutionType.CANARY || selectedStrategy === ExecutionType.ROLLING ? (
                   <FieldArray
@@ -308,7 +321,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
                                             margin={{ top: 'small', right: 'small' }}
                                             border
                                             font={{ align: 'center' }}
-                                            width={95}
+                                            width={80}
                                           >
                                             {getString('pipeline.phasesForm.phase')} {isCanary ? index + 1 : null}
                                           </Text>
@@ -321,6 +334,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
                                         onChange={value => {
                                           onPhaseFieldChange(formikProps, 'phases', index, value, field)
                                         }}
+                                        allowableTypes={[MultiTypeInputType.FIXED]}
                                         expressions={expressions}
                                       />
                                       {isCanary ? (

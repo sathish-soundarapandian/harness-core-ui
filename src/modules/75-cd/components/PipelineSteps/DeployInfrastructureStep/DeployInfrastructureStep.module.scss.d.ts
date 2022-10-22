@@ -9,12 +9,10 @@
 declare const styles: {
   readonly dialogStyles: string
   readonly formRow: string
-  readonly fullWidth: string
   readonly grid: string
   readonly inputWidth: string
   readonly label: string
   readonly modalFooter: string
-  readonly sectionContent: string
   readonly thumbnailSelect: string
   readonly yamlToggleEnv: string
 }

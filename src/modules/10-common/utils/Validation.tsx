@@ -6,7 +6,7 @@
  */
 
 import * as Yup from 'yup'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
 import {
   illegalIdentifiers,
   regexEmail,
@@ -119,12 +119,14 @@ export function EmailSchemaWithoutRequired(emailProps: EmailProps = {}): Yup.Sch
   return Yup.string().trim().email(getString('common.validation.email.format'))
 }
 
-export function URLValidationSchema(): Yup.Schema<string | undefined> {
+export function URLValidationSchema(
+  { urlMessage, requiredMessage } = {} as { urlMessage?: string; requiredMessage?: string }
+): Yup.Schema<string | undefined> {
   const { getString } = useStrings()
   return Yup.string()
     .trim()
-    .required(getString('common.validation.urlIsRequired'))
-    .url(getString('validation.urlIsNotValid'))
+    .required(requiredMessage ?? getString('common.validation.urlIsRequired'))
+    .url(urlMessage ?? getString('validation.urlIsNotValid'))
 }
 export function URLValidationSchemaWithoutRequired(): Yup.Schema<string | undefined> {
   const { getString } = useStrings()
@@ -142,7 +144,7 @@ export const ConnectorRefSchema = (config?: { requiredErrorMsg?: string }): Yup.
   )
 }
 
-export function TemplateVersionLabelSchema() {
+export function TemplateVersionLabelSchema(): Yup.Schema<string> {
   const { getString } = useStrings()
   const versionLabelText = getString('common.versionLabel')
   return Yup.string()
@@ -202,4 +204,12 @@ export const VariableSchemaWithoutHook = (
       type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
     })
   )
+}
+
+const digitsOnly = (value: string): boolean => /^\d+$/.test(value)
+
+export const getNumberFieldValidationSchema = (
+  getString: (key: StringKeys, vars?: Record<string, any> | undefined) => string
+): Yup.StringSchema<string | undefined> => {
+  return Yup.string().test('Digits only', getString('common.validation.onlyDigitsAllowed'), digitsOnly)
 }

@@ -6,7 +6,7 @@
  */
 
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-
+import { WaitStep } from './Steps/WaitStep/WaitStep'
 import { StepGroupStep } from './Steps/StepGroupStep/StepGroupStep'
 import { CustomVariables } from './Steps/CustomVariables/CustomVariables'
 import { BarrierStep } from './Steps/Barrier/Barrier'
@@ -20,6 +20,7 @@ import { ServiceNowCreate } from './Steps/ServiceNowCreate/ServiceNowCreate'
 import { ServiceNowUpdate } from './Steps/ServiceNowUpdate/ServiceNowUpdate'
 import { JenkinsStep } from './Steps/JenkinsStep/JenkinsStep'
 import { CustomApproval } from './Steps/CustomApproval/CustomApproval'
+import { ServiceNowImportSet } from './Steps/ServiceNowImportSet/ServiceNowImportSet'
 
 class PipelineStepFactory extends AbstractStepFactory {
   protected type = 'pipeline-factory'
@@ -39,7 +40,9 @@ factory.registerStep(new JiraUpdate())
 factory.registerStep(new ServiceNowApproval())
 factory.registerStep(new ServiceNowCreate())
 factory.registerStep(new ServiceNowUpdate())
+factory.registerStep(new ServiceNowImportSet())
 factory.registerStep(new JenkinsStep())
+factory.registerStep(new WaitStep())
 factory.registerStep(new CustomApproval())
 
 // build steps

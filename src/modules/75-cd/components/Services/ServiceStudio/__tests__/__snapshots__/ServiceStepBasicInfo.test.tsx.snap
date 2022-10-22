@@ -14,6 +14,12 @@ exports[`ServiceStepBasicInfo should render ServiceStepBasicInfo 1`] = `
       >
         <div>
           <div
+            class="tabHeading"
+            id="serviceBasicInfo"
+          >
+            cd.pipelineSteps.serviceTab.aboutYourService
+          </div>
+          <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard"
           >
             <div

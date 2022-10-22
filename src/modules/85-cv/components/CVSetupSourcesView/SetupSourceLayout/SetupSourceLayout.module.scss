@@ -14,7 +14,6 @@ $footer-cta-height: 50px;
     height: 100%;
     .leftPanel,
     .rightPanel {
-      height: calc(100vh - #{$footer-cta-height} - 20px);
       overflow-y: scroll;
       position: sticky;
       top: 0;
@@ -32,7 +31,7 @@ $footer-cta-height: 50px;
       clear: left;
       clear: right;
       margin: $footer-cta-height var(--spacing-medium);
-      margin-bottom: 60px;
+      margin-bottom: 0;
       overflow-y: scroll;
       padding: 2px !important;
     }

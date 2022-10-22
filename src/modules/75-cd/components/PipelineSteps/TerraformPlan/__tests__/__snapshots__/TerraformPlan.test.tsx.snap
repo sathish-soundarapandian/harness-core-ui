@@ -335,7 +335,7 @@ Object {
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -815,7 +815,7 @@ Object {
         >
           <div
             class="StyledProps--font StyledProps--main"
-            style="margin-bottom: 5px;"
+            data-test-id="connectorTooltip"
           >
             <span
               class="Tooltip--acenter bp3-label"
@@ -1349,7 +1349,7 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -2785,7 +2785,7 @@ exports[`Test TerraformPlan should render edit view as edit step 1`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -3265,7 +3265,7 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -3745,7 +3745,7 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -4409,7 +4409,7 @@ exports[`Test TerraformPlan should render edit view with command Destroy 1`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -4727,7 +4727,7 @@ exports[`Test TerraformPlan should render input set view 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -5422,7 +5422,7 @@ exports[`Test TerraformPlan should submit form for terraform plan 1`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"

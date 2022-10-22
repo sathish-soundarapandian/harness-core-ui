@@ -17,6 +17,7 @@ declare const styles: {
   readonly main: string
   readonly mainCtn: string
   readonly pushdown7: string
+  readonly selectDropdown: string
   readonly selectPerspectiveContainer: string
   readonly sendAlertTo: string
   readonly separator: string

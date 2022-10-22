@@ -244,19 +244,18 @@ export const getSelectionType = (resourceGroup?: ResourceGroupV2): SelectionType
   }
   return SelectionType.SPECIFIED
 }
-export const getScopeType = (resourceGroup?: ResourceGroupV2): SelectorScope => {
-  return resourceGroup
-    ? getSelectedScopeType(getScopeFromDTO(resourceGroup), resourceGroup?.includedScopes)
-    : SelectorScope.CURRENT
-}
 
-export const getSelectedScopeType = (scopeOfResourceGroup: Scope, scopes?: ScopeSelector[]): SelectorScope => {
+export const getSelectedScopeType = (
+  scopeOfResourceGroup: Scope,
+  scopes?: ScopeSelector[],
+  isHarnessManaged?: boolean
+): SelectorScope => {
   if (scopes?.length) {
     if (scopes.length > 1) {
       return SelectorScope.CUSTOM
     }
     for (const scope of scopes) {
-      if (scopeOfResourceGroup === getScopeFromDTO(scope)) {
+      if (scopeOfResourceGroup === getScopeFromDTO(scope) || isHarnessManaged) {
         return scope.filter === 'INCLUDING_CHILD_SCOPES' ? SelectorScope.INCLUDE_CHILD_SCOPES : SelectorScope.CURRENT
       } else {
         return SelectorScope.CUSTOM
@@ -331,15 +330,24 @@ export const getAllProjects = (orgScopes?: ScopeSelector[]): string[] => {
 export const cleanUpResourcesMap = (
   resourceTypes: ResourceType[],
   selectedResourcesMap: Map<ResourceType, ResourceSelectorValue>,
-  selectionType: SelectionType
+  selectionType: SelectionType,
+  selectedScope: SelectorScope
 ): Map<ResourceType, ResourceSelectorValue> => {
   const types = [...resourceTypes]
-  selectedResourcesMap.forEach((_value, key) => {
+  selectedResourcesMap.forEach((value, key) => {
     if (!types.includes(key)) {
       selectedResourcesMap.delete(key)
     } else {
       types.splice(types.indexOf(key), 1)
-      selectedResourcesMap.set(key, RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR)
+      if (selectedScope === SelectorScope.CURRENT) {
+        selectedResourcesMap.set(key, value)
+      } else {
+        if (isAtrributeFilterSelector(value)) {
+          selectedResourcesMap.set(key, value)
+        } else {
+          selectedResourcesMap.set(key, RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR)
+        }
+      }
     }
   })
   if (selectionType === SelectionType.ALL) {

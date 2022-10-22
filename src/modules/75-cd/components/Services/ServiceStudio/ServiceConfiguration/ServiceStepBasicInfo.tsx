@@ -13,9 +13,12 @@ import { NameIdDescriptionTags } from '@common/components'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { NGServiceV2InfoConfig } from 'services/cd-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import { useStrings } from 'framework/strings'
 import css from './ServiceConfiguration.module.scss'
 
 function ServiceStepBasicInfo(): React.ReactElement {
+  const { getString } = useStrings()
+
   const {
     state: { pipeline },
     isReadonly,
@@ -43,6 +46,9 @@ function ServiceStepBasicInfo(): React.ReactElement {
       >
         {formikProps => (
           <FormikForm>
+            <div className={css.tabHeading} id="serviceBasicInfo">
+              {getString('cd.pipelineSteps.serviceTab.aboutYourService')}
+            </div>
             <Card className={css.sectionCard}>
               <NameIdDescriptionTags
                 className={css.nameIdDescriptionTags}

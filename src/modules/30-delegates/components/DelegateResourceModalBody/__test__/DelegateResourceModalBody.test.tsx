@@ -13,7 +13,7 @@ import DelegateResourceModalBody from '../DelegateResourceModalBody'
 const onChangeFn = jest.fn()
 
 jest.mock('services/portal', () => ({
-  useGetDelegateGroupsV2: jest
+  useGetDelegateGroupsNGV2WithFilter: jest
     .fn()
     .mockImplementation(() => ({ data: { content: [] }, refetch: jest.fn(), error: null, loading: false }))
 }))

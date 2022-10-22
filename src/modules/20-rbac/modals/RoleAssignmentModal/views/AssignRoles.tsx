@@ -22,12 +22,7 @@ import { useToaster } from '@common/components'
 import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'services/rbac'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  getScopeBasedDefaultAssignment,
-  isAccountBasicRolePresent,
-  isNewRoleAssignment,
-  PrincipalType
-} from '@rbac/utils/utils'
+import { getScopeBasedDefaultAssignment, isNewRoleAssignment, PrincipalType } from '@rbac/utils/utils'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
@@ -62,7 +57,7 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const { ACCOUNT_BASIC_ROLE, ACCOUNT_BASIC_ROLE_ONLY } = useFeatureFlags()
+  const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
   const isCommunity = useGetCommunity()
   const { showSuccess } = useToaster()
@@ -71,13 +66,7 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
-  const assignments: Assignment[] = getScopeBasedDefaultAssignment(
-    scope,
-    getString,
-    isCommunity,
-    isAccountBasicRolePresent(scope, !!ACCOUNT_BASIC_ROLE),
-    !!ACCOUNT_BASIC_ROLE_ONLY
-  )
+  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, isCommunity, !!ACCOUNT_BASIC_ROLE)
 
   const handleRoleAssignment = async (values: UserGroupRoleAssignmentValues): Promise<void> => {
     /* istanbul ignore next */ if (values.assignments.length === 0) {

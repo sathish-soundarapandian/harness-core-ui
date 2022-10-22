@@ -30,12 +30,14 @@ export enum PipelineActions {
   UpdateSelection = 'UpdateSelection',
   Initialize = 'Initialize',
   Fetching = 'Fetching',
+  IntermittentLoading = 'IntermittentLoading',
   UpdatePipelineView = 'UpdatePipelineView',
   UpdateTemplateView = 'UpdateTemplateView',
   UpdatePipeline = 'UpdatePipeline',
   SetYamlHandler = 'SetYamlHandler',
   SetTemplateTypes = 'SetTemplateTypes',
   SetTemplateServiceData = 'SetTemplateServiceData',
+  SetResolvedCustomDeploymentDetailsByRef = 'SetResolvedCustomDeploymentDetailsByRef',
   PipelineSaved = 'PipelineSaved',
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
   Success = 'Success',
@@ -57,7 +59,8 @@ export enum DrawerTypes {
   PolicySets = 'PolicySets',
   ProvisionerStepConfig = 'ProvisionerStepConfig',
   AddProvisionerStep = 'AddProvisionerStep',
-  TemplateInputs = 'TemplateInputs'
+  TemplateInputs = 'TemplateInputs',
+  ViewTemplateDetails = 'ViewTemplateDetails'
 }
 
 export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
@@ -74,7 +77,8 @@ export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
   [DrawerTypes.FlowControl]: 600,
   [DrawerTypes.AdvancedOptions]: 840,
   [DrawerTypes.PolicySets]: 1000,
-  [DrawerTypes.TemplateInputs]: 876
+  [DrawerTypes.TemplateInputs]: 876,
+  [DrawerTypes.ViewTemplateDetails]: 600
 }
 
 export enum SplitViewTypes {
@@ -131,17 +135,20 @@ export interface PipelineReducerState {
   schemaErrors: boolean
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
+  resolvedCustomDeploymentDetailsByRef: { [key: string]: Record<string, string | string[]> }
   storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
   entityValidityDetails: EntityValidityDetails
   isDBInitialized: boolean
   isLoading: boolean
+  isIntermittentLoading: boolean
   isInitialized: boolean
   isBEPipelineUpdated: boolean
   isUpdated: boolean
   snippets?: YamlSnippetMetaData[]
   selectionState: SelectionState
   templateError?: GetDataError<Failure | Error> | null
+  remoteFetchError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
@@ -163,11 +170,14 @@ export interface ActionResponse {
   yamlHandler?: YamlBuilderHandlerBinding
   templateTypes?: { [key: string]: string }
   templateServiceData?: TemplateServiceDataType
+  resolvedCustomDeploymentDetailsByRef?: { [key: string]: Record<string, string | string[]> }
   originalPipeline?: PipelineInfoConfig
+  isIntermittentLoading?: boolean
   isBEPipelineUpdated?: boolean
   pipelineView?: PipelineViewData
   selectionState?: SelectionState
   templateError?: GetDataError<Failure | Error> | null
+  remoteFetchError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
@@ -199,8 +209,16 @@ const setTemplateServiceData = (response: ActionResponse): ActionReturnType => (
   type: PipelineActions.SetTemplateServiceData,
   response
 })
+const setResolvedCustomDeploymentDetailsByRef = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.SetResolvedCustomDeploymentDetailsByRef,
+  response
+})
 const updating = (): ActionReturnType => ({ type: PipelineActions.UpdatePipeline })
 const fetching = (): ActionReturnType => ({ type: PipelineActions.Fetching })
+const setIntermittentLoading = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.IntermittentLoading,
+  response
+})
 const pipelineSavedAction = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.PipelineSaved,
   response
@@ -227,10 +245,12 @@ export const PipelineContextActions = {
   setYamlHandler,
   setTemplateTypes,
   setTemplateServiceData,
+  setResolvedCustomDeploymentDetailsByRef,
   success,
   error,
   updateSchemaErrorsFlag,
-  updateSelectionState
+  updateSelectionState,
+  setIntermittentLoading
 }
 
 export const initialState: PipelineReducerState = {
@@ -252,7 +272,9 @@ export const initialState: PipelineReducerState = {
   entityValidityDetails: {},
   templateTypes: {},
   templateServiceData: {},
+  resolvedCustomDeploymentDetailsByRef: {},
   isLoading: false,
+  isIntermittentLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: false,
   isUpdated: false,
@@ -297,6 +319,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
         ...state,
         templateServiceData: data.response?.templateServiceData || {}
       }
+    case PipelineActions.SetResolvedCustomDeploymentDetailsByRef:
+      return {
+        ...state,
+        resolvedCustomDeploymentDetailsByRef: data.response?.resolvedCustomDeploymentDetailsByRef || {}
+      }
     case PipelineActions.UpdatePipelineView:
       return {
         ...state,
@@ -331,6 +358,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         selectionState: response?.selectionState || state.selectionState
+      }
+    case PipelineActions.IntermittentLoading:
+      return {
+        ...state,
+        isIntermittentLoading: !!response?.isIntermittentLoading
       }
     default:
       return state

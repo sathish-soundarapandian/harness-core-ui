@@ -7,9 +7,13 @@
 
 .secondHeader {
   z-index: 0;
-
   .search {
     margin-right: var(--spacing-small) !important;
     height: var(--spacing-xxlarge) !important;
   }
+}
+.searchNotinHeader {
+  margin-right: var(--spacing-xxlarge) !important;
+  height: var(--spacing-xxlarge) !important;
+  align-self: flex-end;
 }

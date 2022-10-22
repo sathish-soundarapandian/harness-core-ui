@@ -23,12 +23,12 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './DependencyFunctionConfigs'
 import type { DependencyProps, DependencyData, DependencyDataUI } from './Dependency'
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
-import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const DependencyBase = (
@@ -46,8 +46,9 @@ export const DependencyBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
-
+  const buildInfrastructureType: CIBuildInfrastructureType =
+    get(currentStage, 'stage.spec.infrastructure.type') ||
+    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
   return (
     <Formik<DependencyDataUI>
       initialValues={getInitialValuesInCorrectFormat<DependencyData, DependencyDataUI>(
@@ -136,7 +137,11 @@ export const DependencyBase = (
                           'spec.envVariables': { tooltipId: 'dependencyEnvironmentVariables' },
                           'spec.entrypoint': {},
                           'spec.args': {},
-                          ...(buildInfrastructureType === CIBuildInfrastructureType.VM && {
+                          ...([
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType) && {
                             'spec.portBindings': {}
                           })
                         }}

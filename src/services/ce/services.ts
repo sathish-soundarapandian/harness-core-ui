@@ -674,8 +674,14 @@ export const FetchPerspectiveDetailsSummaryWithBudgetDocument = gql`
     $filters: [QLCEViewFilterWrapperInput]
     $aggregateFunction: [QLCEViewAggregationInput]
     $isClusterQuery: Boolean
+    $groupBy: [QLCEViewGroupByInput]
   ) {
-    perspectiveTrendStats(filters: $filters, aggregateFunction: $aggregateFunction, isClusterQuery: $isClusterQuery) {
+    perspectiveTrendStats(
+      filters: $filters
+      aggregateFunction: $aggregateFunction
+      isClusterQuery: $isClusterQuery
+      groupBy: $groupBy
+    ) {
       cost {
         statsDescription
         statsLabel
@@ -704,7 +710,12 @@ export const FetchPerspectiveDetailsSummaryWithBudgetDocument = gql`
         statsValue
       }
     }
-    perspectiveForecastCost(filters: $filters, aggregateFunction: $aggregateFunction, isClusterQuery: $isClusterQuery) {
+    perspectiveForecastCost(
+      filters: $filters
+      aggregateFunction: $aggregateFunction
+      isClusterQuery: $isClusterQuery
+      groupBy: $groupBy
+    ) {
       cost {
         statsLabel
         statsTrend
@@ -897,6 +908,7 @@ export const FetchRecommendationDocument = gql`
       }
       ... on ECSRecommendationDTO {
         clusterName
+        launchType
         id
         percentileBased
         serviceArn
@@ -1980,6 +1992,7 @@ export type FetchPerspectiveDetailsSummaryWithBudgetQueryVariables = Exact<{
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>> | InputMaybe<QlceViewAggregationInput>>
   isClusterQuery: InputMaybe<Scalars['Boolean']>
+  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>> | InputMaybe<QlceViewGroupByInput>>
 }>
 
 export type FetchPerspectiveDetailsSummaryWithBudgetQuery = {
@@ -2075,6 +2088,7 @@ export type FetchRecommendationQuery = {
     | {
         __typename?: 'ECSRecommendationDTO'
         clusterName: string | null
+        launchType: LaunchType | null
         id: string | null
         percentileBased: any | null
         serviceArn: string | null
@@ -2871,6 +2885,7 @@ export type EcsRecommendationDto = {
   current: Maybe<Scalars['Map_String_StringScalar']>
   id: Maybe<Scalars['String']>
   lastDayCost: Maybe<Cost>
+  launchType: Maybe<LaunchType>
   memoryHistogram: Maybe<HistogramExp>
   percentileBased: Maybe<Scalars['Map_String_Map_String_StringScalar']>
   serviceArn: Maybe<Scalars['String']>
@@ -3005,6 +3020,12 @@ export type K8sRecommendationFilterDtoInput = {
   resourceTypes: InputMaybe<Array<InputMaybe<ResourceType>>>
 }
 
+export enum LaunchType {
+  Ec2 = 'EC2',
+  External = 'EXTERNAL',
+  Fargate = 'FARGATE'
+}
+
 export type NodePool = {
   __typename?: 'NodePool'
   role: Maybe<Scalars['String']>
@@ -3080,6 +3101,12 @@ export type PerspectiveTrendStats = {
   systemCost: Maybe<StatsInfo>
   unallocatedCost: Maybe<StatsInfo>
   utilizedCost: Maybe<StatsInfo>
+}
+
+export type QlceInExpressionFilterInput = {
+  fields: Array<InputMaybe<QlceViewFieldInputInput>>
+  nullValueField: InputMaybe<Scalars['String']>
+  values: Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>
 }
 
 export enum QlceSortOrder {
@@ -3172,6 +3199,7 @@ export enum QlceViewFilterOperator {
 
 export type QlceViewFilterWrapperInput = {
   idFilter: InputMaybe<QlceViewFilterInput>
+  inExpressionFilter: InputMaybe<QlceInExpressionFilterInput>
   ruleFilter: InputMaybe<QlceViewRuleInput>
   timeFilter: InputMaybe<QlceViewTimeFilterInput>
   viewMetadataFilter: InputMaybe<QlceViewMetadataFilterInput>
@@ -3356,6 +3384,7 @@ export type QueryPerspectiveFiltersArgs = {
 export type QueryPerspectiveForecastCostArgs = {
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>>>
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
+  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>>>
   isClusterQuery: InputMaybe<Scalars['Boolean']>
 }
 
@@ -3394,6 +3423,7 @@ export type QueryPerspectiveTotalCountArgs = {
 export type QueryPerspectiveTrendStatsArgs = {
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>>>
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
+  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>>>
   isClusterQuery: InputMaybe<Scalars['Boolean']>
 }
 
@@ -3405,6 +3435,7 @@ export type QueryPerspectivesArgs = {
 
 /** Query root */
 export type QueryRecommendationDetailsArgs = {
+  bufferPercentage?: InputMaybe<Scalars['Int']>
   endTime: InputMaybe<Scalars['OffsetDateTime']>
   id: Scalars['String']
   resourceType: ResourceType
@@ -3471,6 +3502,7 @@ export type RecommendationItemDto = {
 }
 
 export type RecommendationItemDtoRecommendationDetailsArgs = {
+  bufferPercentage?: InputMaybe<Scalars['Int']>
   endTime: InputMaybe<Scalars['OffsetDateTime']>
   startTime: InputMaybe<Scalars['OffsetDateTime']>
 }

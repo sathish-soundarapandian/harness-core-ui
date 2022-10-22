@@ -16,8 +16,9 @@
           "name": "infra1",
           "description": "",
           "tags": {},
+          "deploymentType": "Kubernetes",
           "type": "KubernetesDirect",
-          "yaml": "infrastructureDefinition:\n  name: \"infra1\"\n  identifier: \"infra1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"dummy\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"test\"\n    namespace: \"<+input>\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+          "yaml": "infrastructureDefinition:\n  name: \"infra1\"\n  identifier: \"infra1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"dummy\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  deploymentType: \"Kubernetes\"\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"test\"\n    namespace: \"<+input>\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
         },
         "createdAt": 1658311748118,
         "lastModifiedAt": 1658311748118
@@ -32,8 +33,9 @@
           "name": "infra2",
           "description": "",
           "tags": {},
+          "deploymentType": "Kubernetes",
           "type": "KubernetesDirect",
-          "yaml": "infrastructureDefinition:\n  name: \"infra2\"\n  identifier: \"infra2\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"dummy\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"test\"\n    namespace: \"<+input>\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+          "yaml": "infrastructureDefinition:\n  name: \"infra2\"\n  identifier: \"infra2\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"dummy\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  deploymentType: \"Kubernetes\"\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"test\"\n    namespace: \"<+input>\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
         },
         "createdAt": 1658311748118,
         "lastModifiedAt": 1658311748118

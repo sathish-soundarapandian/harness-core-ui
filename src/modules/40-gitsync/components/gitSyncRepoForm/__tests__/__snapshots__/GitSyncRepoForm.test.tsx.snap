@@ -21,6 +21,11 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
           >
             common.entityReferenceTitle
           </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+          >
+            common.sortedByCreatedTime
+          </p>
         </div>
         <button
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-secondary"
@@ -89,7 +94,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               aria-disabled="false"
               aria-expanded="true"
               aria-selected="true"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="project"
               id="bp3-tab-title_selectScope_project"
               role="tab"
@@ -134,7 +139,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="organization"
               id="bp3-tab-title_selectScope_organization"
               role="tab"
@@ -176,7 +181,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="account"
               id="bp3-tab-title_selectScope_account"
               role="tab"
@@ -217,7 +222,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
           <div
             aria-hidden="false"
             aria-labelledby="bp3-tab-title_selectScope_project"
-            class="bp3-tab-panel tabClass"
+            class="bp3-tab-panel"
             id="bp3-tab-panel_selectScope_project"
             role="tabpanel"
           >
@@ -796,6 +801,38 @@ exports[`Git Sync - repo tab Filling gitSync repo form: gitSync repo form 1`] = 
                       class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-blue500"
                     >
                       GitHub
+                    </p>
+                  </div>
+                  <div
+                    class="Layout--vertical StyledProps--main cardWrapper"
+                  >
+                    <div
+                      class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
+                      data-testid="Bitbucket-card"
+                      tabindex="0"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main connectorTypeIcon StyledProps--margin-large StyledProps--inline"
+                        data-icon="bitbucket-unselected"
+                      >
+                        <svg
+                          fill="none"
+                          height="40"
+                          viewBox="0 0 20 18"
+                          width="40"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M.65 0a.646.646 0 00-.495.218.622.622 0 00-.147.512l2.72 16.224c.07.41.43.71.853.714h13.05a.638.638 0 00.64-.528L19.991.733a.621.621 0 00-.142-.51A.646.646 0 0019.36 0H.65zm11.453 11.725H7.938L6.81 5.94h6.302l-1.009 5.785z"
+                            fill="#4F5162"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500"
+                    >
+                      Bitbucket
                     </p>
                   </div>
                 </div>
@@ -1519,6 +1556,38 @@ exports[`Git Sync - repo tab Repo type card should be enabled only for Github 1`
                       GitHub
                     </p>
                   </div>
+                  <div
+                    class="Layout--vertical StyledProps--main cardWrapper"
+                  >
+                    <div
+                      class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
+                      data-testid="Bitbucket-card"
+                      tabindex="0"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main connectorTypeIcon StyledProps--margin-large StyledProps--inline"
+                        data-icon="bitbucket-unselected"
+                      >
+                        <svg
+                          fill="none"
+                          height="40"
+                          viewBox="0 0 20 18"
+                          width="40"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M.65 0a.646.646 0 00-.495.218.622.622 0 00-.147.512l2.72 16.224c.07.41.43.71.853.714h13.05a.638.638 0 00.64-.528L19.991.733a.621.621 0 00-.142-.51A.646.646 0 0019.36 0H.65zm11.453 11.725H7.938L6.81 5.94h6.302l-1.009 5.785z"
+                            fill="#4F5162"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500"
+                    >
+                      Bitbucket
+                    </p>
+                  </div>
                 </div>
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -2078,6 +2147,11 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
           >
             common.entityReferenceTitle
           </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+          >
+            common.sortedByCreatedTime
+          </p>
         </div>
         <button
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-secondary"
@@ -2146,7 +2220,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               aria-disabled="false"
               aria-expanded="true"
               aria-selected="true"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="project"
               id="bp3-tab-title_selectScope_project"
               role="tab"
@@ -2191,7 +2265,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="organization"
               id="bp3-tab-title_selectScope_organization"
               role="tab"
@@ -2233,7 +2307,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="account"
               id="bp3-tab-title_selectScope_account"
               role="tab"
@@ -2274,7 +2348,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
           <div
             aria-hidden="false"
             aria-labelledby="bp3-tab-title_selectScope_project"
-            class="bp3-tab-panel tabClass"
+            class="bp3-tab-panel"
             id="bp3-tab-panel_selectScope_project"
             role="tabpanel"
           >
@@ -2925,6 +2999,38 @@ exports[`Git Sync - repo tab rendering form to create gitSync repo 1`] = `
                       GitHub
                     </p>
                   </div>
+                  <div
+                    class="Layout--vertical StyledProps--main cardWrapper"
+                  >
+                    <div
+                      class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
+                      data-testid="Bitbucket-card"
+                      tabindex="0"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main connectorTypeIcon StyledProps--margin-large StyledProps--inline"
+                        data-icon="bitbucket-unselected"
+                      >
+                        <svg
+                          fill="none"
+                          height="40"
+                          viewBox="0 0 20 18"
+                          width="40"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M.65 0a.646.646 0 00-.495.218.622.622 0 00-.147.512l2.72 16.224c.07.41.43.71.853.714h13.05a.638.638 0 00.64-.528L19.991.733a.621.621 0 00-.142-.51A.646.646 0 0019.36 0H.65zm11.453 11.725H7.938L6.81 5.94h6.302l-1.009 5.785z"
+                            fill="#4F5162"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500"
+                    >
+                      Bitbucket
+                    </p>
+                  </div>
                 </div>
                 <div
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -3567,6 +3673,38 @@ exports[`Git Sync - repo tab rendering form to create gitSync repo 2`] = `
                       class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-blue500"
                     >
                       GitHub
+                    </p>
+                  </div>
+                  <div
+                    class="Layout--vertical StyledProps--main cardWrapper"
+                  >
+                    <div
+                      class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
+                      data-testid="Bitbucket-card"
+                      tabindex="0"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main connectorTypeIcon StyledProps--margin-large StyledProps--inline"
+                        data-icon="bitbucket-unselected"
+                      >
+                        <svg
+                          fill="none"
+                          height="40"
+                          viewBox="0 0 20 18"
+                          width="40"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M.65 0a.646.646 0 00-.495.218.622.622 0 00-.147.512l2.72 16.224c.07.41.43.71.853.714h13.05a.638.638 0 00.64-.528L19.991.733a.621.621 0 00-.142-.51A.646.646 0 0019.36 0H.65zm11.453 11.725H7.938L6.81 5.94h6.302l-1.009 5.785z"
+                            fill="#4F5162"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500"
+                    >
+                      Bitbucket
                     </p>
                   </div>
                 </div>

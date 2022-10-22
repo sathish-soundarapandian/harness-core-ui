@@ -13,18 +13,16 @@ import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { ApiKey, ApiKeys, useDeleteAPIKey, UseGetAllAPIKeysProps } from 'services/cf'
 import { useToaster } from '@common/exports'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { useEnvStrings } from '@cf/hooks/environment'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'
 import { withTableData } from '@cf/utils/table-utils'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useConfirmAction } from '@common/hooks'
-import { NoData } from '@cf/components/NoData/NoData'
-import { String } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import AddKeyDialog from '../../components/AddKeyDialog/AddKeyDialog'
-import EmptySDKs from './NoSDKs.svg'
 
+import EnvironmentDetailsSectionNoData from './EnvironmentDetailsSectionNoData'
 import css from './EnvironmentDetails.module.scss'
 export interface EnvironmentDetailsBodyProps {
   environment: EnvironmentResponseDTO
@@ -58,18 +56,22 @@ const NameCell = withApiKey(({ apiKey }) => (
 ))
 
 const TypeCell = withApiKey(({ apiKey }) => {
-  const { getEnvString } = useEnvStrings()
+  const { getString } = useStrings()
 
   return (
     <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
-      {getEnvString(`apiKeys.${apiKey.type.toLowerCase()}Type`)}
+      {getString(
+        apiKey.type.toLowerCase() === 'client'
+          ? 'cf.environments.apiKeys.clientType'
+          : 'cf.environments.apiKeys.serverType'
+      )}
     </Text>
   )
 })
 
 const ApiInfoCell = withApiKey(({ apiKey }) => {
   const { isNew, getSecret } = useContext(RowContext) ?? defaultContext
-  const { getString, getEnvString } = useEnvStrings()
+  const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const showCopy = isNew(apiKey.identifier)
 
@@ -117,7 +119,7 @@ const ApiInfoCell = withApiKey(({ apiKey }) => {
           color={Color.ORANGE_900}
           icon="warning-icon"
         >
-          {getEnvString('apiKeys.redactionWarning')}
+          {getString('cf.environments.apiKeys.redactionWarning')}
         </Text>
       )}
     </>
@@ -126,11 +128,11 @@ const ApiInfoCell = withApiKey(({ apiKey }) => {
 
 const DeleteCell = withApiKey(({ apiKey }) => {
   const { environmentIdentifier, onDelete } = useContext(RowContext) ?? defaultContext
-  const { getString, getEnvString } = useEnvStrings()
+  const { getString } = useStrings()
 
   const deleteSDKKey = useConfirmAction({
     intent: Intent.DANGER,
-    title: getEnvString('apiKeys.deleteTitle'),
+    title: getString('cf.environments.apiKeys.deleteTitle'),
     message: <String useRichText stringID="cf.environments.apiKeys.deleteMessage" vars={{ keyName: apiKey.name }} />,
     action: () => {
       onDelete(apiKey.identifier, apiKey.name)
@@ -169,7 +171,7 @@ const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
   recents
 }) => {
   const { showError } = useToaster()
-  const { getString, getEnvString } = useEnvStrings()
+  const { getString } = useStrings()
 
   const queryParams = {
     projectIdentifier: environment.projectIdentifier as string,
@@ -236,7 +238,7 @@ const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
         >
           <Layout.Horizontal width="100%" flex={{ distribution: 'space-between', alignItems: 'baseline' }}>
             <Text font={{ variation: FontVariation.BODY1 }} color={Color.BLACK}>
-              {getEnvString('apiKeys.title')}
+              {getString('cf.environments.apiKeys.title')}
             </Text>
           </Layout.Horizontal>
           <Text
@@ -244,7 +246,7 @@ const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
             color={Color.GREY_800}
             padding={{ top: 'small', bottom: 'small' }}
           >
-            {getEnvString('apiKeys.message')}
+            {getString('cf.environments.apiKeys.message')}
           </Text>
           <Container className={css.content}>
             <Container className={css.table}>
@@ -266,11 +268,7 @@ const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
 
       {emptyData && (
         <Container height="100%" flex={{ align: 'center-center' }}>
-          <NoData
-            imageURL={EmptySDKs}
-            message={getString('cf.environments.apiKeys.noKeysFoundTitle')}
-            description={<String useRichText stringID="cf.environments.apiKeys.noKeysFoundMessage" />}
-          >
+          <EnvironmentDetailsSectionNoData>
             <AddKeyDialog
               primary
               environment={environment}
@@ -279,8 +277,9 @@ const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
                 onNewKeyCreated()
                 hideModal()
               }}
+              isLinkVariation
             />
-          </NoData>
+          </EnvironmentDetailsSectionNoData>
         </Container>
       )}
       {loading && <ContainerSpinner flex={{ align: 'center-center' }} />}

@@ -15,8 +15,11 @@ import { useGetDelegatesHeartbeatDetailsV2 } from 'services/portal'
 import { POLL_INTERVAL, TIME_OUT } from '@delegates/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import delegateErrorURL from '../../home/images/delegate-error.svg'
 import delegateSuccessURL from '../../home/images/cd-delegates-success.svg'
+import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
 import css from './CreateK8sDelegate.module.scss'
 
 interface StepDelegateData {
@@ -24,7 +27,7 @@ interface StepDelegateData {
   delegateType?: string
   name?: string
   replicas?: number
-  onSuccessHandler?: () => void
+  onSuccessHandler?: (data: DelegateSuccessHandler) => void
 }
 
 const StepProcessing: FC<StepDelegateData> = props => {
@@ -35,6 +38,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
   const [showError, setShowError] = useState(false)
   const [isHeartBeatVerified, setVerifyHeartBeat] = useState(false)
   const [counter, setCounter] = useState(0)
+  const { trackEvent } = useTelemetry()
 
   const { showWarning } = useToaster()
   const {
@@ -74,6 +78,10 @@ const StepProcessing: FC<StepDelegateData> = props => {
         window.clearTimeout(timerId)
         setVerifyHeartBeat(true)
         setShowError(true)
+        trackEvent(CDOnboardingActions.HeartBeatFailedOnboardingYAML, {
+          category: Category.DELEGATE,
+          data: { name: name, delegateType: delegateType }
+        })
       }
 
       return () => {
@@ -82,8 +90,13 @@ const StepProcessing: FC<StepDelegateData> = props => {
     } else if (data?.resource?.numberOfConnectedDelegates === replicas) {
       setVerifyHeartBeat(true)
       setShowSuccess(true)
-      onSuccessHandler && onSuccessHandler()
+      trackEvent(CDOnboardingActions.HeartbeatVerifiedOnboardingYAML, {
+        category: Category.DELEGATE,
+        data: { name: name, delegateType: delegateType }
+      })
+      onSuccessHandler && onSuccessHandler({ delegateCreated: true, delegateInstalled: true })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, verifyHeartBeat, loading, onSuccessHandler])
 
   if (showError) {

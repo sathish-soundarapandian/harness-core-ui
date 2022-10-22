@@ -17,7 +17,7 @@ exports[`Render with tooltip context hook if formname is empty: tooltipId formna
           testing
         </p>
         <div
-          class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+          class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
         >
           <div
             class="StyledProps--font StyledProps--main pointer"
@@ -57,7 +57,7 @@ exports[`Render with tooltip context hook if tooltip ID taken from form name: to
           </p>
         </div>
         <div
-          class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+          class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
         >
           <div
             class="StyledProps--font StyledProps--main pointer"
@@ -295,7 +295,7 @@ exports[`Rendering should render 1`] = `
           </p>
         </div>
         <div
-          class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+          class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
         >
           <div
             class="StyledProps--font StyledProps--main pointer"

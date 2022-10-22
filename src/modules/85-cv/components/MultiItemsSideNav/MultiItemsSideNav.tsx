@@ -4,12 +4,15 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React, { useEffect, useMemo, useState } from 'react'
 import { Button, Container, Utils } from '@wings-software/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { SelectedAppsSideNav } from './components/SelectedAppsSideNav/SelectedAppsSideNav'
-import { getCreatedMetricLength, getSelectedMetricIndex } from './MultiItemsSideNav.utils'
+import {
+  getCreatedMetricLength,
+  getFilteredGroupedCreatedMetric,
+  getSelectedMetricIndex
+} from './MultiItemsSideNav.utils'
 import type { GroupedCreatedMetrics } from './components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import css from './MultiItemsSideNav.module.scss'
 
@@ -71,6 +74,10 @@ export function MultiItemsSideNav(props: MultiItemsSideNavProps): JSX.Element {
       : createdMetrics
   }, [filter, createdMetrics])
 
+  const filteredGroupMetric = useMemo(() => {
+    return getFilteredGroupedCreatedMetric(groupedCreatedMetrics, filter)
+  }, [filter, groupedCreatedMetrics])
+
   const createdMetricsLength = useMemo(
     () => getCreatedMetricLength(createdMetrics, groupedCreatedMetrics),
     [groupedCreatedMetrics, createdMetrics]
@@ -107,7 +114,7 @@ export function MultiItemsSideNav(props: MultiItemsSideNavProps): JSX.Element {
         }}
         selectedItem={selectedMetric}
         selectedApps={metricsToRender}
-        groupedSelectedApps={groupedCreatedMetrics}
+        groupedSelectedApps={filteredGroupMetric}
         isMetricThresholdEnabled={isMetricThresholdEnabled}
         onRemoveItem={
           hasOnRemove

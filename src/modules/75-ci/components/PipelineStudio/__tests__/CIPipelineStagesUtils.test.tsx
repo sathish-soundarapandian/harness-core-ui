@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getCIPipelineStages } from '../CIPipelineStagesUtils'
+import { getPipelineStages } from '@pipeline/components/PipelineStudio/PipelineStagesUtils'
 
 describe('CIPipelineStagesUtils', () => {
   test('getCIPipelineStages works', () => {
-    expect(getCIPipelineStages({ args: {}, getString: () => '' })).toMatchSnapshot()
+    expect(getPipelineStages({ args: {}, getString: () => '', module: 'ci' })).toMatchSnapshot()
   })
 })

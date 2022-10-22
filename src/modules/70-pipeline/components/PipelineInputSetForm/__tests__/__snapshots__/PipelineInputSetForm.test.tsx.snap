@@ -741,7 +741,7 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -952,7 +952,7 @@ exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"

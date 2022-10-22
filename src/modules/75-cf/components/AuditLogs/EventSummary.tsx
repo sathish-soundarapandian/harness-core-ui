@@ -155,6 +155,7 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
 
           <Container margin={{ top: 'small' }}>
             <Button
+              data-testId="yaml-diff-btn"
               minimal
               rightIcon={showDiff ? 'chevron-up' : 'chevron-down'}
               text={getString('auditTrail.yamlDifference').toLocaleUpperCase()}

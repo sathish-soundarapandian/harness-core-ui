@@ -22,6 +22,7 @@ export type MapGCOLogsQueryToService = {
   serviceInstance?: string
   messageIdentifier?: string
   query: string
+  identifier?: string
 }
 
 export interface GCOLogsQueryDefinition {
@@ -29,6 +30,7 @@ export interface GCOLogsQueryDefinition {
   query: string
   serviceInstanceIdentifier?: string
   messageIdentifier?: string
+  identifier?: string
 }
 
 export type GCOLogsHealthSourceSpec = HealthSourceSpec & {

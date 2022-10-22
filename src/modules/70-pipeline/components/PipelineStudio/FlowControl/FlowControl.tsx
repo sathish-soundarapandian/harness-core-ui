@@ -63,11 +63,12 @@ const getErrors = (barriers: Barrier[], getString: UseStringsReturn['getString']
 const getValidBarriers = (barriers: Barrier[]): Barrier[] =>
   barriers.filter(barrier => barrier.identifier.length > 0 && barrier.name.length > 0)
 
+type BarrierMode = 'ADD' | 'EDIT' | null
 interface Barrier {
   identifier: string
   name: string
   id?: string
-  mode?: 'ADD' | 'EDIT' | null
+  mode?: BarrierMode
   stages?: StageDetail[]
 }
 export interface BarrierListProps {
@@ -75,7 +76,7 @@ export interface BarrierListProps {
   list: Array<Barrier>
   createItem: (push: (data: Barrier) => void) => void
   deleteItem: (index: number, remove: (a: number) => void) => void
-  commitItem: (data: Barrier, index: number) => void
+  commitItem: (data: Barrier, index: number, barrierMode?: Exclude<BarrierMode, 'ADD'>) => void
   getString: UseStringsReturn['getString']
   loadingSetupInfo: boolean
 }
@@ -141,14 +142,18 @@ export function FlowControl(
     updateBarriers(updatedState)
   }
 
-  const commitBarrier = (barrierData: Barrier, index: number): void => {
+  const commitBarrier = (
+    barrierData: Barrier,
+    index: number,
+    barrierMode: Exclude<BarrierMode, 'ADD'> = null
+  ): void => {
     if (!barrierData?.name?.length || !barrierData?.identifier?.length) {
       return
     }
     const updatedBarriers: Barrier[] = produce(barriers, draft => {
       draft[index] = {
         ...barrierData,
-        mode: null
+        mode: barrierMode
       }
     })
     updateBarriers(updatedBarriers)
@@ -316,6 +321,23 @@ export function BarrierList({
                               ))}
                             </div>
                             <div className={css.barrierAction}>
+                              <RbacButton
+                                variation={ButtonVariation.ICON}
+                                icon="edit"
+                                disabled={isReadonly}
+                                permission={{
+                                  permission: PermissionIdentifier.EDIT_PIPELINE,
+                                  resource: {
+                                    resourceType: ResourceType.PIPELINE
+                                  }
+                                }}
+                                className={cx(css.actionIcon, {
+                                  [css.disabledIcon]: loadingSetupInfo || barrier.stages?.length
+                                })}
+                                withoutCurrentColor
+                                iconProps={{ size: 16, color: '#6B6D85' }}
+                                onClick={() => commitItem(formik.values.barriers[index], index, 'EDIT')}
+                              />
                               <Tooltip
                                 content={
                                   barrier.stages?.length
@@ -333,7 +355,7 @@ export function BarrierList({
                                   }}
                                   icon="main-trash"
                                   variation={ButtonVariation.ICON}
-                                  className={cx(css.deleteIcon, {
+                                  className={cx(css.actionIcon, {
                                     [css.disabledIcon]: loadingSetupInfo || barrier.stages?.length
                                   })}
                                   withoutCurrentColor
@@ -346,7 +368,7 @@ export function BarrierList({
                         ) : (
                           <div className={css.rowItem} key={barrier.id}>
                             <div className={css.newBarrier}>
-                              {barrier.name} <br />
+                              {barrier.mode !== 'EDIT' && barrier.name} <br />
                               <NameId
                                 nameLabel="Barrier Name"
                                 identifierProps={{
@@ -358,7 +380,8 @@ export function BarrierList({
                                         !formik.errors?.barriers?.[index] &&
                                         commitItem(formik.values.barriers[index], index)
                                     }
-                                  }
+                                  },
+                                  isIdentifierEditable: barrier.mode !== 'EDIT'
                                 }}
                               />
                             </div>
@@ -374,7 +397,7 @@ export function BarrierList({
                                 iconProps={{ color: '#6B6D85', size: 16 }}
                                 icon="main-trash"
                                 withoutCurrentColor
-                                className={css.deleteIcon}
+                                className={css.actionIcon}
                                 onClick={() => deleteItem(index, remove)}
                               />
                             </div>

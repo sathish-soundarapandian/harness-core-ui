@@ -23,7 +23,7 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { LdapConnectionSettings, ResponseMessage, useValidateLdapConnectionSettings } from 'services/cd-ng'
@@ -56,25 +56,40 @@ export const StepConnectionSettings: React.FC<
     }
   })
 
+  enum connectionSettingsFields {
+    HOST = 'host',
+    PORT = 'port',
+    MAX_REFERRAL_HOPS = 'maxReferralHops',
+    CONNECT_TIMEOUT = 'connectTimeout',
+    RESPONSE_TIMEOUT = 'responseTimeout',
+    BIND_DN = 'bindDN',
+    BIND_PASSWORD = 'bindPassword',
+    REFERRALS_ENABLED = 'referralsEnabled'
+  }
+
   const validationSchema = Yup.object().shape({
-    host: Yup.string().trim().required(getString('authSettings.ldap.connSettings.validateHost.required')),
-    port: Yup.number()
+    [connectionSettingsFields.HOST]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.connSettings.validateHost.required')),
+    [connectionSettingsFields.PORT]: Yup.number()
       .typeError(getString('authSettings.ldap.connSettings.portNumber.number'))
       .required(getString('authSettings.ldap.connSettings.portNumber.required')),
-    maxReferralHops: Yup.number().when('referralsEnabled', {
+    [connectionSettingsFields.MAX_REFERRAL_HOPS]: Yup.number().when([connectionSettingsFields.REFERRALS_ENABLED], {
       is: true,
       then: Yup.number()
         .typeError(getString('authSettings.ldap.connSettings.validateReferralHops.number'))
         .required(getString('authSettings.ldap.connSettings.validateReferralHops.required'))
     }),
-    connectTimeout: Yup.number()
+    [connectionSettingsFields.CONNECT_TIMEOUT]: Yup.number()
       .typeError(getString('authSettings.ldap.connSettings.validateConnectionTimeout.number'))
       .required(getString('authSettings.ldap.connSettings.validateConnectionTimeout.required')),
-    responseTimeout: Yup.number()
+    [connectionSettingsFields.RESPONSE_TIMEOUT]: Yup.number()
       .typeError(getString('authSettings.ldap.connSettings.validateResponseTime.number'))
       .required(getString('authSettings.ldap.connSettings.validateResponseTime.required')),
-    bindDN: Yup.string().trim().required(getString('authSettings.ldap.connSettings.validateBindDN')),
-    bindPassword: Yup.string().trim().required(getString('validation.password'))
+    [connectionSettingsFields.BIND_DN]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.connSettings.validateBindDN')),
+    [connectionSettingsFields.BIND_PASSWORD]: Yup.string().trim().required(getString('validation.password'))
   })
 
   const testConnection = async (values: RawLdapConnectionSettings): Promise<void> => {
@@ -218,8 +233,26 @@ export const StepConnectionSettings: React.FC<
                         variation={ButtonVariation.SECONDARY}
                         data-testid="testConnSettings"
                         text={getString('common.smtp.testConnection')}
-                        onClick={() => {
-                          formik.values && validationSchema && testConnection(formik.values)
+                        onClick={async () => {
+                          // Reset the previous test result message
+                          formik.setTouched({
+                            ...formik.touched,
+                            [connectionSettingsFields.HOST]: true,
+                            [connectionSettingsFields.PORT]: true,
+                            [connectionSettingsFields.MAX_REFERRAL_HOPS]: true,
+                            [connectionSettingsFields.CONNECT_TIMEOUT]: true,
+                            [connectionSettingsFields.RESPONSE_TIMEOUT]: true,
+                            [connectionSettingsFields.BIND_DN]: true,
+                            [connectionSettingsFields.BIND_PASSWORD]: true,
+                            [connectionSettingsFields.REFERRALS_ENABLED]: true
+                          })
+                          setTestConnSuccessOrFail(false)
+                          const formValidation = await formik.validateForm()
+                          if (!isEmpty(formValidation) || !formik.values) {
+                            // Test Connection call not to be fired if schema validation fails
+                            return
+                          }
+                          testConnection(formik.values)
                         }}
                         margin={{ right: 'medium', bottom: 'medium' }}
                         disabled={testingConnection}

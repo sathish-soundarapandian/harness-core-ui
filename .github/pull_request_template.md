@@ -26,10 +26,11 @@ NA
 - Standards: `retrigger standards`
 - Build: `retrigger build`
 - Title Check: `retrigger titlecheck`
+- Feature Name Check: `trigger featurenamecheck`
 - Coverage: `retrigger coverage`
 - Rebase: `trigger rebase`
 - Cypress: `trigger cypress`
 - Fix Prettier: `fix prettier`
 </details>
 
-## [Contributor license agreement](https://github.com/harness/harness-core-ui/blob/develop/CONTRIBUTOR_LICENSE_AGREEMENT.md)
+#### [Contributor license agreement](https://github.com/harness/harness-core-ui/blob/develop/CONTRIBUTOR_LICENSE_AGREEMENT.md)

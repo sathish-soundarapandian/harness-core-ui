@@ -12,7 +12,8 @@ import { get, times } from 'lodash-es'
 
 import { parse } from '@common/utils/YamlHelperMethods'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
-import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { ErrorType, Strategy, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
+import type { AbortFailureActionConfig, ManualInterventionFailureActionConfig } from 'services/pipeline-ng'
 import { Basic } from '../FailureStrategyPanel.stories'
 
 describe('<FailureStrategyPanel /> tests', () => {
@@ -57,13 +58,13 @@ describe('<FailureStrategyPanel /> tests', () => {
             {
               onFailure: {
                 errors: [ErrorType.Authentication],
-                action: { type: Strategy.Abort }
+                action: { type: Strategy.Abort } as AbortFailureActionConfig
               }
             },
             {
               onFailure: {
                 errors: [ErrorType.Authorization],
-                action: { type: Strategy.Abort }
+                action: { type: Strategy.Abort } as AbortFailureActionConfig
               }
             }
           ]
@@ -192,7 +193,7 @@ describe('<FailureStrategyPanel /> tests', () => {
             {
               onFailure: {
                 errors: [ErrorType.Authentication, ErrorType.Authorization],
-                action: { type: Strategy.Abort }
+                action: { type: Strategy.Abort } as AbortFailureActionConfig
               }
             }
           ]
@@ -253,7 +254,7 @@ describe('<FailureStrategyPanel /> tests', () => {
       <Basic
         data={{
           failureStrategies: Object.values(ErrorType).map(err => ({
-            onFailure: { errors: [err], action: { type: Strategy.Abort } }
+            onFailure: { errors: [err], action: { type: Strategy.Abort } as AbortFailureActionConfig }
           }))
         }}
         mode={Modes.STAGE}
@@ -317,7 +318,7 @@ describe('<FailureStrategyPanel /> tests', () => {
               errors: [ErrorType.AllErrors],
               action: {
                 type: Strategy.Abort
-              }
+              } as AbortFailureActionConfig
             }
           }))
         }}
@@ -353,7 +354,7 @@ describe('<FailureStrategyPanel /> tests', () => {
                       }
                     }
                   }
-                }
+                } as ManualInterventionFailureActionConfig
               }
             }
           ]
@@ -362,7 +363,7 @@ describe('<FailureStrategyPanel /> tests', () => {
       />
     )
 
-    const queryFieldAndStrategy = (name: string, strategy: Strategy): HTMLElement | null =>
+    const queryFieldAndStrategy = (name: string, strategy: StrategyType): HTMLElement | null =>
       container.querySelector(`input[name="${name}"][value=${strategy}]`)
 
     await waitFor(() => findByTestId('failure-strategy-step-0'))

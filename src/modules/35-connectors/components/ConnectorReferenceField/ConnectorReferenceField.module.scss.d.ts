@@ -27,6 +27,7 @@ declare const styles: {
   readonly item: string
   readonly label: string
   readonly leftInfo: string
+  readonly mini: string
   readonly noDataCardContainerConnector: string
   readonly noDataCardContainerContent: string
   readonly redStatus: string

@@ -20,23 +20,16 @@ import { useHistory, useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
-import type { SnippetFetchResponse, YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import {
-  usePostSecretViaYaml,
-  useGetYamlSchema,
-  ResponseJsonNode,
-  useGetYamlSnippetMetadata,
-  useGetYamlSnippet
-} from 'services/cd-ng'
+import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import { usePostSecretViaYaml, useGetYamlSchema, ResponseJsonNode } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { UseGetMockData } from '@common/utils/testUtils'
-import { getSnippetTags } from '@common/utils/SnippetUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
+export const AUTHORIZATION_ERROR_CODE = 403
 
 const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<ResponseJsonNode> }> = props => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
@@ -45,9 +38,7 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
   useDocumentTitle(getString('createSecretYAML.createSecret'))
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const history = useHistory()
-  const { OPA_SECRET_GOVERNANCE } = useFeatureFlags()
   const { showSuccess, showError } = useToaster()
-  const [snippetFetchResponse, setSnippetFetchResponse] = React.useState<SnippetFetchResponse>()
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
     considerWarningAsError: false,
     errorHeaderMsg: 'secrets.policyEvaluations.failedToSave',
@@ -91,23 +82,24 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
     if (yamlData && jsonData) {
       try {
         const response = await createSecret(yamlData as any)
-        conditionallyOpenGovernanceErrorModal(
-          OPA_SECRET_GOVERNANCE ? response.data?.governanceMetadata : undefined,
-          () => {
-            showSuccess(getString('createSecretYAML.secretCreated'))
-            history.push(
-              routes.toSecretDetails({
-                secretId: jsonData['identifier'],
-                accountId,
-                orgIdentifier,
-                projectIdentifier,
-                module
-              })
-            )
-          }
-        )
+        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
+          showSuccess(getString('createSecretYAML.secretCreated'))
+          history.push(
+            routes.toSecretDetails({
+              secretId: jsonData['identifier'],
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              module
+            })
+          )
+        })
       } catch (err) {
-        showError(getRBACErrorMessage(err))
+        if (err.status === AUTHORIZATION_ERROR_CODE) {
+          showError(getRBACErrorMessage(err))
+        } else {
+          showError(err.data.details)
+        }
       }
     } else {
       showError(getString('createSecretYAML.invalidSecret'))
@@ -123,47 +115,7 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
     },
     mock: props.mockSchemaData
   })
-  const { data: snippetData } = useGetYamlSnippetMetadata({
-    queryParams: {
-      tags: getSnippetTags('Secrets')
-    },
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    }
-  })
-  const {
-    data: snippet,
-    refetch,
-    cancel,
-    loading: isFetchingSnippet,
-    error: errorFetchingSnippet
-  } = useGetYamlSnippet({
-    identifier: '',
-    lazy: true
-  })
 
-  React.useEffect(() => {
-    let snippetStr = ''
-    try {
-      snippetStr = snippet?.data ? yamlStringify(snippet.data, { indent: 4 }) : ''
-    } catch {
-      /**/
-    }
-    setSnippetFetchResponse({
-      snippet: snippetStr,
-      loading: isFetchingSnippet,
-      error: errorFetchingSnippet
-    })
-  }, [isFetchingSnippet])
-
-  const onSnippetCopy = async (identifier: string): Promise<void> => {
-    cancel()
-    await refetch({
-      pathParams: {
-        identifier
-      }
-    })
-  }
   return (
     <Container>
       <PageHeader breadcrumbs={<NGBreadcrumbs />} title={getString('createSecretYAML.newSecret')} />
@@ -174,9 +126,7 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
           bind={setYamlHandler}
           height="calc(100vh - 250px)"
           schema={secretSchema?.data}
-          onSnippetCopy={onSnippetCopy}
-          snippetFetchResponse={snippetFetchResponse}
-          snippets={snippetData?.data?.yamlSnippets}
+          showSnippetSection={false}
         />
         <Layout.Horizontal spacing="large">
           <Button

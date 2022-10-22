@@ -1,0 +1,35 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "repositories": {
+      "iistest": "iistest",
+      "KenTest": "KenTest",
+      "harness-nuget": "harness-nuget",
+      "thirdparty-annonymous": "thirdparty-annonymous",
+      "automation-repo-do-not-delete": "automation-repo-do-not-delete",
+      "cf-tutorial": "cf-tutorial",
+      "todolist-zip": "todolist-zip",
+      "KenHarnessHelm": "KenHarnessHelm",
+      "helm-remote": "helm-remote",
+      "lambda": "lambda",
+      "iis-website": "iis-website",
+      "se-iis-winrm-demos": "se-iis-winrm-demos",
+      "BuildsTools": "BuildsTools",
+      "citilab-helm-icg-prod": "citilab-helm-icg-prod",
+      "Venkat-Test-BT-274": "Venkat-Test-BT-274",
+      "todolist": "todolist",
+      "generic-local": "generic-local",
+      "todolist-tutorial": "todolist-tutorial",
+      "harness-helm-charts": "harness-helm-charts",
+      "kentest1": "kentest1",
+      "citilab-helm-icg-dev": "citilab-helm-icg-dev",
+      "alex-helm-test-repo": "alex-helm-test-repo",
+      "datacollection-dsl": "datacollection-dsl",
+      "se-latam": "se-latam",
+      "harness-internal": "harness-internal",
+      "harness-cf": "harness-cf"
+    }
+  },
+  "metaData": null,
+  "correlationId": "afeb5c77-06f9-4990-a84d-3b325faffb20"
+}

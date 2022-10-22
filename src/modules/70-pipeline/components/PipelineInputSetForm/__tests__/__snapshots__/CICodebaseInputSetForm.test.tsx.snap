@@ -44,7 +44,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline Form  Initial Render 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -593,7 +593,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline Form  Re-Run Pipeline Render 
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -1308,7 +1308,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -1867,7 +1867,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -2601,7 +2601,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Re-Run Pip
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"

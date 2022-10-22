@@ -16,6 +16,9 @@ import mockData from './secret-details-home-data.json'
 jest.mock('services/cd-ng', () => ({
   useGetSecretV2: jest.fn().mockImplementation(() => {
     return { ...mockData, refetch: jest.fn(), error: null }
+  }),
+  useDeleteSecretV2: jest.fn().mockImplementation(() => {
+    return { refetch: jest.fn(), error: null }
   })
 }))
 

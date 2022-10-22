@@ -21,6 +21,7 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import {
+  DefaultPipeline,
   initialState,
   PipelineContextActions,
   PipelineReducer,
@@ -45,6 +46,7 @@ import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { EntityGitDetails } from 'services/template-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 export interface TemplatePipelineProviderProps {
   queryParams: GetPipelineQueryParams
@@ -55,6 +57,7 @@ export interface TemplatePipelineProviderProps {
   contextType: PipelineContextType
   isReadOnly: boolean
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+  setIntermittentLoading: PipelineContextInterface['setIntermittentLoading']
 }
 
 export function TemplatePipelineProvider({
@@ -66,7 +69,8 @@ export function TemplatePipelineProvider({
   isReadOnly,
   contextType,
   renderPipelineStage,
-  children
+  children,
+  setIntermittentLoading: setTemplateIntermittentLoading
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
@@ -79,6 +83,7 @@ export function TemplatePipelineProvider({
   const setSchemaErrorView = React.useCallback(flag => {
     dispatch(PipelineContextActions.updateSchemaErrorsFlag({ schemaErrors: flag }))
   }, [])
+  const { supportingTemplatesGitx } = useAppStore()
   const getStageFromPipeline = React.useCallback(
     <T extends StageElementConfig = StageElementConfig>(
       stageId: string,
@@ -132,18 +137,21 @@ export function TemplatePipelineProvider({
   }, [])
 
   const fetchPipeline = async () => {
-    const templateRefs = findAllByKey('templateRef', initialValue)
+    const originalPipeline = isEqual(state.originalPipeline, DefaultPipeline)
+      ? cloneDeep(initialValue)
+      : state.originalPipeline
     dispatch(
       PipelineContextActions.success({
         error: '',
         pipeline: initialValue,
-        originalPipeline: cloneDeep(initialValue),
+        originalPipeline,
         isBEPipelineUpdated: false,
-        isUpdated: false,
+        isUpdated: !isEqual(originalPipeline, initialValue),
         gitDetails,
         storeMetadata
       })
     )
+    const templateRefs = findAllByKey('templateRef', initialValue)
     if (templateRefs.length > 0) {
       const { templateTypes, templateServiceData } = await getTemplateTypesByRef(
         {
@@ -155,7 +163,9 @@ export function TemplatePipelineProvider({
           branch: gitDetails?.branch,
           getDefaultFromOtherRepo: true
         },
-        templateRefs
+        templateRefs,
+        storeMetadata,
+        supportingTemplatesGitx
       )
       dispatch(
         PipelineContextActions.setTemplateTypes({
@@ -183,6 +193,14 @@ export function TemplatePipelineProvider({
     )
   }
 
+  const setIntermittentLoading = React.useCallback(
+    isIntermittentLoading => {
+      setTemplateIntermittentLoading(isIntermittentLoading)
+      dispatch(PipelineContextActions.setIntermittentLoading({ isIntermittentLoading }))
+    },
+    [setTemplateIntermittentLoading]
+  )
+
   const getStagePathFromPipeline = React.useCallback(
     (stageId: string, prefix = '', pipeline?: PipelineInfoConfig) => {
       const localPipeline = pipeline || state.pipeline
@@ -205,7 +223,9 @@ export function TemplatePipelineProvider({
         branch: state.gitDetails?.branch,
         getDefaultFromOtherRepo: true
       },
-      templateRefs
+      templateRefs,
+      storeMetadata,
+      supportingTemplatesGitx
     ).then(resp => {
       PipelineContextActions.setTemplateTypes({ templateTypes: merge(state.templateTypes, resp.templateTypes) })
       PipelineContextActions.setTemplateServiceData({
@@ -250,7 +270,8 @@ export function TemplatePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
-        setTemplateServiceData: noop
+        setTemplateServiceData: noop,
+        setIntermittentLoading
       }}
     >
       {children}

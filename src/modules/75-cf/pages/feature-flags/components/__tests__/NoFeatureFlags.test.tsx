@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
@@ -55,12 +55,11 @@ describe('NoFeatureFlags', () => {
     jest.resetAllMocks()
   })
 
-  test('It should render "No Flags" image, message & New Flag button when the project has no feature flags', async () => {
+  test('It should render "No Flags" description & New Flag button when the project has no feature flags', async () => {
     renderComponent({ hasFeatureFlags: false, hasFlagFilter: false, hasSearchTerm: false })
 
     await waitFor(() => {
-      expect(screen.getByTestId('nodata-image')).toBeVisible()
-      expect(screen.getByText('cf.featureFlags.noFlagsInProject')).toBeVisible()
+      expect(screen.getByText('cf.featureFlags.noFeatureFlagsDescription')).toBeVisible()
       expect(screen.getByText('cf.featureFlags.newFlag')).toBeVisible()
     })
 
@@ -98,10 +97,11 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.clearSearch')).toBeVisible()
     })
 
-    await act(async () => {
-      userEvent.click(screen.getByText('cf.featureFlags.clearSearch'))
+    userEvent.click(screen.getByText('cf.featureFlags.clearSearch'))
+
+    await waitFor(() => {
+      expect(onClearSearch).toHaveBeenCalled()
     })
-    expect(onClearSearch).toHaveBeenCalled()
   })
 
   test('It should render the filter message when both flagFilter and searchTerm are present', async () => {
@@ -114,9 +114,10 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.resetFilters')).toBeVisible()
     })
 
-    await act(async () => {
-      userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
+    userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
+
+    await waitFor(() => {
+      expect(onClearFilter).toHaveBeenCalled()
     })
-    expect(onClearFilter).toHaveBeenCalled()
   })
 })

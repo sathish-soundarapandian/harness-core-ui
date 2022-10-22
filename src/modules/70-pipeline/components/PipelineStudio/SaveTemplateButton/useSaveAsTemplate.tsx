@@ -18,7 +18,8 @@ import {
   ModalProps,
   Intent,
   TemplateConfigModalWithRef,
-  TemplateConfigModalHandle
+  TemplateConfigModalHandle,
+  Fields
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
@@ -32,6 +33,7 @@ import { sanitize } from '@common/utils/JSONUtils'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import css from './SaveAsTemplate.module.scss'
 
 interface TemplateActionsReturnType {
@@ -117,6 +119,9 @@ export function useSaveAsTemplate({
         storeMetadata,
         gitDetails,
         title: getString('common.template.saveAsNewTemplateHeading'),
+        disabledFields:
+          storeMetadata?.storeType === StoreType.REMOTE ? [Fields.Branch, Fields.ConnectorRef, Fields.RepoName] : [],
+        disableCreatingNewBranch: storeMetadata?.storeType === StoreType.REMOTE,
         allowScopeChange: true,
         intent: Intent.SAVE,
         onFailure

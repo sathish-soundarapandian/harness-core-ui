@@ -601,7 +601,7 @@ describe('ExecutionStrategy test', () => {
         target: { value: 'JAR' }
       })
     })
-    expect(packageSelect!).toHaveValue('JAR')
+    expect(packageSelect!).toHaveValue('pipeline.phasesForm.packageTypes.jar')
 
     const submitBtnPhases = await findByTestId(container, 'execution-use-strategy-phases')
     expect(submitBtnPhases).toBeInTheDocument()
@@ -611,5 +611,46 @@ describe('ExecutionStrategy test', () => {
     })
     await waitFor(() => expect(pipelineContextMockValue.updateStage).toHaveBeenCalled())
     expect(pipelineContextMockValue.updateStage).toHaveBeenCalledWith(rollingUpdateSshStageFnArg)
+  })
+  test('render phases, update stage winrm type', async () => {
+    pipelineContextMockValue = getDummyPipelineContextValue()
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <ExecutionStrategy
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: {
+                      serviceDefinition: { type: 'WinRm' },
+                      serviceRef: 'service_3'
+                    },
+                    execution: {
+                      steps: [],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+            ref={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const packageSelect = container.querySelector('input[name="packageType"]')
+    expect(packageSelect).toBeInTheDocument()
+
+    act(async () => {
+      fireEvent.change(packageSelect!, {
+        target: { value: 'IIS_APP' }
+      })
+    })
+    waitFor(() => expect(packageSelect!).toHaveValue('IIS_APP'))
   })
 })

@@ -113,7 +113,7 @@ describe('Artifactory Artifact Source tests', () => {
     )
 
     expect(container).toMatchSnapshot()
-    expect(await waitFor(() => findByText('pipeline.artifactPathLabel'))).toBeInTheDocument()
+    expect(await waitFor(() => findByText('pipeline.artifactImagePathLabel'))).toBeInTheDocument()
     expect(await waitFor(() => artifactSourceUtils.fromPipelineInputTriggerTab)).toBeCalled()
     expect(await waitFor(() => artifactSourceUtils.isFieldfromTriggerTabDisabled)).toBeCalled()
     expect(await waitFor(() => cdng.useGetBuildDetailsForArtifactoryArtifactWithYaml)).toBeCalled()

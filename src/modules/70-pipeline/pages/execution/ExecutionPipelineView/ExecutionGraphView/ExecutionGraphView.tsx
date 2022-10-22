@@ -89,7 +89,7 @@ export default function ExecutionGraphView(): React.ReactElement {
       }
 
       const params = {
-        ...queryParams,
+        view: queryParams?.view,
         stage: selectedStageId,
         ...(selectedStageExecutionId && { stageExecId: selectedStageExecutionId }),
         step

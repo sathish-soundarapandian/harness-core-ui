@@ -369,7 +369,8 @@ describe('stageinputset tests', () => {
       )
       const deleteButton = container.querySelectorAll('[data-icon="main-trash"]')
       fireEvent.click(deleteButton[0])
-      expect(container.querySelectorAll('[data-icon="main-trash"]').length).toBe(3)
+
+      expect(container.querySelectorAll('[data-icon="main-trash"]').length).toBe(1)
     })
     test('initial render with empty props', () => {
       const propNew = {

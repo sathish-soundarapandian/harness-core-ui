@@ -36,6 +36,7 @@ export interface InputSetGitQueryParams extends GitQueryParams {
 export interface PipelineStudioQueryParams extends GitQueryParams, RunPipelineQueryParams {
   stageId?: string
   stepId?: string
+  sectionId?: string
 }
 export interface RunPipelineQueryParams extends GitQueryParams, InputSetGitQueryParams {
   runPipeline?: boolean
@@ -65,6 +66,8 @@ export type TemplateType =
   | 'Step'
   | 'Stage'
   | 'Pipeline'
+  | 'CustomDeployment'
+  | 'ArtifactSource'
   | 'Service'
   | 'Infrastructure'
   | 'StepGroup'
@@ -74,12 +77,14 @@ export type TemplateType =
   | ':templateType(Step)'
   | ':templateType(Stage)'
   | ':templateType(Pipeline)'
+  | ':templateType(CustomDeployment)'
   | ':templateType(Service)'
   | ':templateType(Infrastructure)'
   | ':templateType(StepGroup)'
   | ':templateType(Execution)'
   | ':templateType(MonitoredService)'
   | ':templateType(SecretManager)'
+  | ':templateType(ArtifactSource)'
   | ':templateType'
 
 export interface TemplateStudioPathProps extends ProjectPathProps {
@@ -95,6 +100,7 @@ export interface TriggerPathProps extends PipelinePathProps {
   sourceRepo?: string
   artifactType?: string
   manifestType?: string
+  scheduleType?: string
 }
 
 export interface TriggerQueryParams {
@@ -103,6 +109,7 @@ export interface TriggerQueryParams {
   sourceRepo?: string
   artifactType?: string
   manifestType?: string
+  scheduleType?: string
 }
 
 export interface ExecutionPathProps extends PipelinePathProps {
@@ -198,7 +205,7 @@ export type ModuleHomeParams = {
   source?: string
 }
 
-export type PipelineType<T> = T & ModulePathParams
+export type PipelineType<T> = T & Partial<ModulePathParams>
 
 export type PathFn<T> = (props: AccountPathProps & T) => string
 

@@ -17,9 +17,9 @@ import {
   SelectOption,
   getMultiTypeFromValue,
   FormInput,
-  MultiSelectOption
+  MultiSelectOption,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { cloneDeep, defaultTo, isEqual } from 'lodash-es'
@@ -37,7 +37,7 @@ import {
   useGetBuildsForJenkins,
   BuildDetails
 } from 'services/cd-ng'
-import { getConnectorIdValue, getJenkinsFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
   JenkinsArtifactProps,
@@ -48,7 +48,7 @@ import type { SubmenuSelectOption } from '@pipeline/components/PipelineSteps/Ste
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 function FormComponent({
@@ -59,7 +59,8 @@ function FormComponent({
   initialValues,
   previousStep,
   isReadonly = false,
-  formik
+  formik,
+  isMultiArtifactSource
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const lastOpenedJob = useRef<any>(null)
@@ -77,7 +78,7 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.label)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
 
   const {
     refetch: refetchJobs,
@@ -236,8 +237,9 @@ function FormComponent({
   }, [jobsResponse])
 
   return (
-    <Form>
+    <FormikForm>
       <div className={css.connectorForm}>
+        {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
           <FormInput.SelectWithSubmenuTypeInput
@@ -430,19 +432,20 @@ function FormComponent({
           rightIcon="chevron-right"
         />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 
 export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsArtifactProps): React.ReactElement {
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const getInitialValues = (): JenkinsArtifactType => {
-    return getJenkinsFormData(
+    return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as JenkinsArtifactType
   }
 
@@ -474,7 +477,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -491,7 +494,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={formData => {
           submitFormData(
             {

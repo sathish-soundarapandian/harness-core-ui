@@ -14,8 +14,7 @@ import {
   Layout,
   AllowedTypes,
   Heading,
-  PageError,
-  Text
+  PageError
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
@@ -23,7 +22,8 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
-import { defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop, set } from 'lodash-es'
+import { produce } from 'immer'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -40,10 +40,11 @@ import {
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useQueryParams } from '@common/hooks'
 import { stringify } from '@common/utils/YamlHelperMethods'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -62,13 +63,20 @@ function TemplateStepWidget(
   props: TemplateStepWidgetProps,
   formikRef: StepFormikFowardRef<TemplateStepNode>
 ): React.ReactElement {
+  const {
+    state: { storeMetadata },
+    setIntermittentLoading
+  } = usePipelineContext()
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const stepTemplateRef = getIdentifierFromValue(initialValues.template.templateRef)
+  const stepTemplateVersionLabel = defaultTo(initialValues.template.versionLabel, '')
   const scope = getScopeFromValue(initialValues.template.templateRef)
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
+  const [formValues, setFormValues] = React.useState<TemplateStepNode>(initialValues)
+  const [allValues, setAllValues] = React.useState<StepElementConfig>()
 
   const {
     data: stepTemplateResponse,
@@ -79,17 +87,14 @@ function TemplateStepWidget(
     templateIdentifier: stepTemplateRef,
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
-      versionLabel: defaultTo(initialValues.template.versionLabel, ''),
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      versionLabel: stepTemplateVersionLabel,
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
-  const allValues = React.useMemo(
-    () => parse(defaultTo(stepTemplateResponse?.data?.yaml, ''))?.template.spec,
-    [stepTemplateResponse?.data?.yaml]
-  )
+  React.useEffect(() => {
+    setAllValues(parse(defaultTo(stepTemplateResponse?.data?.yaml, ''))?.template.spec)
+  }, [stepTemplateResponse?.data?.yaml])
 
   const {
     data: stepTemplateInputSetYaml,
@@ -100,10 +105,8 @@ function TemplateStepWidget(
     templateIdentifier: stepTemplateRef,
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
-      versionLabel: defaultTo(initialValues.template.versionLabel, ''),
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      versionLabel: stepTemplateVersionLabel,
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
@@ -112,7 +115,13 @@ function TemplateStepWidget(
     [stepTemplateInputSetYaml?.data]
   )
 
-  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
+  const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
+    const updateValues = produce(initialValues, draft => {
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
+    })
+    setFormValues(updateValues)
+    onUpdate?.(updateValues)
+  }
 
   React.useEffect(() => {
     if (!isEmpty(templateInputs)) {
@@ -128,23 +137,26 @@ function TemplateStepWidget(
           }
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
-            const mergedTemplateInputs = parse(defaultTo(response.data?.mergedTemplateInputs, ''))
-            set(initialValues, TEMPLATE_INPUT_PATH, mergedTemplateInputs)
-            onUpdate?.(initialValues)
+            setLoadingMergedTemplateInputs(false)
+            updateFormValues(parse(defaultTo(response.data?.mergedTemplateInputs, '')))
           } else {
             throw response
           }
         })
       } catch (error) {
-        set(initialValues, TEMPLATE_INPUT_PATH, templateInputs)
-        onUpdate?.(initialValues)
+        setLoadingMergedTemplateInputs(false)
+        updateFormValues(templateInputs)
       }
-      setLoadingMergedTemplateInputs(false)
     } else if (!stepTemplateInputSetLoading) {
-      unset(initialValues, TEMPLATE_INPUT_PATH)
-      onUpdate?.(initialValues)
+      updateFormValues(undefined)
     }
   }, [templateInputs])
+
+  React.useEffect(() => {
+    if (stepTemplateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [stepTemplateInputSetLoading])
 
   const validateForm = (values: TemplateStepNode) => {
     const errorsResponse = validateStep({
@@ -170,13 +182,25 @@ function TemplateStepWidget(
 
   const error = defaultTo(stepTemplateInputSetError, stepTemplateError)
 
+  /**
+   * This effect disables/enables "Apply Changes" button on Pipeline and Template Studio
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
+
   return (
     <div className={stepCss.stepPanel}>
       <Formik<TemplateStepNode>
         onSubmit={values => {
           onUpdate?.(values)
         }}
-        initialValues={initialValues}
+        initialValues={formValues}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({
           name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
@@ -199,33 +223,21 @@ function TemplateStepWidget(
               <Container className={css.inputsContainer}>
                 {isLoading && <PageSpinner />}
                 {!isLoading && error && (
-                  <Container height={300}>
-                    <PageError
-                      message={defaultTo((error?.data as Error)?.message, error?.message)}
-                      onClick={() => refetch()}
-                    />
+                  <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                    <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                   </Container>
                 )}
                 {!isLoading && !error && templateInputs && allValues && (
                   <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'}>
-                    <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-                      <Heading level={5} color={Color.BLACK}>
-                        {getString('pipeline.templateInputs')}
-                      </Heading>
-                      <Text font={{ size: 'normal' }}>
-                        {getString('templatesLibrary.inputsCount', { count: templateInputsCount })}
-                      </Text>
-                    </Layout.Horizontal>
+                    <Heading level={5} color={Color.BLACK}>
+                      {getString('pipeline.templateInputs')}
+                    </Heading>
                     <StepForm
-                      key={`${formik.values.template.templateRef}-${defaultTo(
-                        formik.values.template.versionLabel,
-                        ''
-                      )}`}
                       template={{ step: templateInputs }}
                       values={{ step: formik.values.template?.templateInputs as StepElementConfig }}
                       allValues={{ step: allValues }}
                       readonly={readonly}
-                      viewType={StepViewType.InputSet}
+                      viewType={StepViewType.TemplateUsage}
                       path={TEMPLATE_INPUT_PATH}
                       allowableTypes={allowableTypes}
                       onUpdate={noop}

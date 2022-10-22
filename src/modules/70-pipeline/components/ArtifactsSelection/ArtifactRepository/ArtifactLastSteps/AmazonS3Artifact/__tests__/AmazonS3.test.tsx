@@ -20,6 +20,7 @@ import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE, StepProps } from '@harness/uicore'
 
 import * as cdng from 'services/cd-ng'
+import * as portalng from 'services/portal'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   AmazonS3ArtifactProps,
@@ -95,6 +96,13 @@ describe('AmazonS3 tests', () => {
         loading: false,
         data: bucketListData,
         refetch: fetchBuckets
+      }
+    })
+    jest.spyOn(portalng, 'useListAwsRegions').mockImplementation((): any => {
+      return {
+        loading: false,
+        data: awsRegionsData,
+        error: null
       }
     })
     fetchBuckets.mockReset()
@@ -388,6 +396,7 @@ describe('AmazonS3 tests', () => {
     const initialValues = {
       spec: {
         identifier: '',
+        region: RUNTIME_INPUT_VALUE,
         bucketName: RUNTIME_INPUT_VALUE,
         tagType: TagTypes.Value,
         filePath: RUNTIME_INPUT_VALUE
@@ -400,8 +409,10 @@ describe('AmazonS3 tests', () => {
       </TestWrapper>
     )
 
+    const regionInput = queryByAttribute('name', container, 'region') as HTMLInputElement
     const bucketNameInput = queryByAttribute('name', container, 'bucketName') as HTMLInputElement
     const filePathInput = queryByAttribute('name', container, 'filePath') as HTMLInputElement
+    expect(regionInput).not.toBeNull()
     expect(bucketNameInput).not.toBeNull()
     expect(filePathInput).not.toBeNull()
 
@@ -409,6 +420,12 @@ describe('AmazonS3 tests', () => {
     expect(modals.length).toBe(0)
 
     // Configure options testing for bucketName and filePath fields
+    const cogRegion = document.getElementById('configureOptions_region')
+    userEvent.click(cogRegion!)
+    await waitFor(() => expect(modals.length).toBe(1))
+    const regionCOGModal = modals[0] as HTMLElement
+    await doConfigureOptionsTesting(regionCOGModal, regionInput)
+
     const cogBucketName = document.getElementById('configureOptions_bucketName')
     userEvent.click(cogBucketName!)
     await waitFor(() => expect(modals.length).toBe(1))
@@ -428,6 +445,7 @@ describe('AmazonS3 tests', () => {
       expect(onSubmit).toHaveBeenCalledWith({
         spec: {
           connectorRef: 'testConnector',
+          region: '<+input>.regex(<+input>.includes(/test/))',
           bucketName: '<+input>.regex(<+input>.includes(/test/))',
           filePath: '<+input>.regex(<+input>.includes(/test/))'
         }
@@ -505,16 +523,36 @@ describe('AmazonS3 tests', () => {
       </TestWrapper>
     )
 
+    await waitFor(() => expect(fetchBuckets).toHaveBeenCalledTimes(1))
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    fireEvent.click(bucketNameDropDownButton!)
+    userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
     const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Buckets...')
     expect(loadingBucketsOption).toBeDefined()
-    await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
+    await waitFor(() => expect(fetchBuckets).toHaveBeenCalledTimes(1))
+  })
+
+  test(`region field placeholder should be loading when region data is being fetched`, async () => {
+    jest.spyOn(portalng, 'useListAwsRegions').mockImplementation((): any => {
+      return {
+        loading: true,
+        data: null,
+        refetch: jest.fn()
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <AmazonS3 initialValues={commonInitialValues} {...props} />
+      </TestWrapper>
+    )
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const regionSelect = queryByNameAttribute('region') as HTMLInputElement
+    expect(regionSelect.placeholder).toBe('loading')
   })
 
   test(`clicking on Bucket Name field should call fetchBuckets function when bucket data is not present`, async () => {
@@ -539,9 +577,39 @@ describe('AmazonS3 tests', () => {
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBuckets')
+    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBucketsFound')
     expect(noBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
+  })
+
+  test(`Bucket Name field should be rendered as free text field, if region is Runtime input`, async () => {
+    const initialValues = {
+      spec: {
+        identifier: '',
+        region: RUNTIME_INPUT_VALUE,
+        bucketName: 'cdng-terraform-state',
+        tagType: TagTypes.Value,
+        filePath: 'test_file_1'
+      },
+      type: 'AmazonS3'
+    }
+    const { container } = render(
+      <TestWrapper>
+        <AmazonS3 initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(fetchBuckets).toHaveBeenCalledTimes(1))
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const bucketNameInput = queryByNameAttribute('bucketName') as HTMLInputElement
+    const bucketNameDropDownButtons = container.querySelectorAll('[data-icon="chevron-down"]')
+    expect(bucketNameDropDownButtons.length).toBe(0)
+    userEvent.click(bucketNameInput)
+    await waitFor(() => expect(fetchBuckets).toHaveBeenCalledTimes(1))
+    expect(bucketNameInput.value).toBe('cdng-terraform-state')
+    userEvent.clear(bucketNameInput)
+    userEvent.type(bucketNameInput, 'abc')
+    expect(bucketNameInput.value).toBe('abc')
   })
 
   test(`submits should work when filePath value is given`, async () => {
@@ -624,11 +692,24 @@ describe('AmazonS3 tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
 
+    // Select region from dropdown
+    const regionDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[0]
+    fireEvent.click(regionDropDownButton!)
+    expect(portalDivs.length).toBe(1)
+    const dropdownPortalDivRegion = portalDivs[0]
+    const selectListMenuRegion = dropdownPortalDivRegion.querySelector('.bp3-menu')
+    const selectItemRegion = await findByText(selectListMenuRegion as HTMLElement, 'GovCloud (US-West)')
+    act(() => {
+      fireEvent.click(selectItemRegion)
+    })
+    const regionSelect = queryByNameAttribute('region') as HTMLInputElement
+    expect(regionSelect.value).toBe('GovCloud (US-West)')
+
     // Select bucketName from dropdown
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
     fireEvent.click(bucketNameDropDownButton!)
-    expect(portalDivs.length).toBe(1)
-    const dropdownPortalDiv = portalDivs[0]
+    expect(portalDivs.length).toBe(2)
+    const dropdownPortalDiv = portalDivs[1]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
     const selectItem = await findByText(selectListMenu as HTMLElement, 'prod-bucket-339')
     act(() => {
@@ -652,8 +733,77 @@ describe('AmazonS3 tests', () => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
         spec: {
           connectorRef: 'testConnector',
+          region: 'us-gov-west-1',
           bucketName: 'prod-bucket-339',
           filePathRegex: 'file_path_regex'
+        }
+      })
+    })
+  })
+
+  test(`on change of region, existing bucketName should be cleared`, async () => {
+    const initialValues = {
+      spec: {
+        identifier: '',
+        bucketName: 'cdng-terraform-state',
+        tagType: TagTypes.Value,
+        filePath: 'test_file_1'
+      },
+      type: 'AmazonS3'
+    }
+    const { container, getByText } = render(
+      <TestWrapper>
+        <AmazonS3 initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const submitBtn = getByText('submit')
+    fireEvent.click(submitBtn)
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const bucketNameSelect = queryByNameAttribute('bucketName') as HTMLInputElement
+    expect(bucketNameSelect.value).toBe('cdng-terraform-state')
+
+    // Select region from dropdown
+    const regionDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[0]
+    fireEvent.click(regionDropDownButton!)
+    expect(portalDivs.length).toBe(1)
+    const dropdownPortalDivRegion = portalDivs[0]
+    const selectListMenuRegion = dropdownPortalDivRegion.querySelector('.bp3-menu')
+    const selectItemRegion = await findByText(selectListMenuRegion as HTMLElement, 'GovCloud (US-West)')
+    act(() => {
+      fireEvent.click(selectItemRegion)
+    })
+    const regionSelect = queryByNameAttribute('region') as HTMLInputElement
+    expect(regionSelect.value).toBe('GovCloud (US-West)')
+    await waitFor(() => expect(bucketNameSelect.value).toBe(''))
+
+    // Select bucketName from dropdown
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
+    fireEvent.click(bucketNameDropDownButton!)
+    expect(portalDivs.length).toBe(2)
+    const dropdownPortalDiv = portalDivs[1]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+    const selectItem = await findByText(selectListMenu as HTMLElement, 'prod-bucket-339')
+    act(() => {
+      fireEvent.click(selectItem)
+    })
+    expect(bucketNameSelect.value).toBe('prod-bucket-339')
+
+    // Submit the form
+    fireEvent.click(submitBtn)
+    await waitFor(() => {
+      expect(props.handleSubmit).toBeCalled()
+      expect(props.handleSubmit).toHaveBeenCalledWith({
+        spec: {
+          connectorRef: 'testConnector',
+          region: 'us-gov-west-1',
+          bucketName: 'prod-bucket-339',
+          filePath: 'test_file_1'
         }
       })
     })
@@ -688,7 +838,7 @@ describe('AmazonS3 tests', () => {
     const submitBtn = getByText('submit')
     fireEvent.click(submitBtn)
 
-    const identifierRequiredErr = await findByText(container, 'validation.identifierRequired')
+    const identifierRequiredErr = await findByText(container, 'common.validation.nameIsRequired')
     expect(identifierRequiredErr).toBeDefined()
 
     // change value of identifier

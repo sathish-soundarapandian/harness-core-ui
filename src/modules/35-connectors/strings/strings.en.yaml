@@ -57,6 +57,7 @@ loginToMasterAccount: and login to your master account
 roleARN: Create Cross Account Role
 ifReq: if required.
 selectConnector: Select Connector
+selectConnectors: Select Connectors
 showInstructions: Show instructions
 apiKey: '{{$.common.apikey}}'
 apiKeyOrPassword: Password/Api Key
@@ -75,7 +76,9 @@ addParameter: Add Parameter
 baseURL: Base URL
 requestMethod: Request Method
 optionalAuthentication: Authentication (optional)
-bearerToken: Bearer Token(HTTP Header)
+bearerToken: Bearer Token (HTTP Header)
+apiToken: API Token
+apiTokenValidation: API Token is required.
 connectivityMode:
   title: 'Connectivity Mode'
   validation: 'Please select connectivity mode'
@@ -83,6 +86,7 @@ connectivityMode:
   selectText: 'Select how you would like to connect to the provider'
 title:
   customSecretManager: 'Custom Secrets Manager'
+  gcpSecretManager: 'GCP Secrets Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -114,6 +118,7 @@ title:
   gcpKms: GCP Key Management Service
   azure: 'Azure Cloud Provider'
   harnessImageConnectorRef: 'Override Image Connector'
+  spot: 'Spot Cloud Provider'
 placeholder:
   harnessImageConnectorRef: 'Select Image Connector'
 name_labels:
@@ -136,6 +141,7 @@ name_labels:
   SecretManager: 'Secret Manager Name'
   AppDynamics: 'AppDynamics Connector Name'
   Splunk: 'Splunk Connector Name'
+  Spot: 'Spot Connector Name'
 testConnectionStep:
   errorDetails: Click to view error details
   noDelegate: Unable to get Delegate information
@@ -231,6 +237,7 @@ hashiCorpVault:
   engineName: 'Secret Engine Name'
   engineVersion: 'Secret Engine Version'
   renewal: 'Renewal Interval (minutes)'
+  renewalIntervalWarningMessage: Harness will not renew the token if Renewal Interval is set to zero
   readOnly: '{{$.common.readOnly}}'
   readOnlyVault: 'Read-only Vault'
   default: '{{$.common.default}}'
@@ -252,9 +259,9 @@ hashiCorpVault:
   serviceAccountTokenPath: Service Account Token Path
   vaultK8sAuthRoleRequired: Role Required
   serviceAccountRequired: Service Account Token Path Required
-  preventDefaultWhenReadOnly: Read only secret manager cannot be set as default
 nexus:
-  nexusLabel: Nexus
+  nexusLabel: Nexus3
+  nexus2Label: Nexus2
   nexusServerUrl: 'Nexus Repository URL'
 artifactory:
   artifactoryLabel: Artifactory
@@ -292,7 +299,7 @@ docker:
   dockerRegistryURL: 'Docker Registry URL'
   dockerProvideType: 'Provider Type'
   dockerHub: 'DockerHub'
-  harbour: 'Harbour'
+  harbor: 'Harbor'
   quay: 'Quay'
   other: 'Other (Docker V2 compliant)'
   dockerRepository: Docker Repository
@@ -344,6 +351,15 @@ newRelic:
   accountIdTooltip: For steps to get New Relic Account Id
   products:
     fullStackObservability: 'Full Stack Observability: APM'
+elk:
+  elkConnectorDetails: 'ELK Connector Details'
+  testConnectionStepValidation: 'Validating ELK authentication and permissions'
+  elkLabel: ELK
+  apiId: API ID
+  noAuthentication: No Authentication
+  validation:
+    apiKeyId: API ID is a required field
+    apiKeyRef: API KEY is a required field
 prometheus:
   urlValidation: Prometheus URL is required.
 datadog:
@@ -353,8 +369,6 @@ datadog:
 errorTracking:
   urlValidation: Error Tracking URL is required.
 dynatrace:
-  apiToken: API Token
-  apiTokenValidation: API Token is required.
   urlValidation: Dynatrace URL is required.
 sumologic:
   urlLabel: Sumo Logic API Server URL
@@ -379,6 +393,7 @@ cdng:
   baseline: Baseline
   trafficsplit: Traffic Split (OPTIONAL)
   continousVerificationStep: Verify Step Details
+  failOnNoAnalysis: Fail On No Analysis
   displayName: Display Name
   createCVJob: Please create a verification job
   loadingJobs: Loading verification jobs…
@@ -545,6 +560,7 @@ ceAws:
     trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
     editConnector: '{{ $.connectors.editConnector }}'
     ifReq: '{{ $.connectors.ifReq }}'
+    govCloudHeader: 'Is this an AWS GovCloud account?'
     validation:
       numeric: 'AWS Account Id must be numeric'
       positive: 'AWS Account Id must be a positive number'
@@ -749,7 +765,7 @@ ceAzure:
     subscriptionId: '{{ $.common.subscriptionId }}'
     tenantId: '{{ $.connectors.tenantId }}'
     hints:
-      nextStepHint1: 'If the Azure tenant ID you entered is covered by any of the above, select and click “Continue >” to proceed.'
+      nextStepHint1: 'If the billing export for the Subscription Id {{ subscriptionId }} is covered by any of the above existing exports, click "Continue >" to proceed.'
       nextStepHint2: '{{ $.connectors.ceAws.curExising.nextStepHint2 }}'
     searchBillingReports: Enter billing report name
   chooseRequirements:
@@ -759,6 +775,7 @@ ceAzure:
     info: Cost visibility of the resources for which you added the Billing Export in the previous step is enabled by default. Select the others as per your requirements.
     visibilityCardDesc: Cost insights, anomaly detection, service insights, creating budgets perspectives and alerts, utilised/wasted resources in clusters.
     optimizationCardDesc: Detection of orphaned resources, recommendations to save costs, scaling/tearing down, turning off in non-work hours, reserving instances.
+    atleastOneError: Please select at least one feature other than Visibility
     billing:
       feat1: Azure costs by services, accounts, etc.
       feat2: Cost perspective by various constructs
@@ -924,3 +941,7 @@ customSM:
   sshKey: SSH Key Reference
   validation:
     template: Please select a template
+gcpSecretManager:
+  gcpSMSecretFile: Google Secrets Manager Credentials File
+  validation:
+    credFileRequired: Credentials File is required

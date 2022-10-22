@@ -75,9 +75,27 @@ export enum OsTypes {
   MacOS = 'MacOS'
 }
 
+export enum ArchTypes {
+  Amd64 = 'Amd64',
+  Arm64 = 'Arm64'
+}
+
+export enum CIBuildInfrastructureType {
+  KubernetesDirect = 'KubernetesDirect',
+  VM = 'VM',
+  KubernetesHosted = 'KubernetesHosted',
+  Cloud = 'Cloud',
+  UseFromStage = 'UseFromStage',
+  Docker = 'Docker'
+}
+
 export const DEFAULT_PAGE_INDEX = 0
 export const DEFAULT_PAGE_SIZE = 20
 export const DEFAULT_PIPELINE_LIST_TABLE_SORT = ['lastUpdatedAt', 'DESC']
 export const DEFAULT_EXECUTION_LIST_TABLE_SORT = ['startTs', 'DESC']
 
 export const AUTO_TRIGGERS: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM', 'SCHEDULER_CRON']
+
+export const stepNameRegex = /^[a-zA-Z_][-0-9a-zA-Z_\s]{0,63}$/
+
+export const stepIdentifierRegex = /^[a-zA-Z_][-0-9a-zA-Z_]{0,63}$/

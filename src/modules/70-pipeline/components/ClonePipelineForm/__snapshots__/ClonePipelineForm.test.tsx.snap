@@ -86,7 +86,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = false org and
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -522,7 +522,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = false org and
           </div>
         </div>
         <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main createPipelineButtons"
         >
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
@@ -638,7 +638,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = false snapsho
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -952,7 +952,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = false snapsho
           </div>
         </div>
         <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main createPipelineButtons"
         >
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
@@ -1068,7 +1068,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = true default 
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -1503,7 +1503,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = true default 
           </div>
         </div>
         <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main createPipelineButtons"
         >
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
@@ -1619,7 +1619,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = true store = 
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -2054,7 +2054,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = true store = 
           </div>
         </div>
         <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main createPipelineButtons"
         >
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
@@ -2170,7 +2170,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = true store = 
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -2743,7 +2743,7 @@ exports[`<ClonePipelineForm /> tests supportingGitSimplification = true store = 
           </div>
         </div>
         <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main createPipelineButtons"
         >
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"

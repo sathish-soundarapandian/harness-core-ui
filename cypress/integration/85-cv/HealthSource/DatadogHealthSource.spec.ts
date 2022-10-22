@@ -7,10 +7,13 @@
 
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   connectorIdentifier,
   dataLogsIndexes,
@@ -68,6 +71,7 @@ describe('Configure Datadog health source', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
 
     cy.findByRole('button', { name: /Submit/i }).click()
@@ -76,13 +80,13 @@ describe('Configure Datadog health source', () => {
     // Triggering validations.
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.wait('@getMetrics')
+    cy.wait('@riskCategoryCall')
     cy.wait('@getActiveMetrics')
 
     // Check for form validations
-    cy.contains('span', 'Group Name is required.').should('be.visible')
-    cy.contains('span', 'Metric is required.').should('be.visible')
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.contains('span', validations.metric).should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
 
     // Adding group name
     cy.addingGroupName('group-1')
@@ -124,12 +128,12 @@ describe('Configure Datadog health source', () => {
 
     //triggering validations
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Query is required.').should('be.visible')
-    cy.contains('span', 'Service Instance is required.').should('be.visible')
+    cy.contains('span', validations.query).should('be.visible')
+    cy.contains('span', validations.serviceInstance).should('be.visible')
     cy.contains('p', 'Submit query to see records from Datadog Logs').should('be.visible')
 
     cy.fillField('query', 'source:browser')
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     //Fetching records
     cy.contains('span', 'Fetch records').click()
@@ -209,6 +213,7 @@ describe('Configure Datadog health source', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
     cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
       'getDashboardDetails'
@@ -216,7 +221,7 @@ describe('Configure Datadog health source', () => {
 
     cy.findAllByRole('button', { name: /Next/i }).last().click()
 
-    cy.wait('@getMetrics')
+    cy.wait('@riskCategoryCall')
     cy.wait('@getActiveMetrics')
     cy.wait('@getDashboardDetails')
     cy.contains('h3', 'Query Specifications').should('be.visible')
@@ -326,6 +331,7 @@ describe('Datadog metric thresholds', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
     cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
       'getDashboardDetails'
@@ -338,9 +344,8 @@ describe('Datadog metric thresholds', () => {
 
     cy.contains('span', 'Continuous Verification').click({ force: true })
 
-    cy.get('input[name="serviceInstance"]').click({ force: true })
+    cy.get('input[name="serviceInstance"]').scrollIntoView().click({ force: true })
 
-    cy.contains('p', 'host').should('be.visible')
     cy.contains('p', 'host').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
@@ -373,6 +378,7 @@ describe('Datadog metric thresholds', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
     cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
       'getDashboardDetails'
@@ -386,7 +392,7 @@ describe('Datadog metric thresholds', () => {
 
     cy.get('input[name="serviceInstance"]').click({ force: true })
 
-    cy.contains('p', 'host').should('be.visible')
+    cy.contains('p', 'host').should('exist')
     cy.contains('p', 'host').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')

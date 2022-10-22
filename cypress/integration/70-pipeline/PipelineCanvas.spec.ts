@@ -35,7 +35,9 @@ import {
   strategiesYamlSnippets,
   executionStrategies,
   pageHeaderClassName,
-  pipelineSaveCallWithStoreType
+  pipelineSaveCallWithStoreType,
+  pipelineSummaryCallAPIWIthMetadataOnly,
+  pipelineYAMLAPI
 } from '../../support/70-pipeline/constants'
 import { connectorsListAPI } from '../../support/35-connectors/constants'
 import { getIdentifierFromName } from '../../utils/stringHelpers'
@@ -560,6 +562,10 @@ describe('Input Sets', () => {
     })
     cy.initializeRoute()
     cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
+    cy.intercept('GET', pipelineYAMLAPI, { fixture: 'pipeline/api/inputSet/pipelineYAML' }).as('pipelineYAML')
+    cy.intercept('GET', pipelineSummaryCallAPIWIthMetadataOnly, {
+      fixture: 'pipeline/api/inputSet/pipelineSummary'
+    }).as('pipelineMetadata')
     cy.intercept('POST', inputSetsTemplateCall, {
       fixture: 'pipeline/api/inputSet/fetchServiceTemplate'
     }).as('fetchServiceTemplate')
@@ -579,6 +585,8 @@ describe('Input Sets', () => {
   it('Input Set Creation & Deletion', () => {
     cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
+    cy.wait('@pipelineYAML')
+    cy.wait('@pipelineMetadata')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')
     cy.get('.NoDataCard--buttonContainer').contains('span', '+ New Input Set').click()

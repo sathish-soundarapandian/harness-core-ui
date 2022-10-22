@@ -46,7 +46,7 @@ export const getModuleLink = ({ accountId, orgIdentifier, projectIdentifier, mod
         accountId
       })
     case ModuleName.CF:
-      return routes.toCFFeatureFlags({
+      return routes.toCFConfigurePath({
         projectIdentifier,
         orgIdentifier,
         accountId

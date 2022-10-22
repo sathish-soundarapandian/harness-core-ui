@@ -20,7 +20,7 @@
     align-items: center;
     justify-content: center;
 
-    &[data-primary-state='default'] {
+    &[data-state='default'] {
       height: 12px;
       background-color: var(--grey-200);
       &:hover,
@@ -29,7 +29,7 @@
       }
     }
 
-    &[data-primary-state='success'] {
+    &[data-state='success'] {
       background-color: var(--green-500);
       &:hover,
       &:focus {
@@ -37,16 +37,29 @@
       }
     }
 
-    &[data-primary-state='failed'] {
+    &[data-state='aborted'] {
+      background-color: var(--grey-200);
+      color: var(--grey-600);
+      // TODO: circle-stop has fill none, remove it
+      path {
+        fill: var(--grey-600) !important;
+      }
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--grey-200) 0px 0px 0px 4px;
+      }
+    }
+
+    &[data-state='failed'] {
       background-color: var(--red-200);
-      color: var(--red-900);
+      color: var(--red-700);
       &:hover,
       &:focus {
         box-shadow: var(--white) 0px 0px 0px 2px, var(--red-200) 0px 0px 0px 4px;
       }
     }
 
-    &[data-primary-state='paused'] {
+    &[data-state='paused'] {
       background-color: var(--orange-200);
       color: var(--orange-900);
       &:hover,
@@ -55,9 +68,9 @@
       }
     }
 
-    &[data-primary-state='running'] {
+    &[data-state='running'] {
       background-color: var(--primary-3);
-      color: var(--primary-7);
+      color: var(--primary-8);
       &:hover,
       &:focus {
         box-shadow: var(--white) 0px 0px 0px 2px, var(--primary-3) 0px 0px 0px 4px;

@@ -10,7 +10,16 @@ import type {
   UpdatedHealthSource,
   SourceDataInterface
 } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
-import type { MetricPackDTO } from 'services/cv'
+import type { MetricPackDTO, TimeSeriesMetricPackDTO } from 'services/cv'
+import type {
+  CommonFormTypesForMetricThresholds,
+  MetricThresholdType
+} from '../../common/MetricThresholds/MetricThresholds.types'
+import type {
+  CustomMappedMetric,
+  CustomSelectedAndMappedMetrics,
+  GroupedCreatedMetrics
+} from '../../common/CustomMetric/CustomMetric.types'
 
 export interface DynatraceHealthSourceContainerProps {
   data: SourceDataInterface
@@ -55,9 +64,14 @@ export interface DynatraceMetricData {
   metricData: { [key: string]: boolean }
   customMetrics: Map<string, DynatraceMetricInfo>
   showCustomMetric?: boolean
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
-export interface DynatraceFormDataInterface extends DynatraceMetricData, DynatraceMetricInfo {}
+export interface DynatraceFormDataInterface
+  extends DynatraceMetricData,
+    DynatraceMetricInfo,
+    CommonFormTypesForMetricThresholds {}
 
 export interface InitDynatraceCustomMetricInterface {
   metricSelector: string
@@ -71,4 +85,34 @@ export interface InitDynatraceCustomMetricInterface {
     label: string
     value: string
   }
+}
+
+export interface MetricThresholdCommonProps {
+  formikValues: any
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  metricPacks: TimeSeriesMetricPackDTO[]
+  setThresholdState: React.Dispatch<React.SetStateAction<DynatraceFormDataInterface>>
+}
+
+export type DynatraceMetricThresholdContextType = MetricThresholdCommonProps
+
+export interface PersistCustomMetricInterface {
+  mappedMetrics: Map<string, CustomMappedMetric>
+  selectedMetric: string
+  dynatraceMetricData: DynatraceFormDataInterface
+  formikValues: any
+  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
+}
+
+type MandatoryPropertiesToPersistData = Pick<
+  DynatraceFormDataInterface,
+  'selectedService' | 'metricPacks' | 'metricData' | 'ignoreThresholds' | 'failFastThresholds'
+>
+
+export interface PersistFuntionNotEqualHelperProps {
+  areAllFilled: boolean
+  selectedMetric: string
+  metricName: string
+  nonCustomMetricValuesFromState: MandatoryPropertiesToPersistData
+  nonCustomValuesFromSelectedMetric: MandatoryPropertiesToPersistData
 }

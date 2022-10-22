@@ -16,6 +16,7 @@ import { Utils } from '../../common/Utils'
 import LBAdvancedConfiguration from './LBAdvancedConfiguration'
 import ResourceAccessUrlSelector from './ResourceAccessUrlSelector'
 import LoadBalancerSelection from './LoadBalancerSelection'
+import CustomExclusion from './CustomExclusion'
 
 interface DNSLinkSetupProps {
   gatewayDetails: GatewayDetails
@@ -33,6 +34,7 @@ interface DNSLinkSetupProps {
 
 const DNSLinkSetup: React.FC<DNSLinkSetupProps> = props => {
   const { getString } = useStrings()
+  const isAwsProvider = Utils.isProviderAws(props.gatewayDetails.provider)
   const accessDetails = props.gatewayDetails.opts.access_details as ConnectionMetadata // eslint-disable-line
   const customDomainProviderDetails = props.gatewayDetails.routing.custom_domain_providers as CustomDomainDetails // eslint-disable-line
   const allCustomDomains = useMemo(
@@ -99,6 +101,9 @@ const DNSLinkSetup: React.FC<DNSLinkSetupProps> = props => {
                 setDomainsToOverlap={props.setDomainsToOverlap}
                 allCustomDomains={allCustomDomains}
               />
+              {isAwsProvider && (
+                <CustomExclusion gatewayDetails={props.gatewayDetails} setGatewayDetails={props.setGatewayDetails} />
+              )}
             </Layout.Vertical>
           </FormikForm>
         )}

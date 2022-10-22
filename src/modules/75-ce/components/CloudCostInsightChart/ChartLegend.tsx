@@ -20,13 +20,13 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
   const [legendMap, setLegendMap] = useState<Record<string, boolean>>({})
 
   chartRefObj.series.forEach(chart => {
-    legendMap[chart.userOptions.name as string] = chart.visible
+    legendMap[(chart.userOptions as any).nodeId as string] = chart.visible
   })
 
   useEffect(() => {
     const newMap: Record<string, boolean> = {}
     chartRefObj.series.forEach(chart => {
-      newMap[chart.userOptions.name as string] = chart.visible
+      newMap[(chart.userOptions as any).nodeId as string] = chart.visible
     })
     setLegendMap(newMap)
   }, [chartRefObj])
@@ -48,9 +48,9 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
     //   })
     // } else {
     updatedLegend = { ...legendMap }
-    updatedLegend[chart.userOptions.name] = !updatedLegend[chart.userOptions.name]
+    updatedLegend[chart.userOptions.nodeId] = !updatedLegend[chart.userOptions.nodeId]
     chart.update({
-      visible: updatedLegend[chart.userOptions.name]
+      visible: updatedLegend[chart.userOptions.nodeId]
     })
     setLegendMap(updatedLegend)
     return
@@ -90,7 +90,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
               <div
                 className={css.colorBox}
                 style={
-                  legendMap[chart.userOptions.name as string]
+                  legendMap[(chart.userOptions as any).nodeId as string]
                     ? {
                         backgroundColor: chartColor
                       }

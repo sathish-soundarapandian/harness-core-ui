@@ -145,12 +145,12 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
             <SLOTargetContextualHelpText />
           </Container>
         </Layout.Horizontal>
-        <SLOTargetNotificationsContainer
-          identifier={identifier}
-          setFieldValue={formikProps?.setFieldValue}
-          notificationRuleRefs={notificationRuleRefs}
-        />
       </Card>
+      <SLOTargetNotificationsContainer
+        identifier={identifier}
+        setFieldValue={formikProps?.setFieldValue}
+        notificationRuleRefs={notificationRuleRefs}
+      />
       {children}
     </>
   )

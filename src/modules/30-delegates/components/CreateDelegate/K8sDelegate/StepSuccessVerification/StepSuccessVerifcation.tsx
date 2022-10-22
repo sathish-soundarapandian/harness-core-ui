@@ -34,7 +34,9 @@ const StepSuccessVerification: React.FC<StepProps<K8sDelegateWizardData> & StepS
       previousStep(props?.prevStepData)
     }
   }
-
+  const insert = (str: string, index: number, value: string | any): string => {
+    return str.slice(0, index) + value + str.slice(index)
+  }
   // TODO: Create common components for label and command and use it at all the places
   const helmDelegateInstructions = (
     <Layout.Horizontal className={css.verificationBody}>
@@ -86,9 +88,15 @@ const StepSuccessVerification: React.FC<StepProps<K8sDelegateWizardData> & StepS
             className={css.verificationField}
           >
             <Text style={{ marginRight: 'var(--spacing-xlarge)' }} font="small">
-              {getString('delegates.successVerification.installHelmChartCmd')}
+              {insert(getString('delegates.successVerification.installHelmChartCmd'), 15, prevStepData?.name)}
             </Text>
-            <CopyToClipboard content={getString('delegates.successVerification.installHelmChartCmd').slice(2)} />
+            <CopyToClipboard
+              content={insert(
+                getString('delegates.successVerification.installHelmChartCmd'),
+                15,
+                prevStepData?.name
+              ).slice(2)}
+            />
           </Container>
         </Layout.Horizontal>
       </Layout.Vertical>

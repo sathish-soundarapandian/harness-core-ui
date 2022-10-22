@@ -5,25 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
-import { FormInput, Layout, MultiTypeInputType, Text } from '@wings-software/uicore'
+import { FormInput, Layout, MultiTypeInputType, SelectOption, Text } from '@wings-software/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
-import {
-  ArtifactToConnectorMap,
-  ENABLED_ARTIFACT_TYPES,
-  regions
-} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { GARBuildDetailsDTO, useGetBuildDetailsForGoogleArtifactRegistry } from 'services/cd-ng'
+import {
+  GARBuildDetailsDTO,
+  RegionGar,
+  useGetBuildDetailsForGoogleArtifactRegistry,
+  useGetRegionsForGoogleArtifactRegistry
+} from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { isFieldFixedAndNonEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { isArtifactSourceRuntime } from '../artifactSourceUtils'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -37,7 +38,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     path,
     readonly,
     allowableTypes,
-    isSidecar,
     artifactPath,
     initialValues,
     accountId,
@@ -49,6 +49,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   } = props
 
   const { getString } = useStrings()
+  const [regions, setRegions] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
   const commonParams = {
     accountIdentifier: accountId,
@@ -70,7 +71,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     get(formik, `values.${path}.artifacts.${artifactPath}.spec.repositoryName`) || get(artifact, `spec.repositoryName`)
 
   const {
-    data: buildDetails,
+    data: buildsDetail,
     refetch: refetchBuildDetails,
     loading: fetchingBuilds,
     error
@@ -111,21 +112,32 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   ))
 
   const selectItems = useMemo(() => {
-    return buildDetails?.data?.buildDetailsList?.map((builds: GARBuildDetailsDTO) => ({
+    return buildsDetail?.data?.buildDetailsList?.map((builds: GARBuildDetailsDTO) => ({
       value: defaultTo(builds.version, ''),
       label: defaultTo(builds.version, '')
     }))
-  }, [buildDetails?.data])
+  }, [buildsDetail?.data])
 
-  const getBuilds = (): { label: string; value: string }[] => {
+  const getBuildDetails = (): { label: string; value: string }[] => {
     if (fetchingBuilds) {
       return [{ label: 'Loading Builds...', value: 'Loading Builds...' }]
     }
     return defaultTo(selectItems, [])
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
+  const { data: regionData } = useGetRegionsForGoogleArtifactRegistry({})
 
+  useEffect(() => {
+    if (regionData?.data) {
+      setRegions(
+        regionData?.data?.map((item: RegionGar) => {
+          return { label: item.name, value: item.value } as SelectOption
+        })
+      )
+    }
+  }, [regionData])
+
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -213,7 +225,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
             <FormInput.MultiTypeInput
-              selectItems={getBuilds()}
+              selectItems={getBuildDetails()}
+              disabled={!isAllFieldsAreFixed()}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
@@ -230,10 +243,16 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     />
                   ),
                   itemRenderer: itemRenderer,
-                  items: getBuilds(),
+                  items: getBuildDetails(),
                   allowCreatingNewItems: true
                 },
-                onFocus: () => {
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
                   if (isAllFieldsAreFixed()) {
                     refetchBuildDetails({
                       queryParams: {

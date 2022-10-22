@@ -52,4 +52,6 @@ export interface CloudMetricsHealthSourceProps<T> {
   serviceInstanceList?: string[]
   isTemplate?: boolean
   expressions?: string[]
+  showMetricDetailsContent?: boolean
+  onDeleteManualMetric?: (id?: string) => void
 }

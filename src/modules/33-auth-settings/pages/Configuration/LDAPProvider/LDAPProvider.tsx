@@ -155,6 +155,11 @@ const LDAPProvider: React.FC<Props> = ({ authSettings, refetchAuthSettings, perm
               <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.flexGrowFull}>
                 {ldapSettings.displayName}
               </Text>
+              <Text color={Color.GREY_800} width="70%">
+                {ldapSettings.disabled
+                  ? getString('authSettings.authorizationNotEnabled')
+                  : getString('authSettings.authorizationEnabled')}
+              </Text>
               <Button
                 text={getString('test')}
                 variation={ButtonVariation.SECONDARY}
@@ -206,7 +211,7 @@ const LDAPProvider: React.FC<Props> = ({ authSettings, refetchAuthSettings, perm
                           setIsLdapSyncInProgress(false)
                         }
                       }}
-                      disabled={!canEdit || isLdapSyncInProgress}
+                      disabled={!canEdit || isLdapSyncInProgress || ldapSettings.disabled}
                     />
                   </Menu>
                 }

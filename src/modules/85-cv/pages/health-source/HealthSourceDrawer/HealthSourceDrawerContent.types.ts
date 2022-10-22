@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { SelectOption } from '@harness/uicore'
 import type { MonitoredServiceRef } from '@cv/pages/monitored-service/components/Configurations/components/Service/Service.types'
 import type {
   HealthSource,
@@ -19,7 +20,9 @@ import type {
   CustomHealthSourceMetricSpec,
   ErrorTrackingHealthSourceSpec,
   DynatraceHealthSourceSpec,
-  CustomHealthSourceLogSpec
+  CustomHealthSourceLogSpec,
+  ELKHealthSourceSpec,
+  CloudWatchMetricsHealthSourceSpec
 } from 'services/cv'
 import type { DatadogLogsHealthSpec } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/DatadogLogsHealthSource.type'
 import type { GCOLogsHealthSourceSpec } from '../connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/types'
@@ -38,6 +41,8 @@ export interface UpdatedHealthSource extends Omit<HealthSource, 'spec'> {
     | CustomHealthSourceLogSpec
     | ErrorTrackingHealthSourceSpec
     | DynatraceHealthSourceSpec
+    | ELKHealthSourceSpec
+    | CloudWatchMetricsHealthSourceSpec
 }
 
 export interface RowData extends HealthSource {
@@ -61,6 +66,7 @@ export interface SourceDataInterface {
   healthSourceIdentifier?: string
   healthSourceList?: Array<RowData>
   changeSources?: ChangeSourceDTO[]
+  product?: SelectOption
   existingMetricDetails?: HealthSource | null
 }
 

@@ -86,12 +86,14 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
             <Collapse key={key} title={startCase(key)}>
               {value.map((item, index) => {
                 return (
-                  <InputOutputTabRow
-                    key={`${newKey}[${index}]`}
-                    prefix={`${newKey}[${index}]`}
-                    data={item}
-                    level={props.level + 1}
-                  />
+                  <Collapse key={`${key}[${index}]`} title={`${startCase(key)}[${index}]`}>
+                    <InputOutputTabRow
+                      key={`${newKey}[${index}]`}
+                      prefix={`${newKey}[${index}]`}
+                      data={item}
+                      level={props.level + 1}
+                    />
+                  </Collapse>
                 )
               })}
             </Collapse>
