@@ -125,8 +125,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   return (
     <>
-      {showSubHeader && <ExecutionListSubHeader {...rest} />}
-
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
           <Container className={css.healthAndExecutions} data-testid="health-and-executions">
@@ -134,7 +132,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             <PipelineBuildExecutionsChart />
           </Container>
         )}
-
+        {showSubHeader && <ExecutionListSubHeader {...rest} />}
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
         {showSpinner ? (
           <PageSpinner />
