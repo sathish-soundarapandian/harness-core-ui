@@ -36,7 +36,7 @@ import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
-import SCMRoutes from '@scm/RouteDestinations'
+import { SCMRouteDestinations } from '@scm/RouteDestinations'
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',
@@ -69,7 +69,7 @@ export default function RouteDestinations(): React.ReactElement {
       {projectsOrgsRoutes.props.children}
       {DASHBOARDRoutes.props.children}
       {GovernanceRoutes.props.children}
-      {SCM_ENABLED ? SCMRoutes.props.children : null}
+      {SCM_ENABLED ? SCMRouteDestinations().props.children : null}
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}
       {freezeWindowRoutes.props.children}

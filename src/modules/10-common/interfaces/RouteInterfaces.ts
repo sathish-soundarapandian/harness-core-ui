@@ -252,7 +252,7 @@ export interface SCMPathProps
     'accountId' | 'orgIdentifier' | 'projectIdentifier'
   > {
   repoName?: string
-  branch?: string
+  ref?: string
   filePath?: string
   pullRequestId?: string
   commitId?: string

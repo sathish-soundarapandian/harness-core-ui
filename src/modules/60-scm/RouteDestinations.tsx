@@ -8,16 +8,16 @@
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
-import { scmPathProps } from '@common/utils/routeUtils'
+import { scmPathProps as pathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { SCMPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@scm/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { RemmoteRepoResourceDetails, RemoteRepoResources, RemoteRepos } from './SCMApp'
+import { RemoteRepoResources, RemoteRepos } from './SCMApp'
 import SCMHomePage from './pages/home/SCMHomePage'
 
-export const SCMSideNavProps: SidebarContext = {
+export const sidebarProps: SidebarContext = {
   navComponent: SideNav,
   title: 'Code',
   icon: 'gitops-green'
@@ -34,36 +34,52 @@ const RedirectToDefaultSCMRoute: React.FC = () => {
   return null
 }
 
-export const SCMRouteDestinations: React.FC<{
-  sidebarProps: SidebarContext
-  pathProps: Required<SCMPathProps>
-}> = ({ sidebarProps, pathProps }) => (
-  <Route path={routes.toSCM(pathProps)}>
-    <Route path={routes.toSCM(pathProps)} exact>
-      <RedirectToDefaultSCMRoute />
+export function SCMRouteDestinations(): React.ReactElement {
+  return (
+    <Route path={routes.toSCM(pathProps)}>
+      <Route path={routes.toSCM(pathProps)} exact>
+        <RedirectToDefaultSCMRoute />
+      </Route>
+      <RouteWithLayout path={routes.toSCMHome(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMHomePage}>
+        <SCMHomePage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        path={routes.toSCMRepositoriesListing({
+          space: [pathProps.accountId, pathProps.orgIdentifier, pathProps.projectIdentifier].join('/')
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.SCMRepositoriesListing}
+        exact
+      >
+        <RemoteRepos />
+      </RouteWithLayout>
+      <RouteWithLayout
+        path={[
+          routes.toSCMRepository({
+            repoPath: [
+              pathProps.accountId,
+              pathProps.orgIdentifier,
+              pathProps.projectIdentifier,
+              pathProps.repoName
+            ].join('/'),
+            gitRef: ':gitRef*',
+            resourcePath: ':resourcePath*'
+          }),
+          routes.toSCMRepository({
+            repoPath: [
+              pathProps.accountId,
+              pathProps.orgIdentifier,
+              pathProps.projectIdentifier,
+              pathProps.repoName
+            ].join('/'),
+            gitRef: ':gitRef*'
+          })
+        ]}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.SCMRepository}
+      >
+        <RemoteRepoResources />
+      </RouteWithLayout>
     </Route>
-    <RouteWithLayout path={routes.toSCMHome(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMWelcome}>
-      <SCMHomePage />
-    </RouteWithLayout>
-    <RouteWithLayout
-      path={routes.toSCMReposListing(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMRepos}
-      exact
-    >
-      <RemoteRepos />
-    </RouteWithLayout>
-    <RouteWithLayout path={routes.toSCMRepo(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMFiles}>
-      <RemoteRepoResources />
-    </RouteWithLayout>
-    <RouteWithLayout
-      path={routes.toSCMRepoResourceDetails(pathProps)}
-      sidebarProps={sidebarProps}
-      pageName={PAGE_NAME.SCMFileDetails}
-    >
-      <RemmoteRepoResourceDetails />
-    </RouteWithLayout>
-  </Route>
-)
-
-export default <>{SCMRouteDestinations({ sidebarProps: SCMSideNavProps, pathProps: scmPathProps })}</>
+  )
+}

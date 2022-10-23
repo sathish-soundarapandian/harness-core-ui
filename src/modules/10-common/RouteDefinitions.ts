@@ -6,7 +6,7 @@
  */
 
 import qs from 'qs'
-import { getScopeBasedRoute, withAccountId, withQueryParams } from '@common/utils/routeUtils'
+import { getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
   ConnectorPathProps,
@@ -48,9 +48,7 @@ import type {
   VariablesPathProps,
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
-  TemplateType,
-  SCMPathProps,
-  RequireField
+  TemplateType
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -1365,27 +1363,32 @@ const routes = {
   ),
 
   // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
+  // toSCM and toSCMHome are only available within Harness (not in SCM standalone version)
   toSCM: withAccountId(() => `/code`),
   toSCMHome: withAccountId(() => `/code/home`),
-  toSCMReposListing: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: SCMPathProps) => `/code/orgs/${orgIdentifier}/projects/${projectIdentifier}`
-  ),
-  toSCMRepo: withAccountId(
-    ({ orgIdentifier, projectIdentifier, repoName, branch }: RequireField<SCMPathProps, 'repoName' | 'branch'>) =>
-      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}`, {
-        branch
-      })
-  ),
-  toSCMRepoResourceDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branch,
-      filePath
-    }: RequireField<SCMPathProps, 'repoName' | 'branch' | 'filePath'>) =>
-      withQueryParams(`/code/orgs/${orgIdentifier}/projects/${projectIdentifier}/r/${repoName}/c`, { branch, filePath })
-  ),
+
+  toSCMRepositoriesListing: ({ space }: { space: string }) => {
+    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
+  },
+  toSCMRepository: ({
+    repoPath,
+    gitRef,
+    resourcePath
+  }: {
+    repoPath: string
+    gitRef?: string
+    resourcePath?: string
+  }) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    // TODO: this is a workaround until backend stops lowercase everything
+    // https://harness.slack.com/archives/C03Q1Q4C9J8/p1666521412586789
+    const url = `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
+      gitRef ? '/' + gitRef : ''
+    }${resourcePath ? '/~/' + resourcePath : ''}`
+    console.log('toSCMRepo', { url })
+    return url
+  },
 
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>

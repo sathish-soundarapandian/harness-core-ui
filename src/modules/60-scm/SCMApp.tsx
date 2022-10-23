@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense, lazy, useMemo } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { Container } from '@wings-software/uicore'
+import { pick } from 'lodash-es'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import routes from '@common/RouteDefinitions'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -18,29 +20,41 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SessionToken from 'framework/utils/SessionToken'
 import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import type { RemoteViewProps } from './SCMUtils'
 
-const RemoteComponentMounter: React.FC<{
-  spinner?: JSX.Element
+// eslint-disable-next-line import/no-unresolved
+const RemoteSCMApp = lazy(() => import('scm/App'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemoteRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemoteRepository = lazy(() => import('scm/Repository'))
+
+const SCMRemoteComponentMounter: React.FC<{
   component: JSX.Element
-}> = React.memo(function SCMRemoteComponentMounter({ spinner, component }) {
-  // eslint-disable-next-line import/no-unresolved
-  const RemoteSCMApp = lazy(() => import('scm/App'))
+}> = ({ component }) => {
   const { getString } = useStrings()
-  const { path, params } = useRouteMatch<{ accountId: string }>()
+  const { params } = useRouteMatch<ProjectPathProps>()
+  const space = useMemo(
+    () => `${params.accountId}/${params.orgIdentifier}/${params.projectIdentifier}`,
+    [params.accountId, params.orgIdentifier, params.projectIdentifier]
+  )
   const history = useHistory()
   const { getToken: useGetToken } = SessionToken
 
   return (
-    <Suspense fallback={spinner || <Container padding="large">{getString('loading')}</Container>}>
+    <Suspense fallback={<Container padding="large">{getString('loading')}</Container>}>
       <AppErrorBoundary>
         <RemoteSCMApp
-          baseRoutePath={path}
-          accountId={params.accountId}
+          space={space}
           on401={() => {
             global401HandlerUtils(history)
           }}
+          apiToken={useGetToken()}
+          routes={pick(routes, ['toSCM', 'toSCMHome', 'toSCMRepositoriesListing', 'toSCMRepository'])}
           hooks={{
             usePermission,
             useFeatureFlags,
@@ -60,28 +74,12 @@ const RemoteComponentMounter: React.FC<{
       </AppErrorBoundary>
     </Suspense>
   )
-})
-
-export const RemoteWelcome: React.FC<RemoteViewProps> = props => {
-  // eslint-disable-next-line import/no-unresolved
-  const RemoteWelcomeView = lazy(() => import('scm/Welcome'))
-  return <RemoteComponentMounter component={<RemoteWelcomeView {...props} />} />
 }
 
-export const RemoteRepos: React.FC<RemoteViewProps> = props => {
-  // eslint-disable-next-line import/no-unresolved
-  const RemoteReposView = lazy(() => import('scm/Repos'))
-  return <RemoteComponentMounter component={<RemoteReposView {...props} />} />
-}
+export const RemoteRepos: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<RemoteRepositoriesListing {...props} />} />
+)
 
-export const RemoteRepoResources: React.FC<RemoteViewProps> = props => {
-  // eslint-disable-next-line import/no-unresolved
-  const RemoteRepoFilesView = lazy(() => import('scm/RepoResources'))
-  return <RemoteComponentMounter component={<RemoteRepoFilesView {...props} />} />
-}
-
-export const RemmoteRepoResourceDetails: React.FC<RemoteViewProps> = props => {
-  // eslint-disable-next-line import/no-unresolved
-  const RemoteRepoFileDetailsView = lazy(() => import('scm/RepoResourceDetails'))
-  return <RemoteComponentMounter component={<RemoteRepoFileDetailsView {...props} />} />
-}
+export const RemoteRepoResources: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<RemoteRepository {...props} />} />
+)

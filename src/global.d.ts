@@ -177,22 +177,12 @@ declare module 'scm/App' {
   export default ChildApp
 }
 
-declare module 'scm/Welcome' {
+declare module 'scm/Repository' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'scm/Repos' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'scm/RepoResources' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'scm/RepoResourceDetails' {
+declare module 'scm/RepositoriesListing' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
