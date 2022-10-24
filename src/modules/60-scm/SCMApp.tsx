@@ -53,7 +53,6 @@ const SCMRemoteComponentMounter: React.FC<{
           on401={() => {
             global401HandlerUtils(history)
           }}
-          apiToken={useGetToken()}
           routes={pick(routes, ['toSCM', 'toSCMHome', 'toSCMRepositoriesListing', 'toSCMRepository'])}
           hooks={{
             usePermission,
