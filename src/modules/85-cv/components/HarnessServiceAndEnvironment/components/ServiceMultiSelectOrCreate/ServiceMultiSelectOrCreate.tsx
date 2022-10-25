@@ -22,6 +22,8 @@ export interface ServiceMultiSelectOrCreateProps {
   disabled?: boolean
   modalTitle?: string
   placeholder?: string
+  skipServiceCreateOrUpdate?: boolean
+  customLoading?: boolean
 }
 
 export const ServiceMultiSelectOrCreate: React.FC<ServiceMultiSelectOrCreateProps> = props => {
@@ -30,7 +32,9 @@ export const ServiceMultiSelectOrCreate: React.FC<ServiceMultiSelectOrCreateProp
   const { serviceOptions, openHarnessServiceModal } = useServiceSelectOrCreate({
     options: props.options,
     modalTitle: props.modalTitle,
-    onNewCreated: props.onNewCreated
+    onNewCreated: props.onNewCreated,
+    customLoading: props?.customLoading,
+    skipServiceCreateOrUpdate: props?.skipServiceCreateOrUpdate
   })
 
   const onSelectChange = (val: MultiSelectOption[]): void => {

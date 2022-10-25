@@ -142,6 +142,7 @@ export function HarnessServiceAsFormField(props: {
         isMultiSelectField ? (
           <ServiceMultiSelectOrCreate
             {...(serviceProps as ServiceMultiSelectOrCreateProps)}
+            customLoading={customLoading}
             onSelect={selectedOption => {
               formikProps.setFieldValue(customRenderProps.name, selectedOption)
               ;(serviceProps as ServiceMultiSelectOrCreateProps).onSelect?.(selectedOption)

@@ -40,6 +40,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import CreateMonitoredServiceFromSLO from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO'
 import type { ServiceAndEnv } from './SLOName.types'
 import { initialFormData } from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO.constants'
+import { createServiceProps } from './SLOName.utils'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 
 const SLOName = <T,>({
@@ -48,13 +49,14 @@ const SLOName = <T,>({
   identifier,
   monitoredServicesLoading = false,
   monitoredServicesOptions = [],
-  fetchingMonitoredServices
+  fetchingMonitoredServices,
+  isMultiSelect
 }: SLONameProps<T>): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const TEXT_USER_JOURNEY = getString('cv.slos.userJourney')
-  const { userJourneyRef } = formikProps.values
+  const { userJourneyRef } = formikProps.values as { userJourneyRef?: string | SelectOption | MultiSelectOption }
   const {
     data: userJourneysData,
     error: userJourneysError,
@@ -85,26 +87,6 @@ const SLOName = <T,>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userJourneysError])
 
-  const handleCreateUserJourney = useCallback(async newOption => {
-    if (newOption?.identifier && newOption?.name) {
-      try {
-        // creating new user journey
-        await createUserJourney({ name: newOption.name, identifier: newOption.identifier })
-
-        // selecting the current user journey
-        formikProps.setFieldValue('userJourneyRef', newOption.identifier)
-
-        // listing all user journeys
-        await fetchUserJourneys()
-
-        showSuccess(getString('cv.slos.userJourneyCreated'))
-      } catch (e) {
-        showError(getErrorMessage(e))
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const key = useMemo(() => Utils.randomId(), [userJourneyRef])
 
   const userJourneyOptions = useMemo(
@@ -114,10 +96,38 @@ const SLOName = <T,>({
 
   const activeUserJourney = useMemo(
     () =>
-      Array.isArray(userJourneyRef)
+      Array.isArray(userJourneyRef) && isMultiSelect
         ? userJourneyRef.map(userJourney => userJourney.value)
         : userJourneyOptions?.find(userJourney => userJourney.value === userJourneyRef),
-    [userJourneyOptions, userJourneyRef]
+    [userJourneyOptions, userJourneyRef, isMultiSelect]
+  )
+
+  const handleCreateUserJourney = useCallback(
+    async newOption => {
+      if (newOption?.identifier && newOption?.name) {
+        try {
+          // creating new user journey
+          await createUserJourney({ name: newOption.name, identifier: newOption.identifier })
+
+          // selecting the current user journey
+          if (isMultiSelect && Array.isArray(userJourneyRef)) {
+            userJourneyRef?.push({ value: newOption.identifier, label: newOption.name })
+            formikProps.setFieldValue('userJourneyRef', userJourneyRef)
+          } else {
+            formikProps.setFieldValue('userJourneyRef', newOption.identifier)
+          }
+
+          // listing all user journeys
+          await fetchUserJourneys()
+
+          showSuccess(getString('cv.slos.userJourneyCreated'))
+        } catch (e) {
+          showError(getErrorMessage(e))
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [isMultiSelect, activeUserJourney]
   )
 
   const [showModal, hideModal] = useModalHook(
@@ -201,31 +211,16 @@ const SLOName = <T,>({
             name: SLOFormFields.USER_JOURNEY_REF,
             label: TEXT_USER_JOURNEY
           }}
-          isMultiSelectField
-          serviceProps={{
-            item:
-              Array.isArray(activeUserJourney) && activeUserJourney.length
-                ? userJourneyOptions
-                    ?.map(item => {
-                      if (activeUserJourney?.includes(item?.value)) {
-                        return item
-                      }
-                    })
-                    .filter(item => item)
-                : activeUserJourney,
-            options: userJourneyOptions,
-            onSelect: (selectedUserJourney: SelectOption | MultiSelectOption) =>
-              formikProps.setFieldValue(
-                SLOFormFields.USER_JOURNEY_REF,
-                Array.isArray(selectedUserJourney) ? selectedUserJourney : selectedUserJourney.value
-              ),
-            modalTitle: TEXT_USER_JOURNEY,
-            placeholder: getString('cv.slos.userJourneyPlaceholder'),
-            skipServiceCreateOrUpdate: true,
-            onNewCreated: newOption => handleCreateUserJourney(newOption),
-            loading: userJourneysLoading,
-            name: TEXT_USER_JOURNEY
-          }}
+          isMultiSelectField={isMultiSelect}
+          serviceProps={createServiceProps({
+            onChange: formikProps.setFieldValue,
+            getString,
+            isMultiSelect: Boolean(isMultiSelect),
+            activeUserJourney,
+            userJourneysLoading,
+            userJourneyOptions,
+            handleCreateUserJourney
+          })}
           customLoading={saveUserJourneyLoading}
         />
       </Container>

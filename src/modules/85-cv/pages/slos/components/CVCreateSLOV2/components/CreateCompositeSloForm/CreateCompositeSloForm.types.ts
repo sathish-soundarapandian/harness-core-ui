@@ -11,6 +11,7 @@ export interface CreateCompositeSloFormInterface {
   retryOnError: () => void
   handleRedirect: () => void
   runValidationOnMount?: boolean
+  loadingSaveButton: boolean
 }
 
 export enum CreateCompositeSLOSteps {

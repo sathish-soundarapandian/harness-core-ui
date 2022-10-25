@@ -44,6 +44,7 @@ export const CreateCompositeSloForm = ({
   error,
   retryOnError,
   handleRedirect,
+  loadingSaveButton,
   runValidationOnMount
 }: CreateCompositeSloFormInterface): JSX.Element => {
   const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
@@ -214,6 +215,7 @@ export const CreateCompositeSloForm = ({
               />
               <Button
                 text={getString('save')}
+                loading={loadingSaveButton}
                 variation={ButtonVariation.PRIMARY}
                 onClick={() => {
                   setValidateAllSteps(true)

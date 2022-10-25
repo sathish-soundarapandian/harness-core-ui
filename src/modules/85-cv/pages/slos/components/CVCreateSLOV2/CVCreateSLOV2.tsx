@@ -242,8 +242,10 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
               retryOnError={refetchSLOData}
               handleRedirect={handleRedirect}
               runValidationOnMount={Boolean(identifier)}
+              loadingSaveButton={createSLOLoading || updateSLOLoading}
             />
           ) : (
+            // add normal SLO here later
             <></>
           )
         }
