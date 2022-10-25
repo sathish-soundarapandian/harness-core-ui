@@ -29,12 +29,24 @@ export interface ServiceMultiSelectOrCreateProps {
 export const ServiceMultiSelectOrCreate: React.FC<ServiceMultiSelectOrCreateProps> = props => {
   const { getString } = useStrings()
 
+  const {
+    item,
+    options,
+    disabled,
+    className,
+    modalTitle,
+    placeholder,
+    onNewCreated,
+    customLoading,
+    skipServiceCreateOrUpdate
+  } = props
+
   const { serviceOptions, openHarnessServiceModal } = useServiceSelectOrCreate({
-    options: props.options,
-    modalTitle: props.modalTitle,
-    onNewCreated: props.onNewCreated,
-    customLoading: props?.customLoading,
-    skipServiceCreateOrUpdate: props?.skipServiceCreateOrUpdate
+    options,
+    modalTitle,
+    onNewCreated,
+    customLoading,
+    skipServiceCreateOrUpdate
   })
 
   const onSelectChange = (val: MultiSelectOption[]): void => {
@@ -48,14 +60,14 @@ export const ServiceMultiSelectOrCreate: React.FC<ServiceMultiSelectOrCreateProp
   return (
     <Container onClick={e => e.stopPropagation()}>
       <MultiSelectDropDown
-        placeholder={props?.placeholder || getString('cv.selectCreateService')}
-        value={props?.item}
+        value={item}
+        disabled={disabled}
+        className={className}
         items={serviceOptions}
-        className={props?.className}
-        disabled={props?.disabled}
         onChange={onSelectChange}
         buttonTestId={'multiSelectService'}
         popoverClassName={css.popOverClassName}
+        placeholder={placeholder || getString('cv.selectCreateService')}
       />
     </Container>
   )

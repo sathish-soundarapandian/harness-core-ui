@@ -9,7 +9,7 @@ import type { FormikProps } from 'formik'
 import type { MutableRefObject } from 'react'
 import { PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
-import { CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
+import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 
 // const setAllTouched = async (formikProps: FormikProps<SLOForm>) => {
 //   const validationErrors = await formikProps.validateForm()
@@ -24,9 +24,9 @@ export const isFormDataValid = (
   selectedTabId: CreateCompositeSLOSteps
 ): boolean => {
   if (selectedTabId === CreateCompositeSLOSteps.Define_SLO_Identification) {
-    // formikProps.setFieldTouched(CompositeSLOFormFields.NAME, true)
-    // formikProps.setFieldTouched(CompositeSLOFormFields.IDENTIFIER, true)
-    // formikProps.setFieldTouched(CompositeSLOFormFields.USER_JOURNEY_REF, true)
+    formikProps.setFieldTouched(CompositeSLOFormFields.NAME, true)
+    formikProps.setFieldTouched(CompositeSLOFormFields.IDENTIFIER, true)
+    formikProps.setFieldTouched(CompositeSLOFormFields.USER_JOURNEY_REF, true)
 
     const isNameValid = /^[0-9a-zA-Z-_\s]+$/.test(formikProps.values['name'])
     const { name, identifier, userJourneyRef } = formikProps.values
@@ -37,9 +37,9 @@ export const isFormDataValid = (
   }
 
   if (selectedTabId === CreateCompositeSLOSteps.Set_SLO_Time_Window) {
-    // formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH, true)
-    // formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_TYPE, true)
-    // formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH_TYPE, true)
+    formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH, true)
+    formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_TYPE, true)
+    formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH_TYPE, true)
 
     const { periodType, periodLength, periodLengthType } = formikProps.values
     if (periodType === PeriodTypes.ROLLING) {
@@ -59,7 +59,7 @@ export const isFormDataValid = (
   }
 
   if (selectedTabId === CreateCompositeSLOSteps.Set_SLO_Target) {
-    // formikProps.setFieldTouched(CompositeSLOFormFields.SLO_TARGET_PERCENTAGE, true)
+    formikProps.setFieldTouched(CompositeSLOFormFields.SLO_TARGET_PERCENTAGE, true)
     const { SLOTargetPercentage } = formikProps.values
     if (SLOTargetPercentage) {
       return true

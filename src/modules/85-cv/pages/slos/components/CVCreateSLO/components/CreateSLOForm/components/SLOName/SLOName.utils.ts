@@ -40,6 +40,7 @@ export const createServiceProps = ({
   handleCreateUserJourney
 }: ICreateServiceProps): ServiceSelectOrCreateProps | ServiceMultiSelectOrCreateProps => {
   const serviceProps = {
+    name: getString('cv.slos.userJourney'),
     options: userJourneyOptions,
     loading: userJourneysLoading,
     skipServiceCreateOrUpdate: true,

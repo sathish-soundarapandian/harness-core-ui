@@ -17,9 +17,7 @@ import {
   Container,
   Dialog,
   FontVariation,
-  Heading,
-  FormInput,
-  Icon
+  Heading
 } from '@harness/uicore'
 import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
@@ -33,10 +31,10 @@ import { isFormDataValid } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
-import { CreatePreview, LabelAndValue } from './components/CreatePreview/CreatePreview'
+import { CreatePreview } from './components/CreatePreview/CreatePreview'
 import SLOName from '../../../CVCreateSLO/components/CreateSLOForm/components/SLOName/SLOName'
-// import SLOTargetNotificationsContainer from '../CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import SLOTargetNotificationsContainer from '../../../CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
+import SLOTarget from './components/SLOTarget/SLOTarget'
 import css from './CreateCompositeSloForm.module.scss'
 
 export const CreateCompositeSloForm = ({
@@ -52,7 +50,7 @@ export const CreateCompositeSloForm = ({
   const formikProps = useFormikContext<SLOV2Form>()
   const isStepValid = useCallback(
     (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps),
-    [formikProps]
+    [formikProps.values]
   )
 
   const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)
@@ -157,32 +155,7 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Set_SLO_Target,
               title: 'Set SLO Target',
-              panel: (
-                <>
-                  <Layout.Horizontal spacing="medium" margin={{ bottom: 'small' }}>
-                    <LabelAndValue label="Period Type" value={formikProps.values.periodType || ''} />
-                    {formikProps.values.periodLength && (
-                      <LabelAndValue label="Period length" value={formikProps.values.periodLength || ''} />
-                    )}
-                    {formikProps.values.periodLengthType && (
-                      <LabelAndValue label="Window ends" value={formikProps.values.periodLengthType || ''} />
-                    )}
-                  </Layout.Horizontal>
-                  <Container width={250} margin={{ top: 'medium' }}>
-                    <FormInput.Text
-                      name={'SLOTargetPercentage'}
-                      label={getString('cv.SLOTarget')}
-                      inputGroup={{
-                        type: 'number',
-                        min: 0,
-                        max: 100,
-                        step: 'any',
-                        rightElement: <Icon name="percentage" padding="small" />
-                      }}
-                    />
-                  </Container>
-                </>
-              ),
+              panel: <SLOTarget formikProps={formikProps} />,
               preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
             },
             {

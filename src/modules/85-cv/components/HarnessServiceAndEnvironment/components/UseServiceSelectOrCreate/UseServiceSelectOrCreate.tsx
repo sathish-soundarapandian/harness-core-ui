@@ -6,12 +6,11 @@
  */
 
 import { useMemo } from 'react'
-import { noop } from 'lodash-es'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { useStrings } from 'framework/strings'
 import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
 import type { ServiceRequestDTO, ServiceResponseDTO } from 'services/cd-ng'
-import { ADD_NEW_VALUE } from '@cv/constants'
+import { AddNewSelectOption, initModalData } from './UseServiceSelectOrCreate.constants'
 
 export interface MultiSelectService {
   options: SelectOption[]
@@ -33,31 +32,14 @@ export const useServiceSelectOrCreate = ({
   customLoading
 }: MultiSelectService): MultiSelectReturn => {
   const { getString } = useStrings()
-  const serviceOptions = useMemo(
-    () => [
-      {
-        label: '+ Add New',
-        value: ADD_NEW_VALUE
-      },
-      ...options
-    ],
-    [options]
-  )
+  const serviceOptions = useMemo(() => [{ ...AddNewSelectOption }, ...options], [options])
 
   const onSubmit = async (values: ServiceRequestDTO): Promise<void> => {
     onNewCreated(values)
   }
 
   const { openHarnessServiceModal } = useHarnessServicetModal({
-    data: {
-      name: '',
-      description: '',
-      identifier: '',
-      tags: {}
-    },
-    isService: true,
-    isEdit: false,
-    onClose: noop,
+    ...initModalData,
     modalTitle: modalTitle || getString('newService'),
     onCreateOrUpdate: onSubmit,
     skipServiceCreateOrUpdate,

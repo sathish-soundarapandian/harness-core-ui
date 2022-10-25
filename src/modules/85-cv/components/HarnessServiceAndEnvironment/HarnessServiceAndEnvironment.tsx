@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { FormInput, SelectOption } from '@wings-software/uicore'
 import type { CustomRenderProps } from '@wings-software/uicore/dist/components/FormikForm/FormikForm'
 import { useParams } from 'react-router-dom'
@@ -35,6 +35,7 @@ import {
   ServiceMultiSelectOrCreate,
   ServiceMultiSelectOrCreateProps
 } from './components/ServiceMultiSelectOrCreate/ServiceMultiSelectOrCreate'
+import { createKeyProp } from './HarnessServiceAndEnvironment.utils'
 import css from './HarnessServiceAndEnvironment.module.scss'
 
 export function useGetHarnessServices() {
@@ -127,17 +128,13 @@ export function HarnessServiceAsFormField(props: {
 }): JSX.Element {
   const { customRenderProps, serviceProps, customLoading, isMultiSelectField } = props
 
+  const keyProp = useMemo(() => createKeyProp(serviceProps.item), [serviceProps.item])
+
   return (
     <FormInput.CustomRender
       {...customRenderProps}
       tooltipProps={{ dataTooltipId: 'serviceSelectOrCreate' }}
-      key={`${
-        Array.isArray(serviceProps.item)
-          ? (serviceProps.item?.[0]?.value as string)
-          : typeof serviceProps.item === 'string'
-          ? serviceProps.item
-          : (serviceProps.item?.value as string)
-      }`}
+      key={keyProp}
       render={formikProps =>
         isMultiSelectField ? (
           <ServiceMultiSelectOrCreate
