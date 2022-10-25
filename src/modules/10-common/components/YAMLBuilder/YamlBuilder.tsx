@@ -42,6 +42,7 @@ import type {
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
 import SnippetSection from '@common/components/SnippetSection/SnippetSection'
+import { pluralize } from '@common/utils/StringUtils'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
@@ -147,7 +148,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
-  const [dynamicHeight, setDynamicHeight] = useState<React.CSSProperties['height']>(height as number)
+  const [dynamicHeight, setDynamicHeight] = useState<React.CSSProperties['height']>(height)
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
@@ -608,11 +609,15 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [currentYaml])
 
   useEffect(() => {
-    if (shouldShowErrorPanel && dynamicHeight) {
-      const halfHeight = (dynamicHeight.valueOf() as number) / 2
-      setDynamicHeight(halfHeight)
+    if (height) {
+      if (shouldShowErrorPanel) {
+        const halfHeight = (height.valueOf() as number) / 2
+        setDynamicHeight(halfHeight)
+      } else {
+        setDynamicHeight(height)
+      }
     }
-  }, [shouldShowErrorPanel, dynamicHeight])
+  }, [shouldShowErrorPanel, height])
 
   const renderErrorPanel = useCallback((): JSX.Element => {
     if (isUndefined(yamlValidationErrors)) {
@@ -623,7 +628,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         isOpen={shouldShowErrorPanel}
         onToggleOpen={() => setShouldShowErrorPanel(true)}
         onRemove={() => setShouldShowErrorPanel(false)}
-        heading={`${yamlValidationErrors.size} Errors`}
+        heading={`${yamlValidationErrors.size} ${getString('error')}${pluralize(yamlValidationErrors.size)}`}
+        collapsedIcon="chevron-up"
+        expandedIcon="chevron-down"
       >
         <ul className={css.noStyleUl}>
           {Array.from(yamlValidationErrors.keys()).map(key => {
@@ -666,7 +673,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ref={editorRef}
       />
     ),
-    [dynamicWidth, height, currentYaml, onYamlChange]
+    [dynamicWidth, dynamicHeight, currentYaml, onYamlChange]
   )
 
   const throttledOnResize = throttle(() => {
@@ -690,7 +697,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             className={css.splitPanel}
             onChange={handleResize}
             maxSize={-1 * MIN_SNIPPET_SECTION_WIDTH}
-            style={{ height: defaultTo(height, DEFAULT_EDITOR_HEIGHT) }}
+            style={{ height: defaultTo(dynamicHeight, DEFAULT_EDITOR_HEIGHT) }}
             pane1Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH, width: dynamicWidth }}
             pane2Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH }}
           >
