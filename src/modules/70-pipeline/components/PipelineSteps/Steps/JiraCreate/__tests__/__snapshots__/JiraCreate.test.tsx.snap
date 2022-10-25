@@ -929,6 +929,7 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1033,6 +1034,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode but no runtime values:
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1453,6 +1455,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
 }
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1774,6 +1777,7 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

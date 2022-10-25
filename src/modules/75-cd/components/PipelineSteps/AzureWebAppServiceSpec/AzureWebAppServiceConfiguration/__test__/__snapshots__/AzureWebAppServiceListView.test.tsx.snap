@@ -342,6 +342,7 @@ exports[`AzureWebAppListView renders empty 1`] = `
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
+        aria-label="common.newName common.override"
         class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         id="add-applicationSetting"
         type="button"
@@ -372,6 +373,7 @@ exports[`AzureWebAppListView renders empty 1`] = `
         </span>
       </button>
       <button
+        aria-label="common.newName common.override"
         class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         id="add-connectionString"
         type="button"

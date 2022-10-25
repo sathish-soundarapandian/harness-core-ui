@@ -41,6 +41,7 @@ exports[`Right Drawer tests StepConfig tests Step save succeeds with allowed key
       </div>
       <div>
         <button
+          aria-label="applyChanges"
           class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main applyChanges Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -79,6 +80,7 @@ exports[`Right Drawer tests StepConfig tests Step save succeeds with allowed key
           </span>
         </button>
         <button
+          aria-label="pipeline.discard"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main discard Button--with-current-color Button--without-shadow"
           type="button"
         >
@@ -415,6 +417,7 @@ exports[`Right Drawer tests StepConfig tests Step save succeeds with allowed key
                   </div>
                 </div>
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.envVariables"
                   style="padding: 0px;"

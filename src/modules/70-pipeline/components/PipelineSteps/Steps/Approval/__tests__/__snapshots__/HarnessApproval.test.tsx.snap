@@ -238,6 +238,7 @@ exports[`Harness Approval tests Basic snapshot - deploymentform mode readonly: h
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -489,6 +490,7 @@ exports[`Harness Approval tests Basic snapshot - deploymentform mode: harness-ap
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -638,6 +640,7 @@ exports[`Harness Approval tests Basic snapshot - inputset mode but no runtime va
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -990,6 +993,7 @@ exports[`Harness Approval tests Basic snapshot - inputset mode: input set with e
 }
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -2307,6 +2311,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
                 </button>
               </div>
               <button
+                aria-label="plusAdd"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                 data-testid="add-spec.approvers.userGroups"
                 style="padding: 0px;"
@@ -3281,6 +3286,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
                 </button>
               </div>
               <button
+                aria-label="plusAdd"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                 data-testid="add-spec.approvers.userGroups"
                 style="padding: 0px;"

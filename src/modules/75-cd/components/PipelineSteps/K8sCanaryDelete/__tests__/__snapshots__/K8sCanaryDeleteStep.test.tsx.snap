@@ -151,6 +151,7 @@ exports[`Test K8sCanaryDeleteStep inputset with path 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -723,6 +724,7 @@ exports[`Test K8sCanaryDeleteStep should render edit view for inputset 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

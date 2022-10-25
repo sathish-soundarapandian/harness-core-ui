@@ -348,6 +348,7 @@ exports[`ServiceNow Update tests Basic snapshot - deploymentform mode: serviceNo
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -435,6 +436,7 @@ exports[`ServiceNow Update tests Basic snapshot - inputset mode but no runtime v
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -895,6 +897,7 @@ exports[`ServiceNow Update tests Basic snapshot - inputset mode: input set with 
 }
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1061,6 +1064,7 @@ exports[`ServiceNow Update tests Deploymentform with custom fields as runtime: s
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -2861,6 +2865,7 @@ exports[`ServiceNow Update tests deploymentform readonly mode: serviceNow-update
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

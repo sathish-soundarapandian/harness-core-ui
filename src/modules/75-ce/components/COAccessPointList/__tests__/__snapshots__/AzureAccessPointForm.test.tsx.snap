@@ -235,6 +235,7 @@ exports[`Azure Access Point Form form in edit mode 1`] = `
                 </div>
               </div>
               <button
+                aria-label="Refresh"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon"
                 type="button"
               >
@@ -849,6 +850,7 @@ exports[`Azure Access Point Form render and fill azure ap form 1`] = `
               </div>
             </div>
             <button
+              aria-label="Refresh"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon"
               type="button"
             >
@@ -969,6 +971,7 @@ exports[`Azure Access Point Form render and fill azure ap form 1`] = `
               </div>
             </div>
             <button
+              aria-label="Refresh"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon"
               type="button"
             >
@@ -1071,6 +1074,7 @@ exports[`Azure Access Point Form render and fill azure ap form 1`] = `
               </div>
             </div>
             <button
+              aria-label="Refresh"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon"
               type="button"
             >
@@ -1173,6 +1177,7 @@ exports[`Azure Access Point Form render and fill azure ap form 1`] = `
               </div>
             </div>
             <button
+              aria-label="Refresh"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon"
               type="button"
             >

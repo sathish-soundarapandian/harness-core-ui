@@ -143,7 +143,7 @@ describe('OnboardingDetailPage', () => {
     userEvent.click(screen.getByText('ABC Flag'))
 
     // proceed to next step
-    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+    userEvent.click(screen.getByRole('button', { name: 'next' }))
 
     await waitFor(() => {
       // first step Complete
@@ -155,7 +155,7 @@ describe('OnboardingDetailPage', () => {
     })
 
     // testing Previous button
-    userEvent.click(screen.getByRole('button', { name: 'chevron-left back' }))
+    userEvent.click(screen.getByRole('button', { name: 'back' }))
 
     await waitFor(() => {
       // first step still Complete
@@ -166,7 +166,7 @@ describe('OnboardingDetailPage', () => {
       expect(document.querySelector(barCompleted)).not.toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+    userEvent.click(screen.getByRole('button', { name: 'next' }))
 
     // Second component replaces First component
     expect(screen.getByTestId('ffOnboardingSelectedFlag')).toBeInTheDocument()
@@ -175,7 +175,7 @@ describe('OnboardingDetailPage', () => {
     // select language and create sdk key
     userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
 
-    userEvent.click(screen.getByRole('button', { name: 'plus cf.environments.apiKeys.addKeyTitle' }))
+    userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
 
     const sdkKeyInputBox = document.querySelector('input[name=name]') as HTMLInputElement
 
@@ -188,7 +188,7 @@ describe('OnboardingDetailPage', () => {
     await waitFor(() => expect(mutateMock).toBeCalled())
 
     // proceed to Third step and its component to appear
-    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+    userEvent.click(screen.getByRole('button', { name: 'next' }))
 
     expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
 
@@ -206,7 +206,7 @@ describe('OnboardingDetailPage', () => {
       expect(document.querySelector(barInProgress)).not.toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'chevron-left back' }))
+    userEvent.click(screen.getByRole('button', { name: 'back' }))
 
     await waitFor(() => {
       const allStepsCompleted = document.querySelectorAll(stepCompleted)

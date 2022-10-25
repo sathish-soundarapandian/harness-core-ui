@@ -365,6 +365,7 @@ exports[`StartupScriptWizard & stepOne initial render with stepOne 1`] = `
                             />
                           </label>
                           <button
+                            aria-label="Close"
                             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                             data-testid="thumbnail-select-cancel"
                             type="button"
@@ -535,6 +536,7 @@ exports[`StartupScriptWizard & stepOne initial render with stepOne 1`] = `
                       </div>
                     </div>
                     <button
+                      aria-label="newLabel common.repo_provider.githubLabel connector"
                       class="bp3-button Button--button StyledProps--font StyledProps--main addStartupScript Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                       id="new-startup-script-connector"
                       type="button"
@@ -570,6 +572,7 @@ exports[`StartupScriptWizard & stepOne initial render with stepOne 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
                 >
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                     type="submit"
                   >
@@ -822,6 +825,7 @@ exports[`StartupScriptWizard & stepOne runtime stepOne 1`] = `
                             />
                           </label>
                           <button
+                            aria-label="Change"
                             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                             data-testid="thumbnail-select-change"
                             type="button"
@@ -978,6 +982,7 @@ exports[`StartupScriptWizard & stepOne runtime stepOne 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
                 >
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                     type="submit"
                   >

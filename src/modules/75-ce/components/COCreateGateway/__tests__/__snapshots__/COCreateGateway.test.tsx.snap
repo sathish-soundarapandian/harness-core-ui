@@ -252,6 +252,7 @@ exports[`Create Auto Stopping rule Render cloud provider & connector selection s
             </div>
           </div>
           <button
+            aria-label="Next"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main footer StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
             disabled=""
             tabindex="-1"

@@ -336,6 +336,7 @@ const ResourceGroupDetails: React.FC = () => {
                 onResourceCategorySelect={onResourceCategorySelect}
                 preSelectedResourceList={Array.from(selectedResourcesMap.keys())}
                 disableAddingResources={disableAddingResources}
+                isHarnessManaged={isHarnessManaged}
                 onSelectionTypeChange={onSelectionTypeChange}
               />
             </Container>

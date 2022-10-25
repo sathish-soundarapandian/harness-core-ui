@@ -587,6 +587,7 @@ exports[`Create k8 connector Wizard should form for authtype username 2`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="k8sBackButton"
               type="button"
@@ -617,6 +618,7 @@ exports[`Create k8 connector Wizard should form for authtype username 2`] = `
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -873,6 +875,7 @@ exports[`Create k8 connector Wizard should form for edit authtype OIDC 1`] = `
                     />
                   </label>
                   <button
+                    aria-label="Change"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                     data-testid="thumbnail-select-change"
                     type="button"
@@ -1482,6 +1485,7 @@ exports[`Create k8 connector Wizard should form for edit authtype OIDC 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="k8sBackButton"
               type="button"
@@ -1512,6 +1516,7 @@ exports[`Create k8 connector Wizard should form for edit authtype OIDC 1`] = `
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1768,6 +1773,7 @@ exports[`Create k8 connector Wizard should form for edit authtype serviceAccount
                     />
                   </label>
                   <button
+                    aria-label="Change"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                     data-testid="thumbnail-select-change"
                     type="button"
@@ -2074,6 +2080,7 @@ exports[`Create k8 connector Wizard should form for edit authtype serviceAccount
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="k8sBackButton"
               type="button"
@@ -2104,6 +2111,7 @@ exports[`Create k8 connector Wizard should form for edit authtype serviceAccount
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -2735,6 +2743,7 @@ exports[`Create k8 connector Wizard should form for edit authtype username 2`] =
                     />
                   </label>
                   <button
+                    aria-label="Change"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                     data-testid="thumbnail-select-change"
                     type="button"
@@ -3077,6 +3086,7 @@ exports[`Create k8 connector Wizard should form for edit authtype username 2`] =
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="k8sBackButton"
               type="button"
@@ -3107,6 +3117,7 @@ exports[`Create k8 connector Wizard should form for edit authtype username 2`] =
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -3363,6 +3374,7 @@ exports[`should render form for edit authtype clientKey 1`] = `
                     />
                   </label>
                   <button
+                    aria-label="Change"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                     data-testid="thumbnail-select-change"
                     type="button"
@@ -3970,6 +3982,7 @@ exports[`should render form for edit authtype clientKey 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="k8sBackButton"
               type="button"
@@ -4000,6 +4013,7 @@ exports[`should render form for edit authtype clientKey 1`] = `
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -4404,6 +4418,7 @@ exports[`should render form for edit authtype clientKey 2`] = `
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--margin-top-xxxlarge"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="awsBackButton"
                   type="button"
@@ -4434,6 +4449,7 @@ exports[`should render form for edit authtype clientKey 2`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="saveAndContinue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main saveAndContinue StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                   data-testid="delegateSaveAndContinue"
                   type="submit"

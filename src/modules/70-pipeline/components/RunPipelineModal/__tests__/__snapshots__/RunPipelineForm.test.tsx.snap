@@ -692,6 +692,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
               class="Layout--horizontal StyledProps--main actionButtons"
             >
               <button
+                aria-label="runPipeline"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -705,6 +706,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                 class="secondaryButton"
               >
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--variation Button--variation-tertiary"
                   id="cancel-runpipeline"
                   type="button"
@@ -724,6 +726,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="inputSets.saveAsInputSet"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   type="button"
                 >
@@ -1216,6 +1219,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
               class="Layout--horizontal StyledProps--main actionButtons"
             >
               <button
+                aria-label="runPipeline"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1229,6 +1233,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                 class="secondaryButton"
               >
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--variation Button--variation-tertiary"
                   id="cancel-runpipeline"
                   type="button"
@@ -1248,6 +1253,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="inputSets.saveAsInputSet"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   type="button"
                 >
@@ -1819,6 +1825,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
               class="Layout--horizontal StyledProps--main actionButtons"
             >
               <button
+                aria-label="runPipeline"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1832,6 +1839,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                 class="secondaryButton"
               >
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--variation Button--variation-tertiary"
                   id="cancel-runpipeline"
                   type="button"
@@ -1851,6 +1859,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="inputSets.saveAsInputSet"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   type="button"
                 >

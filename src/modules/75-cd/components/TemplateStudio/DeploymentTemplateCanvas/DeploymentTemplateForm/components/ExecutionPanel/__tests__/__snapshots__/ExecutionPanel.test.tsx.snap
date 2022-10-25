@@ -25,6 +25,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render - with step template 
           class="bp3-popover-target"
         >
           <button
+            aria-label="addStep"
             class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--withRightIcon"
             type="button"
           >
@@ -202,6 +203,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render - without step templa
           class="bp3-popover-target"
         >
           <button
+            aria-label="addStep"
             class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--withRightIcon"
             type="button"
           >

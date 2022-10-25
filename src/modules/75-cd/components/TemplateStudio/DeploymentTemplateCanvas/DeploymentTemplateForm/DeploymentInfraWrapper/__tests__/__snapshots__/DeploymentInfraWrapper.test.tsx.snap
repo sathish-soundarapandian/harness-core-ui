@@ -42,6 +42,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                   class="customVariablesStage infraVariableSection"
                 >
                   <button
+                    aria-label="variables.newVariable"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     type="button"
                   >
@@ -327,6 +328,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                     />
                   </div>
                   <button
+                    aria-label="pipeline.customDeployment.newAttribute"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"
@@ -409,6 +411,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                   class="customVariablesStage infraVariableSection"
                 >
                   <button
+                    aria-label="variables.newVariable"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     type="button"
                   >
@@ -894,6 +897,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                     />
                   </div>
                   <button
+                    aria-label="pipeline.customDeployment.newAttribute"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"
@@ -1218,6 +1222,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                     </div>
                   </div>
                   <button
+                    aria-label="variables.newVariable"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     type="button"
                   >
@@ -1573,6 +1578,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                     />
                   </div>
                   <button
+                    aria-label="pipeline.customDeployment.newAttribute"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"
@@ -1897,6 +1903,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                     </div>
                   </div>
                   <button
+                    aria-label="variables.newVariable"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     type="button"
                   >
@@ -2252,6 +2259,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                     />
                   </div>
                   <button
+                    aria-label="pipeline.customDeployment.newAttribute"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"

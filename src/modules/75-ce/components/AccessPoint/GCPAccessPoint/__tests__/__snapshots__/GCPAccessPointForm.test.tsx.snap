@@ -497,6 +497,7 @@ exports[`GCP AP form fill form 1`] = `
             style="margin-top: 220px;"
           >
             <button
+              aria-label="Back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
               data-testid="previousButton"
               type="button"
@@ -527,6 +528,7 @@ exports[`GCP AP form fill form 1`] = `
               </span>
             </button>
             <button
+              aria-label="Save Load Balancer"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               disabled=""
               tabindex="-1"
@@ -1059,6 +1061,7 @@ exports[`GCP AP form form in edit mode 1`] = `
             style="margin-top: 220px;"
           >
             <button
+              aria-label="Back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
               data-testid="previousButton"
               type="button"
@@ -1089,6 +1092,7 @@ exports[`GCP AP form form in edit mode 1`] = `
               </span>
             </button>
             <button
+              aria-label="Save Load Balancer"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="button"
             >
@@ -1619,6 +1623,7 @@ exports[`GCP AP form form while saving 1`] = `
             style="margin-top: 220px;"
           >
             <button
+              aria-label="Back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
               data-testid="previousButton"
               type="button"
@@ -2175,6 +2180,7 @@ exports[`GCP AP form form with no data 1`] = `
             style="margin-top: 220px;"
           >
             <button
+              aria-label="Back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
               data-testid="previousButton"
               type="button"
@@ -2205,6 +2211,7 @@ exports[`GCP AP form form with no data 1`] = `
               </span>
             </button>
             <button
+              aria-label="Save Load Balancer"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               disabled=""
               tabindex="-1"

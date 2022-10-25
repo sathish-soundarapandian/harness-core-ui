@@ -277,6 +277,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
             </button>
           </div>
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-spec.filePaths"
             type="button"
@@ -494,6 +495,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -935,6 +937,7 @@ exports[`Test K8sApplyStep should render edit view as edit step 1`] = `
             </div>
             <span>
               <button
+                aria-label="addFileText"
                 class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 disabled=""
                 tabindex="-1"
@@ -1340,6 +1343,7 @@ exports[`Test K8sApplyStep should render edit view as edit step 1`] = `
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"
@@ -2013,6 +2017,7 @@ exports[`Test K8sApplyStep should render edit view as edit step with all runtime
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"
@@ -2367,6 +2372,7 @@ exports[`Test K8sApplyStep should render edit view as new step 1`] = `
             </div>
             <span>
               <button
+                aria-label="addFileText"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="button"
               >
@@ -2581,6 +2587,7 @@ exports[`Test K8sApplyStep should render edit view as new step 1`] = `
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"
@@ -2768,6 +2775,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
             </button>
           </div>
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-/abc.spec.filePaths"
             type="button"
@@ -3216,6 +3224,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
             </button>
           </div>
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-undefined.spec.overrides[0].spec.store.spec.paths"
             type="button"
@@ -3238,6 +3247,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -3484,6 +3494,7 @@ exports[`Test K8sApplyStep should render null for StepviewType.template 1`] = `
             </div>
             <span>
               <button
+                aria-label="addFileText"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="button"
               >
@@ -3698,6 +3709,7 @@ exports[`Test K8sApplyStep should render null for StepviewType.template 1`] = `
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"

@@ -337,6 +337,7 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
                     class="StyledProps--font StyledProps--main StyledProps--margin-top-xxlarge"
                   >
                     <button
+                      aria-label="continue"
                       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                       type="button"
                     >

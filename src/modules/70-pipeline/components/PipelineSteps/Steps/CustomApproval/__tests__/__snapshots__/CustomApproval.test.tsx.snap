@@ -20,6 +20,7 @@ exports[`CustomApproval tests Basic snapshot - deploymentform mode: custom-appro
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -752,6 +753,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -785,6 +787,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode: input set with err
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -3158,6 +3161,7 @@ exports[`CustomApproval tests deploymentform mode - readonly: custom-approval-de
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

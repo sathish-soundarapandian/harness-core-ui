@@ -392,6 +392,7 @@ exports[`Validate ChangeCard should render in error state 1`] = `
         We cannot perform your request at the moment. Please try again.
       </p>
       <button
+        aria-label="Retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >

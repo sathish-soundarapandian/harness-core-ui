@@ -167,6 +167,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
               </div>
             </div>
             <button
+              aria-label="add"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--inline Button--with-current-color Button--variation Button--variation-primary"
               disabled=""
               tabindex="-1"
@@ -632,6 +633,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="projectsOrgs.manageProject"
             class="bp3-button Button--button StyledProps--font StyledProps--main manageUsers Button--with-current-color Button--variation Button--variation-link"
             type="button"
           >

@@ -687,6 +687,7 @@ exports[`Create GCP connector Wizard Should render form 2`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="gcpBackButton"
               type="button"
@@ -717,6 +718,7 @@ exports[`Create GCP connector Wizard Should render form 2`] = `
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1445,6 +1447,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
                     />
                   </label>
                   <button
+                    aria-label="Change"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                     data-testid="thumbnail-select-change"
                     type="button"
@@ -1588,6 +1591,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="gcpBackButton"
               type="button"
@@ -1618,6 +1622,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -2316,6 +2321,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
                     />
                   </label>
                   <button
+                    aria-label="Change"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                     data-testid="thumbnail-select-change"
                     type="button"
@@ -2459,6 +2465,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="gcpBackButton"
               type="button"
@@ -2489,6 +2496,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

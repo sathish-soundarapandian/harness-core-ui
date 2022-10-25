@@ -99,6 +99,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
         style="width: 55%;"
       >
         <button
+          aria-label="ce.co.accessPoint.new"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
           type="button"
         >

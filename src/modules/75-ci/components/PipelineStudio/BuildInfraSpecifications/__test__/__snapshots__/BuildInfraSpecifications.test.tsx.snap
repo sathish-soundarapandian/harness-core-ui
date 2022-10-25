@@ -124,6 +124,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                               />
                             </label>
                             <button
+                              aria-label="Change"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                               data-testid="thumbnail-select-change"
                               type="button"
@@ -881,6 +882,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
                                 />
                               </label>
                               <button
+                                aria-label="Change"
                                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                                 data-testid="thumbnail-select-change"
                                 type="button"
@@ -1447,6 +1449,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                               />
                             </label>
                             <button
+                              aria-label="Change"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                               data-testid="thumbnail-select-change"
                               type="button"

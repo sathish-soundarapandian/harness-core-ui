@@ -28,6 +28,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
           </p>
         </div>
         <button
+          aria-label="+ newConnector"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >
@@ -610,6 +611,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                   class="Layout--horizontal StyledProps--main"
                 >
                   <button
+                    aria-label="Prev"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -641,6 +643,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                     </span>
                   </button>
                   <button
+                    aria-label="Next"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -684,6 +687,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
       >
         <button
+          aria-label="entityReference.apply"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main bp3-popover-dismiss Button--with-current-color Button--variation Button--variation-primary"
           disabled=""
           tabindex="-1"
@@ -696,6 +700,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
           </span>
         </button>
         <button
+          aria-label="cancel"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
           type="button"
         >
@@ -1284,6 +1289,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: gitSync repo form 1`] = 
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-xlarge"
               >
                 <button
+                  aria-label="save"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                   type="submit"
                 >
@@ -1294,6 +1300,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: gitSync repo form 1`] = 
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                   type="button"
                 >
@@ -1960,6 +1967,7 @@ exports[`Git Sync - repo tab Repo type card should be enabled only for Github 1`
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-xlarge"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                   type="submit"
                 >
@@ -1970,6 +1978,7 @@ exports[`Git Sync - repo tab Repo type card should be enabled only for Github 1`
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                   type="button"
                 >
@@ -2114,6 +2123,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorDialog 1
   style="width: auto; min-width: 1175px; min-height: 640px; border-left: 0; padding-bottom: 0px; position: relative; overflow: auto;"
 >
   <button
+    aria-label="save"
     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
     type="button"
   >
@@ -2154,6 +2164,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
           </p>
         </div>
         <button
+          aria-label="+ newConnector"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >
@@ -2736,6 +2747,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                   class="Layout--horizontal StyledProps--main"
                 >
                   <button
+                    aria-label="Prev"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -2767,6 +2779,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                     </span>
                   </button>
                   <button
+                    aria-label="Next"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -2810,6 +2823,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
       >
         <button
+          aria-label="entityReference.apply"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main bp3-popover-dismiss Button--with-current-color Button--variation Button--variation-primary"
           disabled=""
           tabindex="-1"
@@ -2822,6 +2836,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
           </span>
         </button>
         <button
+          aria-label="cancel"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
           type="button"
         >
@@ -3403,6 +3418,7 @@ exports[`Git Sync - repo tab rendering form to create gitSync repo 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-xlarge"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                   type="submit"
                 >
@@ -3413,6 +3429,7 @@ exports[`Git Sync - repo tab rendering form to create gitSync repo 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                   type="button"
                 >
@@ -4172,6 +4189,7 @@ exports[`Git Sync - repo tab rendering form to create gitSync repo 2`] = `
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-xlarge"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                   type="submit"
                 >
@@ -4182,6 +4200,7 @@ exports[`Git Sync - repo tab rendering form to create gitSync repo 2`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                   type="button"
                 >

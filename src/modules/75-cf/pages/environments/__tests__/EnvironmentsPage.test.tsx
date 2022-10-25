@@ -189,7 +189,7 @@ describe('EnvironmentsPage', () => {
     })
     renderComponent()
 
-    expect(screen.getByRole('button', { name: 'plus newEnvironment' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'newEnvironment' })).toBeInTheDocument()
     expect(screen.getByTestId('nodata-heading')).toBeInTheDocument()
     expect(screen.getByText('cf.environments.noEnvironmentSection.message')).toBeInTheDocument()
   })

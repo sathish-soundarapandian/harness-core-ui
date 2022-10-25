@@ -262,6 +262,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
           class="bp3-flex-expander"
         />
         <button
+          aria-label="common.saveAsTemplate"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
           type="button"
         >
@@ -589,6 +590,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                           class="bp3-form-content"
                         >
                           <button
+                            aria-label="plusAdd"
                             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                             data-testid="add-sharedPaths"
                             style="padding: 0px;"
@@ -650,6 +652,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main footer"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="button"
               >

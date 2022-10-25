@@ -335,6 +335,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
           </button>
         </div>
         <button
+          aria-label="plusAdd"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
           data-testid="add-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.paths"
           type="button"

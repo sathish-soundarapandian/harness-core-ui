@@ -130,7 +130,7 @@ describe('FlagPipelineTab', () => {
 
       // assert empty state initially
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'plus cf.featureFlags.flagPipeline.title'
+        name: 'cf.featureFlags.flagPipeline.title'
       })
       expect(screen.getByText('cf.featureFlags.flagPipeline.noDataMessage')).toBeInTheDocument()
       expect(addFlagPipelineButton).toBeInTheDocument()
@@ -176,7 +176,7 @@ describe('FlagPipelineTab', () => {
     test('it should let user search for a flag pipeline', async () => {
       renderComponent()
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'plus cf.featureFlags.flagPipeline.title'
+        name: 'cf.featureFlags.flagPipeline.title'
       })
       userEvent.click(addFlagPipelineButton)
 
@@ -205,7 +205,7 @@ describe('FlagPipelineTab', () => {
     test('it should close drawer when close icon clicked', async () => {
       renderComponent()
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'plus cf.featureFlags.flagPipeline.title'
+        name: 'cf.featureFlags.flagPipeline.title'
       })
 
       userEvent.click(addFlagPipelineButton)
@@ -229,7 +229,7 @@ describe('FlagPipelineTab', () => {
 
       renderComponent()
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'plus cf.featureFlags.flagPipeline.title'
+        name: 'cf.featureFlags.flagPipeline.title'
       })
       userEvent.click(addFlagPipelineButton)
 
@@ -247,7 +247,7 @@ describe('FlagPipelineTab', () => {
 
         renderComponent()
         const addFlagPipelineButton = screen.getByRole('button', {
-          name: 'plus cf.featureFlags.flagPipeline.title'
+          name: 'cf.featureFlags.flagPipeline.title'
         })
         userEvent.click(addFlagPipelineButton)
 

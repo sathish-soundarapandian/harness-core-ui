@@ -874,6 +874,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step one and step two fo
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -1412,6 +1413,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step one and step two fo
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -1919,6 +1921,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step two for SSH key 1`]
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -2457,6 +2460,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step two for SSH key 2`]
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -3056,6 +3060,7 @@ exports[`Create Gitlab connector Wizard should be able to edit  usernamePassword
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="gitlabBackButton"
                   type="button"
@@ -3086,6 +3091,7 @@ exports[`Create Gitlab connector Wizard should be able to edit  usernamePassword
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -3622,6 +3628,7 @@ exports[`Create Gitlab connector Wizard should be able to edit ssh with API acce
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="gitlabBackButton"
                   type="button"
@@ -3652,6 +3659,7 @@ exports[`Create Gitlab connector Wizard should be able to edit ssh with API acce
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -4204,6 +4212,7 @@ exports[`Create Gitlab connector Wizard should render edit form for hosted 1`] =
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="gitlabBackButton"
                   type="button"
@@ -4234,6 +4243,7 @@ exports[`Create Gitlab connector Wizard should render edit form for hosted 1`] =
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >

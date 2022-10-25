@@ -428,6 +428,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests expand advanced secti
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -596,6 +597,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests expand advanced secti
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -625,6 +627,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests expand advanced secti
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1089,6 +1092,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders correctly in 
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -1161,6 +1165,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders correctly in 
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1190,6 +1195,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders correctly in 
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1654,6 +1660,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders while adding 
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -1726,6 +1733,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders while adding 
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1755,6 +1763,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders while adding 
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -2219,6 +2228,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders without crash
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -2291,6 +2301,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders without crash
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -2320,6 +2331,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders without crash
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

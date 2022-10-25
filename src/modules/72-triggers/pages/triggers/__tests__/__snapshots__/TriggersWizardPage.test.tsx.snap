@@ -717,6 +717,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -746,6 +747,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -1190,6 +1192,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -1219,6 +1222,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -2399,6 +2403,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon Button--variation Button--variation-secondary"
                   type="button"
                 >
@@ -2428,6 +2433,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                   </span>
                 </button>
                 <button
+                  aria-label="triggers.updateTrigger"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -2457,6 +2463,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -3564,6 +3571,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -3593,6 +3601,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -4659,6 +4668,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -4688,6 +4698,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -5158,6 +5169,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -5187,6 +5199,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -5725,6 +5738,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon Button--variation Button--variation-secondary"
                   type="button"
                 >
@@ -5754,6 +5768,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -5783,6 +5798,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >

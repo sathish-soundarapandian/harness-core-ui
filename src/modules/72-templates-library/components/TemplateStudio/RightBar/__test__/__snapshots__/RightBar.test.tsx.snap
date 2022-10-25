@@ -6,6 +6,7 @@ exports[`RightBar should match snapshot 1`] = `
     class="rightBar"
   >
     <button
+      aria-label="pipeline.templateInputs"
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       data-testid="template-inputs"
       type="button"
@@ -41,6 +42,7 @@ exports[`RightBar should match snapshot 1`] = `
       </span>
     </button>
     <button
+      aria-label="common.variables"
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       data-testid="input-variable"
       type="button"

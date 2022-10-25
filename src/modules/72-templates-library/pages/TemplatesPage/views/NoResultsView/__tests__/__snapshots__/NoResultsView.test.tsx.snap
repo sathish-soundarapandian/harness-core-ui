@@ -21,6 +21,7 @@ exports[`<NoResultsView> tests should match snapshot 1`] = `
         class="bp3-popover-target"
       >
         <button
+          aria-label="templatesLibrary.addNewTemplate"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-primary"
           type="button"
         >
@@ -107,6 +108,7 @@ exports[`<NoResultsView> tests should match snapshot when has search params 1`] 
       common.filters.noResultsFound
     </p>
     <button
+      aria-label="common.filters.clearFilters"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link Button--size Button--large"
       type="button"
     >

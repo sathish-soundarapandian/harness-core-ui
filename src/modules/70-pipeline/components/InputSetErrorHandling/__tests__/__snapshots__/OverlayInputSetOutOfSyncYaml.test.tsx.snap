@@ -142,6 +142,7 @@ exports[`Inline Overlay Input Set Error Exp should open yaml view and render out
                 pipeline.inputSetErrorStrip.errorInfo
               </p>
               <button
+                aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                 type="button"
               >
@@ -162,6 +163,7 @@ exports[`Inline Overlay Input Set Error Exp should open yaml view and render out
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -173,6 +175,7 @@ exports[`Inline Overlay Input Set Error Exp should open yaml view and render out
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -275,6 +278,7 @@ exports[`Old Git Sync Input Set Error Exp should open delete input set modal on 
             style="display: flex; justify-content: flexStart;"
           >
             <button
+              aria-label="pipeline.inputSets.deleteOverlayIS"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
               type="button"
             >
@@ -447,6 +451,7 @@ exports[`Old Git Sync Input Set Error Exp should open reconcile dialog on clicki
                 class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
               >
                 <button
+                  aria-label="pipeline.inputSets.removeInvalidFields"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
                   style="width: 232px;"
                   type="button"
@@ -610,6 +615,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
                 pipeline.inputSetErrorStrip.errorInfo
               </p>
               <button
+                aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                 type="button"
               >
@@ -630,6 +636,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -641,6 +648,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -743,6 +751,7 @@ exports[`Remote Git Sync Input Set Error Exp should open delete input set modal 
             style="display: flex; justify-content: flexStart;"
           >
             <button
+              aria-label="pipeline.inputSets.deleteOverlayIS"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
               type="button"
             >
@@ -915,6 +924,7 @@ exports[`Remote Git Sync Input Set Error Exp should open reconcile dialog on cli
                 class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
               >
                 <button
+                  aria-label="pipeline.inputSets.removeInvalidFields"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
                   style="width: 232px;"
                   type="button"
@@ -1078,6 +1088,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
                 pipeline.inputSetErrorStrip.errorInfo
               </p>
               <button
+                aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                 type="button"
               >
@@ -1098,6 +1109,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
           >
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1109,6 +1121,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >

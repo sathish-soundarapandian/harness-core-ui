@@ -241,6 +241,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -270,6 +271,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -733,6 +735,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -762,6 +765,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

@@ -32,6 +32,7 @@ exports[`SelectFeatureFlagGitRepoPage it should render component 1`] = `
         cf.selectFlagRepo.introText
       </p>
       <button
+        aria-label="cf.selectFlagRepo.useExistingRepo"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-large StyledProps--font StyledProps--font-size-medium Button--with-current-color"
         type="button"
       >
@@ -42,6 +43,7 @@ exports[`SelectFeatureFlagGitRepoPage it should render component 1`] = `
         </span>
       </button>
       <button
+        aria-label="cf.selectFlagRepo.newRepo"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-large StyledProps--font StyledProps--font-size-medium Button--with-current-color"
         type="button"
       >

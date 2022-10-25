@@ -100,6 +100,7 @@ exports[`Test SLI component should render SLI component 1`] = `
                   </div>
                 </div>
                 <button
+                  aria-label="cv.healthSource.newHealthSource"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
                   disabled=""
                   tabindex="-1"
@@ -464,6 +465,7 @@ exports[`Test SLI component should render SLI component 1`] = `
                     </div>
                   </div>
                   <button
+                    aria-label="cv.newMetric"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
                     disabled=""
                     tabindex="-1"
@@ -564,6 +566,7 @@ exports[`Test SLI component should render SLI component 1`] = `
                   </div>
                 </div>
                 <button
+                  aria-label="cv.newMetric"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
                   disabled=""
                   tabindex="-1"

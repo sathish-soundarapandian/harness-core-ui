@@ -108,6 +108,7 @@ exports[`Certificate Upload Screen render upload component along with other fiel
             </div>
           </div>
           <button
+            aria-label="Done"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             disabled=""
             tabindex="-1"
@@ -237,6 +238,7 @@ exports[`Certificate Upload Screen render upload component in edit mode 1`] = `
             </div>
           </div>
           <button
+            aria-label="Done"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             disabled=""
             tabindex="-1"

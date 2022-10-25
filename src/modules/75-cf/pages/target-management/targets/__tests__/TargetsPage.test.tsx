@@ -155,7 +155,7 @@ describe('TargetsPage', () => {
 
     renderComponent()
 
-    expect(screen.getByRole('button', { name: 'plus cf.targets.newEnvironmentTarget' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'cf.targets.newEnvironmentTarget' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.targets' })).toBeInTheDocument()
   })
 
@@ -186,7 +186,7 @@ describe('TargetsPage', () => {
 
     renderComponent()
 
-    expect(screen.getByRole('button', { name: 'plus cf.targets.create' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'cf.targets.create' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.targets' })).toBeInTheDocument()
   })
 

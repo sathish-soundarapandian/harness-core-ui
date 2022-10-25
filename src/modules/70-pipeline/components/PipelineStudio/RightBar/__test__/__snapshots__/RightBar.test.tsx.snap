@@ -1006,6 +1006,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
       class="bp3-dialog-footer"
     >
       <button
+        aria-label="applyChanges"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -1018,6 +1019,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
        
          
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -1906,6 +1908,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
       class="bp3-dialog-footer"
     >
       <button
+        aria-label="applyChanges"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -1918,6 +1921,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
        
          
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -2806,6 +2810,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
       class="bp3-dialog-footer"
     >
       <button
+        aria-label="applyChanges"
         class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -2846,6 +2851,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
        
          
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -3734,6 +3740,7 @@ exports[`RightBar Renders validation errors 1`] = `
       class="bp3-dialog-footer"
     >
       <button
+        aria-label="applyChanges"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -3746,6 +3753,7 @@ exports[`RightBar Renders validation errors 1`] = `
        
          
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -3766,6 +3774,7 @@ exports[`RightBar renders correctly 1`] = `
     class="rightBar"
   >
     <button
+      aria-label="common.variables"
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       data-testid="input-variable"
       type="button"
@@ -3801,6 +3810,7 @@ exports[`RightBar renders correctly 1`] = `
       </span>
     </button>
     <button
+      aria-label="notifications.pipelineName"
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -3829,6 +3839,7 @@ exports[`RightBar renders correctly 1`] = `
       </span>
     </button>
     <button
+      aria-label="pipeline.barriers.flowControl"
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -3858,6 +3869,7 @@ exports[`RightBar renders correctly 1`] = `
       </span>
     </button>
     <button
+      aria-label="codebase"
       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--without-shadow Button--withLeftIcon Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -3900,6 +3912,7 @@ exports[`RightBar renders correctly 1`] = `
       </span>
     </button>
     <button
+      aria-label="pipeline.advancedOptions"
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       type="button"
     >

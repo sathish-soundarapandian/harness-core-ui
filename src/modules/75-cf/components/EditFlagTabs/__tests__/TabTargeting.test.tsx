@@ -108,7 +108,7 @@ describe('TabTargeting', () => {
 
     renderComponent({ setEditing })
 
-    const editButton = screen.getByRole('button', { name: 'edit cf.featureFlags.rules.editRules' })
+    const editButton = screen.getByRole('button', { name: 'cf.featureFlags.rules.editRules' })
     expect(editButton).toBeInTheDocument()
     expect(setEditing).not.toHaveBeenCalled()
 

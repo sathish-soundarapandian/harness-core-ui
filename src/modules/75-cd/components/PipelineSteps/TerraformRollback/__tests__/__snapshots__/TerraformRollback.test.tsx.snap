@@ -171,6 +171,7 @@ exports[`Test TerraformRollback should render edit view 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

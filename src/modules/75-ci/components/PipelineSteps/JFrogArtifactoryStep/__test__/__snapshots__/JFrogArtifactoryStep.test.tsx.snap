@@ -1675,6 +1675,7 @@ exports[`JFrogArtifactory Step InputSet View should not render any fields 1`] = 
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -2334,6 +2335,7 @@ exports[`JFrogArtifactory Step InputSet View should render all fields 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -2371,6 +2373,7 @@ exports[`JFrogArtifactory Step InputSet View should render properly 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

@@ -564,6 +564,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                   </li>
                 </ul>
                 <button
+                  aria-label="pipeline.inputSets.applyInputSets"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -1120,6 +1121,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                   </li>
                 </ul>
                 <button
+                  aria-label="pipeline.inputSets.applyInputSets"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -1676,6 +1678,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                   </li>
                 </ul>
                 <button
+                  aria-label="pipeline.inputSets.applyInputSets"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
                   type="button"
                 >

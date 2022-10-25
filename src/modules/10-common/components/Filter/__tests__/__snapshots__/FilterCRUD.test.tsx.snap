@@ -68,6 +68,7 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 1`]
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -351,6 +352,7 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 1`]
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-large"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main saveFilterBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
                 type="submit"
               >
@@ -361,6 +363,7 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 1`]
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main cancelBtn StyledProps--color StyledProps--color-white Button--with-current-color Button--variation Button--variation-link"
                 type="reset"
               >
@@ -447,6 +450,7 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 2`]
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -702,6 +706,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 1`] =
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -985,6 +990,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 1`] =
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-large"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main saveFilterBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
                 type="submit"
               >
@@ -995,6 +1001,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 1`] =
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main cancelBtn StyledProps--color StyledProps--color-white Button--with-current-color Button--variation Button--variation-link"
                 type="reset"
               >
@@ -1081,6 +1088,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 2`] =
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -1336,6 +1344,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 3`] =
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -1619,6 +1628,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 3`] =
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-large"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main saveFilterBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
                 type="submit"
               >
@@ -1629,6 +1639,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 3`] =
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main cancelBtn StyledProps--color StyledProps--color-white Button--with-current-color Button--variation Button--variation-link"
                 type="reset"
               >
@@ -1715,6 +1726,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 4`] =
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -1970,6 +1982,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 5`] =
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -2225,6 +2238,7 @@ exports[`Test FilterCRUD component Enable edit mode 1`] = `
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >
@@ -2508,6 +2522,7 @@ exports[`Test FilterCRUD component Enable edit mode 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-large"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main saveFilterBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
                 type="submit"
               >
@@ -2518,6 +2533,7 @@ exports[`Test FilterCRUD component Enable edit mode 1`] = `
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main cancelBtn StyledProps--color StyledProps--color-white Button--with-current-color Button--variation Button--variation-link"
                 type="reset"
               >
@@ -2604,6 +2620,7 @@ exports[`Test FilterCRUD component Initial render should match snapshot 1`] = `
       class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
     >
       <button
+        aria-label="filters.newFilter"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn isActive StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
         type="button"
       >

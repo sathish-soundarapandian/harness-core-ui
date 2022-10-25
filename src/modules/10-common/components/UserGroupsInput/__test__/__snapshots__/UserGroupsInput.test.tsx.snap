@@ -242,6 +242,7 @@ exports[`Rendering Modal should close on clicking cross 1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
       >
         <button
+          aria-label="entityReference.apply"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           disabled=""
           tabindex="-1"
@@ -480,6 +481,7 @@ exports[`Rendering should render Modal 1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
       >
         <button
+          aria-label="entityReference.apply"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           disabled=""
           tabindex="-1"

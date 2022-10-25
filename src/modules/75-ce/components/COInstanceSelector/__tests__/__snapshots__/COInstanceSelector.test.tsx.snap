@@ -419,6 +419,7 @@ exports[`AWS instance selection should render AWS instances selection modal with
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -462,6 +463,7 @@ exports[`AWS instance selection should render AWS instances selection modal with
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -1230,6 +1232,7 @@ exports[`Instance Selector Modal modal should retain the selected resource group
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -1273,6 +1276,7 @@ exports[`Instance Selector Modal modal should retain the selected resource group
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -1835,6 +1839,7 @@ exports[`Instance Selector Modal search and select/unselect instances successful
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -1878,6 +1883,7 @@ exports[`Instance Selector Modal search and select/unselect instances successful
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -2423,6 +2429,7 @@ exports[`Instance Selector Modal should show data 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -2466,6 +2473,7 @@ exports[`Instance Selector Modal should show data 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"

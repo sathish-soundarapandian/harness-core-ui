@@ -19,6 +19,7 @@ exports[`test case for anomalies settings drawer should be able to delete the an
         ce.anomalyDetection.settings.subtext
       </p>
       <button
+        aria-label="ce.anomalyDetection.settings.newAlertBtn"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
         type="button"
       >
@@ -601,6 +602,7 @@ exports[`test case for anomalies settings drawer should be able to open alert cr
               </div>
             </div>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main actionBtn Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               disabled=""
               tabindex="-1"

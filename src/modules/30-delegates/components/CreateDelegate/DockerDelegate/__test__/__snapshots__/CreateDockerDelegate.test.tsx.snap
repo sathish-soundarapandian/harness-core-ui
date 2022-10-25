@@ -359,6 +359,7 @@ exports[`Create Docker Delegate render data 1`] = `
                           </div>
                         </div>
                         <button
+                          aria-label="add"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon"
                           type="button"
                         >
@@ -398,6 +399,7 @@ exports[`Create Docker Delegate render data 1`] = `
                   class="Layout--horizontal StyledProps--main"
                 >
                   <button
+                    aria-label="back"
                     class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
                     id="delegateSetupBackBtn"
                     type="button"
@@ -428,6 +430,7 @@ exports[`Create Docker Delegate render data 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                     type="submit"
                   >

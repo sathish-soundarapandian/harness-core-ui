@@ -200,6 +200,7 @@ exports[`Test cases for Move Perspective Folder Dialog Should render the modal 1
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-xlarge"
           >
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               data-testid="moveFolder"
               type="submit"
@@ -211,6 +212,7 @@ exports[`Test cases for Move Perspective Folder Dialog Should render the modal 1
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >

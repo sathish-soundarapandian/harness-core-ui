@@ -191,6 +191,7 @@ exports[`Test Policy Sets Form Field snapshot test and open close modal 1`] = `
         </button>
       </div>
       <button
+        aria-label="common.policiesSets.addOrModifyPolicySet"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addModifyButton Button--without-shadow"
         type="button"
       >

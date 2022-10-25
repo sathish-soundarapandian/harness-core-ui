@@ -796,6 +796,7 @@ exports[`Create Git connector Wizard Creating Github step one and step two for H
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -1295,6 +1296,7 @@ exports[`Create Git connector Wizard Creating Github step one and step two for H
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -2117,6 +2119,7 @@ exports[`Create Git connector Wizard should be able to edit form for http and au
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="gitBackButton"
                   type="button"
@@ -2147,6 +2150,7 @@ exports[`Create Git connector Wizard should be able to edit form for http and au
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >

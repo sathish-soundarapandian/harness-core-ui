@@ -139,6 +139,7 @@ exports[`Validate MetricChartsValue conponent JSON path component is disabled wh
       </div>
     </div>
     <button
+      aria-label="cv.healthSource.connectors.buildChart"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -319,6 +320,7 @@ exports[`Validate MetricChartsValue conponent should render MetricChartsValue 1`
       </div>
     </div>
     <button
+      aria-label="cv.healthSource.connectors.buildChart"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

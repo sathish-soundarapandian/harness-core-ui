@@ -6,6 +6,7 @@ exports[`Validate SaveAndDiscardButton SaveAndDiscardButton isUpdated false 1`] 
     class="saveHeader"
   >
     <button
+      aria-label="save"
       class="bp3-button Button--button StyledProps--font StyledProps--main saveButton StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
       type="button"
     >
@@ -37,6 +38,7 @@ exports[`Validate SaveAndDiscardButton SaveAndDiscardButton isUpdated false 1`] 
       </span>
     </button>
     <button
+      aria-label="common.discard"
       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color"
       disabled=""
       tabindex="-1"
@@ -63,6 +65,7 @@ exports[`Validate SaveAndDiscardButton SaveAndDiscardButton isUpdated true 1`] =
       unsavedChanges
     </div>
     <button
+      aria-label="save"
       class="bp3-button Button--button StyledProps--font StyledProps--main saveButton StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
       type="button"
     >
@@ -94,6 +97,7 @@ exports[`Validate SaveAndDiscardButton SaveAndDiscardButton isUpdated true 1`] =
       </span>
     </button>
     <button
+      aria-label="common.discard"
       class="bp3-button Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color"
       type="button"
     >

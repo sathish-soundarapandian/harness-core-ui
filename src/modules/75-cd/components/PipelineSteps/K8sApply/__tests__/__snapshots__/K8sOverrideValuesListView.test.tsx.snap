@@ -19,6 +19,7 @@ exports[`OverrideYamlValues List View tests delete manifest list works correctly
       </div>
     </div>
     <button
+      aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
       class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
       data-testid="addManifest"
       id="add-manifest"

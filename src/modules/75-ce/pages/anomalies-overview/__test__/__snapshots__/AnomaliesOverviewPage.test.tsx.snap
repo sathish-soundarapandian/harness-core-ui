@@ -174,6 +174,7 @@ exports[`test case for anomalies detection overview page should be able to rende
         class="bp3-popover-target"
       >
         <button
+          aria-label="projectsOrgs.landingDashboard.last30Days"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
           type="button"
         >
@@ -267,6 +268,7 @@ exports[`test case for anomalies detection overview page should be able to rende
           />
         </div>
         <button
+          aria-label="ce.anomalyDetection.settingsBtn"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary Button--size"
           type="button"
         >

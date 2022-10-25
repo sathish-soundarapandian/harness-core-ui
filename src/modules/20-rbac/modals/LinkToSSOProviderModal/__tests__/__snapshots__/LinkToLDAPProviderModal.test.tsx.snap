@@ -38,6 +38,7 @@ exports[`Create LinkToLDAPProviderModal should search for groups with no results
           </div>
         </div>
         <button
+          aria-label="search"
           class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main StyledProps--padding-xsmall Button--with-current-color Button--variation Button--variation-secondary"
           data-testid="searchLdapGroup"
           type="button"
@@ -102,6 +103,7 @@ exports[`Create LinkToLDAPProviderModal should search the form for groups and re
           </div>
         </div>
         <button
+          aria-label="search"
           class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main StyledProps--padding-xsmall Button--with-current-color Button--variation Button--variation-secondary"
           data-testid="searchLdapGroup"
           type="button"
@@ -186,6 +188,7 @@ exports[`Create LinkToLDAPProviderModal should search the form for groups and re
           </div>
         </div>
         <button
+          aria-label="search"
           class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main StyledProps--padding-xsmall Button--with-current-color Button--variation Button--variation-secondary"
           data-testid="searchLdapGroup"
           type="button"
@@ -270,6 +273,7 @@ exports[`Create LinkToLDAPProviderModal should search the form for groups and re
           </div>
         </div>
         <button
+          aria-label="search"
           class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main StyledProps--padding-xsmall Button--with-current-color Button--variation Button--variation-secondary"
           data-testid="searchLdapGroup"
           type="button"
@@ -430,6 +434,7 @@ exports[`Create LinkToLDAPProviderModal should search the form for groups and re
           </div>
         </div>
         <button
+          aria-label="search"
           class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main StyledProps--padding-xsmall Button--with-current-color Button--variation Button--variation-secondary"
           data-testid="searchLdapGroup"
           type="button"

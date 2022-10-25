@@ -323,6 +323,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main stickyBtnContainer StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
   >
     <button
+      aria-label="save"
       class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
       type="button"
     >
@@ -333,6 +334,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
       </span>
     </button>
     <button
+      aria-label="cancel"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -842,6 +844,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
         unsavedChanges
       </div>
       <button
+        aria-label="save"
         class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -852,6 +855,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
         </span>
       </button>
       <button
+        aria-label="pipeline.discard"
         class="bp3-button Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color Button--variation Button--variation-secondary"
         type="button"
       >
@@ -1509,6 +1513,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
         unsavedChanges
       </div>
       <button
+        aria-label="save"
         class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -1519,6 +1524,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
         </span>
       </button>
       <button
+        aria-label="pipeline.discard"
         class="bp3-button Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color Button--variation Button--variation-secondary"
         type="button"
       >

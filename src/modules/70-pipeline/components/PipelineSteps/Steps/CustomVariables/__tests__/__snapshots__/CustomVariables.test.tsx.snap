@@ -651,6 +651,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       </div>
     </div>
     <button
+      aria-label="common.addVariable"
       class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
       type="button"
     >
@@ -1378,6 +1379,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </div>
     </div>
     <button
+      aria-label="common.addVariable"
       class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
       type="button"
     >
@@ -2154,6 +2156,7 @@ exports[`Custom Variables should render variables 1`] = `
       </div>
     </div>
     <button
+      aria-label="common.addVariable"
       class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
       type="button"
     >

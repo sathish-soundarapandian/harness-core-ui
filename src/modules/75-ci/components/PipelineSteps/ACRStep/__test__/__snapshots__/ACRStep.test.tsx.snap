@@ -691,6 +691,7 @@ exports[`ACR Step Edit View edit mode works 1`] = `
                   </button>
                 </div>
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.tags"
                   style="padding: 0px;"
@@ -1629,6 +1630,7 @@ exports[`ACR Step Edit View should render properly 1`] = `
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.tags"
                   style="padding: 0px;"
@@ -1706,6 +1708,7 @@ exports[`ACR Step InputSet View should not render any fields 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -2077,6 +2080,7 @@ exports[`ACR Step InputSet View should render all fields 1`] = `
                   </button>
                 </div>
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.tags"
                   type="button"
@@ -2406,6 +2410,7 @@ exports[`ACR Step InputSet View should render all fields 1`] = `
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.labels"
                   style="padding: 0px;"
@@ -2505,6 +2510,7 @@ exports[`ACR Step InputSet View should render all fields 1`] = `
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.buildArgs"
                   style="padding: 0px;"
@@ -2986,6 +2992,7 @@ exports[`ACR Step InputSet View should render all fields 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -3023,6 +3030,7 @@ exports[`ACR Step InputSet View should render properly 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

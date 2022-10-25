@@ -352,6 +352,7 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot 1`] = `
                 </button>
               </div>
               <button
+                aria-label="plusAdd"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                 data-testid="add-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.paths"
                 type="button"
@@ -716,6 +717,7 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot with fromTrigg
                 </button>
               </div>
               <button
+                aria-label="plusAdd"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                 data-testid="add-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.paths"
                 type="button"

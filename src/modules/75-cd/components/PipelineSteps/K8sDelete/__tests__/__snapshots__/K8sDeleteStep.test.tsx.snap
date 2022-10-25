@@ -1378,6 +1378,7 @@ exports[`Test K8sDeleteStep should render edit view as new step 1`] = `
             </div>
             <span>
               <button
+                aria-label="addFileText"
                 class="bp3-button Button--button StyledProps--font StyledProps--main addBtn Button--with-current-color Button--variation Button--variation-primary"
                 type="button"
               >
@@ -1688,6 +1689,7 @@ exports[`Test K8sDeleteStep validate input set in deployment form - only timeout
 }
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

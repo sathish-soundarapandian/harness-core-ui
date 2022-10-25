@@ -98,6 +98,7 @@ exports[`Environments should render Environments 1`] = `
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="newEnvironment"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
             data-testid="add-environment"
             type="button"

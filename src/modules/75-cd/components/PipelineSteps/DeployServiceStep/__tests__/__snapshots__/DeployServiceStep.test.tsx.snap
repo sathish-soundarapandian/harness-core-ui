@@ -221,6 +221,7 @@ exports[`SeviceModal  should render Services modal 1`] = `
           class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
         >
           <button
+            aria-label="save"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
             data-id="service-save"
             type="submit"
@@ -232,6 +233,7 @@ exports[`SeviceModal  should render Services modal 1`] = `
             </span>
           </button>
           <button
+            aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
             type="button"
           >
@@ -289,6 +291,7 @@ exports[`SeviceModal  should render Services modal 2`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large"
       >
         <button
+          aria-label="save"
           class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           disabled=""
           tabindex="-1"
@@ -327,6 +330,7 @@ exports[`SeviceModal  should render Services modal 2`] = `
           </span>
         </button>
         <button
+          aria-label="cancel"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
           type="button"
         >
@@ -536,6 +540,7 @@ exports[`SeviceModal  should validate edit mode snapshot 1`] = `
           class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
         >
           <button
+            aria-label="save"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
             data-id="service-save"
             type="submit"
@@ -547,6 +552,7 @@ exports[`SeviceModal  should validate edit mode snapshot 1`] = `
             </span>
           </button>
           <button
+            aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
             type="button"
           >
@@ -844,6 +850,7 @@ exports[`Test DeployService Step Should be able save even if there is 63 charact
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
           >
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               data-id="service-save"
               type="submit"
@@ -855,6 +862,7 @@ exports[`Test DeployService Step Should be able save even if there is 63 charact
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -1154,6 +1162,7 @@ exports[`Test DeployService Step should render edit service view (service), then
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
           >
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               data-id="service-save"
               type="submit"
@@ -1165,6 +1174,7 @@ exports[`Test DeployService Step should render edit service view (service), then
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -1434,6 +1444,7 @@ exports[`Test DeployService Step should render service view and save 1`] = `
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-xlarge"
           >
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               data-id="service-save"
               type="submit"
@@ -1445,6 +1456,7 @@ exports[`Test DeployService Step should render service view and save 1`] = `
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >

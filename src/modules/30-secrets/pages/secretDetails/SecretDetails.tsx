@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
-import { omit, without, defaultTo } from 'lodash-es'
+import { isEmpty, omit, without, defaultTo } from 'lodash-es'
 import {
   Layout,
   Container,
@@ -31,7 +31,7 @@ import {
 } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
-import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { SnippetFetchResponse, YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
@@ -73,6 +73,8 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
     ProjectPathProps & SecretsPathProps & ModulePathParams
   >()
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
+  const [secretDataState, setSecretDataState] = React.useState<SecretResponseWrapper>(secretData)
+  const [hasValidationErrors, setHasValidationErrors] = React.useState<boolean>(false)
   const [snippetFetchResponse, setSnippetFetchResponse] = React.useState<SnippetFetchResponse>()
   const [fieldsRemovedFromYaml, setFieldsRemovedFromYaml] = useState(['draft', 'createdAt', 'updatedAt'])
 
@@ -191,14 +193,21 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
     openDialog()
   }
 
+  const handleChange = React.useCallback(() => {
+    requestAnimationFrame(() => {
+      setSecretDataState(parse(yamlHandler?.getLatestYaml() || ''))
+      setHasValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
+    })
+  }, [yamlHandler])
+
   return (
     <Container>
       {edit && (
         <>
-          <YamlBuilder
+          <YamlBuilderMemo
             entityType={'Secrets'}
-            fileName={`${secretData.secret.name}.yaml`}
-            existingJSON={omit(secretData, fieldsRemovedFromYaml)}
+            fileName={`${secretDataState.secret.name}.yaml`}
+            existingJSON={omit(secretDataState, fieldsRemovedFromYaml)}
             bind={setYamlHandler}
             height="calc(100vh - 350px)"
             onSnippetCopy={onSnippetCopy}
@@ -208,6 +217,7 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
             snippets={snippetData?.data?.yamlSnippets}
             yamlSanityConfig={yamlSanityConfig}
             showSnippetSection={false}
+            onChange={handleChange}
           />
           <Layout.Horizontal spacing="medium">
             <Button
@@ -216,6 +226,7 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
               onClick={handleSaveYaml}
               margin={{ top: 'large' }}
               variation={ButtonVariation.PRIMARY}
+              disabled={hasValidationErrors}
             />
             <Button
               text={getString('cancel')}
@@ -227,10 +238,10 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
         </>
       )}
       {!edit && (
-        <YamlBuilder
+        <YamlBuilderMemo
           entityType={'Secrets'}
-          existingJSON={omit(secretData, fieldsRemovedFromYaml)}
-          fileName={`${secretData.secret.name}.yaml`}
+          existingJSON={omit(secretDataState, fieldsRemovedFromYaml)}
+          fileName={`${secretDataState.secret.name}.yaml`}
           height="calc(100vh - 350px)"
           isReadOnlyMode={true}
           showSnippetSection={false}

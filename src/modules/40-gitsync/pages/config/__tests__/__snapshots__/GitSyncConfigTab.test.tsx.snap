@@ -107,6 +107,7 @@ exports[`Git Sync - Config tab rendering full sync entities 1`] = `
           />
         </div>
         <button
+          aria-label="gitsync.resyncButtonText"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >
@@ -886,6 +887,7 @@ exports[`Git Sync - Config tab rendering full sync entities 1`] = `
             class="Layout--horizontal StyledProps--main"
           >
             <button
+              aria-label="Prev"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
               disabled=""
               tabindex="-1"
@@ -929,6 +931,7 @@ exports[`Git Sync - Config tab rendering full sync entities 1`] = `
               </span>
             </button>
             <button
+              aria-label="Next"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
               disabled=""
               tabindex="-1"

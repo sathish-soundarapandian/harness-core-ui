@@ -68,7 +68,7 @@ describe('FeatureStageSetupShell', () => {
 
     userEvent.click(screen.getByRole('tab', { name: 'overview' }))
 
-    await waitFor(() => expect(screen.getByRole('button', { name: 'next chevron-right' })).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByRole('button', { name: 'next' })).toBeInTheDocument())
   })
 
   test('it should switch to the Rollout Strategy tab when the Next button is clicked', async () => {
@@ -77,7 +77,7 @@ describe('FeatureStageSetupShell', () => {
     updatePipelineMock.mockClear()
 
     userEvent.click(screen.getByRole('tab', { name: 'overview' }))
-    userEvent.click(await screen.findByRole('button', { name: 'next chevron-right' }))
+    userEvent.click(await screen.findByRole('button', { name: 'next' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('rollout-strategy-panel')).toBeInTheDocument()

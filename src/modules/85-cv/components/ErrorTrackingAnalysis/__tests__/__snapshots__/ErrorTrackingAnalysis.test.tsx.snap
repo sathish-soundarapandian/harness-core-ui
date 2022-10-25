@@ -348,6 +348,7 @@ exports[`Unit tests for ErrorTrackingAnalysisContainer Verify if ErrorTrackingAn
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="Prev"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -391,6 +392,7 @@ exports[`Unit tests for ErrorTrackingAnalysisContainer Verify if ErrorTrackingAn
           </span>
         </button>
         <button
+          aria-label="Next"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
           disabled=""
           tabindex="-1"

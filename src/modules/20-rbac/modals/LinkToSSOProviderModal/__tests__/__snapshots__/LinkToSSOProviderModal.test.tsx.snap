@@ -67,6 +67,7 @@ exports[`Create LinkToSSOProviderModal should render UnlinkToSSOProviderModalFor
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 data-testid="submitLinkSSOProvider"
                 type="submit"
@@ -179,6 +180,7 @@ exports[`Create LinkToSSOProviderModal should render the form with ssoLinked fal
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 data-testid="submitLinkSSOProvider"
                 type="submit"
@@ -291,6 +293,7 @@ exports[`Create LinkToSSOProviderModal should render the form with ssoLinked tru
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 data-testid="submitLinkSSOProvider"
                 type="submit"

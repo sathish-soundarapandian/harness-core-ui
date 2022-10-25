@@ -130,6 +130,7 @@ exports[`Test Step 2 render after button is clicked 1`] = `
             </div>
             <div>
               <button
+                aria-label="ce.connector.AWS.crossAccountRole.templateLaunchText"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
                 type="button"
               >
@@ -142,6 +143,7 @@ exports[`Test Step 2 render after button is clicked 1`] = `
             </div>
             <div>
               <button
+                aria-label="ce.connector.AWS.overview.submitText"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="submit"
               >

@@ -7,6 +7,7 @@ exports[`Kubernetes Yaml Editor edit mode 1`] = `
   >
     <div />
     <button
+      aria-label="Validate YAML"
       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       disabled=""
       style="margin-top: 20px;"

@@ -473,6 +473,7 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -577,6 +578,7 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode but no runtime
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1130,6 +1132,7 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
 }
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -3325,6 +3328,7 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

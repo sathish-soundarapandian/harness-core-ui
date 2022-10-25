@@ -262,6 +262,7 @@ exports[`Test K8sCanaryDeployStep should render edit view 1`] = `
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 type="button"
               >
@@ -624,6 +625,7 @@ exports[`Test K8sCanaryDeployStep should render edit view as edit step with all 
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 type="button"
               >
@@ -1028,6 +1030,7 @@ exports[`Test K8sCanaryDeployStep should render edit view as new step 1`] = `
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 type="button"
               >
@@ -1264,6 +1267,7 @@ exports[`Test K8sCanaryDeployStep should render input set view 1`] = `
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 disabled=""
                 tabindex="-1"
@@ -1308,6 +1312,7 @@ exports[`Test K8sCanaryDeployStep should render input set view 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1531,6 +1536,7 @@ exports[`Test K8sCanaryDeployStep should render input set with percentage and ti
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 disabled=""
                 tabindex="-1"
@@ -1575,6 +1581,7 @@ exports[`Test K8sCanaryDeployStep should render input set with percentage and ti
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1741,6 +1748,7 @@ exports[`Test K8sCanaryDeployStep should render null for StepviewType.template 1
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 type="button"
               >
@@ -2126,6 +2134,7 @@ exports[`Test K8sCanaryDeployStep should submit with valid payload for instance 
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.percentageText"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 type="button"
               >
@@ -2483,6 +2492,7 @@ exports[`Test K8sCanaryDeployStep should submit with valid paylod for instace ty
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 type="button"
               >
@@ -2871,6 +2881,7 @@ exports[`Test K8sCanaryDeployStep should throw validation error without instance
               class="bp3-popover-target"
             >
               <button
+                aria-label="instanceFieldOptions.instanceText"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withRightIcon"
                 type="button"
               >

@@ -429,6 +429,7 @@ exports[`Test cloudformation remote wizard step one click add and remove paths 1
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -459,6 +460,7 @@ exports[`Test cloudformation remote wizard step one click add and remove paths 1
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -832,6 +834,7 @@ exports[`Test cloudformation remote wizard step one click add and remove paths 2
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -862,6 +865,7 @@ exports[`Test cloudformation remote wizard step one click add and remove paths 2
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -1264,6 +1268,7 @@ exports[`Test cloudformation remote wizard step one should error on submit 1`] =
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -1294,6 +1299,7 @@ exports[`Test cloudformation remote wizard step one should error on submit 1`] =
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -1682,6 +1688,7 @@ exports[`Test cloudformation remote wizard step one should render parameters 1`]
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -1712,6 +1719,7 @@ exports[`Test cloudformation remote wizard step one should render parameters 1`]
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -2106,6 +2114,7 @@ exports[`Test cloudformation remote wizard step one should render with github br
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -2136,6 +2145,7 @@ exports[`Test cloudformation remote wizard step one should render with github br
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -2459,6 +2469,7 @@ exports[`Test cloudformation remote wizard step one should render with github co
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -2489,6 +2500,7 @@ exports[`Test cloudformation remote wizard step one should render with github co
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -2812,6 +2824,7 @@ exports[`Test cloudformation remote wizard step one should render with github co
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -2842,6 +2855,7 @@ exports[`Test cloudformation remote wizard step one should render with github co
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -3094,6 +3108,7 @@ exports[`Test cloudformation remote wizard step one should render with no initia
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -3124,6 +3139,7 @@ exports[`Test cloudformation remote wizard step one should render with no initia
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -3512,6 +3528,7 @@ exports[`Test cloudformation remote wizard step one should render with runtime p
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -3542,6 +3559,7 @@ exports[`Test cloudformation remote wizard step one should render with runtime p
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -3930,6 +3948,7 @@ exports[`Test cloudformation remote wizard step one should render with runtime p
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -3960,6 +3979,7 @@ exports[`Test cloudformation remote wizard step one should render with runtime p
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -4277,6 +4297,7 @@ exports[`Test cloudformation remote wizard step one submit with params 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -4307,6 +4328,7 @@ exports[`Test cloudformation remote wizard step one submit with params 1`] = `
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"

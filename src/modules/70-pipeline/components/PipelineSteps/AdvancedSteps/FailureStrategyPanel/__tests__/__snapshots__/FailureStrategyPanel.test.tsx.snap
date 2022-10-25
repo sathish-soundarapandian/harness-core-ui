@@ -832,6 +832,7 @@ exports[`<FailureStrategyPanel /> tests removing a strategy works 1`] = `
               />
             </label>
             <button
+              aria-label="Change"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
               data-testid="thumbnail-select-change"
               type="button"

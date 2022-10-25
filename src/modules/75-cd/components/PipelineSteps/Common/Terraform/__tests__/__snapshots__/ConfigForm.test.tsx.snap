@@ -422,6 +422,7 @@ exports[`TF Config Form tests edit view loads correctly 1`] = `
             style="width: 180px;"
           >
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -432,6 +433,7 @@ exports[`TF Config Form tests edit view loads correctly 1`] = `
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-left-medium Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -761,6 +763,7 @@ exports[`TF Config Form tests initial render 1`] = `
             style="width: 180px;"
           >
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -771,6 +774,7 @@ exports[`TF Config Form tests initial render 1`] = `
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-left-medium Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -1348,6 +1352,7 @@ exports[`TF Config Form tests should render runtime correctly 1`] = `
             style="width: 180px;"
           >
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1358,6 +1363,7 @@ exports[`TF Config Form tests should render runtime correctly 1`] = `
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-left-medium Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >

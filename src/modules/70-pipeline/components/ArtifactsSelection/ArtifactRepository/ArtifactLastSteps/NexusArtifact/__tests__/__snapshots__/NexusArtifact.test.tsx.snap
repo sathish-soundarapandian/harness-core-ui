@@ -563,6 +563,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -592,6 +593,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1191,6 +1193,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1220,6 +1223,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1826,6 +1830,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1855,6 +1860,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

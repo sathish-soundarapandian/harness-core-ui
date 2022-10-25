@@ -198,6 +198,7 @@ exports[`Approval Stage readonly view if readonly view works: readonly view appr
           class="bp3-flex-expander"
         />
         <button
+          aria-label="common.saveAsTemplate"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
           type="button"
         >
@@ -457,6 +458,7 @@ exports[`Approval Stage readonly view if readonly view works: readonly view appr
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main footer StyledProps--padding-medium"
             >
               <button
+                aria-label="next"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="button"
               >

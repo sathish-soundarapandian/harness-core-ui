@@ -81,6 +81,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
       class="Layout--horizontal StyledProps--main StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--padding-top-medium StyledProps--padding-bottom-medium StyledProps--background-white"
     >
       <button
+        aria-label="ce.budgets.listPage.newBudget"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-large Button--with-current-color Button--withLeftIcon"
         type="button"
       >
