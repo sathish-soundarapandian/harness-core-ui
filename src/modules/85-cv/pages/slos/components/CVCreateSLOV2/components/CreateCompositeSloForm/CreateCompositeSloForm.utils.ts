@@ -6,7 +6,6 @@
  */
 
 import type { FormikProps } from 'formik'
-import type { MutableRefObject } from 'react'
 import { PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
@@ -72,41 +71,4 @@ export const isFormDataValid = (
   }
 
   return false
-}
-
-export const handleStepChange = (
-  nextTabId: string,
-  formik: FormikProps<SLOV2Form>,
-  setStepId: (tabId: CreateCompositeSLOSteps) => void,
-  skipValidation = false,
-  compositeSloPayloadRef: MutableRefObject<SLOV2Form | null>
-): void => {
-  switch (nextTabId) {
-    case CreateCompositeSLOSteps.Set_SLO_Time_Window: {
-      ;(skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Define_SLO_Identification)) &&
-        setStepId(CreateCompositeSLOSteps.Set_SLO_Time_Window)
-      compositeSloPayloadRef.current = formik.values
-      break
-    }
-    case CreateCompositeSLOSteps.Add_SLOs: {
-      if (skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Set_SLO_Time_Window)) {
-        setStepId(CreateCompositeSLOSteps.Add_SLOs)
-        compositeSloPayloadRef.current = formik.values
-      }
-      break
-    }
-    case CreateCompositeSLOSteps.Set_SLO_Target: {
-      if (skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Add_SLOs)) {
-        setStepId(CreateCompositeSLOSteps.Set_SLO_Target)
-        compositeSloPayloadRef.current = formik.values
-      }
-      break
-    }
-    default: {
-      if (skipValidation || isFormDataValid(formik, nextTabId as CreateCompositeSLOSteps)) {
-        setStepId(nextTabId as CreateCompositeSLOSteps)
-        compositeSloPayloadRef.current = formik.values
-      }
-    }
-  }
 }
