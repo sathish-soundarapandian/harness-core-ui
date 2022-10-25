@@ -510,6 +510,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               placeholder={''}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
+              configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
               width={391}
               setRefValue

@@ -610,6 +610,7 @@ exports[`Terraform Var Store tests on edit mode for tf var store  1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="Git connector"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
@@ -1062,6 +1063,7 @@ exports[`Terraform Var Store tests on edit mode for tf var store  2`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="Git connector"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"
@@ -1514,6 +1516,7 @@ exports[`Terraform Var Store tests select one of the types 1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="Git connector"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                           tabindex="0"
                           type="button"

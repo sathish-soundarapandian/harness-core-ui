@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useState, useEffect } from 'react'
+import cx from 'classnames'
 import {
   Formik,
   Layout,
@@ -79,8 +80,9 @@ export function Nexus3Artifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType,
-  isMultiArtifactSource
+  selectedDeploymentType = '',
+  isMultiArtifactSource,
+  formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
@@ -88,6 +90,7 @@ export function Nexus3Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isTemplateContext = context === ModalViewFor.Template
 
   const schemaObject = {
     tagType: Yup.string(),
@@ -341,15 +344,28 @@ export function Nexus3Artifact({
     handleSubmit(formatedFormData)
   }
 
+  const handleValidate = (formData: Nexus2InitialValuesType & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorId: getConnectorIdValue(prevStepData)
+      })
+    }
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isMultiArtifactSource ? sidecarSchema : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -360,7 +376,7 @@ export function Nexus3Artifact({
       >
         {formik => (
           <FormikForm>
-            <div className={css.artifactForm}>
+            <div className={cx(css.artifactForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -668,20 +684,22 @@ export function Nexus3Artifact({
                 isImagePath={false}
               />
             </div>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isTemplateContext && (
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

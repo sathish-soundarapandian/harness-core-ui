@@ -26,14 +26,9 @@ import { useModalHook } from '@harness/use-modal'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
-import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
-import {
-  EntityGitDetails,
-  InputSetSummaryResponse,
-  useGetInputsetYaml,
-  useGetTemplateFromPipeline
-} from 'services/pipeline-ng'
+import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
@@ -52,7 +47,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import routes from '@common/RouteDefinitions'
-import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { TagsPopover } from '@common/components'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
@@ -72,11 +67,10 @@ import {
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
-import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
-import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import useDiffDialog from '@common/hooks/useDiffDialog'
+import { PipelineOutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -172,6 +166,7 @@ export function PipelineCanvas({
   const {
     pipeline,
     isUpdated,
+    modules,
     pipelineView: { isYamlEditable },
     pipelineView,
     isLoading,
@@ -184,7 +179,6 @@ export function PipelineCanvas({
     storeMetadata,
     entityValidityDetails,
     templateError,
-    templateInputsErrorNodeSummary,
     yamlSchemaErrorWrapper
   } = state
 
@@ -198,20 +192,6 @@ export function PipelineCanvas({
     }> &
       GitQueryParams
   >()
-
-  const { data: template } = useMutateAsGet(useGetTemplateFromPipeline, {
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      pipelineIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
-    },
-    body: {}
-  })
 
   const { showError, clear } = useToaster()
 
@@ -960,11 +940,7 @@ export function PipelineCanvas({
                         variation={ButtonVariation.PRIMARY}
                         icon="run-pipeline"
                         intent="success"
-                        disabled={
-                          isUpdated ||
-                          entityValidityDetails?.valid === false ||
-                          !isEmpty(templateInputsErrorNodeSummary)
-                        }
+                        disabled={isUpdated || entityValidityDetails?.valid === false}
                         className={css.runPipelineBtn}
                         text={getString('runPipelineText')}
                         tooltip={
@@ -979,7 +955,7 @@ export function PipelineCanvas({
                           openRunPipelineModal()
                         }}
                         featuresProps={getFeaturePropsForRunPipelineButton({
-                          modules: template?.data?.modules,
+                          modules,
                           getString
                         })}
                         permission={{
@@ -1001,19 +977,7 @@ export function PipelineCanvas({
               )}
             </div>
           )}
-          {templateInputsErrorNodeSummary && (
-            <OutOfSyncErrorStrip
-              errorNodeSummary={templateInputsErrorNodeSummary}
-              entity={TemplateErrorEntity.PIPELINE}
-              originalYaml={yamlStringify({ pipeline: originalPipeline })}
-              isReadOnly={isReadonly}
-              onRefreshEntity={() => {
-                fetchPipeline({ forceFetch: true, forceUpdate: true })
-              }}
-              updateRootEntity={updateEntity}
-            />
-          )}
-
+          <PipelineOutOfSyncErrorStrip updateRootEntity={updateEntity} />
           {remoteFetchError ? (
             handleFetchFailure(
               'pipeline',

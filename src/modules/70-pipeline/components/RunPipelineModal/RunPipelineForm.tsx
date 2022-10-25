@@ -725,6 +725,7 @@ function RunPipelineFormBasic({
         branch={branch}
         connectorRef={connectorRef}
         storeType={storeType}
+        onClose={onClose}
       />
     )
   } else if (inputSetsError?.message) {
@@ -893,7 +894,7 @@ function RunPipelineFormBasic({
                             blockedStagesSelected ||
                             (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
                             loadingShouldDisableDeployment ||
-                            shouldDisableDeploymentData?.data
+                            shouldDisableDeploymentData?.data?.shouldDisable
                           }
                           tooltip={
                             shouldDisableDeploymentData?.data ? (

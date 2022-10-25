@@ -61,15 +61,17 @@ function FormContent({
   previousStep,
   isReadonly = false,
   formik,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName
 }: any): React.ReactElement {
   const { getString } = useStrings()
+  const isTemplateContext = context === ModalViewFor.Template
 
   const scriptType: ScriptType =
     formik.values?.spec?.scripts?.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
   return (
     <FormikForm>
-      <div className={css.artifactForm}>
+      <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.customArtifactContainer}>
@@ -232,15 +234,22 @@ function FormContent({
           )}
         </div>
       </div>
-      <Layout.Horizontal spacing="medium">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => previousStep?.(prevStepData)}
-        />
-        <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('next')} rightIcon="chevron-right" />
-      </Layout.Horizontal>
+      {!isTemplateContext && (
+        <Layout.Horizontal spacing="medium">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            onClick={() => previousStep?.(prevStepData)}
+          />
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            type="submit"
+            text={getString('next')}
+            rightIcon="chevron-right"
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }
@@ -251,6 +260,7 @@ export function CustomArtifact(
   const { context, initialValues, artifactIdentifiers, selectedArtifact, nextStep, prevStepData } = props
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const schemaObject = {
     spec: Yup.object().shape({
@@ -280,9 +290,11 @@ export function CustomArtifact(
   }
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"

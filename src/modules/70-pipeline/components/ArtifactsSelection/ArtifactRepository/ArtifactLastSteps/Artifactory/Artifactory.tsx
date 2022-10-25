@@ -99,11 +99,13 @@ function Artifactory({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType,
-  isMultiArtifactSource
+  selectedDeploymentType = '',
+  isMultiArtifactSource,
+  formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
@@ -357,6 +359,19 @@ function Artifactory({
     handleSubmit(artifactObj)
   }
 
+  const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        repository: defaultTo((formData?.repository as SelectOption)?.value, formData?.repository) as string,
+        artifactPath: defaultTo((formData?.artifactPath as SelectOption)?.value, formData?.artifactPath) as string,
+        tag: defaultTo(formData?.tag?.value, formData?.tag),
+        connectorId: getConnectorIdValue(prevStepData)
+      })
+    }
+  }
+
   const getValidationSchema = useCallback(() => {
     if (isGenericArtifactory) {
       if (isIdentifierAllowed) {
@@ -424,13 +439,16 @@ function Artifactory({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="artifactoryArtifact"
         validationSchema={getValidationSchema()}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -449,7 +467,7 @@ function Artifactory({
           }
           return (
             <FormikForm>
-              <div className={css.connectorForm}>
+              <div className={cx(css.connectorForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 {showRepositoryFormatForAllowedTypes && (
@@ -711,20 +729,22 @@ function Artifactory({
                   />
                 </div>
               </div>
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  variation={ButtonVariation.SECONDARY}
-                  text={getString('back')}
-                  icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
-                />
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  text={getString('submit')}
-                  rightIcon="chevron-right"
-                />
-              </Layout.Horizontal>
+              {!isTemplateContext && (
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    text={getString('submit')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
+              )}
             </FormikForm>
           )
         }}

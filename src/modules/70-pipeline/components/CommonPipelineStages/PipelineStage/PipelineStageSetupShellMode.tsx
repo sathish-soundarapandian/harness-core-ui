@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import cx from 'classnames'
 import { Button, ButtonVariation, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
 import { Expander } from '@blueprintjs/core'
@@ -17,18 +17,20 @@ import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemp
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { PipelineStageOverview } from './PipelineStageOverview'
 import { PipelineStageAdvancedSpecifications } from './PipelineStageAdvancedSpecifications'
+import { PipelineStageInputSection } from './PipelineStageInputSection'
 import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module.scss'
 
 export function PipelineStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
   const tabHeadings = [getString('overview'), getString('inputs'), getString('advancedTitle')]
   const layoutRef = useRef<HTMLDivElement>(null)
-  const [selectedTabId, setSelectedTabId] = React.useState<string>(tabHeadings[0])
+  const [selectedTabId, setSelectedTabId] = useState<string>(tabHeadings[1])
   const pipelineContext = usePipelineContext()
   const {
     state: {
       pipeline,
-      selectionState: { selectedStageId = '' }
+      selectionState: { selectedStageId = '' },
+      storeMetadata
     },
     contextType,
     getStageFromPipeline,
@@ -41,18 +43,19 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
     <Layout.Horizontal>
       {selectedTabId !== tabHeadings[0] && (
         <Button
-          text={getString('back')}
+          text={getString('previous')}
           variation={ButtonVariation.SECONDARY}
           icon="chevron-left"
           onClick={() => {
             updatePipeline(pipeline)
             setSelectedTabId(tabHeadings[Math.max(0, tabHeadings.indexOf(selectedTabId) - 1)])
           }}
+          margin={{ right: 'medium' }}
         />
       )}
       {selectedTabId !== tabHeadings[2] && (
         <Button
-          text={selectedTabId === tabHeadings[1] ? getString('save') : getString('next')}
+          text={getString('next')}
           variation={ButtonVariation.PRIMARY}
           rightIcon="chevron-right"
           onClick={() => {
@@ -107,7 +110,7 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
               {tabHeadings[1]}
             </span>
           }
-          panel={<div />}
+          panel={<PipelineStageInputSection storeMetadata={storeMetadata}>{actionBtns}</PipelineStageInputSection>}
           data-testid={tabHeadings[1]}
           className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
         />

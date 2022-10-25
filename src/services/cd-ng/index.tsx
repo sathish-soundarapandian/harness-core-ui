@@ -2410,7 +2410,7 @@ export interface CrossAccountAccess {
   externalId?: string
 }
 
-export interface CurrentOrUpcomingActiveWindow {
+export interface CurrentOrUpcomingWindow {
   endTime?: number
   startTime?: number
 }
@@ -5207,10 +5207,21 @@ export interface FolderNodeDTO {
   type: 'FILE' | 'FOLDER'
 }
 
+export interface FreezeBannerDetails {
+  accountId?: string
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  window?: CurrentOrUpcomingWindow
+  windows?: FreezeWindow[]
+}
+
 export interface FreezeDetailedResponse {
   accountId?: string
   createdAt?: number
-  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow
+  currentOrUpcomingWindow?: CurrentOrUpcomingWindow
   description?: string
   freezeScope?: 'account' | 'org' | 'project' | 'unknown'
   identifier?: string
@@ -5271,7 +5282,7 @@ export interface FreezeResponseWrapperDTO {
 export interface FreezeSummaryResponse {
   accountId?: string
   createdAt?: number
-  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow
+  currentOrUpcomingWindow?: CurrentOrUpcomingWindow
   description?: string
   freezeScope?: 'account' | 'org' | 'project' | 'unknown'
   identifier?: string
@@ -6707,6 +6718,11 @@ export interface GitopsProviderResponse {
   tags?: {
     [key: string]: string
   }
+}
+
+export interface GlobalFreezeWithBannerDetailsResponseDTO {
+  activeOrUpcomingParentGlobalFreezes?: FreezeBannerDetails[]
+  globalFreezeResponse?: FreezeDetailedResponse
 }
 
 export type GoogleArtifactRegistryConfig = ArtifactConfig & {
@@ -9117,6 +9133,7 @@ export type PipelineFilterProperties = FilterProperties & {
   name?: string
   pipelineIdentifiers?: string[]
   pipelineTags?: NGTag[]
+  repoName?: string
 }
 
 export interface PipelineInfrastructure {
@@ -9267,7 +9284,7 @@ export interface Recurrence {
 }
 
 export interface RecurrenceSpec {
-  until?: string
+  until: string
 }
 
 export interface ReferenceDTO {
@@ -10142,6 +10159,13 @@ export interface ResponseGitopsProviderResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseGlobalFreezeWithBannerDetailsResponseDTO {
+  correlationId?: string
+  data?: GlobalFreezeWithBannerDetailsResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseHealthDeploymentDashboard {
   correlationId?: string
   data?: HealthDeploymentDashboard
@@ -10494,12 +10518,12 @@ export interface ResponseListExecutionStatus {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedDueToFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
     | 'WAITING'
-    | 'ABORTED_DUE_TO_FREEZE'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11728,6 +11752,13 @@ export interface ResponseSetupStatus {
     | 'K8S_CONNECTOR_PROVISION_FAILURE'
     | 'DOCKER_CONNECTOR_PROVISION_FAILURE'
     | 'PROVISIONING_DISABLED'
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseShouldDisableDeploymentFreezeResponseDTO {
+  correlationId?: string
+  data?: ShouldDisableDeploymentFreezeResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13098,6 +13129,11 @@ export interface ShellScriptSourceWrapper {
   type: string
 }
 
+export interface ShouldDisableDeploymentFreezeResponseDTO {
+  freezeReferences?: string[]
+  shouldDisable?: boolean
+}
+
 export interface SidecarArtifact {
   identifier: string
   name?: string
@@ -14390,11 +14426,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -32454,7 +32490,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32468,7 +32504,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -32483,7 +32519,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32497,7 +32533,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -32509,7 +32545,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -32518,7 +32554,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -32579,7 +32615,7 @@ export interface ShouldDisableDeploymentQueryParams {
 }
 
 export type ShouldDisableDeploymentProps = Omit<
-  GetProps<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
+  GetProps<ResponseShouldDisableDeploymentFreezeResponseDTO, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
   'path'
 >
 
@@ -32587,7 +32623,7 @@ export type ShouldDisableDeploymentProps = Omit<
  * If to disable run button for deployment
  */
 export const ShouldDisableDeployment = (props: ShouldDisableDeploymentProps) => (
-  <Get<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>
+  <Get<ResponseShouldDisableDeploymentFreezeResponseDTO, Failure | Error, ShouldDisableDeploymentQueryParams, void>
     path={`/freeze/evaluate/shouldDisableDeployment`}
     base={getConfig('ng/api')}
     {...props}
@@ -32595,7 +32631,12 @@ export const ShouldDisableDeployment = (props: ShouldDisableDeploymentProps) => 
 )
 
 export type UseShouldDisableDeploymentProps = Omit<
-  UseGetProps<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
+  UseGetProps<
+    ResponseShouldDisableDeploymentFreezeResponseDTO,
+    Failure | Error,
+    ShouldDisableDeploymentQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -32603,7 +32644,7 @@ export type UseShouldDisableDeploymentProps = Omit<
  * If to disable run button for deployment
  */
 export const useShouldDisableDeployment = (props: UseShouldDisableDeploymentProps) =>
-  useGet<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>(
+  useGet<ResponseShouldDisableDeploymentFreezeResponseDTO, Failure | Error, ShouldDisableDeploymentQueryParams, void>(
     `/freeze/evaluate/shouldDisableDeployment`,
     { base: getConfig('ng/api'), ...props }
   )
@@ -32612,15 +32653,20 @@ export const useShouldDisableDeployment = (props: UseShouldDisableDeploymentProp
  * If to disable run button for deployment
  */
 export const shouldDisableDeploymentPromise = (
-  props: GetUsingFetchProps<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
+  props: GetUsingFetchProps<
+    ResponseShouldDisableDeploymentFreezeResponseDTO,
+    Failure | Error,
+    ShouldDisableDeploymentQueryParams,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>(
-    getConfig('ng/api'),
-    `/freeze/evaluate/shouldDisableDeployment`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponseShouldDisableDeploymentFreezeResponseDTO,
+    Failure | Error,
+    ShouldDisableDeploymentQueryParams,
+    void
+  >(getConfig('ng/api'), `/freeze/evaluate/shouldDisableDeployment`, props, signal)
 
 export interface GetGlobalFreezeQueryParams {
   accountIdentifier: string
@@ -32671,6 +32717,78 @@ export const getGlobalFreezePromise = (
     props,
     signal
   )
+
+export interface GetGlobalFreezeWithBannerDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetGlobalFreezeWithBannerDetailsProps = Omit<
+  GetProps<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get Global Freeze Yaml with Banner Details
+ */
+export const GetGlobalFreezeWithBannerDetails = (props: GetGlobalFreezeWithBannerDetailsProps) => (
+  <Get<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >
+    path={`/freeze/getGlobalFreezeWithBannerDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetGlobalFreezeWithBannerDetailsProps = Omit<
+  UseGetProps<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get Global Freeze Yaml with Banner Details
+ */
+export const useGetGlobalFreezeWithBannerDetails = (props: UseGetGlobalFreezeWithBannerDetailsProps) =>
+  useGet<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >(`/freeze/getGlobalFreezeWithBannerDetails`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get Global Freeze Yaml with Banner Details
+ */
+export const getGlobalFreezeWithBannerDetailsPromise = (
+  props: GetUsingFetchProps<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >(getConfig('ng/api'), `/freeze/getGlobalFreezeWithBannerDetails`, props, signal)
 
 export interface GetFreezeListQueryParams {
   page?: number
@@ -32889,7 +33007,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32903,7 +33021,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -32918,7 +33036,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -32932,7 +33050,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -32944,7 +33062,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -32953,7 +33071,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -33020,7 +33138,7 @@ export interface GetFreezePathParams {
 }
 
 export type GetFreezeProps = Omit<
-  GetProps<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
+  GetProps<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
   'path'
 > &
   GetFreezePathParams
@@ -33029,7 +33147,7 @@ export type GetFreezeProps = Omit<
  * Get a Freeze
  */
 export const GetFreeze = ({ freezeIdentifier, ...props }: GetFreezeProps) => (
-  <Get<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>
+  <Get<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>
     path={`/freeze/${freezeIdentifier}`}
     base={getConfig('ng/api')}
     {...props}
@@ -33037,7 +33155,7 @@ export const GetFreeze = ({ freezeIdentifier, ...props }: GetFreezeProps) => (
 )
 
 export type UseGetFreezeProps = Omit<
-  UseGetProps<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
+  UseGetProps<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
   'path'
 > &
   GetFreezePathParams
@@ -33046,7 +33164,7 @@ export type UseGetFreezeProps = Omit<
  * Get a Freeze
  */
 export const useGetFreeze = ({ freezeIdentifier, ...props }: UseGetFreezeProps) =>
-  useGet<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
+  useGet<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
     (paramsInPath: GetFreezePathParams) => `/freeze/${paramsInPath.freezeIdentifier}`,
     { base: getConfig('ng/api'), pathParams: { freezeIdentifier }, ...props }
   )
@@ -33058,12 +33176,12 @@ export const getFreezePromise = (
   {
     freezeIdentifier,
     ...props
-  }: GetUsingFetchProps<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams> & {
+  }: GetUsingFetchProps<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams> & {
     freezeIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
+  getUsingFetch<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
     getConfig('ng/api'),
     `/freeze/${freezeIdentifier}`,
     props,

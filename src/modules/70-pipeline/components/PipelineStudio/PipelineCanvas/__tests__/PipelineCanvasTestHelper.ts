@@ -63,7 +63,7 @@ const stagesMap = {
 
 export const getPipelineContextMockData = (
   isLoading = false,
-  gitDetails?: any,
+  gitDetails = {},
   isReadonly = false,
   isUpdated = false
 ) => ({

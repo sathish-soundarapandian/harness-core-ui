@@ -52,6 +52,7 @@ exports[`Failure Strategy: Retry strategy works with simple fallback 1`] = `
           class="bp3-popover-target"
         >
           <a
+            aria-label="pipeline.failureStrategies.tabHasErrors"
             class="bp3-button bp3-disabled bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
             data-testid="add-failure-strategy"
             disabled=""

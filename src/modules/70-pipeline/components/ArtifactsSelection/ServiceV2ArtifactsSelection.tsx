@@ -32,7 +32,7 @@ import {
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-
+import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useStrings } from 'framework/strings'
@@ -46,9 +46,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useCache } from '@common/hooks/useCache'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
-import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
-import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
-import { GCRImagePath } from './ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
   ArtifactsSelectionProps,
@@ -74,19 +71,8 @@ import {
   isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import { Nexus3Artifact } from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
-import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
-import {
-  CustomArtifact,
-  CustomArtifactOptionalConfiguration
-} from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
+import { CustomArtifactOptionalConfiguration } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
-import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
-import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
-import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
-import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
-import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
-import { Nexus2Artifact } from './ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ServiceV2ArtifactsSelection({
@@ -502,35 +488,7 @@ export default function ServiceV2ArtifactsSelection({
   }
   /******************************************************************Connector Steps************************************************************** */
 
-  const getLastSteps = useCallback((): JSX.Element => {
-    switch (selectedArtifact) {
-      case ENABLED_ARTIFACT_TYPES.Gcr:
-        return <GCRImagePath {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.Ecr:
-        return <ECRArtifact {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return <Nexus3Artifact {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
-        return <Nexus2Artifact {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
-        return <Artifactory {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.AmazonS3:
-        return <AmazonS3 {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
-        return <CustomArtifact {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.Acr:
-        return <ACRArtifact {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.Jenkins:
-        return <JenkinsArtifact {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
-        return <GoogleArtifactRegistry {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
-        return <GithubPackageRegistry {...artifactLastStepProps} />
-      case ENABLED_ARTIFACT_TYPES.DockerRegistry:
-      default:
-        return <DockerRegistryArtifact {...artifactLastStepProps} />
-    }
-  }, [artifactLastStepProps, selectedArtifact])
+  const artifactSelectionLastSteps = useArtifactSelectionLastSteps({ selectedArtifact, artifactLastStepProps })
 
   const changeArtifactType = useCallback((selected: ArtifactType | null): void => {
     setSelectedArtifact(selected)
@@ -564,7 +522,7 @@ export default function ServiceV2ArtifactsSelection({
         types={allowedArtifactTypes[deploymentType]}
         expressions={expressions}
         allowableTypes={allowableTypes}
-        lastSteps={getLastSteps()}
+        lastSteps={artifactSelectionLastSteps}
         labels={getLabels}
         isReadonly={readonly}
         selectedArtifact={selectedArtifact}

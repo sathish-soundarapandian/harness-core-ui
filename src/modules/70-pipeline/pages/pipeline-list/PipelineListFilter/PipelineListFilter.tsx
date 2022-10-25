@@ -85,7 +85,9 @@ export function PipelineListFilter({
   } = useGetFilterList({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' }
   })
-  const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({})
+  const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({
+    queryParams: { accountId }
+  })
   const {
     data: servicesResponse,
     loading: isFetchingServices,

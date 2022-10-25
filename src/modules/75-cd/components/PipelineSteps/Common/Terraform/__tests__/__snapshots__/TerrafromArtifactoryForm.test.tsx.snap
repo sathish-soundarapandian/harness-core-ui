@@ -30,6 +30,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -367,6 +368,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -704,6 +706,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -1079,6 +1082,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -1636,6 +1640,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -1973,6 +1978,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -2310,6 +2316,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -2685,6 +2692,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -3160,6 +3168,7 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"

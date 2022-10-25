@@ -47,6 +47,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: true,
+    modules: [],
     templateTypes: {},
     templateServiceData: {},
     resolvedCustomDeploymentDetailsByRef: {}

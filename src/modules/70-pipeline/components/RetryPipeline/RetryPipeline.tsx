@@ -672,6 +672,7 @@ function RetryPipeline({
         branch={branch}
         connectorRef={connectorRef}
         storeType={storeType}
+        onClose={onClose}
       />
     )
   }

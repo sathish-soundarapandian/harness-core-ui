@@ -145,11 +145,11 @@ export interface PipelineReducerState {
   isInitialized: boolean
   isBEPipelineUpdated: boolean
   isUpdated: boolean
+  modules: string[]
   snippets?: YamlSnippetMetaData[]
   selectionState: SelectionState
   templateError?: GetDataError<Failure | Error> | null
   remoteFetchError?: GetDataError<Failure | Error> | null
-  templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
@@ -162,6 +162,7 @@ export interface ActionResponse {
   error?: string
   schemaErrors?: boolean
   isUpdated?: boolean
+  modules?: string[]
   storeMetadata?: StoreMetadata
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
@@ -278,6 +279,7 @@ export const initialState: PipelineReducerState = {
   isBEPipelineUpdated: false,
   isDBInitialized: false,
   isUpdated: false,
+  modules: [],
   isInitialized: false,
   selectionState: {
     selectedStageId: undefined,

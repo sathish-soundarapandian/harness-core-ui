@@ -18,7 +18,8 @@ import type { ArtifactType } from './ArtifactInterface'
 
 export enum ModalViewFor {
   PRIMARY = 1,
-  SIDECAR = 2
+  SIDECAR = 2,
+  Template = 3
 }
 
 export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {

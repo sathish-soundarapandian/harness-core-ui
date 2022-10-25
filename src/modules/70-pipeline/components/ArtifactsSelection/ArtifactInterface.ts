@@ -20,7 +20,8 @@ import type {
   Error,
   ArtifactoryBuildDetailsDTO,
   ServiceDefinition,
-  ArtifactSource
+  ArtifactSource,
+  ConnectorConfigDTO
 } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
@@ -137,8 +138,10 @@ export interface ImagePathProps<T> {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
-  selectedDeploymentType: string
+  selectedDeploymentType?: string
   isMultiArtifactSource?: boolean
+  formClassName?: string
+  prevStepData?: ConnectorConfigDTO
 }
 
 export interface AmazonS3ArtifactProps {
@@ -153,6 +156,7 @@ export interface AmazonS3ArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface GithubPackageRegistryInitialValuesType {
@@ -194,6 +198,7 @@ export interface ACRArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface JenkinsArtifactProps {
@@ -237,6 +242,7 @@ export interface GoogleArtifactRegistryProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface Nexus2ArtifactProps {
