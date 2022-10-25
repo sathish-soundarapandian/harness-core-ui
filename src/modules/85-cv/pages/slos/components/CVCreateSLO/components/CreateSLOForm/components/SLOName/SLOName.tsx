@@ -97,7 +97,7 @@ const SLOName = <T,>({
   const activeUserJourney = useMemo(
     () =>
       Array.isArray(userJourneyRef) && isMultiSelect
-        ? userJourneyRef.map(userJourney => userJourney.value)
+        ? userJourneyRef.map(userJourney => userJourney.value || userJourney)
         : userJourneyOptions?.find(userJourney => userJourney.value === userJourneyRef),
     [userJourneyOptions, userJourneyRef, isMultiSelect]
   )

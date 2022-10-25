@@ -9,9 +9,11 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import * as cvServices from 'services/cv'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { userJourneyResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import CVCreateSLOV2 from '../CVCreateSLOV2'
+import { SLODetailsData } from './CVCreateSLOV2.mock'
 
 jest.mock('services/cv', () => ({
   useSaveSLOV2Data: jest.fn().mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
@@ -25,6 +27,15 @@ jest.mock('services/cv', () => ({
     .fn()
     .mockImplementation(() => ({ data: userJourneyResponse, loading: false, error: null, refetch: jest.fn() })),
   useSaveUserJourney: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useGetNotificationRulesForSLO: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useSaveNotificationRuleData: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useUpdateNotificationRuleData: jest
     .fn()
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
@@ -76,6 +87,68 @@ describe('CVCreateSloV2', () => {
     expect(modal).toBeTruthy()
     fireEvent.click(modal?.querySelector('button')!)
     fireEvent.click(modal?.querySelector('button')?.lastChild!)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('Validate values populate while editing SLO', async () => {
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+
+    const { container, getByText } = render(
+      <TestWrapper pathParams={{ orgIdentifier: 'default', projectIdentifier: 'project1', identifier: 'new_slov2' }}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+    const sloName = container.querySelector('input[name ="name"]')
+    await waitFor(() => expect(sloName).toHaveValue(SLODetailsData.resource.serviceLevelObjectiveV2.name))
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    await waitFor(() => expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.name)).toBeInTheDocument())
+    await waitFor(() =>
+      expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.userJourneyRefs.join(' '))).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(container.querySelector('input[name="periodType"]')).toHaveValue(
+        'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
+      )
+    )
+    await waitFor(() =>
+      expect(container.querySelector('input[name="periodLength"]')).toHaveValue(
+        SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.spec.periodLength.split('')[0]
+      )
+    )
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    await waitFor(() =>
+      expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.type)).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.spec.periodLength)).toBeInTheDocument()
+    )
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    SLODetailsData.resource.serviceLevelObjectiveV2.spec.serviceLevelObjectivesDetails.forEach(async sloObjective => {
+      await waitFor(() => expect(getByText(sloObjective.serviceLevelObjectiveRef)).toBeInTheDocument())
+      await waitFor(() => expect(getByText(sloObjective.weightagePercentage.toString())).toBeInTheDocument())
+    })
+    //
+    await waitFor(() =>
+      expect(container.querySelector('input[name="SLOTargetPercentage"]')).toHaveValue(
+        SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage
+      )
+    )
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    await waitFor(() =>
+      expect(
+        getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage.toString())
+      ).toBeInTheDocument()
+    )
     expect(container).toMatchSnapshot()
   })
 })

@@ -31,7 +31,7 @@ export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data:
           <LabelAndValue
             label={'User Journey'}
             value={(data.userJourneyRef as unknown as MultiSelectOption[])
-              ?.map((userJourney: SelectOption) => userJourney.label)
+              ?.map((userJourney: SelectOption) => userJourney.label || userJourney)
               .join(',')}
           />
         </Layout.Vertical>
