@@ -11,7 +11,7 @@ import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceD
 import { HealthSourceTypes } from '../../types'
 import type { NewRelicData } from './NewRelicHealthSource.types'
 import { getMetricPacksForPayload } from '../../common/MetricThresholds/MetricThresholds.utils'
-import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 
 export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: boolean): UpdatedHealthSource | null => {
   const specPayload = {
@@ -40,7 +40,7 @@ export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: b
         higherBaselineDeviation
       } = entry[1]
 
-      const assignComponentPayload = createPayloadForAssignComponent({
+      const assignComponentPayload = createPayloadForAssignComponentV2({
         sli,
         riskCategory,
         healthScore,
@@ -121,10 +121,7 @@ export const createNewRelicData = (sourceData: any): NewRelicData => {
         sli: metricDefinition?.sli?.enabled,
         continuousVerification: metricDefinition?.analysis?.deploymentVerification?.enabled,
         healthScore: metricDefinition?.analysis?.liveMonitoring?.enabled,
-        riskCategory:
-          metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
-            ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
-            : '',
+        riskCategory: metricDefinition?.analysis?.riskProfile?.riskCategory,
         lowerBaselineDeviation:
           metricDefinition?.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
         higherBaselineDeviation:

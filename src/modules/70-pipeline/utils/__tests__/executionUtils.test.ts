@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { InterruptEffectDTO } from 'services/pipeline-ng'
 import * as utils from '../executionUtils'
 
 import stageGraph from './stage-graph.json'
 import success from './successful-execution.json'
+import interruptHistories from './mockJson/interruptHistories.json'
 
 jest.mock('@pipeline/components/PipelineSteps/PipelineStepFactory', () => ({}))
 
@@ -315,5 +317,13 @@ describe('ExecutionUtils tests', () => {
 
       expect(stage).toBe('stage2.1')
     })
+  })
+  test('filter interruptHistories data based on type', () => {
+    const filteredInterruptHistories = utils.getInterruptHistoriesFromType(
+      interruptHistories as InterruptEffectDTO[],
+      utils.Interrupt.RETRY
+    )
+
+    expect(filteredInterruptHistories.length).toBe(1)
   })
 })

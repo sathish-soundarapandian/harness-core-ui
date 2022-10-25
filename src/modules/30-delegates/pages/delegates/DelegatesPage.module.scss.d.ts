@@ -26,15 +26,13 @@ declare const styles: {
   readonly expandIcon: string
   readonly groupHostName: string
   readonly header: string
-  readonly instanceStatus: string
+  readonly instanceTable: string
   readonly instancesContainer: string
   readonly itemActionContainer: string
   readonly listBody: string
   readonly listPage: string
-  readonly marginLeft: string
+  readonly noInstances: string
   readonly overviewCard: string
-  readonly paddedContainer: string
-  readonly paddingLeft: string
   readonly podDetailsContainer: string
   readonly podDetailsSeparator: string
   readonly profileCard: string
@@ -46,6 +44,7 @@ declare const styles: {
   readonly statusText: string
   readonly successIcon: string
   readonly tickerContainer: string
+  readonly toggleAccordion: string
   readonly troubleshootLink: string
   readonly view: string
 }

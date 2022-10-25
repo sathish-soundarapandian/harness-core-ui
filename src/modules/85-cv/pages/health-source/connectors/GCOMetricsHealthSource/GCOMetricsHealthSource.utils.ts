@@ -26,7 +26,7 @@ import { HealthSourceTypes } from '../../types'
 import { chartsConfig } from './GCOWidgetChartConfig'
 import { OVERALL } from './GCOMetricsHealthSource.constants'
 import { MANUAL_INPUT_QUERY } from './components/ManualInputQueryModal/ManualInputQueryModal'
-import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 import {
   getFilteredMetricThresholdValues,
   validateCommonFieldsForMetricThreshold
@@ -139,7 +139,7 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(
       dashboardName: metricDefinition.dashboardName,
       dashboardPath: metricDefinition.dashboardPath,
       isManualQuery: manualQuery,
-      riskCategory: `${metricDefinition.riskProfile?.category}/${metricDefinition.riskProfile?.metricType}`,
+      riskCategory: metricDefinition.riskProfile?.riskCategory,
       higherBaselineDeviation: metricDefinition.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER'),
       lowerBaselineDeviation: metricDefinition.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER'),
       query: parsedQuery,
@@ -191,7 +191,7 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(
     const { sli, riskCategory, healthScore, continuousVerification, lowerBaselineDeviation, higherBaselineDeviation } =
       metricInfo
 
-    const assignComponentPayload = createPayloadForAssignComponent({
+    const assignComponentPayload = createPayloadForAssignComponentV2({
       sli,
       riskCategory,
       healthScore,

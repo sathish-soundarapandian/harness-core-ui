@@ -25,6 +25,7 @@ import { useModalHook } from '@harness/use-modal'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
@@ -32,6 +33,7 @@ import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/Co
 import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap } from '../Manifesthelper'
 import type { ManifestStores, PrimaryManifestType } from '../ManifestInterface'
 import DragnDropPaths from '../DragnDropPaths'
+import { removeEmptyFieldsFromStringArray } from '../ManifestWizardSteps/ManifestUtils'
 import css from '../ManifestSelection.module.scss'
 
 interface AttachPathYamlFlowType {
@@ -63,7 +65,10 @@ function AttachPathYamlFlow({
     if (manifestStore === ManifestStoreMap.Harness) {
       return valuesPaths
     }
-    return valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+    return defaultTo(removeEmptyFieldsFromStringArray(valuesPaths), []).map((path: string) => ({
+      path,
+      uuid: uuid(path, nameSpace())
+    }))
   }
   const getInitialValues = (): { valuesPaths: string | string[] | Array<{ path: string; uuid: string }> } => ({
     valuesPaths: typeof valuesPaths === 'string' ? valuesPaths : getValuesPathInitialValue()

@@ -39,6 +39,7 @@ describe('process single environment initial values', () => {
       false
     )
     expect(output).toEqual({
+      category: 'single',
       environment: 'Env_1',
       environmentInputs: {
         Env_1: {
@@ -75,6 +76,7 @@ describe('process single environment initial values', () => {
       false
     )
     expect(output).toEqual({
+      category: 'single',
       environment: 'Env_1',
       environmentInputs: {
         Env_1: undefined
@@ -93,6 +95,7 @@ describe('process single environment initial values', () => {
       false
     )
     expect(output).toEqual({
+      category: 'single',
       environment: '<+input>'
     } as DeployEnvironmentEntityFormState)
   })
@@ -110,6 +113,7 @@ describe('process single environment initial values', () => {
       true
     )
     expect(output).toEqual({
+      category: 'single',
       environment: 'Env_1',
       environmentInputs: {},
       cluster: 'Cluster_1'
@@ -125,6 +129,7 @@ describe('process single environment initial values', () => {
       true
     )
     expect(output).toEqual({
+      category: 'single',
       environment: 'Env_1',
       environmentInputs: {
         Env_1: undefined
@@ -142,13 +147,16 @@ describe('process single environment initial values', () => {
       true
     )
     expect(output).toEqual({
+      category: 'single',
       environment: '<+input>'
     } as DeployEnvironmentEntityFormState)
   })
 
   test('no env', () => {
     const output = processSingleEnvironmentInitialValues('' as any, false)
-    expect(output).toEqual({} as DeployEnvironmentEntityFormState)
+    expect(output).toEqual({
+      category: 'single'
+    } as DeployEnvironmentEntityFormState)
   })
 })
 
@@ -156,6 +164,7 @@ describe('process single environment form values', () => {
   test('single env only selected', () => {
     const output = processSingleEnvironmentFormValues(
       {
+        category: 'single',
         environment: 'Env_1',
         environmentInputs: {
           Env_1: {
@@ -192,6 +201,7 @@ describe('process single environment form values', () => {
   test('single env single infra selected', () => {
     const output = processSingleEnvironmentFormValues(
       {
+        category: 'single',
         environment: 'Env_1',
         environmentInputs: {
           Env_1: {
@@ -252,6 +262,7 @@ describe('process single environment form values', () => {
   test('single env selected, infra runtime', () => {
     const output = processSingleEnvironmentFormValues(
       {
+        category: 'single',
         environment: 'Env_1',
         environmentInputs: {
           Env_1: undefined
@@ -285,6 +296,7 @@ describe('process single environment form values', () => {
   test('single env single cluster selected', () => {
     const output = processSingleEnvironmentFormValues(
       {
+        category: 'single',
         environment: 'Env_1',
         environmentInputs: {
           Env_1: {
@@ -327,6 +339,7 @@ describe('process single environment form values', () => {
   test('single env selected, cluster runtime', () => {
     const output = processSingleEnvironmentFormValues(
       {
+        category: 'single',
         environment: 'Env_1',
         environmentInputs: {
           Env_1: undefined
@@ -348,6 +361,7 @@ describe('process single environment form values', () => {
   test('single env runtime, GitOps disabled', () => {
     const output = processSingleEnvironmentFormValues(
       {
+        category: 'single',
         environment: '<+input>',
         // Validation when all the below remains as is, will the form get updated correctly
         environmentInputs: {
@@ -390,6 +404,7 @@ describe('process single environment form values', () => {
   test('single env runtime, GitOps enabled', () => {
     const output = processSingleEnvironmentFormValues(
       {
+        category: 'single',
         environment: '<+input>',
         // Validation when all the below remains as is, will the form get updated correctly
         environmentInputs: {

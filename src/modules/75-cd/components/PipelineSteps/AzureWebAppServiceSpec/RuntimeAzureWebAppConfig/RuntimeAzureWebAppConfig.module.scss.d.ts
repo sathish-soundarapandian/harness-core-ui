@@ -7,11 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly accordionSummary: string
+  readonly configSection: string
+  readonly connectorInputSpacing: string
+  readonly fileStoreVerticalSpacing: string
+  readonly inputSpacing: string
   readonly inputWidth: string
   readonly layoutVerticalSpacing: string
   readonly nopadLeft: string
   readonly subheading: string
-  readonly verticalSpacingInput: string
 }
 export default styles

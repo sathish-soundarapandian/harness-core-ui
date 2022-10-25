@@ -30,12 +30,24 @@ const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
 // TODO: change condition to !== 'false' upon GA
 const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
+const enableCIUI = process.env.ENABLE_CI_UI === 'true'
+const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableSCM = process.env.ENABLE_SCM === 'true'
-const enableFFUI = process.env.ENABLE_FF_UI === 'true'
+const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 
 console.log('Common build flags')
-console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO, enableSCM, enableFFUI })
+console.table({
+  enableGovernance,
+  enableGitOpsUI,
+  enableChaosUI,
+  enableCCMUI,
+  enableCIUI,
+  enableTIUI,
+  enableSTO,
+  enableSCM,
+  enableFFUI
+})
 
 const config = {
   context: CONTEXT,
@@ -188,6 +200,8 @@ const config = {
         enableSTO,
         enableChaosUI,
         enableCCMUI,
+        enableCIUI,
+        enableTIUI,
         enableSCM,
         enableFFUI
       })
@@ -215,6 +229,16 @@ if (!enableGitOpsUI) {
 if (!enableCCMUI) {
   // render a mock app when CCM MF is disabled
   config.resolve.alias['ccmui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableCIUI) {
+  // render a mock app when CI MF is disabled
+  config.resolve.alias['ciui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableTIUI) {
+  // render a mock app when TI MF is disabled
+  config.resolve.alias['tiui/MicroFrontendApp'] = ChildAppError
 }
 
 if (!enableChaosUI) {
@@ -248,6 +272,10 @@ if (!enableSCM) {
     'scm/RepoSettings'
   ]
   scmModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
+}
+
+if (!enableFFUI) {
+  config.resolve.alias['ffui/MicroFrontendApp'] = ChildAppError
 }
 
 module.exports = config

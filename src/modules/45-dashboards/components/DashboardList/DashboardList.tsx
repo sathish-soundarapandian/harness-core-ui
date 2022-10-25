@@ -16,9 +16,8 @@ import routes from '@common/RouteDefinitions'
 import type { DashboardModel } from 'services/custom-dashboards'
 import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import DashboardTags from '@dashboards/components/DashboardTags/DashboardTags'
+import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import css from '@dashboards/pages/home/HomePage.module.scss'
 
 export interface DashboardListProps {
@@ -36,6 +35,13 @@ const DashboardList: React.FC<DashboardListProps> = ({
 }): React.ReactElement => {
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
+  const { editableFolders } = useDashboardsContext()
+
+  const isCloneable = !!editableFolders.length
+
+  const isDashboardEditable = (dashboard: DashboardModel): boolean => {
+    return !!editableFolders.some(folder => folder.id === dashboard.folder.id)
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type CustomColumn<T extends Record<string, any>> = Column<T>
@@ -74,24 +80,14 @@ const DashboardList: React.FC<DashboardListProps> = ({
                 icon="edit"
                 text={getString('edit')}
                 onClick={() => editDashboard(data)}
-                permission={{
-                  permission: PermissionIdentifier.EDIT_DASHBOARD,
-                  resource: {
-                    resourceType: ResourceType.DASHBOARDS
-                  }
-                }}
+                disabled={!isDashboardEditable(data)}
               />
             )}
             <RbacMenuItem
               icon="duplicate"
               text={getString('projectCard.clone')}
               onClick={() => cloneDashboard(data)}
-              permission={{
-                permission: PermissionIdentifier.EDIT_DASHBOARD,
-                resource: {
-                  resourceType: ResourceType.DASHBOARDS
-                }
-              }}
+              disabled={!isCloneable}
             />
             {data.type === DashboardType.ACCOUNT && (
               <>
@@ -100,12 +96,7 @@ const DashboardList: React.FC<DashboardListProps> = ({
                   icon="trash"
                   text={getString('delete')}
                   onClick={() => deleteDashboard(data.id)}
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_DASHBOARD,
-                    resource: {
-                      resourceType: ResourceType.DASHBOARDS
-                    }
-                  }}
+                  disabled={!isDashboardEditable(data)}
                 />
               </>
             )}

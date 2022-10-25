@@ -59,7 +59,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
@@ -81,7 +81,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
         <>
           <Card className={css.sectionCard} id={getString('pipeline.startupCommand.name')}>
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('optionalField', {
@@ -103,7 +103,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
 
           <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('optionalField', {
@@ -128,7 +128,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
@@ -149,23 +149,22 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               />
             )}
           </Card>
-          {(isNewService || isServiceEntityPage) &&
-            NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2
-              <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
-                <div
-                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
-                >
-                  {getString('pipelineSteps.configFiles')}
-                </div>
-                <ConfigFilesSelection
-                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                  isPropagating={isPropagating}
-                  deploymentType={selectedDeploymentType}
-                  readonly={!!readonly}
-                />
-              </Card>
-            )}
+          {(isNewService || isServiceEntityPage) && ( //Config files are only available for creation or readonly mode for service V2
+            <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
+              <div
+                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.configFiles')}
+              </div>
+              <ConfigFilesSelection
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
         </>
       )}
 
@@ -174,7 +173,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={css.tabSubHeading}>{getString('common.variables')}</div>
+          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
           {isReadonlyServiceMode ? (
             <VariableListReadOnlyView />
           ) : (

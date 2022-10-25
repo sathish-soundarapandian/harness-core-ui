@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Layout,
   SelectOption,
@@ -187,20 +187,20 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
 
   /* Different ways to trigger filter search */
 
-  /* Initial page load */
-  useEffect(() => {
-    refetchConnectorList({ ...defaultQueryParams, searchTerm, pageIndex: 0 })
-    setPage(0)
-  }, [projectIdentifier, orgIdentifier])
-
+  const firstRender = useRef(true)
   /* Through page browsing */
   useEffect(() => {
-    const updatedQueryParams = {
-      ...(shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams),
-      searchTerm,
-      pageIndex: page
+    /* Initial page load */
+    if (firstRender.current) {
+      firstRender.current = false
+    } else {
+      const updatedQueryParams = {
+        ...(shouldApplyGitFilters ? queryParamsWithGitContext : defaultQueryParams),
+        searchTerm,
+        pageIndex: page
+      }
+      refetchConnectorList(updatedQueryParams, appliedFilter?.filterProperties)
     }
-    refetchConnectorList(updatedQueryParams, appliedFilter?.filterProperties)
   }, [page])
 
   /* Through git filter */
@@ -230,7 +230,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
     ])
     setShouldApplyGitFilters(shouldApply)
     setQueryParamsWithGitContext(updatedQueryParams)
-  }, [gitFilter])
+  }, [gitFilter, projectIdentifier, orgIdentifier])
 
   /* Through expandable filter text search */
   const debouncedConnectorSearch = useCallback(

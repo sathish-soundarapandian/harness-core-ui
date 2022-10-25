@@ -11,6 +11,7 @@ import type { RecommendationFiltersProps } from '@ce/components/RecommendationFi
 import type { AnomalyFiltersProps } from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { GatewayListFiltersProps } from '@ce/components/COGatewayList/GatewayListFilters'
+import type FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 
 export interface CCMUIAppCustomProps {
   customComponents: {
@@ -19,5 +20,6 @@ export interface CCMUIAppCustomProps {
     AnomaliesFilter: React.ComponentType<AnomalyFiltersProps>
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
     GatewayListFilters: React.ComponentType<GatewayListFiltersProps>
+    FeatureWarningBanner: typeof FeatureWarningBanner
   }
 }

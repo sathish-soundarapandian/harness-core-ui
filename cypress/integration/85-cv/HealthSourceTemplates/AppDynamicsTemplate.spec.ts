@@ -11,7 +11,8 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   applicationCall,
@@ -25,6 +26,7 @@ import {
   metricStructureCall,
   metricStructureResponse
 } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import { variablesResponse, variablesResponseWithAppDVariable } from '../../../support/85-cv/Templates/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
@@ -86,6 +88,7 @@ describe('Create empty monitored service', () => {
 
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -158,7 +161,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="serviceInstanceMetricPath"]').scrollIntoView().should('have.value', '<+input>')
-    cy.get('input[value="Errors/ERROR"]').click({ force: true })
+    cy.get('input[value="Performance_Throughput"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
 
     cy.contains('span', 'Submit').click({ force: true })
@@ -178,6 +181,7 @@ describe('Create empty monitored service', () => {
 
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -249,6 +253,7 @@ describe('Create empty monitored service', () => {
 
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -334,6 +339,7 @@ describe('Create empty monitored service', () => {
     cy.setServiceEnvRuntime()
 
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
 
     // Fill Define HealthSource Tab with AppDynamics
@@ -362,7 +368,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="serviceInstanceMetricPath"]').should('have.value', '<+input>')
-    cy.get('input[value="Errors/ERROR"]').click({ force: true })
+    cy.get('input[value="Performance_Throughput"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
 
     cy.contains('span', 'Submit').click({ force: true })
@@ -378,7 +384,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="completeMetricPath"]').should('have.value', '<+input>')
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="serviceInstanceMetricPath"]').should('have.value', '<+input>')
-    cy.get('input[value="Errors/ERROR"]').should('be.checked')
+    cy.get('input[value="Performance_Throughput"]').should('be.checked')
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
     cy.contains('span', 'Submit').click({ force: true })
     // Creating the template.
@@ -406,6 +412,7 @@ describe('Create empty monitored service', () => {
     ).as('listIndv')
 
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
@@ -417,6 +424,8 @@ describe('Create empty monitored service', () => {
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })
 
+    cy.wait('@riskCategoryCall')
+
     cy.get('[data-testid="appDTier"] input').should('have.value', '<+input>')
     cy.get('[data-testid="appdApplication"] input').should('have.value', '<+input>')
     cy.get('input[name="groupName"]').should('have.value', 'Group 1')
@@ -424,7 +433,7 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="completeMetricPath"]').should('have.value', '<+input>')
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="serviceInstanceMetricPath"]').should('have.value', '<+input>')
-    cy.get('input[value="Errors/ERROR"]').should('be.checked')
+    cy.get('input[value="Performance_Throughput"]').should('be.checked')
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
 
     cy.contains('span', 'Previous').click({ force: true })

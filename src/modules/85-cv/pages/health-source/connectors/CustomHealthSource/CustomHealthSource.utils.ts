@@ -32,7 +32,7 @@ import {
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
-import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 
 const validateMetricThresholds = (
   errors: Record<string, string>,
@@ -279,10 +279,7 @@ export function transformCustomHealthSourceToSetupSource(
         continuousVerification: Boolean(metricDefinition?.analysis?.deploymentVerification?.enabled),
         healthScore: Boolean(metricDefinition.analysis?.liveMonitoring?.enabled),
         sli: Boolean(metricDefinition.sli?.enabled),
-        riskCategory:
-          metricDefinition.analysis?.riskProfile?.category && metricDefinition.analysis.riskProfile.metricType
-            ? `${metricDefinition.analysis.riskProfile.category}/${metricDefinition.analysis.riskProfile.metricType}`
-            : '',
+        riskCategory: metricDefinition.analysis?.riskProfile?.riskCategory,
         serviceInstanceIdentifier: metricDefinition.metricResponseMapping?.serviceInstanceJsonPath || '',
         lowerBaselineDeviation:
           metricDefinition.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
@@ -375,7 +372,7 @@ export function transformCustomSetupSourceToHealthSource(
       continue
     }
 
-    const assignComponentPayload = createPayloadForAssignComponent({
+    const assignComponentPayload = createPayloadForAssignComponentV2({
       sli,
       riskCategory,
       healthScore,

@@ -27,7 +27,7 @@ import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
-import deployServiceCsss from './DeployServiceSpecifications.module.scss'
+import deployServiceCss from './DeployServiceSpecifications.module.scss'
 
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
@@ -142,7 +142,7 @@ export default function SelectDeploymentType({
     if (!isCommunity) {
       return (
         <Layout.Vertical margin={{ top: 'medium' }}>
-          <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }} margin={{ bottom: 'large' }}>
+          <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }}>
             <CardList
               items={ngDeploymentTypes}
               isReadonly={isReadonly}
@@ -160,7 +160,7 @@ export default function SelectDeploymentType({
                 <TemplateBar
                   templateLinkConfig={customDeploymentData}
                   onOpenTemplateSelector={addOrUpdateTemplate}
-                  className={cx(deployServiceCsss.templateBar, templateBarOverrideClassName)}
+                  className={cx(deployServiceCss.templateBar, templateBarOverrideClassName)}
                   isReadonly={isReadonly}
                 />
               </Layout.Vertical>
@@ -188,6 +188,7 @@ export default function SelectDeploymentType({
           checked={gitOpsEnabled}
           onChange={handleGitOpsCheckChanged}
           disabled={isReadonly}
+          className={deployServiceCss.gitOpsCheck}
         />
       )
     }

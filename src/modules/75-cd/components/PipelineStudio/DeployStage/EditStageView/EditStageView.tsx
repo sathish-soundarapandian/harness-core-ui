@@ -347,7 +347,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                               identifierProps={{
                                 inputLabel: getString('stageNameLabel'),
                                 isIdentifierEditable: !context,
-                                inputGroupProps: { disabled: isReadonly }
+                                inputGroupProps: { disabled: isReadonly, className: css.zeroMargin }
                               }}
                               descriptionProps={{ disabled: isReadonly }}
                               tagsProps={{ disabled: isReadonly }}
@@ -369,10 +369,11 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           identifierProps={{
                             inputLabel: getString('stageNameLabel'),
                             isIdentifierEditable: !context && !isReadonly,
-                            inputGroupProps: { disabled: isReadonly }
+                            inputGroupProps: { disabled: isReadonly, className: css.zeroMargin }
                           }}
                           descriptionProps={{ disabled: isReadonly }}
                           tagsProps={{ disabled: isReadonly }}
+                          className={css.nameIdDescriptionTags}
                         />
                       )}
                     </>

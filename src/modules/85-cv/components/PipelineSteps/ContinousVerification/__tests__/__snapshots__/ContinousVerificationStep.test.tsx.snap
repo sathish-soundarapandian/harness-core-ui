@@ -1260,6 +1260,35 @@ exports[`Test ContinousVerificationStep Step should render editView when current
             </div>
           </div>
         </div>
+        <div
+          class="formGroup"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  name="spec.spec.failOnNoAnalysis"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="cvData_spec.spec.failOnNoAnalysis"
+                >
+                  connectors.cdng.failOnNoAnalysis
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div

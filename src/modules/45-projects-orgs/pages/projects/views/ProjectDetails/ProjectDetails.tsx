@@ -152,12 +152,16 @@ const ProjectDetails: React.FC = () => {
         size={projectData.description || !isEmpty(projectData.tags) ? 'xxlarge' : 'xlarge'}
         breadcrumbs={
           <NGBreadcrumbs
-            links={[
-              {
-                url: routes.toProjects({ accountId }),
-                label: getString('projectsText')
-              }
-            ]}
+            links={
+              !NEW_LEFT_NAVBAR_SETTINGS
+                ? [
+                    {
+                      url: routes.toProjects({ accountId }),
+                      label: getString('projectsText')
+                    }
+                  ]
+                : []
+            }
           />
         }
         title={

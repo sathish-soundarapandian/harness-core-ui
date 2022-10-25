@@ -11,6 +11,7 @@ import { render } from '@testing-library/react'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import type { AbortFailureActionConfig } from 'services/pipeline-ng'
 import { errorTypesForStages } from '../StrategySelection/StrategyConfig'
 import { Basic } from '../FailureStrategyPanel.stories'
 
@@ -33,7 +34,7 @@ describe('CI <FailureStrategyPanel /> tests', () => {
                 errors: errorTypesForStages[StageType.BUILD],
                 action: {
                   type: Strategy.Abort
-                }
+                } as AbortFailureActionConfig
               }
             }
           ]
@@ -59,7 +60,7 @@ describe('CI <FailureStrategyPanel /> tests', () => {
                 errors: [ErrorType.Unknown],
                 action: {
                   type: Strategy.Abort
-                }
+                } as AbortFailureActionConfig
               }
             }
           ]

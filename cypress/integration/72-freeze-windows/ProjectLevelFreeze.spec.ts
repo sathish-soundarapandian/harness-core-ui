@@ -35,7 +35,9 @@ describe('Project Level Freeze', () => {
       })
     })
     cy.initializeRoute()
-    cy.intercept('POST', projLevelPostFreezeCall, { fixture: 'pipeline/api/freeze/createFreeze' }).as('createFreezeCall')
+    cy.intercept('POST', projLevelPostFreezeCall, { fixture: 'pipeline/api/freeze/createFreeze' }).as(
+      'createFreezeCall'
+    )
     cy.intercept('PUT', projLevelPutFreezeCall).as('updateFreezeCall')
     cy.intercept('GET', projLevelGetFreezeCall, { fixture: 'pipeline/api/freeze/getProjectLevelFreeze' })
   })
@@ -53,7 +55,7 @@ describe('Project Level Freeze', () => {
     })
 
     // Check if Header has required nodes
-    cy.get('.Toggle--toggle input').should('be.checked')
+    cy.get('.bp3-switch span').should('not.be.checked')
     cy.get('.PillToggle--optionBtns').should('have.length', 1)
     cy.get('.PillToggle--item').should('have.length', 2)
 
@@ -135,7 +137,7 @@ describe('Project Level Freeze', () => {
     // Go To YAML - validate YAML
     cy.contains('div[data-name="toggle-option-two"]', 'YAML').should('be.visible').click()
     cy.wait(500)
-    cy.get('.view-lines div').should('have.length', 22)
+    cy.get('.view-lines div').should('have.length', 24)
     cy.contains('span', 'freeze').should('be.visible')
     cy.contains('span', 'name:').should('be.visible')
     cy.contains('span', 'project level freeze').should('be.visible')
@@ -151,21 +153,23 @@ describe('Project Level Freeze', () => {
     cy.contains('span', 'Equals').should('be.visible')
     cy.contains('span', 'entityRefs').should('be.visible')
     cy.contains('span', 'PROD').should('be.visible')
-
     cy.contains('span', 'Equals').should('be.visible')
     cy.contains('span', 'entityRefs').should('be.visible')
     cy.contains('span', 'testService').should('be.visible')
     cy.contains('span', 'status').should('be.visible')
-
-    cy.contains('span', 'Enabled').should('be.visible')
+    cy.contains('span', 'Disabled').should('be.visible')
+    cy.contains('span', 'orgIdentifier').should('be.visible')
+    cy.contains('span', 'default').should('be.visible')
+    cy.contains('span', 'projectIdentifier').should('be.visible')
+    cy.contains('span', 'project1').should('be.visible')
 
     // Hit Save Button
     cy.get('button span.bp3-button-text').contains('Save').click()
+    cy.contains('p', 'Loading, please wait...').should('be.visible')
 
     // Check Save API Payload
     cy.get('@createFreezeCall').should(req => {
       cy.contains('.bp3-toast span.bp3-toast-message', 'Freeze window created successfully').should('be.visible')
-      cy.contains('p', 'Loading, please wait...').should('be.visible')
       expect(req.request.method).to.equal('POST')
       expect(req.request.body).to.equal(`freeze:
   name: project level freeze
@@ -187,7 +191,9 @@ describe('Project Level Freeze', () => {
           filterType: All
         - type: EnvType
           filterType: All
-  status: Enabled
+  status: Disabled
+  orgIdentifier: default
+  projectIdentifier: project1
 `)
     })
 
@@ -217,10 +223,10 @@ describe('Project Level Freeze', () => {
 
     cy.get('button span').contains('Unsaved changes')
     cy.get('button span.bp3-button-text').contains('Save').click()
+    cy.contains('p', 'Loading, please wait...').should('be.visible')
 
     cy.get('@updateFreezeCall').should(req => {
       cy.contains('.bp3-toast span.bp3-toast-message', 'Freeze window updated successfully').should('be.visible')
-      cy.contains('p', 'Loading, please wait...').should('be.visible')
       expect(req.request.method).to.equal('PUT')
       expect(req.request.body).to.equal(`freeze:
   name: project level freeze
@@ -236,7 +242,9 @@ describe('Project Level Freeze', () => {
           filterType: Equals
           entityRefs:
             - PROD
-  status: Enabled
+  status: Disabled
+  orgIdentifier: default
+  projectIdentifier: project1
 `)
     })
   })

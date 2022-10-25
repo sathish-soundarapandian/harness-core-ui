@@ -41,7 +41,12 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { filePathWidth, getRepositoryName, handleCommandFlagsSubmitData } from '../ManifestUtils'
+import {
+  filePathWidth,
+  getRepositoryName,
+  handleCommandFlagsSubmitData,
+  removeEmptyFieldsFromStringArray
+} from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from './HelmWithGIT.module.scss'
@@ -100,7 +105,10 @@ function HelmWithGIT({
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
-            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(initialValues?.spec?.valuesPaths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag

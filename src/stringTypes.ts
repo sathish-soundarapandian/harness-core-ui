@@ -47,6 +47,7 @@ export interface StringsMap {
   'common.advanced': string
   'common.agent': string
   'common.agents': string
+  'common.all': string
   'common.allClusters': string
   'common.allEnvironments': string
   'common.allErrors': string
@@ -119,6 +120,7 @@ export interface StringsMap {
   'common.byType': string
   'common.capsAll': string
   'common.cardNumber': string
+  'common.cdAndGitops': string
   'common.ce.autostopping': string
   'common.ce.cost': string
   'common.ce.optimization': string
@@ -140,6 +142,7 @@ export interface StringsMap {
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string
+  'common.codeErrorsAgents': string
   'common.comingSoon': string
   'common.comingSoon2': string
   'common.commentModal.addCommentPlaceholder': string
@@ -517,6 +520,7 @@ export interface StringsMap {
   'common.newName': string
   'common.newVersion': string
   'common.noAPIKeys': string
+  'common.noAvailableTags': string
   'common.noConnectorAvailable': string
   'common.noDelegateForTask': string
   'common.noDeployments': string
@@ -820,6 +824,7 @@ export interface StringsMap {
   'common.smtp.validationBody': string
   'common.smtp.validationSubject': string
   'common.smtp.validationTo': string
+  'common.sortedByCreatedTime': string
   'common.sourceBranch': string
   'common.sourceBranchPlaceholder': string
   'common.specified': string
@@ -833,6 +838,7 @@ export interface StringsMap {
   'common.startTrial': string
   'common.state': string
   'common.stepName': string
+  'common.stoText': string
   'common.submittingRequest': string
   'common.submittingRequestToGitViaDelegate': string
   'common.subscribed': string
@@ -886,6 +892,8 @@ export interface StringsMap {
   'common.switchAccount': string
   'common.switchAccountError': string
   'common.switchAccountSearch': string
+  'common.switchToBarChart': string
+  'common.switchToLineChart': string
   'common.sync': string
   'common.tagName': string
   'common.targetBranch': string
@@ -1126,7 +1134,6 @@ export interface StringsMap {
   'rbac.planEnforcement.ff.teamEnterprisePlan.approachingLimit': string
   'rbac.planEnforcement.ff.teamEnterprisePlan.upgradeRequired': string
   'rbac.project': string
-  'rbac.resourceGroup.all': string
   'rbac.resourceGroup.builtInResourceGroup': string
   'rbac.resourceGroup.color': string
   'rbac.resourceGroup.confirmDelete': string
@@ -1878,6 +1885,8 @@ export interface StringsMap {
   'connectors.addParameter': string
   'connectors.apiKey': string
   'connectors.apiKeyOrPassword': string
+  'connectors.apiToken': string
+  'connectors.apiTokenValidation': string
   'connectors.appD.accountName': string
   'connectors.appD.apiClient': string
   'connectors.appD.clientId': string
@@ -1950,6 +1959,7 @@ export interface StringsMap {
   'connectors.cdng.defineVerificationJob': string
   'connectors.cdng.displayName': string
   'connectors.cdng.error': string
+  'connectors.cdng.failOnNoAnalysis': string
   'connectors.cdng.healthSources.healthSourceDef': string
   'connectors.cdng.healthSources.label': string
   'connectors.cdng.healthSources.noHealthSourcesDefined': string
@@ -2380,8 +2390,6 @@ export interface StringsMap {
   'connectors.docker.harbor': string
   'connectors.docker.other': string
   'connectors.docker.quay': string
-  'connectors.dynatrace.apiToken': string
-  'connectors.dynatrace.apiTokenValidation': string
   'connectors.dynatrace.urlValidation': string
   'connectors.dynatraceConnectorDetails': string
   'connectors.dynatraceLabel': string
@@ -2500,6 +2508,7 @@ export interface StringsMap {
   'connectors.name_labels.PDC': string
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
+  'connectors.name_labels.Spot': string
   'connectors.name_labels.gcpKms': string
   'connectors.newArtifactRepository': string
   'connectors.newRelic.accountIdFieldLabel': string
@@ -2651,6 +2660,7 @@ export interface StringsMap {
   'connectors.title.secretManager': string
   'connectors.title.serviceNow': string
   'connectors.title.splunk': string
+  'connectors.title.spot': string
   'connectors.title.sumologic': string
   'connectors.unableToCreateConnector': string
   'connectors.unableToUpdateConnector': string
@@ -3259,7 +3269,6 @@ export interface StringsMap {
   'pipeline.dashboardDeploymentsWidget.runningPipeline.singular': string
   'pipeline.dashboards.activeBuilds': string
   'pipeline.dashboards.activeDeployments': string
-  'pipeline.dashboards.baselineActivityComingSoon': string
   'pipeline.dashboards.baselineTargets': string
   'pipeline.dashboards.buildExecutions': string
   'pipeline.dashboards.buildHealth': string
@@ -3274,6 +3283,7 @@ export interface StringsMap {
   'pipeline.dashboards.noFailedDeployments': string
   'pipeline.dashboards.noPendingDeployments': string
   'pipeline.dashboards.noRepositories': string
+  'pipeline.dashboards.noTargetBaselines': string
   'pipeline.dashboards.noWorkloads': string
   'pipeline.dashboards.pendingDeployments': string
   'pipeline.dashboards.pipelineExecution': string
@@ -3443,8 +3453,11 @@ export interface StringsMap {
   'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess': string
   'pipeline.failureStrategies.strategiesLabel.MarkedAsFail': string
   'pipeline.failureStrategies.strategiesLabel.MarkedAsSuccess': string
+  'pipeline.failureStrategies.strategiesLabel.PipelineRollback': string
+  'pipeline.failureStrategies.strategiesLabel.ProceedWithDefaultValues': string
   'pipeline.failureStrategies.strategiesLabel.Retry': string
   'pipeline.failureStrategies.strategiesLabel.StageRollback': string
+  'pipeline.failureStrategies.strategiesLabel.StepGroupRollback': string
   'pipeline.failureStrategies.tabHasErrors': string
   'pipeline.failureStrategies.title': string
   'pipeline.failureStrategies.validation.actionRequired': string
@@ -3859,6 +3872,7 @@ export interface StringsMap {
   'pipeline.rightBar.mergeCommit': string
   'pipeline.runAPipeline': string
   'pipeline.runAllParallelstages': string
+  'pipeline.runDisabledOnFreeze': string
   'pipeline.runFailedStages': string
   'pipeline.runModalNoPipelineText': string
   'pipeline.runPipeline.ciCodebaseConfig': string
@@ -3991,7 +4005,14 @@ export interface StringsMap {
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
+  'pipeline.stepDescription.ECSBlueGreenCreateService': string
+  'pipeline.stepDescription.ECSBlueGreenRollback': string
+  'pipeline.stepDescription.ECSBlueGreenSwapTargetGroups': string
+  'pipeline.stepDescription.ECSCanaryDelete': string
+  'pipeline.stepDescription.ECSCanaryDeploy': string
   'pipeline.stepDescription.ECSRollingDeploy': string
+  'pipeline.stepDescription.ECSRollingRollback': string
+  'pipeline.stepDescription.ECSRunTask': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
@@ -4087,7 +4108,7 @@ export interface StringsMap {
   'pipeline.testsReports.searchByTestName': string
   'pipeline.testsReports.selectedTestMethods': string
   'pipeline.testsReports.selectionBreakdown': string
-  'pipeline.testsReports.showOnlyFailedTests': string
+  'pipeline.testsReports.showAllTests': string
   'pipeline.testsReports.skipped': string
   'pipeline.testsReports.skippedWithColon': string
   'pipeline.testsReports.sortBy': string
@@ -4187,6 +4208,7 @@ export interface StringsMap {
   'pipeline.verification.waitForAnalysis': string
   'pipeline.verificationResult': string
   'pipeline.viewExecution': string
+  'pipeline.viewFreeze': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
@@ -4696,6 +4718,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deployToAll': string
+  'cd.pipelineSteps.environmentTab.envGroupToggleText': string
   'cd.pipelineSteps.environmentTab.environmentGroupConfirmationText': string
   'cd.pipelineSteps.environmentTab.environmentGroupDialogTitleText': string
   'cd.pipelineSteps.environmentTab.environmentGroupIsRequired': string
@@ -4940,6 +4963,7 @@ export interface StringsMap {
   'cd.steps.pdcStep.specificHostsOptional': string
   'cd.steps.pdcStep.specificHostsPlaceholder': string
   'cd.steps.pdcStep.specifyHostsOption': string
+  'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
   'cd.successfullyLinkedClusters': string
@@ -6358,6 +6382,7 @@ export interface StringsMap {
   'cf.noEnvironment.message': string
   'cf.noEnvironment.title': string
   'cf.noResultMatch': string
+  'cf.onboarding.android': string
   'cf.onboarding.backToStart': string
   'cf.onboarding.clientKey': string
   'cf.onboarding.createAFlag': string
@@ -6375,6 +6400,7 @@ export interface StringsMap {
   'cf.onboarding.help.heading2': string
   'cf.onboarding.help.text1': string
   'cf.onboarding.help.text2': string
+  'cf.onboarding.ios': string
   'cf.onboarding.keyDescriptionClient': string
   'cf.onboarding.keyDescriptionServer': string
   'cf.onboarding.letsGetStarted': string
@@ -6383,12 +6409,18 @@ export interface StringsMap {
   'cf.onboarding.otherTypes': string
   'cf.onboarding.readme.android': string
   'cf.onboarding.readme.dotnet': string
+  'cf.onboarding.readme.flutter': string
   'cf.onboarding.readme.golang': string
   'cf.onboarding.readme.ios': string
   'cf.onboarding.readme.java': string
   'cf.onboarding.readme.javascript': string
   'cf.onboarding.readme.nodejs': string
+  'cf.onboarding.readme.php': string
   'cf.onboarding.readme.python': string
+  'cf.onboarding.readme.reactNative': string
+  'cf.onboarding.readme.ruby': string
+  'cf.onboarding.readme.xamarinAndroid': string
+  'cf.onboarding.readme.xamarinIOS': string
   'cf.onboarding.sdkKeyLabel': string
   'cf.onboarding.secret': string
   'cf.onboarding.selectLanguage': string
@@ -6586,6 +6618,7 @@ export interface StringsMap {
   'chaos.chaosGameday': string
   'chaos.chaosHub': string
   'chaos.chaosInfrastructure': string
+  'chaos.chaosTrialHomePage.description': string
   'chaos.environments.create.description': string
   'chaos.environments.create.duplicateName': string
   'chaos.environments.create.envTypeLabel': string
@@ -6605,6 +6638,9 @@ export interface StringsMap {
   'chaos.pipelineStep.expectedResiliencyScoreLabel': string
   'chaos.pipelineStep.experimentRefLabel': string
   'chaos.selectChaosExperiment': string
+  'chaos.trial.modal.description': string
+  'chaos.trial.modal.title': string
+  'chaos.trial.modal.welcome': string
   'chaos.viewDetailedExecution': string
   'ci.advancedLabel': string
   'ci.annotations': string
@@ -6866,6 +6902,9 @@ export interface StringsMap {
   'cv.changesPage.viewKubernetesEvents': string
   'cv.clusterType': string
   'cv.codeErrors': string
+  'cv.codeErrorsAgents': string
+  'cv.codeErrorsAgentsHeading': string
+  'cv.codeErrorsAgentsTokens': string
   'cv.codeErrorsHeading': string
   'cv.componentValidations.queryType': string
   'cv.componentValidations.queryTypeLabel': string
@@ -6963,6 +7002,7 @@ export interface StringsMap {
   'cv.healthSource.connectors.AppDynamics.validation.tier': string
   'cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder': string
   'cv.healthSource.connectors.CloudWatch.fetchDataButtonText': string
+  'cv.healthSource.connectors.CloudWatch.groupModalTitle': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.customMetrics': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.expression': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.submitQuery': string

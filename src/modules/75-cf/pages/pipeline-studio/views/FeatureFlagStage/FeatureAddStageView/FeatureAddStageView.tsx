@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { Text, Container, Formik, FormikForm, Button } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikConfig, FormikErrors } from 'formik'
@@ -117,7 +117,14 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
         >
           {formikProps => (
             <FormikForm>
-              <Text font={{ weight: 'bold' }} icon="cf-main" iconProps={{ size: 16 }} margin={{ bottom: 'medium' }}>
+              <Text
+                font={{ weight: 'bold' }}
+                style={{ fontVariant: FontVariation.H5, color: Color.GREY_800 }}
+                icon="cf-main"
+                iconProps={{ size: 16 }}
+                margin={{ bottom: 'medium' }}
+                className={css.titleHeading}
+              >
                 {getString('pipelineSteps.build.create.aboutYourStage')}
               </Text>
               {!isTemplate && (

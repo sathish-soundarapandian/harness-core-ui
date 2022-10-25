@@ -15,7 +15,7 @@ export const stageNodeId = 'nodeId'
 export const pageHeaderClassName = '.PageHeader--container'
 export const activeTabClassName = '.TabNavigation--active'
 export const serviceName = 'testServiceV2'
-const connectorRef = 'connector'
+const connectorRef = 'org.connector'
 const connectorName = 'testConnector'
 const anotherConnectorName = 'testConnector2'
 const repositoryType = 'generic'
@@ -38,6 +38,7 @@ export const servicesCallV2 = `/ng/api/servicesV2/list/access?routingId=${accoun
 export const delegateSelectionExecutionAPI = `/pipeline/api/pipelines/execution/v2/${delegateExecutionId}?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}`
 export const delegateSelectionStageAPI = `/pipeline/api/pipelines/execution/v2/${delegateExecutionId}?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}&stageNodeId=Dswl1Ln8T8aBx-8BEbunpQ`
 export const pipelineVariablesCall = `/pipeline/api/pipelines/v2/variables?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const shouldDisableDeploymentAPI = `ng/api/freeze/evaluate/shouldDisableDeployment?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 
 export const gitSyncEnabledCall = `/ng/api/git-sync/git-sync-enabled?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const pipelineSaveCall = `/pipeline/api/pipelines?accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}`
@@ -121,6 +122,17 @@ export const pipelinesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/p
 export const triggersRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
 export const templatesListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
 export const testParallelNodesPipelineRoute = `#/account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
+
+export const resolvedPipelineDetailsCall =
+  '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&pipelineIdentifier=testPipeline_Cypress&projectIdentifier=project1&getDefaultFromOtherRepo=true'
+export const servicesCallRunPipeline =
+  '/ng/api/servicesV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&type=Kubernetes&gitOpsEnabled=false'
+export const servicesYaml =
+  '/ng/api/servicesV2/servicesYamlMetadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+export const environmentsCallRunPipeline =
+  '/ng/api/environmentsV2/listV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+export const connectorsCall =
+  '/ng/api/connectors?accountIdentifier=accountId&type=K8sCluster&searchTerm=&projectIdentifier=project1&orgIdentifier=default'
 export interface ValidObject {
   resourceName: StepResourceObject[]
   warningCheck?: boolean

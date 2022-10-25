@@ -11,6 +11,7 @@ import type { SeriesColumnOptions } from 'highcharts'
 import { Button, Container, Layout } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
+import { useStrings } from 'framework/strings'
 import { TimeSeriesAreaChart } from '@common/components/TimeSeriesAreaChart/TimeSeriesAreaChart'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
 import css from './OverviewChartsWithToggle.module.scss'
@@ -44,13 +45,14 @@ export const OverviewChartsWithToggle: React.FC<OverviewChartsWithToggleProps> =
   props: OverviewChartsWithToggleProps
 ) => {
   const [selectedView, setSelectedView] = useState<ChartType>(props.defaultChartType || ChartType.BAR)
-
+  const { getString } = useStrings()
   return (
     <Layout.Vertical spacing="large">
       <Container flex>
         <Layout.Horizontal spacing={'medium'}>{props.summaryCards}</Layout.Horizontal>
         <Container flex className={css.toggleBtns}>
           <Button
+            aria-label={getString('common.switchToBarChart')}
             minimal
             icon="bar-chart"
             active={selectedView === ChartType.BAR}
@@ -65,6 +67,7 @@ export const OverviewChartsWithToggle: React.FC<OverviewChartsWithToggleProps> =
             }}
           />
           <Button
+            aria-label={getString('common.switchToLineChart')}
             minimal
             icon="line-chart"
             active={selectedView === ChartType.LINE}

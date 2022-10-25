@@ -425,7 +425,8 @@ function StartupScriptListView({
             variation={ButtonVariation.LINK}
             data-test-id="addStartupScript"
             onClick={addStartupScript}
-            text={getString('common.plusAddName', { name: getString('pipeline.startupCommand.name') })}
+            icon={'plus'}
+            text={getString('common.addName', { name: getString('pipeline.startupCommand.name') })}
           />
         )}
       </Layout.Vertical>

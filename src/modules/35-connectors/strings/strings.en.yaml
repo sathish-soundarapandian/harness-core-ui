@@ -77,6 +77,8 @@ baseURL: Base URL
 requestMethod: Request Method
 optionalAuthentication: Authentication (optional)
 bearerToken: Bearer Token (HTTP Header)
+apiToken: API Token
+apiTokenValidation: API Token is required.
 connectivityMode:
   title: 'Connectivity Mode'
   validation: 'Please select connectivity mode'
@@ -116,6 +118,7 @@ title:
   gcpKms: GCP Key Management Service
   azure: 'Azure Cloud Provider'
   harnessImageConnectorRef: 'Override Image Connector'
+  spot: 'Spot Cloud Provider'
 placeholder:
   harnessImageConnectorRef: 'Select Image Connector'
 name_labels:
@@ -138,6 +141,7 @@ name_labels:
   SecretManager: 'Secret Manager Name'
   AppDynamics: 'AppDynamics Connector Name'
   Splunk: 'Splunk Connector Name'
+  Spot: 'Spot Connector Name'
 testConnectionStep:
   errorDetails: Click to view error details
   noDelegate: Unable to get Delegate information
@@ -365,8 +369,6 @@ datadog:
 errorTracking:
   urlValidation: Error Tracking URL is required.
 dynatrace:
-  apiToken: API Token
-  apiTokenValidation: API Token is required.
   urlValidation: Dynatrace URL is required.
 sumologic:
   urlLabel: Sumo Logic API Server URL
@@ -391,6 +393,7 @@ cdng:
   baseline: Baseline
   trafficsplit: Traffic Split (OPTIONAL)
   continousVerificationStep: Verify Step Details
+  failOnNoAnalysis: Fail On No Analysis
   displayName: Display Name
   createCVJob: Please create a verification job
   loadingJobs: Loading verification jobs…

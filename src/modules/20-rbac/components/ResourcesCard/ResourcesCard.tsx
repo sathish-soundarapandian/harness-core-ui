@@ -81,7 +81,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.radioBtnSet}>
             <Container className={css.radioBtnCtr}>
               <Radio
-                label={getString('rbac.resourceGroup.all')}
+                label={getString('common.all')}
                 data-testid={`dynamic-${resourceType}`}
                 checked={isDynamicResourceSelector(resourceValues)}
                 onChange={e => onResourceSelectionChange(resourceType, e.currentTarget.checked)}

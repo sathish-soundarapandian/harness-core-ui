@@ -578,7 +578,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   path as string,
                   !!isPropagatedStage,
                   stageIdentifier,
-                  defaultTo(artifactPath, ''),
+                  defaultTo(
+                    isSidecar
+                      ? artifactPath
+                          ?.split('[')[0]
+                          .concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+                      : artifactPath,
+                    ''
+                  ),
                   'connectorRef'
                 )}
               />

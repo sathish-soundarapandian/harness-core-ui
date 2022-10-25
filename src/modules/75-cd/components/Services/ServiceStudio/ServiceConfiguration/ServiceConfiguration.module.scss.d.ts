@@ -16,6 +16,7 @@ declare const styles: {
   readonly serviceEntity: string
   readonly serviceModal: string
   readonly serviceStepBasicInfo: string
+  readonly tabHeading: string
   readonly yamlBuilder: string
 }
 export default styles

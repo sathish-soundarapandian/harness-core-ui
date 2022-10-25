@@ -6,10 +6,11 @@
  */
 
 import type {
-  ResponsePageSLODashboardWidget,
+  ResponsePageSLOHealthListView,
   ResponsePageUserJourneyResponse,
   RestResponseListSLOErrorBudgetResetDTO,
-  SLODashboardWidget
+  SLODashboardWidget,
+  SLOHealthListView
 } from 'services/cv'
 import type { TestWrapperProps } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -29,6 +30,31 @@ export const pathParams = {
 export const testWrapperProps: TestWrapperProps = {
   path: routes.toCVSLOs({ ...projectPathProps, module: 'cv' }),
   pathParams
+}
+
+export const dashboardWidgetsContentData: SLOHealthListView = {
+  burnRate: 90,
+  errorBudgetRemaining: 60,
+  errorBudgetRemainingPercentage: 60,
+  errorBudgetRisk: RiskValues.HEALTHY,
+  healthSourceIdentifier: 'health_source_identifier',
+  healthSourceName: 'Health Source Name',
+  monitoredServiceIdentifier: 'monitored_service_identifier',
+  monitoredServiceName: 'Monitored Service Name',
+  sloIdentifier: 'slo_identifier',
+  sloTargetPercentage: 60,
+  sloTargetType: PeriodTypes.ROLLING,
+  tags: {},
+  name: 'Title',
+  totalErrorBudget: 100,
+  serviceIdentifier: 'service',
+  environmentIdentifier: 'env',
+  environmentName: 'env',
+  serviceName: 'serviceName',
+  noOfActiveAlerts: 0,
+  noOfMaximumAlerts: 5,
+  userJourneyIdentifier: 'userJourney',
+  userJourneyName: 'userJourney'
 }
 
 export const dashboardWidgetsContent: SLODashboardWidget = {
@@ -64,14 +90,14 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
   serviceName: 'serviceName'
 }
 
-export const dashboardWidgetsResponse: ResponsePageSLODashboardWidget = {
+export const dashboardWidgetsResponse: ResponsePageSLOHealthListView = {
   data: {
     totalItems: 1,
     totalPages: 1,
     pageIndex: 0,
     pageItemCount: 1,
     pageSize: 4,
-    content: [dashboardWidgetsContent]
+    content: [dashboardWidgetsContentData]
   }
 }
 

@@ -28,6 +28,7 @@ interface EntityUsageProps {
   pageSize?: number
   pageHeaderClassName?: string
   pageBodyClassName?: string
+  withSearchBarInPageHeader?: boolean
 }
 
 const DEFAULT_PAGE_SIZE = 10
@@ -58,7 +59,15 @@ const EntityUsage: React.FC<EntityUsageProps> = props => {
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const [page, setPage] = useState(0)
-  const { entityIdentifier, entityType, mockData, pageSize, pageHeaderClassName, pageBodyClassName } = props
+  const {
+    entityIdentifier,
+    entityType,
+    mockData,
+    pageSize,
+    pageBodyClassName,
+    withSearchBarInPageHeader = true,
+    pageHeaderClassName
+  } = props
 
   const { data, loading, refetch, error } = useListAllEntityUsageByFqn({
     queryParams: {
@@ -75,26 +84,28 @@ const EntityUsage: React.FC<EntityUsageProps> = props => {
 
   return (
     <>
-      <PageHeader
-        className={cx(css.secondHeader, defaultTo(pageHeaderClassName, ''))}
-        size="standard"
-        title={undefined}
-        toolbar={
-          <Container>
-            <Layout.Horizontal>
-              <ExpandingSearchInput
-                alwaysExpanded
-                onChange={text => {
-                  setPage(0)
-                  setSearchTerm(text.trim())
-                }}
-                className={css.search}
-                width={350}
-              />
-            </Layout.Horizontal>
-          </Container>
-        }
-      />
+      {withSearchBarInPageHeader && (
+        <PageHeader
+          className={cx(css.secondHeader, defaultTo(pageHeaderClassName, ''))}
+          size="standard"
+          title={undefined}
+          toolbar={
+            <Container>
+              <Layout.Horizontal>
+                <ExpandingSearchInput
+                  alwaysExpanded
+                  onChange={text => {
+                    setPage(0)
+                    setSearchTerm(text.trim())
+                  }}
+                  className={css.search}
+                  width={350}
+                />
+              </Layout.Horizontal>
+            </Container>
+          }
+        />
+      )}
       <PageBody
         loading={loading}
         retryOnError={() => refetch()}
@@ -114,7 +125,26 @@ const EntityUsage: React.FC<EntityUsageProps> = props => {
               }
         }
       >
-        <EntityUsageList entityData={data} gotoPage={pageNumber => setPage(pageNumber)} />
+        {withSearchBarInPageHeader ? (
+          <EntityUsageList entityData={data} gotoPage={pageNumber => setPage(pageNumber)} />
+        ) : (
+          <Layout.Vertical>
+            <ExpandingSearchInput
+              alwaysExpanded
+              onChange={text => {
+                setPage(0)
+                setSearchTerm(text.trim())
+              }}
+              className={css.searchNotinHeader}
+              width={350}
+            />
+            <EntityUsageList
+              entityData={data}
+              gotoPage={pageNumber => setPage(pageNumber)}
+              withNoSpaceAroundTable={!withSearchBarInPageHeader}
+            />
+          </Layout.Vertical>
+        )}
       </PageBody>
     </>
   )

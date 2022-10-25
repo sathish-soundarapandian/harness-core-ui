@@ -19,7 +19,7 @@ import {
   HandleManualInterventionInterruptQueryParams
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
+import { Strategy, strategyIconMap, stringsMap, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
@@ -38,7 +38,7 @@ const ChaosStepExecution = React.lazy(() => import('chaos/ChaosStepExecution'))
 
 export interface ActionButtonProps {
   step: ExecutionNode
-  allowedStrategies: Strategy[]
+  allowedStrategies: StrategyType[]
   isManualInterruption: boolean
   expIdentifier: string
   expRunIdentifier: string
@@ -61,7 +61,7 @@ export function ActionButtons(props: ActionButtonProps): React.ReactElement {
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
 
-  function handleChange(strategy: Strategy): void {
+  function handleChange(strategy: StrategyType): void {
     const interruptType = strategy as HandleManualInterventionInterruptQueryParams['interruptType']
     handleInterrupt(undefined, {
       queryParams: {
@@ -74,7 +74,7 @@ export function ActionButtons(props: ActionButtonProps): React.ReactElement {
     })
   }
 
-  const STRATEGIES: Strategy[][] = React.useMemo(() => chunk(allowedStrategies, 5), [allowedStrategies])
+  const STRATEGIES: StrategyType[][] = React.useMemo(() => chunk(allowedStrategies, 5), [allowedStrategies])
 
   React.useEffect(() => {
     if (error) {

@@ -91,7 +91,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
     jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
     jest.spyOn(cvService, 'useGetLabelNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricNames').mockReturnValue({ data: { data: [] } } as any)
-    jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue({ data: { data: [] } } as any)
+    jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric').mockReturnValue({ data: [] } as any)
   })
   beforeEach(() => {
     jest.clearAllMocks()
@@ -139,11 +139,6 @@ describe('Unit tests for PrometheusHealthSource', () => {
     })
 
     await waitFor(() => expect(container.querySelector('input[name="sli"')).toBeInTheDocument())
-
-    // Correct warning message is shown
-    // await waitFor(() =>
-    //   expect(getByText('cv.monitoringSources.gco.mapMetricsToServicesPage.validation.baseline')).not.toBeNull()
-    // )
 
     await waitFor(() =>
       expect(onSubmitMock).toHaveBeenCalledWith(MockManualQueryData, {

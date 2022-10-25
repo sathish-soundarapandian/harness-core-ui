@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Card, Icon, Text, Color, AllowedTypes, ButtonSize } from '@harness/uicore'
+import { Button, ButtonVariation, Card, Icon, Text, Color, AllowedTypes, ButtonSize, Layout } from '@harness/uicore'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, set } from 'lodash-es'
@@ -87,22 +87,24 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
             </Text>
           </span>
         </div>
-        <div>
+        <Layout.Horizontal>
           <Button
-            variation={ButtonVariation.ICON}
-            icon="edit"
+            icon="Edit"
             data-testid={`edit-service-${service.identifier}`}
             disabled={readonly}
             onClick={() => onEditClick({ service, serviceInputs })}
+            minimal
+            aria-label={getString('editService')}
           />
           <Button
-            variation={ButtonVariation.ICON}
-            icon="trash"
+            icon="main-trash"
             data-testid={`delete-service-${service.identifier}`}
             disabled={readonly}
             onClick={() => onDeleteClick({ service, serviceInputs })}
+            aria-label={getString('common.deleteService')}
+            minimal
           />
-        </div>
+        </Layout.Horizontal>
       </div>
       {serviceInputs && MULTI_SERVICE_INFRA && get(formik?.values, `serviceInputs.${serviceIdentifier}`) ? (
         <>

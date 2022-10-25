@@ -74,22 +74,12 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
 }))
 
 describe('Unit tests for createting monitored source', () => {
-  let refetchDashboardWidgets: jest.Mock
   beforeEach(() => {
-    refetchDashboardWidgets = jest.fn()
-
     jest.spyOn(cvServices, 'useGetAllJourneys').mockReturnValue({
       data: {},
       loading: false,
       error: null,
       refetch: jest.fn()
-    } as any)
-
-    jest.spyOn(cvServices, 'useGetSLODashboardWidgets').mockReturnValue({
-      data: {},
-      loading: false,
-      error: null,
-      refetch: refetchDashboardWidgets
     } as any)
 
     jest.spyOn(cvServices, 'useGetSLOAssociatedMonitoredServices').mockReturnValue({

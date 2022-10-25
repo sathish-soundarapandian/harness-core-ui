@@ -7,7 +7,7 @@
 
 import type { SelectOption } from '@harness/uicore'
 import type { PartiallyRequired } from '@pipeline/utils/types'
-import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams } from 'services/cd-ng'
+import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams, FreezeResponse } from 'services/cd-ng'
 import type { NotificationRules } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -37,6 +37,14 @@ export interface EntityType {
 export interface EntityConfig {
   name: string
   entities: EntityType[]
+}
+
+export interface FreezeObj extends FreezeResponse {
+  entityConfigs: EntityConfig[]
+}
+
+export interface ValidationErrorType {
+  entity?: Array<Record<string, string>>
 }
 
 export enum EnvironmentType {

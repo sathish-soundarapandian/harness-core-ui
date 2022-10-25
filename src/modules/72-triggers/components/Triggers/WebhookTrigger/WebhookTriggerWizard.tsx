@@ -1347,6 +1347,8 @@ export default function WebhookTriggerWizard(
     }
   )
 
+  const triggerHeading = isNewTrigger ? getString('triggers.onNewWebhookTitle') : `Trigger: ${triggerData?.name}`
+
   return (
     <TabWizard
       key={wizardKey} // re-renders with yaml to visual initialValues
@@ -1380,12 +1382,11 @@ export default function WebhookTriggerWizard(
       // headerProps={{
       title={
         <TitleWithSwitch
-          isNewTrigger={isNewTrigger}
           selectedView={selectedView}
           enabledStatus={enabledStatus}
           setEnabledStatus={setEnabledStatus}
-          triggerName={triggerData?.name}
           isTriggerRbacDisabled={isTriggerRbacDisabled}
+          triggerHeading={triggerHeading}
         />
       }
       selectedView={selectedView}

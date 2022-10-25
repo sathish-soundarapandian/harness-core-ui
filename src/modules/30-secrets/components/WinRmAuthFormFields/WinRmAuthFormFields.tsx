@@ -42,10 +42,6 @@ const WinRmAuthFormFields: React.FC<WinRmAuthFormFieldsProps> = props => {
     {
       label: getString('password'),
       value: 'Password'
-    },
-    {
-      label: getString('secrets.sshAuthFormFields.optionKerbNone'),
-      value: 'None'
     }
   ]
 

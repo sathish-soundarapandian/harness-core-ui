@@ -264,11 +264,21 @@ export default function DeployInfrastructure({
     closeAddNewModal()
 
     const newFormValues = produce(values, draft => {
-      if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
-        draft.infrastructures[environmentIdentifier].push({
-          label: newInfrastructureInfo.name,
-          value: newInfrastructureInfo.identifier
-        })
+      if (draft.category === 'multi') {
+        if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
+          draft.infrastructures[environmentIdentifier].push({
+            label: newInfrastructureInfo.name,
+            value: newInfrastructureInfo.identifier
+          })
+        } else {
+          set(draft, `infrastructures.${environmentIdentifier}`, [
+            {
+              label: newInfrastructureInfo.name,
+              value: newInfrastructureInfo.identifier
+            }
+          ])
+        }
+        set(draft, uniquePathForInfrastructures.current, draft.infrastructures?.[environmentIdentifier])
       } else {
         draft.infrastructure = newInfrastructureInfo.identifier
       }
@@ -288,9 +298,11 @@ export default function DeployInfrastructure({
         draft.infrastructure = ''
         delete draft.infrastructures
       } else if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
-        draft.infrastructures[environmentIdentifier] = draft.infrastructures[environmentIdentifier].filter(
+        const filteredInfrastructures = draft.infrastructures[environmentIdentifier].filter(
           infra => infra.value !== infrastructureToDelete
         )
+        draft.infrastructures[environmentIdentifier] = filteredInfrastructures
+        set(draft, uniquePathForInfrastructures.current, filteredInfrastructures)
       }
     })
 

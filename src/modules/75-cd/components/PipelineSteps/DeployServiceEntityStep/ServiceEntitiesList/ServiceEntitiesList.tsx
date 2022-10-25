@@ -28,7 +28,8 @@ const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
   canOutsideClickClose: false,
   enforceFocus: false,
   lazy: true,
-  style: { width: 1114 }
+  style: { width: 1114 },
+  className: css.editServiceDialog
 }
 
 export interface ServiceEntitiesListProps {

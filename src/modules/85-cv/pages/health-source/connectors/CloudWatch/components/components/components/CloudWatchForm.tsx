@@ -50,6 +50,7 @@ export default function CloudWatchForm(): JSX.Element {
                 />
                 <GroupName
                   usePortal
+                  title={getString('cv.healthSource.connectors.CloudWatch.groupModalTitle')}
                   groupNames={customMetricGroupOptions}
                   selectProps={{ popoverClassName: css.groupNamePopover }}
                   onChange={setFieldValue}

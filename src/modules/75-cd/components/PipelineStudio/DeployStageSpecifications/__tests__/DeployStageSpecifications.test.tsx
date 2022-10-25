@@ -65,6 +65,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
     gitDetails: {},
     entityValidityDetails: {},
     isUpdated: true,
+    modules: [],
     templateTypes: {},
     templateServiceData: {},
     resolvedCustomDeploymentDetailsByRef: {}

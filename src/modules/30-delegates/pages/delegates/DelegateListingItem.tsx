@@ -5,25 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import ReactTimeago from 'react-timeago'
-import { set } from 'lodash-es'
+import { defaultTo, set } from 'lodash-es'
 import { useParams, useHistory } from 'react-router-dom'
 import {
   Button,
-  Container,
   Text,
   Layout,
   Popover,
-  Card,
   useToaster,
   useConfirmationDialog,
-  Icon,
-  HarnessDocTooltip
+  ButtonVariation
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Menu, MenuItem, Classes, Position } from '@blueprintjs/core'
-import moment from 'moment'
+import { Menu, MenuItem, Classes, Position, Dialog } from '@blueprintjs/core'
+import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { useDeleteDelegateGroupByIdentifier, DelegateGroupDetails } from 'services/portal'
 import routes from '@common/RouteDefinitions'
@@ -32,93 +29,144 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
+import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
+import { Table } from '@common/components'
+import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { DelegateInstanceList } from './DelegateInstanceList'
+import { getAutoUpgradeTextColor, getInstanceStatus } from './utils/DelegateHelper'
 import css from './DelegatesPage.module.scss'
 
-type delTroubleshoterProps = {
-  delegate: DelegateGroupDetails
-  setOpenTroubleshoter: (prop: { isConnected: boolean | undefined }) => void
+interface DelegateProps {
+  data: DelegateGroupDetails[]
 }
 
-enum InstanceStatus {
-  EXPIRED = 'Expired',
-  EXPIRING = 'Expiring',
-  LATEST = 'latest',
-  UPGRADE_REQUIRED = 'Upgrade Required'
-}
-
-export const DelegateListingHeader = () => {
-  const { getString } = useStrings()
-  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
-  const columnWidths = USE_IMMUTABLE_DELEGATE
-    ? {
-        icon: '80px',
-        name: '25%',
-        tags: '15%',
-        version: '12%',
-        instanceStatus: '18%',
-        heartbeat: '14%',
-        status: '12%',
-        actions: '2%'
-      }
-    : {
-        icon: '80px',
-        name: '28%',
-        tags: '16%',
-        version: '16%',
-        heartbeat: '15%',
-        status: '14%',
-        actions: '2%'
-      }
+const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<DelegateGroupDetails> }> = ({ row }) => {
   return (
-    <Layout.Horizontal className={css.delegateListHeader}>
-      <div key="icon" style={{ width: columnWidths.icon }}></div>
-      <div key="del-name" style={{ width: columnWidths.name }}>
-        {getString('delegate.DelegateName')}
-      </div>
-      <div
-        key="tags"
-        style={{
-          width: columnWidths.tags,
-          paddingLeft: 'var(--spacing-xlarge)'
-        }}
-      >
-        {getString('tagsLabel')}
-      </div>
-      <div key="version" style={{ width: columnWidths.version, paddingLeft: 'var(--spacing-medium)' }}>
-        {getString('version')}
-      </div>
-      {USE_IMMUTABLE_DELEGATE ? (
-        <div
-          key="instanceStatus"
-          style={{ width: columnWidths.instanceStatus, paddingLeft: 'var(--spacing-4)' }}
-          data-tooltip-id="instanceStatus"
-        >
-          {getString('delegates.instanceStatus')}
-          <HarnessDocTooltip tooltipId="instanceStatus" useStandAlone={true}></HarnessDocTooltip>
-        </div>
-      ) : null}
-      <div
-        key="heartbeat"
-        style={{ width: columnWidths.heartbeat, paddingLeft: USE_IMMUTABLE_DELEGATE ? 'var(--spacing-small)' : '' }}
-      >
-        {getString('delegate.LastHeartBeat')}
-      </div>
-      <div key="status" style={{ width: columnWidths.status }}>
-        {getString('connectivityStatus')}
-      </div>
-      <div key="actions" style={{ width: columnWidths.actions }} />
+    <Layout.Horizontal onClick={killEvent}>
+      <Button
+        {...row.getToggleRowExpandedProps()}
+        color={Color.GREY_600}
+        icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
+        variation={ButtonVariation.ICON}
+        iconProps={{ size: 19 }}
+        className={css.toggleAccordion}
+      />
     </Layout.Horizontal>
   )
 }
 
-const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterProps) => {
-  const { delegateGroupIdentifier, groupName, activelyConnected } = delegate
+const RenderDelegateIcon: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  return (
+    <div className={css.delegateItemIcon}>
+      <Text icon={delegateTypeToIcon(row.original?.delegateType as string)} iconProps={{ size: 24 }} />
+    </div>
+  )
+}
+
+const RenderDelegateName: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  const [autoUpgradeColor, autoUpgradeText] = !row.original?.activelyConnected
+    ? []
+    : getAutoUpgradeTextColor(row.original?.autoUpgrade)
+
+  return (
+    <Layout.Horizontal>
+      <Layout.Vertical width={'55%'} margin={{ right: 'large' }}>
+        <Text color={Color.BLACK} lineClamp={1}>
+          {row.original?.groupName}
+        </Text>
+        <Text font={{ size: 'small' }} color={Color.GREY_500} lineClamp={1}>
+          {row.original.delegateGroupIdentifier}
+        </Text>
+      </Layout.Vertical>
+      <Text
+        background={autoUpgradeColor}
+        color={Color.WHITE}
+        font={{ weight: 'semi-bold', size: 'xsmall' }}
+        className={css.statusText}
+      >
+        {autoUpgradeText}
+      </Text>
+    </Layout.Horizontal>
+  )
+}
+
+const RenderTags: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  const delegate = row.original
+  const allSelectors = Object.keys(delegate.groupImplicitSelectors || {}).concat(delegate.groupCustomSelectors || [])
+  return (
+    delegate?.groupImplicitSelectors && (
+      <>
+        <Text lineClamp={1}>
+          <TagsViewer key="tags" tags={allSelectors.slice(0, 3)} />
+          <span key="hidenTags">{allSelectors.length > 3 ? '+' + (allSelectors.length - 3) : ''}</span>
+        </Text>
+      </>
+    )
+  )
+}
+
+const RenderVersion: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  return <Text>{row.original?.groupVersion}</Text>
+}
+
+const RenderInstanceStatus: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  const delegate = row.original
+  return <Text>{getInstanceStatus(delegate)}</Text>
+}
+
+const RenderHeartbeat: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
   const { getString } = useStrings()
+  return row.original?.lastHeartBeat ? <ReactTimeago date={row.original?.lastHeartBeat} live /> : getString('na')
+}
+
+const RenderConnectivityStatus: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  const { getString } = useStrings()
+  const delegate = row.original
+  const isConnected = delegate.activelyConnected
+  const text = isConnected ? getString('connected') : getString('delegate.notConnected')
+  const [troubleshoterOpen, setOpenTroubleshoter] = useState<{ isConnected: boolean | undefined }>()
+  return (
+    <Layout.Vertical>
+      <Text
+        icon="full-circle"
+        iconProps={{ size: 6, color: isConnected ? Color.GREEN_600 : Color.GREY_400, padding: 'small' }}
+      >
+        {text}
+      </Text>
+      <Dialog
+        isOpen={!!troubleshoterOpen}
+        enforceFocus={false}
+        style={{ width: '680px', height: '100%' }}
+        onClose={() => setOpenTroubleshoter(undefined)}
+      >
+        <DelegateInstallationError showDelegateInstalledMessage={false} delegateType={delegate?.delegateType} />
+      </Dialog>
+      {!isConnected && delegate.delegateType === 'KUBERNETES' && (
+        <div
+          className={css.troubleshootLink}
+          onClick={(e: React.MouseEvent) => {
+            /*istanbul ignore next */
+            e.stopPropagation()
+            setOpenTroubleshoter({ isConnected: delegate.activelyConnected })
+          }}
+        >
+          {getString('delegates.troubleshootOption')}
+        </div>
+      )}
+    </Layout.Vertical>
+  )
+}
+
+const RenderColumnMenu: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
+  const delegate = row.original
+  const { getString } = useStrings()
+
   const [menuOpen, setMenuOpen] = useState(false)
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const [troubleshoterOpen, setOpenTroubleshoter] = useState<{ isConnected: boolean | undefined }>()
 
   const { mutate: forceDeleteDelegate } = useDeleteDelegateGroupByIdentifier({
     queryParams: { accountId: accountId, orgId: orgIdentifier, projectId: projectIdentifier }
@@ -131,7 +179,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
       </Text>
       <Text font={{ variation: FontVariation.BODY }}>
         {getString('delegates.questionForceDeleteDelegate', {
-          name: groupName
+          name: delegate?.groupName
         })}
       </Text>
     </>
@@ -143,14 +191,15 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
     onCloseDialog: async (isConfirmed: boolean) => {
+      /*istanbul ignore next */
       if (isConfirmed) {
         try {
-          if (delegateGroupIdentifier) {
-            const deleted = await forceDeleteDelegate(delegateGroupIdentifier)
+          if (delegate?.delegateGroupIdentifier) {
+            const deleted = await forceDeleteDelegate(delegate?.delegateGroupIdentifier)
 
             if (deleted) {
               /*istanbul ignore next */
-              showSuccess(getString('delegates.delegateDeleted', { name: groupName }))
+              showSuccess(getString('delegates.delegateDeleted', { name: delegate?.groupName }))
             }
           }
         } catch (error) {
@@ -168,6 +217,14 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
 
   return (
     <Layout.Horizontal className={css.itemActionContainer}>
+      <Dialog
+        isOpen={!!troubleshoterOpen}
+        enforceFocus={false}
+        style={{ width: '680px', height: '100%' }}
+        onClose={() => setOpenTroubleshoter(undefined)}
+      >
+        <DelegateInstallationError showDelegateInstalledMessage={false} delegateType={delegate?.delegateType} />
+      </Dialog>
       <Popover
         isOpen={menuOpen}
         onInteraction={nextOpenState => {
@@ -183,6 +240,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
             e.stopPropagation()
             setMenuOpen(true)
           }}
+          aria-label="delegate menu options"
         />
         <Menu style={{ minWidth: 'unset' }}>
           <RbacMenuItem
@@ -194,7 +252,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
               },
               resource: {
                 resourceType: ResourceType.DELEGATE,
-                resourceIdentifier: delegateGroupIdentifier
+                resourceIdentifier: delegate.delegateGroupIdentifier
               },
               permission: PermissionIdentifier.VIEW_DELEGATE
             }}
@@ -210,7 +268,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
               },
               resource: {
                 resourceType: ResourceType.DELEGATE,
-                resourceIdentifier: delegateGroupIdentifier
+                resourceIdentifier: delegate.delegateGroupIdentifier
               },
               permission: PermissionIdentifier.DELETE_DELEGATE
             }}
@@ -224,7 +282,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
               onClick={(e: React.MouseEvent) => {
                 /*istanbul ignore next */
                 e.stopPropagation()
-                setOpenTroubleshoter({ isConnected: activelyConnected })
+                setOpenTroubleshoter({ isConnected: delegate.activelyConnected })
               }}
               icon="book"
             />
@@ -235,9 +293,8 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
   )
 }
 
-export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroubleshoterProps) => {
+export const DelegateListingItem: React.FC<DelegateProps> = props => {
   const { getString } = useStrings()
-  const [isExtended, setIsExtended] = useState(false)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<Record<string, string>>()
   const history = useHistory()
 
@@ -256,11 +313,11 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
     []
   )
 
-  const onDelegateClick = (): void => {
+  const onDelegateClick = (delegateId: string): void => {
     if (canAccessDelegate) {
       const params = {
         accountId,
-        delegateIdentifier: delegate.delegateGroupIdentifier as string
+        delegateIdentifier: delegateId as string
       }
       if (orgIdentifier) {
         set(params, 'orgIdentifier', orgIdentifier)
@@ -274,241 +331,142 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
       history.push(routes.toDelegatesDetails(params))
     }
   }
-  const currentTime = Date.now()
-  const isConnected = delegate.activelyConnected
-  const text = isConnected ? getString('connected') : getString('delegate.notConnected')
-  const status =
-    delegate?.delegateGroupExpirationTime !== undefined
-      ? !delegate?.immutable
-        ? InstanceStatus.LATEST
-        : delegate?.immutable && delegate?.groupVersion?.startsWith('1.0')
-        ? InstanceStatus.UPGRADE_REQUIRED
-        : currentTime > delegate?.delegateGroupExpirationTime
-        ? InstanceStatus.EXPIRED
-        : InstanceStatus.EXPIRING
-      : null
 
-  const [autoUpgradeColor, autoUpgradeText] = !delegate.activelyConnected
-    ? []
-    : delegate?.autoUpgrade === 'SYNCHRONIZING'
-    ? [Color.ORANGE_400, 'SYNCHRONIZING']
-    : delegate?.autoUpgrade === 'ON'
-    ? [Color.GREEN_600, 'AUTO UPGRADE: ON']
-    : [Color.GREY_300, 'AUTO UPGRADE: OFF']
-  const color: Color = isConnected ? Color.GREEN_600 : Color.GREY_400
-  const allSelectors = Object.keys(delegate.groupImplicitSelectors || {}).concat(delegate.groupCustomSelectors || [])
   const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
-  const columnWidths = USE_IMMUTABLE_DELEGATE
-    ? {
-        icon: '80px',
-        name: '25%',
-        tags: '15%',
-        version: '11%',
-        instanceStatus: '17%',
-        heartbeat: '15%',
-        status: '12%',
-        actions: '2%'
-      }
-    : {
-        icon: '80px',
-        name: '28%',
-        tags: '17%',
-        version: '15%',
-        heartbeat: '14%',
-        status: '15%',
-        actions: '2%'
-      }
+  const columns = useMemo(() => {
+    const columnsArray = USE_IMMUTABLE_DELEGATE
+      ? [
+          {
+            Header: '',
+            id: 'rowSelectOrExpander',
+            width: '3%',
+            Cell: ToggleAccordionCell
+          },
+          {
+            Header: '',
+            id: 'delegateIcon',
+            width: '2%',
+            Cell: RenderDelegateIcon
+          },
+          {
+            Header: getString('delegate.DelegateName'),
+            id: 'delegateName',
+            width: '24%',
+            Cell: RenderDelegateName
+          },
+          {
+            Header: getString('tagsLabel'),
+            id: 'tags',
+            width: '15%',
+            Cell: RenderTags
+          },
+          {
+            Header: getString('version'),
+            id: 'version',
+            width: '11%',
+            Cell: RenderVersion
+          },
+          {
+            Header: getString('delegates.instanceStatus'),
+            id: 'instanceStatus',
+            width: '18%',
+            Cell: RenderInstanceStatus
+          },
+          {
+            Header: getString('delegate.LastHeartBeat'),
+            id: 'heartbeat',
+            width: '14%',
+            Cell: RenderHeartbeat
+          },
+          {
+            Header: getString('connectivityStatus'),
+            id: 'connectivityStatus',
+            width: '12%',
+            Cell: RenderConnectivityStatus
+          },
+          {
+            Header: '',
+            id: 'actions',
+            width: '1%',
+            Cell: RenderColumnMenu
+          }
+        ]
+      : [
+          {
+            Header: '',
+            id: 'rowSelectOrExpander',
+            width: '3%',
+            Cell: ToggleAccordionCell
+          },
+          {
+            Header: '',
+            id: 'delegateIcon',
+            width: '5%',
+            Cell: RenderDelegateIcon
+          },
+          {
+            Header: getString('delegate.DelegateName'),
+            id: 'delegateName',
+            width: '27%',
+            Cell: RenderDelegateName
+          },
+          {
+            Header: getString('tagsLabel'),
+            id: 'tags',
+            width: '15%',
+            Cell: RenderTags
+          },
+          {
+            Header: getString('version'),
+            id: 'version',
+            width: '15%',
+            Cell: RenderVersion
+          },
+
+          {
+            Header: getString('delegate.LastHeartBeat'),
+            id: 'heartbeat',
+            width: '15%',
+            Cell: RenderHeartbeat
+          },
+          {
+            Header: getString('connectivityStatus'),
+            id: 'connectivityStatus',
+            width: '15%',
+            Cell: RenderConnectivityStatus
+          },
+          {
+            Header: '',
+            id: 'actions',
+            width: '5%',
+            Cell: RenderColumnMenu
+          }
+        ]
+    return columnsArray
+  }, [])
+
+  const renderRowSubComponent = React.useCallback(
+    ({ row }) => (
+      <>
+        <Layout.Horizontal className={css.podDetailsSeparator}></Layout.Horizontal>
+        <DelegateInstanceList row={row}></DelegateInstanceList>
+      </>
+    ),
+    []
+  )
 
   return (
-    <Card elevation={2} interactive={true} onClick={onDelegateClick} className={css.delegateItemContainer}>
-      <Layout.Horizontal className={css.delegateItemSubcontainer}>
-        <div style={{ width: columnWidths.icon }} className={css.delegateItemIcon}>
-          <Icon
-            name={isExtended ? 'chevron-down' : 'chevron-right'}
-            className={css.expandIcon}
-            size={20}
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              setIsExtended(!isExtended)
-            }}
-          />
-          <Text icon={delegateTypeToIcon(delegate.delegateType as string)} iconProps={{ size: 24 }} />
-        </div>
-        <Layout.Horizontal width={columnWidths.name}>
-          <Layout.Vertical width={'55%'} margin={{ right: 'large' }}>
-            <Layout.Horizontal spacing="small" data-testid={delegate.groupName}>
-              <Text color={Color.BLACK} lineClamp={1}>
-                {delegate.groupName}
-              </Text>
-            </Layout.Horizontal>
-
-            <Text font={{ size: 'small' }} color={Color.GREY_500} lineClamp={1}>
-              {delegate.delegateGroupIdentifier}
-            </Text>
-          </Layout.Vertical>
-
-          <Text
-            background={autoUpgradeColor}
-            color={Color.WHITE}
-            font={{ weight: 'semi-bold', size: 'xsmall' }}
-            className={css.statusText}
-          >
-            {autoUpgradeText}
-          </Text>
-        </Layout.Horizontal>
-
-        <Container className={css.connectivity} width={columnWidths.tags} padding={{ left: 'large' }}>
-          {delegate.groupImplicitSelectors && (
-            <>
-              <Text lineClamp={1}>
-                <TagsViewer key="tags" tags={allSelectors.slice(0, 3)} />
-                <span key="hidenTags">{allSelectors.length > 3 ? '+' + (allSelectors.length - 3) : ''}</span>
-              </Text>
-            </>
-          )}
-        </Container>
-
-        <Layout.Horizontal width={columnWidths.version} padding={{ left: USE_IMMUTABLE_DELEGATE ? 'xxlarge' : '' }}>
-          {delegate.groupVersion}
-        </Layout.Horizontal>
-
-        {USE_IMMUTABLE_DELEGATE ? (
-          <Layout.Horizontal width={columnWidths.instanceStatus} className={css.paddingLeft}>
-            <>
-              <Text className={css.statusText} lineClamp={1}>
-                {status}
-              </Text>
-              {status === InstanceStatus.LATEST ? (
-                ''
-              ) : delegate.delegateGroupExpirationTime ? (
-                <div style={{ paddingTop: '2px' }}>
-                  {!delegate?.groupVersion?.startsWith('1.0') && moment(delegate.delegateGroupExpirationTime).fromNow()}
-                </div>
-              ) : (
-                ''
-              )}
-            </>
-          </Layout.Horizontal>
-        ) : null}
-
-        <Layout.Horizontal width={columnWidths.heartbeat} style={{ paddingLeft: USE_IMMUTABLE_DELEGATE ? '40px' : '' }}>
-          {delegate.lastHeartBeat ? <ReactTimeago date={delegate.lastHeartBeat} live /> : getString('na')}
-        </Layout.Horizontal>
-
-        <Layout.Vertical width={columnWidths.status}>
-          <Text icon="full-circle" iconProps={{ size: 6, color, padding: 'small' }}>
-            {text}
-          </Text>
-          {!isConnected && delegate.delegateType === 'KUBERNETES' && (
-            <div
-              className={css.troubleshootLink}
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                setOpenTroubleshoter({ isConnected })
-              }}
-            >
-              {getString('delegates.troubleshootOption')}
-            </div>
-          )}
-        </Layout.Vertical>
-
-        <Layout.Vertical width={columnWidths.actions}>
-          {RenderColumnMenu({ delegate, setOpenTroubleshoter })}
-        </Layout.Vertical>
-      </Layout.Horizontal>
-
-      {isExtended && <Layout.Horizontal className={css.podDetailsSeparator}></Layout.Horizontal>}
-
-      {isExtended && (
-        <Layout.Vertical className={`${css.instancesContainer} ${css.podDetailsContainer}`}>
-          {!delegate.delegateInstanceDetails?.length && (
-            <Layout.Horizontal className={css.delegateItemSubcontainer}>
-              <Layout.Horizontal style={{ width: columnWidths.icon }} />
-              <Layout.Horizontal width={columnWidths.name}>
-                <Text color={Color.BLACK}>{getString('delegates.noInstances')}</Text>
-              </Layout.Horizontal>
-              <Layout.Horizontal width={columnWidths.tags} />
-              <Layout.Horizontal width={columnWidths.version} />
-              {USE_IMMUTABLE_DELEGATE ? <Container width={columnWidths.instanceStatus} /> : null}
-              <Layout.Horizontal width={columnWidths.heartbeat} />
-              <Layout.Vertical width={columnWidths.status} />
-              <Layout.Vertical width={columnWidths.actions} />
-            </Layout.Horizontal>
-          )}
-          {delegate.delegateInstanceDetails?.map(instanceDetails => {
-            const podStatusColor = instanceDetails.activelyConnected ? Color.GREEN_600 : Color.GREY_400
-
-            const statusText = instanceDetails.activelyConnected
-              ? getString('connected')
-              : getString('delegate.notConnected')
-            /*istanbul ignore next */
-            const instanceStatus = !delegate?.immutable
-              ? InstanceStatus.LATEST
-              : delegate?.immutable && instanceDetails?.version?.startsWith('1.0')
-              ? InstanceStatus.UPGRADE_REQUIRED
-              : instanceDetails?.delegateExpirationTime !== undefined
-              ? currentTime > instanceDetails?.delegateExpirationTime
-                ? InstanceStatus.EXPIRED
-                : InstanceStatus.EXPIRING
-              : null
-
-            /*istanbul ignore next */
-            return (
-              <Layout.Horizontal key={instanceDetails.hostName} width="100%" spacing={'small'}>
-                <Layout.Horizontal style={{ width: USE_IMMUTABLE_DELEGATE ? '52px' : '80px' }} />
-                <Layout.Horizontal width={columnWidths.name}>
-                  <Text lineClamp={1}>{instanceDetails.hostName} </Text>
-                </Layout.Horizontal>
-                <Layout.Horizontal width={USE_IMMUTABLE_DELEGATE ? '16%' : '17%'}></Layout.Horizontal>
-                <Layout.Horizontal
-                  width={columnWidths.version}
-                  className={css.marginLeft}
-                  style={{ paddingLeft: !USE_IMMUTABLE_DELEGATE ? '6px' : '9px' }}
-                >
-                  <Text>{instanceDetails.version}</Text>
-                </Layout.Horizontal>
-                {USE_IMMUTABLE_DELEGATE ? (
-                  <Layout.Horizontal width={columnWidths.instanceStatus} className={css.instanceStatus}>
-                    <>
-                      <Text className={css.statusText} lineClamp={1}>
-                        {instanceStatus}
-                      </Text>
-                      <div style={{ paddingTop: '2px' }}>
-                        {!instanceDetails.version?.startsWith('1.0') &&
-                          moment(instanceDetails?.delegateExpirationTime).fromNow()}
-                      </div>
-                    </>
-                  </Layout.Horizontal>
-                ) : null}
-                <Layout.Horizontal
-                  width={USE_IMMUTABLE_DELEGATE ? columnWidths.status : '14%'}
-                  className={USE_IMMUTABLE_DELEGATE ? css.statusPadding : ''}
-                >
-                  <Text>
-                    {instanceDetails.lastHeartbeat ? (
-                      <ReactTimeago date={instanceDetails.lastHeartbeat} live />
-                    ) : (
-                      getString('na')
-                    )}
-                  </Text>
-                </Layout.Horizontal>
-                <Layout.Vertical
-                  width={columnWidths.status}
-                  padding={{ left: USE_IMMUTABLE_DELEGATE ? 'medium' : '2px' }}
-                >
-                  <Text icon="full-circle" iconProps={{ size: 6, color: podStatusColor, padding: 'small' }}>
-                    {statusText}
-                  </Text>
-                </Layout.Vertical>
-                <Layout.Vertical width={columnWidths.actions} />
-              </Layout.Horizontal>
-            )
-          })}
-        </Layout.Vertical>
-      )}
-    </Card>
+    <Layout.Horizontal width={'100%'}>
+      <Table<DelegateGroupDetails>
+        columns={columns}
+        className={css.instanceTable}
+        data={props?.data}
+        onRowClick={(row: DelegateGroupDetails) => {
+          onDelegateClick(defaultTo(row.delegateGroupIdentifier, ''))
+        }}
+        renderRowSubComponent={renderRowSubComponent}
+      />
+    </Layout.Horizontal>
   )
 }
 export default DelegateListingItem

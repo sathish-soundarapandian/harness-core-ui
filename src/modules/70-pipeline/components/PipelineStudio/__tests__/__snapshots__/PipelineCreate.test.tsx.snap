@@ -57,7 +57,7 @@ exports[`PipelineCreate test initializes ok edit pipeline 1`] = `
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -161,7 +161,7 @@ exports[`PipelineCreate test initializes ok edit pipeline 1`] = `
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
+            class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
@@ -274,7 +274,7 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -432,7 +432,7 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
             </button>
           </div>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
+            class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
@@ -545,7 +545,7 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -703,7 +703,7 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
             </button>
           </div>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
+            class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
@@ -816,7 +816,7 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
                 </span>
               </div>
               <div
-                class="bp3-form-group"
+                class="bp3-form-group zeroMargin"
                 data-id="name-0"
               >
                 <label
@@ -966,7 +966,7 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
             </button>
           </div>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
+            class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"

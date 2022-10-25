@@ -28,16 +28,14 @@ export const sourceData = {
             identifier: 'appdMetric',
             metricName: 'appdMetric',
             riskProfile: {
-              category: 'Errors',
-              metricType: 'ERROR',
+              riskCategory: 'Errors/ERROR',
               thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
             },
             analysis: {
               liveMonitoring: { enabled: true },
               deploymentVerification: { enabled: true },
               riskProfile: {
-                category: 'Errors',
-                metricType: 'ERROR',
+                riskCategory: 'Errors/ERROR',
                 thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
               }
             },
@@ -147,8 +145,7 @@ export const templateSourceDataWithCustomMetric = {
             sli: { enabled: true },
             analysis: {
               riskProfile: {
-                category: 'Performance',
-                metricType: 'THROUGHPUT',
+                riskCategory: 'Performance/THROUGHPUT',
                 thresholdTypes: ['ACT_WHEN_HIGHER']
               },
               liveMonitoring: { enabled: true },
@@ -187,8 +184,7 @@ export const templateSourceDataWithCustomMetric = {
           sli: { enabled: true },
           analysis: {
             riskProfile: {
-              category: 'Performance',
-              metricType: 'THROUGHPUT',
+              riskCategory: 'Performance/THROUGHPUT',
               thresholdTypes: ['ACT_WHEN_HIGHER']
             },
             liveMonitoring: { enabled: true },
@@ -729,8 +725,7 @@ export const onPreviousPayload = {
               deploymentVerification: { enabled: true },
               liveMonitoring: { enabled: true },
               riskProfile: {
-                category: 'Errors',
-                metricType: 'ERROR',
+                riskCategory: 'Errors/ERROR',
                 thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
               }
             },
@@ -744,8 +739,7 @@ export const onPreviousPayload = {
             metricName: 'appdMetric',
             metricPacks: [{ identifier: 'Performance' }, { identifier: 'Errors' }],
             riskProfile: {
-              category: 'Errors',
-              metricType: 'ERROR',
+              riskCategory: 'Errors/ERROR',
               thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
             },
             sli: { enabled: true }
@@ -1233,8 +1227,7 @@ export const formDataExpectedOutput = {
           deploymentVerification: { enabled: false },
           liveMonitoring: { enabled: true },
           riskProfile: {
-            category: 'Errors',
-            metricType: 'ERROR',
+            riskCategory: 'Errors/ERROR',
             thresholdTypes: []
           }
         },
@@ -1252,8 +1245,7 @@ export const formDataExpectedOutput = {
           deploymentVerification: { enabled: true },
           liveMonitoring: { enabled: false },
           riskProfile: {
-            category: 'Errors',
-            metricType: 'INFRA',
+            riskCategory: 'Errors/INFRA',
             thresholdTypes: ['ACT_WHEN_LOWER']
           }
         },
@@ -1261,7 +1253,6 @@ export const formDataExpectedOutput = {
         identifier: undefined,
         metricName: 'appdMetric One Updated',
         completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
-        completeServiceInstanceMetricPath: undefined,
         sli: {
           enabled: false
         }
@@ -1496,14 +1487,13 @@ export const onSubmitPayload = {
         analysis: {
           deploymentVerification: { enabled: false },
           liveMonitoring: { enabled: true },
-          riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
+          riskProfile: { riskCategory: 'Performance_ResponseTime', thresholdTypes: ['ACT_WHEN_HIGHER'] }
         },
         groupName: 'Group 1',
         identifier: 'appdMetric',
         metricName: 'appdMetric',
         sli: { enabled: true },
-        completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
-        completeServiceInstanceMetricPath: undefined
+        completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute'
       }
     ],
     metricPacks: [

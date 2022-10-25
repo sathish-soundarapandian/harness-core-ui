@@ -12,6 +12,7 @@
     'input-field toggle'
     'main-content main-content';
   align-items: start;
+  row-gap: var(--spacing-xsmall);
 
   :global {
     .bp3-form-group {
@@ -57,4 +58,9 @@
 
 .inputSetSpinner {
   margin-bottom: var(--spacing-6);
+}
+
+.git-ops-stage {
+  align-items: center;
+  row-gap: var(--spacing-medium);
 }

@@ -18,6 +18,7 @@ import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
 import paths from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface NGBreadcrumbsProps extends BreadcrumbsProps {
   orgBreadCrumbOptional: boolean
@@ -39,6 +40,7 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
   baseUrl
 }) => {
   const { getString } = useStrings()
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const originalParams = useParams<ProjectPathProps & SecretsPathProps & ModulePathParams>()
   const params = defaults(customPathParams, originalParams)
   const { module } = useModuleInfo()
@@ -59,13 +61,16 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
     pathname.indexOf(paths.toMainDashboard({ accountId: params.accountId })) !== -1
   const isDashBoards = pathname.indexOf(paths.toCustomDashboard({ accountId: params.accountId })) !== -1
 
-  const isProjects = pathname.indexOf(paths.toProjects({ accountId: params.accountId })) !== -1
+  const isProjects =
+    pathname.indexOf(paths.toProjects({ accountId: params.accountId })) !== -1 && !NEW_LEFT_NAVBAR_SETTINGS
 
   if (isHome) {
     moduleBreadCrumb = {
-      label: getString('common.home'),
+      label: NEW_LEFT_NAVBAR_SETTINGS ? getString('projectsText') : getString('common.home'),
       iconProps: { name: 'harness', color: 'primary7' },
-      url: resolveUrl(paths.toMainDashboard(params))
+      url: NEW_LEFT_NAVBAR_SETTINGS
+        ? resolveUrl(paths.toAllProjects(params))
+        : resolveUrl(paths.toMainDashboard(params))
     }
   } else if (isProjects) {
     moduleBreadCrumb = {
@@ -108,6 +113,10 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
       case ModuleName.CHAOS:
         url = paths.toChaos(params)
         label = getString('common.chaosText')
+        break
+      case ModuleName.STO:
+        url = paths.toSTO(params)
+        label = getString('common.purpose.sto.continuous')
         break
     }
 

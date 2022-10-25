@@ -9,8 +9,10 @@ import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
   monitoredServiceListCall,
   monitoredServiceListResponse,
+  riskCategoryMock,
   validations
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   labelNamesAPI,
   labelNamesResponse,
@@ -62,7 +64,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.get('input[name="product"]').should('be.disabled')
 
-    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
@@ -152,7 +154,7 @@ describe('Health Source - Prometheus', () => {
     cy.populateTemplateDetails('Prometheus Template', '1')
     cy.setServiceEnvRuntime()
 
-    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', labelNamesAPI, labelNamesResponse)
     cy.intercept('GET', metricListAPI, metricListResponse)
 
@@ -179,7 +181,7 @@ describe('Health Source - Prometheus', () => {
     cy.contains('div', 'Assign').click()
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="serviceInstance"]').should('have.value', '<+input>')
-    cy.get('input[value="Errors/ERROR"]').click({ force: true })
+    cy.get('input[value="Performance_Throughput"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
     cy.findByRole('button', { name: /Submit/i }).click()
     // Creating the template.

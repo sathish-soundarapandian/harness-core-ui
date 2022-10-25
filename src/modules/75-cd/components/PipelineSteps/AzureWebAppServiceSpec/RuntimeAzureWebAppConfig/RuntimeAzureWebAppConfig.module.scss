@@ -9,7 +9,7 @@
   padding-left: 0 !important;
 }
 
-.accordionSummary {
+.configSection {
   width: 100%;
   background: var(--white);
   margin-top: 0 !important;
@@ -24,9 +24,28 @@
 
 .layoutVerticalSpacing {
   margin-top: var(--spacing-main) !important;
-  .verticalSpacingInput {
-    margin-bottom: var(--spacing-small);
+  .inputSpacing {
+    margin-bottom: var(--spacing-4);
   }
+  :global {
+    .TextInput--main {
+      margin-bottom: 0 !important;
+    }
+  }
+  .connectorInputSpacing {
+    margin-bottom: var(--spacing-2) !important;
+  }
+  :global {
+    .bp3-form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.fileStoreVerticalSpacing {
+  margin-top: 0 !important;
+  margin-bottom: var(--spacing-4) !important;
+
   :global {
     .bp3-form-group {
       margin-bottom: 0;

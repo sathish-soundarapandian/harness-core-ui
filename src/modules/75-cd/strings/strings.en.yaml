@@ -56,6 +56,7 @@ steps:
     hostsOptional: Hosts (Optional)
     previewHosts: Preview Hosts
     noHosts: No hosts provided
+    title: Select Hosts
   azureInfraStep:
     azure: 'Microsoft Azure'
     subscription: '{{ $.common.subscriptionId }}'
@@ -189,8 +190,9 @@ pipelineSteps:
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
     environmentGroupIsRequired: 'Environment Group is required'
-    clusterIsRequired: 'Clusters are required'
+    clusterIsRequired: 'Cluster is required'
     multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
+    envGroupToggleText: 'Deploy to Environment Group'
     viewEnvironmentInputs: View environment inputs
     hideEnvironmentInputs: Hide environment inputs
     viewInfrastructureInputs: View infrastructure inputs

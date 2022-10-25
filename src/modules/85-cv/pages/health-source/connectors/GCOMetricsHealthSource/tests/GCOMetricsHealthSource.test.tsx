@@ -25,6 +25,7 @@ import {
 } from './GCOMetricsHealthSource.mock'
 import { FieldNames } from '../GCOMetricsHealthSource.constants'
 import type { GCOMetricsHealthSourceProps } from '../GCOMetricsHealthSource.type'
+import { riskCategoryMock } from '../../__tests__/HealthSources.mock'
 
 function WrapperComponent({ data, onSubmit }: GCOMetricsHealthSourceProps) {
   return (
@@ -57,6 +58,10 @@ jest.mock('services/cv', () => ({
   useGetMetricNames: jest.fn().mockImplementation(() => {
     return { data: { data: [] } } as any
   }),
+  useGetRiskCategoryForCustomHealthMetric: jest.fn().mockImplementation(() => {
+    return { loading: false, error: null, data: riskCategoryMock } as any
+  }),
+
   useGetStackdriverSampleData: jest.fn().mockImplementation(() => {
     return { mutate: mutateMock, cancel: jest.fn() }
   })

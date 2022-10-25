@@ -11,8 +11,8 @@
           "name": "service_now_connector",
           "identifier": "service_now_connector",
           "description": "",
-          "orgIdentifier": null,
-          "projectIdentifier": null,
+          "orgIdentifier": "dummy_org",
+          "projectIdentifier": "dummy_project_id",
           "tags": {},
           "type": "ServiceNow",
           "spec": {

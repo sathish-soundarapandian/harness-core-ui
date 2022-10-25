@@ -6,15 +6,20 @@
  */
 
 .table {
-  padding: var(--spacing-large) var(--spacing-xxlarge);
-  padding-bottom: 0;
-
   .gitText {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 150px;
   }
+}
+.tableWithNoSpace {
+  padding: var(--spacing-0) var(--spacing-0);
+  padding-right: var(--spacing-xxlarge);
+}
+.tableWithSpace {
+  padding: var(--spacing-large) var(--spacing-xxlarge);
+  padding-bottom: 0;
 }
 .overflow {
   overflow-wrap: anywhere;

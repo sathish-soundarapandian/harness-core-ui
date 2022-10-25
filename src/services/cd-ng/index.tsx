@@ -2410,7 +2410,7 @@ export interface CrossAccountAccess {
   externalId?: string
 }
 
-export interface CurrentOrUpcomingActiveWindow {
+export interface CurrentOrUpcomingWindow {
   endTime?: number
   startTime?: number
 }
@@ -5207,10 +5207,21 @@ export interface FolderNodeDTO {
   type: 'FILE' | 'FOLDER'
 }
 
+export interface FreezeBannerDetails {
+  accountId?: string
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  window?: CurrentOrUpcomingWindow
+  windows?: FreezeWindow[]
+}
+
 export interface FreezeDetailedResponse {
   accountId?: string
   createdAt?: number
-  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow
+  currentOrUpcomingWindow?: CurrentOrUpcomingWindow
   description?: string
   freezeScope?: 'account' | 'org' | 'project' | 'unknown'
   identifier?: string
@@ -5271,7 +5282,7 @@ export interface FreezeResponseWrapperDTO {
 export interface FreezeSummaryResponse {
   accountId?: string
   createdAt?: number
-  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow
+  currentOrUpcomingWindow?: CurrentOrUpcomingWindow
   description?: string
   freezeScope?: 'account' | 'org' | 'project' | 'unknown'
   identifier?: string
@@ -6707,6 +6718,11 @@ export interface GitopsProviderResponse {
   tags?: {
     [key: string]: string
   }
+}
+
+export interface GlobalFreezeWithBannerDetailsResponseDTO {
+  activeOrUpcomingParentGlobalFreezes?: FreezeBannerDetails[]
+  globalFreezeResponse?: FreezeDetailedResponse
 }
 
 export type GoogleArtifactRegistryConfig = ArtifactConfig & {
@@ -9117,6 +9133,7 @@ export type PipelineFilterProperties = FilterProperties & {
   name?: string
   pipelineIdentifiers?: string[]
   pipelineTags?: NGTag[]
+  repoName?: string
 }
 
 export interface PipelineInfrastructure {
@@ -9267,7 +9284,7 @@ export interface Recurrence {
 }
 
 export interface RecurrenceSpec {
-  until?: string
+  until: string
 }
 
 export interface ReferenceDTO {
@@ -10142,6 +10159,13 @@ export interface ResponseGitopsProviderResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseGlobalFreezeWithBannerDetailsResponseDTO {
+  correlationId?: string
+  data?: GlobalFreezeWithBannerDetailsResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseHealthDeploymentDashboard {
   correlationId?: string
   data?: HealthDeploymentDashboard
@@ -10494,12 +10518,12 @@ export interface ResponseListExecutionStatus {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedDueToFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
     | 'WAITING'
-    | 'ABORTED_DUE_TO_FREEZE'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11728,6 +11752,13 @@ export interface ResponseSetupStatus {
     | 'K8S_CONNECTOR_PROVISION_FAILURE'
     | 'DOCKER_CONNECTOR_PROVISION_FAILURE'
     | 'PROVISIONING_DISABLED'
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseShouldDisableDeploymentFreezeResponseDTO {
+  correlationId?: string
+  data?: ShouldDisableDeploymentFreezeResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13098,6 +13129,11 @@ export interface ShellScriptSourceWrapper {
   type: string
 }
 
+export interface ShouldDisableDeploymentFreezeResponseDTO {
+  freezeReferences?: string[]
+  shouldDisable?: boolean
+}
+
 export interface SidecarArtifact {
   identifier: string
   name?: string
@@ -14375,6 +14411,8 @@ export type SignupDTORequestBody = SignupDTO
 export type SourceCodeManagerDTORequestBody = SourceCodeManagerDTO
 
 export type StartTrialDTORequestBody = StartTrialDTO
+
+export type StrategyParametersRequestBody = StrategyParameters
 
 export type SubscriptionDTORequestBody = SubscriptionDTO
 
@@ -32577,7 +32615,7 @@ export interface ShouldDisableDeploymentQueryParams {
 }
 
 export type ShouldDisableDeploymentProps = Omit<
-  GetProps<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
+  GetProps<ResponseShouldDisableDeploymentFreezeResponseDTO, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
   'path'
 >
 
@@ -32585,7 +32623,7 @@ export type ShouldDisableDeploymentProps = Omit<
  * If to disable run button for deployment
  */
 export const ShouldDisableDeployment = (props: ShouldDisableDeploymentProps) => (
-  <Get<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>
+  <Get<ResponseShouldDisableDeploymentFreezeResponseDTO, Failure | Error, ShouldDisableDeploymentQueryParams, void>
     path={`/freeze/evaluate/shouldDisableDeployment`}
     base={getConfig('ng/api')}
     {...props}
@@ -32593,7 +32631,12 @@ export const ShouldDisableDeployment = (props: ShouldDisableDeploymentProps) => 
 )
 
 export type UseShouldDisableDeploymentProps = Omit<
-  UseGetProps<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
+  UseGetProps<
+    ResponseShouldDisableDeploymentFreezeResponseDTO,
+    Failure | Error,
+    ShouldDisableDeploymentQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -32601,7 +32644,7 @@ export type UseShouldDisableDeploymentProps = Omit<
  * If to disable run button for deployment
  */
 export const useShouldDisableDeployment = (props: UseShouldDisableDeploymentProps) =>
-  useGet<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>(
+  useGet<ResponseShouldDisableDeploymentFreezeResponseDTO, Failure | Error, ShouldDisableDeploymentQueryParams, void>(
     `/freeze/evaluate/shouldDisableDeployment`,
     { base: getConfig('ng/api'), ...props }
   )
@@ -32610,15 +32653,20 @@ export const useShouldDisableDeployment = (props: UseShouldDisableDeploymentProp
  * If to disable run button for deployment
  */
 export const shouldDisableDeploymentPromise = (
-  props: GetUsingFetchProps<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>,
+  props: GetUsingFetchProps<
+    ResponseShouldDisableDeploymentFreezeResponseDTO,
+    Failure | Error,
+    ShouldDisableDeploymentQueryParams,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseBoolean, Failure | Error, ShouldDisableDeploymentQueryParams, void>(
-    getConfig('ng/api'),
-    `/freeze/evaluate/shouldDisableDeployment`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponseShouldDisableDeploymentFreezeResponseDTO,
+    Failure | Error,
+    ShouldDisableDeploymentQueryParams,
+    void
+  >(getConfig('ng/api'), `/freeze/evaluate/shouldDisableDeployment`, props, signal)
 
 export interface GetGlobalFreezeQueryParams {
   accountIdentifier: string
@@ -32669,6 +32717,78 @@ export const getGlobalFreezePromise = (
     props,
     signal
   )
+
+export interface GetGlobalFreezeWithBannerDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetGlobalFreezeWithBannerDetailsProps = Omit<
+  GetProps<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get Global Freeze Yaml with Banner Details
+ */
+export const GetGlobalFreezeWithBannerDetails = (props: GetGlobalFreezeWithBannerDetailsProps) => (
+  <Get<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >
+    path={`/freeze/getGlobalFreezeWithBannerDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetGlobalFreezeWithBannerDetailsProps = Omit<
+  UseGetProps<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get Global Freeze Yaml with Banner Details
+ */
+export const useGetGlobalFreezeWithBannerDetails = (props: UseGetGlobalFreezeWithBannerDetailsProps) =>
+  useGet<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >(`/freeze/getGlobalFreezeWithBannerDetails`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get Global Freeze Yaml with Banner Details
+ */
+export const getGlobalFreezeWithBannerDetailsPromise = (
+  props: GetUsingFetchProps<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    Failure | Error,
+    GetGlobalFreezeWithBannerDetailsQueryParams,
+    void
+  >(getConfig('ng/api'), `/freeze/getGlobalFreezeWithBannerDetails`, props, signal)
 
 export interface GetFreezeListQueryParams {
   page?: number
@@ -33018,7 +33138,7 @@ export interface GetFreezePathParams {
 }
 
 export type GetFreezeProps = Omit<
-  GetProps<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
+  GetProps<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
   'path'
 > &
   GetFreezePathParams
@@ -33027,7 +33147,7 @@ export type GetFreezeProps = Omit<
  * Get a Freeze
  */
 export const GetFreeze = ({ freezeIdentifier, ...props }: GetFreezeProps) => (
-  <Get<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>
+  <Get<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>
     path={`/freeze/${freezeIdentifier}`}
     base={getConfig('ng/api')}
     {...props}
@@ -33035,7 +33155,7 @@ export const GetFreeze = ({ freezeIdentifier, ...props }: GetFreezeProps) => (
 )
 
 export type UseGetFreezeProps = Omit<
-  UseGetProps<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
+  UseGetProps<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>,
   'path'
 > &
   GetFreezePathParams
@@ -33044,7 +33164,7 @@ export type UseGetFreezeProps = Omit<
  * Get a Freeze
  */
 export const useGetFreeze = ({ freezeIdentifier, ...props }: UseGetFreezeProps) =>
-  useGet<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
+  useGet<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
     (paramsInPath: GetFreezePathParams) => `/freeze/${paramsInPath.freezeIdentifier}`,
     { base: getConfig('ng/api'), pathParams: { freezeIdentifier }, ...props }
   )
@@ -33056,12 +33176,12 @@ export const getFreezePromise = (
   {
     freezeIdentifier,
     ...props
-  }: GetUsingFetchProps<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams> & {
+  }: GetUsingFetchProps<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams> & {
     freezeIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseFreezeResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
+  getUsingFetch<ResponseFreezeDetailedResponse, Failure | Error, GetFreezeQueryParams, GetFreezePathParams>(
     getConfig('ng/api'),
     `/freeze/${freezeIdentifier}`,
     props,
@@ -40550,6 +40670,73 @@ export const getExecutionStrategyListPromise = (
     signal
   )
 
+export interface PostDefaultTemplatesQueryParams {
+  accountIdentifier: string
+  serviceDefinitionType:
+    | 'Kubernetes'
+    | 'NativeHelm'
+    | 'Ssh'
+    | 'WinRm'
+    | 'ServerlessAwsLambda'
+    | 'AzureWebApp'
+    | 'CustomDeployment'
+    | 'ECS'
+  strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
+}
+
+export type PostDefaultTemplatesProps = Omit<
+  MutateProps<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generates default templates for the account if they are not already created
+ */
+export const PostDefaultTemplates = (props: PostDefaultTemplatesProps) => (
+  <Mutate<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>
+    verb="POST"
+    path={`/pipelines/configuration/strategies/generate-default-templates`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePostDefaultTemplatesProps = Omit<
+  UseMutateProps<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generates default templates for the account if they are not already created
+ */
+export const usePostDefaultTemplates = (props: UsePostDefaultTemplatesProps) =>
+  useMutate<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>(
+    'POST',
+    `/pipelines/configuration/strategies/generate-default-templates`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Generates default templates for the account if they are not already created
+ */
+export const postDefaultTemplatesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseString,
+    Failure | Error,
+    PostDefaultTemplatesQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseString,
+    Failure | Error,
+    PostDefaultTemplatesQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/pipelines/configuration/strategies/generate-default-templates`, props, signal)
+
 export interface GetProvisionerExecutionStrategyYamlQueryParams {
   provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'SHELL_SCRIPT_PROVISIONER'
 }
@@ -40657,6 +40844,7 @@ export const getExecutionStrategyYamlPromise = (
   )
 
 export interface PostExecutionStrategyYamlQueryParams {
+  accountIdentifier: string
   serviceDefinitionType:
     | 'Kubernetes'
     | 'NativeHelm'
@@ -40671,7 +40859,13 @@ export interface PostExecutionStrategyYamlQueryParams {
 }
 
 export type PostExecutionStrategyYamlProps = Omit<
-  MutateProps<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>,
+  MutateProps<
+    ResponseString,
+    Failure | Error,
+    PostExecutionStrategyYamlQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -40679,7 +40873,7 @@ export type PostExecutionStrategyYamlProps = Omit<
  * Gets generated Yaml snippet based on strategy parameters
  */
 export const PostExecutionStrategyYaml = (props: PostExecutionStrategyYamlProps) => (
-  <Mutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>
+  <Mutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParametersRequestBody, void>
     verb="POST"
     path={`/pipelines/configuration/strategies/yaml-snippets`}
     base={getConfig('ng/api')}
@@ -40688,7 +40882,13 @@ export const PostExecutionStrategyYaml = (props: PostExecutionStrategyYamlProps)
 )
 
 export type UsePostExecutionStrategyYamlProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>,
+  UseMutateProps<
+    ResponseString,
+    Failure | Error,
+    PostExecutionStrategyYamlQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -40696,7 +40896,7 @@ export type UsePostExecutionStrategyYamlProps = Omit<
  * Gets generated Yaml snippet based on strategy parameters
  */
 export const usePostExecutionStrategyYaml = (props: UsePostExecutionStrategyYamlProps) =>
-  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
+  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParametersRequestBody, void>(
     'POST',
     `/pipelines/configuration/strategies/yaml-snippets`,
     { base: getConfig('ng/api'), ...props }
@@ -40710,18 +40910,18 @@ export const postExecutionStrategyYamlPromise = (
     ResponseString,
     Failure | Error,
     PostExecutionStrategyYamlQueryParams,
-    StrategyParameters,
+    StrategyParametersRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/pipelines/configuration/strategies/yaml-snippets`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseString,
+    Failure | Error,
+    PostExecutionStrategyYamlQueryParams,
+    StrategyParametersRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/pipelines/configuration/strategies/yaml-snippets`, props, signal)
 
 export interface GetProjectListQueryParams {
   accountIdentifier: string

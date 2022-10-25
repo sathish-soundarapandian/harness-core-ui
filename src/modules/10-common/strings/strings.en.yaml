@@ -99,6 +99,8 @@ selectTimeFrame: Select Timeframe
 lastModified: 'Last Modified'
 servicePrefix: 'Service: {{ name }}'
 serviceInputs: Service inputs
+switchToBarChart: Switch to bar chart
+switchToLineChart: Switch to line chart
 accountSetting:
   connector:
     loading: 'Loading settings...'
@@ -982,6 +984,9 @@ moduleConfig:
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
 configureModuleList: Configure Module List
+codeErrorsAgents: Code Error Agents
+cdAndGitops: Continuous Delivery & GitOps
+stoText: Security Testing Orchestration
 
 # Chaos Module
 chaosText: Chaos
@@ -1036,6 +1041,7 @@ serviceName: Service Name
 assignedAt: Assigned at
 assignedThrough: Assigned Through
 directly: Directly
+noAvailableTags: No available tags
 loadBalancer: Load Balancer
 environmentInputs: Environment inputs
 infrastructures: Infrastructures
@@ -1078,3 +1084,5 @@ schedulePanel:
   cronExpression: 'Cron Expression'
   cronExpressionRequired: 'Cron Expression required'
 allClusters: 'All Clusters'
+all: 'All {{name}}'
+sortedByCreatedTime: List sorted by created time

@@ -19,15 +19,19 @@ export interface CopyTextProps {
   valueClassName?: string
   textToCopy: string
   iconAlwaysVisible?: boolean
+  stopPropagation?: boolean
 }
 
 export function CopyText(props: CopyTextProps): React.ReactElement {
-  const { iconAlwaysVisible = false } = props
+  const { iconAlwaysVisible = false, stopPropagation = false } = props
   const [copied, setCopied] = React.useState(false)
   const icon = props.iconName || 'copy-alt'
-  function handleClick(): void {
+  function handleClick(e: React.MouseEvent<Element, MouseEvent>): void {
     Utils.copy(props.textToCopy)
     setCopied(true)
+    if (stopPropagation) {
+      e.stopPropagation()
+    }
   }
 
   function onClosed(): void {

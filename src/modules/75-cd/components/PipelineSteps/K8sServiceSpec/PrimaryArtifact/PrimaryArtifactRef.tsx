@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
 import produce from 'immer'
 import { PrimaryArtifact, ServiceSpec, useGetArtifactSourceInputs } from 'services/cd-ng'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -49,7 +49,8 @@ function PrimaryArtifactRef({
   allowableTypes,
   readonly,
   formik,
-  serviceIdentifier = ''
+  serviceIdentifier = '',
+  stepViewType
 }: PrimaryArtifactRefProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -90,7 +91,7 @@ function PrimaryArtifactRef({
   const onPrimaryArtifactRefChange = (value: SelectOption): void => {
     if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED) {
       updateStageFormTemplate(undefined, `${path}.artifacts.primary.sources`)
-      const isRuntime = isValueRuntimeInput(value)
+      const isRuntime = isValueRuntimeInput(value) && stepViewType === StepViewType.TemplateUsage
 
       formik?.setValues(
         produce(formik?.values, (draft: any) => {

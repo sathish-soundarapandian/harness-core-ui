@@ -46,8 +46,17 @@
   }
 }
 .serviceModal {
-  margin-bottom: var(--spacing-small);
+  margin-bottom: var(--spacing-7);
 }
 .nonModalView {
   margin: var(--spacing-large) 0 var(--spacing-medium) var(--spacing-large);
+}
+
+.tabHeading {
+  font-size: 16px;
+  color: var(--black);
+  margin-top: var(--spacing-7);
+  font-weight: 600;
+  line-height: var(--spacing-7);
+  margin-bottom: var(--spacing-small);
 }

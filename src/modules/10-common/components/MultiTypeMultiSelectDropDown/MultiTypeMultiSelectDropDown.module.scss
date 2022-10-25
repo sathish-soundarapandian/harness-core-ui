@@ -11,6 +11,11 @@
     border: 1px solid var(--grey-200);
     border-radius: var(--spacing-2);
 
+    input {
+      height: 30px !important;
+      border: 0 !important;
+    }
+
     &.hasError {
       border-color: var(--red-500);
     }

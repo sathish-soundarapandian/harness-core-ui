@@ -1376,7 +1376,7 @@ exports[`StepWidget tests renders ServiceStep for Service Tab  1`] = `
         id="common.variables"
       >
         <div
-          class="tabSubHeading"
+          class="tabSubHeading listHeader"
         >
           common.variables
         </div>

@@ -15,7 +15,7 @@ import NotificationTable, {
   RenderColumnEventsContent
 } from '@pipeline/components/Notifications/NotificationTable'
 import { Actions } from '@pipeline/components/Notifications/NotificationUtils'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import type { FreezeNotificationRules } from '@freeze-windows/types'
 import { FreezeEvents } from './FreezeEvents'
 import css from '@pipeline/components/PipelineStudio/PipelineNotifications/PipelineNotifications.module.scss'

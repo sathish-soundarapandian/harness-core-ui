@@ -12,7 +12,7 @@ import type {
   SelectedAndMappedMetrics
 } from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics.types'
 import type { DynatraceMetricInfo } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
-import type { useGetMetricPacks } from 'services/cv'
+import type { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 
 export const DEFAULT_METRIC_NAME = 'mock_default_metric_name'
 export const CREATED_METRICS_WITH_DEFAULT_METRIC_MOCK: CreatedMetricsWithSelectedIndex = {
@@ -77,11 +77,11 @@ export const DYNATRACE_CUSTOM_METRICS_PROPS_MOCK: DynatraceCustomMetricsProps = 
   selectedMetric: 'mapped_metric_1',
   connectorIdentifier: 'mock_connector',
   selectedServiceId: 'mock_service_id',
-  metricPackResponse: {
+  riskProfileResponse: {
     resource: [],
     metaData: {},
     responseMessages: []
-  } as unknown as ReturnType<typeof useGetMetricPacks>
+  } as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
 }
 
 export const DYNATRACE_METRICS_SELECTORS_MOCK = [

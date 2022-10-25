@@ -8,7 +8,6 @@
 import React, { useEffect } from 'react'
 import { FormInput, AllowedTypes } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import cx from 'classnames'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
@@ -33,7 +32,7 @@ export default function ConfigureFields(props: {
       case VerificationTypes.LoadTest:
         return (
           <>
-            <div className={cx(stepCss.formGroup)}>
+            <div className={stepCss.formGroup}>
               <VerificationSensitivity
                 label={getString('sensitivity')}
                 name={`spec.spec.sensitivity`}
@@ -42,7 +41,7 @@ export default function ConfigureFields(props: {
                 allowableTypes={allowableTypes}
               />
             </div>
-            <div className={cx(stepCss.formGroup)}>
+            <div className={stepCss.formGroup}>
               <Duration
                 name={`spec.spec.duration`}
                 label={getString('duration')}
@@ -51,7 +50,7 @@ export default function ConfigureFields(props: {
                 allowableTypes={allowableTypes}
               />
             </div>
-            <div className={cx(stepCss.formGroup)}>
+            <div className={stepCss.formGroup}>
               <BaselineSelect
                 name={`spec.spec.baseline`}
                 label={getString('connectors.cdng.baseline')}
@@ -67,7 +66,7 @@ export default function ConfigureFields(props: {
       case VerificationTypes.Rolling:
         return (
           <>
-            <div className={cx(stepCss.formGroup)}>
+            <div className={stepCss.formGroup}>
               <VerificationSensitivity
                 label={getString('sensitivity')}
                 name={`spec.spec.sensitivity`}
@@ -76,7 +75,7 @@ export default function ConfigureFields(props: {
                 allowableTypes={allowableTypes}
               />
             </div>
-            <div className={cx(stepCss.formGroup)}>
+            <div className={stepCss.formGroup}>
               <Duration
                 name={`spec.spec.duration`}
                 label={getString('duration')}
@@ -85,7 +84,7 @@ export default function ConfigureFields(props: {
                 allowableTypes={allowableTypes}
               />
             </div>
-            <div className={cx(stepCss.formGroup)}>
+            <div className={stepCss.formGroup}>
               {/* Note - This has to be removed for now but might be required in future, hence commenting the code */}
               {/* <TrafficSplit
                 name={`spec.spec.trafficsplit`}
@@ -116,12 +115,15 @@ export default function ConfigureFields(props: {
   return (
     <>
       {renderConfigOptions()}
-      <div className={cx(stepCss.formGroup)}>
+      <div className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           label={getString('connectors.cdng.artifactTag')}
           name="spec.spec.deploymentTag"
           multiTextInputProps={{ expressions, allowableTypes }}
         />
+      </div>
+      <div className={stepCss.formGroup}>
+        <FormInput.CheckBox name="spec.spec.failOnNoAnalysis" label={getString('connectors.cdng.failOnNoAnalysis')} />
       </div>
     </>
   )

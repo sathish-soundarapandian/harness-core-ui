@@ -3,8 +3,10 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   baseURLCall,
   baseURLResponse,
@@ -77,6 +79,7 @@ describe('Configure Datadog health source', () => {
   it('Add new Custom HealthSource ', () => {
     cy.intercept('GET', baseURLCall, baseURLResponse).as('BaseURLCall')
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.populateDefineHealthSource(Connectors.CUSTOM_HEALTH, 'customconnector', 'Custom Health Source')
@@ -102,6 +105,7 @@ describe('Configure Datadog health source', () => {
   it('Add new Custom HealthSource with multiple metric', () => {
     cy.intercept('GET', baseURLCall, baseURLResponse).as('BaseURLCall')
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.populateDefineHealthSource(Connectors.CUSTOM_HEALTH, 'customconnector', 'Custom Health Source')
@@ -134,6 +138,7 @@ describe('Configure Datadog health source', () => {
     )
     cy.intercept('GET', baseURLCall, baseURLResponse).as('BaseURLCall')
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.wait(2000)
 
@@ -196,6 +201,7 @@ describe('Custom health metric thresholds', () => {
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.populateDefineHealthSource(Connectors.CUSTOM_HEALTH, 'customconnector', 'Custom Health Source')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.selectFeature('Custom Health Metrics')
 
@@ -222,6 +228,7 @@ describe('Custom health metric thresholds', () => {
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.populateDefineHealthSource(Connectors.CUSTOM_HEALTH, 'customconnector', 'Custom Health Source')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.selectFeature('Custom Health Metrics')
 

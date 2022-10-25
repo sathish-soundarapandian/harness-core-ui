@@ -62,7 +62,7 @@ exports[`Deploy stage test Should match snapshot 1`] = `
           >
             <div>
               <div
-                class="StyledProps--font StyledProps--main main"
+                class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
               >
                 <div
                   class="InputWithIdentifier--txtNameContainer TextInput--main"
@@ -130,7 +130,7 @@ exports[`Deploy stage test Should match snapshot 1`] = `
                     </span>
                   </div>
                   <div
-                    class="bp3-form-group"
+                    class="bp3-form-group zeroMargin"
                     data-id="name-0"
                   >
                     <label

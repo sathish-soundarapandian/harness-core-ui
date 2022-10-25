@@ -30,7 +30,7 @@ exports[`<WaitStepDetailsTab /> tests snapshot test 1`] = `
             duration
           </th>
           <td>
-            0 Sec
+            0 Second
           </td>
         </tr>
         <tr>
@@ -173,7 +173,7 @@ exports[`<WaitStepDetailsTab /> tests snapshot test after completion 1`] = `
             duration
           </th>
           <td>
-            0 Sec
+            0 Second
           </td>
         </tr>
         <tr>
@@ -235,7 +235,7 @@ exports[`<WaitStepDetailsTab /> tests snapshot test completed 1`] = `
             duration
           </th>
           <td>
-            0 Sec
+            0 Second
           </td>
         </tr>
         <tr>
@@ -378,7 +378,7 @@ exports[`<WaitStepDetailsTab /> tests snapshot test with no startTs and endTs 1`
             duration
           </th>
           <td>
-            0 Sec
+            0 Second
           </td>
         </tr>
         <tr>

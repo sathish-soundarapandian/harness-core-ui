@@ -14,7 +14,6 @@ import {
   Container,
   Button,
   ButtonVariation,
-  PageHeader,
   VisualYamlSelectedView as SelectedView,
   useConfirmationDialog,
   useToaster,
@@ -295,8 +294,7 @@ const SecretDetails: React.FC<SecretDetailsProps> = props => {
 
   return (
     <>
-      <PageHeader size="standard" title={getString('overview')} />
-      <Container padding={{ top: 'large', left: 'huge', right: 'huge' }}>
+      <Container padding={{ right: 'huge' }}>
         {mode === SelectedView.YAML ? (
           <>
             <Container padding={{ bottom: 'large' }}>

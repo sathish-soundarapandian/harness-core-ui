@@ -119,7 +119,8 @@ function ConfigFilesListView({
     orgIdentifier,
     projectIdentifier,
     connectorInfo: undefined,
-    configFileIndex
+    configFileIndex,
+    deploymentType
   }
 
   const getInitialValues = (): ConfigInitStepData => {

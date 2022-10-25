@@ -34,6 +34,38 @@ export type FreezeWindowFormData = FreezeWindow & {
   }
 }
 
+function getEndTimeValidationSchema(): Yup.StringSchema<string | undefined> {
+  return Yup.string()
+    .required('End Time is required')
+    .test({
+      test(value: string): boolean | Yup.ValidationError {
+        const startTime = this.parent.startTime
+        if (moment(value).diff(startTime, 'minutes') < 0) {
+          return this.createError({ message: 'End Time should not be before the Start Time' })
+        } else if (moment(value).diff(startTime, 'minutes') < 30) {
+          return this.createError({ message: 'End Time should be at least "30 minutes" from Start Time' })
+        } else if (moment(value).diff(startTime, 'year') > 1) {
+          return this.createError({ message: 'End Time should be less than an year from Start Time' })
+        }
+
+        return true
+      }
+    })
+}
+
+function getRecurrenceEndDateValidationSchema(): Yup.StringSchema<string | undefined> {
+  return Yup.string()
+    .required('Recurrence End Date is required')
+    .test({
+      test(value: string): boolean | Yup.ValidationError {
+        if (moment(value).diff((this as any).from[2].value.endTime, 'minutes') < 0) {
+          return this.createError({ message: 'Recurrence End Date should be after the End Time' })
+        }
+        return true
+      }
+    })
+}
+
 const validationSchema = Yup.object().shape({
   timeZone: Yup.string().required('Timezone is required'),
   startTime: Yup.string().required('Start Time is required'),
@@ -44,15 +76,7 @@ const validationSchema = Yup.object().shape({
   }),
   endTime: Yup.string().when('endTimeMode', {
     is: 'date',
-    then: Yup.string()
-      .required('End Time is required')
-      .test(
-        'isMinimum30MinutesWindow',
-        'Start Time and End time should be at least 30 minutes apart',
-        function (value) {
-          return moment(value).diff(this.parent.startTime, 'minutes') >= 30
-        }
-      )
+    then: getEndTimeValidationSchema()
   }),
   recurrence: Yup.object().shape({
     type: Yup.string(),
@@ -60,7 +84,7 @@ const validationSchema = Yup.object().shape({
       recurrenceEndMode: Yup.string().oneOf(['never', 'date']),
       until: Yup.string().when('recurrenceEndMode', {
         is: 'date',
-        then: Yup.string().required('Recurrence End Date is required')
+        then: getRecurrenceEndDateValidationSchema()
       })
     })
   })
@@ -76,14 +100,16 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
   const processedValues = {
     ...freezeWindow,
     timeZone: freezeWindow?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
-    startTime: freezeWindow?.startTime ?? moment().format(DATE_PARSE_FORMAT),
+    startTime: freezeWindow?.startTime ?? moment().add(1, 'hour').format(DATE_PARSE_FORMAT),
     endTime: freezeWindow?.endTime ?? moment(freezeWindow?.startTime).add(30, 'minutes').format(DATE_PARSE_FORMAT),
     duration: freezeWindow?.duration ?? '30m',
     endTimeMode: freezeWindow?.endTime ? 'date' : 'duration',
     recurrence: {
       ...freezeWindow.recurrence,
       spec: {
-        ...freezeWindow.recurrence?.spec,
+        until:
+          freezeWindow?.recurrence?.spec?.until ??
+          moment(freezeWindow?.endTime).endOf('year').format(DATE_PARSE_FORMAT),
         recurrenceEndMode: freezeWindow?.recurrence?.type && freezeWindow?.recurrence?.spec?.until ? 'date' : 'never'
       }
     }
@@ -126,7 +152,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
       {formikProps => {
         return (
           <FormikForm>
-            <Layout.Vertical width={'350px'} className={css.scheduleFreezeForm}>
+            <Layout.Vertical width={'320px'} className={css.scheduleFreezeForm}>
               <FormInput.DropDown
                 label="Timezone"
                 name="timeZone"
@@ -143,9 +169,13 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                 items={[
                   {
                     label: (
-                      <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }}>
-                        <FormInput.DurationInput name="duration" disabled={formikProps.values.endTimeMode === 'date'} />
-                        <span>from start time</span>
+                      <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }} className={css.endTime}>
+                        <FormInput.DurationInput
+                          name="duration"
+                          disabled={formikProps.values.endTimeMode === 'date'}
+                          inputProps={{ placeholder: 'Enter w/d/h/m' }}
+                        />
+                        <span className={css.text}>from start time</span>
                       </Layout.Horizontal>
                     ),
                     value: 'duration'

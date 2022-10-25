@@ -173,6 +173,7 @@ export default function CreatePipelines({
                 isIdentifierEditable: pipelineIdentifier === DefaultNewPipelineId
               }}
               tooltipProps={{ dataTooltipId: 'pipelineCreate' }}
+              inputGroupProps={{ className: css.zeroMargin }}
             />
             {oldGitSyncEnabled && (
               <GitSyncStoreProvider>
@@ -237,7 +238,7 @@ export default function CreatePipelines({
               </Container>
             )}
 
-            <Container padding={{ top: 'xlarge' }}>
+            <Container className={css.createPipelineButtons}>
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"

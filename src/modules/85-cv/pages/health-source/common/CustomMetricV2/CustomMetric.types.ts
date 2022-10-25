@@ -1,5 +1,9 @@
 import type { SelectOption } from '@harness/uicore'
-import type { CloudWatchMetricDefinition, DynatraceMetricDefinition, useGetMetricPacks } from 'services/cv'
+import type {
+  CloudWatchMetricDefinition,
+  DynatraceMetricDefinition,
+  useGetRiskCategoryForCustomHealthMetric
+} from 'services/cv'
 
 // For all Health sources, their custom metric types will be added here like "CloudWatchMetricDefinition | AppDMetricDefinition |..."
 type CombinedMetricDefinitionsOfHealthSources = CloudWatchMetricDefinition | DynatraceMetricDefinition
@@ -37,5 +41,5 @@ export interface GroupedCreatedMetrics {
 
 export interface CustomMetricsV2HelperContextType {
   groupedCreatedMetrics: GroupedCreatedMetrics
-  metricPacksResponse: ReturnType<typeof useGetMetricPacks>
+  riskProfileResponse: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
 }

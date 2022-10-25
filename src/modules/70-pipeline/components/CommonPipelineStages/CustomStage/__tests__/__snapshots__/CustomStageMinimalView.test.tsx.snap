@@ -12,7 +12,7 @@ exports[`Custom Stage Minimal View Basic render, selection and setup stage 1`] =
       <div>
         <p
           class="StyledProps--font StyledProps--main addStageHeading StyledProps--margin-bottom-medium"
-          style="display: flex; align-items: center;"
+          style="font-variant: h5; display: flex; align-items: center;"
         >
           <span
             class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"

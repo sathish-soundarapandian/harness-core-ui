@@ -22,7 +22,9 @@ declare const styles: {
   readonly marginTop: string
   readonly previewHostsLabel: string
   readonly runtimeWidth: string
+  readonly showPreviewBtn: string
   readonly simultaneousDeployment: string
+  readonly specifyFilterRadioGroup: string
   readonly specifyHostsRadioGroup: string
 }
 export default styles

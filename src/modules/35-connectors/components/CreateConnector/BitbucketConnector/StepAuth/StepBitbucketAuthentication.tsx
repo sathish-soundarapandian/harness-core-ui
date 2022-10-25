@@ -34,6 +34,7 @@ import { GitAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { getCommonConnectorsValidationSchema } from '../../CreateConnectorUtils'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
@@ -81,21 +82,27 @@ const defaultInitialFormData: BitbucketFormInterface = {
   accessToken: undefined
 }
 
-const RenderBitbucketAuthForm: React.FC<FormikProps<BitbucketFormInterface>> = props => {
-  const { getString } = useStrings()
-  return (
-    <>
-      <TextReference
-        name="username"
-        stringId="username"
-        type={props.values.username ? props.values.username?.type : ValueType.TEXT}
-      />
-      <SecretInput name="password" label={getString('password')} />
-    </>
-  )
-}
+const RenderBitbucketAuthForm: React.FC<{ formikProps: FormikProps<BitbucketFormInterface>; scope?: ScopedObjectDTO }> =
+  props => {
+    const { formikProps, scope } = props
+    const { getString } = useStrings()
+    return (
+      <>
+        <TextReference
+          name="username"
+          stringId="username"
+          type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
+        />
+        <SecretInput name="password" label={getString('password')} scope={scope} />
+      </>
+    )
+  }
 
-const RenderAPIAccessFormWrapper: React.FC<FormikProps<BitbucketFormInterface>> = props => {
+const RenderAPIAccessFormWrapper: React.FC<{
+  formikProps: FormikProps<BitbucketFormInterface>
+  scope?: ScopedObjectDTO
+}> = props => {
+  const { formikProps, scope } = props
   const { getString } = useStrings()
 
   const apiAuthOptions: Array<SelectOption> = [
@@ -106,7 +113,7 @@ const RenderAPIAccessFormWrapper: React.FC<FormikProps<BitbucketFormInterface>> 
   ]
 
   useEffect(() => {
-    props.setFieldValue('apiAuthType', GitAuthTypes.USER_TOKEN)
+    formikProps.setFieldValue('apiAuthType', GitAuthTypes.USER_TOKEN)
   }, [])
 
   return (
@@ -123,9 +130,9 @@ const RenderAPIAccessFormWrapper: React.FC<FormikProps<BitbucketFormInterface>> 
       <TextReference
         name="apiAccessUsername"
         stringId="username"
-        type={props.values.apiAccessUsername ? props.values.apiAccessUsername?.type : ValueType.TEXT}
+        type={formikProps.values.apiAccessUsername ? formikProps.values.apiAccessUsername?.type : ValueType.TEXT}
       />
-      <SecretInput name="accessToken" label={getString('personalAccessToken')} />
+      <SecretInput name="accessToken" label={getString('personalAccessToken')} scope={scope} />
     </>
   )
 }
@@ -177,6 +184,13 @@ const StepBitbucketAuthentication: React.FC<
     connector_type: Connectors.BitBucket
   })
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
@@ -227,7 +241,7 @@ const StepBitbucketAuthentication: React.FC<
                     <Text font={{ variation: FontVariation.H6 }}>{getString('authentication')}</Text>
                     <FormInput.Select name="authType" items={authOptions} className={commonStyles.authTypeSelect} />
                   </Container>
-                  <RenderBitbucketAuthForm {...formikProps} />
+                  <RenderBitbucketAuthForm formikProps={{ ...formikProps }} scope={scope} />
                 </Container>
               )}
 
@@ -239,7 +253,9 @@ const StepBitbucketAuthentication: React.FC<
               <Text font="small" className={commonCss.bottomMargin4}>
                 {getString('common.git.APIAccessDescription')}
               </Text>
-              {formikProps.values.enableAPIAccess ? <RenderAPIAccessFormWrapper {...formikProps} /> : null}
+              {formikProps.values.enableAPIAccess ? (
+                <RenderAPIAccessFormWrapper formikProps={{ ...formikProps }} scope={scope} />
+              ) : null}
             </Container>
             <Layout.Horizontal spacing="medium">
               <Button

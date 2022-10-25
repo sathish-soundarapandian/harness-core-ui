@@ -6,81 +6,72 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, waitFor } from '@testing-library/react'
+import { render, fireEvent, act, screen, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
-import DelegatesListingItem, { DelegateListingHeader } from '../DelegateListingItem'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
+import DelegatesListingItem from '../DelegateListingItem'
 import { delegateGroupsMock } from './DelegateGroupsMock'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-
-const setOpenTroubleshoterFn = jest.fn()
 
 jest.mock('services/portal', () => ({
   useDeleteDelegateGroupByIdentifier: () => ({
     mutate: jest.fn()
   })
 }))
-
-describe('DelegateListingHeader test', () => {
-  test('render DelegateListingHeader', () => {
-    const { container } = render(
-      <TestWrapper>
-        <DelegateListingHeader />
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
-  })
-})
-
+const routesToDelegateDetails = jest.spyOn(routes, 'toDelegatesDetails')
 describe('Delegates Listing With Groups', () => {
   test('render data', () => {
     const { container } = render(
       <TestWrapper>
-        <DelegatesListingItem delegate={delegateGroupsMock[0]} setOpenTroubleshoter={setOpenTroubleshoterFn} />
+        <DelegatesListingItem data={delegateGroupsMock} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
   })
-  test('Click on item', async () => {
-    const { container } = render(
+
+  test('click on delegate item details option', async () => {
+    render(
       <TestWrapper>
-        <DelegatesListingItem delegate={delegateGroupsMock[0]} setOpenTroubleshoter={setOpenTroubleshoterFn} />
+        <DelegatesListingItem data={delegateGroupsMock} />
       </TestWrapper>
     )
-    act(() => {
-      fireEvent.click(container.firstChild!)
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[2]).getByRole('button', {
+      name: /delegate menu options/i
     })
-    expect(container).toMatchSnapshot()
-  })
-  test('click on delegate item action', async () => {
-    const { getAllByText, container } = render(
-      <TestWrapper>
-        <DelegatesListingItem delegate={delegateGroupsMock[1]} setOpenTroubleshoter={setOpenTroubleshoterFn} />
-      </TestWrapper>
-    )
-    const menuBtn = container.querySelector('button') as HTMLButtonElement
-    userEvent.click(menuBtn!)
-    userEvent.click(getAllByText('delegates.troubleshootOption')[0]!)
-    expect(document.body.innerHTML).toContain('troubleshoot')
-  })
-  test('click on delegate item delete action', async () => {
-    const { getAllByText, container, queryAllByText } = render(
-      <TestWrapper>
-        <DelegatesListingItem delegate={delegateGroupsMock[1]} setOpenTroubleshoter={setOpenTroubleshoterFn} />
-      </TestWrapper>
-    )
-    const menuBtn = container.querySelector('button') as HTMLButtonElement
-    act(() => {
-      fireEvent.click(menuBtn!)
-    })
+    userEvent.click(moreOptions)
+
+    const menuContent = findPopoverContainer() as HTMLElement
+
+    const viewDetailsFromMenu = within(menuContent).getByText('details')
+
+    userEvent.click(viewDetailsFromMenu)
     await waitFor(() => {
-      expect(getAllByText('delete')[0]).toBeDefined()
+      expect(routesToDelegateDetails).toHaveBeenCalled()
     })
-    const deleteBtn = getAllByText('delete')[0]
-    act(() => {
-      fireEvent.click(deleteBtn!)
+  })
+
+  test('click on delegate item delete action', async () => {
+    const { queryAllByText } = render(
+      <TestWrapper>
+        <DelegatesListingItem data={delegateGroupsMock} />
+      </TestWrapper>
+    )
+
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /delegate menu options/i
     })
+    userEvent.click(moreOptions)
+
+    const menuContent = findPopoverContainer() as HTMLElement
+
+    const viewDeleteFromMenu = within(menuContent).getByText('delete')
+
+    userEvent.click(viewDeleteFromMenu)
+
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
     const modalDeleteBtn = queryAllByText('delete')[1]
     act(() => {
@@ -91,17 +82,34 @@ describe('Delegates Listing With Groups', () => {
     })
   })
 
+  test('click on delegate item troubleshoot action', async () => {
+    render(
+      <TestWrapper>
+        <DelegatesListingItem data={delegateGroupsMock} />
+      </TestWrapper>
+    )
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /delegate menu options/i
+    })
+    userEvent.click(moreOptions)
+
+    const menuContent = findPopoverContainer() as HTMLElement
+    const viewTroubleshooterFromMenu = within(menuContent).getByText('delegates.openTroubleshooter')
+    userEvent.click(viewTroubleshooterFromMenu)
+    expect(document.body.innerHTML).toContain('troubleshoot')
+  })
+
   test('click on delegate item and expand it', async () => {
     const { container } = render(
       <TestWrapper>
-        <DelegatesListingItem delegate={delegateGroupsMock[1]} setOpenTroubleshoter={setOpenTroubleshoterFn} />
+        <DelegatesListingItem data={delegateGroupsMock} />
       </TestWrapper>
     )
     const expandRowBtn = container.querySelector('[data-icon="chevron-right"]') as HTMLButtonElement
     act(() => {
       fireEvent.click(expandRowBtn!)
     })
-
     waitFor(() => {
       expect(document.body.innerHTML).toContain('delegates.noInstances')
     })

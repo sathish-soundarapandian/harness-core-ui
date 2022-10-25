@@ -718,13 +718,13 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                    title=""
+                    title="Title"
                   >
-                    
+                    Title
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-small"
-                    title=""
+                    title="Title"
                   >
                     
                   </p>
@@ -836,9 +836,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               >
                 <p
                   class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                  title="0.00%"
+                  title="90.00%"
                 >
-                  0.00
+                  90.00
                   %
                 </p>
               </div>
@@ -861,9 +861,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               >
                 <p
                   class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                  title=""
+                  title="userJourney"
                 >
-                  
+                  userJourney
                 </p>
               </div>
               <div

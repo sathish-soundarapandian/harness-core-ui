@@ -109,8 +109,8 @@ export const TaskDefinitionModal = (props: TaskDefinitionModalProps): React.Reac
   }
 
   const getLastStepInitialData = useCallback((): ManifestConfig => {
-    if (!isEmpty(initialValues?.type) && !isEmpty(store) && initialValues?.type !== store) {
-      return { identifier: '', type: selectedManifest as ManifestTypes, spec: {} }
+    if (!isEmpty(store) && initialValues?.type !== store) {
+      return null as unknown as ManifestConfig
     } else if (initialValues) {
       return {
         identifier: '',

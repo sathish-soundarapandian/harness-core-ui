@@ -27,6 +27,7 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { errorCheck } from '@common/utils/formikHelpers'
+import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import type { FileUsage } from '@filestore/interfaces/FileStore'
@@ -65,6 +66,7 @@ export interface MultiTypeMapProps {
   fileUsage?: FileUsage
   addFileLabel?: string
   isAttachment?: boolean
+  deploymentType?: string
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -87,6 +89,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     fileUsage,
     addFileLabel,
     isAttachment = false,
+    deploymentType,
     ...restProps
   } = props
 
@@ -217,6 +220,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                                 <FileSelectField
                                                   value={get(formik?.values, `${name}[${index}]`)}
                                                   name={`${name}[${index}]`}
+                                                  isSshWinRm={isSshOrWinrmDeploymentType(defaultTo(deploymentType, ''))}
                                                   onChange={(newValue, i) => {
                                                     replace(i as number, {
                                                       ...restValue,

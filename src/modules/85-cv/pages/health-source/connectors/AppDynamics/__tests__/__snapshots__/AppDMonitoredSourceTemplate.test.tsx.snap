@@ -1027,12 +1027,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                   class="RadioButton--input"
                                                   name="riskCategory"
                                                   type="radio"
-                                                  value="Errors/ERROR"
+                                                  value="Errors"
                                                 />
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Errors/Number of Errors
+                                                Errors
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1041,27 +1041,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                   class="RadioButton--input"
                                                   name="riskCategory"
                                                   type="radio"
-                                                  value="Performance/RESP_TIME"
+                                                  value="Infrastructure"
                                                 />
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Performance/Average Wait Time (ms)
-                                              </label>
-                                              <label
-                                                class="RadioButton--radio StyledProps--main"
-                                              >
-                                                <input
-                                                  checked=""
-                                                  class="RadioButton--input"
-                                                  name="riskCategory"
-                                                  type="radio"
-                                                  value="Performance/THROUGHPUT"
-                                                />
-                                                <span
-                                                  class="RadioButton--radioIcon"
-                                                />
-                                                Performance/Calls per Minute
+                                                Infrastructure
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1070,12 +1055,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                   class="RadioButton--input"
                                                   name="riskCategory"
                                                   type="radio"
-                                                  value="Performance/ERROR"
+                                                  value="Performance_Throughput"
                                                 />
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Performance/Stall Count
+                                                Performance/Throughput
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1084,12 +1069,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                   class="RadioButton--input"
                                                   name="riskCategory"
                                                   type="radio"
-                                                  value="Performance/ERROR"
+                                                  value="Performance_Other"
                                                 />
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Performance/Number of Slow Calls
+                                                Performance/Other
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1098,96 +1083,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                   class="RadioButton--input"
                                                   name="riskCategory"
                                                   type="radio"
-                                                  value="Performance/RESP_TIME"
+                                                  value="Performance_ResponseTime"
                                                 />
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Performance/95th Percentile Response Time (ms)
-                                              </label>
-                                              <label
-                                                class="RadioButton--radio StyledProps--main"
-                                              >
-                                                <input
-                                                  class="RadioButton--input"
-                                                  name="riskCategory"
-                                                  type="radio"
-                                                  value="Performance/RESP_TIME"
-                                                />
-                                                <span
-                                                  class="RadioButton--radioIcon"
-                                                />
-                                                Performance/Normal Average Response Time (ms)
-                                              </label>
-                                              <label
-                                                class="RadioButton--radio StyledProps--main"
-                                              >
-                                                <input
-                                                  class="RadioButton--input"
-                                                  name="riskCategory"
-                                                  type="radio"
-                                                  value="Performance/ERROR"
-                                                />
-                                                <span
-                                                  class="RadioButton--radioIcon"
-                                                />
-                                                Performance/Errors per Minute
-                                              </label>
-                                              <label
-                                                class="RadioButton--radio StyledProps--main"
-                                              >
-                                                <input
-                                                  class="RadioButton--input"
-                                                  name="riskCategory"
-                                                  type="radio"
-                                                  value="Performance/RESP_TIME"
-                                                />
-                                                <span
-                                                  class="RadioButton--radioIcon"
-                                                />
-                                                Performance/Average Response Time (ms)
-                                              </label>
-                                              <label
-                                                class="RadioButton--radio StyledProps--main"
-                                              >
-                                                <input
-                                                  class="RadioButton--input"
-                                                  name="riskCategory"
-                                                  type="radio"
-                                                  value="Performance/RESP_TIME"
-                                                />
-                                                <span
-                                                  class="RadioButton--radioIcon"
-                                                />
-                                                Performance/Average Block Time (ms)
-                                              </label>
-                                              <label
-                                                class="RadioButton--radio StyledProps--main"
-                                              >
-                                                <input
-                                                  class="RadioButton--input"
-                                                  name="riskCategory"
-                                                  type="radio"
-                                                  value="Performance/INFRA"
-                                                />
-                                                <span
-                                                  class="RadioButton--radioIcon"
-                                                />
-                                                Performance/Average CPU Used (ms)
-                                              </label>
-                                              <label
-                                                class="RadioButton--radio StyledProps--main"
-                                              >
-                                                <input
-                                                  class="RadioButton--input"
-                                                  name="riskCategory"
-                                                  type="radio"
-                                                  value="Performance/ERROR"
-                                                />
-                                                <span
-                                                  class="RadioButton--radioIcon"
-                                                />
-                                                Performance/Number of Very Slow Calls
+                                                Performance/Response Time
                                               </label>
                                             </div>
                                           </div>

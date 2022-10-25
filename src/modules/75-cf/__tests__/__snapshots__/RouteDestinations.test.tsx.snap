@@ -264,9 +264,7 @@ Array [
       }
     }
   >
-    <FFGitSyncProvider>
-      <EnvironmentDetails />
-    </FFGitSyncProvider>
+    <EnvironmentDetails />
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}

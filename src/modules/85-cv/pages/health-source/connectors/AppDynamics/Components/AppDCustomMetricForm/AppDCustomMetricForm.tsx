@@ -31,7 +31,11 @@ import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSo
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
-import { useGetMetricPacks, AppDMetricDefinitions, useGetCompleteServiceInstanceMetricPath } from 'services/cv'
+import {
+  AppDMetricDefinitions,
+  useGetCompleteServiceInstanceMetricPath,
+  useGetRiskCategoryForCustomHealthMetric
+} from 'services/cv'
 import { AppDynamicsMonitoringSourceFieldNames } from '../../AppDHealthSource.constants'
 import { PATHTYPE } from './AppDCustomMetricForm.constants'
 import {
@@ -66,9 +70,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'APP_DYNAMICS' }
-  })
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const {
     data: completeServiceInsanceData,
@@ -329,7 +331,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   }}
                   isTemplate={isTemplate}
                   expressions={expressions}
-                  metricPackResponse={metricPackResponse}
+                  riskProfileResponse={riskProfileResponse}
                   hideServiceIdentifier
                 />
               </>

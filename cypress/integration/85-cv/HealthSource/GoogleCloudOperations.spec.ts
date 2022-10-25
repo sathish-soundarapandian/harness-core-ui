@@ -3,9 +3,11 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
 import { metricPackResponse } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   dashboardDetailsAPI,
   dashboardDetailsResponse,
@@ -57,6 +59,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.contains('p', '+ Manually input query').click()
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.contains('h4', 'Add your Google Cloud Operations query').should('be.visible')
     cy.fillField('metricName', 'GCO Metric')
@@ -132,6 +135,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.contains('p', 'TestDashboard').click()
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', dashboardDetailsAPI, dashboardDetailsResponse)
 
     cy.findAllByRole('button', { name: /Next/g }).last().click()
@@ -325,6 +329,7 @@ describe('GCO metric thresholds', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', monitoredService)
     cy.intercept('GET', dashboardsAPI, dashboardsResponse).as('dashboardsResponse')
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.populateDefineHealthSource(Connectors.GCP, 'gcp-qa-target', 'Google Cloud Operations')
 
@@ -354,6 +359,7 @@ describe('GCO metric thresholds', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', monitoredService)
     cy.intercept('GET', dashboardsAPI, dashboardsResponse).as('dashboardsResponse')
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.populateDefineHealthSource(Connectors.GCP, 'gcp-qa-target', 'Google Cloud Operations')

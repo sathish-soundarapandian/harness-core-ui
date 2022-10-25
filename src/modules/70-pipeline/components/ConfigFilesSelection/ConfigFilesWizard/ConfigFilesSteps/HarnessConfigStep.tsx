@@ -28,6 +28,7 @@ interface ConfigFilesPropType {
   isEditMode: boolean
   listOfConfigFiles: any[]
   configFileIndex?: number
+  deploymentType?: string
 }
 export function HarnessConfigStep({
   stepName = 'step name',
@@ -37,7 +38,8 @@ export function HarnessConfigStep({
   expressions,
   isEditMode,
   listOfConfigFiles,
-  configFileIndex
+  configFileIndex,
+  deploymentType
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
   const { getString } = useStrings()
   const isEditState = defaultTo(prevStepData.isEditMode, isEditMode)
@@ -175,6 +177,7 @@ export function HarnessConfigStep({
                       expressions={expressions}
                       values={formikProps.values.files}
                       fileUsage={FileUsage.CONFIG}
+                      deploymentType={deploymentType}
                       multiTypeFieldSelectorProps={{
                         disableTypeSelection: false,
                         label: (

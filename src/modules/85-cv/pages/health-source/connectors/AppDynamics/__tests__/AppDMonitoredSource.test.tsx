@@ -29,6 +29,7 @@ import {
   appDynamicsDataFull
 } from './AppDMonitoredSource.mock'
 import AppDMonitoredSource from '../AppDHealthSource'
+import { riskCategoryMock } from '../../__tests__/HealthSources.mock'
 
 const createModeProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
@@ -83,6 +84,9 @@ describe('Unit tests for createAppd monitoring source', () => {
       .spyOn(cvServices, 'useGetMetricPacks')
       .mockImplementation(() => ({ loading: false, error: null, data: metricPack, refetch: refetchMock } as any))
     jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
+    jest
       .spyOn(cvServices, 'useGetAppdynamicsMetricStructure')
       .mockImplementation(
         () => ({ loading: false, error: null, data: [{ name: 'cvng', type: 'leaf' }], refetch: refetchMock } as any)
@@ -127,6 +131,10 @@ describe('Unit tests for createAppd monitoring source', () => {
 
     act(() => {
       fireEvent.click(getByText('cv.monitoringSources.lowerCounts'))
+    })
+
+    act(() => {
+      fireEvent.click(getByText('Performance/Response Time'))
     })
 
     act(() => {

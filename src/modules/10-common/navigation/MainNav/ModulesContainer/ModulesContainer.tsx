@@ -7,7 +7,6 @@
 
 import React, { useRef, useState } from 'react'
 import { Container, Icon } from '@harness/uicore'
-import cx from 'classnames'
 import { debounce } from 'lodash-es'
 import {
   ModulesPreferenceStoreData,
@@ -32,11 +31,10 @@ interface ChevronButtonProps {
 
 const ChevronButton: React.FC<ChevronButtonProps> = (props: ChevronButtonProps) => {
   const { disabled, type, handleClick } = props
-  const style = type === ChevronButtonType.DOWN ? css.down : css.up
 
   return (
     <Container
-      className={cx(css.chevron, style)}
+      className={css.chevron}
       onClick={disabled ? undefined : handleClick}
       padding={{ top: 'small', bottom: 'small' }}
     >
@@ -99,6 +97,7 @@ const ModulesContainer = (): React.ReactElement => {
   const showChevronButtons = selectedModules.length > MODULES_WINDOW_SIZE
   return (
     <>
+      <div className={css.border} />
       {showChevronButtons && <ChevronButton handleClick={handleUpClick} disabled={moduleStartIndex === 0} />}
       <Container onScroll={handleOnScroll} className={css.container} style={{ height: modulesListHeight }}>
         {orderedModules
@@ -120,6 +119,7 @@ const ModulesContainer = (): React.ReactElement => {
           disabled={moduleStartIndex + MODULES_WINDOW_SIZE >= selectedModules.length}
         />
       )}
+      <div className={css.border} />
     </>
   )
 }

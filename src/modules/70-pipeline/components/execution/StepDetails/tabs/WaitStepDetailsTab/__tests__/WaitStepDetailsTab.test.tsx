@@ -206,23 +206,23 @@ describe('<WaitStepDetailsTab /> tests', () => {
   test(' ms to date function test case', () => {
     const epochTime = 123456789123
     const time = msToTime(epochTime)
-    expect(time).toEqual('1428 Days')
+    expect(time).toEqual('1428 Days 21 Hrs')
   })
 
   test(' ms to date function test case for seconds', () => {
     const epochTime = 1000
     const time = msToTime(epochTime)
-    expect(time).toEqual('1 Sec')
+    expect(time).toEqual('1 Second')
   })
 
   test(' ms to date function test case for minutes', () => {
     const epochTime = 70000
     const time = msToTime(epochTime)
-    expect(time).toEqual('1 Min')
+    expect(time).toEqual('1 Minute 10 Seconds')
   })
   test(' ms to date function test case for hrs', () => {
     const epochTime = 5000000
     const time = msToTime(epochTime)
-    expect(time).toEqual('1 Hrs')
+    expect(time).toEqual('1 Hr 23 Minutes')
   })
 })

@@ -701,6 +701,46 @@ exports[`Default View Test renders snapshot 1`] = `
               />
             </label>
           </div>
+          <div
+            class="actionRow"
+          >
+            <label
+              class="Thumbnail--squareCardContainer thumbnail"
+            >
+              <div
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                tabindex="0"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="main-resume"
+                >
+                  <svg
+                    height="26"
+                    viewBox="0 0 14 11"
+                    width="26"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6.57 0c.129 0 .243.052.345.118L6.92.11l6.755 4.42c.189.133.324.362.324.627a.732.732 0 01-.33.619l.006.007-6.755 4.421-.006-.007a.631.631 0 01-.345.118c-.371 0-.675-.332-.675-.737V.737c0-.405.304-.737.675-.737zM2.947 0c.406 0 .737.332.737.737v8.842a.739.739 0 01-.737.737H.737A.739.739 0 010 9.579V.737C0 .332.332 0 .737 0z"
+                      fill="#4d5969"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+              >
+                pipeline.failureStrategies.strategiesLabel.ProceedWithDefaultValues
+              </p>
+              <input
+                name="ProceedWithDefaultValues"
+                type="checkbox"
+                value="ProceedWithDefaultValues"
+              />
+            </label>
+          </div>
         </div>
       </div>
     </div>

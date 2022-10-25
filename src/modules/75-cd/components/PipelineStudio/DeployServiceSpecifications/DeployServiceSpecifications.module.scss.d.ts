@@ -17,6 +17,7 @@ declare const styles: {
   readonly comingSoonLayout: string
   readonly currentGenSupported: string
   readonly cursorPointer: string
+  readonly gitOpsCheck: string
   readonly learnMore: string
   readonly left: string
   readonly newText: string

@@ -9,14 +9,22 @@
     .RadioButton--radio {
       display: flex;
       align-items: baseline;
+      flex-shrink: auto;
     }
 
     .bp3-form-content {
-      .RadioButton--radio:nth-child(2) {
-        .bp3-form-group {
-          width: 100%;
-        }
+      .RadioButton--radio .bp3-form-group {
+        width: 100%;
       }
+    }
+  }
+
+  .endTime {
+    flex-shrink: 1;
+    width: 100%;
+
+    .text {
+      white-space: nowrap;
     }
   }
 }

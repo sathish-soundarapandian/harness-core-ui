@@ -15,5 +15,6 @@ declare const styles: {
   readonly nameIdDescriptionTags: string
   readonly stageTypeThumbnail: string
   readonly templateBarOverride: string
+  readonly zeroMargin: string
 }
 export default styles

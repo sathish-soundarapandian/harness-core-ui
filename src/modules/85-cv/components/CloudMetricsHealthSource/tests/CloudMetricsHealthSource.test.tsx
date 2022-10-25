@@ -23,6 +23,7 @@ import {
 } from '@cv/components/CloudMetricsHealthSource/tests/mock'
 import type { SelectHealthSourceServicesProps } from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices.types'
 import * as cvService from 'services/cv'
+import { riskCategoryMock } from '@cv/pages/health-source/connectors/__tests__/HealthSources.mock'
 import CloudMetricsHealthSource from '../CloudMetricsHealthSource'
 
 jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
@@ -81,6 +82,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
     jest.clearAllMocks()
 
     jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue(mockUseGetReturnData as any)
+    jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric').mockReturnValue(riskCategoryMock as any)
   })
 
   test('Ensure props are passed properly to child component', async () => {
@@ -114,7 +116,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
         continuousVerification: mockCloudMetricHealthSourcePropsValue.formikProps.values.continuousVerification,
         serviceInstance: mockCloudMetricHealthSourcePropsValue.formikProps.values.serviceInstance
       },
-      metricPackResponse: mockUseGetReturnData,
+      riskProfileResponse: riskCategoryMock,
       labelNamesResponse: { data: { data: ['cluster-name'] } }
     })
     expect(mockMonacoEditor).toHaveBeenCalledTimes(0)

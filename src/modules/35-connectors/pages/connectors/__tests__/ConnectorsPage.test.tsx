@@ -223,6 +223,6 @@ describe('Connectors Page Test', () => {
       fireEvent.change(searchInput!, { target: { value: query } })
     })
     await waitFor(() => expect(searchInput?.value).toBe(query))
-    await waitFor(() => expect(getConnectorsListV2).toBeCalledTimes(3))
+    await waitFor(() => expect(getConnectorsListV2).toBeCalledTimes(1))
   })
 })

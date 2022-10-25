@@ -41,7 +41,7 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface ServerlessAwsLambdaManifestPropType {
@@ -95,7 +95,10 @@ function ServerlessAwsLambdaManifest({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              }))
       }
     }
     return {

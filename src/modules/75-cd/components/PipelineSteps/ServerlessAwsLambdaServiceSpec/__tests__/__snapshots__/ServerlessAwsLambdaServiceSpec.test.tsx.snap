@@ -10,7 +10,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
       id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests"
     >
       <div
-        class="tabSubHeading ng-tooltip-native"
+        class="tabSubHeading listHeader ng-tooltip-native"
         data-tooltip-id="ServerlessAwsLambdaDeploymentTypeManifests"
       >
         pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests
@@ -74,7 +74,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
       id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts"
     >
       <div
-        class="tabSubHeading ng-tooltip-native"
+        class="tabSubHeading listHeader ng-tooltip-native"
         data-tooltip-id="ServerlessAwsLambdaDeploymentTypeArtifacts"
       >
         pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts
@@ -168,7 +168,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
         id="common.variables"
       >
         <div
-          class="tabSubHeading"
+          class="tabSubHeading listHeader"
         >
           common.variables
         </div>

@@ -50,7 +50,7 @@ import {
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
-import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 
 export const DatadogProduct = {
   CLOUD_METRICS: 'Datadog Cloud Metrics',
@@ -115,10 +115,7 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(
       }),
       isManualQuery: metricDefinition?.isManualQuery,
       isCustomCreatedMetric: metricDefinition.isCustomCreatedMetric,
-      riskCategory:
-        metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
-          ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
-          : '',
+      riskCategory: metricDefinition?.analysis?.riskProfile?.riskCategory,
       higherBaselineDeviation: Boolean(
         metricDefinition.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER')
       ),
@@ -186,7 +183,7 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
     const { sli, riskCategory, healthScore, continuousVerification, lowerBaselineDeviation, higherBaselineDeviation } =
       metricInfo
 
-    const assignComponentPayload = createPayloadForAssignComponent({
+    const assignComponentPayload = createPayloadForAssignComponentV2({
       sli,
       riskCategory,
       healthScore,

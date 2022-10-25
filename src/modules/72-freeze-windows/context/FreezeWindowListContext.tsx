@@ -8,9 +8,9 @@
 import React, { createContext, ReactNode, useContext, ReactElement, useState, useCallback } from 'react'
 
 interface FreezeWindowListContextProps {
-  toggleRowSelect: (id: string, select: boolean) => void
+  toggleRowSelect: (select: boolean, id: string) => void
+  toggleAllSelect: (select: boolean, selectIds?: string[]) => void
   selectedItems: string[]
-  clearSelectedItems: () => void
 }
 
 const FreezeWindowListContext = createContext({} as FreezeWindowListContextProps)
@@ -19,7 +19,7 @@ export function FreezeWindowListProvider({ children }: { children: ReactNode }):
   const [selectedItems, setSelectedItems] = useState<string[]>([])
 
   const toggleRowSelect = useCallback(
-    (id: string, select: boolean) => {
+    (select: boolean, id: string) => {
       if (select) {
         setSelectedItems([...selectedItems, id])
       } else {
@@ -30,10 +30,16 @@ export function FreezeWindowListProvider({ children }: { children: ReactNode }):
     [selectedItems]
   )
 
-  const clearSelectedItems = useCallback(() => setSelectedItems([]), [])
+  const toggleAllSelect = useCallback((select: boolean, selectIds?: string[]) => {
+    if (select && selectIds) {
+      setSelectedItems(selectIds)
+    } else {
+      setSelectedItems([])
+    }
+  }, [])
 
   return (
-    <FreezeWindowListContext.Provider value={{ toggleRowSelect, selectedItems, clearSelectedItems }}>
+    <FreezeWindowListContext.Provider value={{ toggleRowSelect, toggleAllSelect, selectedItems }}>
       {children}
     </FreezeWindowListContext.Provider>
   )

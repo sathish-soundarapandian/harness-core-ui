@@ -25,7 +25,7 @@ import {
   ExecutionStatusEnum,
   ExecutionStatus
 } from '@pipeline/utils/statusHelpers'
-import { getStepsTreeStatus } from '@pipeline/utils/executionUtils'
+import { getInterruptHistoriesFromType, getStepsTreeStatus, Interrupt } from '@pipeline/utils/executionUtils'
 import { StatusIcon } from './StatusIcon'
 
 import css from './StepsTree.module.scss'
@@ -70,27 +70,25 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
           const retryInterrupts = getRetryInterrupts(step)
 
           if (retryInterrupts.length > 0) {
-            const retryNodes: Array<ExecutionPipelineNode<ExecutionNode>> = defaultTo(
+            const retryNodes: Array<ExecutionPipelineNode<ExecutionNode>> = getInterruptHistoriesFromType(
               step.item.data?.interruptHistories,
-              []
-            )
-              .filter(node => node?.interruptConfig?.retryInterruptConfig)
-              .map((node, k): { item: ExecutionPipelineItem<ExecutionNode> } => ({
-                item: {
-                  ...(step.item as ExecutionPipelineItem<ExecutionNode>),
-                  name: getString('pipeline.execution.retryStepCount', { num: k + 1 }),
-                  retryId: defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, ''),
-                  status: ExecutionStatusEnum.Failed,
-                  // override data in order to stop infinite loop
-                  data: defaultTo(
-                    omit(
-                      get(allNodeMap, defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, '')),
-                      'interruptHistories'
-                    ),
-                    {}
-                  )
-                }
-              }))
+              Interrupt.RETRY
+            ).map((node, k): { item: ExecutionPipelineItem<ExecutionNode> } => ({
+              item: {
+                ...(step.item as ExecutionPipelineItem<ExecutionNode>),
+                name: getString('pipeline.execution.retryStepCount', { num: k + 1 }),
+                retryId: defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, ''),
+                status: ExecutionStatusEnum.Failed,
+                // override data in order to stop infinite loop
+                data: defaultTo(
+                  omit(
+                    get(allNodeMap, defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, '')),
+                    'interruptHistories'
+                  ),
+                  {}
+                )
+              }
+            }))
 
             const num = retryNodes.length + 1
 

@@ -14,6 +14,7 @@ import * as customDashboardServices from 'services/custom-dashboards'
 import CloneDashboardForm, { CloneDashboardFormProps } from '../CloneDashboardForm'
 
 const defaultProps: CloneDashboardFormProps = {
+  editableFolders: [],
   hideModal: jest.fn(),
   reloadDashboards: jest.fn()
 }
@@ -64,6 +65,7 @@ describe('CloneDashboardForm', () => {
     const mockCallbackReload = jest.fn()
 
     const testProps: CloneDashboardFormProps = {
+      editableFolders: [],
       hideModal: mockCallbackHide,
       reloadDashboards: mockCallbackReload,
       formData: testFormData
@@ -103,6 +105,7 @@ describe('CloneDashboardForm', () => {
     const mockCallbackReload = jest.fn()
 
     const testProps: CloneDashboardFormProps = {
+      editableFolders: [],
       hideModal: mockCallbackHide,
       reloadDashboards: mockCallbackReload,
       formData: testFormData

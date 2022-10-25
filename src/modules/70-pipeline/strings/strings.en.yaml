@@ -421,6 +421,9 @@ failureStrategies:
     MarkedAsSuccess: Marked As Success
     MarkAsFail: Mark As Fail
     MarkedAsFail: Marked As Fail
+    PipelineRollback: Rollback Pipeline
+    ProceedWithDefaultValues: Proceed with Default Values
+    StepGroupRollback: Rollback Step Group
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -649,7 +652,7 @@ dashboards:
   activeDeployments: Active Deployments
   pendingDeployments: Pending Approval/Manual Intervention
   baselineTargets: Target Baselines
-  baselineActivityComingSoon: Baseline target activity coming soon!
+  noTargetBaselines: No Baseline Targets set
   noRepositories: No Repositories found
   noFailedBuilds: No Failed Builds found
   noActiveBuilds: No Active Builds found
@@ -732,7 +735,7 @@ testsReports:
   testCasesExecution: Tests Execution
   testExecutions: Test Executions
   noFailedTestsFound: No failed tests found
-  showOnlyFailedTests: Show only failed tests
+  showAllTests: Show all tests
   hangTight: Hang tight! Report is being generated...
   noTestResults: No test results
   testsWillAppear: Tests will appear here if they were reported or uploaded to Harness.
@@ -1055,7 +1058,14 @@ stepDescription:
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
-  ECSRollingDeploy: Use a rolling update to schedule new aws instances on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
+  ECSRollingDeploy: Roll out a new ECS service version.
+  ECSRollingRollback: Roll back the ECS service version deployed using the ECS Rolling Deploy step.
+  ECSCanaryDeploy: Deploy a new ECS service version to one instance for validation.
+  ECSCanaryDelete: Delete the ECS service version deployed by the ECS Canary Deploy step.
+  ECSBlueGreenCreateService: Stage a new service version to a target group.
+  ECSBlueGreenSwapTargetGroups: Swap stage and prod routes for a Blue/Green deployment.
+  ECSBlueGreenRollback: Roll back the new ECS service version and upscale the old version to its previous task number.
+  ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
 executionStrategy:
@@ -1424,3 +1434,5 @@ customDeployment:
 step:
   validation:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
+runDisabledOnFreeze: Cannot run pipeline due to an active freeze
+viewFreeze: View freeze details

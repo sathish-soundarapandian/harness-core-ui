@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { defaultTo, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { v4 as uuid } from 'uuid'
@@ -152,9 +152,11 @@ export default function DeployCluster({
         draft.cluster = ''
         delete draft.clusters
       } else if (draft.clusters && Array.isArray(draft.clusters[environmentIdentifier])) {
-        draft.clusters[environmentIdentifier] = draft.clusters[environmentIdentifier].filter(
+        const filteredClusters = draft.clusters[environmentIdentifier].filter(
           cluster => cluster.value !== clusterToDelete
         )
+        draft.clusters[environmentIdentifier] = filteredClusters
+        set(draft, uniquePathForClusters.current, filteredClusters)
       }
     })
 

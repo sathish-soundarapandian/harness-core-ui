@@ -74,7 +74,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const selectedDeploymentType =
@@ -262,7 +262,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
             data-testid={'task-definition-card'}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
             >
               {getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
@@ -294,7 +294,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
             data-testid={'service-definition-card'}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_serviceDefinition`}
             >
               {getString('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')}
@@ -326,7 +326,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
             data-testid={'scalable-target-definition-card'}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_scalableTarget`}
             >
               {getString('common.headerWithOptionalText', {
@@ -359,7 +359,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
             data-testid={'scaling-policy-definition-card'}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_scalingPolicy`}
             >
               {getString('common.headerWithOptionalText', {
@@ -391,7 +391,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
@@ -412,27 +412,26 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               />
             )}
           </Card>
-          {(isNewService || isServiceEntityPage) &&
-            NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2
-              <Card
-                className={css.sectionCard}
-                id={getString('pipelineSteps.configFiles')}
-                data-testid={'configFiles-card'}
+          {(isNewService || isServiceEntityPage) && ( //Config files are only available for creation or readonly mode for service V2
+            <Card
+              className={css.sectionCard}
+              id={getString('pipelineSteps.configFiles')}
+              data-testid={'configFiles-card'}
+            >
+              <div
+                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
               >
-                <div
-                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
-                >
-                  {getString('pipelineSteps.configFiles')}
-                </div>
-                <ConfigFilesSelection
-                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                  isPropagating={isPropagating}
-                  deploymentType={selectedDeploymentType}
-                  readonly={!!readonly}
-                />
-              </Card>
-            )}
+                {getString('pipelineSteps.configFiles')}
+              </div>
+              <ConfigFilesSelection
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
         </>
       )}
 
@@ -441,7 +440,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={css.tabSubHeading}>{getString('common.variables')}</div>
+          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
           {isReadonlyServiceMode ? (
             <VariableListReadOnlyView />
           ) : (

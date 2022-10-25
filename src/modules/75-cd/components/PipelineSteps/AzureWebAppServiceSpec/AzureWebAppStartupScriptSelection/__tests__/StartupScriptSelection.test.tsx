@@ -59,7 +59,7 @@ describe('StartupScriptSelection', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
-    const addFileButton = await findByText(container, 'common.plusAddName')
+    const addFileButton = await findByText(container, 'common.addName')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]

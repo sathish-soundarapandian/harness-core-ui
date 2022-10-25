@@ -34,3 +34,8 @@ export interface EventListProps extends ChildAppProps {
   toBaseRouteDefinition?: () => string
   handleBackAction?: () => void
 }
+
+/* istanbul ignore next */
+export interface AgentListProps extends ChildAppProps {
+  handleBackAction?: () => void
+}

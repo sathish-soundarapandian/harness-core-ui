@@ -155,7 +155,7 @@ export default function TemplatesPage(): React.ReactElement {
 
   const { showImportResourceModal } = useImportResource({
     resourceType: ResourceType.TEMPLATE,
-    modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.templates') }),
+    modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.template.label') }),
     onSuccess: reloadTemplates
   })
 

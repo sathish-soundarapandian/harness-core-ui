@@ -45,7 +45,7 @@ const AzureWebAppConfigInputField = (props: ApplicationConfigProps): React.React
   if (props.azureWebAppConfig?.store?.type === 'Harness') {
     if (props.azureWebAppConfig?.store.spec.secretFiles) {
       return (
-        <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+        <Layout.Vertical className={cx(css.inputWidth, css.fileStoreVerticalSpacing)}>
           <FileStoreList
             name={`${props.path}.${props.type}.store.spec.secretFiles`}
             type={fileTypes.ENCRYPTED}
@@ -56,7 +56,7 @@ const AzureWebAppConfigInputField = (props: ApplicationConfigProps): React.React
       )
     }
     return (
-      <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+      <Layout.Vertical className={cx(css.inputWidth, css.fileStoreVerticalSpacing)}>
         <FileStoreList
           name={`${props.path}.${props.type}.store.spec.files`}
           type={fileTypes.FILE_STORE}
@@ -115,7 +115,7 @@ export function ApplicationConfig(props: ApplicationConfigProps): React.ReactEle
   }
   return (
     <div
-      className={cx(css.nopadLeft, css.accordionSummary)}
+      className={cx(css.nopadLeft, css.configSection)}
       id={`Stage.${props.stageIdentifier}.Service.AzureWebAppConfig`}
     >
       {!props.fromTrigger && <div className={css.subheading}>{getHeading(props.type)}</div>}

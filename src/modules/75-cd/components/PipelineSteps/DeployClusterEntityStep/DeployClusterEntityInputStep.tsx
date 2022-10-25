@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { defaultTo, get, isEmpty, isEqual, isNil } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, set, unset } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -53,6 +53,7 @@ export default function DeployClusterEntityInputStep({
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
 
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+  const pathForDeployToAll = `${pathPrefix}deployToAll`
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith(TEMPLATE_INPUT_PATH)
 
   const clusterValue = get(initialValues, `gitOpsClusters.[0].identifier`)
@@ -89,20 +90,36 @@ export default function DeployClusterEntityInputStep({
   const loading = loadingClustersList
 
   useDeepCompareEffect(() => {
+    if (!clustersList.length) {
+      return
+    }
+
     // if this is a multi clusters, then set up a dummy field,
     // so that clusters can be updated in this dummy field
     if (isMultipleCluster) {
+      const isDeployToAll = get(formik.values, pathForDeployToAll)
+
       formik.setFieldValue(
         uniquePath.current,
-        clusterIdentifiers.map(clusterId => ({
-          label: defaultTo(clustersList.find(clusterInList => clusterInList.clusterRef === clusterId)?.name, clusterId),
-          value: clusterId
-        }))
+        isDeployToAll
+          ? [
+              {
+                label: 'All',
+                value: 'All'
+              }
+            ]
+          : clusterIdentifiers.map(clusterId => ({
+              label: defaultTo(
+                clustersList.find(clusterInList => clusterInList.clusterRef === clusterId)?.name,
+                clusterId
+              ),
+              value: clusterId
+            }))
       )
     }
 
     // update identifiers in state when deployToAll is true. This sets the clustersData
-    if (clustersList.length && deployToAllClusters) {
+    if (deployToAllClusters === true) {
       const newIdentifiers = clustersList.map(clusterInList => clusterInList.clusterRef)
       if (!isEqual(newIdentifiers, clusterIdentifiers)) {
         setClusterIdentifiers(newIdentifiers)
@@ -122,16 +139,38 @@ export default function DeployClusterEntityInputStep({
   }
 
   function handleClustersChange(values: SelectOption[]): void {
-    const newValues = values.map(val => ({
-      identifier: val.value as string
-    }))
+    if (values?.at(0)?.value === 'All') {
+      const newIdentifiers = clustersList.map(clusterInList => clusterInList.clusterRef)
+      setClusterIdentifiers(newIdentifiers)
 
-    formik.setFieldValue(`${pathPrefix}gitOpsClusters`, newValues)
-    if (!deployToAllClusters) {
-      formik.setFieldValue(`${pathPrefix}deployToAll`, false)
+      const newFormikValues = { ...formik.values }
+      set(newFormikValues, pathForDeployToAll, true)
+      unset(newFormikValues, `${pathPrefix}gitOpsClusters`)
+      formik.setValues(newFormikValues)
+    } else {
+      const newValues = values.map(val => ({
+        identifier: val.value as string
+      }))
+
+      const newFormikValues = { ...formik.values }
+
+      set(newFormikValues, `${pathPrefix}gitOpsClusters`, newValues)
+      if (!isBoolean(deployToAllClusters)) {
+        set(newFormikValues, pathForDeployToAll, false)
+      }
+
+      setClusterIdentifiers(getClusterIdentifiers())
+      formik.setValues(newFormikValues)
     }
-    setClusterIdentifiers(getClusterIdentifiers())
   }
+
+  const placeHolderForClusters = loading
+    ? getString('loading')
+    : get(formik.values, pathForDeployToAll) === true
+    ? getString('common.allClusters')
+    : clusterIdentifiers.length
+    ? getString('common.clusters')
+    : getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')
 
   return (
     <>
@@ -157,7 +196,12 @@ export default function DeployClusterEntityInputStep({
             formik={formik}
           />
         )}
-        {isMultipleCluster && !deployToAllClusters && (
+        {/**
+         * Hide if:
+         * 1. if deploy to all environments is true, either by default or after selection from input field
+         * 2. if deploy to all clusters is true
+         */}
+        {isMultipleCluster && deployToAllClusters !== true && (
           <FormMultiTypeMultiSelectDropDown
             tooltipProps={{ dataTooltipId: 'specifyGitOpsClusters' }}
             label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
@@ -165,8 +209,10 @@ export default function DeployClusterEntityInputStep({
             disabled={inputSetData?.readonly || loading}
             dropdownProps={{
               items: selectOptions,
-              placeholder: getString('common.clusters'),
-              disabled: loading || inputSetData?.readonly
+              placeholder: placeHolderForClusters,
+              disabled: loading || inputSetData?.readonly,
+              isAllSelectionSupported: !!environmentIdentifier,
+              selectAllOptionIfAllItemsAreSelected: !!environmentIdentifier
             }}
             onChange={handleClustersChange}
             multiTypeProps={{

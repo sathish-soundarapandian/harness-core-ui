@@ -47,6 +47,7 @@ import { useStrings } from 'framework/strings'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
 import { Connectors } from '@connectors/constants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import {
   ConnectorSecretScope,
   handleOAuthEventProcessing,
@@ -103,28 +104,32 @@ const defaultInitialFormData: GithubFormInterface = {
   apiAuthType: GitAPIAuthTypes.TOKEN
 }
 
-const RenderGithubAuthForm: React.FC<{ formikProps: FormikProps<GithubFormInterface>; gitAuthType?: GitAuthTypes }> =
-  props => {
-    const { formikProps, gitAuthType } = props
-    const { getString } = useStrings()
-    switch (gitAuthType) {
-      case GitAuthTypes.USER_TOKEN:
-        return (
-          <>
-            <TextReference
-              name="username"
-              stringId="username"
-              type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
-            />
-            <SecretInput name="accessToken" label={getString('personalAccessToken')} />
-          </>
-        )
-      default:
-        return null
-    }
+const RenderGithubAuthForm: React.FC<{
+  formikProps: FormikProps<GithubFormInterface>
+  gitAuthType?: GitAuthTypes
+  scope?: ScopedObjectDTO
+}> = props => {
+  const { formikProps, gitAuthType, scope } = props
+  const { getString } = useStrings()
+  switch (gitAuthType) {
+    case GitAuthTypes.USER_TOKEN:
+      return (
+        <>
+          <TextReference
+            name="username"
+            stringId="username"
+            type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
+          />
+          <SecretInput name="accessToken" label={getString('personalAccessToken')} scope={scope} />
+        </>
+      )
+    default:
+      return null
   }
+}
 
-const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface>> = props => {
+const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface> & ScopedObjectDTO> = props => {
+  const { orgIdentifier, projectIdentifier } = props
   const { getString } = useStrings()
   switch (props.values.apiAuthType) {
     case GitAPIAuthTypes.GITHUB_APP:
@@ -146,6 +151,7 @@ const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface>> = props =>
             name="apiAccessToken"
             label={getString('personalAccessToken')}
             tooltipProps={{ dataTooltipId: 'gitHubPersonalAccessTooltip' }}
+            scope={{ projectIdentifier, orgIdentifier }}
           />
         </Container>
       )
@@ -154,7 +160,7 @@ const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface>> = props =>
   }
 }
 
-const RenderAPIAccessFormWrapper: React.FC<FormikProps<GithubFormInterface>> = formikProps => {
+const RenderAPIAccessFormWrapper: React.FC<FormikProps<GithubFormInterface> & ScopedObjectDTO> = props => {
   const { getString } = useStrings()
 
   const apiAuthOptions: Array<SelectOption> = [
@@ -176,7 +182,7 @@ const RenderAPIAccessFormWrapper: React.FC<FormikProps<GithubFormInterface>> = f
         </Text>
         <FormInput.Select name="apiAuthType" items={apiAuthOptions} className={commonStyles.authTypeSelect} />
       </Container>
-      <RenderAPIAccessForm {...formikProps} />
+      <RenderAPIAccessForm {...props} />
     </>
   )
 }
@@ -195,6 +201,13 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     const [gitAuthType, setGitAuthType] = useState<GitAuthTypes>()
     const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
     const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
+
+    const scope: ScopedObjectDTO | undefined = props.isEditMode
+      ? {
+          orgIdentifier: prevStepData?.orgIdentifier,
+          projectIdentifier: prevStepData?.projectIdentifier
+        }
+      : undefined
 
     useConnectorWizard({
       helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
@@ -426,7 +439,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                           }}
                         />
                       </Container>
-                      <RenderGithubAuthForm formikProps={formikProps} gitAuthType={gitAuthType} />
+                      <RenderGithubAuthForm formikProps={formikProps} gitAuthType={gitAuthType} scope={scope} />
                     </Container>
                   )}
 
@@ -452,7 +465,13 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                       <Text font="small" className={commonCss.bottomMargin4}>
                         {getString('common.git.APIAccessDescription')}
                       </Text>
-                      {formikProps.values.enableAPIAccess ? <RenderAPIAccessFormWrapper {...formikProps} /> : null}
+                      {formikProps.values.enableAPIAccess ? (
+                        <RenderAPIAccessFormWrapper
+                          {...formikProps}
+                          orgIdentifier={prevStepData?.orgIdentifier}
+                          projectIdentifier={prevStepData?.projectIdentifier}
+                        />
+                      ) : null}
                     </>
                   )}
                 </Container>

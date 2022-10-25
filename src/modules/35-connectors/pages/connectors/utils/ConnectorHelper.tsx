@@ -168,6 +168,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.awsSecretManager'
     case Connectors.GcpSecretManager:
       return 'connectors.title.gcpSecretManager'
+    case Connectors.SPOT:
+      return 'connectors.title.spot'
     default:
       return 'connector'
   }

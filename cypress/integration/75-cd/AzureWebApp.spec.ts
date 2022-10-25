@@ -79,7 +79,7 @@ describe('Azure web app end to end test', () => {
     cy.contains('span', 'Set Up Stage').click()
     // adding a new service
     cy.wait('@servicesV2Call')
-    cy.contains('span', 'New Service').should('be.visible').click()
+    cy.contains('span', 'Add Service').should('be.visible').click()
     cy.get('input[name="name"]').should('be.visible').type('testService').should('have.value', 'testService')
 
     // adding a startup command

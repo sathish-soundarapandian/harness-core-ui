@@ -10,8 +10,10 @@ declare const styles: {
   readonly choosePipelineSetupHeader: string
   readonly cloneForm: string
   readonly container: string
+  readonly createPipelineButtons: string
   readonly form: string
   readonly inlineRemoteSelect: string
   readonly inputWithSpinner: string
+  readonly zeroMargin: string
 }
 export default styles

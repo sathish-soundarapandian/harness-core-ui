@@ -33,7 +33,7 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   StackdriverDefinition,
-  useGetMetricPacks,
+  useGetRiskCategoryForCustomHealthMetric,
   useGetStackdriverDashboardDetail,
   useGetStackdriverSampleData
 } from 'services/cv'
@@ -169,6 +169,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const { getString } = useStrings()
+
   const transformedData = useMemo(
     () => transformGCOMetricHealthSourceToGCOMetricSetupSource(data, isMetricThresholdEnabled),
     [data, isMetricThresholdEnabled]
@@ -251,9 +252,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
   const { loading: loadingDashBoardData } = stackDriverDashBoardRequest
 
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'STACKDRIVER' }
-  })
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const metricFormData = updatedData.get(selectedMetric || '') || {}
   const formInitialValues = {
@@ -439,7 +438,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                               serviceInstanceMetricPath: formikProps.values?.serviceInstanceField
                             }}
                             hideServiceIdentifier
-                            metricPackResponse={metricPackResponse}
+                            riskProfileResponse={riskProfileResponse}
                             isTemplate={isTemplate}
                             expressions={expressions}
                             customServiceInstanceName={FieldNames.SERVICE_INSTANCE_FIELD}

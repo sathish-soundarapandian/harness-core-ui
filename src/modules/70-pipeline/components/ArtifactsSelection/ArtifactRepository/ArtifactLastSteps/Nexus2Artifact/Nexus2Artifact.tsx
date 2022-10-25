@@ -61,6 +61,7 @@ export function Nexus2Artifact({
   isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({ repositoryFormat: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -220,7 +221,7 @@ export function Nexus2Artifact({
     return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
+      isIdentifierAllowed
     ) as Nexus2InitialValuesType
   }
   const submitFormData = (formData: Nexus2InitialValuesType & { connectorId?: string }): void => {
@@ -255,7 +256,7 @@ export function Nexus2Artifact({
         }
       }
     }
-    if (context === ModalViewFor.SIDECAR) {
+    if (isIdentifierAllowed) {
       merge(formatedFormData, { identifier: formData?.identifier })
     }
     handleSubmit(formatedFormData)

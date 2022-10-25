@@ -29,12 +29,13 @@ import {
   EntityReferenceProps,
   EntityReference,
   getScopeFromValue,
-  getIdentifierFromValue
+  getIdentifierFromValue,
+  ScopedObjectDTO
 } from '../EntityReference/EntityReference'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 import css from './ReferenceSelect.module.scss'
 
-export interface MinimalObject {
+export interface MinimalObject extends ScopedObjectDTO {
   identifier?: string
   name?: string
 }
@@ -84,6 +85,9 @@ export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProp
           {getString('common.entityReferenceTitle', {
             compName: componentName
           })}
+        </Text>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+          {getString('common.sortedByCreatedTime')}
         </Text>
       </Layout.Vertical>
 

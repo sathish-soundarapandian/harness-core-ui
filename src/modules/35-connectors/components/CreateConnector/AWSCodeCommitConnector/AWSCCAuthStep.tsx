@@ -43,6 +43,7 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../commonSteps/ConnectorCommonStyles.module.scss'
 
@@ -137,6 +138,13 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
     return <PageSpinner />
   }
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: props.connectorInfo?.orgIdentifier,
+        projectIdentifier: props.connectorInfo?.projectIdentifier
+      }
+    : undefined
+
   return (
     <Layout.Vertical width="60%" style={{ minHeight: 460 }} className={css.stepContainer}>
       <ModalErrorHandler bind={setModalErrorHandler} />
@@ -170,7 +178,7 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
                 stringId="connectors.aws.accessKey"
                 type={(formikPros.values as any)?.accessKey?.type}
               />
-              <SecretInput name="secretKey" label={getString('connectors.aws.secretKey')} />
+              <SecretInput name="secretKey" label={getString('connectors.aws.secretKey')} scope={scope} />
             </Container>
             <Layout.Horizontal spacing="medium">
               <Button

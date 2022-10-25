@@ -471,7 +471,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                   class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+                    class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
                   >
                     <div
                       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -657,7 +657,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                     id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests"
                   >
                     <div
-                      class="tabSubHeading ng-tooltip-native"
+                      class="tabSubHeading listHeader ng-tooltip-native"
                       data-tooltip-id="KubernetesDeploymentTypeManifests"
                     >
                       pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests
@@ -721,7 +721,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                     id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts"
                   >
                     <div
-                      class="tabSubHeading ng-tooltip-native"
+                      class="tabSubHeading listHeader ng-tooltip-native"
                       data-tooltip-id="KubernetesDeploymentTypeArtifacts"
                     >
                       pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts
@@ -815,7 +815,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                       id="common.variables"
                     >
                       <div
-                        class="tabSubHeading"
+                        class="tabSubHeading listHeader"
                       >
                         common.variables
                       </div>

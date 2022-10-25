@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { Button, Container, FormikForm, Text } from '@wings-software/uicore'
-import { Color, Intent } from '@harness/design-system'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useStrings } from 'framework/strings'
@@ -89,6 +89,7 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
               icon="approval-stage-icon"
               iconProps={{ size: 16, intent: Intent.PRIMARY }}
               margin={{ bottom: 'medium' }}
+              style={{ fontVariant: FontVariation.H5, color: Color.GREY_800 }}
               className={css.addStageHeading}
             >
               {getString('pipelineSteps.build.create.aboutYourStage')}

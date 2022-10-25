@@ -40,7 +40,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
@@ -98,7 +98,10 @@ function KustomizeWithGIT({
         patchesPaths:
           typeof initialValues?.spec?.patchesPaths === 'string'
             ? initialValues?.spec?.patchesPaths
-            : initialValues?.spec?.patchesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(initialValues?.spec?.patchesPaths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         optimizedKustomizeManifestCollection: !!kustomizeYamlFolderPath,
         kustomizeYamlFolderPath

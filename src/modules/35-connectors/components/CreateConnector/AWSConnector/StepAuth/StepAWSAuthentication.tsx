@@ -21,6 +21,7 @@ import type { ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInte
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import { regionValues } from './StepAuthConstants'
 import css from './StepAWSAuthentication.module.scss'
@@ -87,6 +88,13 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
     connector_type: Connectors.AWS
   })
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
@@ -146,7 +154,7 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
                       stringId="connectors.aws.accessKey"
                       type={formikProps.values.accessKey ? formikProps.values.accessKey?.type : ValueType.TEXT}
                     />
-                    <SecretInput name="secretKeyRef" label={getString('connectors.aws.secretKey')} />
+                    <SecretInput name="secretKeyRef" label={getString('connectors.aws.secretKey')} scope={scope} />
                   </div>
                 </Layout.Vertical>
               ) : (

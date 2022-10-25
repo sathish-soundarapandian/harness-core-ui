@@ -127,6 +127,7 @@ export interface AnalysisState {
     | 'SERVICE_GUARD_LOG_CLUSTER'
     | 'SERVICE_GUARD_TREND_ANALYSIS'
     | 'SLI_METRIC_ANALYSIS'
+    | 'COMPOSOITE_SLO_METRIC_ANALYSIS'
 }
 
 export interface AnalysisStateMachine {
@@ -387,6 +388,18 @@ export type AwsManualConfigSpec = AwsCredentialSpec & {
   secretKeyRef: string
 }
 
+export type AwsPrometheusHealthSourceSpec = HealthSourceSpec & {
+  metricDefinitions?: PrometheusMetricDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
+  region?: string
+  workspaceId?: string
+}
+
+export interface AwsPrometheusWorkspaceDTO {
+  name?: string
+  workspaceId?: string
+}
+
 export type AwsSMCredentialSpecAssumeIAM = AwsSecretManagerCredentialSpec & { [key: string]: any }
 
 export type AwsSMCredentialSpecAssumeSTS = AwsSecretManagerCredentialSpec & {
@@ -415,6 +428,26 @@ export type AwsSecretManagerDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   region: string
   secretNamePrefix?: string
+}
+
+export interface AzureArtifactsAuthentication {
+  spec: AzureArtifactsHttpCredentials
+}
+
+export type AzureArtifactsConnector = ConnectorConfigDTO & {
+  auth: AzureArtifactsAuthentication
+  azureArtifactsUrl: string
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface AzureArtifactsHttpCredentials {
+  spec: AzureArtifactsUsernameToken
+  type: 'PersonalAccessToken'
+}
+
+export interface AzureArtifactsUsernameToken {
+  tokenRef: string
 }
 
 export interface AzureAuthCredentialDTO {
@@ -627,7 +660,6 @@ export interface CVConfig {
   deploymentVerificationEnabled?: boolean
   eligibleForDemo?: boolean
   enabled?: boolean
-  firstTimeDataCollectionStartTime?: number
   firstTimeDataCollectionTimeRange?: TimeRange
   fullyQualifiedIdentifier?: string
   identifier: string
@@ -656,6 +688,7 @@ export interface CVConfig {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   uuid?: string
   verificationTaskTags?: {
     [key: string]: string
@@ -820,8 +853,8 @@ export interface ChangeTimeline {
 
 export interface CloudWatchMetricDefinition {
   analysis?: AnalysisDTO
-  expression?: string
-  groupName?: string
+  expression: string
+  groupName: string
   identifier: string
   metricName: string
   responseMapping?: MetricResponseMapping
@@ -934,6 +967,8 @@ export interface ConnectorInfoDTO {
     | 'CustomSecretManager'
     | 'ELK'
     | 'GcpSecretManager'
+    | 'AzureArtifacts'
+    | 'Spot'
 }
 
 export interface ControlClusterSummary {
@@ -1076,6 +1111,7 @@ export interface DataCollectionRequest {
     | 'CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST'
     | 'CLOUDWATCH_METRIC_DATA_REQUEST'
     | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
+    | 'AWS_GENERIC_DATA_COLLECTION_REQUEST'
 }
 
 export interface DataCollectionTask {
@@ -2445,6 +2481,7 @@ export interface HealthSourceDTO {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2964,6 +3001,7 @@ export interface MetricPack {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -2992,6 +3030,7 @@ export interface MetricPackDTO {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -3085,7 +3124,7 @@ export interface MonitoredServiceDTO {
   projectIdentifier: string
   serviceRef: string
   sources?: Sources
-  tags: {
+  tags?: {
     [key: string]: string
   }
   template?: TemplateDTO
@@ -3428,16 +3467,6 @@ export interface PageNotificationRuleResponse {
   totalPages?: number
 }
 
-export interface PageSLODashboardWidget {
-  content?: SLODashboardWidget[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  totalItems?: number
-  totalPages?: number
-}
-
 export interface PageSLOHealthListView {
   content?: SLOHealthListView[]
   empty?: boolean
@@ -3734,6 +3763,13 @@ export interface ResponseLinkedHashMap {
 export interface ResponseListAppDynamicsFileDefinition {
   correlationId?: string
   data?: AppDynamicsFileDefinition[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListAwsPrometheusWorkspaceDTO {
+  correlationId?: string
+  data?: AwsPrometheusWorkspaceDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4189,7 +4225,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4275,13 +4311,6 @@ export interface ResponsePageMonitoredServiceResponse {
 export interface ResponsePageNotificationRuleResponse {
   correlationId?: string
   data?: PageNotificationRuleResponse
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePageSLODashboardWidget {
-  correlationId?: string
-  data?: PageSLODashboardWidget
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4604,6 +4633,14 @@ export interface RestResponseListProgressLog {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListRiskCategoryDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: RiskCategoryDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListSLOErrorBudgetResetDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4904,14 +4941,6 @@ export interface RestResponseUserJourneyResponse {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseVerificationJobInstance {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: VerificationJobInstance
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseVerifyStepDebugResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4937,6 +4966,13 @@ export interface ResultSummary {
   testClusterSummaries?: ClusterSummary[]
 }
 
+export interface RiskCategoryDTO {
+  cvMonitoringCategory?: 'Performance' | 'Errors' | 'Infrastructure'
+  displayName?: string
+  identifier?: 'Errors' | 'Infrastructure' | 'Performance_Throughput' | 'Performance_Other' | 'Performance_ResponseTime'
+  timeSeriesMetricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
+}
+
 export interface RiskCount {
   count?: number
   displayName?: string
@@ -4954,11 +4990,22 @@ export interface RiskData {
 export interface RiskProfile {
   category?: 'Performance' | 'Errors' | 'Infrastructure'
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
+  riskCategory?:
+    | 'Errors'
+    | 'Infrastructure'
+    | 'Performance_Throughput'
+    | 'Performance_Other'
+    | 'Performance_ResponseTime'
   thresholdTypes?: ('ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER')[]
 }
 
 export type RollingSLOTargetSpec = SLOTargetSpec & {
   periodLength: string
+}
+
+export interface RuntimeParameter {
+  runtimeParam?: boolean
+  value?: string
 }
 
 export interface Slidto {
@@ -5329,6 +5376,27 @@ export interface SplunkSavedSearch {
   title?: string
 }
 
+export type SpotConnector = ConnectorConfigDTO & {
+  credential: SpotCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface SpotCredential {
+  spec?: SpotCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface SpotCredentialSpec {
+  [key: string]: any
+}
+
+export type SpotManualConfigSpec = SpotCredentialSpec & {
+  accountId?: string
+  accountIdRef?: string
+  apiTokenRef: string
+}
+
 export interface StackTraceElement {
   classLoaderName?: string
   className?: string
@@ -5524,6 +5592,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   environmentIdentifier?: string
   groupName?: string
   metricDataList?: MetricData[]
@@ -5628,6 +5697,7 @@ export interface TimeSeriesThreshold {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -5670,6 +5740,7 @@ export interface TimeSeriesThresholdDTO {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -5730,6 +5801,7 @@ export interface TransactionMetricInfo {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -5825,11 +5897,13 @@ export interface VerificationJob {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
   )[]
   defaultJob?: boolean
   duration?: Duration
   envIdentifier: string
   executionDuration?: Duration
+  failOnNoAnalysis?: RuntimeParameter
   identifier: string
   jobName: string
   lastUpdatedAt?: number
@@ -5874,7 +5948,6 @@ export interface VerificationJobInstance {
     | 'ERROR'
     | 'ABORTED'
     | 'IN_PROGRESS'
-  verificationTasksCount?: number
 }
 
 export interface VerificationJobRuntimeDetails {
@@ -6957,10 +7030,10 @@ export interface GetSampleDataForQueryQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  connectorIdentifier?: string
-  requestGuid?: string
-  region?: string
-  expression?: string
+  connectorIdentifier: string
+  requestGuid: string
+  region: string
+  expression: string
   metricName?: string
   metricIdentifier?: string
 }
@@ -8681,6 +8754,7 @@ export interface GetMetricPacksQueryParams {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -8748,6 +8822,7 @@ export interface SaveMetricPacksQueryParams {
     | 'CUSTOM_HEALTH_LOG'
     | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -11247,6 +11322,26 @@ export interface GetLabelNamesQueryParams {
   projectIdentifier: string
   connectorIdentifier: string
   tracingId: string
+  dataSourceType?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+  region?: string
+  workspaceId?: string
 }
 
 export type GetLabelNamesProps = Omit<
@@ -11300,6 +11395,26 @@ export interface GetLabeValuesQueryParams {
   connectorIdentifier: string
   labelName: string
   tracingId: string
+  dataSourceType?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+  region?: string
+  workspaceId?: string
 }
 
 export type GetLabeValuesProps = Omit<
@@ -11353,6 +11468,26 @@ export interface GetMetricNamesQueryParams {
   connectorIdentifier: string
   filter?: string
   tracingId: string
+  dataSourceType?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+  region?: string
+  workspaceId?: string
 }
 
 export type GetMetricNamesProps = Omit<
@@ -11406,6 +11541,26 @@ export interface GetSampleDataQueryParams {
   connectorIdentifier: string
   query: string
   tracingId: string
+  dataSourceType?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+  region?: string
+  workspaceId?: string
 }
 
 export type GetSampleDataProps = Omit<
@@ -11448,6 +11603,50 @@ export const getSampleDataPromise = (
   getUsingFetch<ResponseListPrometheusSampleData, Failure | Error, GetSampleDataQueryParams, void>(
     getConfig('cv/api'),
     `/prometheus/sample-data`,
+    props,
+    signal
+  )
+
+export type GetRiskCategoryForCustomHealthMetricProps = Omit<
+  GetProps<RestResponseListRiskCategoryDTO, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * get risk category for a custom health metric
+ */
+export const GetRiskCategoryForCustomHealthMetric = (props: GetRiskCategoryForCustomHealthMetricProps) => (
+  <Get<RestResponseListRiskCategoryDTO, Failure | Error, void, void>
+    path={`/risk-category`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetRiskCategoryForCustomHealthMetricProps = Omit<
+  UseGetProps<RestResponseListRiskCategoryDTO, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * get risk category for a custom health metric
+ */
+export const useGetRiskCategoryForCustomHealthMetric = (props: UseGetRiskCategoryForCustomHealthMetricProps) =>
+  useGet<RestResponseListRiskCategoryDTO, Failure | Error, void, void>(`/risk-category`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * get risk category for a custom health metric
+ */
+export const getRiskCategoryForCustomHealthMetricPromise = (
+  props: GetUsingFetchProps<RestResponseListRiskCategoryDTO, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseListRiskCategoryDTO, Failure | Error, void, void>(
+    getConfig('cv/api'),
+    `/risk-category`,
     props,
     signal
   )
@@ -11817,63 +12016,6 @@ export const getSLODetailsPromise = (
   getUsingFetch<ResponseSLODashboardDetail, unknown, GetSLODetailsQueryParams, GetSLODetailsPathParams>(
     getConfig('cv/api'),
     `/slo-dashboard/widget/${identifier}`,
-    props,
-    signal
-  )
-
-export interface GetSLODashboardWidgetsQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-  userJourneyIdentifiers?: string[]
-  monitoredServiceIdentifier?: string
-  sliTypes?: ('Availability' | 'Latency')[]
-  targetTypes?: ('Rolling' | 'Calender')[]
-  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
-  pageNumber?: number
-  pageSize?: number
-}
-
-export type GetSLODashboardWidgetsProps = Omit<
-  GetProps<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>,
-  'path'
->
-
-/**
- * get widget list
- */
-export const GetSLODashboardWidgets = (props: GetSLODashboardWidgetsProps) => (
-  <Get<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>
-    path={`/slo-dashboard/widgets`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetSLODashboardWidgetsProps = Omit<
-  UseGetProps<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>,
-  'path'
->
-
-/**
- * get widget list
- */
-export const useGetSLODashboardWidgets = (props: UseGetSLODashboardWidgetsProps) =>
-  useGet<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>(`/slo-dashboard/widgets`, {
-    base: getConfig('cv/api'),
-    ...props
-  })
-
-/**
- * get widget list
- */
-export const getSLODashboardWidgetsPromise = (
-  props: GetUsingFetchProps<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>(
-    getConfig('cv/api'),
-    `/slo-dashboard/widgets`,
     props,
     signal
   )

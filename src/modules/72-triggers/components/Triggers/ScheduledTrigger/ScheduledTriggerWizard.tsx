@@ -76,7 +76,7 @@ import {
 } from '@triggers/components/steps/SchedulePanel/components/utils'
 import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
-import { flattenKeys, getModifiedTemplateValues, getPanels } from '../WebhookTrigger/utils'
+import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
 import type { TriggerProps } from '../Trigger'
 import { TriggerBaseType } from '../TriggerInterface'
 import {
@@ -91,7 +91,8 @@ import {
   FlatInitialValuesInterface,
   FlatOnEditValuesInterface,
   FlatValidScheduleFormikValuesInterface,
-  getValidationSchema
+  getValidationSchema,
+  getPanels
 } from './utils'
 import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
 
@@ -909,6 +910,8 @@ export default function ScheduledTriggerWizard(
 
   const isTriggerRbacDisabled = !isExecutable
 
+  const triggerHeading = isNewTrigger ? getString('triggers.onNewScheduleTitle') : `Trigger: ${triggerData?.name}`
+
   return (
     <TabWizard
       key={wizardKey} // re-renders with yaml to visual initialValues
@@ -941,12 +944,11 @@ export default function ScheduledTriggerWizard(
       // headerProps={{
       title={
         <TitleWithSwitch
-          isNewTrigger={isNewTrigger}
           selectedView={selectedView}
           enabledStatus={enabledStatus}
           setEnabledStatus={setEnabledStatus}
-          triggerName={triggerData?.name}
           isTriggerRbacDisabled={isTriggerRbacDisabled}
+          triggerHeading={triggerHeading}
         />
       }
       selectedView={selectedView}

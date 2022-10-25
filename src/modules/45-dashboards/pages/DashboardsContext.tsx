@@ -6,27 +6,40 @@
  */
 
 import React, { useState, useContext } from 'react'
+import { useParams } from 'react-router-dom'
 import type { Breadcrumb } from '@harness/uicore'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { FolderModel, useGetFolders } from 'services/custom-dashboards'
 
 export interface DashboardsContextProps {
   breadcrumbs: Breadcrumb[]
   includeBreadcrumbs: (breadcrumbs: Breadcrumb[]) => void
+  editableFolders: FolderModel[]
 }
 
 const DashboardsContext = React.createContext<DashboardsContextProps>({} as DashboardsContextProps)
 
 export function DashboardsContextProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
+  const { accountId } = useParams<AccountPathProps>()
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([])
 
   const includeBreadcrumbs = (breadcrumbsToAdd: Breadcrumb[]): void => {
     setBreadcrumbs(breadcrumbsToAdd)
   }
 
+  const { data: folderResponse } = useGetFolders({
+    queryParams: { accountId, page: 1, pageSize: 100, permission: PermissionIdentifier.EDIT_DASHBOARD }
+  })
+
+  const editableFolders = folderResponse?.resource || []
+
   return (
     <DashboardsContext.Provider
       value={{
         breadcrumbs,
-        includeBreadcrumbs
+        includeBreadcrumbs,
+        editableFolders
       }}
     >
       {props.children}

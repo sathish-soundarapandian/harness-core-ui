@@ -56,7 +56,7 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
 
         <Layout.Horizontal flex spacing="huge">
           <Radio
-            label={getString('rbac.resourceGroup.all')}
+            label={getString('common.all')}
             inline={true}
             disabled={disableAddingResources}
             value={SelectionType.ALL}

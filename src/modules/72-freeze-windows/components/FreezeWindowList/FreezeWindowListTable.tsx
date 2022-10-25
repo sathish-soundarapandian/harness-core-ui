@@ -22,6 +22,7 @@ import {
   FreezeToggleCell,
   FreezeWindowListColumnActions
 } from './FreezeWindowListCells'
+import { ToggleAllSelection } from './ToggleAllSelection'
 import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListTableProps extends FreezeWindowListColumnActions {
@@ -68,7 +69,7 @@ export function FreezeWindowListTable({
     }
     return [
       {
-        Header: '',
+        Header: <ToggleAllSelection data={content} />,
         id: 'rowSelectToggle',
         width: '2.5%',
         Cell: RowSelectCell,

@@ -271,6 +271,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="projectsOrgs.resendInvitation"
                           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--inline Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
                           tabindex="0"
                           type="button"
@@ -304,6 +305,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="projectsOrgs.deleteInvitation"
                           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--inline Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
                           tabindex="0"
                           type="button"
@@ -414,6 +416,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="projectsOrgs.resendInvitation"
                           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--inline Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
                           tabindex="0"
                           type="button"
@@ -447,6 +450,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="projectsOrgs.deleteInvitation"
                           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--inline Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
                           tabindex="0"
                           type="button"
@@ -557,6 +561,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="projectsOrgs.resendInvitation"
                           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--inline Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
                           tabindex="0"
                           type="button"
@@ -590,6 +595,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
                         class="bp3-popover-target"
                       >
                         <button
+                          aria-label="projectsOrgs.deleteInvitation"
                           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--inline Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
                           tabindex="0"
                           type="button"

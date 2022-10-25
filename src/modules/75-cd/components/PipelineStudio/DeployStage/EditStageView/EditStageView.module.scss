@@ -10,19 +10,19 @@
 }
 
 .stageTypeThumbnail {
-  margin: var(--spacing-medium) 0;
+  margin: var(--spacing-medium) 0 0 0;
   min-width: 400px;
 }
 
 .addStageHeading {
-  color: var(--grey-800);
+  color: var(--grey-800) !important;
   font-weight: 600 !important;
-  line-height: 24px;
+  line-height: var(--spacing-7) !important;
   padding-bottom: var(--spacing-medium) !important;
 }
 
 .nameIdDescriptionTags {
-  margin-bottom: 0px !important;
+  margin-bottom: var(--spacing-7) !important;
 }
 .deploymentType {
   margin-bottom: var(--spacing-medium);
@@ -30,6 +30,7 @@
 .gitOpsCheck {
   color: var(--grey-700) !important;
   font-size: var(--font-size-small) !important;
+  margin-top: var(--spacing-medium);
 }
 .templateBarOverride {
   background: var(--primary-1) !important;
@@ -53,4 +54,8 @@
 
 .halfWidthBar {
   width: 50% !important;
+}
+
+.zeroMargin {
+  margin: 0 !important;
 }

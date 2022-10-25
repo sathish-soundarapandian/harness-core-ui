@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
 import { Formik, FormikForm } from '@wings-software/uicore'
 import { noop } from 'lodash-es'
 import React from 'react'
@@ -37,7 +37,8 @@ describe('Test WinRmAuthFormFields', () => {
                   values: {
                     authScheme: 'NTLM' as WinRmAuthDTO['type'],
                     ...defaultFormikValues
-                  }
+                  },
+                  setFieldValue: jest.fn()
                 } as any
               }
             />
@@ -45,6 +46,12 @@ describe('Test WinRmAuthFormFields', () => {
         </Formik>
       </TestWrapper>
     )
+    const checkboxSSL = container.querySelector('input[name="useSSL"]') as HTMLInputElement
+    expect(checkboxSSL.checked).toEqual(false)
+    act(() => {
+      fireEvent.click(checkboxSSL)
+    })
+    expect(checkboxSSL.checked).toEqual(true)
     expect(container).toMatchSnapshot()
     expect(queryByText('secrets.winRmAuthFormFields.domain')).toBeTruthy()
   })

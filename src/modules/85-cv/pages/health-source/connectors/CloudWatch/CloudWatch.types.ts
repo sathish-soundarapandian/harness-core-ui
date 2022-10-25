@@ -3,7 +3,7 @@ import type { CloudWatchMetricDefinition, CloudWatchMetricsHealthSourceSpec, Res
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export type FormikRiskProfileType = {
-  category?: string
+  riskCategory?: string
 }
 
 export type FormikAnalysisType = {

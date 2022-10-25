@@ -26,7 +26,12 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import GroupName from '@cv/components/GroupName/GroupName'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
-import { StackdriverDefinition, useGetLabelNames, useGetMetricNames, useGetMetricPacks } from 'services/cv'
+import {
+  StackdriverDefinition,
+  useGetLabelNames,
+  useGetMetricNames,
+  useGetRiskCategoryForCustomHealthMetric
+} from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
@@ -85,9 +90,9 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
   const [labelNameTracingId, metricNameTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'PROMETHEUS' }
-  })
+
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
+
   const labelNamesResponse = useGetLabelNames({
     lazy: isConnectorRuntimeOrExpression,
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: labelNameTracingId }
@@ -323,7 +328,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                           }}
                           isTemplate={isTemplate}
                           expressions={expressions}
-                          metricPackResponse={metricPackResponse}
+                          riskProfileResponse={riskProfileResponse}
                           labelNamesResponse={labelNamesResponse}
                           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                         />

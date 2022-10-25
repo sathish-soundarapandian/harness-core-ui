@@ -1,9 +1,8 @@
-import { metricPackResponse } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
-
 import {
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 import { featureFlagsCall } from '../../../support/85-cv/common'
@@ -11,8 +10,8 @@ import {
   awsRegionsCall,
   awsRegionsResponse,
   longInvalidName,
-  metricPackCall,
   monitoredServicePostCall,
+  riskCategoryCall,
   sampleDataCall,
   sampleDataMockResponse
 } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
@@ -30,7 +29,7 @@ describe('Cloud watch health source without feature flag enabled tests', () => {
   })
 
   it('should not render Cloud watch health source type, if the feature flag is disabled', () => {
-    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -67,7 +66,7 @@ describe('Cloud watch health source', () => {
   })
 
   it('should render Cloud watch health source type, if the feature flag is enabled', () => {
-    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -82,7 +81,7 @@ describe('Cloud watch health source', () => {
   })
 
   it('should add cloud watch health source, if correct values are given', () => {
-    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', awsRegionsCall, awsRegionsResponse).as('regionsCall')
     cy.intercept('GET', sampleDataCall, sampleDataMockResponse).as('sampleDataCall')
 
@@ -137,8 +136,8 @@ describe('Cloud watch health source', () => {
     cy.findByText(/Risk Category/).should('exist')
     cy.findByText(/^Deviation Compared to Baseline$/).should('exist')
 
-    cy.findByText(/Errors\/Number of Errors/).should('exist')
-    cy.findByText(/Errors\/Number of Errors/).click()
+    cy.findByText(/Performance\/Other/).should('exist')
+    cy.findByText(/Performance\/Other/).click()
 
     cy.findByText(/Higher value is higher risk/).should('exist')
     cy.findByText(/Higher value is higher risk/).click()

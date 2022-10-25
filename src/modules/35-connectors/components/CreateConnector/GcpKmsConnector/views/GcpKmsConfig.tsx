@@ -21,6 +21,7 @@ import { Connectors } from '@connectors/constants'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import css from '../CreateGcpKmsConnector.module.scss'
 
 const defaultInitialFormData: GcpKmsConfigFormData = {
@@ -60,6 +61,13 @@ const GcpKmsConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps
     connector_type: Connectors.GcpKms
   })
 
+  const scope: ScopedObjectDTO | undefined = isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   return loadingFormData ? (
     <PageSpinner />
   ) : (
@@ -97,6 +105,7 @@ const GcpKmsConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps
               label={getString('connectors.gcpKms.credentialsFile')}
               type="SecretFile"
               connectorTypeContext={Connectors.GCP_KMS}
+              scope={scope}
             />
             <FormInput.CheckBox
               name="default"

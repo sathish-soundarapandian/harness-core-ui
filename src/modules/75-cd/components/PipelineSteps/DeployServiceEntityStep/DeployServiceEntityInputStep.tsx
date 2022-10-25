@@ -27,9 +27,12 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
+import { isExecutionTimeFieldDisabled } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCustomProps {
@@ -41,6 +44,7 @@ export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCu
     readonly?: boolean
   }
   allowableTypes: AllowedTypes
+  stepViewType: StepViewType
 }
 
 export function DeployServiceEntityInputStep({
@@ -49,7 +53,8 @@ export function DeployServiceEntityInputStep({
   allowableTypes,
   deploymentType,
   gitOpsEnabled,
-  customDeploymentData
+  customDeploymentData,
+  stepViewType
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -198,28 +203,46 @@ export function DeployServiceEntityInputStep({
   return (
     <>
       <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
-        {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
-          <ExperimentalInput
-            tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-            label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
-            name={`${pathPrefix}serviceRef`}
-            placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
-            selectItems={selectOptions}
-            useValue
-            multiTypeInputProps={{
-              expressions,
-              allowableTypes: allowableTypes,
-              selectProps: {
-                addClearBtn: !inputSetData?.readonly,
-                items: selectOptions
-              },
-              onChange: onServiceRefChange
-            }}
-            disabled={inputSetData?.readonly}
-            className={css.inputWidth}
-            formik={formik}
-          />
-        ) : null}
+        <div className={css.inputFieldLayout}>
+          {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
+            <ExperimentalInput
+              tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+              label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
+              name={`${pathPrefix}serviceRef`}
+              placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
+              selectItems={selectOptions}
+              useValue
+              multiTypeInputProps={{
+                expressions,
+                allowableTypes: allowableTypes,
+                selectProps: {
+                  addClearBtn: !inputSetData?.readonly,
+                  items: selectOptions
+                },
+                onChange: onServiceRefChange
+              }}
+              disabled={inputSetData?.readonly}
+              className={css.inputWidth}
+              formik={formik}
+            />
+          ) : null}
+          {getMultiTypeFromValue(get(formik?.values, `${pathPrefix}serviceRef`)) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              className={css.configureOptions}
+              style={{ alignSelf: 'center' }}
+              value={get(formik?.values, `${pathPrefix}serviceRef`)}
+              type="String"
+              variableName="skipResourceVersioning"
+              isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+              showRequiredField={false}
+              showDefaultField={true}
+              showAdvanced={true}
+              onChange={value => {
+                formik.setFieldValue(`${pathPrefix}serviceRef`, value)
+              }}
+            />
+          )}
+        </div>
         {isMultiSvcTemplate ? (
           <FormMultiTypeMultiSelectDropDown
             tooltipProps={{ dataTooltipId: 'specifyYourService' }}

@@ -57,7 +57,7 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
@@ -80,7 +80,7 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
           </Card>
           <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
             <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('pipelineSteps.configFiles')}
@@ -104,7 +104,7 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={css.tabSubHeading}>{getString('common.variables')}</div>
+          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
           {isReadonlyServiceMode ? (
             <VariableListReadOnlyView />
           ) : (

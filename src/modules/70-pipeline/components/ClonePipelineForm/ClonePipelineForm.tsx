@@ -208,7 +208,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
           return (
             <FormikForm className={css.form}>
               <div className={css.container}>
-                <NameIdDescriptionTags formikProps={formikProps} />
+                <NameIdDescriptionTags inputGroupProps={{ className: css.zeroMargin }} formikProps={formikProps} />
               </div>
               {supportingGitSimplification ? (
                 <>
@@ -257,7 +257,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
                   </div>
                 </React.Fragment>
               ) : null}
-              <Layout.Horizontal padding={{ top: 'large' }} spacing="medium">
+              <Layout.Horizontal className={css.createPipelineButtons} spacing="medium">
                 <RbacButton
                   permission={{
                     resource: { resourceType: ResourceType.PIPELINE },

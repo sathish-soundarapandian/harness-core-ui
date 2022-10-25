@@ -753,9 +753,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         </Card>
       )}
-      {contextType !== PipelineContextType.Standalone &&
-      selectedInfrastructureType &&
-      !isServerlessDeploymentType(selectedDeploymentType) ? (
+      {contextType !== PipelineContextType.Standalone && selectedInfrastructureType && (
         <Accordion className={stageCss.accordion} activeId="dynamicProvisioning">
           <Accordion.Panel
             id="dynamicProvisioning"
@@ -793,7 +791,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
             }
           />
         </Accordion>
-      ) : null}
+      )}
       {selectedInfrastructureType && (
         <>
           {(isAzureWebAppDeploymentType(selectedInfrastructureType) ||

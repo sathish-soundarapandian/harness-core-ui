@@ -658,7 +658,7 @@ healthSource:
         expression: Expression is required
         customMetrics: Add minimum one custom metric
         submitQuery: Submit query to see chart
-
+      groupModalTitle: New CloudWatch Group Name
     NewRelic:
       applicationLabel: Find an NewRelic application
       nrqlQuery: NRQL Query
@@ -967,3 +967,6 @@ metricThresholds:
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
 codeErrors: Code Errors
 codeErrorsHeading: Review code errors related to your project
+codeErrorsAgents: '{{projectName}} Code Error Agents'
+codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
+codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'

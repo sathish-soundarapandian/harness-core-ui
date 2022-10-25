@@ -166,6 +166,7 @@ allowpaths:
   - /cloudwatch/metrics/fetch-sample-data
   - /cloudwatch/metrics/regions
   - /cloudwatch/metrics/fetch-sample-data
+  - /risk-category
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

@@ -7,18 +7,22 @@
 
 import type { IconName } from '@wings-software/uicore'
 import type { StringKeys } from 'framework/strings'
-import type { OnFailureConfig } from 'services/cd-ng'
+import type { FailureStrategyActionConfig, OnFailureConfig } from 'services/pipeline-ng'
 
 export type FailureErrorType = OnFailureConfig['errors'][number]
 
-export enum Strategy {
-  Ignore = 'Ignore',
-  Abort = 'Abort',
-  StageRollback = 'StageRollback',
-  Retry = 'Retry',
-  ManualIntervention = 'ManualIntervention',
-  MarkAsSuccess = 'MarkAsSuccess',
-  MarkAsFailure = 'MarkAsFailure'
+export type StrategyType = FailureStrategyActionConfig['type']
+
+export const Strategy: Record<StrategyType, StrategyType> = {
+  Ignore: 'Ignore',
+  Abort: 'Abort',
+  StageRollback: 'StageRollback',
+  Retry: 'Retry',
+  ManualIntervention: 'ManualIntervention',
+  MarkAsSuccess: 'MarkAsSuccess',
+  PipelineRollback: 'PipelineRollback',
+  ProceedWithDefaultValues: 'ProceedWithDefaultValues',
+  StepGroupRollback: 'StepGroupRollback'
 }
 
 export enum WaitActions {
@@ -41,14 +45,16 @@ export const ErrorType: Record<FailureErrorType, FailureErrorType> = {
   InputTimeoutError: 'InputTimeoutError'
 }
 
-export const strategyIconMap: Record<Strategy, IconName> = {
-  [Strategy.Ignore]: 'delete',
-  [Strategy.Abort]: 'ban-circle',
-  [Strategy.MarkAsSuccess]: 'tick',
-  [Strategy.StageRollback]: 'repeat',
-  [Strategy.Retry]: 'refresh',
-  [Strategy.ManualIntervention]: 'hand-up',
-  [Strategy.MarkAsFailure]: 'ban-circle'
+export const strategyIconMap: Record<StrategyType, IconName> = {
+  Ignore: 'delete',
+  Abort: 'ban-circle',
+  MarkAsSuccess: 'tick',
+  StageRollback: 'repeat',
+  Retry: 'refresh',
+  ManualIntervention: 'hand-up',
+  PipelineRollback: 'repeat',
+  ProceedWithDefaultValues: 'main-resume',
+  StepGroupRollback: 'repeat'
 }
 
 export const waitActionsIconMap: Record<WaitActions, IconName> = {
@@ -57,14 +63,16 @@ export const waitActionsIconMap: Record<WaitActions, IconName> = {
   [WaitActions.MarkedAsSuccess]: 'tick',
   [WaitActions.MarkAsSuccess]: 'tick'
 }
-export const stringsMap: Record<Strategy, StringKeys> = {
-  [Strategy.Ignore]: 'pipeline.failureStrategies.strategiesLabel.Ignore',
-  [Strategy.Abort]: 'pipeline.failureStrategies.strategiesLabel.Abort',
-  [Strategy.MarkAsSuccess]: 'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess',
-  [Strategy.StageRollback]: 'pipeline.failureStrategies.strategiesLabel.StageRollback',
-  [Strategy.Retry]: 'pipeline.failureStrategies.strategiesLabel.Retry',
-  [Strategy.ManualIntervention]: 'pipeline.failureStrategies.strategiesLabel.ManualIntervention',
-  [Strategy.MarkAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkAsFail'
+export const stringsMap: Record<StrategyType, StringKeys> = {
+  Ignore: 'pipeline.failureStrategies.strategiesLabel.Ignore',
+  Abort: 'pipeline.failureStrategies.strategiesLabel.Abort',
+  MarkAsSuccess: 'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess',
+  StageRollback: 'pipeline.failureStrategies.strategiesLabel.StageRollback',
+  Retry: 'pipeline.failureStrategies.strategiesLabel.Retry',
+  ManualIntervention: 'pipeline.failureStrategies.strategiesLabel.ManualIntervention',
+  PipelineRollback: 'pipeline.failureStrategies.strategiesLabel.PipelineRollback',
+  ProceedWithDefaultValues: 'pipeline.failureStrategies.strategiesLabel.ProceedWithDefaultValues',
+  StepGroupRollback: 'pipeline.failureStrategies.strategiesLabel.StepGroupRollback'
 }
 
 export const waitActionsStringMap: Record<WaitActions, StringKeys> = {

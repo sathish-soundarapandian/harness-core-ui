@@ -333,7 +333,11 @@ function DeployEnvironment({
             setEnvironmentsSelectOptions(options)
           }
         } else {
-          formik?.setFieldValue('environment.environmentRef', existingEnvironment?.value)
+          formik?.setValues(
+            produce(initialValues, draft => {
+              set(draft, 'environment.environmentRef', existingEnvironment?.value)
+            })
+          )
           setSelectedEnvironment(
             environments?.find(environment => environment.identifier === existingEnvironment?.value)
           )
@@ -409,7 +413,7 @@ function DeployEnvironment({
             setSelectedEnvironment(
               environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
             )
-            if (formik?.values['infrastructureRef']) {
+            if (formik?.values['infrastructureRef'] && item !== RUNTIME_INPUT_VALUE) {
               formik?.setFieldValue('infrastructureRef', '')
             }
           },

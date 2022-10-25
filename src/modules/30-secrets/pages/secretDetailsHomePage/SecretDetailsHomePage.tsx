@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { Container, Layout, Text, Icon, TabNavigation } from '@wings-software/uicore'
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom'
+import { Container, Layout, Text, Icon, Tabs } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
@@ -19,6 +19,10 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import SecretDetails from '../secretDetails/SecretDetails'
+import SecretReferences from '../secretReferences/SecretReferences'
+import { SecretMenuItem } from '../secrets/views/SecretsListView/SecretsList'
+import css from './SecretDetailsHomePage.module.scss'
 
 interface OptionalIdentifiers {
   module?: Module
@@ -41,11 +45,16 @@ const getSecretsUrl = ({ accountId, orgIdentifier, projectIdentifier, module }: 
   return routes.toSecrets({ accountId, orgIdentifier, projectIdentifier, module })
 }
 
-const SecretDetaislHomePage: React.FC<SecretDetailsProps> = ({ children }, props) => {
+const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
   const { accountId, projectIdentifier, orgIdentifier, secretId, module } = useParams<
     ProjectPathProps & SecretsPathProps & ModulePathParams
   >()
+  const isReference = useRouteMatch(
+    routes.toSecretDetailsReferences({ accountId, projectIdentifier, orgIdentifier, secretId, module })
+  )
+
   const { selectedProject } = useAppStore()
+  const history = useHistory()
   const { loading, data, error, refetch } = useGetSecretV2({
     identifier: secretId,
     queryParams: { accountIdentifier: accountId, projectIdentifier: projectIdentifier, orgIdentifier: orgIdentifier },
@@ -53,10 +62,9 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = ({ children }, props
   })
   const { getString } = useStrings()
   const secretType = data?.data?.secret.type
-  const childrenWithProps = React.isValidElement(children)
-    ? React.cloneElement(children, { secretData: data, refetch: refetch })
-    : children
-
+  const onSuccessfulDeleteRedirect = () => {
+    history.push(routes.toSecrets({ accountId, projectIdentifier, orgIdentifier, module }))
+  }
   const renderBreadCrumb: React.FC = () => {
     const breadCrumbArray = [
       {
@@ -111,31 +119,15 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = ({ children }, props
           </Layout.Horizontal>
         }
         toolbar={
-          <TabNavigation
-            size={'small'}
-            links={[
-              {
-                label: getString('overview'),
-                to: routes.toSecretDetailsOverview({
-                  accountId,
-                  projectIdentifier,
-                  orgIdentifier,
-                  secretId,
-                  module
-                })
-              },
-              {
-                label: getString('common.references'),
-                to: routes.toSecretDetailsReferences({
-                  accountId,
-                  projectIdentifier,
-                  orgIdentifier,
-                  secretId,
-                  module
-                })
-              }
-            ]}
-          />
+          data?.data?.secret && (
+            <div className={css.secretMenuItem}>
+              <SecretMenuItem
+                secret={data?.data?.secret || {}}
+                onSuccessfulDelete={onSuccessfulDeleteRedirect}
+                onSuccessfulEdit={refetch}
+              />
+            </div>
+          )
         }
       />
       <Page.Body
@@ -148,7 +140,24 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = ({ children }, props
           message: getString('entityReference.noRecordFound')
         }}
       >
-        {childrenWithProps}
+        <div className={css.secretTabs}>
+          <Tabs
+            id={'horizontalTabs'}
+            defaultSelectedTabId={isReference && isReference.isExact ? 'reference' : 'overview'}
+            tabList={[
+              {
+                id: 'overview',
+                title: getString('overview'),
+                panel: <SecretDetails secretData={data || undefined} refetch={refetch} />
+              },
+              {
+                id: 'reference',
+                title: getString('common.references'),
+                panel: <SecretReferences secretData={data || undefined} />
+              }
+            ]}
+          ></Tabs>
+        </div>
       </Page.Body>
     </>
   )
