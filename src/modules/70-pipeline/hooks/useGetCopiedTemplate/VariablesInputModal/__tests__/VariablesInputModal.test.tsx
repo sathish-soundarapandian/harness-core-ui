@@ -12,6 +12,7 @@ import { VariablesInputModal } from '@pipeline/hooks/useGetCopiedTemplate/Variab
 import type { VariablesInputModalProps } from '@pipeline/hooks/useGetCopiedTemplate/useGetCopiedTemplate'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import * as templateService from 'services/template-ng'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 
 const stepTemplate: TemplateSummaryResponse = {
   accountId: 'px7xd_BFRCi-pfWPYXVjvw',
@@ -30,23 +31,23 @@ const stepTemplate: TemplateSummaryResponse = {
   versionLabel: 'v1',
   yaml:
     'template:' +
-    '\n    name: Test Http Template' +
-    '\n    identifier: Test_Http_Template' +
-    '\n    versionLabel: v1' +
-    '\n    type: Step' +
-    '\n    projectIdentifier: Yogesh_Test' +
-    '\n    orgIdentifier: default' +
-    '\n    description: null' +
-    '\n    tags: {}' +
+    '\n  name: Test Http Template' +
+    '\n  identifier: Test_Http_Template' +
+    '\n  versionLabel: v1' +
+    '\n  type: Step' +
+    '\n  projectIdentifier: Yogesh_Test' +
+    '\n  orgIdentifier: default' +
+    '\n  description: null' +
+    '\n  tags: {}' +
+    '\n  spec:' +
+    '\n    type: Http' +
+    '\n    timeout: 1m 40s' +
     '\n    spec:' +
-    '\n        type: Http' +
-    '\n        timeout: 1m 40s' +
-    '\n        spec:' +
-    '\n            url: <+input>' +
-    '\n            method: GET' +
-    '\n            headers: []' +
-    '\n            outputVariables: []' +
-    '\n            requestBody: <+input>' +
+    '\n      url: <+input>' +
+    '\n      method: GET' +
+    '\n      headers: []' +
+    '\n      outputVariables: []' +
+    '\n      requestBody: <+input>' +
     '\n'
 }
 
@@ -68,29 +69,15 @@ const stepMockTemplatesInputYamlMock = jest.spyOn(templateService, 'useGetTempla
   error: null,
   loading: false
 } as any)
+
 const copyTemplateWithVariablesPromiseMock = jest
   .spyOn(templateService, 'copyTemplateWithVariablesPromise')
-  .mockReturnValue({
-    status: 'SUCCESS',
-    data:
-      '---\n' +
-      'name: "Http Step"\n' +
-      'identifier: "Http_Step"\n' +
-      'versionLabel: "v1"\n' +
-      'type: "Step"\n' +
-      'projectIdentifier: "prabu"\n' +
-      'orgIdentifier: "default"\n' +
-      'tags: {}\n' +
-      'spec:\n' +
-      '  type: "Http"\n' +
-      '  timeout: "10s"\n' +
-      '  spec:\n' +
-      '    url: "<+input>"\n' +
-      '    method: "GET"\n' +
-      '    headers: []\n' +
-      '    outputVariables: []\n' +
-      '    requestBody: "<+input>"\n'
-  } as any)
+  .mockImplementation(() =>
+    Promise.resolve({
+      status: 'SUCCESS',
+      data: yamlStringify(parse<any>(stepTemplate.yaml || '')?.template)
+    } as any)
+  )
 
 const baseProps: VariablesInputModalProps = {
   template: stepTemplate,
@@ -137,14 +124,12 @@ describe('<VariablesInputModal/> tests', () => {
       })
     )
 
-    await waitFor(() =>
-      expect(baseProps.onResolve).toBeCalledWith(
-        'template:\n  name: Http Step\n  identifier: Http_Step\n  versionLabel: v1\n  type: Step\n  projectIdentifier: prabu\n  orgIdentifier: default\n  tags: {}\n  spec:\n    type: Http\n    timeout: 10s\n    spec:\n      url: <+input>\n      method: GET\n      headers: []\n      outputVariables: []\n      requestBody: <+input>\n'
-      )
-    )
+    await waitFor(() => {
+      expect(baseProps.onResolve).toBeCalledWith(stepTemplate.yaml)
+    })
   })
 
-  test('should call onResolve with template yaml if there are no template inputs', () => {
+  test('should call onResolve with template yaml if there are no template variables inputs', async () => {
     stepMockTemplatesInputYamlMock.mockReturnValue({
       data: {
         status: 'SUCCESS',
@@ -165,10 +150,12 @@ describe('<VariablesInputModal/> tests', () => {
         <VariablesInputModal {...baseProps} />
       </TestWrapper>
     )
-    expect(baseProps.onResolve).toBeCalledWith(stepTemplate.yaml)
+    await waitFor(() => {
+      expect(baseProps.onResolve).toBeCalledWith(stepTemplate.yaml)
+    })
   })
 
-  test('should call onResolve with template yaml if there are no template variables inputs', () => {
+  test('should call onResolve with template yaml if there are no template inputs', async () => {
     stepMockTemplatesInputYamlMock.mockReturnValue({
       data: {
         status: 'SUCCESS',
@@ -183,7 +170,9 @@ describe('<VariablesInputModal/> tests', () => {
         <VariablesInputModal {...baseProps} />
       </TestWrapper>
     )
-    expect(baseProps.onResolve).toBeCalledWith(stepTemplate.yaml)
+    await waitFor(() => {
+      expect(baseProps.onResolve).toBeCalledWith(stepTemplate.yaml)
+    })
   })
 
   test('should call onReject if template input call fails', () => {
