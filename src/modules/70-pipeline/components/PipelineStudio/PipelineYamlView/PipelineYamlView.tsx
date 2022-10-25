@@ -205,7 +205,7 @@ function PipelineYamlView(): React.ReactElement {
               )
             }}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
-            height={'50vh'}
+            height={'calc(100vh - 200px)'}
             width="calc(100vw - 400px)"
             invocationMap={stepsFactory.getInvocationMap()}
             schema={schema}

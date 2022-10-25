@@ -25,7 +25,7 @@ import {
   isNil,
   isUndefined
 } from 'lodash-es'
-import { Layout, Text } from '@harness/uicore'
+import { Layout, Text, Collapse } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
@@ -147,6 +147,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
+  const [dynamicHeight, setDynamicHeight] = useState<React.CSSProperties['height']>(height as number)
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
@@ -154,6 +155,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
   const [shouldAutoComplete, setShouldAutoComplete] = useState<boolean>(true)
+  const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(showErrorPanel)
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -605,33 +607,47 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [currentYaml])
 
+  useEffect(() => {
+    if (shouldShowErrorPanel && dynamicHeight) {
+      const halfHeight = (dynamicHeight.valueOf() as number) / 2
+      setDynamicHeight(halfHeight)
+    }
+  }, [shouldShowErrorPanel, dynamicHeight])
+
   const renderErrorPanel = useCallback((): JSX.Element => {
     if (isUndefined(yamlValidationErrors)) {
       return <></>
     }
     return (
-      <ul className={css.noStyleUl}>
-        {Array.from(yamlValidationErrors.keys()).map(key => {
-          const errorMssg = yamlValidationErrors.get(key)
-          return errorMssg ? (
-            <Container padding="xsmall">
-              <li>
-                <Text color={Color.WHITE}>
-                  Line&nbsp;{key + 1}:&nbsp;{errorMssg}
-                </Text>
-              </li>
-            </Container>
-          ) : null
-        })}
-      </ul>
+      <Collapse
+        isOpen={shouldShowErrorPanel}
+        onToggleOpen={() => setShouldShowErrorPanel(true)}
+        onRemove={() => setShouldShowErrorPanel(false)}
+        heading={`${yamlValidationErrors.size} Errors`}
+      >
+        <ul className={css.noStyleUl}>
+          {Array.from(yamlValidationErrors.keys()).map(key => {
+            const errorMssg = yamlValidationErrors.get(key)
+            return errorMssg ? (
+              <Container padding="xsmall">
+                <li>
+                  <Text color={Color.WHITE}>
+                    Line&nbsp;{key + 1}:&nbsp;{errorMssg}
+                  </Text>
+                </li>
+              </Container>
+            ) : null
+          })}
+        </ul>
+      </Collapse>
     )
-  }, [yamlValidationErrors])
+  }, [yamlValidationErrors, shouldShowErrorPanel])
 
   const renderEditor = useCallback(
     (): JSX.Element => (
       <MonacoEditor
         width={dynamicWidth}
-        height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
+        height={defaultTo(dynamicHeight, DEFAULT_EDITOR_HEIGHT)}
         language="yaml"
         value={currentYaml}
         onChange={onYamlChange}
@@ -691,9 +707,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           </div>
         )}
       </div>
-      {showErrorPanel ? (
-        <Container padding={{ top: 'medium', bottom: 'medium' }}>{renderErrorPanel()}</Container>
-      ) : null}
+      {shouldShowErrorPanel ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
     </Layout.Vertical>
   )
 }
