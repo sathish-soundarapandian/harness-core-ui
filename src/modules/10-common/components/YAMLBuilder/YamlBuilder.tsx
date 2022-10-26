@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
+import { IKeyboardEvent, IPosition, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import {
@@ -159,7 +159,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const yamlValidationErrorsRef = useRef<Map<number, string | string[]>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
-  const [shouldAutoComplete, setShouldAutoComplete] = useState<boolean>(true)
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
 
@@ -302,7 +301,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         if (lineNumber && column) {
           const editorContent = editor.getModel()?.getValue() || ''
           const { autoCompletionYAML } = AutoCompletionMap.get(editorContent) || {}
-          if (shouldAutoComplete && AutoCompletionMap.has(editorContent)) {
+          if (AutoCompletionMap.has(editorContent)) {
             editor.executeEdits('', [
               {
                 range: {
@@ -311,14 +310,24 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                   endLineNumber: lineNumber,
                   endColumn: column
                 } as Range,
-                text: autoCompletionYAML || ''
+                text: autoCompletionYAML || '',
+                forceMoveMarkers: true
               }
             ])
+            const lastLineNum = editor.getModel()?.getLineCount()
+            if (lastLineNum) {
+              const lastColumn = editor.getModel()?.getLineMaxColumn(lastLineNum)
+              editor.setSelection(new monaco.Range(0, 0, 0, 0))
+              editor.setPosition({
+                lineNumber: lastLineNum,
+                column: lastColumn
+              } as IPosition)
+            }
           }
         }
       }
     }, 500),
-    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange, shouldAutoComplete]
+    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
   )
 
   const showNoPermissionError = useCallback(
