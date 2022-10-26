@@ -63,7 +63,7 @@ export default function L1Nav(): React.ReactElement {
     root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
 
     NEW_LEFT_NAVBAR_SETTINGS &&
-      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'start' })
+      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
   })
 
   useEffect(() => {
