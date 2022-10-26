@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages, Position, Range } from 'monaco-editor/esm/vs/editor/editor.api'
+import { IKeyboardEvent, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import {
   debounce,
