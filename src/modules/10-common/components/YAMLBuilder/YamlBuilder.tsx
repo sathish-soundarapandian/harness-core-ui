@@ -610,10 +610,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               content={getErrorSummary(yamlValidationErrors)}
               popoverClassName={css.summaryPopover}
             >
-              <div>
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
                 <Icon name="main-issue-filled" size={14} className={css.validationIcon} />
                 <span className={css.invalidYaml}>{getString('invalidText')}</span>
-              </div>
+              </Layout.Horizontal>
             </Popover>
           )}
         </div>
@@ -672,15 +672,27 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         collapseClassName={css.errorPanelCollapse}
         collapseHeaderClassName={css.errorPanelHeader}
       >
-        <Container padding={{ top: 'small' }}>
+        <Container padding={{ top: 'small' }} className={css.errorPanel}>
           {schemaValidationErrors.map((error: Diagnostic) => {
             const { message, range } = error
             const { end } = range
+            const { line: row, character: column } = end
+            const editor = editorRef.current?.editor
             return message ? (
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="xsmall" padding={{ bottom: 'small' }}>
+              <Layout.Horizontal
+                flex={{ justifyContent: 'flex-start' }}
+                spacing="xsmall"
+                padding={{ bottom: 'small' }}
+                onClick={() => {
+                  editor?.setPosition({ lineNumber: row + 1, column })
+                  editor?.revealLineInCenter(row + 1)
+                  editor?.focus()
+                }}
+                className={css.errorRow}
+              >
                 <Icon name="danger-icon" />
                 <Text font={{ variation: FontVariation.BODY }}>
-                  {message} [Ln&nbsp;{end.line + 1},&nbsp;Col&nbsp;{end.character}]
+                  {message} [Ln&nbsp;{row + 1},&nbsp;Col&nbsp;{column}]
                 </Text>
               </Layout.Horizontal>
             ) : null

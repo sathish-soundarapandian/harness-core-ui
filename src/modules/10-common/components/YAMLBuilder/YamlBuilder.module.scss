@@ -154,3 +154,14 @@
     }
   }
 }
+
+.errorRow {
+  :hover {
+    cursor: pointer;
+  }
+}
+
+.errorPanel {
+  height: 21vh;
+  overflow-y: scroll;
+}
