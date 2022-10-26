@@ -87,7 +87,6 @@ describe('CVCreateSloV2', () => {
     expect(modal).toBeTruthy()
     fireEvent.click(modal?.querySelector('button')!)
     fireEvent.click(modal?.querySelector('button')?.lastChild!)
-    expect(container).toMatchSnapshot()
   })
 
   test('Validate values populate while editing SLO', async () => {
@@ -149,6 +148,5 @@ describe('CVCreateSloV2', () => {
         getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage.toString())
       ).toBeInTheDocument()
     )
-    expect(container).toMatchSnapshot()
   })
 })
