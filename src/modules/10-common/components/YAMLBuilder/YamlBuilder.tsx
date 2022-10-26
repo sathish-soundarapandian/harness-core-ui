@@ -675,7 +675,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                   >
                     <Icon name="danger-icon" />
                     <Text font={{ variation: FontVariation.BODY }}>
-                      Line&nbsp;{key + 1}:&nbsp;{item}
+                      {item} [Ln&nbsp;{key + 1},&nbsp;Col&nbsp;]
                     </Text>
                   </Layout.Horizontal>
                 ))
