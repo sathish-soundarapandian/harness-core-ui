@@ -7,8 +7,11 @@
 
 .main {
   background-color: var(--white);
-  border: 1px solid var(--grey-250);
-  border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-top: 1px solid var(--grey-250);
+  border-left: 1px solid var(--grey-250);
+  border-right: 1px solid var(--grey-250);
 }
 
 .filePath {
@@ -102,8 +105,41 @@
 
 .noStyleUl {
   list-style-type: none;
-  padding: var(--spacing-small);
   margin: 0;
-  background-color: var(--black);
-  color: var(--white);
+}
+
+.errorPanelCollapse {
+  margin: var(--spacing-none);
+  padding: var(--spacing-none);
+
+  [class*='Collapse--collapse'] {
+    margin-left: var(--spacing-medium) !important;
+  }
+
+  [class*='Collapse--header'] {
+    padding-top: var(--spacing-none) !important;
+  }
+
+  span[icon='chevron-down'] {
+    background: var(--grey-100);
+    padding: var(--spacing-small) var(--spacing-4);
+    svg {
+      height: 20px;
+      width: 20px;
+      path {
+        stroke-width: 1;
+      }
+    }
+  }
+  span[icon='chevron-up'] {
+    background: var(--grey-100);
+    padding: var(--spacing-small) var(--spacing-4);
+    svg {
+      height: 20px;
+      width: 20px;
+      path {
+        stroke-width: 1;
+      }
+    }
+  }
 }
