@@ -32,10 +32,8 @@ import {
   useSaveSLOV2Data,
   useUpdateSLOV2Data
 } from 'services/cv'
-import { useQueryParams } from '@common/hooks'
-import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/CommonUtils'
+import { getErrorMessage } from '@cv/utils/CommonUtils'
 import sloReviewChange from '@cv/assets/sloReviewChange.svg'
-import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import {
   createSLOV2RequestPayload,
   getIsUserUpdatedSLOData,
@@ -55,7 +53,6 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
-  const { monitoredServiceIdentifier } = useQueryParams<{ monitoredServiceIdentifier?: string }>()
 
   const projectIdentifierRef = useRef<string>()
   const sloPayloadRef = useRef<ServiceLevelObjectiveV2DTO | null>(null)
@@ -157,20 +154,6 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
   )
 
   const handleRedirect = (): void => {
-    if (monitoredServiceIdentifier) {
-      history.push({
-        pathname: routes.toCVAddMonitoringServicesEdit({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          identifier: monitoredServiceIdentifier,
-          module: 'cv'
-        }),
-        search: getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.SLOs })
-      })
-      return
-    }
-
     history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
   }
 

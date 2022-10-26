@@ -197,7 +197,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       />
       <RbacButton
         icon="plus"
-        disabled
         text={getString('cv.slos.createCompoisteSLO')}
         variation={ButtonVariation.PRIMARY}
         onClick={() => {
