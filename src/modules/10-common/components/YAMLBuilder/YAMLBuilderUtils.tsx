@@ -77,22 +77,11 @@ const getMetaDataForKeyboardEventProcessing = ({
  * @param validationErrors
  * @param editor
  */
-const getYAMLValidationErrors = (validationErrors: Diagnostic[]): Map<number, string | string[]> => {
-  const errorMap = new Map<number, string | string[]>()
+const getYAMLValidationErrors = (validationErrors: Diagnostic[]): Map<number, string> => {
+  const errorMap = new Map<number, string>()
   validationErrors.forEach(valError => {
-    const errorLineNum = valError?.range?.end?.line
-    if (errorMap.has(errorLineNum)) {
-      const existingErrors = errorMap.get(errorLineNum)
-      if (existingErrors) {
-        if (Array.isArray(existingErrors) && existingErrors.length > 0) {
-          errorMap.set(errorLineNum, [...existingErrors, valError?.message])
-        } else {
-          errorMap.set(errorLineNum, [existingErrors as string, valError?.message])
-        }
-      }
-    } else {
-      errorMap.set(errorLineNum, valError?.message)
-    }
+    const errorIndex = valError?.range?.end?.line
+    errorMap.set(errorIndex, valError?.message)
   })
   return errorMap
 }
@@ -121,7 +110,7 @@ const getValidationErrorMessagesForToaster = (
 
 const verifyYAML = (args: {
   updatedYaml: string
-  setYamlValidationErrors: (yamlValidationErrors: Map<number, string | string[]> | undefined) => void
+  setYamlValidationErrors: (yamlValidationErrors: Map<number, string> | undefined) => void
   showError: ToasterProps['showError']
   errorMessage: string
   schema?: Record<string, any>

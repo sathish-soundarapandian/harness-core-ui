@@ -147,7 +147,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
-  const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string | string[]> | undefined>()
+  const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
   const [dynamicHeight, setDynamicHeight] = useState<React.CSSProperties['height']>(
@@ -560,30 +560,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
-  const getErrorSummary = (errorMap?: Map<number, string | string[]>): React.ReactElement => {
+  const getErrorSummary = (errorMap?: Map<number, string>): React.ReactElement => {
     const errors: React.ReactElement[] = []
     errorMap?.forEach((value, key) => {
-      if (Array.isArray(value)) {
-        value.forEach((item: string) => {
-          const error = (
-            <li className={css.item} title={item} key={key}>
-              {getString('yamlBuilder.lineNumberLabel')}&nbsp;
-              {key + 1},&nbsp;
-              {truncate(item, { length: MAX_ERR_MSSG_LENGTH })}
-            </li>
-          )
-          errors.push(error)
-        })
-      } else {
-        const error = (
-          <li className={css.item} title={value} key={key}>
-            {getString('yamlBuilder.lineNumberLabel')}&nbsp;
-            {key + 1},&nbsp;
-            {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
-          </li>
-        )
-        errors.push(error)
-      }
+      const error = (
+        <li className={css.item} title={value} key={key}>
+          {getString('yamlBuilder.lineNumberLabel')}&nbsp;
+          {key + 1},&nbsp;
+          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
+        </li>
+      )
+      errors.push(error)
     })
     return (
       <div className={css.errorSummary}>
