@@ -666,14 +666,20 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         <Container padding={{ top: 'small' }}>
           {Array.from(yamlValidationErrors.keys()).map(key => {
             const errorMssg = yamlValidationErrors.get(key)
-            return errorMssg ? (
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="xsmall" padding={{ bottom: 'small' }}>
-                <Icon name="danger-icon" />
-                <Text font={{ variation: FontVariation.BODY }}>
-                  Line&nbsp;{key + 1}:&nbsp;{errorMssg}
-                </Text>
-              </Layout.Horizontal>
-            ) : null
+            return errorMssg
+              ? (Array.isArray(errorMssg) ? errorMssg : [errorMssg]).map((item: string) => (
+                  <Layout.Horizontal
+                    flex={{ justifyContent: 'flex-start' }}
+                    spacing="xsmall"
+                    padding={{ bottom: 'small' }}
+                  >
+                    <Icon name="danger-icon" />
+                    <Text font={{ variation: FontVariation.BODY }}>
+                      Line&nbsp;{key + 1}:&nbsp;{item}
+                    </Text>
+                  </Layout.Horizontal>
+                ))
+              : null
           })}
         </Container>
       </Collapse>
