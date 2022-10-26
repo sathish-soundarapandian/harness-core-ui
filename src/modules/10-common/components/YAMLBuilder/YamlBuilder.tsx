@@ -283,6 +283,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (schema) {
         validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
           setSchemaValidationErrors(errors)
+          if (isEmpty(errors)) {
+            setShouldShowErrorPanel(false)
+          }
         })
       }
       onChange?.(!(updatedYaml === ''))
