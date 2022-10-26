@@ -13,6 +13,7 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { Diagnostic } from 'vscode-languageserver-types'
 import {
   debounce,
   isEmpty,
@@ -43,7 +44,7 @@ import type {
 } from '@common/interfaces/YAMLBuilderProps'
 import SnippetSection from '@common/components/SnippetSection/SnippetSection'
 import { pluralize } from '@common/utils/StringUtils'
-import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
+import { getSchemaWithLanguageSettings, validateYAMLWithSchema } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
 
@@ -159,6 +160,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const [shouldAutoComplete, setShouldAutoComplete] = useState<boolean>(true)
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
+  const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -278,6 +280,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         schema,
         errorMessage: yamlError
       })
+      if (schema) {
+        validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
+          setSchemaValidationErrors(errors)
+        })
+      }
       onChange?.(!(updatedYaml === ''))
       const editor = editorRef.current?.editor
       if (editor) {
@@ -635,7 +642,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [shouldShowErrorPanel, height])
 
   const renderErrorPanel = useCallback((): JSX.Element => {
-    if (isUndefined(yamlValidationErrors)) {
+    if (isUndefined(schemaValidationErrors)) {
       return <></>
     }
     const { lineNumber, column } = editorRef.current?.editor?.getPosition() || {}
@@ -649,7 +656,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               color={Color.RED_800}
               font={{ variation: FontVariation.BODY2 }}
               padding={{ top: 'small', left: 'medium' }}
-            >{`${yamlValidationErrors.size} ${getString('error')}${pluralize(yamlValidationErrors.size)}`}</Text>
+            >{`${schemaValidationErrors.length} ${getString('error')}${pluralize(
+              schemaValidationErrors.length
+            )}`}</Text>
             <Layout.Horizontal flex spacing="medium">
               {lineNumber && column ? (
                 <Text font={{ variation: FontVariation.SMALL }}>{`Ln ${lineNumber}, Col ${column}`}</Text>
@@ -664,27 +673,22 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         collapseHeaderClassName={css.errorPanelHeader}
       >
         <Container padding={{ top: 'small' }}>
-          {Array.from(yamlValidationErrors.keys()).map(key => {
-            const errorMssg = yamlValidationErrors.get(key)
-            return errorMssg
-              ? (Array.isArray(errorMssg) ? errorMssg : [errorMssg]).map((item: string) => (
-                  <Layout.Horizontal
-                    flex={{ justifyContent: 'flex-start' }}
-                    spacing="xsmall"
-                    padding={{ bottom: 'small' }}
-                  >
-                    <Icon name="danger-icon" />
-                    <Text font={{ variation: FontVariation.BODY }}>
-                      {item} [Ln&nbsp;{key + 1},&nbsp;Col&nbsp;]
-                    </Text>
-                  </Layout.Horizontal>
-                ))
-              : null
+          {schemaValidationErrors.map((error: Diagnostic) => {
+            const { message, range } = error
+            const { end } = range
+            return message ? (
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="xsmall" padding={{ bottom: 'small' }}>
+                <Icon name="danger-icon" />
+                <Text font={{ variation: FontVariation.BODY }}>
+                  {message} [Ln&nbsp;{end.line + 1},&nbsp;Col&nbsp;{end.character}]
+                </Text>
+              </Layout.Horizontal>
+            ) : null
           })}
         </Container>
       </Collapse>
     )
-  }, [yamlValidationErrors, shouldShowErrorPanel, editorRef.current?.editor?.getPosition()])
+  }, [schemaValidationErrors, shouldShowErrorPanel, editorRef.current?.editor?.getPosition()])
 
   const renderEditor = useCallback(
     (): JSX.Element => (
@@ -724,11 +728,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [])
 
-  const showErrorFooter = showErrorPanel && !isEmpty(yamlValidationErrors)
+  const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
   return (
     <Layout.Vertical>
-      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
+      <div
+        className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: schemaValidationErrors })}
+      >
         {showSnippetSection ? (
           <SplitPane
             split="vertical"
