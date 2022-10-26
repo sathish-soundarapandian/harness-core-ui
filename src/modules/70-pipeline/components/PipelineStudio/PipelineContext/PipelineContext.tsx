@@ -501,7 +501,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       pipeline,
       originalPipeline: cloneDeep(pipeline),
       isUpdated: false,
-      modules: pipelineWithGitDetails.modules,
+      modules: pipelineWithGitDetails?.modules,
       gitDetails:
         pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
           ? pipelineWithGitDetails.gitDetails
@@ -540,7 +540,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: !isEqual(pipeline, data.originalPipeline),
           isUpdated: !isEqual(pipeline, data.pipeline),
-          modules: defaultTo(pipelineWithGitDetails.modules, data.modules),
+          modules: defaultTo(pipelineWithGitDetails?.modules, data.modules),
           gitDetails:
             pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
               ? pipelineWithGitDetails.gitDetails

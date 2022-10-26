@@ -8,9 +8,6 @@
     "name": {
       "type": "string"
     },
-    "tags": {
-      "type": "object"
-    },
     "stages": {
       "type": "array",
       "items": [
@@ -23,43 +20,90 @@
             "type": {
               "type": "string"
             },
-            "spec": {
-              "type": "object",
-              "properties": {
-                "steps": {
-                  "type": "array",
-                  "items": [
-                    {
+            "steps": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "spec": {
                       "type": "object",
                       "properties": {
-                        "name": {
+                        "run": {
                           "type": "string"
-                        },
-                        "type": {
-                          "type": "string"
-                        },
-                        "spec": {
-                          "type": "object",
-                          "properties": {
-                            "exec": {
-                              "type": "string"
-                            }
-                          },
-                          "required": ["exec"]
                         }
                       },
-                      "required": ["name", "type", "spec"]
+                      "required": ["run"]
                     }
-                  ]
+                  },
+                  "required": ["name", "type", "spec"]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "spec": {
+                      "type": "object",
+                      "properties": {
+                        "language": {
+                          "type": "string"
+                        },
+                        "build_tool": {
+                          "type": "string"
+                        },
+                        "build_args": {
+                          "type": "string"
+                        },
+                        "test_reports": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "paths": {
+                              "type": "array",
+                              "items": [
+                                {
+                                  "type": "string"
+                                }
+                              ]
+                            }
+                          },
+                          "required": ["type", "paths"]
+                        },
+                        "strategy": {
+                          "type": "object",
+                          "properties": {
+                            "parallelism": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": ["parallelism"]
+                        }
+                      },
+                      "required": ["language", "build_tool", "build_args", "test_reports", "strategy"]
+                    }
+                  },
+                  "required": ["name", "type", "spec"]
                 }
-              },
-              "required": ["steps"]
+              ]
             }
           },
-          "required": ["name", "type", "spec"]
+          "required": ["name", "type", "steps"]
         }
       ]
     }
   },
-  "required": ["version", "name", "tags", "stages"]
+  "required": ["version", "name", "stages"]
 }

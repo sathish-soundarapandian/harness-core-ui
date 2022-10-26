@@ -33,7 +33,7 @@ export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfS
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      identifier: pipeline.identifier,
+      identifier: pipeline?.identifier,
       repoIdentifier: gitDetails.repoIdentifier,
       branch: gitDetails.branch,
       getDefaultFromOtherRepo: true
