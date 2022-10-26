@@ -6,7 +6,8 @@
       "type": "integer"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "enum": ["Java with Maven", "Java with Gradle"]
     },
     "stages": {
       "type": "array",

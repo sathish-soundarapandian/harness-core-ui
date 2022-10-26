@@ -78,6 +78,7 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { AutoCompletionMap } from './YAMLAutoCompletionHelper'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -280,13 +281,18 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         schema,
         errorMessage: yamlError
       })
-      if (schema) {
-        validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
-          setSchemaValidationErrors(errors)
-          if (isEmpty(errors)) {
-            setShouldShowErrorPanel(false)
-          }
-        })
+      if (updatedYaml) {
+        if (schema) {
+          validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
+            setSchemaValidationErrors(errors)
+            if (isEmpty(errors)) {
+              setShouldShowErrorPanel(false)
+            }
+          })
+        }
+      } else {
+        setSchemaValidationErrors([])
+        setShouldShowErrorPanel(false)
       }
       onChange?.(!(updatedYaml === ''))
       const editor = editorRef.current?.editor
@@ -294,16 +300,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         const currentCursorPosition = editor.getPosition()
         const { lineNumber, column } = currentCursorPosition || {}
         if (lineNumber && column) {
-          const editorContent = editor.getModel()?.getValue()
-          const [key, value] = editor.getModel()?.getLineContent(lineNumber)?.split(':') || []
-          if (
-            shouldAutoComplete &&
-            key === 'name' &&
-            value.trim() === 'Java with Maven' &&
-            editorContent?.trim() === 'name: Java with Maven'
-          ) {
-            const yamlBlob =
-              '\nversion: 1\ntags: {}\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n        steps:\n          - name: Build_test\n            type: exec\n            spec:\n              exec: |\n                echo "Welcome to Harness CI"\n                mvn -B package --file pom.xml'
+          const editorContent = editor.getModel()?.getValue() || ''
+          const { autoCompletionYAML } = AutoCompletionMap.get(editorContent) || {}
+          if (shouldAutoComplete && AutoCompletionMap.has(editorContent)) {
             editor.executeEdits('', [
               {
                 range: {
@@ -312,10 +311,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                   endLineNumber: lineNumber,
                   endColumn: column
                 } as Range,
-                text: yamlBlob
+                text: autoCompletionYAML || ''
               }
             ])
-            setShouldAutoComplete(false)
           }
         }
       }
