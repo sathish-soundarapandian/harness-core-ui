@@ -630,15 +630,19 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         isOpen={shouldShowErrorPanel}
         onToggleOpen={(isOpen: boolean) => setShouldShowErrorPanel(isOpen)}
         heading={
-          <Text
-            color={Color.RED_800}
-            font={{ variation: FontVariation.BODY2 }}
-            padding={{ top: 'small', left: 'medium' }}
-          >{`${yamlValidationErrors.size} ${getString('error')}${pluralize(yamlValidationErrors.size)}`}</Text>
+          <Layout.Horizontal background={Color.GREY_50} flex={{ alignItems: 'center' }} width={'95%'}>
+            <Text
+              color={Color.RED_800}
+              font={{ variation: FontVariation.BODY2 }}
+              padding={{ top: 'small', left: 'medium' }}
+            >{`${yamlValidationErrors.size} ${getString('error')}${pluralize(yamlValidationErrors.size)}`}</Text>
+            <Text font={{ variation: FontVariation.SMALL }}>{getString('yaml')}</Text>
+          </Layout.Horizontal>
         }
         collapsedIcon="chevron-up"
         expandedIcon="chevron-down"
         collapseClassName={css.errorPanelCollapse}
+        collapseHeaderClassName={css.errorPanelHeader}
       >
         <Container padding={{ top: 'small' }}>
           {Array.from(yamlValidationErrors.keys()).map(key => {

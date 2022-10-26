@@ -13,6 +13,7 @@ declare const styles: {
   readonly entityTag: string
   readonly errorList: string
   readonly errorPanelCollapse: string
+  readonly errorPanelHeader: string
   readonly errorSummary: string
   readonly filePath: string
   readonly flexCenter: string

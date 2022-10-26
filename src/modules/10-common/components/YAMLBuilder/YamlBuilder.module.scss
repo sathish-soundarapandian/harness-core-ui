@@ -108,9 +108,17 @@
   margin: 0;
 }
 
+.errorPanelHeader {
+  width: 100%;
+}
+
 .errorPanelCollapse {
   margin: var(--spacing-none);
   padding: var(--spacing-none);
+
+  [class*='leftSection'] {
+    width: inherit;
+  }
 
   [class*='Collapse--collapse'] {
     margin-left: var(--spacing-medium) !important;
