@@ -213,7 +213,6 @@ function PipelineYamlView(): React.ReactElement {
             isEditModeSupported={!isReadonly}
             openDialogProp={openDialog}
             // existingJSON={{}}
-            existingYaml={'name: \nstages:\n    - name: '}
             showErrorPanel={true}
           />
         )}

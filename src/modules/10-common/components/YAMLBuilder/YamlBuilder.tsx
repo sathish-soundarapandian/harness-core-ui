@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
+import { IKeyboardEvent, languages, Position, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import {
   debounce,
@@ -30,7 +30,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
-import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions } from 'yaml'
@@ -159,6 +159,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const [shouldAutoComplete, setShouldAutoComplete] = useState<boolean>(true)
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
+  const [currentCursorPosition, setCurrentCursorPosition] = useState<Position>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -586,7 +587,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
             <Popover
               interactionKind={PopoverInteractionKind.HOVER}
-              position={Position.TOP}
+              position={PopoverPosition.TOP}
               content={getErrorSummary(yamlValidationErrors)}
               popoverClassName={css.summaryPopover}
             >
@@ -625,6 +626,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     if (isUndefined(yamlValidationErrors)) {
       return <></>
     }
+    const { lineNumber, column } = editorRef.current?.editor?.getPosition() || {}
     return (
       <Collapse
         isOpen={shouldShowErrorPanel}
@@ -636,7 +638,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               font={{ variation: FontVariation.BODY2 }}
               padding={{ top: 'small', left: 'medium' }}
             >{`${yamlValidationErrors.size} ${getString('error')}${pluralize(yamlValidationErrors.size)}`}</Text>
-            <Text font={{ variation: FontVariation.SMALL }}>{getString('yaml')}</Text>
+            <Layout.Horizontal flex spacing="medium">
+              {lineNumber && column ? (
+                <Text font={{ variation: FontVariation.SMALL }}>{`Ln ${lineNumber}, Col ${column}`}</Text>
+              ) : null}
+              <Text font={{ variation: FontVariation.SMALL }}>{getString('yaml')}</Text>
+            </Layout.Horizontal>
           </Layout.Horizontal>
         }
         collapsedIcon="chevron-up"
@@ -659,7 +666,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </Container>
       </Collapse>
     )
-  }, [yamlValidationErrors, shouldShowErrorPanel])
+  }, [yamlValidationErrors, shouldShowErrorPanel, editorRef.current?.editor?.getPosition()])
 
   const renderEditor = useCallback(
     (): JSX.Element => (
