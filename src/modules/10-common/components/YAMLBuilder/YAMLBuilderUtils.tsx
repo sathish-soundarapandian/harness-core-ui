@@ -80,18 +80,18 @@ const getMetaDataForKeyboardEventProcessing = ({
 const getYAMLValidationErrors = (validationErrors: Diagnostic[]): Map<number, string | string[]> => {
   const errorMap = new Map<number, string | string[]>()
   validationErrors.forEach(valError => {
-    const errorIndex = valError?.range?.end?.line
-    if (errorMap.has(errorIndex)) {
-      const existingErrors = errorMap.get(errorIndex)
+    const errorLineNum = valError?.range?.end?.line
+    if (errorMap.has(errorLineNum)) {
+      const existingErrors = errorMap.get(errorLineNum)
       if (existingErrors) {
         if (Array.isArray(existingErrors) && existingErrors.length > 0) {
-          errorMap.set(errorIndex, [...existingErrors, valError?.message])
+          errorMap.set(errorLineNum, [...existingErrors, valError?.message])
         } else {
-          errorMap.set(errorIndex, [existingErrors as string, valError?.message])
+          errorMap.set(errorLineNum, [existingErrors as string, valError?.message])
         }
       }
     } else {
-      errorMap.set(errorIndex, valError?.message)
+      errorMap.set(errorLineNum, valError?.message)
     }
   })
   return errorMap
