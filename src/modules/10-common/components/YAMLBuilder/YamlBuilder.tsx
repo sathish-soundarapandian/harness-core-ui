@@ -322,6 +322,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                 lineNumber: lastLineNum,
                 column: lastColumn
               } as IPosition)
+              const updatedPosition = editor.getPosition()
+              if (updatedPosition) {
+                setTimeout(() => editor.setPosition({ ...updatedPosition, column: updatedPosition?.column + 1 }), 1000)
+              }
             }
           }
         }
