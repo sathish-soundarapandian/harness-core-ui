@@ -632,14 +632,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   useEffect(() => {
     if (height) {
-      if (shouldShowErrorPanel) {
+      if (shouldShowErrorPanel && !isEmpty(schemaValidationErrors)) {
         const heightWithErrorPanel: React.CSSProperties['height'] = 'calc(80vh - 250px)'
         setDynamicHeight(heightWithErrorPanel)
       } else {
         setDynamicHeight(height)
       }
     }
-  }, [shouldShowErrorPanel, height])
+  }, [shouldShowErrorPanel, height, schemaValidationErrors])
 
   const renderErrorPanel = useCallback((): JSX.Element => {
     if (isUndefined(schemaValidationErrors)) {
@@ -744,9 +744,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   return (
     <Layout.Vertical>
-      <div
-        className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: schemaValidationErrors })}
-      >
+      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
         {showSnippetSection ? (
           <SplitPane
             split="vertical"
