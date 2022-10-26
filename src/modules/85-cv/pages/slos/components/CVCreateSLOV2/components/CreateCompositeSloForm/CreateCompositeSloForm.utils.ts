@@ -6,6 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
+import { isEmpty } from 'lodash-es'
 import { PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
@@ -29,7 +30,7 @@ export const isFormDataValid = (
 
     const isNameValid = /^[0-9a-zA-Z-_\s]+$/.test(formikProps.values['name'])
     const { name, identifier, userJourneyRef } = formikProps.values
-    if (!name || !identifier || !userJourneyRef || !isNameValid) {
+    if (!name || !identifier || isEmpty(userJourneyRef) || !isNameValid) {
       return false
     }
     return true

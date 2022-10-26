@@ -147,7 +147,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     queryParams: pathParams
   })
 
-  const onEdit = (sloIdentifier: string): void => {
+  const onEdit = (sloIdentifier: string, sloType?: string): void => {
     history.push({
       pathname: routes.toCVSLODetailsPage({
         identifier: sloIdentifier,
@@ -155,7 +155,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         orgIdentifier,
         projectIdentifier
       }),
-      search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, monitoredServiceIdentifier })
+      search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, monitoredServiceIdentifier, sloType })
     })
   }
 
@@ -399,8 +399,15 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const RenderSLOActions: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
-    const { sloIdentifier = '', name = '' } = slo || {}
-    return <SLOActions sloIdentifier={sloIdentifier} title={name} onDelete={onDelete} onEdit={onEdit} />
+    const { sloIdentifier = '', name = '', sloType = 'composite' } = slo || {}
+    return (
+      <SLOActions
+        sloIdentifier={sloIdentifier}
+        title={name}
+        onDelete={onDelete}
+        onEdit={(id: string) => onEdit(id, sloType)}
+      />
+    )
   }
   return (
     <>
