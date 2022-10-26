@@ -706,9 +706,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [])
 
+  const showErrorFooter = showErrorPanel && !isEmpty(yamlValidationErrors)
+
   return (
     <Layout.Vertical>
-      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' })}>
+      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
         {showSnippetSection ? (
           <SplitPane
             split="vertical"
@@ -732,9 +734,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           </div>
         )}
       </div>
-      {showErrorPanel && !isEmpty(yamlValidationErrors) ? (
-        <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container>
-      ) : null}
+      {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
     </Layout.Vertical>
   )
 }

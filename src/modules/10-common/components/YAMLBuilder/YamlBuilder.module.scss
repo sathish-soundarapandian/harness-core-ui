@@ -7,11 +7,14 @@
 
 .main {
   background-color: var(--white);
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-top: 1px solid var(--grey-250);
-  border-left: 1px solid var(--grey-250);
-  border-right: 1px solid var(--grey-250);
+  border-radius: 5px;
+  border: 1px solid var(--grey-250);
+}
+
+.borderWithPanel {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-bottom: none !important;
 }
 
 .filePath {
