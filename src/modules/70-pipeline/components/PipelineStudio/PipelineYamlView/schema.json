@@ -2,9 +2,6 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
-    "version": {
-      "type": "integer"
-    },
     "name": {
       "type": "string",
       "enum": ["Java with Maven", "Java with Gradle"]
@@ -106,5 +103,5 @@
       ]
     }
   },
-  "required": ["version", "name", "stages"]
+  "required": ["name", "stages"]
 }
