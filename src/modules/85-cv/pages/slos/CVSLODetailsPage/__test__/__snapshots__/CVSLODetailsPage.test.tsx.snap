@@ -199,7 +199,6 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
           style="flex-grow: 1;"
         />
         <button
-          aria-label="edit"
           class="bp3-button Button--button StyledProps--font StyledProps--main tabLink Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           type="button"
         >
@@ -235,7 +234,6 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
           </span>
         </button>
         <button
-          aria-label="cv.resetErrorBudget"
           class="bp3-button Button--button StyledProps--font StyledProps--main tabLink Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           type="button"
         >
@@ -265,7 +263,6 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
           </span>
         </button>
         <button
-          aria-label="cv.executionLogs"
           class="bp3-button Button--button StyledProps--font StyledProps--main tabLink Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           type="button"
         >
@@ -315,7 +312,6 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
           </span>
         </button>
         <button
-          aria-label="cv.externalAPICalls"
           class="bp3-button Button--button StyledProps--font StyledProps--main tabLink Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           type="button"
         >
@@ -356,7 +352,6 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
           </span>
         </button>
         <button
-          aria-label="delete"
           class="bp3-button Button--button StyledProps--font StyledProps--main tabLink Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           type="button"
         >
