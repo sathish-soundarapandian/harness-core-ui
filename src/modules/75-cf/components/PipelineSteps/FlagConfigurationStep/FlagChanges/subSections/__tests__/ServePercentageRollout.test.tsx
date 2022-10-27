@@ -8,13 +8,15 @@
 import React, { Children, cloneElement, FC, ReactElement } from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Variation } from 'services/cf'
-import ServePercentageRollout, { ServePercentageRolloutProps } from '../ServePercentageRollout'
+import ServePercentageRollout, {
+  ServePercentageRolloutProps,
+  servePercentageRolloutSchema
+} from '../ServePercentageRollout'
 import {
   mockServePercentageRolloutFieldValues,
-  mockTargetAttributes,
   mockTargetGroups,
   mockVariations,
   prefixInstructionField
@@ -22,7 +24,7 @@ import {
 
 const ComponentWrapper: FC = ({ children }) => (
   <TestWrapper>
-    <Formik formName="test" onSubmit={jest.fn()} initialValues={{ spec: { percentageRollout: { variation: {} } } }}>
+    <Formik onSubmit={jest.fn()} initialValues={{ spec: { percentageRollout: { variation: {} } } }}>
       {({ values }) =>
         Children.toArray(children).map(child => cloneElement(child as ReactElement, { fieldValues: values }))
       }
@@ -41,7 +43,6 @@ const Subject = ({
     variations={variations}
     targetGroups={mockTargetGroups}
     fieldValues={mockServePercentageRolloutFieldValues(variations)}
-    targetAttributes={mockTargetAttributes}
     clearField={clearField}
     setField={setField}
     prefix={prefixInstructionField}
@@ -58,7 +59,6 @@ describe('ServePercentageRollout', () => {
     renderComponent()
 
     expect(screen.getByText('cf.percentageRollout.toTargetGroup')).toBeInTheDocument()
-    expect(screen.getByText('cf.percentageRollout.bucketBy')).toBeInTheDocument()
   })
 
   test('it should set instruction fields when it renders', async () => {
@@ -163,5 +163,62 @@ describe('ServePercentageRollout', () => {
       expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining(`variations[0]`), 50)
       expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining(`variations[1]`), 50)
     })
+  })
+})
+
+describe('servePercentageRolloutSchema', () => {
+  const getStringMock = jest.fn().mockImplementation(str => str)
+  const validVariations = [{ weight: 50 }, { weight: 50 }]
+  const validTargetGroup = [{ values: ['tg1'] }]
+
+  test('it should throw when a Target Group is not specified', async () => {
+    expect(() =>
+      servePercentageRolloutSchema(getStringMock).validateSync(
+        { spec: { distribution: { variations: validVariations } } },
+        { abortEarly: false }
+      )
+    ).toThrow('cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup')
+  })
+
+  test('it should throw when variations are not specified', async () => {
+    expect(() =>
+      servePercentageRolloutSchema(getStringMock).validateSync(
+        { spec: { distribution: { clauses: validTargetGroup } } },
+        { abortEarly: false }
+      )
+    ).toThrow('cf.percentageRollout.invalidTotalError')
+  })
+
+  test('it should throw when variations are less than 100', async () => {
+    expect(() =>
+      servePercentageRolloutSchema(getStringMock).validateSync(
+        { spec: { distribution: { clauses: validTargetGroup, variations: [{ weight: 10 }, { weight: 10 }] } } },
+        { abortEarly: false }
+      )
+    ).toThrow('cf.percentageRollout.invalidTotalError')
+  })
+
+  test('it should throw when variations are more than 100', async () => {
+    expect(() =>
+      servePercentageRolloutSchema(getStringMock).validateSync(
+        { spec: { distribution: { clauses: validTargetGroup, variations: [{ weight: 60 }, { weight: 60 }] } } },
+        { abortEarly: false }
+      )
+    ).toThrow('cf.percentageRollout.invalidTotalError')
+  })
+
+  test('it should not throw when variations are equal to 100', async () => {
+    expect(() =>
+      servePercentageRolloutSchema(getStringMock).validateSync(
+        { spec: { distribution: { clauses: validTargetGroup, variations: validVariations } } },
+        { abortEarly: false }
+      )
+    ).not.toThrow()
+  })
+
+  test('it should throw with 2 errors when neither the Target Group nor variations are correct', async () => {
+    expect(() =>
+      servePercentageRolloutSchema(getStringMock).validateSync({ spec: { distribution: {} } }, { abortEarly: false })
+    ).toThrow('2 errors occurred')
   })
 })

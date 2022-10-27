@@ -2166,6 +2166,17 @@ export interface AzureAppDeploymentData {
   subscriptionId?: string
 }
 
+export interface AzureArtifactsAuthentication {
+  spec: AzureArtifactsHttpCredentials
+}
+
+export type AzureArtifactsConnector = ConnectorConfigDTO & {
+  auth: AzureArtifactsAuthentication
+  azureArtifactsUrl: string
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
 export interface AzureArtifactsFeed {
   fullyQualifiedName?: string
   id?: string
@@ -2173,10 +2184,19 @@ export interface AzureArtifactsFeed {
   project?: AzureDevopsProject
 }
 
+export interface AzureArtifactsHttpCredentials {
+  spec: AzureArtifactsUsernameToken
+  type: 'PersonalAccessToken'
+}
+
 export interface AzureArtifactsPackage {
   id?: string
   name?: string
   protocolType?: string
+}
+
+export interface AzureArtifactsUsernameToken {
+  tokenRef: string
 }
 
 export interface AzureAuthCredentialDTO {
@@ -2251,6 +2271,7 @@ export type AzureInstanceInfrastructure = InfraMappingInfrastructureProvider & {
   resourceGroup?: string
   subscriptionId?: string
   tags?: AzureTag[]
+  usePrivateIp?: boolean
   usePublicDns?: boolean
   winRmConnectionAttributes?: string
 }
@@ -2959,6 +2980,8 @@ export interface CVConfiguration {
   lastUpdatedBy?: EmbeddedUser
   name: string
   numOfOccurrencesForAlert?: number
+  serviceGuardDataAnalysisIteration?: number
+  serviceGuardDataCollectionIteration?: number
   serviceId: string
   serviceName?: string
   snoozeEndTime?: number
@@ -3180,13 +3203,22 @@ export type CVModuleLicenseDTO = ModuleLicenseDTO & {}
 
 export interface CVNGPerpetualTaskDTO {
   accountId?: string
-  cvngPerpetualTaskState?: 'TASK_UNASSIGNED' | 'TASK_TO_REBALANCE' | 'TASK_PAUSED' | 'TASK_ASSIGNED'
+  cvngPerpetualTaskState?:
+    | 'TASK_UNASSIGNED'
+    | 'TASK_TO_REBALANCE'
+    | 'TASK_PAUSED'
+    | 'TASK_ASSIGNED'
+    | 'TASK_NON_ASSIGNABLE'
+    | 'TASK_INVALID'
   cvngPerpetualTaskUnassignedReason?:
     | 'NO_DELEGATE_INSTALLED'
     | 'NO_DELEGATE_AVAILABLE'
     | 'NO_ELIGIBLE_DELEGATES'
     | 'MULTIPLE_FAILED_PERPETUAL_TASK'
     | 'VALIDATION_TASK_FAILED'
+    | 'TASK_EXPIRED'
+    | 'TASK_VALIDATION_FAILED'
+    | 'PT_TASK_FAILED'
   delegateId?: string
 }
 
@@ -3267,8 +3299,8 @@ export interface ChangesetInformation {
 }
 
 export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
+  totalChaosExperimentRuns?: number
   totalChaosInfrastructures?: number
-  totalChaosExperimentRun?: number
 }
 
 export interface CloneMetadata {
@@ -4033,8 +4065,10 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
+    | 'AzureArtifacts'
+    | 'Spot'
 }
 
 export interface ConnectorValidationResult {
@@ -4619,7 +4653,7 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   default?: boolean
   delegateSelectors?: string[]
   host?: string
-  onDelegate: boolean
+  onDelegate?: boolean
   template: TemplateLinkConfigForCustomSecretManager
   workingDirectory?: string
 }
@@ -4786,6 +4820,7 @@ export interface DataCollectionRequest {
     | 'CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST'
     | 'CLOUDWATCH_METRIC_DATA_REQUEST'
     | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
+    | 'AWS_GENERIC_DATA_COLLECTION_REQUEST'
 }
 
 export interface DataDogSetupTestNodeData {
@@ -4999,6 +5034,7 @@ export interface Delegate {
   ceEnabled?: boolean
   createdAt?: number
   currentlyExecutingDelegateTasks?: string[]
+  delegateDisconnectDetectorNextIteration?: number
   delegateGroupId?: string
   delegateGroupName?: string
   delegateName?: string
@@ -5149,6 +5185,7 @@ export interface DelegateFile {
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_PLAN_JSON'
     | 'EXPORT_EXECUTIONS'
+    | 'TERRAFORM_HUMAN_READABLE_PLAN'
     | 'FILE_STORE'
   checksum?: string
   checksumType?: 'MD5' | 'SHA1' | 'SHA256'
@@ -5507,6 +5544,7 @@ export interface DelegateScope {
     | 'COMMAND_TASK_NG'
     | 'ECS'
     | 'AZURE_NG_ARM_BLUEPRINT'
+    | 'SHELL_SCRIPT_PROVISION_NG'
   )[]
   uuid: string
   valid?: boolean
@@ -5733,6 +5771,7 @@ export interface DelegateTaskPackageV2 {
     | 'AZURE_ARTIFACTS_GET_FEEDS'
     | 'AZURE_ARTIFACTS_GET_PACKAGES'
     | 'AZURE_ARTIFACTS_COLLECTION'
+    | 'AZURE_ARTIFACTS_CONNECTIVITY_TEST_TASK'
     | 'AZURE_GET_SUBSCRIPTIONS'
     | 'AZURE_MACHINE_IMAGE_GET_IMAGE_GALLERIES'
     | 'AZURE_MACHINE_IMAGE_GET_IMAGE_DEFINITIONS'
@@ -5917,6 +5956,7 @@ export interface DelegateTaskPackageV2 {
     | 'ARTIFACTORY_ARTIFACT_TASK_NG'
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
     | 'GITHUB_PACKAGES_TASK_NG'
+    | 'AZURE_ARTIFACT_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
@@ -6001,6 +6041,10 @@ export interface DelegateTaskPackageV2 {
     | 'ECS_GIT_FETCH_TASK_NG'
     | 'ECS_COMMAND_TASK_NG'
     | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ECS_GIT_FETCH_RUN_TASK_NG'
+    | 'TRIGGER_AUTHENTICATION_TASK'
+    | 'SPOT_TASK_NG'
 }
 
 export interface DelegateTaskResponse {
@@ -6089,6 +6133,7 @@ export interface DelegateTaskResponse {
     | 'AZURE_ARTIFACTS_GET_FEEDS'
     | 'AZURE_ARTIFACTS_GET_PACKAGES'
     | 'AZURE_ARTIFACTS_COLLECTION'
+    | 'AZURE_ARTIFACTS_CONNECTIVITY_TEST_TASK'
     | 'AZURE_GET_SUBSCRIPTIONS'
     | 'AZURE_MACHINE_IMAGE_GET_IMAGE_GALLERIES'
     | 'AZURE_MACHINE_IMAGE_GET_IMAGE_DEFINITIONS'
@@ -6273,6 +6318,7 @@ export interface DelegateTaskResponse {
     | 'ARTIFACTORY_ARTIFACT_TASK_NG'
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
     | 'GITHUB_PACKAGES_TASK_NG'
+    | 'AZURE_ARTIFACT_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
@@ -6357,6 +6403,10 @@ export interface DelegateTaskResponse {
     | 'ECS_GIT_FETCH_TASK_NG'
     | 'ECS_COMMAND_TASK_NG'
     | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ECS_GIT_FETCH_RUN_TASK_NG'
+    | 'TRIGGER_AUTHENTICATION_TASK'
+    | 'SPOT_TASK_NG'
 }
 
 export interface DelegateTaskResponseV2 {
@@ -6444,6 +6494,7 @@ export interface DelegateTaskResponseV2 {
     | 'AZURE_ARTIFACTS_GET_FEEDS'
     | 'AZURE_ARTIFACTS_GET_PACKAGES'
     | 'AZURE_ARTIFACTS_COLLECTION'
+    | 'AZURE_ARTIFACTS_CONNECTIVITY_TEST_TASK'
     | 'AZURE_GET_SUBSCRIPTIONS'
     | 'AZURE_MACHINE_IMAGE_GET_IMAGE_GALLERIES'
     | 'AZURE_MACHINE_IMAGE_GET_IMAGE_DEFINITIONS'
@@ -6628,6 +6679,7 @@ export interface DelegateTaskResponseV2 {
     | 'ARTIFACTORY_ARTIFACT_TASK_NG'
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
     | 'GITHUB_PACKAGES_TASK_NG'
+    | 'AZURE_ARTIFACT_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
@@ -6712,6 +6764,10 @@ export interface DelegateTaskResponseV2 {
     | 'ECS_GIT_FETCH_TASK_NG'
     | 'ECS_COMMAND_TASK_NG'
     | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ECS_GIT_FETCH_RUN_TASK_NG'
+    | 'TRIGGER_AUTHENTICATION_TASK'
+    | 'SPOT_TASK_NG'
 }
 
 export interface DelegateTokenDetails {
@@ -8272,6 +8328,7 @@ export interface ExecutionCapability {
     | 'OCI_HELM_REPO'
     | 'AWS_CLI_INSTALL'
     | 'NG_WINRM_HOST_CONNECTION'
+    | 'NG_SSH_HOST_CONNECTION'
   maxValidityPeriod?: Duration
   periodUntilNextValidation?: Duration
 }
@@ -8774,7 +8831,7 @@ export interface FailureStrategy {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   manualInterventionTimeout?: number
   repairActionCode?:
@@ -8908,6 +8965,7 @@ export interface FieldOptions {
   uninterpretedOptionList?: UninterpretedOption[]
   uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
   unknownFields?: UnknownFieldSet
+  unverifiedLazy?: boolean
   weak?: boolean
 }
 
@@ -11144,6 +11202,7 @@ export interface InstanceExecutionHistory {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -11152,6 +11211,7 @@ export interface InstanceExecutionHistory {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -11679,18 +11739,6 @@ export interface LDAPTestAuthenticationRequest {
   password?: string
 }
 
-export interface LabeledLogRecord {
-  accountId?: string
-  createdAt?: number
-  envId?: string
-  feedbackIds?: string[]
-  label?: string
-  lastUpdatedAt?: number
-  logDataRecordIds?: string[]
-  serviceId?: string
-  uuid?: string
-}
-
 export interface LambdaSpecification {
   accountId?: string
   appId: string
@@ -11964,178 +12012,6 @@ export interface LogCollectionInfo {
 export interface LogConfiguration {
   logDriver?: string
   options?: LogOption[]
-}
-
-export interface LogDataRecord {
-  accountId?: string
-  appId: string
-  clusterLabel?: string
-  clusterLevel?: 'L0' | 'L1' | 'L2' | 'H0' | 'H1' | 'H2' | 'HF'
-  count?: number
-  createdAt?: number
-  createdBy?: EmbeddedUser
-  cvConfigId?: string
-  host?: string
-  lastUpdatedAt: number
-  lastUpdatedBy?: EmbeddedUser
-  logCollectionMinute?: number
-  logMD5Hash?: string
-  logMessage?: string
-  query?: string
-  serviceId?: string
-  stateExecutionId?: string
-  stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
-    | 'ARTIFACT_COLLECTION'
-    | 'ARTIFACT_CHECK'
-    | 'AZURE_NODE_SELECT'
-    | 'AZURE_VMSS_SETUP'
-    | 'AZURE_VMSS_DEPLOY'
-    | 'AZURE_VMSS_ROLLBACK'
-    | 'AZURE_VMSS_SWITCH_ROUTES'
-    | 'AZURE_VMSS_SWITCH_ROUTES_ROLLBACK'
-    | 'AZURE_WEBAPP_SLOT_SETUP'
-    | 'AZURE_WEBAPP_SLOT_SWAP'
-    | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
-    | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
-    | 'AWS_CODEDEPLOY_STATE'
-    | 'AWS_CODEDEPLOY_ROLLBACK'
-    | 'AWS_LAMBDA_STATE'
-    | 'AWS_LAMBDA_ROLLBACK'
-    | 'AWS_AMI_SERVICE_SETUP'
-    | 'ASG_AMI_SERVICE_ALB_SHIFT_SETUP'
-    | 'AWS_AMI_SERVICE_DEPLOY'
-    | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
-    | 'AWS_AMI_SWITCH_ROUTES'
-    | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
-    | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
-    | 'ECS_SERVICE_SETUP'
-    | 'SPOTINST_SETUP'
-    | 'SPOTINST_ALB_SHIFT_SETUP'
-    | 'SPOTINST_DEPLOY'
-    | 'SPOTINST_ALB_SHIFT_DEPLOY'
-    | 'SPOTINST_LISTENER_UPDATE'
-    | 'SPOTINST_LISTENER_ALB_SHIFT'
-    | 'SPOTINST_ROLLBACK'
-    | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
-    | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
-    | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
-    | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
-    | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
-    | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'COLLECT_REMAINING_INSTANCES'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
-    | 'K8S_CANARY_DEPLOY'
-    | 'K8S_DELETE'
-    | 'RANCHER_RESOLVE'
-    | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
-    | 'RANCHER_K8S_CANARY_DEPLOY'
-    | 'RANCHER_K8S_BLUE_GREEN_DEPLOY'
-    | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'RANCHER_K8S_DELETE'
-    | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'JIRA_CREATE_UPDATE'
-    | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
-    | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
-    | 'ARTIFACT_COLLECT_LOOP_STATE'
-  supervisedLabel?: string
-  timeStamp?: number
-  timesLabeled?: number
-  uuid: string
-  workflowExecutionId?: string
-  workflowId?: string
 }
 
 export interface LogMLAnalysisSummary {
@@ -12626,6 +12502,8 @@ export interface LogsCVConfiguration {
   name: string
   numOfOccurrencesForAlert?: number
   query?: string
+  serviceGuardDataAnalysisIteration?: number
+  serviceGuardDataCollectionIteration?: number
   serviceId: string
   serviceName?: string
   snoozeEndTime?: number
@@ -14214,6 +14092,7 @@ export interface PerpetualTaskRecord {
   clientContext?: PerpetualTaskClientContext
   createdAt?: number
   delegateId?: string
+  exception?: string
   failedExecutionCount?: number
   intervalSeconds?: number
   lastHeartbeat?: number
@@ -14230,6 +14109,8 @@ export interface PerpetualTaskRecord {
     | 'NO_ELIGIBLE_DELEGATES'
     | 'TASK_RUN_SUCCEEDED'
     | 'TASK_RUN_FAILED'
+    | 'TASK_NON_ASSIGNABLE'
+    | 'TASK_INVALID'
   taskDescription?: string
   timeoutMillis?: number
   unassignedReason?:
@@ -14238,6 +14119,9 @@ export interface PerpetualTaskRecord {
     | 'NO_ELIGIBLE_DELEGATES'
     | 'MULTIPLE_FAILED_PERPETUAL_TASK'
     | 'VALIDATION_TASK_FAILED'
+    | 'TASK_EXPIRED'
+    | 'TASK_VALIDATION_FAILED'
+    | 'PT_TASK_FAILED'
   uuid?: string
 }
 
@@ -15325,6 +15209,7 @@ export interface ResponseMessage {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -15333,6 +15218,7 @@ export interface ResponseMessage {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -15344,7 +15230,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -16952,42 +16838,6 @@ export interface RestResponseListInviteOperationResponse {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseListLogDataRecord {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: LogDataRecord[]
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponseListLogLabel {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: (
-    | 'NOISE'
-    | 'CLEAN'
-    | 'INFRA'
-    | 'THIRD_PARTY'
-    | 'IMPORTANT'
-    | 'BACKGROUND'
-    | 'JAVA_THROWABLE'
-    | 'ERROR'
-    | 'EXCEPTION'
-    | 'RUNTIME'
-    | 'HTTP'
-    | 'UPSTREAM'
-    | 'DOWNSTREAM'
-    | 'DATABASE'
-    | 'NETWORK'
-    | 'APM'
-    | 'LOGS'
-    | 'JVM'
-    | 'WARN'
-  )[]
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseListLogMLFeedbackRecord {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -17417,16 +17267,6 @@ export interface RestResponseMapPairDeploymentTypeCloudProviderTypeMapStringStri
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseMapPairStringStringInteger {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: {
-    [key: string]: number
-  }
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseMapStringDouble {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -17453,16 +17293,6 @@ export interface RestResponseMapStringGraphGroup {
   }
   resource?: {
     [key: string]: GraphGroup
-  }
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponseMapStringListCVFeedbackRecord {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: {
-    [key: string]: CVFeedbackRecord[]
   }
   responseMessages?: ResponseMessage[]
 }
@@ -18235,6 +18065,14 @@ export interface RestResponseRollbackConfirmation {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseSMPEncLicenseDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: SMPEncLicenseDTO
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseSSOConfig {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -18379,6 +18217,8 @@ export interface RestResponseSetHelmSubCommand {
     | 'PULL'
     | 'FETCH'
     | 'TEMPLATE'
+    | 'REPO_ADD'
+    | 'REPO_UPDATE'
   )[]
   responseMessages?: ResponseMessage[]
 }
@@ -18920,6 +18760,15 @@ export interface RuntimeInputsConfig {
     | 'CONTINUE_WITH_DEFAULTS'
     | 'ABORT_WORKFLOW_EXECUTION'
   userGroupIds?: string[]
+}
+
+export interface SMPEncLicenseDTO {
+  encryptedLicense?: string
+}
+
+export interface SMPLicenseRequestDTO {
+  accountOptional?: boolean
+  customerAccountId?: string
 }
 
 export interface SSHVaultConfig {
@@ -20412,6 +20261,27 @@ export interface SplunkValidationResponse {
   samples?: SplunkSampleResponse
 }
 
+export type SpotConnector = ConnectorConfigDTO & {
+  credential: SpotCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface SpotCredential {
+  spec?: SpotCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface SpotCredentialSpec {
+  [key: string]: any
+}
+
+export type SpotManualConfigSpec = SpotCredentialSpec & {
+  accountId?: string
+  accountIdRef?: string
+  apiTokenRef: string
+}
+
 export interface SpotinstElastigroupRunningCountData {
   elastigroupMax?: number
   elastigroupMin?: number
@@ -21324,6 +21194,7 @@ export interface TaskSelectorMap {
     | 'COMMAND_TASK_NG'
     | 'ECS'
     | 'AZURE_NG_ARM_BLUEPRINT'
+    | 'SHELL_SCRIPT_PROVISION_NG'
   uuid: string
 }
 
@@ -21563,6 +21434,7 @@ export interface TimeRangeBasedFreezeConfig {
   applicable?: boolean
   description?: string
   environmentTypes?: ('PROD' | 'NON_PROD' | 'ALL')[]
+  excludeAppSelections?: ApplicationFilter[]
   freezeForAllApps?: boolean
   freezeWindowState?: 'ACTIVE' | 'INACTIVE'
   name?: string
@@ -22568,6 +22440,7 @@ export interface WeeklyFreezeConfig {
   applicable?: boolean
   description?: string
   environmentTypes?: ('PROD' | 'NON_PROD' | 'ALL')[]
+  excludeAppSelections?: ApplicationFilter[]
   freezeForAllApps?: boolean
   name?: string
   userGroupSelection?: UserGroupFilter
@@ -23360,13 +23233,13 @@ export type YamlPayloadRequestBody = YamlPayload
 
 export type GcpSignUpRequestBody = void
 
-export type GetDelegatePropertiesBodyRequestBody = string[]
-
 export type ImportAccountDataRequestBody = void
 
-export type SaveGcpSecretsManagerConfigRequestBody = void
+export type ProcessPollingResultNgBodyRequestBody = string[]
 
 export type SaveGcpSecretsManagerConfig1RequestBody = void
+
+export type SaveGlobalKmsConfigRequestBody = void
 
 export interface SaveMessageComparisonListBodyRequestBody {
   [key: string]: string

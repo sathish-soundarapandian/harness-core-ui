@@ -8,7 +8,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -24,6 +23,7 @@ import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
 import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import { getSGDimensions, LayoutStyles } from '../utils'
+import { DiagramType, Event } from '../../Constants'
 import css from './StepGroupGraph.module.scss'
 
 interface StepGroupGraphProps {

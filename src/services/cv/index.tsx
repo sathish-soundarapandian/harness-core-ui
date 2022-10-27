@@ -674,7 +674,7 @@ export interface CVConfig {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   uuid?: string
   verificationTaskTags?: {
@@ -956,7 +956,7 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
     | 'Spot'
@@ -1738,6 +1738,7 @@ export interface Error {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2152,6 +2153,7 @@ export interface Failure {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2447,7 +2449,7 @@ export interface HealthSource {
     | 'CustomHealthMetric'
     | 'CustomHealthLog'
     | 'SplunkMetric'
-    | 'ELKLog'
+    | 'ElasticSearch'
     | 'CloudWatchMetrics'
 }
 
@@ -2469,7 +2471,7 @@ export interface HealthSourceDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
@@ -2988,7 +2990,7 @@ export interface MetricPack {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   identifier?: string
   lastUpdatedAt?: number
@@ -3016,7 +3018,7 @@ export interface MetricPackDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
@@ -4204,6 +4206,7 @@ export interface ResponseMessage {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5493,7 +5496,7 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface TaskInfo {
-  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI'
+  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI' | 'COMPOSITE_SLO'
 }
 
 export interface TemplateDTO {
@@ -5633,7 +5636,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   environmentIdentifier?: string
   groupName?: string
@@ -5737,7 +5740,7 @@ export interface TimeSeriesThreshold {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
@@ -5779,7 +5782,7 @@ export interface TimeSeriesThresholdDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   metricGroupName?: string
   metricName?: string
@@ -5839,7 +5842,7 @@ export interface TransactionMetricInfo {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
@@ -5934,7 +5937,7 @@ export interface VerificationJob {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
   )[]
   defaultJob?: boolean
@@ -8794,7 +8797,7 @@ export interface GetMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
 }
 
@@ -8861,7 +8864,7 @@ export interface SaveMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
 }
 

@@ -149,8 +149,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -519,8 +518,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -1056,8 +1054,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -1426,8 +1423,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"

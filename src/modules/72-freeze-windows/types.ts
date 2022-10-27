@@ -49,8 +49,8 @@ export interface ValidationErrorType {
 
 export enum EnvironmentType {
   All = 'All',
-  PROD = 'PROD',
-  NON_PROD = 'NON_PROD'
+  Production = 'Production',
+  PreProduction = 'PreProduction'
 }
 
 export interface WindowPathProps extends ProjectPathProps {

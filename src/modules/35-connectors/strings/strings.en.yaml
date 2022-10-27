@@ -352,9 +352,9 @@ newRelic:
   products:
     fullStackObservability: 'Full Stack Observability: APM'
 elk:
-  elkConnectorDetails: 'ELK Connector Details'
+  elkConnectorDetails: 'ElasticSearch Connector Details'
   testConnectionStepValidation: 'Validating ELK authentication and permissions'
-  elkLabel: ELK
+  elkLabel: ElasticSearch
   apiId: API ID
   noAuthentication: No Authentication
   validation:

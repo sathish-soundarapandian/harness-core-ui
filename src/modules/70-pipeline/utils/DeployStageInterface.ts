@@ -6,7 +6,13 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import type { DeploymentStageConfig, PipelineInfrastructure, ServiceConfig, ServiceDefinition } from 'services/cd-ng'
+import type {
+  DeploymentStageConfig,
+  EnvironmentGroupYaml,
+  PipelineInfrastructure,
+  ServiceConfig,
+  ServiceDefinition
+} from 'services/cd-ng'
 
 export interface EnvironmentYamlV2 {
   deployToAll: boolean
@@ -19,13 +25,6 @@ export interface EnvironmentYamlV2 {
   serviceOverrideInputs?: {
     [key: string]: { [key: string]: any }
   }
-}
-
-export interface EnvironmentGroupYaml {
-  deployToAll?: boolean
-  environments?: EnvironmentYamlV2[]
-  envGroupRef: string
-  metadata?: string
 }
 
 export interface ServiceYamlV2 {

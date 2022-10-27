@@ -7,10 +7,12 @@
 
 import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Target, Variation } from 'services/cf'
 import ServeVariationToIndividualTarget, {
-  ServeVariationToIndividualTargetProps
+  ServeVariationToIndividualTargetProps,
+  serveVariationToIndividualTargetSchema
 } from '../ServeVariationToIndividualTarget'
 import {
   getProfileInitials,
@@ -23,15 +25,17 @@ import {
 const renderComponent = (props: Partial<ServeVariationToIndividualTargetProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <ServeVariationToIndividualTarget
-        fieldValues={mockFieldValues(mockTargets, mockVariations[0])}
-        variations={mockVariations}
-        targets={mockTargets}
-        setField={jest.fn()}
-        prefix={prefixInstructionField}
-        subSectionSelector={<span />}
-        {...props}
-      />
+      <Formik initialValues={{}} onSubmit={jest.fn()}>
+        <ServeVariationToIndividualTarget
+          fieldValues={mockFieldValues(mockTargets, mockVariations[0])}
+          variations={mockVariations}
+          targets={mockTargets}
+          setField={jest.fn()}
+          prefix={prefixInstructionField}
+          subSectionSelector={<span />}
+          {...props}
+        />
+      </Formik>
     </TestWrapper>
   )
 
@@ -56,5 +60,23 @@ describe('ServeVariationToIndividualTarget', () => {
     renderComponent({ fieldValues: mockFieldValues(selectedTargets, fakeVariation) })
 
     expect(screen.queryByText(fakeVariation.name as string)).not.toBeInTheDocument()
+  })
+})
+
+describe('serveVariationToIndividualTargetSchema', () => {
+  const getStringMock = jest.fn().mockImplementation(str => str)
+
+  test('it should throw when targets and variation are not specified', async () => {
+    expect(() => serveVariationToIndividualTargetSchema(getStringMock).validateSync({ spec: {} })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets'
+    )
+  })
+
+  test('it should not throw when targets and variation are specified', async () => {
+    expect(() =>
+      serveVariationToIndividualTargetSchema(getStringMock).validateSync({
+        spec: { targets: ['abc'], variation: '123' }
+      })
+    ).not.toThrow()
   })
 })

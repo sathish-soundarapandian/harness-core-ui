@@ -407,6 +407,8 @@ export interface AccessControlCheckError {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -452,6 +454,7 @@ export interface Account {
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   serviceGuardLimit?: number
+  smpAccount?: boolean
   subdomainUrl?: string
   techStacks?: TechStack[]
   trialSignupOptions?: TrialSignupOptions
@@ -470,6 +473,8 @@ export interface AccountDTO {
   nextGenEnabled?: boolean
   productLed?: boolean
   serviceAccountConfig?: ServiceAccountConfig
+  smpAccount?: boolean
+  twoFactorAdminEnforced?: boolean
 }
 
 export interface AccountEvent {
@@ -1738,6 +1743,11 @@ export interface CDPipelineModuleInfo {
   serviceIdentifiers?: string[]
 }
 
+export interface CDStageMetaDataDTO {
+  environmentRef?: string
+  serviceRef?: string
+}
+
 export interface CDStageModuleInfo {
   infraExecutionSummary?: InfraExecutionSummary
   nodeExecutionId?: string
@@ -1825,6 +1835,11 @@ export interface CcmK8sConnectorResponse {
   k8sConnector?: ConnectorResponse
 }
 
+export interface CdDeployStageMetadataRequestDTO {
+  pipelineYaml: string
+  stageIdentifier: string
+}
+
 export interface CeLicenseInfo {
   expiryTime?: number
   licenseType?: 'FULL_TRIAL' | 'LIMITED_TRIAL' | 'PAID'
@@ -1836,6 +1851,7 @@ export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
 }
 
 export type ChaosStepInfo = StepSpecType & {
+  assertion?: string
   expectedResilienceScore: number
   experimentRef: string
 }
@@ -1909,6 +1925,7 @@ export interface CloudformationTemplateFileSpec {
 }
 
 export interface ClusterBasicDTO {
+  agentIdentifier?: string
   identifier?: string
   name?: string
   scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
@@ -1930,12 +1947,14 @@ export interface ClusterBatchResponse {
 }
 
 export interface ClusterFromGitops {
+  agentIdentifier?: string
   identifier?: string
   name?: string
   scopeLevel?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterRequest {
+  agentIdentifier?: string
   envRef?: string
   identifier?: string
   orgIdentifier?: string
@@ -1945,6 +1964,7 @@ export interface ClusterRequest {
 
 export interface ClusterResponse {
   accountIdentifier?: string
+  agentIdentifier?: string
   clusterRef?: string
   envRef?: string
   linkedAt?: number
@@ -2057,7 +2077,6 @@ export interface ConnectorCatalogueItem {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
-    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -2082,9 +2101,10 @@ export interface ConnectorCatalogueItem {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
   )[]
 }
 
@@ -2139,7 +2159,6 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
-    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -2164,9 +2183,10 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
   )[]
 }
 
@@ -2197,7 +2217,6 @@ export interface ConnectorInfoDTO {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
-    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -2222,9 +2241,10 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
 }
 
 export interface ConnectorResponse {
@@ -2272,7 +2292,6 @@ export interface ConnectorTypeStatistics {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
-    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -2297,9 +2316,10 @@ export interface ConnectorTypeStatistics {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
 }
 
 export interface ConnectorValidationResult {
@@ -2460,8 +2480,8 @@ export type CustomDeploymentInfrastructure = Infrastructure & {
 }
 
 export type CustomDeploymentInstanceInfoDTO = InstanceInfoDTO & {
-  hostname: string
   infrastructureKey: string
+  instanceName: string
   properties?: {
     [key: string]: { [key: string]: any }
   }
@@ -3164,7 +3184,7 @@ export type EcsRollingRollbackStepInfo = StepSpecType & {
 export type EcsRunTaskStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   runTaskRequestDefinition?: StoreConfigWrapper
-  skiSteadyStateCheck?: boolean
+  skipSteadyStateCheck?: boolean
   taskDefinition?: StoreConfigWrapper
 }
 
@@ -3496,6 +3516,10 @@ export type EnvironmentGroupFilterProperties = FilterProperties & {
   envIdentifiers?: string[]
 }
 
+export interface EnvironmentGroupMetadata {
+  parallel?: boolean
+}
+
 export interface EnvironmentGroupRequestDTO {
   color?: string
   identifier?: string
@@ -3532,7 +3556,7 @@ export interface EnvironmentGroupYaml {
   deployToAll?: boolean
   envGroupRef: string
   environments?: EnvironmentYamlV2[]
-  metadata?: string
+  metadata?: EnvironmentGroupMetadata
 }
 
 export interface EnvironmentInfoByServiceId {
@@ -3972,6 +3996,8 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4330,6 +4356,8 @@ export interface ErrorMetadata {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   errorMessage?: string
 }
 
@@ -4745,6 +4773,8 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5093,12 +5123,10 @@ export interface FfSubscriptionDTO {
   accountId?: string
   customer?: CustomerDTO
   edition?: string
-  monthly?: boolean
   numberOfDevelopers?: number
   numberOfMau?: number
   paymentFreq?: string
   premiumSupport?: boolean
-  yearly?: boolean
 }
 
 export interface FieldValues {
@@ -5320,6 +5348,7 @@ export interface GatewayAccountRequestDTO {
   createdFromNG?: boolean
   defaultExperience?: 'NG' | 'CG'
   nextGenEnabled?: boolean
+  smpAccount?: boolean
   uuid?: string
 }
 
@@ -6813,6 +6842,8 @@ export interface HelmManifestCommandFlag {
     | 'Delete'
     | 'Uninstall'
     | 'List'
+    | 'Add'
+    | 'Update'
   flag?: string
 }
 
@@ -7236,10 +7267,13 @@ export interface InstanceGroupedByArtifactList {
 export interface InstanceGroupedByEnvironment {
   envId?: string
   envName?: string
+  instanceGroupedByClusterList?: InstanceGroupedByInfrastructure[]
   instanceGroupedByInfraList?: InstanceGroupedByInfrastructure[]
 }
 
 export interface InstanceGroupedByInfrastructure {
+  agentIdentifier?: string
+  clusterIdentifier?: string
   count?: number
   infraIdentifier?: string
   infraName?: string
@@ -7502,6 +7536,8 @@ export type K8sBGSwapServicesStepInfo = StepSpecType & {
 }
 
 export interface K8sBasicInfo {
+  agentIdentifier?: string
+  clusterIdentifier?: string
   containerList?: K8sContainer[]
   namespace: string
   podId: string
@@ -7732,7 +7768,7 @@ export interface LdapConnectionSettings {
     | 'BAMBOO'
     | 'STRING'
     | 'SPLUNK'
-    | 'ELK'
+    | 'ELASTICSEARCH'
     | 'LOGZ'
     | 'SUMO'
     | 'DATA_DOG'
@@ -8299,6 +8335,11 @@ export interface Node {
   textContent?: string
 }
 
+export interface NexusRepositories {
+  repositoryId?: string
+  repositoryName?: string
+}
+
 export interface NodeErrorInfo {
   fqn?: string
   identifier?: string
@@ -8355,8 +8396,10 @@ export interface OAuthSettings {
 export interface OAuthSignupDTO {
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   email?: string
+  gaClientId?: string
   intent?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   name?: string
+  referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
   utmInfo?: UtmInfo
 }
@@ -9751,6 +9794,13 @@ export interface ResponseCDPipelineModuleInfo {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseCDStageMetaDataDTO {
+  correlationId?: string
+  data?: CDStageMetaDataDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseCDStageModuleInfo {
   correlationId?: string
   data?: CDStageModuleInfo
@@ -10664,6 +10714,13 @@ export interface ResponseListServiceDefinitionType {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListNexusRepositories {
+  correlationId?: string
+  data?: NexusRepositories[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListServiceNowFieldNG {
   correlationId?: string
   data?: ServiceNowFieldNG[]
@@ -11128,6 +11185,8 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -11725,6 +11784,8 @@ export interface ResponseSetHelmCommandFlagType {
     | 'Delete'
     | 'Uninstall'
     | 'List'
+    | 'Add'
+    | 'Update'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12353,7 +12414,7 @@ export type SamlSettings = SSOSettings & {
     | 'BAMBOO'
     | 'STRING'
     | 'SPLUNK'
-    | 'ELK'
+    | 'ELASTICSEARCH'
     | 'LOGZ'
     | 'SUMO'
     | 'DATA_DOG'
@@ -13568,6 +13629,8 @@ export interface TechStack {
 export type TemplateFilterProperties = FilterProperties & {
   childTypes?: string[]
   description?: string
+  listingScope?: TemplateScope
+  repoName?: string
   templateEntityTypes?: (
     | 'Step'
     | 'Stage'
@@ -13651,6 +13714,12 @@ export interface TemplateResponse {
   version?: number
   versionLabel?: string
   yaml?: string
+}
+
+export interface TemplateScope {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type TerraformApplyStepInfo = StepSpecType & {
@@ -14396,9 +14465,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -14411,8 +14480,6 @@ export type SignupDTORequestBody = SignupDTO
 export type SourceCodeManagerDTORequestBody = SourceCodeManagerDTO
 
 export type StartTrialDTORequestBody = StartTrialDTO
-
-export type StrategyParametersRequestBody = StrategyParameters
 
 export type SubscriptionDTORequestBody = SubscriptionDTO
 
@@ -19323,23 +19390,47 @@ export const getBuildDetailsForEcrWithYamlPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getBuildDetailsV2`, props, signal)
 
 export interface GetImagesListForEcrQueryParams {
-  region: string
-  connectorRef: string
+  region?: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
+  fqnPath?: string
+  pipelineIdentifier?: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   projectIdentifier: string
 }
 
 export type GetImagesListForEcrProps = Omit<
-  GetProps<ResponseEcrListImagesDTO, Failure | Error, GetImagesListForEcrQueryParams, void>,
-  'path'
+  MutateProps<
+    ResponseEcrListImagesDTO,
+    Failure | Error,
+    GetImagesListForEcrQueryParams,
+    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets ecr images
  */
 export const GetImagesListForEcr = (props: GetImagesListForEcrProps) => (
-  <Get<ResponseEcrListImagesDTO, Failure | Error, GetImagesListForEcrQueryParams, void>
+  <Mutate<
+    ResponseEcrListImagesDTO,
+    Failure | Error,
+    GetImagesListForEcrQueryParams,
+    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >
+    verb="POST"
     path={`/artifacts/ecr/getImages`}
     base={getConfig('ng/api')}
     {...props}
@@ -19347,32 +19438,48 @@ export const GetImagesListForEcr = (props: GetImagesListForEcrProps) => (
 )
 
 export type UseGetImagesListForEcrProps = Omit<
-  UseGetProps<ResponseEcrListImagesDTO, Failure | Error, GetImagesListForEcrQueryParams, void>,
-  'path'
+  UseMutateProps<
+    ResponseEcrListImagesDTO,
+    Failure | Error,
+    GetImagesListForEcrQueryParams,
+    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets ecr images
  */
 export const useGetImagesListForEcr = (props: UseGetImagesListForEcrProps) =>
-  useGet<ResponseEcrListImagesDTO, Failure | Error, GetImagesListForEcrQueryParams, void>(`/artifacts/ecr/getImages`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<
+    ResponseEcrListImagesDTO,
+    Failure | Error,
+    GetImagesListForEcrQueryParams,
+    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', `/artifacts/ecr/getImages`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Gets ecr images
  */
 export const getImagesListForEcrPromise = (
-  props: GetUsingFetchProps<ResponseEcrListImagesDTO, Failure | Error, GetImagesListForEcrQueryParams, void>,
+  props: MutateUsingFetchProps<
+    ResponseEcrListImagesDTO,
+    Failure | Error,
+    GetImagesListForEcrQueryParams,
+    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseEcrListImagesDTO, Failure | Error, GetImagesListForEcrQueryParams, void>(
-    getConfig('ng/api'),
-    `/artifacts/ecr/getImages`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseEcrListImagesDTO,
+    Failure | Error,
+    GetImagesListForEcrQueryParams,
+    GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/ecr/getImages`, props, signal)
 
 export interface GetLastSuccessfulBuildForEcrQueryParams {
   imagePath: string
@@ -20929,6 +21036,423 @@ export const getJobDetailsForJenkinsPromise = (
     signal
   )
 
+export interface GetBuildsForJenkinsServiceV2QueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  artifactPath?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export interface GetBuildsForJenkinsServiceV2PathParams {
+  jobName: string
+}
+
+export type GetBuildsForJenkinsServiceV2Props = Omit<
+  MutateProps<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetBuildsForJenkinsServiceV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  GetBuildsForJenkinsServiceV2PathParams
+
+/**
+ * Gets Jenkins builds ServiceV2
+ */
+export const GetBuildsForJenkinsServiceV2 = ({ jobName, ...props }: GetBuildsForJenkinsServiceV2Props) => (
+  <Mutate<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetBuildsForJenkinsServiceV2PathParams
+  >
+    verb="POST"
+    path={`/artifacts/jenkins/v2/job/${jobName}/builds`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBuildsForJenkinsServiceV2Props = Omit<
+  UseMutateProps<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetBuildsForJenkinsServiceV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  GetBuildsForJenkinsServiceV2PathParams
+
+/**
+ * Gets Jenkins builds ServiceV2
+ */
+export const useGetBuildsForJenkinsServiceV2 = ({ jobName, ...props }: UseGetBuildsForJenkinsServiceV2Props) =>
+  useMutate<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetBuildsForJenkinsServiceV2PathParams
+  >(
+    'POST',
+    (paramsInPath: GetBuildsForJenkinsServiceV2PathParams) =>
+      `/artifacts/jenkins/v2/job/${paramsInPath.jobName}/builds`,
+    { base: getConfig('ng/api'), pathParams: { jobName }, ...props }
+  )
+
+/**
+ * Gets Jenkins builds ServiceV2
+ */
+export const getBuildsForJenkinsServiceV2Promise = (
+  {
+    jobName,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetBuildsForJenkinsServiceV2PathParams
+  > & { jobName: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetBuildsForJenkinsServiceV2PathParams
+  >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/job/${jobName}/builds`, props, signal)
+
+export interface GetJobParametersForJenkinsServiceV2QueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export interface GetJobParametersForJenkinsServiceV2PathParams {
+  jobName: string
+}
+
+export type GetJobParametersForJenkinsServiceV2Props = Omit<
+  MutateProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetJobParametersForJenkinsServiceV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  GetJobParametersForJenkinsServiceV2PathParams
+
+/**
+ * Gets Jenkins Job paramter ServiceV2
+ */
+export const GetJobParametersForJenkinsServiceV2 = ({
+  jobName,
+  ...props
+}: GetJobParametersForJenkinsServiceV2Props) => (
+  <Mutate<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetJobParametersForJenkinsServiceV2PathParams
+  >
+    verb="POST"
+    path={`/artifacts/jenkins/v2/job/${jobName}/details`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetJobParametersForJenkinsServiceV2Props = Omit<
+  UseMutateProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetJobParametersForJenkinsServiceV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  GetJobParametersForJenkinsServiceV2PathParams
+
+/**
+ * Gets Jenkins Job paramter ServiceV2
+ */
+export const useGetJobParametersForJenkinsServiceV2 = ({
+  jobName,
+  ...props
+}: UseGetJobParametersForJenkinsServiceV2Props) =>
+  useMutate<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetJobParametersForJenkinsServiceV2PathParams
+  >(
+    'POST',
+    (paramsInPath: GetJobParametersForJenkinsServiceV2PathParams) =>
+      `/artifacts/jenkins/v2/job/${paramsInPath.jobName}/details`,
+    { base: getConfig('ng/api'), pathParams: { jobName }, ...props }
+  )
+
+/**
+ * Gets Jenkins Job paramter ServiceV2
+ */
+export const getJobParametersForJenkinsServiceV2Promise = (
+  {
+    jobName,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetJobParametersForJenkinsServiceV2PathParams
+  > & { jobName: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetJobParametersForJenkinsServiceV2PathParams
+  >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/job/${jobName}/details`, props, signal)
+
+export interface GetArtifactPathForJenkinsServiceV2QueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export interface GetArtifactPathForJenkinsServiceV2PathParams {
+  jobName: string
+}
+
+export type GetArtifactPathForJenkinsServiceV2Props = Omit<
+  MutateProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetArtifactPathForJenkinsServiceV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  GetArtifactPathForJenkinsServiceV2PathParams
+
+/**
+ * Gets jenkins Artifact Paths ServiceV2
+ */
+export const GetArtifactPathForJenkinsServiceV2 = ({ jobName, ...props }: GetArtifactPathForJenkinsServiceV2Props) => (
+  <Mutate<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetArtifactPathForJenkinsServiceV2PathParams
+  >
+    verb="POST"
+    path={`/artifacts/jenkins/v2/job/${jobName}/paths`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetArtifactPathForJenkinsServiceV2Props = Omit<
+  UseMutateProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetArtifactPathForJenkinsServiceV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  GetArtifactPathForJenkinsServiceV2PathParams
+
+/**
+ * Gets jenkins Artifact Paths ServiceV2
+ */
+export const useGetArtifactPathForJenkinsServiceV2 = ({
+  jobName,
+  ...props
+}: UseGetArtifactPathForJenkinsServiceV2Props) =>
+  useMutate<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetArtifactPathForJenkinsServiceV2PathParams
+  >(
+    'POST',
+    (paramsInPath: GetArtifactPathForJenkinsServiceV2PathParams) =>
+      `/artifacts/jenkins/v2/job/${paramsInPath.jobName}/paths`,
+    { base: getConfig('ng/api'), pathParams: { jobName }, ...props }
+  )
+
+/**
+ * Gets jenkins Artifact Paths ServiceV2
+ */
+export const getArtifactPathForJenkinsServiceV2Promise = (
+  {
+    jobName,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetArtifactPathForJenkinsServiceV2PathParams
+  > & { jobName: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    GetArtifactPathForJenkinsServiceV2PathParams
+  >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/job/${jobName}/paths`, props, signal)
+
+export interface GetJobDetailsForJenkinsServiceV2QueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  parentJobName?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export type GetJobDetailsForJenkinsServiceV2Props = Omit<
+  MutateProps<
+    ResponseJenkinsJobDetailsDTO,
+    Failure | Error,
+    GetJobDetailsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Job details for Jenkins ServiceV2
+ */
+export const GetJobDetailsForJenkinsServiceV2 = (props: GetJobDetailsForJenkinsServiceV2Props) => (
+  <Mutate<
+    ResponseJenkinsJobDetailsDTO,
+    Failure | Error,
+    GetJobDetailsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/jenkins/v2/jobs`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetJobDetailsForJenkinsServiceV2Props = Omit<
+  UseMutateProps<
+    ResponseJenkinsJobDetailsDTO,
+    Failure | Error,
+    GetJobDetailsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Job details for Jenkins ServiceV2
+ */
+export const useGetJobDetailsForJenkinsServiceV2 = (props: UseGetJobDetailsForJenkinsServiceV2Props) =>
+  useMutate<
+    ResponseJenkinsJobDetailsDTO,
+    Failure | Error,
+    GetJobDetailsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', `/artifacts/jenkins/v2/jobs`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Job details for Jenkins ServiceV2
+ */
+export const getJobDetailsForJenkinsServiceV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseJenkinsJobDetailsDTO,
+    Failure | Error,
+    GetJobDetailsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseJenkinsJobDetailsDTO,
+    Failure | Error,
+    GetJobDetailsForJenkinsServiceV2QueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/jobs`, props, signal)
+
 export interface GetBuildDetailsForNexusArtifactQueryParams {
   repository?: string
   repositoryPort?: string
@@ -21183,6 +21707,99 @@ export const getLastSuccessfulBuildForNexusArtifactPromise = (
     NexusRequestDTO,
     void
   >('POST', getConfig('ng/api'), `/artifacts/nexus/getLastSuccessfulBuild`, props, signal)
+
+export interface GetRepositoriesQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  repositoryFormat?: string
+  fqnPath?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  serviceId?: string
+}
+
+export type GetRepositoriesProps = Omit<
+  MutateProps<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Repositories for nexus artifact server
+ */
+export const GetRepositories = (props: GetRepositoriesProps) => (
+  <Mutate<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/nexus/getRepositories`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRepositoriesProps = Omit<
+  UseMutateProps<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Repositories for nexus artifact server
+ */
+export const useGetRepositories = (props: UseGetRepositoriesProps) =>
+  useMutate<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', `/artifacts/nexus/getRepositories`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get Repositories for nexus artifact server
+ */
+export const getRepositoriesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListNexusRepositories,
+    Failure | Error,
+    GetRepositoriesQueryParams,
+    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/nexus/getRepositories`, props, signal)
 
 export interface ValidateArtifactServerForNexusQueryParams {
   connectorRef?: string
@@ -24131,6 +24748,53 @@ export const getFilePathsV2ForS3Promise = (
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getFilePaths`, props, signal)
 
+export type GetCdDeployStageMetadataProps = Omit<
+  MutateProps<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Gets the Service and Environment refs from CD Stage Yaml
+ */
+export const GetCdDeployStageMetadata = (props: GetCdDeployStageMetadataProps) => (
+  <Mutate<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>
+    verb="POST"
+    path={`/cdStage/metadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetCdDeployStageMetadataProps = Omit<
+  UseMutateProps<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Gets the Service and Environment refs from CD Stage Yaml
+ */
+export const useGetCdDeployStageMetadata = (props: UseGetCdDeployStageMetadataProps) =>
+  useMutate<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>(
+    'POST',
+    `/cdStage/metadata`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets the Service and Environment refs from CD Stage Yaml
+ */
+export const getCdDeployStageMetadataPromise = (
+  props: MutateUsingFetchProps<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/cdStage/metadata`,
+    props,
+    signal
+  )
+
 export interface GetConnectorListQueryParams {
   pageIndex?: number
   pageSize?: number
@@ -24155,7 +24819,6 @@ export interface GetConnectorListQueryParams {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
-    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -24180,9 +24843,10 @@ export interface GetConnectorListQueryParams {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -24553,7 +25217,6 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
-    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -24578,9 +25241,10 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -39083,6 +39747,7 @@ export interface StartFreeLicenseQueryParams {
   accountIdentifier: string
   moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   referer?: string
+  ga_client_id?: string
 }
 
 export type StartFreeLicenseProps = Omit<
@@ -40670,73 +41335,6 @@ export const getExecutionStrategyListPromise = (
     signal
   )
 
-export interface PostDefaultTemplatesQueryParams {
-  accountIdentifier: string
-  serviceDefinitionType:
-    | 'Kubernetes'
-    | 'NativeHelm'
-    | 'Ssh'
-    | 'WinRm'
-    | 'ServerlessAwsLambda'
-    | 'AzureWebApp'
-    | 'CustomDeployment'
-    | 'ECS'
-  strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
-}
-
-export type PostDefaultTemplatesProps = Omit<
-  MutateProps<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Generates default templates for the account if they are not already created
- */
-export const PostDefaultTemplates = (props: PostDefaultTemplatesProps) => (
-  <Mutate<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>
-    verb="POST"
-    path={`/pipelines/configuration/strategies/generate-default-templates`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UsePostDefaultTemplatesProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Generates default templates for the account if they are not already created
- */
-export const usePostDefaultTemplates = (props: UsePostDefaultTemplatesProps) =>
-  useMutate<ResponseString, Failure | Error, PostDefaultTemplatesQueryParams, StrategyParametersRequestBody, void>(
-    'POST',
-    `/pipelines/configuration/strategies/generate-default-templates`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Generates default templates for the account if they are not already created
- */
-export const postDefaultTemplatesPromise = (
-  props: MutateUsingFetchProps<
-    ResponseString,
-    Failure | Error,
-    PostDefaultTemplatesQueryParams,
-    StrategyParametersRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseString,
-    Failure | Error,
-    PostDefaultTemplatesQueryParams,
-    StrategyParametersRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/pipelines/configuration/strategies/generate-default-templates`, props, signal)
-
 export interface GetProvisionerExecutionStrategyYamlQueryParams {
   provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'SHELL_SCRIPT_PROVISIONER'
 }
@@ -40859,13 +41457,7 @@ export interface PostExecutionStrategyYamlQueryParams {
 }
 
 export type PostExecutionStrategyYamlProps = Omit<
-  MutateProps<
-    ResponseString,
-    Failure | Error,
-    PostExecutionStrategyYamlQueryParams,
-    StrategyParametersRequestBody,
-    void
-  >,
+  MutateProps<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>,
   'path' | 'verb'
 >
 
@@ -40873,7 +41465,7 @@ export type PostExecutionStrategyYamlProps = Omit<
  * Gets generated Yaml snippet based on strategy parameters
  */
 export const PostExecutionStrategyYaml = (props: PostExecutionStrategyYamlProps) => (
-  <Mutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParametersRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>
     verb="POST"
     path={`/pipelines/configuration/strategies/yaml-snippets`}
     base={getConfig('ng/api')}
@@ -40882,13 +41474,7 @@ export const PostExecutionStrategyYaml = (props: PostExecutionStrategyYamlProps)
 )
 
 export type UsePostExecutionStrategyYamlProps = Omit<
-  UseMutateProps<
-    ResponseString,
-    Failure | Error,
-    PostExecutionStrategyYamlQueryParams,
-    StrategyParametersRequestBody,
-    void
-  >,
+  UseMutateProps<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>,
   'path' | 'verb'
 >
 
@@ -40896,7 +41482,7 @@ export type UsePostExecutionStrategyYamlProps = Omit<
  * Gets generated Yaml snippet based on strategy parameters
  */
 export const usePostExecutionStrategyYaml = (props: UsePostExecutionStrategyYamlProps) =>
-  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParametersRequestBody, void>(
+  useMutate<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
     'POST',
     `/pipelines/configuration/strategies/yaml-snippets`,
     { base: getConfig('ng/api'), ...props }
@@ -40910,18 +41496,18 @@ export const postExecutionStrategyYamlPromise = (
     ResponseString,
     Failure | Error,
     PostExecutionStrategyYamlQueryParams,
-    StrategyParametersRequestBody,
+    StrategyParameters,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<
-    ResponseString,
-    Failure | Error,
-    PostExecutionStrategyYamlQueryParams,
-    StrategyParametersRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/pipelines/configuration/strategies/yaml-snippets`, props, signal)
+  mutateUsingFetch<ResponseString, Failure | Error, PostExecutionStrategyYamlQueryParams, StrategyParameters, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/pipelines/configuration/strategies/yaml-snippets`,
+    props,
+    signal
+  )
 
 export interface GetProjectListQueryParams {
   accountIdentifier: string
@@ -45624,6 +46210,7 @@ export const communitySignupPromise = (
 
 export interface CompleteSignupInviteQueryParams {
   referer?: string
+  gaClientId?: string
 }
 
 export interface CompleteSignupInvitePathParams {
@@ -45697,17 +46284,13 @@ export const completeSignupInvitePromise = (
     CompleteSignupInvitePathParams
   >('PUT', getConfig('ng/api'), `/signup/complete/${token}`, props, signal)
 
-export interface SignupOAuthQueryParams {
-  referer?: string
-}
-
 export type SignupOAuthProps = Omit<
-  MutateProps<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>,
+  MutateProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,
   'path' | 'verb'
 >
 
 export const SignupOAuth = (props: SignupOAuthProps) => (
-  <Mutate<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>
+  <Mutate<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>
     verb="POST"
     path={`/signup/oauth`}
     base={getConfig('ng/api')}
@@ -45716,22 +46299,21 @@ export const SignupOAuth = (props: SignupOAuthProps) => (
 )
 
 export type UseSignupOAuthProps = Omit<
-  UseMutateProps<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>,
+  UseMutateProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,
   'path' | 'verb'
 >
 
 export const useSignupOAuth = (props: UseSignupOAuthProps) =>
-  useMutate<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>(
-    'POST',
-    `/signup/oauth`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>('POST', `/signup/oauth`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
 
 export const signupOAuthPromise = (
-  props: MutateUsingFetchProps<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>,
+  props: MutateUsingFetchProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>(
+  mutateUsingFetch<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>(
     'POST',
     getConfig('ng/api'),
     `/signup/oauth`,
@@ -51169,7 +51751,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -51179,7 +51761,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -51192,7 +51774,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -51206,7 +51788,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -51218,7 +51800,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -51227,7 +51809,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -51620,7 +52202,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -51634,7 +52216,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -51649,7 +52231,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -51663,7 +52245,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -51675,7 +52257,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -51684,7 +52266,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -51819,7 +52401,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -51834,7 +52416,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -51849,7 +52431,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -51864,7 +52446,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -51883,7 +52465,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -51892,7 +52474,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -51911,7 +52493,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -51926,7 +52508,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -51941,7 +52523,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -51956,7 +52538,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -51975,7 +52557,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -51984,7 +52566,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -52630,7 +53212,6 @@ export interface GetYamlSchemaQueryParams {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
-    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -52655,9 +53236,10 @@ export interface GetYamlSchemaQueryParams {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

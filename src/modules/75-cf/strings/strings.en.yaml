@@ -217,6 +217,17 @@ featureFlags:
     openExecution: Open Pipeline Execution
     pipelineDeleted: The Pipeline in use has been deleted from the Pipelines library
     targeting: When Flag is Enabled - Specific Targeting
+    validation:
+      setFlagSwitch:
+        state: Flag state is required
+      defaultRules:
+        onOrOffVariation: An ON or OFF variation is required
+      serveVariationToIndividualTarget:
+        variationTargets: Targets/variation is required
+      serveVariationToTargetGroup:
+        variationTargetGroups: Target Groups/variation is required
+      servePercentageRollout:
+        targetGroup: Target Group is required
 featureFlagDetail:
   variationCount: '{{ count }} variations'
   serviceDescription: Services this flag is associated with

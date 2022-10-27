@@ -169,7 +169,11 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     {...providedDrag.draggableProps}
                                     {...providedDrag.dragHandleProps}
                                   >
-                                    <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                                    <Layout.Horizontal
+                                      spacing="medium"
+                                      flex={{ alignItems: 'center' }}
+                                      margin={{ bottom: hasError && 'medium' }}
+                                    >
                                       {!restrictToSingleEntry && (
                                         <>
                                           <Icon name="drag-handle-vertical" />

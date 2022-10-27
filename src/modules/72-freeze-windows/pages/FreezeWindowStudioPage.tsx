@@ -68,8 +68,6 @@ export const FreezeWindowStudioPage = () => {
     return true
   }
 
-  // console.log(loadingFreezeObj, isUpdatingFreeze, freezeObj?.entityConfigs?.[0]?.name)
-
   return (
     <>
       <NavigationCheck

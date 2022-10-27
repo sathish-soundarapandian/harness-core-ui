@@ -9,7 +9,7 @@ import { noop } from 'lodash-es'
 import { FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
 
 export const defaultContext = {
-  state: { freezeObj: {}, isYamlEditable: false, oldFreezeObj: {}, isUpdated: false },
+  state: { freezeObj: { identifier: '-1' }, isYamlEditable: false, oldFreezeObj: {}, isUpdated: false },
   updateFreeze: noop,
   view: 'VISUAL',
   setDrawerType: noop,

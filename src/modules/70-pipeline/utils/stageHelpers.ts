@@ -71,13 +71,15 @@ export enum RepositoryFormatTypes {
   Docker = 'docker',
   Maven = 'maven',
   NPM = 'npm',
-  NuGet = 'nuget'
+  NuGet = 'nuget',
+  Raw = 'raw'
 }
 
 export const nexus2RepositoryFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NPM', value: RepositoryFormatTypes.NPM },
-  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet },
+  { label: 'Raw', value: RepositoryFormatTypes.Raw }
 ]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]

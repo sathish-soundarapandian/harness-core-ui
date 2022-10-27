@@ -16,7 +16,7 @@ exports[`Freeze Window Studio Sub Header it should render CreateNewFreezeWindow,
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey800"
         >
-          freezeWindows.freezeWindowsPage.editFreezeWindow
+          freezeWindows.freezeWindowsPage.newFreezeWindow
         </p>
       </div>
     </h4>
@@ -88,12 +88,14 @@ exports[`Freeze Window Studio Sub Header it should render CreateNewFreezeWindow,
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-editable-text bp3-disabled bp3-editable-text-placeholder InputWithIdentifier--idValue"
+                      class="bp3-editable-text bp3-disabled InputWithIdentifier--idValue"
                     >
                       <span
                         class="bp3-editable-text-content"
                         style="height: 1px; line-height: 1px; min-width: 0;"
-                      />
+                      >
+                        -1
+                      </span>
                     </div>
                   </span>
                 </span>

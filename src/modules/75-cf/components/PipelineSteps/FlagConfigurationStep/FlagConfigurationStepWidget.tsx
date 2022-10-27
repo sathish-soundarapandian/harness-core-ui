@@ -12,10 +12,10 @@ import {
   FormInput,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   PageError,
-  RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+  RUNTIME_INPUT_VALUE,
+  SelectOption
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -28,6 +28,7 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import type { FlagConfigurationStepData } from './types'
 import FlagChanges from './FlagChanges/FlagChanges'
 import preProcessFormValues from './preProcessFormValues'
+import flagChangesValidationSchema from './FlagChanges/flagChangesValidationSchema'
 
 export interface FlagConfigurationStepWidgetProps {
   initialValues: FlagConfigurationStepData
@@ -200,7 +201,8 @@ const FlagConfigurationStepWidget = forwardRef(
           ...getNameAndIdentifierSchema(getString, stepViewType),
           spec: Yup.object().shape({
             environment: Yup.string().required(getString('cf.pipeline.flagConfiguration.environmentRequired')),
-            feature: Yup.mixed().required(getString('cf.pipeline.flagConfiguration.flagRequired'))
+            feature: Yup.mixed().required(getString('cf.pipeline.flagConfiguration.flagRequired')),
+            instructions: flagChangesValidationSchema(getString)
           })
         })}
       >

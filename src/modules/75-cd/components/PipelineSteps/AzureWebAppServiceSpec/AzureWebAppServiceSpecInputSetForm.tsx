@@ -9,9 +9,11 @@ import React from 'react'
 import { connect } from 'formik'
 import { Layout } from '@wings-software/uicore'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
@@ -24,6 +26,7 @@ import { KubernetesArtifacts } from '../K8sServiceSpec/KubernetesArtifacts/Kuber
 import { ApplicationConfig } from './RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
 import { AzureWebAppConfigType, AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
+import { ConfigFiles } from '../SshServiceSpec/SshConfigFiles/ConfigFiles'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps): React.ReactElement => {
@@ -77,7 +80,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
         <ApplicationConfig
           type={AzureWebAppConfigType.startupCommand}
           template={template}
-          azureWebAppConfig={allValues?.startupCommand}
+          azureWebAppConfig={defaultTo(allValues?.startupCommand, initialValues?.startupCommand)}
           azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
           stageIdentifier={stageIdentifier}
           {...commonProps}
@@ -88,7 +91,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
         <ApplicationConfig
           type={AzureWebAppConfigType.applicationSettings}
           template={template}
-          azureWebAppConfig={allValues?.applicationSettings}
+          azureWebAppConfig={defaultTo(allValues?.applicationSettings, initialValues?.applicationSettings)}
           azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
           stageIdentifier={stageIdentifier}
           {...commonProps}
@@ -99,9 +102,19 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
         <ApplicationConfig
           type={AzureWebAppConfigType.connectionStrings}
           template={template}
-          azureWebAppConfig={allValues?.connectionStrings}
+          azureWebAppConfig={defaultTo(allValues?.connectionStrings, initialValues?.connectionStrings)}
           azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
           stageIdentifier={stageIdentifier}
+          {...commonProps}
+        />
+      )}
+
+      {!!template?.configFiles?.length && (
+        <ConfigFiles
+          configFiles={defaultTo(allValues?.configFiles, initialValues?.configFiles)}
+          configFileSourceBaseFactory={configFileSourceBaseFactory}
+          stageIdentifier={stageIdentifier}
+          template={template}
           {...commonProps}
         />
       )}

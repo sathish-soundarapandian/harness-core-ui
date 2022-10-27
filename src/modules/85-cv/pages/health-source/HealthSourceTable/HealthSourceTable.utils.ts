@@ -77,7 +77,7 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'Splunk':
     case 'SplunkMetric':
       return 'service-splunk'
-    case 'ELKLog':
+    case 'ElasticSearch':
       return 'elk'
     case 'PagerDuty':
       return 'service-pagerduty'

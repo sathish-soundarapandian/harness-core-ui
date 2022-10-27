@@ -5,6 +5,7 @@
 #### Screenshots
 
 NA
+
 <!-- ✍️ Add screenshots of before and after changes where applicable-->
 
 #### PR Checklist
@@ -29,7 +30,10 @@ NA
 - Feature Name Check: `trigger featurenamecheck`
 - Coverage: `retrigger coverage`
 - Rebase: `trigger rebase`
-- Cypress: `trigger cypress`
+- Cypress Rest: `retrigger cypress-rest`
+- Cypress CD: `retrigger cypress-cd`
+- Cypress Pipeline: `retrigger cypress-pipeline`
+- Cypress CV: `retrigger cypress-cv`
 - Fix Prettier: `fix prettier`
 </details>
 

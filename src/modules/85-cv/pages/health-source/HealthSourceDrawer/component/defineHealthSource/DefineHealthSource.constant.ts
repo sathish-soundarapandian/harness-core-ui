@@ -70,7 +70,7 @@ export const SplunkProduct = {
 }
 
 export const ElkProduct = {
-  ELK_LOGS: 'ELK Logs'
+  ELK_LOGS: 'ElasticSearch Logs'
 }
 
 export const ConnectorRefFieldName = 'connectorRef'

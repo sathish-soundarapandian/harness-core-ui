@@ -9,7 +9,7 @@
     "orgIdentifier": "orgId",
     "projectIdentifier": "ishant",
     "identifier": "project_level_freeze",
-    "yaml": "freeze:\n  name: project level freeze\n  identifier: project_level_freeze\n  entityConfigs:\n    - name: Rule Number 1\n      entities:\n        - type: Service\n          filterType: Equals\n          entityRefs:\n            - testService\n        - type: EnvType\n          filterType: Equals\n          entityRefs:\n            - PROD\n    - name: Rule Number 2\n      entities:\n        - type: Service\n          filterType: All\n        - type: EnvType\n          filterType: All\n  status: Disabled\n",
+    "yaml": "freeze:\n  name: project level freeze\n  identifier: project_level_freeze\n  entityConfigs:\n    - name: Rule Number 1\n      entities:\n        - type: Service\n          filterType: Equals\n          entityRefs:\n            - testService\n        - type: EnvType\n          filterType: Equals\n          entityRefs:\n            - Production\n    - name: Rule Number 2\n      entities:\n        - type: Service\n          filterType: All\n        - type: EnvType\n          filterType: All\n  status: Disabled\n",
     "createdAt": 1665683703406,
     "lastUpdatedAt": 1665683703406,
     "freezeScope": "project"

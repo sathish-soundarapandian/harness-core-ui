@@ -6286,6 +6286,11 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.title': string
   'cf.featureFlags.flagPipeline.to': string
   'cf.featureFlags.flagPipeline.triggerDetails': string
+  'cf.featureFlags.flagPipeline.validation.defaultRules.onOrOffVariation': string
+  'cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup': string
+  'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets': string
+  'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups': string
+  'cf.featureFlags.flagPipeline.validation.setFlagSwitch.state': string
   'cf.featureFlags.flagWillTurnOff': string
   'cf.featureFlags.flagWillTurnOn': string
   'cf.featureFlags.flagsDescription': string

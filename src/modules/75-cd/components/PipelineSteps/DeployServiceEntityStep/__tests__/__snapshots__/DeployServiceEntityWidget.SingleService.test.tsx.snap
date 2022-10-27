@@ -158,7 +158,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -278,7 +278,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -682,7 +682,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -802,7 +802,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -1754,7 +1754,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -1874,7 +1874,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"

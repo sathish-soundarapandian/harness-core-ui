@@ -8,10 +8,10 @@
 import React, { FC, MouseEvent, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { Button, ButtonVariation, Container, PageError } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, PageError } from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { Feature, useGetAllSegments, useGetAllTargetAttributes, useGetAllTargets } from 'services/cf'
+import { Feature, useGetAllSegments, useGetAllTargets } from 'services/cf'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { CFPipelineInstructionType, FeatureFlagConfigurationInstruction, FlagConfigurationStepData } from '../types'
 import SubSectionSelector from './SubSectionSelector'
@@ -91,15 +91,8 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({
     refetch: refetchTargets
   } = useGetAllTargets({ queryParams, debounce: 250 })
 
-  const {
-    data: targetAttributesData,
-    loading: loadingTargetAttributes,
-    error: errorTargetAttributes,
-    refetch: refetchTargetAttributes
-  } = useGetAllTargetAttributes({ queryParams, debounce: 250 })
-
-  const loading = loadingTargetAttributes || loadingTargetGroups || loadingTargets
-  const error = errorTargetAttributes || errorTargetGroups || errorTargets
+  const loading = loadingTargetGroups || loadingTargets
+  const error = errorTargetGroups || errorTargets
 
   const showLoading = useMemo<boolean>(() => {
     if (isInitialRender) {
@@ -213,7 +206,6 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({
           onClick={() => {
             refetchTargets()
             refetchTargetGroups()
-            refetchTargetAttributes()
           }}
         />
       </Container>
@@ -238,8 +230,7 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({
           prefix: (fieldName: string) => prefix(prefixInstruction(fieldName, index)),
           variations: selectedFeature.variations,
           targetGroups: targetGroupsData?.segments ?? [],
-          targets: targetsData?.targets ?? [],
-          targetAttributes: targetAttributesData ?? []
+          targets: targetsData?.targets ?? []
         }
 
         if (subSections.length > 1) {

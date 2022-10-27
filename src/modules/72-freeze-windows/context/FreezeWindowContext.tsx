@@ -71,7 +71,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   )
   const [drawerType, setDrawerType] = React.useState<DrawerTypes>()
   const { accountId, projectIdentifier, orgIdentifier, windowIdentifier } = useParams<WindowPathProps>()
-  const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
+  const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ACCOUNT)
   const [isUpdatingFreeze, setIsUpdatingFreeze] = React.useState<boolean>(false)
 
   React.useEffect(() => {

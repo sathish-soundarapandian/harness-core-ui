@@ -353,6 +353,7 @@ Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName
   if (!isVerifyStep) {
     cy.contains('span', 'Add New Health Source').click()
   }
+  cy.wait(1000)
   cy.contains('span', 'Next').click()
   // Validate and fill Define HealthSource Ta
   cy.contains('span', 'Next').click()

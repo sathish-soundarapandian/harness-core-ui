@@ -8,10 +8,6 @@
 import React from 'react'
 import { render, fireEvent, within } from '@testing-library/react'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
-import type { ExecutionNode } from 'services/pipeline-ng'
-
-import type { ExecutionPipelineNode } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
-import type { ExecutionStageDiagramProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagram'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
 import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
@@ -48,54 +44,6 @@ mockIntersectionObserver.mockReturnValue({
   disconnect: () => null
 })
 window.IntersectionObserver = mockIntersectionObserver
-
-function renderNode(
-  data: ExecutionPipelineNode<ExecutionNode>,
-  itemClickHandler: ExecutionStageDiagramProps<ExecutionNode>['itemClickHandler']
-): React.ReactElement {
-  const { parallel, group, item } = data
-
-  if (parallel) {
-    return (
-      <div data-stage="parallel" key={parallel[0].item?.identifier}>
-        {parallel.map(e => renderNode(e, itemClickHandler))}
-      </div>
-    )
-  }
-  if (group) {
-    return (
-      <div data-stage="group" key={group.identifier} data-group={group.name}>
-        {group.items.map(e => renderNode(e, itemClickHandler))}
-      </div>
-    )
-  }
-
-  if (item) {
-    return (
-      <div
-        data-item={item.identifier}
-        data-status={item.status}
-        key={item.identifier}
-        onClick={e => {
-          e.stopPropagation()
-          itemClickHandler?.({ ...e, stage: item } as any)
-        }}
-      >
-        {item?.name}
-      </div>
-    )
-  }
-
-  return <div data-item="empty" />
-}
-
-jest.mock('@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagram', () => {
-  // eslint-disable-next-line react/function-component-definition
-  return function ExecutionStageDiagramMock(props: ExecutionStageDiagramProps<ExecutionNode>) {
-    const { data, itemClickHandler } = props
-    return <div data-testid="execution-stage-diagram-mock">{data?.items.map(e => renderNode(e, itemClickHandler))}</div>
-  }
-})
 
 const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
   pipelineExecutionDetail: mock.data as any,

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState, useContext } from 'react'
 import cx from 'classnames'
 import { Formik, Layout, PageSpinner, FormikForm, Container, Text } from '@harness/uicore'
 import { isEmpty, defaultTo, get, set, debounce, noop, memoize, remove, isUndefined } from 'lodash-es'
@@ -47,6 +47,9 @@ import { getInputSetReference } from '@pipeline/components/OverlayInputSetForm/O
 import { getsMergedTemplateInputYamlPromise } from 'services/template-ng'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { replaceDefaultValues } from '@pipeline/utils/templateUtils'
+import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import { PipelineStageTabs } from './utils'
 import css from './PipelineStageAdvancedSpecifications.module.scss'
 
 const memoizedParse = memoize(parse)
@@ -114,6 +117,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const tempPipelineInputs = useRef<PipelineInfoConfig | undefined>(undefined)
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(selectedInputSetsContext)
   const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
+  const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
 
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
@@ -209,6 +213,19 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const hasInputSets = !!inputSetYamlResponse?.data?.hasInputSets
   const loadingInputSets = loadingTemplate || loadingInputSetsData || loadingMergedTemplateInputs
   const hasRuntimeInputs = !!inputSetYamlResponse?.data?.inputSetTemplateYaml
+
+  useEffect(() => {
+    subscribeForm({
+      tab: PipelineStageTabs.INPUTS,
+      form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+    })
+    return () =>
+      unSubscribeForm({
+        tab: PipelineStageTabs.INPUTS,
+        form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
@@ -403,6 +420,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
         {(formik: FormikProps<PipelineInfoConfig>) => {
           const { values } = formik
           formikRef.current = formik
+          window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: PipelineStageTabs.INPUTS }))
 
           if (hasRuntimeInputs && isEmpty(values)) {
             return <PageSpinner />
@@ -476,9 +494,12 @@ export function PipelineStageInputSection({
 }: React.PropsWithChildren<{
   storeMetadata?: StoreMetadata
 }>): React.ReactElement {
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+
   return (
     <div className={cx(css.stageSection, css.editStageGrid)}>
-      <div className={css.contentSection}>
+      <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      <div className={css.contentSection} ref={scrollRef}>
         <PipelineVariablesContextProvider storeMetadata={storeMetadata}>
           <PipelineInputSetFormBasic />
         </PipelineVariablesContextProvider>

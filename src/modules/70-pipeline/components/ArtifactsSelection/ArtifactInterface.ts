@@ -257,6 +257,7 @@ export interface Nexus2ArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface Nexus2InitialValuesType {

@@ -210,7 +210,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -330,7 +330,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"

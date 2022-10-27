@@ -10,11 +10,11 @@ import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { Text, IconName, Icon, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../utils'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './IconNode.module.scss'
 
@@ -55,6 +55,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
   return (
     <div
       className={cx(cssDefault.defaultNode, css.iconNodeContainer)}
+      data-testid="icon-node"
       onMouseDown={e => e.stopPropagation()}
       onDragOver={event => {
         event.stopPropagation()

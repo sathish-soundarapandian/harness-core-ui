@@ -152,7 +152,7 @@ describe('Project Level Freeze', () => {
     cy.contains('span', 'EnvType').should('be.visible')
     cy.contains('span', 'Equals').should('be.visible')
     cy.contains('span', 'entityRefs').should('be.visible')
-    cy.contains('span', 'PROD').should('be.visible')
+    cy.contains('span', 'Production').should('be.visible')
     cy.contains('span', 'Equals').should('be.visible')
     cy.contains('span', 'entityRefs').should('be.visible')
     cy.contains('span', 'testService').should('be.visible')
@@ -184,7 +184,7 @@ describe('Project Level Freeze', () => {
         - type: EnvType
           filterType: Equals
           entityRefs:
-            - PROD
+            - Production
     - name: Rule Number 2
       entities:
         - type: Service
@@ -241,7 +241,7 @@ describe('Project Level Freeze', () => {
         - type: EnvType
           filterType: Equals
           entityRefs:
-            - PROD
+            - Production
   status: Disabled
   orgIdentifier: default
   projectIdentifier: project1

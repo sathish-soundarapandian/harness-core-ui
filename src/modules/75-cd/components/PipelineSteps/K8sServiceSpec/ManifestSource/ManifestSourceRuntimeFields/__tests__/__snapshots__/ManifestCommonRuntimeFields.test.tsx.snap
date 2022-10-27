@@ -72,7 +72,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                       class="bp3-form-content"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
                       >
                         <div
                           class="selectFieldWrapper"
@@ -165,7 +165,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                   </div>
                 </div>
                 <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main trashButton Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="remove-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.files-[0]"
                   type="button"
                 >
@@ -259,7 +259,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                       class="bp3-form-content"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
                       >
                         <div
                           class="selectFieldWrapper"
@@ -352,7 +352,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                   </div>
                 </div>
                 <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main trashButton Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="remove-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.valuesPaths-[0]"
                   type="button"
                 >

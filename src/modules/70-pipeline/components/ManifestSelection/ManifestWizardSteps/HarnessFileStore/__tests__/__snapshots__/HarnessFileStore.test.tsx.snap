@@ -153,8 +153,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                           tabindex="0"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                            style="align-items: center;"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
                             <span
                               class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -455,8 +454,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                           tabindex="0"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                            style="align-items: center;"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
                             <span
                               class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -928,8 +926,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                           tabindex="0"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                            style="align-items: center;"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
                             <span
                               class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -1230,8 +1227,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                           tabindex="0"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                            style="align-items: center;"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
                             <span
                               class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -1703,8 +1699,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                           tabindex="0"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                            style="align-items: center;"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
                             <span
                               class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -2005,8 +2000,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                           tabindex="0"
                         >
                           <div
-                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                            style="align-items: center;"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
                             <span
                               class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
