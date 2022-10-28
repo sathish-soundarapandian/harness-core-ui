@@ -74,8 +74,6 @@ export const CreateCompositeSloForm = ({
   }
 
   const onCancel = (): void => {
-    // if identifier match with
-    // else match with init values
     if (isEqual(compositeSloPayloadRef.current, formikProps.values)) {
       handleRedirect()
     } else {
@@ -95,7 +93,7 @@ export const CreateCompositeSloForm = ({
           stepList={[
             {
               id: CreateCompositeSLOSteps.Define_SLO_Identification,
-              title: 'Define SLO Identification',
+              title: getString('cv.CompositeSLO.DefineSLO'),
               panel: <SLOName<SLOV2Form> formikProps={formikProps} identifier={identifier} isMultiSelect />,
               preview: (
                 <CreatePreview id={CreateCompositeSLOSteps.Define_SLO_Identification} data={formikProps.values} />
@@ -103,25 +101,25 @@ export const CreateCompositeSloForm = ({
             },
             {
               id: CreateCompositeSLOSteps.Set_SLO_Time_Window,
-              title: 'Set SLO Time Window',
+              title: getString('cv.CompositeSLO.SetTimeWindow'),
               panel: <PeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
               preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Time_Window} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Add_SLOs,
-              title: 'Add SLOs',
+              title: getString('cv.CompositeSLO.AddSLO'),
               panel: <AddSLOs />,
               preview: <CreatePreview id={CreateCompositeSLOSteps.Add_SLOs} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Set_SLO_Target,
-              title: 'Set SLO Target',
+              title: getString('cv.CompositeSLO.SetTarget'),
               panel: <SLOTarget formikProps={formikProps} />,
               preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
             },
             {
               id: CreateCompositeSLOSteps.Error_Budget_Policy,
-              title: 'Error Budget Policy (Optional)',
+              title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
               panel: (
                 <SLOTargetNotificationsContainer
                   identifier={identifier}

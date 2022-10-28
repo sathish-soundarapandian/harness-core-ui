@@ -20,7 +20,7 @@ export function getUserJourneysData(userJourneysData: ResponsePageUserJourneyRes
   })) || []) as SelectOption[]
 }
 
-interface ICreateServiceProps {
+interface CreateServiceProps {
   isMultiSelect: boolean
   userJourneysLoading: boolean
   userJourneyOptions: SelectOption[]
@@ -38,7 +38,7 @@ export const createServiceProps = ({
   userJourneysLoading,
   userJourneyOptions,
   handleCreateUserJourney
-}: ICreateServiceProps): ServiceSelectOrCreateProps | ServiceMultiSelectOrCreateProps => {
+}: CreateServiceProps): ServiceSelectOrCreateProps | ServiceMultiSelectOrCreateProps => {
   const serviceProps = {
     name: getString('cv.slos.userJourney'),
     options: userJourneyOptions,
@@ -68,4 +68,14 @@ export const createServiceProps = ({
   return isMultiSelect
     ? ({ ...serviceProps, item: items } as ServiceSelectOrCreateProps)
     : ({ ...serviceProps, item: items } as ServiceMultiSelectOrCreateProps)
+}
+
+export const getActiveUserJourney = (
+  userJourneyRef: string | SelectOption | MultiSelectOption | undefined,
+  isMultiSelect: boolean | undefined,
+  userJourneyOptions: SelectOption[]
+): MultiSelectOption[] | SelectOption | undefined => {
+  return Array.isArray(userJourneyRef) && isMultiSelect
+    ? userJourneyRef.map(userJourney => userJourney.value || userJourney)
+    : userJourneyOptions?.find(userJourney => userJourney.value === userJourneyRef)
 }

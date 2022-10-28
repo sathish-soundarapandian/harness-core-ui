@@ -6816,6 +6816,12 @@ export interface StringsMap {
   'ci.titleResources': string
   'ci.titleSettings': string
   'ci.welcome': string
+  'cv.CompositeSLO.AddSLO': string
+  'cv.CompositeSLO.DefineSLO': string
+  'cv.CompositeSLO.ErrorBudgetPolicy': string
+  'cv.CompositeSLO.SetTarget': string
+  'cv.CompositeSLO.SetTimeWindow': string
+  'cv.CompositeSLO.Weightage': string
   'cv.Dependency.noData': string
   'cv.Dependency.serviceChanges': string
   'cv.Dependency.serviceList': string
@@ -7575,7 +7581,7 @@ export interface StringsMap {
   'cv.slos.contextualHelp.target.rollingWindowBased': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition2': string
-  'cv.slos.createCompoisteSLO': string
+  'cv.slos.createCompositeSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
   'cv.slos.deleteSLO': string

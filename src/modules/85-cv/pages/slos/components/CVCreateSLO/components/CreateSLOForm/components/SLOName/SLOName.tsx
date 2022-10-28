@@ -20,7 +20,6 @@ import {
   MultiSelectOption
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { Classes } from '@blueprintjs/core'
@@ -40,7 +39,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import CreateMonitoredServiceFromSLO from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO'
 import type { ServiceAndEnv } from './SLOName.types'
 import { initialFormData } from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO.constants'
-import { createServiceProps } from './SLOName.utils'
+import { createServiceProps, getActiveUserJourney } from './SLOName.utils'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 
 const SLOName = <T,>({
@@ -95,10 +94,7 @@ const SLOName = <T,>({
   )
 
   const activeUserJourney = useMemo(
-    () =>
-      Array.isArray(userJourneyRef) && isMultiSelect
-        ? userJourneyRef.map(userJourney => userJourney.value || userJourney)
-        : userJourneyOptions?.find(userJourney => userJourney.value === userJourneyRef),
+    () => getActiveUserJourney(userJourneyRef, isMultiSelect, userJourneyOptions),
     [userJourneyOptions, userJourneyRef, isMultiSelect]
   )
 
@@ -147,7 +143,7 @@ const SLOName = <T,>({
                 <CreateMonitoredServiceFromSLO
                   monitoredServiceFormikProps={monitoredServiceFormikProps}
                   setFieldForSLOForm={formikProps?.setFieldValue}
-                  fetchingMonitoredServices={fetchingMonitoredServices || noop}
+                  fetchingMonitoredServices={fetchingMonitoredServices!}
                   hideModal={hideModal}
                 />
               </Form>

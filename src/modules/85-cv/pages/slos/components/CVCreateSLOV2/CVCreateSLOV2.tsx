@@ -42,6 +42,7 @@ import {
 } from './CVCreateSLOV2.utils'
 import { CreateCompositeSloForm } from './components/CreateCompositeSloForm/CreateCompositeSloForm'
 import type { SLOV2Form } from './CVCreateSLOV2.types'
+import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.module.scss'
 
 const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
   const history = useHistory()
@@ -103,6 +104,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
         canEscapeKeyClose={true}
         canOutsideClickClose={true}
         enforceFocus={false}
+        className={css.warningModal}
         style={{
           width: 600,
           borderLeft: 0,
@@ -191,10 +193,8 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
       label: getString('cv.slos.title')
     }
   ]
-
+  // TODO: Update with swagger
   const sloType = isComposite ? 'Composite' : 'Simple'
-  const isCompositeSLo = sloType === 'Composite'
-
   return (
     <>
       {!identifier && (
@@ -218,7 +218,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
         enableReinitialize
       >
         {() =>
-          isCompositeSLo ? (
+          isComposite ? (
             <CreateCompositeSloForm
               loading={SLODataLoading}
               error={getErrorMessage(SLODataError)}
@@ -228,7 +228,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
               loadingSaveButton={createSLOLoading || updateSLOLoading}
             />
           ) : (
-            // add normal SLO here later
+            // TODO: Add simple slo here
             <></>
           )
         }

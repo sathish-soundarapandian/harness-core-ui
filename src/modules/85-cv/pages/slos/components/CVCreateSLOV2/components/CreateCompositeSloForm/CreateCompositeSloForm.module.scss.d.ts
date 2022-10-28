@@ -8,5 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly footer: string
+  readonly warningModal: string
 }
 export default styles

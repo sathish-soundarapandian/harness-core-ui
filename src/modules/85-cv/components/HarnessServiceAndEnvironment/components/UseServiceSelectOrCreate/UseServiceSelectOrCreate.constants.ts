@@ -6,11 +6,15 @@
  */
 
 import { noop } from 'lodash-es'
+import type { SelectOption } from '@harness/uicore'
 import { ADD_NEW_VALUE } from '@cv/constants'
+import type { UseStringsReturn } from 'framework/strings'
 
-export const AddNewSelectOption = {
-  label: '+ Add New',
-  value: ADD_NEW_VALUE
+export const AddNewSelectOption = (getString: UseStringsReturn['getString']): SelectOption => {
+  return {
+    label: getString('cv.addNew'),
+    value: ADD_NEW_VALUE
+  }
 }
 
 export const initModalData = {

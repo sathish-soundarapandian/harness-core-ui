@@ -730,7 +730,7 @@ slos:
   burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
-  createCompoisteSLO: Create Composite SLO
+  createCompositeSLO: Create Composite SLO
   healthSource: Health source
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
@@ -813,6 +813,13 @@ slos:
       calendarBased: Calendar-based
       calendarBasedDefinition: Compliance periods can be set to calendar periods like a weekly, monthly or quarterly. At the end of a calendar period, you are given a performance score. The performance score, which is calculated against the performance threshold, tells you whether your service was compliant or not. Even though you may view the performance throughout the period when you use a calendar period, you only get a compliance rating for every compliance period.
       calendarBasedDefinition2: Calendar windows are more closely aligned with business planning and project work.
+CompositeSLO:
+  DefineSLO: Define SLO Identification
+  SetTimeWindow: Set SLO Time Window
+  AddSLO: Add SLOs
+  SetTarget: Set SLO Target
+  ErrorBudgetPolicy: Error Budget Policy
+  Weightage: Weightage
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

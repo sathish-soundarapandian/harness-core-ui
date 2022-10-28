@@ -12,6 +12,7 @@ import { ShowModal, useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import sloReviewChange from '@cv/assets/sloReviewChange.svg'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
+import css from './CreateCompositeSloForm.module.scss'
 
 interface UseCreateCompositeSloWarningModalProps {
   handleRedirect: () => void
@@ -35,14 +36,7 @@ function useCreateCompositeSloWarningModal({
         canEscapeKeyClose={true}
         canOutsideClickClose={true}
         enforceFocus={false}
-        style={{
-          width: 600,
-          borderLeft: 0,
-          paddingBottom: 0,
-          paddingTop: 'large',
-          position: 'relative',
-          overflow: 'hidden'
-        }}
+        className={css.warningModal}
         onClose={closeSaveCancelModal}
       >
         <Layout.Vertical>

@@ -45,6 +45,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage, getRiskColorLogo, getRiskColorValue, getSearchString } from '@cv/utils/CommonUtils'
+import { ModuleCV } from '@cv/RouteDestinations'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import SLOCardSelect from './components/SLOCardSelect/SLOCardSelect'
 import type { CVSLOsListingPageProps, RiskTypes, SLORiskFilter } from './CVSLOsListingPage.types'
@@ -185,7 +186,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         variation={ButtonVariation.PRIMARY}
         onClick={() => {
           history.push({
-            pathname: routes.toCVCreateSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
+            pathname: routes.toCVCreateSLOs({ accountId, orgIdentifier, projectIdentifier, module: ModuleCV }),
             search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
           })
         }}
@@ -201,11 +202,16 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       {SRM_COMPOSITE_SLO && (
         <RbacButton
           icon="plus"
-          text={getString('cv.slos.createCompoisteSLO')}
+          text={getString('cv.slos.createCompositeSLO')}
           variation={ButtonVariation.PRIMARY}
           onClick={() => {
             history.push({
-              pathname: routes.toCVCreateCompositeSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
+              pathname: routes.toCVCreateCompositeSLOs({
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                module: ModuleCV
+              }),
               search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
             })
           }}
@@ -277,7 +283,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             orgIdentifier,
             projectIdentifier,
             identifier,
-            module: 'cv'
+            module: ModuleCV
           })}
         >
           <Text
@@ -295,7 +301,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             projectIdentifier,
             orgIdentifier,
             identifier,
-            module: 'cv'
+            module: ModuleCV
           })}
         >
           <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>

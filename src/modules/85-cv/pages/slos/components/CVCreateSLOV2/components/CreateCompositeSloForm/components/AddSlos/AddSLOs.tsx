@@ -10,6 +10,7 @@ import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { Button, ButtonVariation, Text, TextInput, TableV2, Intent, Page } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ServiceLevelObjectiveDetailsDTO } from 'services/cv'
@@ -18,9 +19,10 @@ import { SLOList } from './components/SLOList'
 
 export const AddSLOs = (): JSX.Element => {
   const formikProps = useFormikContext<SLOV2Form>()
+  const { getString } = useStrings()
   const { showDrawer, hideDrawer } = useDrawer({
-    createHeader: _props => <Page.Header title="Add SLOs" />,
-    createDrawerContent: _props => {
+    createHeader: () => <Page.Header title={getString('cv.CompositeSLO.AddSLO')} />,
+    createDrawerContent: () => {
       return (
         <SLOList
           hideDrawer={() => hideDrawer()}
@@ -80,13 +82,13 @@ export const AddSLOs = (): JSX.Element => {
   const columns: Column<ServiceLevelObjectiveDetailsDTO>[] = [
     {
       accessor: 'serviceLevelObjectiveRef',
-      Header: 'Name',
+      Header: getString('name'),
       Cell: RenderName,
       disableSortBy: true
     },
     {
       accessor: 'weightagePercentage',
-      Header: 'Weightage',
+      Header: getString('cv.CompositeSLO.Weightage'),
       Cell: RenderWeightInput,
       disableSortBy: true
     }
@@ -96,7 +98,7 @@ export const AddSLOs = (): JSX.Element => {
     <>
       <Button
         variation={ButtonVariation.SECONDARY}
-        text={'Add SLOs'}
+        text={getString('cv.CompositeSLO.AddSLO')}
         iconProps={{ name: 'plus' }}
         onClick={showDrawer}
       />

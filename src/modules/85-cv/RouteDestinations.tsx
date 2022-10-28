@@ -76,6 +76,8 @@ import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 //   }
 // )
 
+export const ModuleCV = 'cv'
+
 export const cvModuleParams: ModulePathParams = {
   module: ':module(cv)'
 }

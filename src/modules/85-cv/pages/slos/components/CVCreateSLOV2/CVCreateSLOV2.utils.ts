@@ -19,13 +19,13 @@ export const getSLOV2InitialFormData = (
   if (serviceLevelObjective) {
     return {
       [SLOV2FormFields.TYPE]: serviceLevelObjective.type,
-      //
+      // SLO Name definition
       [SLOV2FormFields.NAME]: serviceLevelObjective.name,
       [SLOV2FormFields.IDENTIFIER]: serviceLevelObjective.identifier,
       [SLOV2FormFields.DESCRIPTION]: serviceLevelObjective.description,
       [SLOV2FormFields.TAGS]: serviceLevelObjective.tags,
       [SLOV2FormFields.USER_JOURNEY_REF]: serviceLevelObjective.userJourneyRefs,
-      //
+      // SLO Period Type
       [SLOV2FormFields.PERIOD_TYPE]: defaultTo(serviceLevelObjective.sloTarget.type, 'Rolling'),
       // for Rolling
       [SLOV2FormFields.PERIOD_LENGTH]: serviceLevelObjective?.sloTarget?.spec?.periodLength,
@@ -33,11 +33,11 @@ export const getSLOV2InitialFormData = (
       [SLOV2FormFields.PERIOD_LENGTH_TYPE]: serviceLevelObjective?.sloTarget?.spec?.spec?.type,
       [SLOV2FormFields.DAY_OF_MONTH]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfMonth,
       [SLOV2FormFields.DAY_OF_WEEK]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfWeek,
-      //
+      // Add SLOs
       [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]: serviceLevelObjective?.spec?.serviceLevelObjectivesDetails,
-      //
+      // SLO target
       [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: serviceLevelObjective.sloTarget.sloTargetPercentage,
-      //
+      // SLO Notificaitons
       [SLOV2FormFields.NOTIFICATION_RULE_REFS]: serviceLevelObjective?.notificationRuleRefs
     }
   } else {
