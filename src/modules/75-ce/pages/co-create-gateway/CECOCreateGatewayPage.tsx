@@ -12,7 +12,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
 export const CECOCreateGatewayPage: React.FC = () => {
   const { getString } = useStrings()
-  useDocumentTitle(getString('ce.co.createAsRule'), true)
+  useDocumentTitle(getString('ce.co.createAsRule'))
   return <COCreateGatewayContainer />
 }
 

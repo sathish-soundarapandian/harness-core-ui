@@ -63,7 +63,8 @@ export enum ServiceDeploymentType {
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
   AzureWebApp = 'AzureWebApp',
-  ECS = 'ECS'
+  ECS = 'ECS',
+  Elastigroup = 'Elastigroup'
 }
 
 export enum RepositoryFormatTypes {
@@ -320,6 +321,10 @@ export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => 
   return deploymentType === ServiceDeploymentType.AzureWebApp
 }
 
+export const isElastigroupDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Elastigroup
+}
+
 export const isCustomDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.CustomDeployment
 }
@@ -350,7 +355,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.AzureWebApp]: 'Web App Infrastructure Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
-  [ServiceDeploymentType.WinRm]: 'WinRM'
+  [ServiceDeploymentType.WinRm]: 'WinRM',
+  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details' //todospt
 }
 
 export const getSelectedDeploymentType = (

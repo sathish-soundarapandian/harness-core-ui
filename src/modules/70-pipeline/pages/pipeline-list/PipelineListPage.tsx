@@ -46,6 +46,7 @@ import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import type { PartiallyRequired } from '@pipeline/utils/types'
 import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
@@ -272,6 +273,7 @@ export function PipelineListPage(): React.ReactElement {
           />
         </Layout.Horizontal>
       </Page.SubHeader>
+      <GlobalFreezeBanner />
       <Page.Body
         className={css.pageBody}
         error={pipelineListLoadingError?.message}

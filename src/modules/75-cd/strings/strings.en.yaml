@@ -110,6 +110,13 @@ steps:
       prodListenerRuleARN: Prod Listener Rule ARN
       stageListener: Stage Listener
       stageListenerRuleARN: Stage Listener Rule ARN
+  elastigroup:
+    infraDetailHeader: Elastigroup Infrastructure Details
+    connectorSpot: Spot Connector
+    elastigroupConfig: Elastigroup Configuration
+    elastigroupConfigReq: Elastigroup Configuration is required
+    elastigroupTitle: Elastigroup Configuration Source
+    elastigroupConfigDetails: '{{$.common.configDetails}}'
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -580,6 +587,7 @@ miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
 useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
 removeStepTemplate: Remove Step Template
+duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
 artifactSource:
   artifactRepositoryTypeIsRequired: Artifact Repository Type is required

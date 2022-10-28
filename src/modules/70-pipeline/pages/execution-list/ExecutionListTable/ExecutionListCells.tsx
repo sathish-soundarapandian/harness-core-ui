@@ -9,8 +9,7 @@
 import { Checkbox, Classes, IconName } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
-import { get, isEmpty } from 'lodash-es'
-import defaultTo from 'lodash-es/defaultTo'
+import { get, isEmpty, defaultTo } from 'lodash-es'
 import React, { useRef, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
@@ -335,7 +334,7 @@ export const TriggerInfoCell: CellType = ({ row }) => {
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =
-    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch.commits[0]?.message
+    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch?.commits[0]?.message
 
   return showCI ? (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>

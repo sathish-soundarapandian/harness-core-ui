@@ -35,6 +35,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { NewFreezeWindowButton } from '@freeze-windows/components/NewFreezeWindowButton/NewFreezeWindowButton'
 import { useComputedFreezeStatusMap } from '@freeze-windows/hooks/useComputedFreezeStatusMap'
 import freezeWindowsIllustration from '@freeze-windows/images/freeze-windows-illustration.svg'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
@@ -67,7 +68,7 @@ function _FreezeWindowsPage(): React.ReactElement {
     body: {
       freezeStatus,
       searchTerm,
-      sort,
+      sort: [sort.join(',')],
       startTime,
       endTime
     }
@@ -126,6 +127,8 @@ function _FreezeWindowsPage(): React.ReactElement {
     <div className={css.main}>
       <FreezeWindowListHeader freezeListLoading={freezeListLoading} />
       <FreezeWindowListSubHeader />
+      <GlobalFreezeBanner />
+
       <Page.Body
         loading={freezeListLoading}
         error={error?.message}

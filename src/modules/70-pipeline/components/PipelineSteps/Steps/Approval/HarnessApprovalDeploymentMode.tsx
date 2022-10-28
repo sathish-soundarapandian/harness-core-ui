@@ -95,6 +95,7 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             allowableTypes,
             textProps: { type: 'number' }
           }}
+          disabled={isApprovalStepFieldDisabled(readonly)}
           className={css.deploymentViewMedium}
           fieldPath="spec.approvers.minimumCount"
           template={template}

@@ -141,7 +141,7 @@ export function ExecutionHeader(): React.ReactElement {
             })}
           >
             <Icon name="Edit" size={12} />
-            <String stringID="edit" />
+            <String stringID="editPipeline" />
           </Link>
 
           <ExecutionActions

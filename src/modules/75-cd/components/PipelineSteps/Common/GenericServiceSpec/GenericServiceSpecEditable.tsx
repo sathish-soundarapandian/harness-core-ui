@@ -20,7 +20,6 @@ import {
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import {
   allowedManifestTypes,
   getManifestsHeaderTooltipId
@@ -138,17 +137,13 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
           <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
-          {isReadonlyServiceMode ? (
-            <VariableListReadOnlyView />
-          ) : (
-            <WorkflowVariables
-              tabName={DeployTabs.SERVICE}
-              formName={'addEditServiceCustomVariableForm'}
-              factory={factory as any}
-              isPropagating={isPropagating}
-              readonly={!!readonly}
-            />
-          )}
+          <WorkflowVariables
+            tabName={DeployTabs.SERVICE}
+            formName={'addEditServiceCustomVariableForm'}
+            factory={factory as any}
+            isPropagating={isPropagating}
+            readonly={!!readonly}
+          />
         </Card>
       </div>
     </div>

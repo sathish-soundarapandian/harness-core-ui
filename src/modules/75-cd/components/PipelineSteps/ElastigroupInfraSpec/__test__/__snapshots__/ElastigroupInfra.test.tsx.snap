@@ -1,0 +1,525 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Elastigroup - inputSet/runtime view Runtime view to render - with initialSnapShot 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+    >
+      <div
+        class="formGroup md"
+      >
+        <div
+          class="connectorLabel"
+        >
+          <div
+            class="StyledProps--font StyledProps--main"
+            data-test-id="connectorTooltip"
+          >
+            <span
+              class="Tooltip--acenter bp3-label"
+              data-tooltip-id="elastigroupConnector"
+            >
+              connector
+            </span>
+          </div>
+          <div
+            class="bp3-form-group"
+            style="margin-bottom: 0px;"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 400px;"
+              >
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                  data-testid="cr-field-stages[0].stage.spec.environment.infrastructureDefinitions.0.inputs.spec.connectorRef"
+                  style="width: 400px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    <span
+                      class="placeholder"
+                    >
+                      connectors.selectConnector
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <span
+                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                >
+                  <span
+                    class="bp3-popover-target"
+                  >
+                    <button
+                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="fixed-input"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 9 9"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="formGroup md fileStoreStyle"
+      >
+        <div>
+          <div
+            class="label"
+          >
+            cd.steps.elastigroup.elastigroupConfig
+          </div>
+          <div
+            class="group"
+          >
+            <div
+              class="selectFieldWrapper"
+              style="flex-grow: 1;"
+            >
+              <div
+                class="bp3-form-group"
+                style="flex-grow: 1; margin-bottom: 0px; margin-top: 0px;"
+              >
+                <label
+                  class="bp3-label"
+                  for="stages[0].stage.spec.environment.infrastructureDefinitions.0.inputs.spec.configuration.store.spec.files[0]"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--flex"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="stepTestUtilForm_stages[0].stage.spec.environment.infrastructureDefinitions.0.inputs.spec.configuration.store.spec.files[0]"
+                    >
+                      
+                    </span>
+                  </div>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+                  >
+                    <div
+                      class="selectFieldWrapper"
+                    >
+                      <div
+                        class="bp3-form-group"
+                        style="width: 100%;"
+                      >
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="Layout--vertical StyledProps--main"
+                            data-testid="file-store-select"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                              data-testid="container-fs"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
+                              >
+                                - 
+                                select
+                                 -
+                              </p>
+                              <div
+                                class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
+                                  icon="chevron-down"
+                                >
+                                  <svg
+                                    data-icon="chevron-down"
+                                    height="15"
+                                    viewBox="0 0 16 16"
+                                    width="15"
+                                  >
+                                    <desc>
+                                      chevron-down
+                                    </desc>
+                                    <path
+                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="bp3-popover-wrapper typeSelectorWrapper"
+                    >
+                      <div
+                        class="bp3-popover-target typeSelector"
+                      >
+                        <button
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-button-text"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main icon fixed"
+                              data-icon="fixed-input"
+                            >
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p
+      class="StyledProps--font StyledProps--main"
+    >
+      Errors
+    </p>
+    <pre>
+      {}
+    </pre>
+    <button
+      aria-label="Submit"
+      class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+      type="button"
+    >
+      <span
+        class="bp3-button-text"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ElastigroupInfraSpec tests render elastigroupInfra with empty initial values 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          >
+            <div
+              class="connectorLabel connectorRef"
+            >
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-test-id="connectorTooltip"
+              >
+                <span
+                  class="Tooltip--acenter bp3-label"
+                  data-tooltip-id="elastigroupConnector"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-sub-section"
+                  >
+                    connector
+                  </p>
+                </span>
+              </div>
+              <div
+                class="bp3-form-group"
+                data-id="undefined-0"
+                style="margin-bottom: 0px;"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="width: 450px;"
+                  >
+                    <button
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                      data-testid="cr-field-connectorRef"
+                      style="width: 450px;"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-button-text"
+                      >
+                        <div
+                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main selectWrapper StyledProps--flex StyledProps--flex-distribution-space-between"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target Text--targetClass"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main label StyledProps--color StyledProps--color-grey800"
+                                tabindex="0"
+                              >
+                                spotConnector
+                              </p>
+                            </span>
+                          </span>
+                          <div
+                            class="rightStatus"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-full-circle StyledProps--main status greenStatus"
+                              data-testid="crf-status"
+                              icon="full-circle"
+                            >
+                              <svg
+                                data-icon="full-circle"
+                                height="6"
+                                viewBox="0 0 16 16"
+                                width="6"
+                              >
+                                <desc>
+                                  full-circle
+                                </desc>
+                                <path
+                                  d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                            <span
+                              class="Tag--main"
+                            >
+                              <span
+                                class="bp3-tag bp3-minimal"
+                                id="tag"
+                              >
+                                <span
+                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                >
+                                  project
+                                </span>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </span>
+                      <span
+                        class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                        icon="chevron-down"
+                      >
+                        <svg
+                          data-icon="chevron-down"
+                          height="14"
+                          viewBox="0 0 16 16"
+                          width="14"
+                        >
+                          <desc>
+                            chevron-down
+                          </desc>
+                          <path
+                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-sub-section"
+            >
+              cd.steps.elastigroup.elastigroupConfig
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="undefined-1"
+              style="width: 100%;"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <button
+                  aria-label="common.addName"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+                  data-test-id="addElastigroupConfig"
+                  id="add-elastigroup-config"
+                  type="button"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+                    icon="plus"
+                  >
+                    <svg
+                      data-icon="plus"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        plus
+                      </desc>
+                      <path
+                        d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-button-text"
+                  >
+                    common.addName
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main lastRow"
+            style="align-items: center;"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="allowSimultaneousDeployments-2"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox simultaneousDeployment StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="allowSimultaneousDeployments"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="elastigroupAllowSimultaneousDeployments"
+                  >
+                    cd.allowSimultaneousDeployments
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

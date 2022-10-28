@@ -41,7 +41,7 @@ export class ServiceNowImportSet extends PipelineStep<ServiceNowImportSetData> {
   protected referenceId = 'serviceNowImportSetStep'
   protected stepName = 'ServiceNow Import Set'
   protected stepIcon: IconName = 'servicenow-update'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowApproval'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowImportSet'
   protected defaultValues: ServiceNowImportSetData = {
     identifier: '',
     timeout: '1d',

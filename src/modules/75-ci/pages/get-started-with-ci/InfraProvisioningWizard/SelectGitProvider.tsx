@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'

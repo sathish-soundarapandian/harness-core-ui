@@ -11,14 +11,10 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-
 import produce from 'immer'
-import get from 'lodash-es/get'
-import set from 'lodash-es/set'
-
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { merge } from 'lodash-es'
+import { get, set, merge } from 'lodash-es'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
@@ -26,8 +22,7 @@ import {
   PrimaryArtifact,
   StageElementConfig,
   ArtifactConfig,
-  SidecarArtifact,
-  ServiceDefinition
+  SidecarArtifact
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
@@ -42,7 +37,6 @@ import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
-import { useCache } from '@common/hooks/useCache'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
@@ -76,12 +70,10 @@ import css from './ArtifactsSelection.module.scss'
 export default function ArtifactsSelection({
   isPropagating = false,
   deploymentType,
-  isReadonlyServiceMode,
   readonly
 }: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
-      pipeline,
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
@@ -104,8 +96,6 @@ export default function ArtifactsSelection({
 
   const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-  const { getCache } = useCache([getServiceCacheId])
 
   useEffect(() => {
     if (
@@ -154,39 +144,26 @@ export default function ArtifactsSelection({
   })
 
   const getArtifactsPath = useCallback((): any => {
-    if (isReadonlyServiceMode) {
-      const serviceData = getCache(getServiceCacheId) as ServiceDefinition
-      return serviceData?.spec?.artifacts
-    }
-
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', {})
-  }, [isPropagating, isReadonlyServiceMode, stage])
+  }, [isPropagating, stage])
 
   const getPrimaryArtifactPath = useCallback((): PrimaryArtifact => {
-    if (isReadonlyServiceMode) {
-      const serviceData = getCache(getServiceCacheId)
-      return get(serviceData, 'spec.artifacts.primary', null)
-    }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts.primary', null)
     }
 
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary', null)
-  }, [isPropagating, isReadonlyServiceMode, stage])
+  }, [isPropagating, stage])
 
   const getSidecarPath = useCallback((): SidecarArtifactWrapper[] => {
-    if (isReadonlyServiceMode) {
-      const serviceData = getCache(getServiceCacheId)
-      return get(serviceData, 'spec.artifacts.sidecars', null) || []
-    }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts.sidecars', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars', [])
-  }, [isPropagating, isReadonlyServiceMode, stage])
+  }, [isPropagating, stage])
 
   const artifacts = getArtifactsPath()
 

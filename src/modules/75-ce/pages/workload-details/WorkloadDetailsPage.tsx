@@ -72,7 +72,7 @@ const WorkloadDetailsPage: () => JSX.Element = () => {
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeFilterType>('timeRange', DEFAULT_TIME_RANGE)
   const [chartDataAggregation, setChartDataAggregation] = useState<Aggregation>(Aggregation.TimeWeighted)
 
-  useDocumentTitle([getString('ce.perspectives.workloadDetails.workloadDetailsText'), workloadName], true)
+  useDocumentTitle([getString('ce.perspectives.workloadDetails.workloadDetailsText'), workloadName])
 
   const isDateRangeInLast7Days = useMemo(() => {
     const last7DaysRange = DATE_RANGE_SHORTCUTS['LAST_7_DAYS']

@@ -6,8 +6,7 @@
  */
 
 import { useEffect } from 'react'
-import pickBy from 'lodash-es/pickBy'
-import merge from 'lodash-es/merge'
+import { pickBy, merge } from 'lodash-es'
 
 interface SyncStepDataValuesProps {
   values: any

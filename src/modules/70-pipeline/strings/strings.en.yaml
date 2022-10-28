@@ -1048,6 +1048,9 @@ stepDescription:
   HelmDeploy: Performs native Helm deployments. Requires Helm and Tiller and supports basic deployments. Helm charts are also supported in Harness Kubernetes deployments without requiring Helm or Tiller and using all deployment strategies.
   HelmRollback: Rolls back all the deployed objects to the previous version.
   ServiceNowApproval: Use ServiceNow issues to approve steps and stages.
+  ServiceNowCreate: Create a Service Now ticket as part of the pipeline execution
+  ServiceNowUpdate: Update a Service Now ticket as part of the pipeline execution
+  ServiceNowImportSet: Create or Update Service Now issues using Service Now Import Set APIs
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
@@ -1230,6 +1233,7 @@ imageVersionDeprecated: Image version outdated
 unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s) {{summary}}'
 invalidRequest: Invalid Request
 serviceDeploymentTypes:
+  elastigroup: Elastigroup
   kubernetes: '{{$.kubernetesText}}'
   amazonEcs: '{{$.delegate.cardData.amazonECS.name}}'
   amazonAmi: AWS AMI
@@ -1352,6 +1356,7 @@ lastExecution: 'Last Execution'
 executionId: Execution Id
 imageTag: 'image: {{image}}'
 fileSource: 'File Source'
+configSource: Configuration Source
 fileDetails: 'File Details'
 appServiceConfig:
   title: App Services Configuration

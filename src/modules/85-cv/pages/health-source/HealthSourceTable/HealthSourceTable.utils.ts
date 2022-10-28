@@ -25,6 +25,7 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
     case HealthSourceTypes.DatadogMetrics:
     case HealthSourceTypes.SplunkMetric:
     case HealthSourceTypes.CloudWatchMetrics:
+    case HealthSourceTypes.AwsPrometheus:
       return getString('pipeline.verification.analysisTab.metrics')
     case HealthSourceTypes.StackdriverLog:
     case HealthSourceTypes.DatadogLog:
@@ -62,6 +63,7 @@ export const getIconBySourceType = (type: string): IconName => {
       return 'lab-test'
     case 'PROMETHEUS':
     case 'Prometheus':
+    case 'AwsPrometheus':
       return 'service-prometheus'
     //TODO one type will be removed once it is full deprecated from backend.
     case 'STACKDRIVER_LOG':

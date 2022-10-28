@@ -40,3 +40,12 @@ export const SourceDataMock = {
 }
 
 export const expectedResponse = {}
+
+export const workspaceMock = {
+  data: [
+    {
+      name: 'Workspace 1',
+      workspaceId: 'sjksm43455n-34x53c45vdssd-fgdfd232sdfad'
+    }
+  ]
+}

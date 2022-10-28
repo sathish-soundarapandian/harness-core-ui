@@ -9,7 +9,7 @@ import React from 'react'
 import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption, AllowedTypes } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { defaultTo, get } from 'lodash-es'
+import { cloneDeep, defaultTo, get } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -23,6 +23,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
@@ -72,7 +73,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-  const formikVariables = get(formik?.values, basePath, [])
+  const formikVariables = defaultTo(get(formik?.values, basePath), [])
+  // get doesn't return defaultValue if it gets null
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -80,6 +82,27 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   }>()
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  // this was necessary due to absence of YAML validations in run pipeline form. Add such logic here only when absolutely unavoidable
+  React.useEffect(() => {
+    const mergeTemplateBaseValues = defaultTo(cloneDeep(template?.variables), [])
+
+    let isYamlDirty = false
+    mergeTemplateBaseValues.forEach((variable, index) => {
+      const isVariablePresentIndex = formikVariables.findIndex(
+        (fVar: AllNGVariables) => fVar.name === variable.name && fVar.type === variable.type
+      )
+      if (isVariablePresentIndex !== -1) {
+        mergeTemplateBaseValues[index].value = formikVariables[isVariablePresentIndex].value
+      } else {
+        isYamlDirty = true
+      }
+    })
+
+    if (isYamlDirty) {
+      formik.setFieldValue(basePath, clearRuntimeInput(mergeTemplateBaseValues))
+    }
+  }, [])
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
       {stepViewType === StepViewType.StageVariable && initialValues.variables.length > 0 && (

@@ -105,7 +105,7 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
     )
   }
   return (
-    <Container flex={{ align: 'center-center' }} style={{ paddingTop: '150px' }}>
+    <Container flex={{ align: 'center-center' }} style={{ paddingTop: '80px' }}>
       <FlagsSectionNoData>
         <FlagDialog environment={environmentIdentifier} isLinkVariation />
       </FlagsSectionNoData>

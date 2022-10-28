@@ -79,7 +79,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetServiceDefinitionTypes: jest
     .fn()
-    .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() }))
+    .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 const testPath = routes.toDeployments({

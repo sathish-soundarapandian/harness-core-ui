@@ -89,6 +89,9 @@ secret:
   newSecretFile: New Secret File
   secretNotFound: 'Secret not found'
   successMessage: Secret '{{name}}' {{action}} successfully
+  configureRegion: 'Configure Region'
+  region: 'Regions'
+  referenceSecretVersionRqrd: 'Reference Secret version is required'
 secretsTitle: 'Resources: Secrets'
 createSecret: Create a Secret
 policyEvaluations:

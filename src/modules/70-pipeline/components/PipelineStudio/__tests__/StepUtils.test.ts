@@ -5,9 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import isMatch from 'lodash-es/isMatch'
-import has from 'lodash-es/has'
-import { get } from 'lodash-es'
+import { isMatch, has, get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { validateCICodebase, validatePipeline } from '../StepUtil'

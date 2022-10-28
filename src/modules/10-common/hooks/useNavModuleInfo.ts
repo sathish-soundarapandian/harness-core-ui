@@ -13,7 +13,6 @@ import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 export type NavModuleName =
@@ -42,7 +41,7 @@ interface useNavModuleInfoReturnType {
   label: StringKeys
   icon: IconName
   homePageUrl: string
-  licenseType?: ModuleLicenseDTO['licenseType']
+  hasLicense?: boolean
 }
 
 interface ModuleInfo {
@@ -124,19 +123,14 @@ export const moduleGroupConfig: GroupConfig[] = [
   }
 ]
 
-const getModuleInfo = (
-  moduleInfo: ModuleInfo,
-  accountId: string,
-  licenseType: ModuleLicenseDTO['licenseType'],
-  shouldVisible = false
-) => {
+const getModuleInfo = (moduleInfo: ModuleInfo, accountId: string, hasLicense: boolean, shouldVisible = false) => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
   return {
     icon: moduleIcon,
     label,
     homePageUrl: getHomePageUrl(accountId),
     shouldVisible: shouldVisible,
-    licenseType: licenseType
+    hasLicense
   }
 }
 
@@ -150,7 +144,7 @@ const useNavModuleInfo = (module: NavModuleName) => {
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
-    licenseInformation[module]?.licenseType,
+    !!licenseInformation[module]?.id,
     featureFlags[featureFlagName]
   ) as useNavModuleInfoReturnType
 }
@@ -169,7 +163,7 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
       [module]: getModuleInfo(
         moduleInfoMap[module],
         accountId,
-        licenseInformation[module]?.licenseType,
+        !!licenseInformation[module]?.id,
         featureFlags[moduleInfoMap[module].featureFlagName]
       )
     }

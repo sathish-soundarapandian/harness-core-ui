@@ -171,6 +171,8 @@ allowpaths:
   - /slo/v2/{identifier}
   - /slo/v2/{identifier}/logs
   - /slo/v2/{identifier}/notification-rules
+  - /aws/prometheus/workspaces
+  - /aws/regions
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

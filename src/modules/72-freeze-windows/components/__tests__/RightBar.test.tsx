@@ -47,6 +47,7 @@ describe('Freeze Window Studio - Right Bar', () => {
   })
   test('it should render in open state of Notifications', async () => {
     const updateFreeze = jest.fn()
+    const setDrawerType = jest.fn()
     render(
       <TestWrapper
         path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/freeze-window-studio/window/:windowIdentifier/"
@@ -56,7 +57,8 @@ describe('Freeze Window Studio - Right Bar', () => {
           value={{
             ...defaultContext,
             drawerType: DrawerTypes.Notification,
-            updateFreeze
+            updateFreeze,
+            setDrawerType
           }}
         >
           <RightBar />
@@ -66,5 +68,10 @@ describe('Freeze Window Studio - Right Bar', () => {
 
     expect(document.body.getElementsByClassName('rightBar')[0]).toMatchSnapshot('open state')
     expect(document.body.getElementsByClassName('almostFullScreenPortal')[0]).toMatchSnapshot('open state')
+
+    const closeBtn = document.getElementsByClassName('almostFullScreenCloseBtn')[0]
+    expect(closeBtn).toBeInTheDocument()
+    await userEvent.click(closeBtn)
+    expect(setDrawerType).toHaveBeenCalledWith()
   })
 })

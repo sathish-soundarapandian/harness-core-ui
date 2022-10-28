@@ -79,7 +79,8 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn().mockResolvedValue(gitSyncListResponse),
     loading: false
   })),
-  useGetSourceCodeManagers: jest.fn(() => ({ data: sourceCodeManagers, refetch: jest.fn() }))
+  useGetSourceCodeManagers: jest.fn(() => ({ data: sourceCodeManagers, refetch: jest.fn() })),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 jest.mock('@pipeline/components/RunPipelineModal/useRunPipelineModal', () => ({

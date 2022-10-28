@@ -5,7 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { featureFlagsCall } from '../../../support/85-cv/common'
+import {
+  awsRegionsCall,
+  awsRegionsResponse,
+  awsWorkspacesCall,
+  awsConnectorCall,
+  featureFlagsCall,
+  workspaceMock
+} from '../../../support/85-cv/common'
 import {
   validations,
   countOfServiceAPI,
@@ -25,7 +32,8 @@ import {
   metricPackResponse,
   monitoredService,
   labelValuesAPI,
-  monitoredServiceForBuildQuery
+  monitoredServiceForBuildQuery,
+  awsPrometheusMonitoredService
 } from '../../../support/85-cv/monitoredService/health-sources/Prometheus/constant'
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
@@ -479,5 +487,167 @@ describe('Prometheus metric thresholds', () => {
     cy.contains('button', 'Confirm').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
+  })
+})
+
+describe('AWS Prometheus', () => {
+  beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+
+    cy.on('uncaught:exception', () => {
+      return false
+    })
+    cy.login('test', 'test')
+    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
+    cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
+  })
+
+  it('should render AWS Prometheus functionality correctly', () => {
+    cy.intercept('GET', awsRegionsCall, awsRegionsResponse).as('awsRegionsCall')
+    cy.intercept('GET', awsWorkspacesCall, workspaceMock).as('awsWorkspacesCall')
+    cy.intercept('GET', awsConnectorCall).as('awsConnectorCall')
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.contains('span', 'Add New Health Source').click()
+
+    cy.contains('span', 'Next').click()
+
+    cy.contains('span', 'Source selection is required').should('be.visible')
+    cy.get(`span[data-icon=service-prometheus]`).click()
+    cy.contains('span', 'Name is required.').should('be.visible')
+    cy.get('input[name="healthSourceName"]').type('awsPrometheusTest')
+    cy.contains('span', 'Source selection is required').should('not.exist')
+    cy.contains('span', 'Name is required.').should('not.exist')
+    cy.contains('span', 'Connection Type is required').should('exist')
+
+    cy.findByPlaceholderText('- Select an AWS Region -').should('not.exist')
+    cy.findByPlaceholderText('- Select a Workspace Id -').should('not.exist')
+
+    cy.get('button[data-testid="cr-field-connectorRef"]').should('be.disabled')
+
+    cy.contains('p', 'Amazon Web services').click()
+
+    cy.wait('@awsRegionsCall')
+    cy.wait('@awsWorkspacesCall')
+
+    cy.get('button[data-testid="cr-field-connectorRef"]').should('not.be.disabled')
+
+    cy.contains('span', 'Connector Selection is required.').should('be.visible')
+    cy.get('button[data-testid="cr-field-connectorRef"]').click()
+
+    cy.wait('@awsConnectorCall')
+
+    cy.contains('p', 'testAWS').click()
+    cy.contains('span', 'Apply Selected').click()
+    cy.contains('span', 'Connector Selection is required.').should('not.exist')
+
+    cy.contains('span', 'AWS Region is required').should('exist')
+    cy.contains('span', 'Workspace Id is required').should('exist')
+
+    cy.findByPlaceholderText('- Select an AWS Region -').click()
+    cy.contains('p', 'region 1').click()
+
+    cy.findByPlaceholderText('- Select a Workspace Id -').click()
+    cy.contains('p', 'Workspace 1').click()
+
+    cy.contains('span', 'AWS Region is required').should('not.exist')
+    cy.contains('span', 'Workspace Id is required').should('not.exist')
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+
+    cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
+    cy.get('input[name="metricName"]').clear()
+
+    cy.contains('span', 'Metric Name is required.').should('be.visible')
+    cy.fillField('metricName', 'Prometheus Metric')
+    cy.contains('span', 'Metric Name is required.').should('not.exist')
+
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.addingGroupName('Group 1')
+    cy.get('input[name="groupName"]').should('contain.value', 'Group 1')
+    cy.contains('span', validations.groupName).should('not.exist')
+
+    cy.contains('div', 'Build your Query').should('be.visible')
+    cy.get('button span[data-icon="Edit"]').click()
+    cy.contains('p', 'Query Builder will not be available').should('be.visible')
+    cy.findByRole('button', { name: /Proceed to Edit/i }).click()
+
+    cy.contains('p', 'Query Builder will not be available since this mapping contains a manually edited query.').should(
+      'be.visible'
+    )
+    cy.contains('div', 'Build your Query').should('not.exist')
+
+    cy.get('textarea[name="query"]').focus().blur()
+    cy.contains('span', validations.query).should('be.visible')
+    cy.findByRole('button', { name: /Fetch records/i }).should('be.disabled')
+    cy.get('textarea[name="query"]').type(`classes	{}`)
+    cy.contains('span', validations.query).should('not.exist')
+
+    cy.contains('div', 'Assign').click()
+    cy.get('input[name="sli"]').click({ force: true })
+
+    cy.intercept('POST', '/cv/api/monitored-service?*').as('monitoredServiceCall')
+
+    cy.findByRole('button', { name: /Submit/i }).click()
+
+    cy.findByRole('button', { name: /Save/i }).click()
+
+    cy.wait('@monitoredServiceCall').then(intercept => {
+      const { sources } = intercept.request.body
+
+      // Response assertion
+      expect(sources?.healthSources?.[0]?.type).equals('AwsPrometheus')
+      expect(sources?.healthSources?.[0]?.name).equals('awsPrometheusTest')
+      expect(sources?.healthSources?.[0]?.identifier).equals('awsPrometheusTest')
+      expect(sources?.healthSources?.[0]?.spec?.region).equals('region 1')
+      expect(sources?.healthSources?.[0]?.spec?.workspaceId).equals('sjksm43455n-34x53c45vdssd-fgdfd232sdfad')
+    })
+  })
+
+  it('should perform AWS Prometheus functionality in edit scenario', () => {
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', awsPrometheusMonitoredService).as(
+      'monitoredServiceCall'
+    )
+
+    cy.intercept('GET', awsRegionsCall, awsRegionsResponse).as('awsRegionsCall')
+    cy.intercept('GET', awsWorkspacesCall, workspaceMock).as('awsWorkspacesCall')
+    cy.intercept('GET', awsConnectorCall).as('awsConnectorCall')
+
+    cy.get('span[data-icon="Options"]').click()
+    cy.contains('div', 'Edit service').click()
+
+    cy.wait('@monitoredServiceCall')
+
+    // clear any cached values
+    cy.get('body').then($body => {
+      if ($body.text().includes('Unsaved changes')) {
+        cy.contains('span', 'Discard').click()
+      }
+    })
+
+    cy.contains('div', 'AwsPrometheusTest').click({ force: true })
+
+    cy.findByPlaceholderText('- Select an AWS Region -').should('be.disabled')
+    cy.findByPlaceholderText('- Select a Workspace Id -').should('be.disabled')
+
+    cy.findByTestId(/thumbnail-select-change/).should('be.disabled')
   })
 })

@@ -125,3 +125,13 @@
   position: absolute;
   right: 0px;
 }
+
+.fieldExpressionHelperWrapper {
+  & :global(.bp3-form-group) {
+    width: 100%;
+    margin: 0;
+  }
+  & :global(.bp3-form-helper-text) {
+    position: absolute;
+  }
+}

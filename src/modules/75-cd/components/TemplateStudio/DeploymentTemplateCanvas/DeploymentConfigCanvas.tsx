@@ -8,6 +8,7 @@
 import React from 'react'
 import { set } from 'lodash-es'
 import produce from 'immer'
+import { useToaster } from '@harness/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useGlobalEventListener } from '@common/hooks'
@@ -30,10 +31,15 @@ function useSaveStepTemplateListener(): void {
     templateDetailsByRef,
     setTemplateDetailsByRef
   } = useDeploymentContext()
+  const { showWarning } = useToaster()
 
   const updateViewForSavedStepTemplate = (savedTemplate: TemplateSummaryResponse) => {
     const templateRef = getScopeBasedTemplateRef(savedTemplate as TemplateSummaryResponse)
-
+    const stepTemplateRefs = deploymentConfig.execution?.stepTemplateRefs || /* istanbul ignore next */ []
+    if (stepTemplateRefs.some(item => item === templateRef)) {
+      showWarning('Duplicate step cannot be added')
+      return
+    }
     const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRef, deploymentConfig })
     const updatedTemplateDetailsByRef = getUpdatedTemplateDetailsByRef({
       templateDetailsObj: savedTemplate as TemplateSummaryResponse,

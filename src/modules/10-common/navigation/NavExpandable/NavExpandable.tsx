@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { useLocation, matchPath } from 'react-router-dom'
-import { Layout, Text } from '@wings-software/uicore'
+import { IconName, Layout, Text } from '@wings-software/uicore'
 import css from './NavExpandable.module.scss'
 
 interface NavExpandableProps {
@@ -16,6 +16,7 @@ interface NavExpandableProps {
   route: string
   className?: string
   withoutBorder?: boolean
+  defaultExpanded?: boolean
 }
 
 const NavExpandable: React.FC<React.PropsWithChildren<NavExpandableProps>> = ({
@@ -23,18 +24,27 @@ const NavExpandable: React.FC<React.PropsWithChildren<NavExpandableProps>> = ({
   route,
   children,
   className,
-  withoutBorder = false
+  withoutBorder = false,
+  defaultExpanded = false
 }) => {
-  const [mouseEnter, setMouseEnter] = useState<boolean>(false)
+  const [isExpanded, setIsExpanded] = useState<boolean>(defaultExpanded)
   const { pathname } = useLocation()
   const isSelected = matchPath(pathname, route)
   const timerRef = React.useRef<number | null>(null)
 
   const handleMouseEvent = (val: boolean): void => {
+    if (defaultExpanded) {
+      return
+    }
     if (timerRef.current) window.clearTimeout(timerRef.current)
     timerRef.current = window.setTimeout(() => {
-      setMouseEnter(val)
+      setIsExpanded(val)
     }, 300)
+  }
+
+  let rightIcon: IconName | undefined
+  if (!defaultExpanded) {
+    rightIcon = isSelected || isExpanded ? 'chevron-up' : 'chevron-down'
   }
 
   return (
@@ -46,14 +56,14 @@ const NavExpandable: React.FC<React.PropsWithChildren<NavExpandableProps>> = ({
         onMouseLeave={() => handleMouseEvent(false)}
       >
         <Text
-          rightIcon={isSelected || mouseEnter ? 'chevron-up' : 'chevron-down'}
+          rightIcon={rightIcon}
           className={css.text}
           font="xsmall"
           flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
         >
           {title}
         </Text>
-        {isSelected || mouseEnter ? children : null}
+        {isSelected || isExpanded ? children : null}
       </Layout.Vertical>
     </div>
   )

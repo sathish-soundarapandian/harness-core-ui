@@ -8,11 +8,11 @@
 import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import useTabVisible from './useTabVisible'
 
-const DEFAULT_POLLING_INTERVAL_IN_MS = 5_000
-const INACTIVE_TAB_POLLING_INTERVAL_IN_MS = 10_000
+const DEFAULT_POLLING_INTERVAL_IN_MS = 30_000
+const INACTIVE_TAB_POLLING_INTERVAL_IN_MS = 60_000
 
 interface UsePollingOptions {
-  // In milliseconds, default is 5s
+  // In milliseconds, default is 30s
   pollingInterval?: number
   // Start polling based on a condition Ex: poll only on first page
   startPolling?: boolean

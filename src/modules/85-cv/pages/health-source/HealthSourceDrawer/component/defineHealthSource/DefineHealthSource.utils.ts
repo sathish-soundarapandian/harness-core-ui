@@ -6,7 +6,7 @@
  */
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
-import type { HealthSource } from 'services/cv'
+import type { AwsPrometheusWorkspaceDTO, HealthSource, ResponseListString } from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
@@ -21,11 +21,18 @@ import {
   ConnectorRefFieldName,
   SplunkProduct,
   DynatraceProductNames,
-  ElkProduct
+  ElkProduct,
+  AWSDataSourceType,
+  DataSourceTypeFieldNames
 } from './DefineHealthSource.constant'
-import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
+import type {
+  ConnectorDisableFunctionProps,
+  DataSourceTypeValidateFunctionProps,
+  DefineHealthSourceFormInterface,
+  FormValidationFunctionProps
+} from './DefineHealthSource.types'
 
-export const validate = (getString: UseStringsReturn['getString']) => {
+export const validate = (getString: UseStringsReturn['getString']): Yup.ObjectSchema => {
   return Yup.object().shape({
     sourceType: Yup.string().trim().required(getString('cv.onboarding.selectProductScreen.validationText.source')),
     healthSourceName: Yup.string().trim().required(getString('cv.onboarding.selectProductScreen.validationText.name')),
@@ -33,17 +40,86 @@ export const validate = (getString: UseStringsReturn['getString']) => {
       .trim()
       .required()
       .notOneOf(['Custom Connector'], getString('cv.onboarding.selectProductScreen.validationText.product')),
+    region: Yup.string().when(DataSourceTypeFieldNames.DataSourceType, {
+      is: AWSDataSourceType,
+      then: Yup.string().required(getString('cd.cloudFormation.errors.region'))
+    }),
+    workspaceId: Yup.string().when(DataSourceTypeFieldNames.DataSourceType, {
+      is: AWSDataSourceType,
+      then: Yup.string().required(getString('cv.healthSource.awsWorkspaceIdValidation'))
+    }),
     [ConnectorRefFieldName]: Yup.string()
       .nullable()
       .required(getString('cv.onboarding.selectProductScreen.validationText.connectorRef'))
   })
 }
 
-export const validateDuplicateIdentifier = (values: DefineHealthSourceFormInterface): any => {
+export const validateDuplicateIdentifier = (
+  values: DefineHealthSourceFormInterface,
+  getString: UseStringsReturn['getString']
+): Record<string, string> => {
   const { healthSourceIdentifier, healthSourceList } = values
   if (healthSourceList?.some(item => item.identifier === healthSourceIdentifier)) {
-    return { healthSourceName: 'identifier already exist' }
+    return { healthSourceName: getString('cv.changeSource.duplicateIdentifier') }
   }
+
+  return {}
+}
+
+const isDataSourceTypeNotValid = ({
+  isDataSourceTypeSelectorEnabled,
+  sourceType,
+  dataSourceType
+}: DataSourceTypeValidateFunctionProps): boolean => {
+  return Boolean(isDataSourceTypeSelectorEnabled && sourceType === HealthSourceTypes.Prometheus && !dataSourceType)
+}
+
+export const formValidation = ({
+  values,
+  isEdit,
+  isDataSourceTypeSelectorEnabled,
+  getString
+}: FormValidationFunctionProps): Record<string, string> => {
+  let errors = {}
+
+  const { dataSourceType, sourceType } = values || {}
+
+  if (!isEdit) {
+    errors = validateDuplicateIdentifier(values, getString)
+  }
+
+  if (
+    isDataSourceTypeNotValid({
+      dataSourceType,
+      sourceType,
+      isDataSourceTypeSelectorEnabled
+    })
+  ) {
+    errors = {
+      ...errors,
+      dataSourceType: getString('cv.healthSource.dataSourceTypeValidation')
+    }
+  }
+
+  return errors
+}
+
+export const getIsConnectorDisabled = ({
+  isEdit,
+  connectorRef,
+  sourceType,
+  isDataSourceTypeSelectorEnabled,
+  dataSourceType
+}: ConnectorDisableFunctionProps): boolean => {
+  if (isEdit && connectorRef) {
+    return true
+  } else if (!isEdit && !sourceType) {
+    return true
+  } else if (isDataSourceTypeNotValid({ isDataSourceTypeSelectorEnabled, sourceType, dataSourceType })) {
+    return true
+  }
+
+  return false
 }
 
 export const getConnectorTypeName = (name: HealthSourceTypes): string => {
@@ -63,12 +139,12 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
   return connectorTypeName
 }
 
-export const getConnectorPlaceholderText = (sourceType?: string): string => {
+export const getConnectorPlaceholderText = (sourceType?: string, dataSourceType?: string): string => {
   if (!sourceType) {
     return ''
   }
 
-  if (sourceType === Connectors.AWS) {
+  if (sourceType === Connectors.AWS || dataSourceType === AWSDataSourceType) {
     return Connectors.AWS.toUpperCase()
   } else {
     return sourceType
@@ -118,6 +194,7 @@ export const getFeatureOption = (
         }
       ]
     case Connectors.PROMETHEUS:
+    case HealthSourceTypes.AwsPrometheus:
       return [
         {
           label: PrometheusProductNames.APM,
@@ -204,25 +281,61 @@ export function getProductBasedOnType(
     case 'CustomHealthMetric':
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[0]
     case Connectors.PROMETHEUS:
+    case HealthSourceTypes.AwsPrometheus:
       return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
     default:
       return { ...currProduct } as SelectOption
   }
 }
 
-export const getInitialValues = (sourceData: any, getString: UseStringsReturn['getString']): any => {
+const getHealthSourceType = (type?: string, sourceType?: string): string | undefined => {
+  if (type === HealthSourceTypes.AwsPrometheus) {
+    return HealthSourceTypes.Prometheus
+  }
+
+  return sourceType
+}
+
+const getDataSourceType = (type?: string, isDataSourceTypeSelectorEnabled?: boolean): string | null => {
+  if (type === HealthSourceTypes.AwsPrometheus) {
+    return AWSDataSourceType
+  } else if (isDataSourceTypeSelectorEnabled) {
+    return HealthSourceTypes.Prometheus
+  }
+
+  return null
+}
+
+const PrometheusTypes = [Connectors.PROMETHEUS, HealthSourceTypes.AwsPrometheus]
+
+export const getInitialValues = (
+  sourceData: any,
+  getString: UseStringsReturn['getString'],
+  isDataSourceTypeSelectorEnabled?: boolean
+): any => {
   const currentHealthSource = sourceData?.healthSourceList?.find(
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
+
+  const { region, workspaceId } = currentHealthSource?.spec || {}
+
+  const { sourceType } = sourceData || {}
+
   // TODO: remove check for prometheus when BE changes are done
-  const selectedFeature = currentHealthSource?.type === Connectors.PROMETHEUS ? '' : currentHealthSource?.spec?.feature
+  const selectedFeature = PrometheusTypes.includes(currentHealthSource?.type) ? '' : currentHealthSource?.spec?.feature
   const initialValues = {
     [ConnectorRefFieldName]: '',
     ...sourceData,
+    type: getHealthSourceType(currentHealthSource?.type),
+    sourceType: getHealthSourceType(currentHealthSource?.type, sourceType),
+    dataSourceType: getDataSourceType(currentHealthSource?.type, isDataSourceTypeSelectorEnabled),
+    region,
+    workspaceId,
     product: selectedFeature
       ? { label: selectedFeature, value: selectedFeature }
       : getProductBasedOnType(getString, currentHealthSource?.type, sourceData?.product)
   }
+
   return initialValues
 }
 
@@ -233,4 +346,51 @@ export const getSelectedFeature = (sourceData: any): any => {
   const selectedFeature = currentHealthSource?.spec?.feature
 
   return selectedFeature ? { label: selectedFeature, value: selectedFeature } : { ...sourceData?.product }
+}
+
+export function getRegionsDropdownOptions(regions: ResponseListString['data']): SelectOption[] {
+  const regionOptions: SelectOption[] = []
+
+  if (regions) {
+    regions.forEach(region => {
+      if (region) {
+        regionOptions.push({
+          value: region,
+          label: region
+        })
+      }
+    })
+  }
+
+  return regionOptions
+}
+
+export function getWorkspaceDropdownOptions(workspaces?: AwsPrometheusWorkspaceDTO[]): SelectOption[] {
+  const workspaceOptions: SelectOption[] = []
+
+  if (workspaces) {
+    workspaces.forEach(workspace => {
+      const { name, workspaceId } = workspace || {}
+      if (name && workspaceId) {
+        workspaceOptions.push({
+          value: workspaceId,
+          label: name
+        })
+      }
+    })
+  }
+
+  return workspaceOptions
+}
+
+export function canShowDataSelector(sourceType?: string, isDataSourceTypeSelectorEnabled?: boolean): boolean {
+  return Boolean(sourceType === HealthSourceTypes.Prometheus && isDataSourceTypeSelectorEnabled)
+}
+
+export function canShowDataInfoSelector(
+  sourceType?: string,
+  dataSourceType?: string,
+  isDataSourceTypeSelectorEnabled?: boolean
+): boolean {
+  return canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled) && dataSourceType === AWSDataSourceType
 }

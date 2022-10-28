@@ -20,7 +20,6 @@ import {
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
@@ -174,17 +173,13 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
           <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
-          {isReadonlyServiceMode ? (
-            <VariableListReadOnlyView />
-          ) : (
-            <WorkflowVariables
-              tabName={DeployTabs.SERVICE}
-              formName={'addEditServiceCustomVariableForm'}
-              factory={factory as any}
-              isPropagating={isPropagating}
-              readonly={!!readonly}
-            />
-          )}
+          <WorkflowVariables
+            tabName={DeployTabs.SERVICE}
+            formName={'addEditServiceCustomVariableForm'}
+            factory={factory as any}
+            isPropagating={isPropagating}
+            readonly={!!readonly}
+          />
         </Card>
       </div>
     </div>

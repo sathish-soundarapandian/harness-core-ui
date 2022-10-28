@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DTListCardContextMenu /> tests should match snapshot 1`] = `
+<div>
+  <span
+    class="bp3-popover-wrapper main"
+  >
+    <span
+      class="bp3-popover-target"
+    >
+      <button
+        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main actionButton Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+        type="button"
+      >
+        <span
+          class="bp3-icon bp3-icon-more StyledProps--main"
+          icon="more"
+        >
+          <svg
+            data-icon="more"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              more
+            </desc>
+            <path
+              d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+    </span>
+  </span>
+</div>
+`;

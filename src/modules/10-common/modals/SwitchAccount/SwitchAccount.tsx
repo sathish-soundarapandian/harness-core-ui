@@ -140,6 +140,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
           })
         } else if (response.resource) {
           SecureStorage.set('acctId', account.uuid)
+          localStorage.setItem('defaultExperience', account.defaultExperience || '')
           // this needs to be a server-redirect to support cluster isolation
           window.location.href = window.location.pathname
         } else {

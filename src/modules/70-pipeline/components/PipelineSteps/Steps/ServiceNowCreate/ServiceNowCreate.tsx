@@ -37,7 +37,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
   protected type = StepType.ServiceNowCreate
   protected stepName = 'ServiceNow Create'
   protected stepIcon: IconName = 'servicenow-create'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowApproval'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowCreate'
   // initialValues on mount
   protected defaultValues: ServiceNowCreateData = {
     identifier: '',

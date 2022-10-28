@@ -5,16 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
+import { useFormikContext } from 'formik'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import * as featureFlags from '@common/hooks/useFeatureFlag'
+import * as ConnectorComponent from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import DefineHealthSource from '../DefineHealthSource'
+import { workspaceMock } from './DefineHealthSource.mock'
 
 const createModeProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
@@ -38,6 +41,15 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
       onPrevious: onPrevious
     })
   }
+}))
+
+jest.mock('services/cv', () => ({
+  useGetAllAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: { data: ['region 1', 'region 2'] } } as any
+  }),
+  useGetPrometheusWorkspaces: jest.fn().mockImplementation(() => {
+    return { data: workspaceMock } as any
+  })
 }))
 
 jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
@@ -192,5 +204,147 @@ describe('DefineHealthSource', () => {
     await waitFor(() =>
       expect(document.querySelector('.bp3-dialog div[data-tab-id="project"]')).not.toBeInTheDocument()
     )
+  })
+
+  test('should render data source type thumbnail select, if feature flag is turned on', async () => {
+    const mockAddListener = jest.spyOn(ConnectorComponent, 'FormConnectorReferenceField' as never)
+
+    mockAddListener.mockImplementation(() => {
+      const formik = useFormikContext()
+
+      useEffect(() => {
+        formik.setFieldValue('connectorRef', 'abc')
+      }, [formik.values])
+
+      return (<h1 data-testid="formConnectorReferenceField">connector</h1>) as never
+    })
+
+    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
+      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS) {
+        return true
+      }
+      return false
+    })
+
+    const onSubmitMock = jest.fn()
+
+    const accountLevelProps: TestWrapperProps = {
+      path: routes.toTemplateStudio({ ...accountPathProps, ...orgPathProps }),
+      pathParams: { accountId: '1234_accountId', orgIdentifier: '1234_org' }
+    }
+
+    const { container } = render(
+      <TestWrapper {...accountLevelProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource onSubmit={onSubmitMock} />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+
+    expect(screen.queryByTestId('dataSourceTypeSelector')).not.toBeInTheDocument()
+
+    await act(() => {
+      userEvent.click(container.querySelector('span[data-icon="service-prometheus"]')!)
+    })
+
+    expect(screen.getByTestId('dataSourceTypeSelector')).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(screen.getByText(/next/))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.healthSource.dataSourceTypeValidation/)).toBeInTheDocument()
+      expect(screen.getByPlaceholderText(/- cv.healthSource.featurePlaceholder -/)).toBeDisabled()
+    })
+
+    await act(() => {
+      userEvent.click(screen.getByText(/cv.healthSource.awsDataSourceName/))
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByText(/cv.healthSource.dataSourceTypeValidation/)).not.toBeInTheDocument()
+      expect(screen.getByText(/cv.healthSource.awsRegionLabel/)).toBeInTheDocument()
+      expect(screen.getByText(/cv.healthSource.awsWorkspaceLabel/)).toBeInTheDocument()
+    })
+
+    act(() => {
+      userEvent.type(screen.getByPlaceholderText(/cv.healthSource.namePlaceholder/), 'testName')
+    })
+
+    act(() => {
+      userEvent.click(screen.getByPlaceholderText(/- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -/))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/region 1/)).toBeInTheDocument()
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText(/region 1/))
+    })
+
+    act(() => {
+      userEvent.click(screen.getByPlaceholderText(/- cv.healthSource.awsWorkspacePlaceholderText -/))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/Workspace 1/)).toBeInTheDocument()
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText(/Workspace 1/))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText(/- cv.healthSource.awsWorkspacePlaceholderText -/)).toHaveValue('Workspace 1')
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText(/next/))
+    })
+
+    await waitFor(() => {
+      expect(onSubmitMock).toHaveBeenCalledWith({
+        connectorRef: 'abc',
+        dataSourceType: 'AWS_PROMETHEUS',
+        healthSourceIdentifier: 'testName',
+        healthSourceName: 'testName',
+        product: { label: 'apm', value: 'connectors.prometheusLabel' },
+        region: 'region 1',
+        sourceType: 'Prometheus',
+        workspaceId: 'sjksm43455n-34x53c45vdssd-fgdfd232sdfad'
+      })
+    })
+  })
+
+  test('should not render data source type thumbnail select, if feature flag is turned off', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
+      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS) {
+        return false
+      }
+      return true
+    })
+    const accountLevelProps: TestWrapperProps = {
+      path: routes.toTemplateStudio({ ...accountPathProps, ...orgPathProps }),
+      pathParams: { accountId: '1234_accountId', orgIdentifier: '1234_org' }
+    }
+    const { container } = render(
+      <TestWrapper {...accountLevelProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+
+    expect(screen.queryByTestId('dataSourceTypeSelector')).not.toBeInTheDocument()
+
+    await act(() => {
+      userEvent.click(container.querySelector('span[data-icon="service-prometheus"]')!)
+    })
+
+    expect(screen.queryByText(/dataSourceTypeSelector/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/cv.healthSource.awsRegionLabel/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/cv.healthSource.awsWorkspaceLabel/)).not.toBeInTheDocument()
   })
 })

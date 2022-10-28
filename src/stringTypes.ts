@@ -151,6 +151,7 @@ export interface StringsMap {
   'common.community': string
   'common.confictOccured': string
   'common.config': string
+  'common.configDetails': string
   'common.configureModuleList': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
@@ -303,6 +304,9 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
+  'common.freezeActiveBannerText': string
+  'common.freezeListActiveBannerExpandedText': string
+  'common.freezeListActiveBannerText': string
   'common.freezeWindows': string
   'common.frequency': string
   'common.friendlyMessage': string
@@ -708,6 +712,7 @@ export interface StringsMap {
   'common.resourceCenter.ticketmenu.viewTicket': string
   'common.resourceCenter.title': string
   'common.resourceGroupLabel': string
+  'common.resourceIdentifier': string
   'common.resourceLabel': string
   'common.resourceTypeLabel': string
   'common.role': string
@@ -1495,6 +1500,7 @@ export interface StringsMap {
   'secrets.noSecrets': string
   'secrets.policyEvaluations.failedToSave': string
   'secrets.policyEvaluations.warning': string
+  'secrets.secret.configureRegion': string
   'secrets.secret.configureSecret': string
   'secrets.secret.inlineSecret': string
   'secrets.secret.labelFile': string
@@ -1511,6 +1517,8 @@ export interface StringsMap {
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
   'secrets.secret.referenceSecret': string
+  'secrets.secret.referenceSecretVersionRqrd': string
+  'secrets.secret.region': string
   'secrets.secret.secretActivity': string
   'secrets.secret.secretCreated': string
   'secrets.secret.secretNotFound': string
@@ -3222,6 +3230,7 @@ export interface StringsMap {
   'pipeline.configFiles.selectFileType': string
   'pipeline.configFiles.source': string
   'pipeline.configFiles.title': string
+  'pipeline.configSource': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string
@@ -3908,6 +3917,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.customDeploy': string
   'pipeline.serviceDeploymentTypes.customDeployment': string
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
+  'pipeline.serviceDeploymentTypes.elastigroup': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
   'pipeline.serviceDeploymentTypes.pcf': string
   'pipeline.serviceDeploymentTypes.serverlessAwsLambda': string
@@ -4050,6 +4060,9 @@ export interface StringsMap {
   'pipeline.stepDescription.ServerlessLambdaDeploy': string
   'pipeline.stepDescription.ServerlessLambdaRollback': string
   'pipeline.stepDescription.ServiceNowApproval': string
+  'pipeline.stepDescription.ServiceNowCreate': string
+  'pipeline.stepDescription.ServiceNowImportSet': string
+  'pipeline.stepDescription.ServiceNowUpdate': string
   'pipeline.stepDescription.ShellScriptProvision': string
   'pipeline.stepDescription.TerraformApply': string
   'pipeline.stepDescription.TerraformDestroy': string
@@ -4217,6 +4230,7 @@ export interface StringsMap {
   'freezeWindows.freezeNotifications.rejectedDeployments': string
   'freezeWindows.freezeNotifications.rejectedInvocations': string
   'freezeWindows.freezeNotifications.windowEnabled': string
+  'freezeWindows.freezeStudio.activeFreeze': string
   'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeFollowingOrg': string
@@ -4250,6 +4264,7 @@ export interface StringsMap {
   'freezeWindows.globalFreeze.enableFreezeSuccess': string
   'freezeWindows.globalFreeze.enableFreezeTitle': string
   'freezeWindows.globalFreeze.enabled': string
+  'freezeWindows.globalFreeze.enabledWindow': string
   'freezeWindows.rbac.global': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
@@ -4589,6 +4604,7 @@ export interface StringsMap {
   'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
+  'cd.duplicateStep': string
   'cd.dynamicProvisioning': string
   'cd.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService': string
   'cd.ecsRollingDeployStep.forceNewDeployment': string
@@ -4946,6 +4962,12 @@ export interface StringsMap {
   'cd.steps.ecsRunTaskStep.runTaskDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskRequestDefinition': string
   'cd.steps.ecsRunTaskStep.skipSteadyStateCheck': string
+  'cd.steps.elastigroup.connectorSpot': string
+  'cd.steps.elastigroup.elastigroupConfig': string
+  'cd.steps.elastigroup.elastigroupConfigDetails': string
+  'cd.steps.elastigroup.elastigroupConfigReq': string
+  'cd.steps.elastigroup.elastigroupTitle': string
+  'cd.steps.elastigroup.infraDetailHeader': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.filterHostAttributes': string
@@ -6163,6 +6185,19 @@ export interface StringsMap {
   'cf.auditLogs.user': string
   'cf.auditLogs.viewEventSummary': string
   'cf.boolean': string
+  'cf.cfTrialHomePage.dontCode.description': string
+  'cf.cfTrialHomePage.dontCode.inviteDeveloper': string
+  'cf.cfTrialHomePage.dontCode.title': string
+  'cf.cfTrialHomePage.featureFlagsDescription': string
+  'cf.cfTrialHomePage.forDevOps.automatedFeature': string
+  'cf.cfTrialHomePage.forDevOps.avoidRollbacks': string
+  'cf.cfTrialHomePage.forDevOps.scaleManagement': string
+  'cf.cfTrialHomePage.forDevOps.title': string
+  'cf.cfTrialHomePage.forDevelopers.createFlag': string
+  'cf.cfTrialHomePage.forDevelopers.realTime': string
+  'cf.cfTrialHomePage.forDevelopers.shipCode': string
+  'cf.cfTrialHomePage.forDevelopers.title': string
+  'cf.cfTrialHomePage.startFreePlanBtn': string
   'cf.cfTrialHomePage.startTrial.description': string
   'cf.cfTrialHomePage.startTrial.startBtn.description': string
   'cf.clause.operators.and': string
@@ -6991,6 +7026,11 @@ export interface StringsMap {
   'cv.harnessService': string
   'cv.healthScore': string
   'cv.healthSource.addHealthSource': string
+  'cv.healthSource.awsDataSourceName': string
+  'cv.healthSource.awsRegionLabel': string
+  'cv.healthSource.awsWorkspaceIdValidation': string
+  'cv.healthSource.awsWorkspaceLabel': string
+  'cv.healthSource.awsWorkspacePlaceholderText': string
   'cv.healthSource.backtoMonitoredService': string
   'cv.healthSource.connectHealthSource': string
   'cv.healthSource.connectors.AppDynamics.applicationLabel': string
@@ -7050,6 +7090,7 @@ export interface StringsMap {
   'cv.healthSource.connectors.gco.selectDashboardTab': string
   'cv.healthSource.connectors.selectConnector': string
   'cv.healthSource.customizeHealthSource': string
+  'cv.healthSource.dataSourceTypeValidation': string
   'cv.healthSource.defineHealthSource': string
   'cv.healthSource.defineYourSource': string
   'cv.healthSource.deleteHealthSource': string
@@ -7063,6 +7104,7 @@ export interface StringsMap {
   'cv.healthSource.newHealthSource': string
   'cv.healthSource.noData': string
   'cv.healthSource.noDataPresentHealthSource': string
+  'cv.healthSource.selectConnectionTypeInfo': string
   'cv.healthSource.selectHealthSource': string
   'cv.healthSource.seriveEnvironmentNote': string
   'cv.healthSource.serviceLabel': string

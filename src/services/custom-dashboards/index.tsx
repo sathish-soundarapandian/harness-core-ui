@@ -713,6 +713,7 @@ export interface CreateSignedUrlQueryParams {
   src: string
   accountId: string
   dashboardId: string
+  timezone?: string
 }
 
 export type CreateSignedUrlProps = Omit<

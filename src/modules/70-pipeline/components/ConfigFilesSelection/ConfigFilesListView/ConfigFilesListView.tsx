@@ -24,13 +24,10 @@ import { Dialog, Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 
 import cx from 'classnames'
-import get from 'lodash/get'
-import set from 'lodash-es/set'
-import { noop, defaultTo, isEmpty, isArray } from 'lodash-es'
+import { get, set, noop, isArray } from 'lodash-es'
 import produce from 'immer'
 import { useModalHook } from '@harness/use-modal'
-import type { ConfigFileWrapper, StageElementConfig, ServiceDefinition } from 'services/cd-ng'
-import { useCache } from '@common/hooks/useCache'
+import type { ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
 
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -72,9 +69,7 @@ function ConfigFilesListView({
   allowableTypes,
   selectedConfig,
   setSelectedConfig,
-  selectedServiceResponse,
-  isReadonlyServiceMode,
-  serviceCacheId
+  selectedServiceResponse
 }: ConfigFilesListViewProps): JSX.Element {
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
@@ -94,15 +89,10 @@ function ConfigFilesListView({
   const [configStore, setConfigStore] = useState<ConfigFileType>('' as ConfigFileType)
   const [configFileIndex, setEditIndex] = useState(0)
   const [isNewFile, setIsNewFile] = useState(true)
-  const { getCache } = useCache([serviceCacheId])
-  const serviceInfo = getCache<ServiceDefinition>(serviceCacheId)
 
   const { expressions } = useVariablesExpression()
 
   const listOfConfigFiles = React.useMemo(() => {
-    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.configFiles, [])
-    }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.configFiles', [])
     }

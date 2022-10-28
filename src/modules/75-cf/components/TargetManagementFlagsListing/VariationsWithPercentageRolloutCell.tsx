@@ -7,7 +7,7 @@
 
 import React, { FC, useEffect, useMemo } from 'react'
 import { useFormikContext } from 'formik'
-import get from 'lodash/get'
+import { get } from 'lodash-es'
 import { FormError, FormInput, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'

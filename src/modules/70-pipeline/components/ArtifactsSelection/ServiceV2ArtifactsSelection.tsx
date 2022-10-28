@@ -13,12 +13,10 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 
 import produce from 'immer'
-import get from 'lodash-es/get'
-import set from 'lodash-es/set'
 
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { defaultTo, isEmpty, merge, unset } from 'lodash-es'
+import { get, set, defaultTo, isEmpty, merge, unset } from 'lodash-es'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
@@ -26,7 +24,6 @@ import {
   PrimaryArtifact,
   ArtifactConfig,
   SidecarArtifact,
-  ServiceDefinition,
   ArtifactListConfig,
   ArtifactSource
 } from 'services/cd-ng'
@@ -43,7 +40,6 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useCache } from '@common/hooks/useCache'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
@@ -77,12 +73,10 @@ import css from './ArtifactsSelection.module.scss'
 
 export default function ServiceV2ArtifactsSelection({
   deploymentType,
-  isReadonlyServiceMode,
   readonly
 }: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
-      pipeline,
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
@@ -105,8 +99,6 @@ export default function ServiceV2ArtifactsSelection({
 
   const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-  const { getCache } = useCache([getServiceCacheId])
 
   useEffect(() => {
     if (
@@ -148,13 +140,9 @@ export default function ServiceV2ArtifactsSelection({
   })
 
   const artifacts = useMemo((): ArtifactListConfig => {
-    if (isReadonlyServiceMode) {
-      const serviceData = getCache(getServiceCacheId) as ServiceDefinition
-      return serviceData?.spec?.artifacts as ArtifactListConfig
-    }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReadonlyServiceMode, stage])
+  }, [stage])
 
   const artifactsList = useMemo(() => {
     if (!isEmpty(artifacts)) {

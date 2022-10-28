@@ -86,7 +86,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots 1`] =
             style="width: 20%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -458,7 +458,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots when 
             style="width: 15%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -848,7 +848,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots 1`
             style="width: 20%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -1153,7 +1153,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots an
             style="width: 20%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -1470,7 +1470,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots wh
             style="width: 15%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"

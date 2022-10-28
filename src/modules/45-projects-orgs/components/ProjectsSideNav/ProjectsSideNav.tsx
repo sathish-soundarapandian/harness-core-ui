@@ -71,7 +71,7 @@ export default function ProjectsSideNav(): React.ReactElement {
             <SidebarLink label={getString('executionsText')} to={routes.toDeployments(projectDetailsParams)} />
           )}
 
-          <ProjectSetupMenu />
+          <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
         </>
       )}
     </Layout.Vertical>

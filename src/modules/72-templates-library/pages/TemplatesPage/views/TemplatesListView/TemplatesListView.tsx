@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Container, Layout, TableV2, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -48,7 +49,7 @@ const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, c
   )
 }
 
-const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   const templateEntityType = defaultTo(data.templateEntityType, '')
   const templateLabel = templateFactory.getTemplateLabel(templateEntityType)
@@ -56,7 +57,7 @@ const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row })
 
   return (
     <Layout.Horizontal
-      className={css.templateColor}
+      className={cx(css.templateColor, 'templateLabelColor')}
       spacing="large"
       flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
       padding={{ right: 'medium' }}
@@ -77,7 +78,7 @@ const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row })
   )
 }
 
-const RenderColumnTemplate: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnTemplate: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
   return (
@@ -133,7 +134,7 @@ const RenderColumnTemplate: Renderer<CellProps<TemplateSummaryResponse>> = ({ ro
   )
 }
 
-const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   return (
     <Layout.Horizontal padding={{ right: 'medium' }}>
@@ -144,7 +145,7 @@ const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
   )
 }
 
-const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   return (
     <Layout.Horizontal padding={{ right: 'medium' }}>
@@ -153,7 +154,7 @@ const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
   )
 }
 
-const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const { gitDetails } = row.original
   const repoName = gitDetails?.repoName || '-'
 

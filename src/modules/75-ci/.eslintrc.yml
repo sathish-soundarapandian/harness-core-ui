@@ -2,23 +2,31 @@ rules:
   no-restricted-imports:
     - error
     - patterns:
-        - lodash.*
-        - microfrontends/*
-        - '!microfrontends/ChildAppMounter'
-        - modules/75-cd/*
-        - modules/75-ce/*
-        - modules/75-cf/*
-        - modules/75-chaos/*
-        - modules/85-cv/*
-        - modules/85-sto/*
-        - modules/90-gitops/*
-        - '@cd/*'
-        - '@ce/*'
-        - '@cf/*'
-        - '@chaos/*'
-        - '@cv/*'
-        - '@sto/*'
-        - '@gitops/*'
+        - group:
+            - lodash/*
+            - lodash.*
+            - lodash-es/*
+            - '!lodash/fp'
+          message: Import from 'lodash-es' instead
+        - group:
+            - microfrontends/*
+            - '!microfrontends/ChildAppMounter'
+        - group:
+            - modules/75-cd/*
+            - modules/75-ce/*
+            - modules/75-cf/*
+            - modules/75-chaos/*
+            - modules/85-cv/*
+            - modules/85-sto/*
+            - modules/90-gitops/*
+            - '@cd/*'
+            - '@ce/*'
+            - '@cf/*'
+            - '@chaos/*'
+            - '@cv/*'
+            - '@sto/*'
+            - '@gitops/*'
+          message: Import from higher layer modules is not allowed
       paths:
         - lodash
         - name: js-yaml

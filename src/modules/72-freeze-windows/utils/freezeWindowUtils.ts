@@ -11,7 +11,7 @@ import type { CurrentOrUpcomingWindow, FreezeDetailedResponse, FreezeSummaryResp
 export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Yearly'] as const
 export const DOES_NOT_REPEAT = 'Does not repeat'
 
-type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
+export type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
 
 export const scopeText: Record<Scope, string> = {
   account: 'Account',

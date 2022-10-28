@@ -281,7 +281,7 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
                   </svg>
                 </span>
                 <span>
-                  edit
+                  editPipeline
                 </span>
               </a>
               <div
@@ -898,7 +898,7 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
                   </svg>
                 </span>
                 <span>
-                  edit
+                  editPipeline
                 </span>
               </a>
               <div

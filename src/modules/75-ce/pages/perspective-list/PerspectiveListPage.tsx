@@ -310,7 +310,7 @@ const PerspectiveListPage: React.FC = () => {
   const [refetchPerspectives, setRefetchPerspectives] = useState(false)
   const searchRef = React.useRef<ExpandingSearchInputHandle>()
 
-  useDocumentTitle(getString('ce.perspectives.sideNavText'), true)
+  useDocumentTitle(getString('ce.perspectives.sideNavText'))
 
   const [result, executeQuery] = useFetchAllPerspectivesQuery({
     variables: {

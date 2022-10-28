@@ -19,7 +19,7 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { pick } from 'lodash-es'
+import { pick, get } from 'lodash-es'
 import {
   usePutSecret,
   usePutSecretFileV2,
@@ -74,7 +74,7 @@ interface CreateUpdateSecretProps {
   privateSecret?: boolean
 }
 
-const LocalFormFieldsSMList = ['Local', 'GcpKms', 'AwsKms', 'GcpSecretManager']
+const LocalFormFieldsSMList = ['Local', 'GcpKms', 'AwsKms']
 const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
@@ -212,6 +212,14 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
           projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
           spec: {
+            ...(get(data, 'regions') &&
+              get(data, 'configureRegions') && {
+                additionalMetadata: {
+                  values: {
+                    ...(get(data, 'regions') && { regions: get(data, 'regions') })
+                  }
+                }
+              }),
             ...pick(data, ['secretManagerIdentifier'])
           } as SecretFileSpecDTO
         } as SecretDTOV2
@@ -230,6 +238,14 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
         orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
         projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
         spec: {
+          ...(((get(data, 'regions') && get(data, 'configureRegions')) || get(data, 'version')) && {
+            additionalMetadata: {
+              values: {
+                ...(get(data, 'regions') && data.valueType === 'Inline' && { regions: get(data, 'regions') }),
+                ...(get(data, 'version') && data.valueType === 'Reference' && { version: get(data, 'version') })
+              }
+            }
+          }),
           value: data.templateInputs ? JSON.stringify(data.templateInputs) : data.value,
           ...pick(data, ['secretManagerIdentifier', 'valueType'])
         } as SecretTextSpecDTO
@@ -338,7 +354,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     setSelectedSecretManager(selectedSM)
     setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
   }, [defaultSecretManagerId, connectorDetails])
-
   return (
     <>
       <ModalErrorHandler bind={setModalErrorHandler} />
@@ -364,7 +379,14 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           ...(editing &&
             secret &&
             (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' &&
-            pick(secret?.spec, ['value']))
+            pick(secret?.spec, ['value'])),
+          ...(editing &&
+            secret &&
+            pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version', 'regions'])),
+          ...(editing &&
+            get(secret, 'spec.additionalMetadata.values.regions') && {
+              configureRegions: !!get(secret, 'spec.additionalMetadata.values.regions')
+            })
         }}
         formName="createUpdateSecretForm"
         enableReinitialize
@@ -381,7 +403,13 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               ? Yup.object().shape({
                   environmentVariables: VariableSchemaWithoutHook(getString)
                 })
-              : Yup.object()
+              : Yup.object(),
+          version: Yup.string()
+            .trim()
+            .when('valueType', {
+              is: 'Reference',
+              then: Yup.string().required(getString('secrets.secret.referenceSecretVersionRqrd'))
+            })
         })}
         validate={formData => {
           props.onChange?.({
@@ -459,9 +487,17 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               ) : null}
               {typeOfSelectedSecretManager === 'Vault' ||
               typeOfSelectedSecretManager === 'AzureKeyVault' ||
-              typeOfSelectedSecretManager === 'AwsSecretManager' ? (
-                <VaultFormFields formik={formikProps} type={type} editing={editing} readonly={readOnlySecretManager} />
+              typeOfSelectedSecretManager === 'AwsSecretManager' ||
+              typeOfSelectedSecretManager === 'GcpSecretManager' ? (
+                <VaultFormFields
+                  secretManagerType={typeOfSelectedSecretManager}
+                  formik={formikProps}
+                  type={type}
+                  editing={editing}
+                  readonly={readOnlySecretManager}
+                />
               ) : null}
+
               <Button
                 intent="primary"
                 type="submit"

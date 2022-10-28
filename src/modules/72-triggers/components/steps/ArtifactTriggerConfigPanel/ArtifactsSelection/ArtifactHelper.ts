@@ -172,7 +172,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr
-  ]
+  ],
+  Elastigroup: []
 }
 
 export const tagOptions: IOptionProps[] = [

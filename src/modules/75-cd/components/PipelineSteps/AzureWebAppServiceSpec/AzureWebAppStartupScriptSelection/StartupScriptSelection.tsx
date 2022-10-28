@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import { Layout, shouldShowError, useToaster } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import { useGetConnectorListV2, PageConnectorResponse } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
@@ -20,14 +20,12 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { useCache } from '@common/hooks/useCache'
 import StartupScriptListView from './StartupScriptListView'
-import type { AzureWebAppsServiceDefinition, StartupScriptSelectionProps } from './StartupScriptInterface.types'
+import type { StartupScriptSelectionProps } from './StartupScriptInterface.types'
 
 export default function StartupScriptSelection({
   isPropagating,
   deploymentType,
-  isReadonlyServiceMode,
   readonly,
   updateStage
 }: StartupScriptSelectionProps): JSX.Element | null {
@@ -44,9 +42,6 @@ export default function StartupScriptSelection({
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-  const { getCache } = useCache([getServiceCacheId])
-  const serviceInfo = getCache<AzureWebAppsServiceDefinition>(getServiceCacheId)
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -71,15 +66,12 @@ export default function StartupScriptSelection({
   const startupCommand = useMemo(() => {
     /* istanbul ignore else */
     /* istanbul ignore next */
-    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.startupCommand, {})
-    }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.startupCommand', {})
     }
 
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.startupCommand', {})
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
+  }, [isPropagating, stage])
 
   useDeepCompareEffect(() => {
     refetchConnectorList()

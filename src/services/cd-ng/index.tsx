@@ -692,6 +692,12 @@ export interface AddUsersResponse {
   }
 }
 
+export interface AdditionalMetadata {
+  values?: {
+    [key: string]: { [key: string]: any }
+  }
+}
+
 export interface AddressDto {
   city?: string
   country?: string
@@ -2907,6 +2913,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -3223,6 +3230,21 @@ export interface EditionActionDTO {
     | 'DISABLED_BY_TEAM'
     | 'DISABLED_BY_ENTERPRISE'
   reason?: string
+}
+
+export interface ElastigroupConfiguration {
+  metadata?: string
+  store: StoreConfigWrapper
+}
+
+export type ElastigroupInfrastructure = Infrastructure & {
+  configuration: ElastigroupConfiguration
+  connectorRef: string
+  metadata?: string
+}
+
+export type ElastigroupServiceSpec = ServiceSpec & {
+  startupScript?: StartupScriptConfiguration
 }
 
 export interface Element {
@@ -5272,6 +5294,19 @@ export interface FreezeErrorResponseDTO {
   name?: string
 }
 
+export interface FreezeExecutionInfo {
+  freezeType?: string
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  yaml?: string
+}
+
+export interface FreezeExecutionSummary {
+  freezeExecutionInfoList?: FreezeExecutionInfo[]
+}
+
 export interface FreezeFilterPropertiesDTO {
   endTime?: number
   freezeIdentifiers?: string[]
@@ -5279,6 +5314,12 @@ export interface FreezeFilterPropertiesDTO {
   searchTerm?: string
   sort?: string[]
   startTime?: number
+}
+
+export interface FreezeReference {
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  identifier?: string
+  type?: 'GLOBAL' | 'MANUAL'
 }
 
 export interface FreezeResponse {
@@ -5324,6 +5365,7 @@ export interface FreezeSummaryResponse {
   }
   type?: 'GLOBAL' | 'MANUAL'
   windows?: FreezeWindow[]
+  yaml?: string
 }
 
 export interface FreezeWindow {
@@ -6749,11 +6791,9 @@ export interface GitopsProviderResponse {
   }
 }
 
-export interface GlobalFreezeWithBannerDetailsResponseDTO {
-  activeOrUpcomingParentGlobalFreezes?: FreezeBannerDetails[]
-  globalFreezeResponse?: FreezeDetailedResponse
+export interface GlobalFreezeBannerDetailsResponseDTO {
+  activeOrUpcomingGlobalFreezes?: FreezeBannerDetails[]
 }
-
 export type GoogleArtifactRegistryConfig = ArtifactConfig & {
   connectorRef: string
   metadata?: string
@@ -7032,6 +7072,7 @@ export interface InfrastructureDef {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -7045,6 +7086,7 @@ export interface InfrastructureDefinitionConfig {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7067,6 +7109,7 @@ export interface InfrastructureDefinitionConfig {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export interface InfrastructureDetails {
@@ -7099,6 +7142,7 @@ export interface InfrastructureRequestDTO {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   yaml?: string
 }
 
@@ -7119,6 +7163,7 @@ export interface InfrastructureResponseDTO {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7139,6 +7184,7 @@ export interface InfrastructureResponseDTO {
     | 'SshWinRmAws'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   yaml?: string
 }
 
@@ -10209,9 +10255,9 @@ export interface ResponseGitopsProviderResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseGlobalFreezeWithBannerDetailsResponseDTO {
+export interface ResponseGlobalFreezeBannerDetailsResponseDTO {
   correlationId?: string
-  data?: GlobalFreezeWithBannerDetailsResponseDTO
+  data?: GlobalFreezeBannerDetailsResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -10709,6 +10755,7 @@ export interface ResponseListServiceDefinitionType {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12628,6 +12675,7 @@ export interface SecretDTOV2 {
 }
 
 export type SecretFileSpecDTO = SecretSpecDTO & {
+  additionalMetadata?: AdditionalMetadata
   secretManagerIdentifier: string
 }
 
@@ -12723,6 +12771,7 @@ export interface SecretSpecDTO {
 }
 
 export type SecretTextSpecDTO = SecretSpecDTO & {
+  additionalMetadata?: AdditionalMetadata
   secretManagerIdentifier: string
   value?: string
   valueType: 'Inline' | 'Reference' | 'CustomSecretManagerValues'
@@ -12842,6 +12891,7 @@ export interface ServiceDefinition {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export interface ServiceDeployment {
@@ -13191,7 +13241,7 @@ export interface ShellScriptSourceWrapper {
 }
 
 export interface ShouldDisableDeploymentFreezeResponseDTO {
-  freezeReferences?: string[]
+  freezeReferences?: FreezeReference[]
   shouldDisable?: boolean
 }
 
@@ -13384,6 +13434,11 @@ export interface StartTrialDTO {
 }
 
 export interface StartupCommandConfiguration {
+  metadata?: string
+  store: StoreConfigWrapper
+}
+
+export interface StartupScriptConfiguration {
   metadata?: string
   store: StoreConfigWrapper
 }
@@ -14465,9 +14520,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -33390,7 +33445,7 @@ export interface GetGlobalFreezeWithBannerDetailsQueryParams {
 
 export type GetGlobalFreezeWithBannerDetailsProps = Omit<
   GetProps<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33402,12 +33457,7 @@ export type GetGlobalFreezeWithBannerDetailsProps = Omit<
  * Get Global Freeze Yaml with Banner Details
  */
 export const GetGlobalFreezeWithBannerDetails = (props: GetGlobalFreezeWithBannerDetailsProps) => (
-  <Get<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
-    Failure | Error,
-    GetGlobalFreezeWithBannerDetailsQueryParams,
-    void
-  >
+  <Get<ResponseGlobalFreezeBannerDetailsResponseDTO, Failure | Error, GetGlobalFreezeWithBannerDetailsQueryParams, void>
     path={`/freeze/getGlobalFreezeWithBannerDetails`}
     base={getConfig('ng/api')}
     {...props}
@@ -33416,7 +33466,7 @@ export const GetGlobalFreezeWithBannerDetails = (props: GetGlobalFreezeWithBanne
 
 export type UseGetGlobalFreezeWithBannerDetailsProps = Omit<
   UseGetProps<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33429,7 +33479,7 @@ export type UseGetGlobalFreezeWithBannerDetailsProps = Omit<
  */
 export const useGetGlobalFreezeWithBannerDetails = (props: UseGetGlobalFreezeWithBannerDetailsProps) =>
   useGet<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33440,7 +33490,7 @@ export const useGetGlobalFreezeWithBannerDetails = (props: UseGetGlobalFreezeWit
  */
 export const getGlobalFreezeWithBannerDetailsPromise = (
   props: GetUsingFetchProps<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -33448,7 +33498,7 @@ export const getGlobalFreezeWithBannerDetailsPromise = (
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<
-    ResponseGlobalFreezeWithBannerDetailsResponseDTO,
+    ResponseGlobalFreezeBannerDetailsResponseDTO,
     Failure | Error,
     GetGlobalFreezeWithBannerDetailsQueryParams,
     void
@@ -36718,6 +36768,44 @@ export const getGitOpsProviderPromise = (
     GetGitOpsProviderPathParams
   >(getConfig('ng/api'), `/gitopsproviders/${identifier}`, props, signal)
 
+export type GetGcpRegionsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * Get GCP Regions
+ */
+export const GetGcpRegions = (props: GetGcpRegionsProps) => (
+  <Get<ResponseListString, Failure | Error, void, void>
+    path={`/google-secret-manager-connector/gcp-regions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetGcpRegionsProps = Omit<UseGetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * Get GCP Regions
+ */
+export const useGetGcpRegions = (props: UseGetGcpRegionsProps) =>
+  useGet<ResponseListString, Failure | Error, void, void>(`/google-secret-manager-connector/gcp-regions`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get GCP Regions
+ */
+export const getGcpRegionsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/google-secret-manager-connector/gcp-regions`,
+    props,
+    signal
+  )
+
 export type GetNGManagerHealthStatusProps = Omit<GetProps<ResponseString, unknown, void, void>, 'path'>
 
 /**
@@ -37009,6 +37097,7 @@ export interface GetInfrastructureListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -41248,6 +41337,7 @@ export interface GetStepsQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -41393,6 +41483,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -41452,6 +41543,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -44980,6 +45072,7 @@ export interface GetServiceListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -45542,6 +45635,7 @@ export interface GetServiceAccessListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+    | 'Elastigroup'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -51751,7 +51845,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -51761,7 +51855,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -51774,7 +51868,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -51788,7 +51882,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -51800,7 +51894,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -51809,7 +51903,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -52202,7 +52296,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52216,7 +52310,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -52231,7 +52325,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52245,7 +52339,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -52257,7 +52351,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52266,7 +52360,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -52401,7 +52495,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -52416,7 +52510,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -52431,7 +52525,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -52446,7 +52540,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -52465,7 +52559,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -52474,7 +52568,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -52493,7 +52587,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -52508,7 +52602,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -52523,7 +52617,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -52538,7 +52632,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -52557,7 +52651,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -52566,7 +52660,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 

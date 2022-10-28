@@ -94,8 +94,8 @@ export const FreezeTimeCell: CellType = ({ row }) => {
   const freezeWindow = data.windows?.[0] || ({} as FreezeWindow)
   const { startTime, duration, endTime, timeZone, recurrence } = freezeWindow
   return (
-    <Layout.Vertical spacing="small">
-      <Layout.Horizontal>
+    <Layout.Vertical>
+      <Layout.Horizontal margin={{ bottom: 'small' }}>
         <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
           {moment(startTime).format('lll')}
         </Text>
@@ -105,17 +105,20 @@ export const FreezeTimeCell: CellType = ({ row }) => {
         <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
           &nbsp;{duration || moment(endTime).format('lll')}
         </Text>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-          &nbsp;{timeZone}
-        </Text>
       </Layout.Horizontal>
 
-      {recurrence && (
-        <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
-          {recurrence?.type}
-          {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+      <Layout.Horizontal>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+          {timeZone}
         </Text>
-      )}
+
+        {recurrence && (
+          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+            &nbsp;| {recurrence?.type}
+            {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+          </Text>
+        )}
+      </Layout.Horizontal>
     </Layout.Vertical>
   )
 }

@@ -6,15 +6,12 @@
  */
 
 import React from 'react'
-import get from 'lodash-es/get'
-import isEmpty from 'lodash-es/isEmpty'
-import set from 'lodash-es/set'
+import { get, isEmpty, set, isString } from 'lodash-es'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
-import { isString } from 'lodash-es'
 import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceSpec,

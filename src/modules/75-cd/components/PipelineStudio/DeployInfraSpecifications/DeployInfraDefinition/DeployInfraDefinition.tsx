@@ -34,7 +34,8 @@ import {
   EcsInfrastructure,
   GetExecutionStrategyYamlQueryParams,
   SshWinRmAwsInfrastructure,
-  CustomDeploymentInfrastructure
+  CustomDeploymentInfrastructure,
+  ElastigroupInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -66,7 +67,8 @@ import {
   isAzureWebAppDeploymentType,
   ServerlessInfraTypes,
   StageType,
-  getServiceDefinitionType
+  getServiceDefinitionType,
+  isElastigroupDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
@@ -76,6 +78,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
 import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
+import type { ElastigroupInfrastructureSpec } from '@cd/components/PipelineSteps/ElastigroupInfraSpec/ElastigroupInfraSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -85,6 +88,7 @@ import {
   InfrastructureGroup,
   isAzureWebAppInfrastructureType,
   isCustomDeploymentInfrastructureType,
+  isElastigroupInfrastructureType,
   isServerlessInfrastructureType
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
@@ -106,7 +110,8 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
   ECS: InfraDeploymentType.ECS,
-  CustomDeployment: InfraDeploymentType.CustomDeployment
+  CustomDeployment: InfraDeploymentType.CustomDeployment,
+  Elastigroup: InfraDeploymentType.Elastigroup
 }
 
 type InfraTypes =
@@ -119,6 +124,7 @@ type InfraTypes =
   | AzureWebAppInfrastructure
   | EcsInfrastructure
   | CustomDeploymentInfrastructure
+  | ElastigroupInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -664,6 +670,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.Elastigroup: {
+        return (
+          <StepWidget<ElastigroupInfrastructureSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as ElastigroupInfrastructureSpec}
+            type={StepType.Elastigroup}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  configuration: value.configuration,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.Elastigroup
+              )
+            }
+          />
+        )
+      }
       default: {
         return <div>{getString('cd.steps.common.undefinedType')}</div>
       }
@@ -728,6 +757,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       {!(
         isAzureWebAppDeploymentType(selectedDeploymentType) ||
         isAzureWebAppInfrastructureType(selectedInfrastructureType) ||
+        isElastigroupDeploymentType(selectedDeploymentType) ||
+        isElastigroupInfrastructureType(selectedInfrastructureType) ||
         isCustomDeploymentInfrastructureType(selectedInfrastructureType)
       ) && (
         <Card className={stageCss.sectionCard}>

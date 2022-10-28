@@ -300,6 +300,10 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 }
               }
               gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: template?.connectorRef
+              }}
             />
           </div>
         )}

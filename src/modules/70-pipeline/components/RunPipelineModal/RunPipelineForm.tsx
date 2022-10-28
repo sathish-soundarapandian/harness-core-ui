@@ -80,6 +80,7 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
+import { getFreezeRouteLink } from '@pipeline/utils/freezeWindowUtils'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -897,17 +898,18 @@ function RunPipelineFormBasic({
                             shouldDisableDeploymentData?.data?.shouldDisable
                           }
                           tooltip={
-                            shouldDisableDeploymentData?.data ? (
+                            shouldDisableDeploymentData?.data?.shouldDisable &&
+                            shouldDisableDeploymentData?.data?.freezeReferences?.[0] ? (
                               <Layout.Horizontal spacing="small" padding="small">
                                 <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
                                   {getString('pipeline.runDisabledOnFreeze')}
                                 </Text>
                                 <Link
-                                  to={routes.toFreezeWindows({
+                                  to={getFreezeRouteLink(shouldDisableDeploymentData?.data?.freezeReferences?.[0], {
                                     projectIdentifier,
                                     orgIdentifier,
                                     accountId,
-                                    module
+                                    module: defaultTo(module, 'cd')
                                   })}
                                 >
                                   <Text font={{ variation: FontVariation.SMALL }} color={Color.PRIMARY_7}>

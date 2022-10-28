@@ -74,6 +74,10 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           }}
           type={'Jira'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          templateProps={{
+            isTemplatizedView: true,
+            templateValue: template?.spec?.connectorRef
+          }}
         />
       ) : null}
 

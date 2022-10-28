@@ -63,12 +63,12 @@ export default function L1Nav(): React.ReactElement {
     root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
 
     NEW_LEFT_NAVBAR_SETTINGS &&
-      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'start' })
+      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
   })
 
   useEffect(() => {
     if (!modulesPreferenceData?.orderedModules?.length && NEW_LEFT_NAVBAR_SETTINGS) {
-      const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].licenseType)
+      const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].hasLicense)
       setModuleConfigPreference({
         selectedModules: modulesWithLicense,
         orderedModules: DEFAULT_MODULES_ORDER
