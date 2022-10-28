@@ -27,7 +27,9 @@ export const getSLOV2InitialFormData = (
       [SLOV2FormFields.USER_JOURNEY_REF]: serviceLevelObjective.userJourneyRefs,
       //
       [SLOV2FormFields.PERIOD_TYPE]: defaultTo(serviceLevelObjective.sloTarget.type, 'Rolling'),
+      // for Rolling
       [SLOV2FormFields.PERIOD_LENGTH]: serviceLevelObjective?.sloTarget?.spec?.periodLength,
+      // for Calendar
       [SLOV2FormFields.PERIOD_LENGTH_TYPE]: serviceLevelObjective?.sloTarget?.spec?.spec?.type,
       [SLOV2FormFields.DAY_OF_MONTH]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfMonth,
       [SLOV2FormFields.DAY_OF_WEEK]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfWeek,

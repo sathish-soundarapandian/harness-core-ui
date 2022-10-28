@@ -9,38 +9,27 @@ import React, { useState, useEffect } from 'react'
 import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import type { Column, Renderer, CellProps } from 'react-table'
-import { Button, ButtonVariation, Text, TextInput, TableV2, Intent } from '@harness/uicore'
+import { Button, ButtonVariation, Text, TextInput, TableV2, Intent, Page } from '@harness/uicore'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ServiceLevelObjectiveDetailsDTO } from 'services/cv'
 import { getDistribution } from './AddSLOs.utils'
+import { SLOList } from './components/SLOList'
 
 export const AddSLOs = (): JSX.Element => {
   const formikProps = useFormikContext<SLOV2Form>()
   const { showDrawer, hideDrawer } = useDrawer({
-    createHeader: _props => <></>,
-    createDrawerContent: _props => (
-      <>
-        <Button
-          onClick={() => {
-            formikProps.setFieldValue('serviceLevelObjectivesDetails', [
-              {
-                serviceLevelObjectiveRef: 'hHJYxnUFTCypZdmYr0Q0tQ',
-                weightagePercentage: 50.0
-              },
-              {
-                serviceLevelObjectiveRef: '7b-_GIZxRu6VjFqAqqdVDQ',
-                weightagePercentage: 50.0
-              }
-            ])
-            hideDrawer()
-          }}
-          text={'Add SLOs'}
-          iconProps={{ name: 'plus' }}
-          variation={ButtonVariation.PRIMARY}
+    createHeader: _props => <Page.Header title="Add SLOs" />,
+    createDrawerContent: _props => {
+      return (
+        <SLOList
+          hideDrawer={() => hideDrawer()}
+          onAddSLO={formikProps.setFieldValue}
+          filter={formikProps.values.periodType}
+          serviceLevelObjectivesDetails={formikProps?.values?.serviceLevelObjectivesDetails || []}
         />
-      </>
-    )
+      )
+    }
   })
 
   const [serviceLevelObjectivesDetails, setServiceLevelObjectivesDetails] = useState(
@@ -58,7 +47,7 @@ export const AddSLOs = (): JSX.Element => {
     }
   }, [formikProps?.values?.serviceLevelObjectivesDetails])
 
-  const onWeightChange = (weight: number, index: number) => {
+  const onWeightChange = (weight: number, index: number): void => {
     if (weight < 100) {
       const neweDist = getDistribution(weight, index, serviceLevelObjectivesDetails)
       setServiceLevelObjectivesDetails(neweDist)
@@ -111,7 +100,9 @@ export const AddSLOs = (): JSX.Element => {
         iconProps={{ name: 'plus' }}
         onClick={showDrawer}
       />
-      <TableV2 columns={columns} data={serviceLevelObjectivesDetails} />
+      {Boolean(serviceLevelObjectivesDetails.length) && (
+        <TableV2 columns={columns} data={serviceLevelObjectivesDetails} />
+      )}
     </>
   )
 }

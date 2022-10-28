@@ -13,7 +13,6 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
-import { SloPeriodLength } from '../../../CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
 import { isFormDataValid } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
@@ -23,6 +22,7 @@ import SLOName from '../../../CVCreateSLO/components/CreateSLOForm/components/SL
 import SLOTargetNotificationsContainer from '../../../CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import SLOTarget from './components/SLOTarget/SLOTarget'
 import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningModal'
+import PeriodLength from './components/PeriodLength/PeriodLength'
 import css from './CreateCompositeSloForm.module.scss'
 
 export const CreateCompositeSloForm = ({
@@ -69,9 +69,6 @@ export const CreateCompositeSloForm = ({
   }, [openPeriodUpdateModal, formikProps.values.periodType])
 
   const onStepChange = (): void => {
-    // if (identifier) {
-    //   compositeSloPayloadRef.current = formikProps.values
-    // }
     prevStepData.current = formikProps.values
     periodTypesRef.current = formikProps.values.periodType
   }
@@ -107,7 +104,7 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Set_SLO_Time_Window,
               title: 'Set SLO Time Window',
-              panel: <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
+              panel: <PeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
               preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Time_Window} data={formikProps.values} />
             },
             {

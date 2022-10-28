@@ -217,7 +217,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
         validationSchema={getSLOV2FormValidationSchema(getString)}
         enableReinitialize
       >
-        {_ =>
+        {() =>
           isCompositeSLo ? (
             <CreateCompositeSloForm
               loading={SLODataLoading}
