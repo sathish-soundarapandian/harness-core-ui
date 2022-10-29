@@ -192,6 +192,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         }}
         className={cx(branchSelectorClassName, css.branchSelector)}
       />
+
       {!showIcons ? null : loading && !disabled ? (
         <Layout.Horizontal
           spacing="small"

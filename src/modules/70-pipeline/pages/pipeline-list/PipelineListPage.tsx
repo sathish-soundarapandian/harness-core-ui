@@ -47,6 +47,7 @@ import type { PartiallyRequired } from '@pipeline/utils/types'
 import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
@@ -241,8 +242,12 @@ export function PipelineListPage(): React.ReactElement {
         breadcrumbs={<NGBreadcrumbs links={[]} />}
       />
       <Page.SubHeader className={css.subHeader}>
-        <Layout.Horizontal>
+        <Layout.Horizontal style={{ alignItems: 'center' }}>
           {createPipelineButton}
+          <Layout.Horizontal className={css.repoFilterContainer}>
+            {!isGitSyncEnabled && <RepoFilter />}
+          </Layout.Horizontal>
+
           {isGitSyncEnabled && (
             <GitFilters
               onChange={handleRepoChange}

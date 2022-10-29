@@ -20,6 +20,9 @@
   z-index: 3;
   border: none;
   box-shadow: var(--elevation-2);
+  .repoFilterContainer {
+    padding: var(--spacing-7);
+  }
 }
 
 .expandSearch {
