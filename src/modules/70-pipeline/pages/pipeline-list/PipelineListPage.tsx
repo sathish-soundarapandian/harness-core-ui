@@ -244,11 +244,7 @@ export function PipelineListPage(): React.ReactElement {
       <Page.SubHeader className={css.subHeader}>
         <Layout.Horizontal style={{ alignItems: 'center' }}>
           {createPipelineButton}
-          <Layout.Horizontal className={css.repoFilterContainer}>
-            {!isGitSyncEnabled && <RepoFilter />}
-          </Layout.Horizontal>
-
-          {isGitSyncEnabled && (
+          {isGitSyncEnabled ? (
             <GitFilters
               onChange={handleRepoChange}
               className={css.gitFilter}
@@ -257,6 +253,10 @@ export function PipelineListPage(): React.ReactElement {
                 branch
               }}
             />
+          ) : (
+            <div className={css.repoFilterContainer}>
+              <RepoFilter />
+            </div>
           )}
         </Layout.Horizontal>
         <Layout.Horizontal style={{ alignItems: 'center' }}>

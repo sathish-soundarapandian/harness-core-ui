@@ -26,7 +26,7 @@ const RepoFilter: React.FC<RepoFilterProps> = props => {
   const { disabled = false } = props
   //   const { getString } = useStrings()
   const dropDown = [
-    { label: 'suman', value: 'suman7364646373737373' },
+    { label: 'suman suman suman suman suman suman suman', value: 'suman7364646373737373' },
     { label: 'gvk', value: 'gvk' }
   ]
   //   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>(dropDown)

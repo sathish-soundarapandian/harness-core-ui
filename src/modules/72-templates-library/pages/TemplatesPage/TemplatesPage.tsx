@@ -46,6 +46,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
@@ -211,7 +212,7 @@ export default function TemplatesPage(): React.ReactElement {
             placeholder={getString('all')}
             popoverClassName={css.dropdownPopover}
           />
-          {isGitSyncEnabled && (
+          {isGitSyncEnabled ? (
             <GitSyncStoreProvider>
               <GitFilters
                 onChange={filter => {
@@ -222,6 +223,8 @@ export default function TemplatesPage(): React.ReactElement {
                 defaultValue={gitFilter || undefined}
               />
             </GitSyncStoreProvider>
+          ) : (
+            <RepoFilter />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
