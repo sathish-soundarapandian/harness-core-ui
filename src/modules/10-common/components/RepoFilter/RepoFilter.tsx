@@ -6,6 +6,8 @@
  */
 
 import { DropDown, Layout, SelectOption } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
+// import { useStrings } from 'framework/strings'
 // import { useEffect } from '@storybook/addons'
 
 // import { useStrings } from 'framework/strings'
@@ -17,14 +19,16 @@ export interface RepoSelectOption {
 }
 
 export interface RepoFilterProps {
+  placeholder?: string
   onChange?: (selected: RepoSelectOption) => void
   disabled?: boolean
   repoFilterClassName?: string
 }
 
 const RepoFilter: React.FC<RepoFilterProps> = props => {
-  const { disabled = false } = props
-  //   const { getString } = useStrings()
+  const { getString } = useStrings()
+  const { placeholder = getString('repository'), disabled = false } = props
+
   const dropDown = [
     { label: 'Repo1', value: 'Repo1' },
     { label: 'Repo2', value: 'Repo2' },
@@ -51,7 +55,7 @@ const RepoFilter: React.FC<RepoFilterProps> = props => {
           buttonTestId={'repo-filter'}
           value={selectedRepo}
           onChange={selected => onChangeRepo(selected)}
-          placeholder={'Repository'}
+          placeholder={placeholder}
           addClearBtn={true}
           minWidth={160}
           usePortal={true}

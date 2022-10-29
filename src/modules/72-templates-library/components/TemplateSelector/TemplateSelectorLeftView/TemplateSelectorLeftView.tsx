@@ -41,6 +41,7 @@ import { getScopeOptions } from '@templates-library/components/TemplateSelector/
 import { areTemplatesSame } from '@pipeline/utils/templateUtils'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import css from './TemplateSelectorLeftView.module.scss'
 
 export interface TemplateSelectorLeftViewProps {
@@ -221,6 +222,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   onChange={item => setSelectedScope(item)}
                   filterable={false}
                 />
+                <RepoFilter placeholder={getString('common.gitSync.selectRepository')} />
                 <ExpandingSearchInput
                   alwaysExpanded
                   className={css.searchBox}

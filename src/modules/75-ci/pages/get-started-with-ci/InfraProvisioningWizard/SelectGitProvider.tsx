@@ -334,7 +334,7 @@ const SelectGitProviderRef = (
     if (gitProvider?.type === NonGitOption.OTHER) {
       updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
     } else {
-      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.selectRepo')}`)
+      updateFooterLabel?.(`${getString('next')}: ${getString('common.gitSync.selectRepository')}`)
     }
   }, [gitProvider])
 

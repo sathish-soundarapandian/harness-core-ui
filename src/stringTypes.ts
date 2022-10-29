@@ -411,6 +411,7 @@ export interface StringsMap {
   'common.gitSync.rootFolderLabel': string
   'common.gitSync.savingInProgress': string
   'common.gitSync.selectBranchLabel': string
+  'common.gitSync.selectRepository': string
   'common.gitSync.settingUpNewBranch': string
   'common.gitSync.sync': string
   'common.gitSync.syncStartSuccess': string
@@ -6781,7 +6782,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.security': string
   'ci.getStartedWithCI.securityHelpText': string
   'ci.getStartedWithCI.selectInfra': string
-  'ci.getStartedWithCI.selectRepo': string
   'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.settingUpCIPipeline': string
   'ci.getStartedWithCI.startProvisioning': string
