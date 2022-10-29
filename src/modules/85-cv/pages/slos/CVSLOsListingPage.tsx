@@ -404,7 +404,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const RenderSLOActions: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
-    const { sloIdentifier = '', name = '', sloType = 'composite' } = slo || {}
+    const { sloIdentifier = '', name = '', sloType = '' } = slo || {}
     return (
       <SLOActions
         sloIdentifier={sloIdentifier}
