@@ -32,7 +32,7 @@ export const useServiceSelectOrCreate = ({
   customLoading
 }: MultiSelectService): MultiSelectReturn => {
   const { getString } = useStrings()
-  const serviceOptions = useMemo(() => [{ ...AddNewSelectOption }, ...options], [options]) as SelectOption[]
+  const serviceOptions = useMemo(() => [{ ...AddNewSelectOption(getString) }, ...options], [options]) as SelectOption[]
 
   const onSubmit = async (values: ServiceRequestDTO): Promise<void> => {
     onNewCreated(values)
