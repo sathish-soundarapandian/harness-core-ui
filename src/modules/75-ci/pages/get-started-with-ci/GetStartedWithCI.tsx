@@ -272,7 +272,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                         size: 14,
                         className: cx(css.icon, css.iconPadding)
                       },
-                      label: 'common.gitSync.selectRepository'
+                      label: 'common.selectRepository'
                     })}
                     {renderBuildPipelineStep({
                       iconProps: {

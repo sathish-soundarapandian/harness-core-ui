@@ -222,7 +222,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   onChange={item => setSelectedScope(item)}
                   filterable={false}
                 />
-                <RepoFilter placeholder={getString('common.gitSync.selectRepository')} />
+                <RepoFilter placeholder={getString('common.selectRepository')} />
                 <ExpandingSearchInput
                   alwaysExpanded
                   className={css.searchBox}

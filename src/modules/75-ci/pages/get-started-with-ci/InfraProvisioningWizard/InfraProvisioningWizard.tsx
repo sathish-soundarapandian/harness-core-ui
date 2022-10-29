@@ -373,7 +373,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
           }
         },
-        stepFooterLabel: `${getString('next')}: ${getString('common.gitSync.selectRepository')}`
+        stepFooterLabel: `${getString('next')}: ${getString('common.selectRepository')}`
       }
     ],
     [
