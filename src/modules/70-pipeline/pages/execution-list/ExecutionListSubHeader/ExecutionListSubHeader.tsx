@@ -25,6 +25,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ExecutionCompareYaml } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareYaml'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionListFilter } from '../ExecutionListFilter/ExecutionListFilter'
 import type { ExecutionListProps } from '../ExecutionList'
@@ -36,8 +37,12 @@ export interface FilterQueryParams {
   status?: ExecutionStatus | null
 }
 
+export interface ExecutionListSubHeaderProps {
+  isDeploymentPage?: boolean
+}
+
 export function ExecutionListSubHeader(
-  props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'>
+  props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'> & ExecutionListSubHeaderProps
 ): React.ReactElement {
   const { module, pipelineIdentifier } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const { queryParams } = useExecutionListFilterContext()
@@ -144,6 +149,7 @@ export function ExecutionListSubHeader(
             onPipelineSelect={value => changeQueryParam('pipelineIdentifier', value)}
           />
         )}
+        {props.isDeploymentPage && <RepoFilter />}
       </div>
       <div className={css.rhs}>
         <ExpandingSearchInput

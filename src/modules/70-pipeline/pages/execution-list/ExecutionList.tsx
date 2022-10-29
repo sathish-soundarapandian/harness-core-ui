@@ -11,7 +11,17 @@ import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type {
+  PipelineType,
+  ConnectorPathProps,
+  PipelinePathProps,
+  TemplateStudioPathProps,
+  ResourceGroupPathProps,
+  RolePathProps,
+  SecretsPathProps,
+  UserGroupPathProps,
+  UserPathProps
+} from '@common/interfaces/RouteInterfaces'
 import { useGetCommunity } from '@common/utils/utils'
 import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
 import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards'
@@ -43,6 +53,17 @@ export interface ExecutionListProps {
 }
 
 function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
+  const params = useParams<
+    PipelinePathProps &
+      TemplateStudioPathProps &
+      ConnectorPathProps &
+      SecretsPathProps &
+      UserPathProps &
+      UserGroupPathProps &
+      ResourceGroupPathProps &
+      RolePathProps
+  >()
+
   const { showHealthAndExecution, ...rest } = props
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -67,6 +88,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   // TODO: Temporary, remove once released
   const { listview } = useQueryParams<{ listview?: boolean }>({ decoder: queryParamDecodeAll() })
   const Executions = listview === true || NEW_EXECUTION_LIST_VIEW ? MemoisedExecutionListTable : ExecutionListCards
+  const isDeploymentPage = !!matchPath(location.pathname, {
+    path: routes.toDeployments({ ...params, module })
+  })
 
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({
@@ -129,7 +153,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   return (
     <>
-      {showSubHeader && <ExecutionListSubHeader {...rest} />}
+      {showSubHeader && <ExecutionListSubHeader isDeploymentPage={isDeploymentPage} {...rest} />}
       <GlobalFreezeBanner />
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
+import { DropDown, Layout, SelectOption } from '@harness/uicore'
 // import { useEffect } from '@storybook/addons'
 
 // import { useStrings } from 'framework/strings'
@@ -26,8 +26,10 @@ const RepoFilter: React.FC<RepoFilterProps> = props => {
   const { disabled = false } = props
   //   const { getString } = useStrings()
   const dropDown = [
-    { label: 'suman suman suman suman suman suman suman', value: 'suman7364646373737373' },
-    { label: 'gvk', value: 'gvk' }
+    { label: 'Repo1', value: 'Repo1' },
+    { label: 'Repo2', value: 'Repo2' },
+    { label: 'Repo3', value: 'Repo3' },
+    { label: 'Repo4', value: 'Repo4' }
   ]
   //   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>(dropDown)
 
@@ -43,7 +45,6 @@ const RepoFilter: React.FC<RepoFilterProps> = props => {
   return (
     <div>
       <Layout.Horizontal spacing="xsmall">
-        <Icon padding={{ top: 'small' }} name="repository" color={Color.GREY_600}></Icon>
         <DropDown
           items={dropDown}
           disabled={disabled}
@@ -53,6 +54,7 @@ const RepoFilter: React.FC<RepoFilterProps> = props => {
           placeholder={'Repository'}
           addClearBtn={true}
           minWidth={160}
+          usePortal={true}
         ></DropDown>
       </Layout.Horizontal>
     </div>
