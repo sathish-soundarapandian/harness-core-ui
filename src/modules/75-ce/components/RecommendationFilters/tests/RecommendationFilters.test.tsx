@@ -7,11 +7,15 @@
 
 import React from 'react'
 import { queryByText, render, fireEvent, getByText, waitFor, getAllByText } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { Provider } from 'urql'
+import { fromValue } from 'wonka'
+
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import SavedFilterData from '@ce/pages/recommendationList/__test__/FiltersData.json'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
+import type { QLCEViewFilterWrapper } from 'services/ce'
 
 import RecommendationFilters from '../RecommendationFilters'
 import {
@@ -19,6 +23,7 @@ import {
   getRecommendationFormValuesFromFilterProperties
 } from '../FilterDrawer/utils'
 import FilterValues from './FilterValues.json'
+import LabelFilterDropdown from '../FilterDrawer/LabelFilterDropdown'
 
 jest.mock('services/ce', () => ({
   useRecommendationFilterValues: jest.fn().mockImplementation(() => ({
@@ -227,5 +232,78 @@ describe('Test Cases for Filter Drawer Utils', () => {
       ...mockFilterProperties,
       filterType: 'CCMRecommendation'
     })
+  })
+})
+
+const labelFilterDropdownProps = {
+  labelFilters: [
+    {
+      idFilter: {
+        field: {
+          fieldId: 'labels.value',
+          fieldName: 'Autostopped',
+          identifier: 'LABEL'
+        },
+        operator: 'IN',
+        values: ['True']
+      }
+    }
+  ] as QLCEViewFilterWrapper[],
+  setLabelFilters: jest.fn()
+}
+
+describe('Test Cases for LabelFilterDropdown Component', () => {
+  test('Should be able to render the component', async () => {
+    const responseState = {
+      executeQuery: () => {
+        return fromValue({
+          data: { perspectiveFilters: { values: ['BLUE', 'GREEN'] } }
+        })
+      }
+    }
+
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <Provider value={responseState as any}>
+          <LabelFilterDropdown {...labelFilterDropdownProps} />
+        </Provider>
+      </TestWrapper>
+    )
+
+    fireEvent.click(container.querySelector('div[class*="bp3-tag-input-values"]')!)
+
+    const keyPopover = findPopoverContainer()
+    await waitFor(() => {
+      expect(keyPopover).toBeDefined()
+    })
+
+    fireEvent.click(getByText(keyPopover!, 'BLUE'))
+
+    const valuesPopover = document.querySelectorAll('.bp3-popover-content')[1]
+    await waitFor(() => {
+      expect(valuesPopover).toBeDefined()
+    })
+
+    fireEvent.click(getByText(keyPopover!, 'GREEN'))
+    expect(valuesPopover.querySelector('div[class*="valuesListCtn"')).toBeDefined()
+  })
+
+  test('Should be able to remove a tag', () => {
+    const responseState = {
+      executeQuery: () => {
+        return fromValue({})
+      }
+    }
+
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <Provider value={responseState as any}>
+          <LabelFilterDropdown {...labelFilterDropdownProps} />
+        </Provider>
+      </TestWrapper>
+    )
+
+    fireEvent.click(container.querySelector('button[class*="bp3-tag-remove"]')!)
+    expect(labelFilterDropdownProps.setLabelFilters).toBeCalledWith([])
   })
 })

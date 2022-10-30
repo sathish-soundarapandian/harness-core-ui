@@ -98,13 +98,13 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
     return tags
   }, [JSON.stringify(labelFilters)])
 
-  const onEndReaded = (): void => {
+  const onEndReaded = /* istanbul ignore next */ (): void => {
     if (labelKeyValues?.length === page * 100) {
       setPage(prevVal => prevVal + 1)
     }
   }
 
-  const handleCheckboxClick = (key: string, value: string): void => {
+  const handleCheckboxClick = /* istanbul ignore next */ (key: string, value: string): void => {
     setSearchText('')
 
     const isKeyInFilters = labelFilters.some(item => item.idFilter?.field?.fieldName === key)
@@ -204,23 +204,27 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
                         data={labelKeyValues}
                         overscan={{ main: 20, reverse: 20 }}
                         endReached={onEndReaded}
-                        itemContent={(_, value) => {
-                          const isChecked = labelFilters?.some(label => label.idFilter?.values?.includes(String(value)))
+                        itemContent={
+                          /* istanbul ignore next */ (_, value) => {
+                            const isChecked = labelFilters?.some(label =>
+                              label.idFilter?.values?.includes(String(value))
+                            )
 
-                          return (
-                            <Container className={css.listValCtn}>
-                              <Checkbox
-                                checked={isChecked}
-                                onClick={() => handleCheckboxClick(String(key), String(value))}
-                                labelElement={
-                                  <Text lineClamp={1} color={Color.BLACK} tooltipProps={{ openOnTargetFocus: false }}>
-                                    {value}
-                                  </Text>
-                                }
-                              />
-                            </Container>
-                          )
-                        }}
+                            return (
+                              <Container className={css.listValCtn}>
+                                <Checkbox
+                                  checked={isChecked}
+                                  onClick={() => handleCheckboxClick(String(key), String(value))}
+                                  labelElement={
+                                    <Text lineClamp={1} color={Color.BLACK} tooltipProps={{ openOnTargetFocus: false }}>
+                                      {value}
+                                    </Text>
+                                  }
+                                />
+                              </Container>
+                            )
+                          }
+                        }
                       />
                     )}
                   </div>
