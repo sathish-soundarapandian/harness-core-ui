@@ -12,6 +12,7 @@ import type { FormikProps } from 'formik'
 import type { FilterStatsDTO } from 'services/ce'
 import { useStrings } from 'framework/strings'
 import type { RecommendationFilterFormType } from './FilterDrawer'
+import LabelFilterDropdown from './LabelFilterDropdown'
 
 import css from '../RecommendationFilters.module.scss'
 
@@ -20,7 +21,7 @@ interface RecommendationFilterFormProps {
   fetchedFilterValues: FilterStatsDTO[]
 }
 
-const RecommendationFilterForm: React.FC<RecommendationFilterFormProps> = ({ fetchedFilterValues }) => {
+const RecommendationFilterForm: React.FC<RecommendationFilterFormProps> = ({ fetchedFilterValues, formikProps }) => {
   const { getString } = useStrings()
 
   const getItemsFromFilterValues = useCallback(
@@ -63,6 +64,13 @@ const RecommendationFilterForm: React.FC<RecommendationFilterFormProps> = ({ fet
         items={getItemsFromFilterValues('resourceType')}
       />
       <Text className={css.label} font={{ variation: FontVariation.BODY2 }}>
+        {getString('pipelineSteps.labelsLabel')}
+      </Text>
+      <LabelFilterDropdown
+        setLabelFilters={filters => formikProps?.setFieldValue('perspectiveFilters', filters)}
+        labelFilters={formikProps?.values.perspectiveFilters || []}
+      />
+      <Text className={css.label} font={{ variation: FontVariation.BODY2 }} margin={{ top: 'tiny' }}>
         {getString('ce.recommendation.listPage.filters.potentialSpend')}
       </Text>
       <FormInput.Text

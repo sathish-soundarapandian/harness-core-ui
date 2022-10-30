@@ -13,9 +13,17 @@ declare const styles: {
   readonly costText: string
   readonly filterPillContainer: string
   readonly filterValue: string
+  readonly keysListCtn: string
   readonly label: string
+  readonly labelInput: string
+  readonly listItemCtn: string
+  readonly listValCtn: string
   readonly menuItem: string
   readonly popoverContainer: string
+  readonly popoverCtn: string
+  readonly popoverTarget: string
+  readonly spinner: string
+  readonly valuesListCtn: string
   readonly visible: string
 }
 export default styles

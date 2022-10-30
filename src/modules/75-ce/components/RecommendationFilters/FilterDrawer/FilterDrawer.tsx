@@ -9,7 +9,14 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { MultiSelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FilterDTO, FilterStatsDTO, useDeleteFilter, usePostFilter, useUpdateFilter } from 'services/ce'
+import {
+  FilterDTO,
+  FilterStatsDTO,
+  QLCEViewFilterWrapper,
+  useDeleteFilter,
+  usePostFilter,
+  useUpdateFilter
+} from 'services/ce'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
@@ -37,6 +44,7 @@ export interface RecommendationFilterFormType {
   clusterNames?: MultiSelectOption[]
   minCost?: number
   minSaving?: number
+  perspectiveFilters?: QLCEViewFilterWrapper[]
 }
 
 const RecommendationFilterDrawer: React.FC<FilterDrawerProps> = ({

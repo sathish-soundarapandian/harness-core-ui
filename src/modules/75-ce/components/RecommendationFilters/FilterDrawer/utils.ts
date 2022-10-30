@@ -13,7 +13,7 @@ export const getRecommendationFormValuesFromFilterProperties = (
 ): RecommendationFilterFormType => {
   const formData: RecommendationFilterFormType = {}
 
-  const { k8sRecommendationFilterPropertiesDTO = {}, minCost, minSaving } = filterProperties
+  const { k8sRecommendationFilterPropertiesDTO = {}, minCost, minSaving, perspectiveFilters } = filterProperties
   const { clusterNames, names, namespaces, resourceTypes } = k8sRecommendationFilterPropertiesDTO
 
   if (clusterNames) {
@@ -40,6 +40,10 @@ export const getRecommendationFormValuesFromFilterProperties = (
     formData.minSaving = minSaving
   }
 
+  if (perspectiveFilters) {
+    formData.perspectiveFilters = perspectiveFilters
+  }
+
   return formData
 }
 
@@ -47,7 +51,7 @@ export const getRecommendationFilterPropertiesFromForm = (
   formData: RecommendationFilterFormType
 ): CCMRecommendationFilterProperties => {
   const filterProperties: CCMRecommendationFilterProperties = { filterType: 'CCMRecommendation' }
-  const { clusterNames, minCost, minSaving, names, namespaces, resourceTypes } = formData
+  const { clusterNames, minCost, minSaving, names, namespaces, resourceTypes, perspectiveFilters } = formData
 
   const k8sRecommendationFilterPropertiesDTO = {} as K8sRecommendationFilterPropertiesDTO
   if (clusterNames) {
@@ -74,6 +78,10 @@ export const getRecommendationFilterPropertiesFromForm = (
 
   if (k8sRecommendationFilterPropertiesDTO) {
     filterProperties.k8sRecommendationFilterPropertiesDTO = k8sRecommendationFilterPropertiesDTO
+  }
+
+  if (perspectiveFilters) {
+    filterProperties.perspectiveFilters = perspectiveFilters
   }
 
   return filterProperties

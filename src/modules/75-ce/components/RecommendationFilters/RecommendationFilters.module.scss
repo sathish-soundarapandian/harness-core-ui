@@ -70,3 +70,77 @@
   color: var(--grey-700) !important;
   padding-bottom: var(--spacing-small) !important;
 }
+
+.labelInput {
+  margin-bottom: var(--spacing-medium);
+}
+
+.popoverTarget {
+  display: unset !important;
+
+  :global {
+    .bp3-input {
+      height: var(--spacing-8);
+      border-radius: var(--spacing-2);
+      border: 1px solid var(--bp3-intent-color, var(--grey-200));
+      outline: none;
+      box-shadow: none;
+
+      &:hover {
+        border-color: var(--primary-6);
+        box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+      }
+
+      &:focus {
+        border-color: var(--primary-7);
+      }
+    }
+
+    .bp3-tag {
+      background: var(--primary-2);
+      color: var(--grey-900);
+    }
+  }
+}
+
+.popoverCtn {
+  box-shadow: var(--elevation-4);
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .keysListCtn {
+    width: 350px;
+    height: 300px;
+    overflow: auto;
+  }
+
+  .valuesListCtn {
+    min-width: 300px;
+    height: 300px;
+    overflow: auto;
+  }
+
+  .listItemCtn {
+    width: 350px;
+    color: var(--black);
+    padding: var(--spacing-small);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--primary-1) !important;
+    }
+  }
+
+  .listValCtn {
+    @extend .listItemCtn;
+
+    width: 300px;
+  }
+
+  .spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+}
