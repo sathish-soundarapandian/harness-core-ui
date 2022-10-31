@@ -43,7 +43,8 @@ export enum StageType {
   SECURITY = 'SecurityTests',
   MATRIX = 'MATRIX',
   LOOP = 'LOOP',
-  PARALLELISM = 'PARALLELISM'
+  PARALLELISM = 'PARALLELISM',
+  IAC = 'IAC'
 }
 
 export enum ServiceDeploymentType {

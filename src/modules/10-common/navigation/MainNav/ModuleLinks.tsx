@@ -196,3 +196,26 @@ export const SCMNavItem = () => {
     </li>
   )
 }
+
+export const IACNavItem = () => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toIac(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="sto-color-filled" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            {/* <String stringID="common.purpose.iac.name" /> */}
+            IAC
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}

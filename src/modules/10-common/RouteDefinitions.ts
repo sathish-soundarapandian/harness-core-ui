@@ -1884,6 +1884,13 @@ const routes = {
       environmentIdentifier
     }: Partial<ProjectPathProps> & { environmentIdentifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}`
+  ),
+
+  /*********************** IAC */
+  toIac: withAccountId(() => `/iac`),
+  toIacMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iac/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
   )
 }
 
