@@ -23,7 +23,7 @@ import {
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { defaultTo, get, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { useListAwsRegions } from 'services/portal'
 import { ConnectorConfigDTO, useGetBuildDetailsForEcr } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -174,7 +174,7 @@ export function ECRArtifact({
       isIdentifierAllowed
     ) as ImagePathTypes
     const specValues = get(initialValues, 'spec', null)
-    if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED && !isEmpty(regions)) {
       values.region = regions.find(regionData => regionData.value === specValues?.region)
     }
     return values

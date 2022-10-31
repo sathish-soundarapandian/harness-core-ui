@@ -12,7 +12,7 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
+import { SidecarArtifact, useGetBuildDetailsForDocker, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -64,7 +64,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     artifact,
     isSidecar,
     artifactPath,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -83,12 +84,32 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
+  const {
+    data: dockerV1data,
+    loading: fetchingV1Tags,
+    refetch: fetchV1Tags,
+    error: fetchV1TagsError
+  } = useGetBuildDetailsForDocker({
+    queryParams: {
+      imagePath: getFinalQueryParamValue(imagePathValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch
+    },
+    lazy: true,
+    debounce: 300
+  })
 
   const {
-    data: dockerdata,
-    loading: fetchingTags,
-    refetch: fetchTags,
-    error: fetchTagsError
+    data: dockerV2data,
+    loading: fetchingV2Tags,
+    refetch: fetchV2Tags,
+    error: fetchV2TagsError
   } = useMutateAsGet(useGetBuildDetailsForDockerWithYaml, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -122,6 +143,19 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     },
     lazy: true
   })
+  const { fetchTags, fetchingTags, fetchTagsError, dockerdata } = useArtifactV1Data
+    ? {
+        fetchTags: fetchV1Tags,
+        fetchingTags: fetchingV1Tags,
+        fetchTagsError: fetchV1TagsError,
+        dockerdata: dockerV1data
+      }
+    : {
+        fetchTags: fetchV2Tags,
+        fetchingTags: fetchingV2Tags,
+        fetchTagsError: fetchV2TagsError,
+        dockerdata: dockerV2data
+      }
 
   const fetchTagsEnabled = (): void => {
     if (canFetchTags()) {

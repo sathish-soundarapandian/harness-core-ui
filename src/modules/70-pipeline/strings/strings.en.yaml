@@ -1501,6 +1501,7 @@ triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
 triggeredByThirdParty: Triggered by a third party system
 triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
+configureArtifactSource: Configure Artifact Source
 pipelineCachedCopy:
   cachedCopyText: Cached Copy
   reloadPipeline: Reload Pipeline?

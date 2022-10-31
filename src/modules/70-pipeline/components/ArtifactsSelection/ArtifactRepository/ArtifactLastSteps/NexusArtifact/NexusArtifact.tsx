@@ -463,7 +463,11 @@ export function Nexus3Artifact({
                 <FormInput.Select
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
-                  items={getAzureNexusRepoOptions(selectedDeploymentType, AZURE_WEB_APP_NG_NEXUS_PACKAGE)}
+                  items={getAzureNexusRepoOptions(
+                    selectedDeploymentType,
+                    AZURE_WEB_APP_NG_NEXUS_PACKAGE,
+                    isTemplateContext
+                  )}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
                       const optionalValues: { extension?: string; classifier?: string } = {}

@@ -45,7 +45,7 @@ import {
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
-  const fieldValue = get(formik.values, fieldPath, '')
+  const fieldValue = get(formik?.values, fieldPath, '')
   if (getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED && fieldValue?.length) {
     formik.setFieldValue(fieldPath, '')
   }
@@ -389,7 +389,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
 
   const getBucketNameHelperText = () => {
     if (
-      getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
+      getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
         MultiTypeInputType.FIXED &&
       (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue?.length === 0)
     ) {
@@ -399,7 +399,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
 
   const getFilePathHelperText = () => {
     if (
-      (getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
+      (getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
         MultiTypeInputType.FIXED &&
         (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
           fixedConnectorValue?.length === 0)) ||

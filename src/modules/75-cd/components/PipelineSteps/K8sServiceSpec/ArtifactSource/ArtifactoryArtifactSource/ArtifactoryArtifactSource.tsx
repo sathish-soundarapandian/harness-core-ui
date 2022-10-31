@@ -224,11 +224,11 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const selectedDeploymentType: ServiceDeploymentType = useMemo(() => {
     let selectedStageSpec: DeploymentStageConfig = getStageFromPipeline(
       props.stageIdentifier,
-      props.formik.values.pipeline ?? props.formik.values
+      props.formik?.values.pipeline ?? props.formik?.values
     ).stage?.stage?.spec as DeploymentStageConfig
 
     const stageArray: StageElementWrapperConfig[] = []
-    props.formik.values.stages?.forEach((stage: StageElementWrapperConfig) => {
+    props.formik?.values.stages?.forEach((stage: StageElementWrapperConfig) => {
       if (get(stage, 'parallel')) {
         stage.parallel?.forEach((parallelStage: StageElementWrapperConfig) => {
           stageArray.push(parallelStage)
@@ -247,7 +247,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return isNewServiceEnvEntity(path as string)
       ? (get(selectedStageSpec, 'service.serviceInputs.serviceDefinition.type') as ServiceDeploymentType)
       : (get(selectedStageSpec, 'serviceConfig.serviceDefinition.type') as ServiceDeploymentType)
-  }, [path, props.formik.values, props.stageIdentifier])
+  }, [path, props.formik?.values, props.stageIdentifier])
 
   const isServerlessOrSshOrWinRmSelected =
     isServerlessDeploymentType(selectedDeploymentType) ||

@@ -20,32 +20,24 @@ import {
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { useMutateAsGet } from '@common/hooks'
-import {
-  SidecarArtifact,
-  useGetBuildDetailsForAcrArtifactWithYaml,
-  useGetAzureSubscriptionsForAcrArtifact,
-  useGetACRRegistriesForService,
-  useGetACRRepositoriesForService
-} from 'services/cd-ng'
+import { SidecarArtifact, useGetACRRegistriesForService, useGetACRRepositoriesForService } from 'services/cd-ng'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { useGetBuildDetailsForAcrArtifact } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ACRArtifactSource/hooks/useGetBuildDetailsForAcrArtifact'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import { useGetSubscriptionsForAcrArtifact } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ACRArtifactSource/hooks/useGetSubscriptionsForAcrArtifact'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getConnectorRefFqnPath,
   getDefaultQueryParam,
   getFinalQueryParamValue,
-  getFqnPath,
   getValidInitialValuePath,
-  getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags,
@@ -82,7 +74,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     isSidecar,
     artifactPath,
     stepViewType,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -135,76 +128,63 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
-  const {
-    data: acrTagsData,
-    loading: fetchingTags,
-    refetch: fetchTags,
-    error: fetchTagsError
-  } = useMutateAsGet(useGetBuildDetailsForAcrArtifactWithYaml, {
-    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json'
-      }
-    },
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      repoIdentifier,
-      branch,
-      connectorRef: getFinalQueryParamValue(connectorRefValue),
-      subscriptionId: getFinalQueryParamValue(subscriptionIdValue),
-      registry: getFinalQueryParamValue(registryValue),
-      repository: getFinalQueryParamValue(repositoryValue),
-      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      serviceId,
-      fqnPath: getFqnPath(
-        path as string,
-        !!isPropagatedStage,
-        stageIdentifier,
-        defaultTo(
-          isSidecar
-            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-            : artifactPath,
-          ''
-        ),
-        'tag'
-      )
-    },
-    lazy: true
+  const { fetchTags, fetchingTags, fetchTagsError, acrTagsData } = useGetBuildDetailsForAcrArtifact({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    subscriptionId: getFinalQueryParamValue(subscriptionIdValue),
+    registry: getFinalQueryParamValue(registryValue),
+    repository: getFinalQueryParamValue(repositoryValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
   })
 
-  const {
-    data: subscriptionsData,
-    refetch: refetchSubscriptions,
-    loading: loadingSubscriptions,
-    error: subscriptionsError
-  } = useGetAzureSubscriptionsForAcrArtifact({
-    queryParams: {
+  const { subscriptionsData, refetchSubscriptions, loadingSubscriptions, subscriptionsError } =
+    useGetSubscriptionsForAcrArtifact({
       connectorRef: artifact?.spec?.connectorRef,
-      accountIdentifier: accountId,
+      accountId,
       orgIdentifier,
       projectIdentifier,
       serviceId,
-      fqnPath: connectorRefFqnPath
-    },
-    lazy: true,
-    debounce: 300
-  })
+      useArtifactV1Data,
+      connectorRefFqnPath
+    })
 
   useEffect(() => {
     if (getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.FIXED) {
-      refetchSubscriptions({
-        queryParams: {
-          connectorRef: artifact?.spec?.connectorRef,
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier,
-          serviceId,
-          fqnPath: connectorRefFqnPath
-        }
-      })
+      if (useArtifactV1Data) {
+        refetchSubscriptions({
+          queryParams: {
+            connectorRef: artifact?.spec?.connectorRef,
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier
+          }
+        })
+      } else {
+        refetchSubscriptions({
+          queryParams: {
+            connectorRef: artifact?.spec?.connectorRef,
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            serviceId,
+            fqnPath: connectorRefFqnPath
+          }
+        })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifact?.spec?.connectorRef, artifact?.spec?.subscriptionId])
@@ -408,16 +388,27 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                   resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
                   const { record } = value as unknown as { record: ConnectorReferenceDTO }
                   if (record && type === MultiTypeInputType.FIXED) {
-                    refetchSubscriptions({
-                      queryParams: {
-                        connectorRef: record?.identifier,
-                        accountIdentifier: accountId,
-                        orgIdentifier,
-                        projectIdentifier,
-                        serviceId,
-                        fqnPath: connectorRefFqnPath
-                      }
-                    })
+                    if (useArtifactV1Data) {
+                      refetchSubscriptions({
+                        queryParams: {
+                          connectorRef: record?.identifier,
+                          accountIdentifier: accountId,
+                          orgIdentifier,
+                          projectIdentifier
+                        }
+                      })
+                    } else {
+                      refetchSubscriptions({
+                        queryParams: {
+                          connectorRef: record?.identifier,
+                          accountIdentifier: accountId,
+                          orgIdentifier,
+                          projectIdentifier,
+                          serviceId,
+                          fqnPath: connectorRefFqnPath
+                        }
+                      })
+                    }
                   } else {
                     setSubscriptions([])
                     setRegistries([])

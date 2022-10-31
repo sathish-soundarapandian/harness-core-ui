@@ -709,6 +709,12 @@ export function CustomArtifact(
     handleSubmit(filteredFormData)
   }
 
+  const handleValidate = (formData: CustomArtifactSource) => {
+    if (isTemplateContext) {
+      submitFormData?.({ ...formData })
+    }
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!isTemplateContext && (
@@ -720,6 +726,7 @@ export function CustomArtifact(
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData?.({ ...formData })
         }}

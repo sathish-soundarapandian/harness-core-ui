@@ -20,7 +20,9 @@ import {
   BuildDetails,
   GithubPackageDTO,
   SidecarArtifact,
+  useGetPackagesFromGithub,
   useGetPackagesFromGithubWithServiceV2,
+  useGetVersionsFromPackages,
   useGetVersionsFromPackagesWithServiceV2
 } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -56,7 +58,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     serviceIdentifier,
     stageIdentifier,
     pipelineIdentifier,
-    stepViewType
+    stepViewType,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -85,11 +88,28 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: packageDetails,
-    refetch: refetchPackageDetails,
-    loading: fetchingPackages,
-    error
+    data: packageV1Details,
+    refetch: refetchPackageV1Details,
+    loading: fetchingV1Packages,
+    error: errorFetchingV1Packages
+  } = useGetPackagesFromGithub({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: defaultTo(connectorRefValue, ''),
+      packageType: defaultTo(packageTypeValue, ''),
+      org: orgValue
+    }
+  })
+
+  const {
+    data: packageV2Details,
+    refetch: refetchPackageV2Details,
+    loading: fetchingV2Packages,
+    error: errorFetchingV2Packages
   } = useMutateAsGet(useGetPackagesFromGithubWithServiceV2, {
     lazy: true,
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
@@ -120,11 +140,42 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const { refetchPackageDetails, fetchingPackages, error, packageDetails } = useArtifactV1Data
+    ? {
+        refetchPackageDetails: refetchPackageV1Details,
+        fetchingPackages: fetchingV1Packages,
+        error: errorFetchingV1Packages,
+        packageDetails: packageV1Details
+      }
+    : {
+        refetchPackageDetails: refetchPackageV2Details,
+        fetchingPackages: fetchingV2Packages,
+        error: errorFetchingV2Packages,
+        packageDetails: packageV2Details
+      }
+
   const {
-    data: versionDetails,
-    refetch: refetchVersionDetails,
-    loading: fetchingVersion,
-    error: errorFetchingVersion
+    data: versionV1Details,
+    refetch: refetchVersionV1Details,
+    loading: fetchingV1Version,
+    error: errorFetchingV1Version
+  } = useGetVersionsFromPackages({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      packageType: defaultTo(packageTypeValue, ''),
+      packageName: defaultTo(packageNameValue, ''),
+      connectorRef: defaultTo(connectorRefValue, ''),
+      versionRegex: '*',
+      org: orgValue
+    }
+  })
+
+  const {
+    data: versionV2Details,
+    refetch: refetchVersionV2Details,
+    loading: fetchingV2Version,
+    error: errorFetchingV2Version
   } = useMutateAsGet(useGetVersionsFromPackagesWithServiceV2, {
     lazy: true,
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
@@ -156,6 +207,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       )
     }
   })
+
+  const { refetchVersionDetails, fetchingVersion, errorFetchingVersion, versionDetails } = useArtifactV1Data
+    ? {
+        refetchVersionDetails: refetchVersionV1Details,
+        fetchingVersion: fetchingV1Version,
+        errorFetchingVersion: errorFetchingV1Version,
+        versionDetails: versionV1Details
+      }
+    : {
+        refetchVersionDetails: refetchVersionV2Details,
+        fetchingVersion: fetchingV2Version,
+        errorFetchingVersion: errorFetchingV2Version,
+        versionDetails: versionV2Details
+      }
 
   const selectPackageItems = useMemo(() => {
     return packageDetails?.data?.githubPackageResponse?.map((packageInfo: GithubPackageDTO) => ({

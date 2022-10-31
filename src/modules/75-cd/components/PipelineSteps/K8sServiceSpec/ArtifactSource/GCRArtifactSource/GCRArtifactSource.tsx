@@ -11,7 +11,7 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
+import { SidecarArtifact, useGetBuildDetailsForGcr, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
@@ -65,7 +65,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     isSidecar,
     artifactPath,
     stepViewType,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -89,11 +90,32 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
   )
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: gcrTagsData,
-    loading: fetchingTags,
-    refetch: refetchTags,
-    error: fetchTagsError
+    data: gcrTagsV1Data,
+    loading: fetchingV1Tags,
+    refetch: refetchV1Tags,
+    error: fetchTagsV1Error
+  } = useGetBuildDetailsForGcr({
+    queryParams: {
+      imagePath: defaultTo(getFinalQueryParamValue(imagePathValue), ''),
+      connectorRef: defaultTo(getFinalQueryParamValue(connectorRefValue), ''),
+      registryHostname: defaultTo(getFinalQueryParamValue(registryHostnameValue), ''),
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch
+    },
+    lazy: true
+  })
+
+  const {
+    data: gcrTagsV2Data,
+    loading: fetchingV2Tags,
+    refetch: refetchV2Tags,
+    error: fetchTagsV2Error
   } = useMutateAsGet(useGetBuildDetailsForGcrWithYaml, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -127,6 +149,20 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     },
     lazy: true
   })
+
+  const { refetchTags, fetchingTags, fetchTagsError, gcrTagsData } = useArtifactV1Data
+    ? {
+        refetchTags: refetchV1Tags,
+        fetchingTags: fetchingV1Tags,
+        fetchTagsError: fetchTagsV1Error,
+        gcrTagsData: gcrTagsV1Data
+      }
+    : {
+        refetchTags: refetchV2Tags,
+        fetchingTags: fetchingV2Tags,
+        fetchTagsError: fetchTagsV2Error,
+        gcrTagsData: gcrTagsV2Data
+      }
 
   const fetchTags = (): void => {
     if (canFetchTags()) {
