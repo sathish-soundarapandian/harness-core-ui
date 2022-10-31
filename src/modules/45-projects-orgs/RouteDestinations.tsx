@@ -715,8 +715,12 @@ export default (
       </GitSyncPage>
     </RouteWithLayout>
     {GovernanceRouteDestinations({
+      sidebarProps: ProjectDetailsSideNavProps,
+      pathProps: { ...projectPathProps }
+    })}
+    {GovernanceRouteDestinations({
       sidebarProps: AccountSideNavProps,
-      pathProps: { ...accountPathProps, ...orgPathProps }
+      pathProps: { ...orgPathProps }
     })}
   </>
 )
