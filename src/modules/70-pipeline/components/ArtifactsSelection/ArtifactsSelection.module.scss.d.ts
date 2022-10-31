@@ -8,15 +8,20 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addArtifact: string
+  readonly addArtifactSourceTemplateBtn: string
   readonly artifactId: string
   readonly artifactList: string
+  readonly artifactRow: string
+  readonly artifactSourceTemplateContainer: string
   readonly borderRadius: string
+  readonly btnDivider: string
   readonly connectorDialog: string
   readonly connectorName: string
   readonly connectorNameField: string
   readonly crossButton: string
   readonly editForm: string
   readonly listHeader: string
+  readonly minimalTemplateBar: string
   readonly modal: string
   readonly noWrap: string
   readonly paddingVertical: string
@@ -24,6 +29,7 @@ declare const styles: {
   readonly rowItem: string
   readonly sideCarBtn: string
   readonly sidecarList: string
+  readonly templateEditWrapper: string
   readonly type: string
 }
 export default styles

@@ -89,11 +89,23 @@ export const PrimaryArtifactSource = (props: KubernetesArtifactsProps): React.Re
               return null
             }
 
-            const artifactPath = `primary.sources[${index}]`
+            const artifactTemplate = get(primarySource, 'template')
+            const isArtifactTemplatePresent = !isEmpty(artifactTemplate)
+
+            const artifactPath = isArtifactTemplatePresent
+              ? `primary.sources[${index}].template.templateInputs`
+              : `primary.sources[${index}]`
+            const updatedPrimarySource = isArtifactTemplatePresent
+              ? {
+                  ...primarySource,
+                  ...artifactTemplate?.templateInputs
+                }
+              : primarySource
+
             return (
               <ArtifactInputField
                 {...props}
-                artifact={primarySource}
+                artifact={updatedPrimarySource}
                 artifactPath={artifactPath}
                 key={primarySource?.identifier}
               />

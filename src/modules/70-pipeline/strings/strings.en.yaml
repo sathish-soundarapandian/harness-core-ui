@@ -1471,3 +1471,4 @@ step:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
 runDisabledOnFreeze: Cannot run pipeline due to an active freeze
 viewFreeze: View freeze details
+configureArtifactSource: Configure Artifact Source

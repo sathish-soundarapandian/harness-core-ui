@@ -33,6 +33,19 @@
     }
   }
 }
+
+.btnDivider {
+  height: 24px;
+  border: 0.5px solid var(--grey-200);
+  margin: var(--spacing-medium) 0 0 var(--spacing-5);
+}
+
+.addArtifactSourceTemplateBtn {
+  padding: 0 !important;
+  margin-top: var(--spacing-medium) !important;
+  margin-left: 0 !important;
+}
+
 .addArtifact {
   padding: 0px !important;
   margin-top: var(--spacing-medium) !important;
@@ -98,4 +111,42 @@
 }
 .borderRadius {
   border-radius: 4px;
+}
+
+.minimalTemplateBar {
+  border: none;
+  background: none !important;
+  padding: 0 !important;
+
+  :global {
+    p {
+      color: var(--grey-900) !important;
+    }
+    span[data-icon='template-library'] {
+      color: var(--primary-5) !important;
+    }
+    span[icon='more'] {
+      display: none;
+    }
+  }
+}
+
+.artifactSourceTemplateContainer {
+  width: 100%;
+  :global {
+    .bp3-button {
+      &:hover {
+        box-shadow: none !important;
+      }
+    }
+  }
+}
+
+.artifactRow {
+  padding-top: 0 !important;
+}
+
+.templateEditWrapper {
+  border: 1px solid var(--primary-5) !important;
+  background: var(--primary-1) !important;
 }

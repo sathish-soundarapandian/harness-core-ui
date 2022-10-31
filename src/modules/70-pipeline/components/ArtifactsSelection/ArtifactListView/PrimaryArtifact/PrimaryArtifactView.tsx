@@ -9,9 +9,11 @@ import React, { useCallback } from 'react'
 import { Button, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
+import type { TemplateStepNode } from 'services/pipeline-ng'
+import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { ArtifactIconByType, ArtifactTitleIdByType, ENABLED_ARTIFACT_TYPES, ModalViewFor } from '../../ArtifactHelper'
 import ArtifactRepositoryTooltip from '../ArtifactRepositoryTooltip'
@@ -29,6 +31,35 @@ interface PrimaryArtifactViewProps {
   identifierElement?: JSX.Element
 }
 
+interface ArtifactSourceTemplateViewProps {
+  artifactSourceTemplateData: TemplateStepNode
+  templateActionBtns: React.ReactElement | null
+}
+
+export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProps) {
+  const { artifactSourceTemplateData, templateActionBtns } = props
+  const { name, template } = artifactSourceTemplateData
+
+  return (
+    <section className={cx(css.rowItem, css.artifactSourceTemplateContainer, css.artifactRow)} key={'Dockerhub'}>
+      <Layout.Horizontal
+        className={css.templateEditWrapper}
+        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      >
+        {name && (
+          <Text padding={{ left: 'small' }} width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
+            {name}
+          </Text>
+        )}
+        <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ flexGrow: 1 }}>
+          <TemplateBar className={css.minimalTemplateBar} templateLinkConfig={template} isReadonly={true} />
+          {templateActionBtns}
+        </Layout.Horizontal>
+      </Layout.Horizontal>
+    </section>
+  )
+}
+
 function PrimaryArtifactView({
   primaryArtifact,
   isReadonly,
@@ -37,8 +68,10 @@ function PrimaryArtifactView({
   editArtifact,
   removePrimary,
   identifierElement
-}: PrimaryArtifactViewProps): React.ReactElement {
+}: PrimaryArtifactViewProps): React.ReactElement | null {
   const { getString } = useStrings()
+
+  const artifactSourceTemplate = (primaryArtifact as TemplateStepNode)?.template
 
   const { color: primaryConnectorColor } = getStatus(
     primaryArtifact?.spec?.connectorRef,
@@ -58,64 +91,76 @@ function PrimaryArtifactView({
     [primaryArtifact?.spec?.connectorRef, primaryConnectorName]
   )
 
-  return (
-    <section>
-      {primaryArtifact && (
-        <section className={cx(css.artifactList, css.rowItem)} key={'Dockerhub'}>
-          {identifierElement ? (
-            identifierElement
-          ) : (
-            <div>
-              <Text width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
-                {getString('primary')}
-              </Text>
-            </div>
-          )}
-          {primaryArtifact.type ? (
-            <>
-              <div>{getString(ArtifactTitleIdByType[primaryArtifact.type])}</div>
-              <div className={css.connectorNameField}>
-                <Icon padding={{ right: 'small' }} name={ArtifactIconByType[primaryArtifact.type]} size={18} />
-                <Text
-                  tooltip={
-                    <ArtifactRepositoryTooltip
-                      artifactConnectorName={primaryConnectorName}
-                      artifactConnectorRef={primaryArtifact.spec?.connectorRef}
-                      artifactType={primaryArtifact.type}
-                    />
-                  }
-                  tooltipProps={{ isDark: true }}
-                  alwaysShowTooltip={showConnectorStep(primaryArtifact.type)}
-                  className={css.connectorName}
-                  lineClamp={1}
-                >
-                  {getPrimaryArtifactRepository(primaryArtifact.type)}
-                </Text>
+  if (!primaryArtifact) {
+    return null
+  }
 
-                {getMultiTypeFromValue(primaryArtifact.spec?.connectorRef) === MultiTypeInputType.FIXED && (
-                  <Icon name="full-circle" size={8} color={primaryConnectorColor} />
-                )}
-              </div>
-            </>
-          ) : null}
+  const templateActionBtns = isReadonly ? null : (
+    <Layout.Horizontal>
+      <Button icon="Edit" minimal iconProps={{ size: 18 }} onClick={() => editArtifact(ModalViewFor.PRIMARY)} />
+      <Button iconProps={{ size: 18 }} minimal icon="main-trash" onClick={removePrimary} />
+    </Layout.Horizontal>
+  )
 
-          <div>
-            <Text width={200} lineClamp={1} color={Color.GREY_500}>
-              <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>
+  return !isEmpty(artifactSourceTemplate) ? (
+    <ArtifactSourceTemplateView
+      artifactSourceTemplateData={primaryArtifact as TemplateStepNode}
+      templateActionBtns={templateActionBtns}
+    />
+  ) : (
+    <section className={cx(css.artifactList, css.rowItem, css.artifactRow)} key={'Dockerhub'}>
+      {identifierElement ? (
+        identifierElement
+      ) : (
+        <div>
+          <Text width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
+            {getString('primary')}
+          </Text>
+        </div>
+      )}
+      {primaryArtifact.type ? (
+        <>
+          <div>{getString(ArtifactTitleIdByType[primaryArtifact.type])}</div>
+          <div className={css.connectorNameField}>
+            <Icon padding={{ right: 'small' }} name={ArtifactIconByType[primaryArtifact.type]} size={18} />
+            <Text
+              tooltip={
+                <ArtifactRepositoryTooltip
+                  artifactConnectorName={primaryConnectorName}
+                  artifactConnectorRef={primaryArtifact.spec?.connectorRef}
+                  artifactType={primaryArtifact.type}
+                />
+              }
+              tooltipProps={{ isDark: true }}
+              alwaysShowTooltip={showConnectorStep(primaryArtifact.type)}
+              className={css.connectorName}
+              lineClamp={1}
+            >
+              {getPrimaryArtifactRepository(primaryArtifact.type)}
             </Text>
+
+            {getMultiTypeFromValue(primaryArtifact.spec?.connectorRef) === MultiTypeInputType.FIXED && (
+              <Icon name="full-circle" size={8} color={primaryConnectorColor} />
+            )}
           </div>
-          {!isReadonly && (
-            <Layout.Horizontal>
-              <Button
-                icon="Edit"
-                minimal
-                iconProps={{ size: 18 }}
-                onClick={() => editArtifact(ModalViewFor.PRIMARY, primaryArtifact.type)}
-              />
-              <Button iconProps={{ size: 18 }} minimal icon="main-trash" onClick={removePrimary} />
-            </Layout.Horizontal>
-          )}
-        </section>
+        </>
+      ) : null}
+
+      <div>
+        <Text width={200} lineClamp={1} color={Color.GREY_500}>
+          <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>
+        </Text>
+      </div>
+      {!isReadonly && (
+        <Layout.Horizontal>
+          <Button
+            icon="Edit"
+            minimal
+            iconProps={{ size: 18 }}
+            onClick={() => editArtifact(ModalViewFor.PRIMARY, primaryArtifact.type)}
+          />
+          <Button iconProps={{ size: 18 }} minimal icon="main-trash" onClick={removePrimary} />
+        </Layout.Horizontal>
       )}
     </section>
   )

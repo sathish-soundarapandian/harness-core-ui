@@ -221,7 +221,7 @@ export function StepCommands(
 
   return (
     <div className={cx(css.stepCommand, className)}>
-      {stepType === StepType.Template && onUseTemplate && onRemoveTemplate ? (
+      {stepType === StepType.Template ? (
         <Layout.Vertical margin={'xlarge'} spacing={'xxlarge'}>
           <TemplateBar
             templateLinkConfig={(step as TemplateStepNode).template}

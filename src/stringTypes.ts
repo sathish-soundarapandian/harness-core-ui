@@ -3284,6 +3284,7 @@ export interface StringsMap {
   'pipeline.configFiles.source': string
   'pipeline.configFiles.title': string
   'pipeline.configSource': string
+  'pipeline.configureArtifactSource': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string
