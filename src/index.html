@@ -31,7 +31,10 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
-      window.browserRouterEnabled = 'BROWSER_ROUTER_ENABLED_PLACEHOLDER' === 'true'
+      // window.browserRouterEnabled = 'BROWSER_ROUTER_ENABLED_PLACEHOLDER' === 'true'
+      if (window.browserRouterEnabled === undefined) {
+        window.browserRouterEnabled = window.location.href.toString().includes('browserEnabled=true')
+      }
       window.getApiBaseUrl = str => {
         if (window.browserRouterEnabled) {
           return `${window.apiUrl || ''}/${str}`
@@ -50,6 +53,9 @@
     <!-- helpPanelSpace -->
     <!-- helpPanelEnvironment -->
     <!-- stripeApiKey -->
+    <!-- newNavContentfulAccessToken -->
+    <!-- newNavContetfulSpace -->
+    <!-- newNavContentfulEnvironment -->
 
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>

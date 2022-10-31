@@ -15,9 +15,8 @@ interface GetLoginPageURL {
 }
 
 export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
-   const basePath = window.HARNESS_ENABLE_NG_AUTH_UI
-    ? `/auth/#/signin`
-    : `/#/login`
+  const locationPath = window.browserRouterEnabled ? '/' : window.location.pathname.replace(/\/ng\/?/, '/')
+  const basePath = window.HARNESS_ENABLE_NG_AUTH_UI ? `${locationPath}auth/#/signin` : `${locationPath}#/login`
 
   return returnUrl
     ? `${basePath}?action=signout&returnUrl=${encodeURIComponent(returnUrl)}`
