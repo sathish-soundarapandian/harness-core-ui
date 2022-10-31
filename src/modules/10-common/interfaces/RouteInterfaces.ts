@@ -193,6 +193,7 @@ export type ModuleNameMatch =
   | ':module(ce)'
   | ':module(sto)'
   | ':module(chaos)'
+  | ':module(iac)'
 
 export type Module = ModuleName | ModuleNameMatch
 

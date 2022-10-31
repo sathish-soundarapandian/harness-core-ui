@@ -155,5 +155,6 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
   [StageType.Template]: [],
   [StageType.MATRIX]: [],
   [StageType.LOOP]: [],
-  [StageType.PARALLELISM]: []
+  [StageType.PARALLELISM]: [],
+  [StageType.IAC]: []
 }

@@ -30,6 +30,7 @@ import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
+import IacRoutes from '@iac/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
 import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
@@ -93,6 +94,7 @@ export default function RouteDestinations(): React.ReactElement {
         </Route>
       ) : null}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
+      {IacRoutes.props.children}
       <Route path="*">
         <NotFoundPage />
       </Route>

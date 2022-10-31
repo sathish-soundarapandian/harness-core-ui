@@ -24,6 +24,7 @@ export type NavModuleName =
   | ModuleName.CHAOS
   | ModuleName.STO
   | ModuleName.SCM
+  | ModuleName.IAC
 
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CD,
@@ -33,7 +34,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CV,
   ModuleName.SCM,
   ModuleName.STO,
-  ModuleName.CHAOS
+  ModuleName.CHAOS,
+  ModuleName.IAC
 ]
 
 interface useNavModuleInfoReturnType {
@@ -109,6 +111,12 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toSCM({ accountId }),
     featureFlagName: FeatureFlag.SCM_ENABLED,
     color: '--default-module-border'
+  },
+  [ModuleName.IAC]: {
+    icon: 'sto-color-filled',
+    label: 'common.stoText',
+    getHomePageUrl: (accountId: string) => routes.toIac({ accountId }),
+    featureFlagName: FeatureFlag.CDNG_ENABLED // TODO - UPDATE WITH IAC FF
   }
 }
 
