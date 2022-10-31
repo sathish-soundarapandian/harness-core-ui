@@ -74,7 +74,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_repositoryFormat"
+                    data-tooltip-id="nexusRepositoryFormat"
                   >
                     common.repositoryFormat
                   </span>
@@ -146,7 +146,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_repository"
+                    data-tooltip-id="nexusRepository"
                   >
                     repository
                   </span>
@@ -250,7 +250,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_spec.artifactPath"
+                    data-tooltip-id="nexusArtifactPath"
                   >
                     pipeline.artifactPathLabel
                   </span>
@@ -736,7 +736,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_repositoryFormat"
+                    data-tooltip-id="nexusRepositoryFormat"
                   >
                     common.repositoryFormat
                   </span>
@@ -808,7 +808,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_repository"
+                    data-tooltip-id="nexusRepository"
                   >
                     repository
                   </span>
@@ -912,7 +912,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_spec.artifactPath"
+                    data-tooltip-id="nexusArtifactPath"
                   >
                     pipeline.artifactPathLabel
                   </span>
@@ -1398,7 +1398,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_repositoryFormat"
+                    data-tooltip-id="nexusRepositoryFormat"
                   >
                     common.repositoryFormat
                   </span>
@@ -1470,7 +1470,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_repository"
+                    data-tooltip-id="nexusRepository"
                   >
                     repository
                   </span>
@@ -1574,7 +1574,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_spec.artifactPath"
+                    data-tooltip-id="nexusArtifactPath"
                   >
                     pipeline.artifactPathLabel
                   </span>
