@@ -133,13 +133,14 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
         const response = await switchAccount({ accountId: account.uuid })
         if (response.resource?.requiresReAuthentication) {
           const baseUrl = window.location.href.split('#')[0]
-          const returnUrl = `${baseUrl}#${routes.toHome({ accountId: account.uuid })}`
+          const returnUrl = `${baseUrl}#${routes.toMainDashboard({ accountId: account.uuid })}`
           history.push({
             pathname: routes.toRedirect(),
             search: `?returnUrl=${encodeURIComponent(getLoginPageURL({ returnUrl }))}`
           })
         } else if (response.resource) {
           SecureStorage.set('acctId', account.uuid)
+          localStorage.setItem('defaultExperience', account.defaultExperience || '')
           // this needs to be a server-redirect to support cluster isolation
           window.location.href = window.location.pathname
         } else {

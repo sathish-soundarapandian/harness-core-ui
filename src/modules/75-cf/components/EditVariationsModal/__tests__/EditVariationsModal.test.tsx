@@ -142,7 +142,7 @@ describe('EditVariationsModal', () => {
       mockFeature.variations.length
     )
 
-    userEvent.click(screen.getByRole('button', { name: 'small-plus cf.shared.variation' }))
+    userEvent.click(screen.getByRole('button', { name: 'cf.shared.variation' }))
 
     await waitFor(() =>
       expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(
@@ -157,7 +157,7 @@ describe('EditVariationsModal', () => {
 
     await renderComponent({ feature: multiFeature })
 
-    expect(screen.getByRole('button', { name: 'small-plus cf.shared.variation' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'cf.shared.variation' })).toBeInTheDocument()
   })
 
   test('it should hide the add variation button for boolean flags', async () => {
@@ -166,6 +166,6 @@ describe('EditVariationsModal', () => {
 
     await renderComponent({ feature: boolFeature })
 
-    expect(screen.queryByRole('button', { name: 'small-plus cf.shared.variation' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'cf.shared.variation' })).not.toBeInTheDocument()
   })
 })

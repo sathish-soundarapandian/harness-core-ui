@@ -93,6 +93,7 @@ exports[`Environments V2 test snapshot test with list view and after sort 1`] = 
       class="Layout--horizontal StyledProps--main PageSubHeader--container toolbar StyledProps--flex"
     >
       <button
+        aria-label="newEnvironment"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font StyledProps--font-weight-bold Button--with-current-color Button--withLeftIcon"
         datatestid="add-environment"
         type="button"
@@ -740,6 +741,7 @@ exports[`Environments V2 test snapshot test with list view and after sort 1`] = 
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="Prev"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
             disabled=""
             tabindex="-1"
@@ -783,6 +785,7 @@ exports[`Environments V2 test snapshot test with list view and after sort 1`] = 
             </span>
           </button>
           <button
+            aria-label="Next"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
             disabled=""
             tabindex="-1"

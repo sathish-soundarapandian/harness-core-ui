@@ -100,7 +100,8 @@ describe('Request util', () => {
           label: 'API_KEY',
           value: 'API_KEY'
         }
-      ]
+      ],
+      resourceIdentifier: 'api_key'
     }
     expect(getFormValuesFromFilterProperties(filterPropertieswithoutActions, result.current.getString)).toEqual(
       formDataWithoutActions

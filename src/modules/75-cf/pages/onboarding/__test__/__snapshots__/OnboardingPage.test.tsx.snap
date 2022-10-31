@@ -200,6 +200,7 @@ exports[`OnboardingPage OnboardingPage should be rendered properly 1`] = `
             class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-end"
           >
             <button
+              aria-label="cf.onboarding.tryItOut"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-primary Button--size Button--large"
               type="button"
             >

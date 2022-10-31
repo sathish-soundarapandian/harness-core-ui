@@ -6,12 +6,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox, Classes } from '@blueprintjs/core'
+import { Checkbox, Classes, IconName } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
-import { get, isEmpty } from 'lodash-es'
-import defaultTo from 'lodash-es/defaultTo'
-import React, { useRef } from 'react'
+import { get, isEmpty, defaultTo } from 'lodash-es'
+import React, { useRef, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
 import { Duration, TimeAgoPopover } from '@common/components'
@@ -53,7 +52,14 @@ export const getExecutionPipelineViewLink = (
     accountId,
     module,
     executionIdentifier: planExecutionId || '-1',
-    source
+    source,
+    connectorRef: pipelineExecutionSummary.connectorRef,
+    repoName: defaultTo(
+      pipelineExecutionSummary.gitDetails?.repoName,
+      pipelineExecutionSummary.gitDetails?.repoIdentifier
+    ),
+    branch: pipelineExecutionSummary.gitDetails?.branch,
+    storeType: pipelineExecutionSummary.storeType
   })
 }
 
@@ -310,34 +316,46 @@ export const TriggerInfoCell: CellType = ({ row }) => {
     }
   }
 
-  if (triggerType && triggers.includes(triggerType)) {
-    const { icon, getText } = triggerMap[triggerType as typeof triggers[number]]
+  const renderDetails = useCallback(
+    ({ iconName, label }: { iconName: IconName; label: string }): React.ReactElement => {
+      return (
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Icon name={iconName} size={12} />
+          <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
+            {label}
+          </Text>
+        </Layout.Horizontal>
+      )
+    },
+    []
+  )
 
-    return (
-      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-        <Icon name={icon} size={12} />
-        <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
-          {getText(data.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
-        </Text>
-      </Layout.Horizontal>
-    )
+  if (triggerType && ['SCHEDULER_CRON', 'WEBHOOK_CUSTOM'].includes(triggerType)) {
+    const { icon, getText } = triggerMap[triggerType as typeof triggers[number]]
+    return renderDetails({
+      iconName: icon,
+      label: getText(data.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)
+    })
   }
 
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =
-    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch.commits[0]?.message
+    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch?.commits[0]?.message
 
-  return (
-    showCI && (
-      <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
-        <CITriggerInfo {...(ciData as unknown as CITriggerInfoProps)} />
-        {prOrCommitTitle && (
-          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
-            {prOrCommitTitle}
-          </Text>
-        )}
-      </Layout.Vertical>
-    )
+  return showCI ? (
+    <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
+      <CITriggerInfo {...(ciData as unknown as CITriggerInfoProps)} />
+      {prOrCommitTitle && (
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
+          {prOrCommitTitle}
+        </Text>
+      )}
+    </Layout.Vertical>
+  ) : (
+    renderDetails({
+      iconName: triggerMap.MANUAL.icon,
+      label: triggerMap.MANUAL.getText()
+    })
   )
 }

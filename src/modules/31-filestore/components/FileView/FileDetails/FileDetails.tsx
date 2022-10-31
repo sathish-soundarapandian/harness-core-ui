@@ -347,7 +347,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                         enabled: false
                       },
                       readOnly: false,
-                      scrollBeyondLastLine: false,
+                      scrollBeyondLastLine: true,
                       lineNumbers: 'on',
                       glyphMargin: false,
                       folding: false,

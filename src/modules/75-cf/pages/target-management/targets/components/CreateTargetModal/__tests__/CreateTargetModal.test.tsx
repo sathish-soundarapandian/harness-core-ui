@@ -25,7 +25,7 @@ const renderComponent = (props: Partial<CreateTargetModalProps> = {}): RenderRes
 
 describe('CreateTargetModal', () => {
   const openModal = async (): Promise<void> => {
-    userEvent.click(screen.getByRole('button', { name: 'plus cf.targets.create' }))
+    userEvent.click(screen.getByRole('button', { name: 'cf.targets.create' }))
 
     await waitFor(() => expect(screen.getByText('cf.targets.addTargetsLabel')).toBeInTheDocument())
   }
@@ -176,7 +176,7 @@ describe('CreateTargetModal', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'plus cf.targets.create' }))
+    userEvent.click(screen.getByRole('button', { name: 'cf.targets.create' }))
 
     await waitFor(() => {
       expect(screen.getByText('cf.targets.addTargetsLabel')).toBeInTheDocument()
@@ -203,7 +203,7 @@ describe('CreateTargetModal', () => {
 
     renderComponent()
 
-    const createTargetButton = screen.getByRole('button', { name: 'plus cf.targets.create' })
+    const createTargetButton = screen.getByRole('button', { name: 'cf.targets.create' })
     fireEvent.mouseOver(createTargetButton)
 
     await waitFor(() => {

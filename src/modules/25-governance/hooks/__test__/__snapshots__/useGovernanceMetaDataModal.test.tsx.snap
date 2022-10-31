@@ -6,6 +6,7 @@ exports[`Governance Modal Test should work as expected 1`] = `
     has Error
   </span>
   <button
+    aria-label="governanceBtn"
     class="bp3-button Button--button StyledProps--font StyledProps--main governanceBtn Button--with-current-color"
     type="button"
   >
@@ -61,6 +62,7 @@ exports[`Governance Modal Test should work as expected 3`] = `
     has Error
   </span>
   <button
+    aria-label="governanceBtn"
     class="bp3-button Button--button StyledProps--font StyledProps--main governanceBtn Button--with-current-color"
     type="button"
   >

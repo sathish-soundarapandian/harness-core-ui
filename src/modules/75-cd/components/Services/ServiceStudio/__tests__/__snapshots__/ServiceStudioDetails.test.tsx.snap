@@ -41,6 +41,12 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
         >
           <div>
             <div
+              class="tabHeading"
+              id="serviceBasicInfo"
+            >
+              cd.pipelineSteps.serviceTab.aboutYourService
+            </div>
+            <div
               class="bp3-card bp3-elevation-0 Card--card sectionCard"
             >
               <div
@@ -222,7 +228,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
           class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
         >
           <div
-            class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+            class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -295,7 +301,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
           </div>
         </div>
         <label
-          class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main"
+          class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
         >
           <input
             disabled=""
@@ -317,6 +323,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main stickyBtnContainer StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
   >
     <button
+      aria-label="save"
       class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
       type="button"
     >
@@ -327,6 +334,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
       </span>
     </button>
     <button
+      aria-label="cancel"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -445,6 +453,12 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 class="FormikForm--main"
               >
                 <div>
+                  <div
+                    class="tabHeading"
+                    id="serviceBasicInfo"
+                  >
+                    cd.pipelineSteps.serviceTab.aboutYourService
+                  </div>
                   <div
                     class="bp3-card bp3-elevation-0 Card--card sectionCard"
                   >
@@ -627,7 +641,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
               >
                 <div
-                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -802,7 +816,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 </div>
               </div>
               <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
               >
                 <input
                   name="gitOpsEnabled"
@@ -830,6 +844,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
         unsavedChanges
       </div>
       <button
+        aria-label="save"
         class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -840,6 +855,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
         </span>
       </button>
       <button
+        aria-label="pipeline.discard"
         class="bp3-button Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color Button--variation Button--variation-secondary"
         type="button"
       >
@@ -1107,6 +1123,12 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
               >
                 <div>
                   <div
+                    class="tabHeading"
+                    id="serviceBasicInfo"
+                  >
+                    cd.pipelineSteps.serviceTab.aboutYourService
+                  </div>
+                  <div
                     class="bp3-card bp3-elevation-0 Card--card sectionCard"
                   >
                     <div
@@ -1288,7 +1310,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
                 class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
               >
                 <div
-                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+                  class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -1463,7 +1485,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
                 </div>
               </div>
               <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
               >
                 <input
                   name="gitOpsEnabled"
@@ -1491,6 +1513,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
         unsavedChanges
       </div>
       <button
+        aria-label="save"
         class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -1501,6 +1524,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
         </span>
       </button>
       <button
+        aria-label="pipeline.discard"
         class="bp3-button Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color Button--variation Button--variation-secondary"
         type="button"
       >

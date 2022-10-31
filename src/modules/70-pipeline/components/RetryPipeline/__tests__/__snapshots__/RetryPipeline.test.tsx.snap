@@ -265,7 +265,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
                               class="bp3-input"
                               name="variables[0].value"
                               type="text"
-                              value="variablevalue"
+                              value=""
                             />
                           </div>
                           <span
@@ -349,6 +349,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
           class="Layout--horizontal StyledProps--main actionButtons"
         >
           <button
+            aria-label="pipeline.retryPipeline"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--variation Button--variation-primary"
             data-testid="retry-failed-pipeline"
             disabled=""
@@ -365,6 +366,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
             class="secondaryButton"
           >
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--variation Button--variation-secondary"
               id="cancel-runpipeline"
               type="button"
@@ -384,6 +386,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
             class="bp3-popover-target"
           >
             <button
+              aria-label="inputSets.saveAsInputSet"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
               type="button"
             >

@@ -6,7 +6,7 @@
  */
 
 import React, { FormEvent } from 'react'
-import { FormInput } from '@harness/uicore'
+import { Checkbox, FormInput } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { StringsMap } from 'framework/strings/StringsContext'
@@ -99,7 +99,7 @@ export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadi
 }) => {
   return (
     <>
-      <FormInput.CheckBox
+      <Checkbox
         name={identifier}
         label=""
         disabled={settingValue && !settingValue.isSettingEditable}

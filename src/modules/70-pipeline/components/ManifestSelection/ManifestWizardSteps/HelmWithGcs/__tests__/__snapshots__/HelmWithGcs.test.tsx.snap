@@ -540,6 +540,7 @@ exports[`helm with http tests expand advanced section 1`] = `
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -717,7 +718,7 @@ exports[`helm with http tests expand advanced section 1`] = `
                                     class="commandType"
                                   >
                                     <div
-                                      class="bp3-form-group"
+                                      class="bp3-form-group commandTypeSelect"
                                     >
                                       <label
                                         class="bp3-label"
@@ -887,6 +888,7 @@ exports[`helm with http tests expand advanced section 1`] = `
                                 </div>
                                 <span>
                                   <button
+                                    aria-label="add"
                                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-primary"
                                     type="button"
                                   >
@@ -912,6 +914,7 @@ exports[`helm with http tests expand advanced section 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -941,6 +944,7 @@ exports[`helm with http tests expand advanced section 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1517,6 +1521,7 @@ exports[`helm with http tests renders correctly in edit case 1`] = `
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -1589,6 +1594,7 @@ exports[`helm with http tests renders correctly in edit case 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1618,6 +1624,7 @@ exports[`helm with http tests renders correctly in edit case 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -2194,6 +2201,7 @@ exports[`helm with http tests renders while adding step first time 1`] = `
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -2266,6 +2274,7 @@ exports[`helm with http tests renders while adding step first time 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -2295,6 +2304,7 @@ exports[`helm with http tests renders while adding step first time 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -2871,6 +2881,7 @@ exports[`helm with http tests renders without crashing 1`] = `
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -2943,6 +2954,7 @@ exports[`helm with http tests renders without crashing 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -2972,6 +2984,7 @@ exports[`helm with http tests renders without crashing 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -3548,6 +3561,7 @@ exports[`helm with http tests submits with the right payload 1`] = `
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -3620,6 +3634,7 @@ exports[`helm with http tests submits with the right payload 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -3649,6 +3664,7 @@ exports[`helm with http tests submits with the right payload 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

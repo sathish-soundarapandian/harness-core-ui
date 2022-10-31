@@ -9,7 +9,6 @@ import * as React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
-import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
@@ -19,6 +18,7 @@ import { getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -130,7 +130,7 @@ export function StepGroupNode(props: any): JSX.Element {
                     isDark: true
                   }}
                 >
-                  <Icon size={26} name={'conditional-skip-new'} color="white" />
+                  <Icon size={26} name={'conditional-skip-new'} />
                 </Text>
               </div>
             )}
@@ -142,7 +142,7 @@ export function StepGroupNode(props: any): JSX.Element {
                     isDark: true
                   }}
                 >
-                  <Icon size={26} name={'conditional-skip-new'} color="white" />
+                  <Icon size={26} name={'conditional-skip-new'} />
                 </Text>
               </div>
             )}

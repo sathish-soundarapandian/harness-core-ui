@@ -32,7 +32,7 @@ import {
   NewRelicMetricDefinition,
   TimeSeriesSampleDTO,
   useFetchParsedSampleData,
-  useGetMetricPacks,
+  useGetRiskCategoryForCustomHealthMetric,
   useGetSampleDataForNRQL
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -50,9 +50,7 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'NEW_RELIC' }
-  })
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const [newRelicGroupName, setNewRelicGroupName] = useState<SelectOption[]>(
     initializeGroupNames(mappedMetrics, getString)
@@ -295,7 +293,7 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                     healthScore: !!formikValues?.healthScore,
                     continuousVerification: !!formikValues?.continuousVerification
                   }}
-                  metricPackResponse={metricPackResponse}
+                  riskProfileResponse={riskProfileResponse}
                   hideServiceIdentifier={true}
                 />
               </>

@@ -279,6 +279,7 @@ exports[`AWS Access Point Configuration screen first render and fill form 1`] = 
           style="margin-top: 220px;"
         >
           <button
+            aria-label="Back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
             type="button"
           >
@@ -308,6 +309,7 @@ exports[`AWS Access Point Configuration screen first render and fill form 1`] = 
             </span>
           </button>
           <button
+            aria-label="Save Load Balancer"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             disabled=""
             tabindex="-1"

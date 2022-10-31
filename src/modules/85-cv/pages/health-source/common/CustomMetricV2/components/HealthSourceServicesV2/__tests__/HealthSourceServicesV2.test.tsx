@@ -13,7 +13,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
           <CustomMetricsV2HelperContext.Provider
             value={{
               groupedCreatedMetrics: {},
-              metricPacksResponse: {
+              riskProfileResponse: {
                 data: { resource: [] },
                 loading: false,
                 cancel: () => null,

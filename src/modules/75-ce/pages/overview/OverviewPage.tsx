@@ -102,7 +102,7 @@ const OverviewPage: React.FC = () => {
     from: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[0].format(CE_DATE_FORMAT_INTERNAL)
   })
 
-  useDocumentTitle([getString('cloudCostsText'), getString('overview')], true)
+  useDocumentTitle([getString('cloudCostsText'), getString('overview')])
 
   const [summaryResult] = useFetchPerspectiveDetailsSummaryQuery({
     variables: {

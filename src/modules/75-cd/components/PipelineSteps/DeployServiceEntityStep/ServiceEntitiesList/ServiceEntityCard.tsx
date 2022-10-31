@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Card, Icon, Text, Color, AllowedTypes, ButtonSize } from '@harness/uicore'
+import { Button, ButtonVariation, Card, Icon, Text, Color, AllowedTypes, ButtonSize, Layout } from '@harness/uicore'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
+import cx from 'classnames'
 
 import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
@@ -33,6 +34,7 @@ export interface ServiceEntityCardProps extends ServiceData {
   allowableTypes: AllowedTypes
   onEditClick(svc: ServiceData): void
   onDeleteClick(svc: ServiceData): void
+  cardClassName?: string
 }
 
 export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactElement {
@@ -45,7 +47,8 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
     onDeleteClick,
     allowableTypes,
     stageIdentifier,
-    deploymentType
+    deploymentType,
+    cardClassName
   } = props
   const [showInputs, setShowInputs] = React.useState(!!defaultExpanded)
   const { getString } = useStrings()
@@ -74,7 +77,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   }
 
   return (
-    <Card className={css.card}>
+    <Card className={cx(css.card, cardClassName)}>
       <div className={css.row}>
         <div className={css.serviceNameIconWrapper}>
           <span className={css.serviceIcon}>{type ? <Icon name={deploymentIconMap[type]} size={24} /> : null}</span>
@@ -87,22 +90,24 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
             </Text>
           </span>
         </div>
-        <div>
+        <Layout.Horizontal>
           <Button
-            variation={ButtonVariation.ICON}
-            icon="edit"
+            icon="Edit"
             data-testid={`edit-service-${service.identifier}`}
             disabled={readonly}
             onClick={() => onEditClick({ service, serviceInputs })}
+            minimal
+            aria-label={getString('editService')}
           />
           <Button
-            variation={ButtonVariation.ICON}
-            icon="trash"
+            icon="main-trash"
             data-testid={`delete-service-${service.identifier}`}
             disabled={readonly}
             onClick={() => onDeleteClick({ service, serviceInputs })}
+            aria-label={getString('common.deleteService')}
+            minimal
           />
-        </div>
+        </Layout.Horizontal>
       </div>
       {serviceInputs && MULTI_SERVICE_INFRA && get(formik?.values, `serviceInputs.${serviceIdentifier}`) ? (
         <>

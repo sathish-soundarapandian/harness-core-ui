@@ -12,9 +12,11 @@ import cx from 'classnames'
 
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
 import { fromPipelineInputTriggerTab, getPrimaryInitialValues } from '../../ArtifactSource/artifactSourceUtils'
@@ -25,7 +27,8 @@ export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): Rea
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
+  const { supportingGitSimplification } = useAppStore()
 
   const runtimeMode = isTemplatizedView(props.stepViewType)
   const isArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts', false)
@@ -72,7 +75,7 @@ export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): Rea
           orgIdentifier,
           accountId,
           pipelineIdentifier,
-          repoIdentifier,
+          repoIdentifier: supportingGitSimplification && storeType === StoreType.REMOTE ? repoName : repoIdentifier,
           branch,
           artifactPath,
           isSidecar: false,

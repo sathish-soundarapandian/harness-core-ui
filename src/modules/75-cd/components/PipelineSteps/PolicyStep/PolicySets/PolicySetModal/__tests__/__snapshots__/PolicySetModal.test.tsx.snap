@@ -208,6 +208,7 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
                   common.policiesSets.selectPolicySet
                 </p>
                 <button
+                  aria-label="common.policiesSets.newPolicyset"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main newPolicySetBtn StyledProps--margin-bottom-small Button--with-current-color Button--without-shadow Button--withLeftIcon"
                   type="button"
                 >
@@ -705,6 +706,7 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
                     class="Layout--horizontal StyledProps--main"
                   >
                     <button
+                      aria-label="Prev"
                       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                       disabled=""
                       tabindex="-1"
@@ -736,6 +738,7 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
                       </span>
                     </button>
                     <button
+                      aria-label="Next"
                       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                       disabled=""
                       tabindex="-1"
@@ -841,6 +844,7 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                   >
                     <button
+                      aria-label="Apply"
                       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
                       type="button"
                     >
@@ -851,6 +855,7 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
                       </span>
                     </button>
                     <button
+                      aria-label="Cancel"
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
                       type="button"
                     >

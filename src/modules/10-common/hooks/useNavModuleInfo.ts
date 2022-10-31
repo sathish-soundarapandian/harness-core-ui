@@ -13,7 +13,6 @@ import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 export type NavModuleName =
@@ -42,7 +41,7 @@ interface useNavModuleInfoReturnType {
   label: StringKeys
   icon: IconName
   homePageUrl: string
-  licenseType?: ModuleLicenseDTO['licenseType']
+  hasLicense?: boolean
 }
 
 interface ModuleInfo {
@@ -55,7 +54,7 @@ interface ModuleInfo {
 const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CD]: {
     icon: 'cd-main',
-    label: 'common.purpose.cd.continuous',
+    label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
     featureFlagName: FeatureFlag.CDNG_ENABLED
   },
@@ -67,7 +66,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.CV]: {
     icon: 'cv-main',
-    label: 'common.purpose.cv.serviceReliability',
+    label: 'common.serviceReliabilityManagement',
     getHomePageUrl: (accountId: string) => routes.toCV({ accountId }),
     featureFlagName: FeatureFlag.CVNG_ENABLED
   },
@@ -79,19 +78,19 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.CE]: {
     icon: 'ce-main',
-    label: 'common.purpose.ce.cloudCost',
+    label: 'common.purpose.ce.continuous',
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
     featureFlagName: FeatureFlag.CENG_ENABLED
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
-    label: 'common.purpose.sto.continuous',
+    label: 'common.stoText',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
     featureFlagName: FeatureFlag.SECURITY
   },
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
-    label: 'common.chaosText',
+    label: 'chaos.homepage.chaosHomePageTitle',
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     featureFlagName: FeatureFlag.CHAOS_ENABLED
   },
@@ -112,35 +111,26 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO]
   },
   {
     label: 'common.moduleList.deployChanges',
-    items: [ModuleName.CD]
+    items: [ModuleName.CD, ModuleName.CF]
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.STO, ModuleName.CF, ModuleName.CHAOS]
-  },
-  {
-    label: 'common.moduleList.optimize',
     items: [ModuleName.CE, ModuleName.CV]
   }
 ]
 
-const getModuleInfo = (
-  moduleInfo: ModuleInfo,
-  accountId: string,
-  licenseType: ModuleLicenseDTO['licenseType'],
-  shouldVisible = false
-) => {
+const getModuleInfo = (moduleInfo: ModuleInfo, accountId: string, hasLicense: boolean, shouldVisible = false) => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
   return {
     icon: moduleIcon,
     label,
     homePageUrl: getHomePageUrl(accountId),
     shouldVisible: shouldVisible,
-    licenseType: licenseType
+    hasLicense
   }
 }
 
@@ -154,7 +144,7 @@ const useNavModuleInfo = (module: NavModuleName) => {
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
-    licenseInformation[module]?.licenseType,
+    !!licenseInformation[module]?.id,
     featureFlags[featureFlagName]
   ) as useNavModuleInfoReturnType
 }
@@ -173,7 +163,7 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
       [module]: getModuleInfo(
         moduleInfoMap[module],
         accountId,
-        licenseInformation[module]?.licenseType,
+        !!licenseInformation[module]?.id,
         featureFlags[moduleInfoMap[module].featureFlagName]
       )
     }

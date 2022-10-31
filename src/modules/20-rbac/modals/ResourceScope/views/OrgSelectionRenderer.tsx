@@ -94,7 +94,7 @@ const OrgSelectionRenderer: React.FC<OrgSelectionRendererProps> = ({
             flex={{ justifyContent: 'flex-start' }}
           >
             <Radio
-              label={getString('rbac.resourceGroup.all')}
+              label={getString('common.all')}
               data-testid={`${orgIdentifier}-INCLUDE-ALL-PROJECTS`}
               inline={true}
               value={SelectionType.ALL}

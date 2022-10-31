@@ -50,8 +50,11 @@ export function ExecutionListPage(): React.ReactElement {
     case 'sto':
       textIdentifier = 'common.purpose.sto.continuous'
       break
-    default:
+    case 'cd':
       textIdentifier = 'deploymentsText'
+      break
+    default:
+      textIdentifier = 'executionsText'
   }
 
   return (

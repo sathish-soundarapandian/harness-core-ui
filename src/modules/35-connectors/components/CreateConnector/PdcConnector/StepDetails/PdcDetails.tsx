@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo } from 'react'
-import get from 'lodash-es/get'
+import { get } from 'lodash-es'
 import {
   Layout,
   Button,

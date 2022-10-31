@@ -15,6 +15,7 @@ import { Connectors } from '@connectors/constants'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { cvConnectorHOC } from '../CommonCVConnector/CVConnectorHOC'
 import type { ConnectionConfigProps } from '../CommonCVConnector/constants'
 import { initializeErrorTrackingConnectorWithStepData } from './utils'
@@ -51,6 +52,13 @@ export function ErrorTrackingConfigStep(props: ConnectionConfigProps): JSX.Eleme
     return <PageSpinner />
   }
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   return (
     <Container className={css.credentials}>
       <StepDetailsHeader connectorTypeLabel={getString('common.purpose.errorTracking.title')} />
@@ -71,7 +79,7 @@ export function ErrorTrackingConfigStep(props: ConnectionConfigProps): JSX.Eleme
       >
         <FormikForm className={css.form}>
           <Layout.Vertical spacing="large" height={450}>
-            <SecretInput label={getString('connectors.encryptedAPIKeyLabel')} name="apiKeyRef" />
+            <SecretInput label={getString('connectors.encryptedAPIKeyLabel')} name="apiKeyRef" scope={scope} />
           </Layout.Vertical>
           <Layout.Horizontal spacing="xlarge">
             <Button onClick={() => props.previousStep?.({ ...props.prevStepData })} text={getString('back')} />

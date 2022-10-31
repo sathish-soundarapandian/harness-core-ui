@@ -384,6 +384,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -493,6 +494,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                       >
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -633,6 +635,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -662,6 +665,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1083,6 +1087,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -1122,6 +1127,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -1151,6 +1157,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1572,6 +1579,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -1611,6 +1619,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -1640,6 +1649,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -2061,6 +2071,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -2100,6 +2111,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -2129,6 +2141,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -2550,6 +2563,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -2589,6 +2603,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -2618,6 +2633,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -3039,6 +3055,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -3078,6 +3095,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -3107,6 +3125,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -3528,6 +3547,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -3567,6 +3587,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -3596,6 +3617,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -4017,6 +4039,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -4056,6 +4079,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -4085,6 +4109,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >

@@ -7,7 +7,7 @@
 
 import React, { useCallback, useMemo } from 'react'
 import type { FormikProps } from 'formik'
-import { Button, ButtonVariation, Layout, useToaster, Utils } from '@harness/uicore'
+import { Button, ButtonVariation, Layout, SelectOption, useToaster, Utils } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import {
   useGetHarnessServices,
@@ -108,7 +108,7 @@ export default function CreateMonitoredServiceFromSLO(props: CreateMonitoredServ
           className: css.dropdown,
           item: serviceOptions.find(item => item?.value === serviceRef),
           options: serviceOptions,
-          onSelect: selectedService =>
+          onSelect: (selectedService: SelectOption) =>
             updateMonitoredServiceNameForService(monitoredServiceFormikProps, selectedService),
           onNewCreated: newOption => {
             if (newOption?.identifier && newOption.name) {

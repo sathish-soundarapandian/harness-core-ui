@@ -368,6 +368,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -397,6 +398,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -790,6 +792,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -819,6 +822,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1266,6 +1270,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1295,6 +1300,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1506,6 +1512,22 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
                             class="bp3-input-action"
                           >
                             <span
+                              class="bp3-icon StyledProps--main StyledProps--padding-top-small StyledProps--padding-right-xsmall StyledProps--padding-bottom-small"
+                              data-icon="main-delete"
+                            >
+                              <svg
+                                height="14"
+                                viewBox="0 0 14 14"
+                                width="14"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M10.5 4.2c0-.4-.3-.7-.7-.7-.2 0-.4.1-.5.2L7 6 4.7 3.7c-.1-.1-.3-.2-.5-.2-.4 0-.7.3-.7.7 0 .2.1.4.2.5L6 7 3.7 9.3c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2L7 8l2.3 2.3c.1.1.3.2.5.2.4 0 .7-.3.7-.7 0-.2-.1-.4-.2-.5L8 7l2.3-2.3c.1-.1.2-.3.2-.5zM7 0C3.1 0 0 3.1 0 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 12.6c-3.1 0-5.6-2.5-5.6-5.6S3.9 1.4 7 1.4s5.6 2.5 5.6 5.6-2.5 5.6-5.6 5.6z"
+                                  fill="#4d5969"
+                                />
+                              </svg>
+                            </span>
+                            <span
                               class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
                               icon="chevron-down"
                             >
@@ -1688,6 +1710,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1717,6 +1740,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1928,6 +1952,22 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
                             class="bp3-input-action"
                           >
                             <span
+                              class="bp3-icon StyledProps--main StyledProps--padding-top-small StyledProps--padding-right-xsmall StyledProps--padding-bottom-small"
+                              data-icon="main-delete"
+                            >
+                              <svg
+                                height="14"
+                                viewBox="0 0 14 14"
+                                width="14"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M10.5 4.2c0-.4-.3-.7-.7-.7-.2 0-.4.1-.5.2L7 6 4.7 3.7c-.1-.1-.3-.2-.5-.2-.4 0-.7.3-.7.7 0 .2.1.4.2.5L6 7 3.7 9.3c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2L7 8l2.3 2.3c.1.1.3.2.5.2.4 0 .7-.3.7-.7 0-.2-.1-.4-.2-.5L8 7l2.3-2.3c.1-.1.2-.3.2-.5zM7 0C3.1 0 0 3.1 0 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 12.6c-3.1 0-5.6-2.5-5.6-5.6S3.9 1.4 7 1.4s5.6 2.5 5.6 5.6-2.5 5.6-5.6 5.6z"
+                                  fill="#4d5969"
+                                />
+                              </svg>
+                            </span>
+                            <span
                               class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
                               icon="chevron-down"
                             >
@@ -2110,6 +2150,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -2139,6 +2180,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

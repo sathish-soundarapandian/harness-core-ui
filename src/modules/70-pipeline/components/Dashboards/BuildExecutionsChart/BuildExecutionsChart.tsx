@@ -6,13 +6,12 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react'
-import noop from 'lodash/noop'
+import { noop, merge } from 'lodash-es'
 import { Container, Text, Layout } from '@wings-software/uicore'
 import HighchartsReact from 'highcharts-react-official'
 import { FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import moment from 'moment'
-import merge from 'lodash-es/merge'
 import { Spinner } from '@blueprintjs/core'
 
 import { useParams } from 'react-router-dom'

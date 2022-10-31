@@ -14,7 +14,7 @@ export const BaseHealthSourceMetricInfoMock: BaseHealthSourceMetricInfo = {
   identifier: 'mock_identifier',
   metricName: 'mock_metric_name',
   groupName: { label: 'mock_group_name', value: 'mock_group_name' },
-  riskCategory: 'Performance/INFRA',
+  riskCategory: 'Performance_Other',
   sli: true,
   continuousVerification: false,
   healthScore: true,
@@ -32,8 +32,7 @@ export const BaseHealthSourceMetricDefinitionMock: BaseHealthSourceMetricDefinit
       enabled: true
     },
     riskProfile: {
-      category: 'Performance',
-      metricType: 'INFRA',
+      riskCategory: 'Performance_Other',
       thresholdTypes: []
     }
   },

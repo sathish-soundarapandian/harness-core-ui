@@ -356,6 +356,7 @@ exports[`Open shift template with git tests expand advanced section 1`] = `
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -495,6 +496,7 @@ exports[`Open shift template with git tests expand advanced section 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -524,6 +526,7 @@ exports[`Open shift template with git tests expand advanced section 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -916,6 +919,7 @@ exports[`Open shift template with git tests renders correctly in edit case 1`] =
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -988,6 +992,7 @@ exports[`Open shift template with git tests renders correctly in edit case 1`] =
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1017,6 +1022,7 @@ exports[`Open shift template with git tests renders correctly in edit case 1`] =
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1409,6 +1415,7 @@ exports[`Open shift template with git tests renders without crashing 1`] = `
                     >
                       <span>
                         <button
+                          aria-label="addFileText"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                           type="button"
                         >
@@ -1481,6 +1488,7 @@ exports[`Open shift template with git tests renders without crashing 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1510,6 +1518,7 @@ exports[`Open shift template with git tests renders without crashing 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

@@ -1052,6 +1052,7 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Hourly select
           </div>
         </div>
         <button
+          aria-label="Submit"
           class="bp3-button Button--button StyledProps--font StyledProps--main submitButton Button--with-current-color"
           type="submit"
         >
@@ -1523,6 +1524,7 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Minutes selec
           </div>
         </div>
         <button
+          aria-label="Submit"
           class="bp3-button Button--button StyledProps--font StyledProps--main submitButton Button--with-current-color"
           type="submit"
         >
@@ -1919,6 +1921,7 @@ exports[`SchedulePanel Triggers tests Renders/snapshots Initial Render - Schedul
           </div>
         </div>
         <button
+          aria-label="Submit"
           class="bp3-button Button--button StyledProps--font StyledProps--main submitButton Button--with-current-color"
           type="submit"
         >

@@ -257,110 +257,107 @@ exports[`TargetDetailPage TargetDetailPage should render data correctly 1`] = `
         style="height: 100%;"
       >
         <div
-          class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200"
+          class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-large StyledProps--margin-bottom-large"
+          style="width: 230px;"
         >
           <div
-            class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--margin-left-xxlarge StyledProps--margin-top-large StyledProps--margin-bottom-large"
-            style="width: 230px;"
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+            style="width: 400px;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-              style="width: 400px;"
+              class="StyledProps--font StyledProps--main gitRepoText"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="repository"
+              >
+                <svg
+                  height="16"
+                  viewBox="0 0 13 14"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12.438 2.452l-.006-.017a.367.367 0 00-.067-.114l-.004-.007L10.409.125a.374.374 0 00-.28-.125H2.327a.376.376 0 00-.28.125L.095 2.314l-.005.008a.374.374 0 00-.066.113l-.006.017a.37.37 0 00-.018.11v11.064c0 .206.168.374.374.374h11.707a.375.375 0 00.375-.374V2.563a.369.369 0 00-.018-.111zm-7.91 7.86h3.4v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357zM.75 9.563V6.625h3.03v.357c0 .588.479 1.066 1.067 1.066H7.61c.588 0 1.066-.478 1.066-1.066v-.357h3.03v2.938H.75zm3.03-6.626v.357c0 .588.479 1.067 1.067 1.067H7.61c.589 0 1.067-.479 1.067-1.067v-.357h3.03v2.939H.75V2.937h3.03zm4.15 0v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357h3.4zm-3.4 3.688h3.4v.357a.318.318 0 01-.319.317H4.846a.317.317 0 01-.318-.317v-.357zM2.493.749h7.468l1.284 1.44H1.21L2.494.748zm9.213 12.502H.75v-2.939h3.03v.357c0 .589.479 1.067 1.067 1.067H7.61c.588 0 1.066-.478 1.066-1.067v-.357h3.03v2.94z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main"
             >
               <div
-                class="StyledProps--font StyledProps--main gitRepoText"
-              >
-                <span
-                  class="bp3-icon StyledProps--main"
-                  data-icon="repository"
-                >
-                  <svg
-                    height="16"
-                    viewBox="0 0 13 14"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12.438 2.452l-.006-.017a.367.367 0 00-.067-.114l-.004-.007L10.409.125a.374.374 0 00-.28-.125H2.327a.376.376 0 00-.28.125L.095 2.314l-.005.008a.374.374 0 00-.066.113l-.006.017a.37.37 0 00-.018.11v11.064c0 .206.168.374.374.374h11.707a.375.375 0 00.375-.374V2.563a.369.369 0 00-.018-.111zm-7.91 7.86h3.4v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357zM.75 9.563V6.625h3.03v.357c0 .588.479 1.066 1.067 1.066H7.61c.588 0 1.066-.478 1.066-1.066v-.357h3.03v2.938H.75zm3.03-6.626v.357c0 .588.479 1.067 1.067 1.067H7.61c.589 0 1.067-.479 1.067-1.067v-.357h3.03v2.939H.75V2.937h3.03zm4.15 0v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357h3.4zm-3.4 3.688h3.4v.357a.318.318 0 01-.319.317H4.846a.317.317 0 01-.318-.317v-.357zM2.493.749h7.468l1.284 1.44H1.21L2.494.748zm9.213 12.502H.75v-2.939h3.03v.357c0 .589.479 1.067 1.067 1.067H7.61c.588 0 1.066-.478 1.066-1.067v-.357h3.03v2.94z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
-                  style="--text-line-clamp: 1;"
-                />
-              </div>
-              <div
-                class="StyledProps--font StyledProps--main"
+                class="bp3-popover-wrapper bp3-fill"
               >
                 <div
-                  class="bp3-popover-wrapper bp3-fill"
+                  class="bp3-popover-target"
                 >
-                  <div
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="undefined settings"
+                    class="branchActionButton"
                   >
-                    <button
-                      class="branchActionButton"
+                    <div
+                      class="StyledProps--font StyledProps--main branchActionButtonWrapper"
                     >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="git-new-branch"
+                      >
+                        <svg
+                          height="15"
+                          viewBox="0 0 13 16"
+                          width="15"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.406.003a2.399 2.399 0 00-.8 4.658v.94a.8.8 0 01-.8.8H4.001a2.413 2.413 0 00-.8.14V4.66A2.399 2.399 0 002.402 0a2.399 2.399 0 00-.8 4.661v6.678a2.399 2.399 0 00.8 4.661 2.399 2.399 0 00.8-4.661v-2.54a.8.8 0 01.8-.799h4.803a2.4 2.4 0 002.402-2.4v-.939a2.399 2.399 0 00-.8-4.658z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
+                      />
                       <div
-                        class="StyledProps--font StyledProps--main branchActionButtonWrapper"
+                        class="StyledProps--font StyledProps--main gitStatusIcon"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="git-new-branch"
-                        >
-                          <svg
-                            height="15"
-                            viewBox="0 0 13 16"
-                            width="15"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M10.406.003a2.399 2.399 0 00-.8 4.658v.94a.8.8 0 01-.8.8H4.001a2.413 2.413 0 00-.8.14V4.66A2.399 2.399 0 002.402 0a2.399 2.399 0 00-.8 4.661v6.678a2.399 2.399 0 00.8 4.661 2.399 2.399 0 00.8-4.661v-2.54a.8.8 0 01.8-.799h4.803a2.4 2.4 0 002.402-2.4v-.939a2.399 2.399 0 00-.8-4.658z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
-                        />
-                        <div
-                          class="StyledProps--font StyledProps--main gitStatusIcon"
+                          class="bp3-popover-wrapper"
                         >
                           <span
-                            class="bp3-popover-wrapper"
+                            class="bp3-popover-target"
                           >
                             <span
-                              class="bp3-popover-target"
+                              class="bp3-icon bp3-icon-full-circle StyledProps--main autoCommitDisabled"
+                              data-testid="auto-commit-status-icon"
+                              icon="full-circle"
+                              tabindex="0"
                             >
-                              <span
-                                class="bp3-icon bp3-icon-full-circle StyledProps--main autoCommitDisabled"
-                                data-testid="auto-commit-status-icon"
-                                icon="full-circle"
-                                tabindex="0"
+                              <svg
+                                data-icon="full-circle"
+                                height="10"
+                                viewBox="0 0 16 16"
+                                width="10"
                               >
-                                <svg
-                                  data-icon="full-circle"
-                                  height="10"
-                                  viewBox="0 0 16 16"
-                                  width="10"
-                                >
-                                  <desc>
-                                    full-circle
-                                  </desc>
-                                  <path
-                                    d="M8 0a8 8 0 100 16A8 8 0 108 0z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
+                                <desc>
+                                  full-circle
+                                </desc>
+                                <path
+                                  d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
                             </span>
                           </span>
-                        </div>
+                        </span>
                       </div>
-                    </button>
-                  </div>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -818,110 +815,107 @@ exports[`TargetDetailPage TargetDetailPage should render its segments 1`] = `
         style="height: 100%;"
       >
         <div
-          class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200"
+          class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-large StyledProps--margin-bottom-large"
+          style="width: 230px;"
         >
           <div
-            class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--margin-left-xxlarge StyledProps--margin-top-large StyledProps--margin-bottom-large"
-            style="width: 230px;"
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+            style="width: 400px;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-              style="width: 400px;"
+              class="StyledProps--font StyledProps--main gitRepoText"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="repository"
+              >
+                <svg
+                  height="16"
+                  viewBox="0 0 13 14"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12.438 2.452l-.006-.017a.367.367 0 00-.067-.114l-.004-.007L10.409.125a.374.374 0 00-.28-.125H2.327a.376.376 0 00-.28.125L.095 2.314l-.005.008a.374.374 0 00-.066.113l-.006.017a.37.37 0 00-.018.11v11.064c0 .206.168.374.374.374h11.707a.375.375 0 00.375-.374V2.563a.369.369 0 00-.018-.111zm-7.91 7.86h3.4v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357zM.75 9.563V6.625h3.03v.357c0 .588.479 1.066 1.067 1.066H7.61c.588 0 1.066-.478 1.066-1.066v-.357h3.03v2.938H.75zm3.03-6.626v.357c0 .588.479 1.067 1.067 1.067H7.61c.589 0 1.067-.479 1.067-1.067v-.357h3.03v2.939H.75V2.937h3.03zm4.15 0v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357h3.4zm-3.4 3.688h3.4v.357a.318.318 0 01-.319.317H4.846a.317.317 0 01-.318-.317v-.357zM2.493.749h7.468l1.284 1.44H1.21L2.494.748zm9.213 12.502H.75v-2.939h3.03v.357c0 .589.479 1.067 1.067 1.067H7.61c.588 0 1.066-.478 1.066-1.067v-.357h3.03v2.94z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main"
             >
               <div
-                class="StyledProps--font StyledProps--main gitRepoText"
-              >
-                <span
-                  class="bp3-icon StyledProps--main"
-                  data-icon="repository"
-                >
-                  <svg
-                    height="16"
-                    viewBox="0 0 13 14"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12.438 2.452l-.006-.017a.367.367 0 00-.067-.114l-.004-.007L10.409.125a.374.374 0 00-.28-.125H2.327a.376.376 0 00-.28.125L.095 2.314l-.005.008a.374.374 0 00-.066.113l-.006.017a.37.37 0 00-.018.11v11.064c0 .206.168.374.374.374h11.707a.375.375 0 00.375-.374V2.563a.369.369 0 00-.018-.111zm-7.91 7.86h3.4v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357zM.75 9.563V6.625h3.03v.357c0 .588.479 1.066 1.067 1.066H7.61c.588 0 1.066-.478 1.066-1.066v-.357h3.03v2.938H.75zm3.03-6.626v.357c0 .588.479 1.067 1.067 1.067H7.61c.589 0 1.067-.479 1.067-1.067v-.357h3.03v2.939H.75V2.937h3.03zm4.15 0v.357a.318.318 0 01-.318.318H4.846a.318.318 0 01-.318-.318v-.357h3.4zm-3.4 3.688h3.4v.357a.318.318 0 01-.319.317H4.846a.317.317 0 01-.318-.317v-.357zM2.493.749h7.468l1.284 1.44H1.21L2.494.748zm9.213 12.502H.75v-2.939h3.03v.357c0 .589.479 1.067 1.067 1.067H7.61c.588 0 1.066-.478 1.066-1.067v-.357h3.03v2.94z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
-                  style="--text-line-clamp: 1;"
-                />
-              </div>
-              <div
-                class="StyledProps--font StyledProps--main"
+                class="bp3-popover-wrapper bp3-fill"
               >
                 <div
-                  class="bp3-popover-wrapper bp3-fill"
+                  class="bp3-popover-target"
                 >
-                  <div
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="undefined settings"
+                    class="branchActionButton"
                   >
-                    <button
-                      class="branchActionButton"
+                    <div
+                      class="StyledProps--font StyledProps--main branchActionButtonWrapper"
                     >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="git-new-branch"
+                      >
+                        <svg
+                          height="15"
+                          viewBox="0 0 13 16"
+                          width="15"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.406.003a2.399 2.399 0 00-.8 4.658v.94a.8.8 0 01-.8.8H4.001a2.413 2.413 0 00-.8.14V4.66A2.399 2.399 0 002.402 0a2.399 2.399 0 00-.8 4.661v6.678a2.399 2.399 0 00.8 4.661 2.399 2.399 0 00.8-4.661v-2.54a.8.8 0 01.8-.799h4.803a2.4 2.4 0 002.402-2.4v-.939a2.399 2.399 0 00-.8-4.658z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
+                      />
                       <div
-                        class="StyledProps--font StyledProps--main branchActionButtonWrapper"
+                        class="StyledProps--font StyledProps--main gitStatusIcon"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="git-new-branch"
-                        >
-                          <svg
-                            height="15"
-                            viewBox="0 0 13 16"
-                            width="15"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M10.406.003a2.399 2.399 0 00-.8 4.658v.94a.8.8 0 01-.8.8H4.001a2.413 2.413 0 00-.8.14V4.66A2.399 2.399 0 002.402 0a2.399 2.399 0 00-.8 4.661v6.678a2.399 2.399 0 00.8 4.661 2.399 2.399 0 00.8-4.661v-2.54a.8.8 0 01.8-.799h4.803a2.4 2.4 0 002.402-2.4v-.939a2.399 2.399 0 00-.8-4.658z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
-                        />
-                        <div
-                          class="StyledProps--font StyledProps--main gitStatusIcon"
+                          class="bp3-popover-wrapper"
                         >
                           <span
-                            class="bp3-popover-wrapper"
+                            class="bp3-popover-target"
                           >
                             <span
-                              class="bp3-popover-target"
+                              class="bp3-icon bp3-icon-full-circle StyledProps--main autoCommitDisabled"
+                              data-testid="auto-commit-status-icon"
+                              icon="full-circle"
+                              tabindex="0"
                             >
-                              <span
-                                class="bp3-icon bp3-icon-full-circle StyledProps--main autoCommitDisabled"
-                                data-testid="auto-commit-status-icon"
-                                icon="full-circle"
-                                tabindex="0"
+                              <svg
+                                data-icon="full-circle"
+                                height="10"
+                                viewBox="0 0 16 16"
+                                width="10"
                               >
-                                <svg
-                                  data-icon="full-circle"
-                                  height="10"
-                                  viewBox="0 0 16 16"
-                                  width="10"
-                                >
-                                  <desc>
-                                    full-circle
-                                  </desc>
-                                  <path
-                                    d="M8 0a8 8 0 100 16A8 8 0 108 0z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
+                                <desc>
+                                  full-circle
+                                </desc>
+                                <path
+                                  d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
                             </span>
                           </span>
-                        </div>
+                        </span>
                       </div>
-                    </button>
-                  </div>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -1028,6 +1022,7 @@ exports[`TargetDetailPage TargetDetailPage should render its segments 1`] = `
                           </p>
                         </div>
                         <button
+                          aria-label="cf.targetDetail.addToSegment"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addBtn Button--with-current-color Button--variation Button--variation-link"
                           type="button"
                         >
@@ -1067,6 +1062,7 @@ exports[`TargetDetailPage TargetDetailPage should render its segments 1`] = `
                           </p>
                         </div>
                         <button
+                          aria-label="cf.targetDetail.excludeFromSegment"
                           class="bp3-button Button--button StyledProps--font StyledProps--main addBtn Button--with-current-color Button--variation Button--variation-link"
                           type="button"
                         >

@@ -397,6 +397,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -407,6 +408,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >
@@ -821,6 +823,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -831,6 +834,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >
@@ -1245,6 +1249,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -1255,6 +1260,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >
@@ -1669,6 +1675,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -1679,6 +1686,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >
@@ -2093,6 +2101,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -2103,6 +2112,7 @@ exports[`Create WinRm Cred Wizard Step Authentication Test for adding required f
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >
@@ -2508,20 +2518,6 @@ exports[`Create WinRm Cred Wizard Step Authentication should render form Kerbero
                     />
                     password
                   </label>
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      class="RadioButton--input"
-                      name="tgtGenerationMethod"
-                      type="radio"
-                      value="None"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    secrets.sshAuthFormFields.optionKerbNone
-                  </label>
                 </div>
               </div>
             </div>
@@ -2596,6 +2592,7 @@ exports[`Create WinRm Cred Wizard Step Authentication should render form Kerbero
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -2606,6 +2603,7 @@ exports[`Create WinRm Cred Wizard Step Authentication should render form Kerbero
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >
@@ -3082,6 +3080,7 @@ exports[`Create WinRm Cred Wizard Step Authentication should render form NTLM 1`
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -3092,6 +3091,7 @@ exports[`Create WinRm Cred Wizard Step Authentication should render form NTLM 1`
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >

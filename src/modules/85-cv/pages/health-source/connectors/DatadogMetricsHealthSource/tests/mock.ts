@@ -74,8 +74,7 @@ export const DatadogMetricsHealthSourceMock = {
             enabled: false
           },
           riskProfile: {
-            category: 'Performance',
-            metricType: 'INFRA',
+            riskCategory: 'Performance/INFRA',
             thresholdTypes: []
           }
         }

@@ -76,7 +76,9 @@ addParameter: Add Parameter
 baseURL: Base URL
 requestMethod: Request Method
 optionalAuthentication: Authentication (optional)
-bearerToken: Bearer Token(HTTP Header)
+bearerToken: Bearer Token (HTTP Header)
+apiToken: API Token
+apiTokenValidation: API Token is required.
 connectivityMode:
   title: 'Connectivity Mode'
   validation: 'Please select connectivity mode'
@@ -116,6 +118,7 @@ title:
   gcpKms: GCP Key Management Service
   azure: 'Azure Cloud Provider'
   harnessImageConnectorRef: 'Override Image Connector'
+  spot: 'Spot Cloud Provider'
 placeholder:
   harnessImageConnectorRef: 'Select Image Connector'
 name_labels:
@@ -138,6 +141,7 @@ name_labels:
   SecretManager: 'Secret Manager Name'
   AppDynamics: 'AppDynamics Connector Name'
   Splunk: 'Splunk Connector Name'
+  Spot: 'Spot Connector Name'
 testConnectionStep:
   errorDetails: Click to view error details
   noDelegate: Unable to get Delegate information
@@ -233,6 +237,7 @@ hashiCorpVault:
   engineName: 'Secret Engine Name'
   engineVersion: 'Secret Engine Version'
   renewal: 'Renewal Interval (minutes)'
+  renewalIntervalWarningMessage: Harness will not renew the token if Renewal Interval is set to zero
   readOnly: '{{$.common.readOnly}}'
   readOnlyVault: 'Read-only Vault'
   default: '{{$.common.default}}'
@@ -347,9 +352,9 @@ newRelic:
   products:
     fullStackObservability: 'Full Stack Observability: APM'
 elk:
-  elkConnectorDetails: 'ELK Connector Details'
+  elkConnectorDetails: 'ElasticSearch Connector Details'
   testConnectionStepValidation: 'Validating ELK authentication and permissions'
-  elkLabel: ELK
+  elkLabel: ElasticSearch
   apiId: API ID
   noAuthentication: No Authentication
   validation:
@@ -364,8 +369,6 @@ datadog:
 errorTracking:
   urlValidation: Error Tracking URL is required.
 dynatrace:
-  apiToken: API Token
-  apiTokenValidation: API Token is required.
   urlValidation: Dynatrace URL is required.
 sumologic:
   urlLabel: Sumo Logic API Server URL
@@ -390,6 +393,7 @@ cdng:
   baseline: Baseline
   trafficsplit: Traffic Split (OPTIONAL)
   continousVerificationStep: Verify Step Details
+  failOnNoAnalysis: Fail On No Analysis
   displayName: Display Name
   createCVJob: Please create a verification job
   loadingJobs: Loading verification jobs…
@@ -761,7 +765,7 @@ ceAzure:
     subscriptionId: '{{ $.common.subscriptionId }}'
     tenantId: '{{ $.connectors.tenantId }}'
     hints:
-      nextStepHint1: 'If the Azure tenant ID you entered is covered by any of the above, select and click “Continue >” to proceed.'
+      nextStepHint1: 'If the billing export for the Subscription Id {{ subscriptionId }} is covered by any of the above existing exports, click "Continue >" to proceed.'
       nextStepHint2: '{{ $.connectors.ceAws.curExising.nextStepHint2 }}'
     searchBillingReports: Enter billing report name
   chooseRequirements:
@@ -771,6 +775,7 @@ ceAzure:
     info: Cost visibility of the resources for which you added the Billing Export in the previous step is enabled by default. Select the others as per your requirements.
     visibilityCardDesc: Cost insights, anomaly detection, service insights, creating budgets perspectives and alerts, utilised/wasted resources in clusters.
     optimizationCardDesc: Detection of orphaned resources, recommendations to save costs, scaling/tearing down, turning off in non-work hours, reserving instances.
+    atleastOneError: Please select at least one feature other than Visibility
     billing:
       feat1: Azure costs by services, accounts, etc.
       feat2: Cost perspective by various constructs

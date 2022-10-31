@@ -18,7 +18,7 @@ import { RouteWithLayout } from '@common/router'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import FreezeWindowsPage from '@freeze-windows/pages/FreezeWindowsPage/FreezeWindowsPage'
+import FreezeWindowsPage from '@freeze-windows/pages/FreezeWindowsPage'
 import { FreezeStudioWrapper } from '@freeze-windows/components/FreezeStudioWrapper'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.DEPLOYMENTFREEZE, {

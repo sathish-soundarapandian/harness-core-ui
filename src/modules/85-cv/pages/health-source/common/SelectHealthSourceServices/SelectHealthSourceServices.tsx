@@ -34,7 +34,8 @@ export default function SelectHealthSourceServices({
   showOnlySLI = false,
   isConnectorRuntimeOrExpression,
   customServiceInstanceName,
-  fieldNames = {}
+  fieldNames = {},
+  riskProfileResponse
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
 
@@ -108,6 +109,7 @@ export default function SelectHealthSourceServices({
           riskCategory={riskCategory}
           fieldNames={fieldNames}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+          riskProfileResponse={riskProfileResponse}
         />
       )}
     </Container>

@@ -22,6 +22,7 @@ interface ResourceTypeListProps {
   onResourceCategorySelect: (types: ResourceType[], isAdd: boolean) => void
   preSelectedResourceList: ResourceType[]
   disableAddingResources?: boolean
+  isHarnessManaged?: boolean
 }
 const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
   const {
@@ -31,7 +32,8 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
     onResourceSelectionChange,
     onResourceCategorySelect,
     preSelectedResourceList,
-    disableAddingResources
+    disableAddingResources,
+    isHarnessManaged
   } = props
 
   const { getString } = useStrings()
@@ -56,8 +58,9 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
 
         <Layout.Horizontal flex spacing="huge">
           <Radio
-            label={getString('rbac.resourceGroup.all')}
+            label={getString('common.all')}
             inline={true}
+            disabled={isHarnessManaged}
             value={SelectionType.ALL}
             checked={selectionType === SelectionType.ALL}
             onChange={e => {
@@ -67,6 +70,7 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
           <Radio
             label={getString('common.specified')}
             inline={true}
+            disabled={isHarnessManaged}
             value={SelectionType.SPECIFIED}
             checked={selectionType === SelectionType.SPECIFIED}
             onChange={e => {

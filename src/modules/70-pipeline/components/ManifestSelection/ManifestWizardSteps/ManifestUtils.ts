@@ -95,6 +95,10 @@ export const handleCommandFlagsSubmitData = (
   }
 }
 
+export const removeEmptyFieldsFromStringArray = (inputArray: string[] | undefined): string[] | undefined => {
+  return inputArray?.filter((path: string) => !!path)
+}
+
 export const getConnectorPath = (type: string, data: any): string => {
   switch (type) {
     case ManifestStoreMap.OciHelmChart:

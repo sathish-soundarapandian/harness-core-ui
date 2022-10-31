@@ -963,6 +963,7 @@ exports[`Test ServerlessDeployStep - InputSet view Serverless Deploy Step render
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1135,6 +1136,7 @@ exports[`Test ServerlessDeployStep - InputSet view when path under inputSetData 
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

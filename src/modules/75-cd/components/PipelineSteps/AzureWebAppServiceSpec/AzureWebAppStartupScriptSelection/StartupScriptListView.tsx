@@ -44,8 +44,13 @@ import { useQueryParams } from '@common/hooks'
 
 import { StartupScriptActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { getStatus, getConnectorNameFromValue } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import {
+  getStatus,
+  getConnectorNameFromValue,
+  getDeploymentSpecificYamlKeys
+} from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ConnectorField from './StartupScriptConnectorField'
 import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
 import {
@@ -58,8 +63,18 @@ import {
   StartupScriptLastStepProps
 } from './StartupScriptInterface.types'
 import { StartupScriptWizard } from './StartupScriptWizard'
-
 import css from './StartupScriptSelection.module.scss'
+
+const getDeploymentSpecificConnectorTypes = (
+  deploymentType: StartupScriptListViewProps['deploymentType']
+): ConnectorTypes[] => {
+  switch (deploymentType) {
+    case ServiceDeploymentType.Elastigroup:
+      return ['Harness']
+    default:
+      return AllowedTypes
+  }
+}
 
 function StartupScriptListView({
   updateStage,
@@ -68,7 +83,8 @@ function StartupScriptListView({
   connectors,
   startupCommand,
   isReadonly,
-  allowableTypes
+  allowableTypes,
+  deploymentType
 }: StartupScriptListViewProps): JSX.Element {
   const [connectorView, setConnectorView] = useState(false)
   const [connectorType, setConnectorType] = useState('')
@@ -95,7 +111,7 @@ function StartupScriptListView({
       const path = isPropagating
         ? 'stage.spec.serviceConfig.stageOverrides'
         : 'stage.spec.serviceConfig.serviceDefinition.spec'
-      const { startupCommand: command, ...rest } = get(stage, path)
+      const { startupCommand: command, startupScript, ...rest } = get(stage, path)
       const newStage = produce(stage, draft => {
         set(draft, path, rest)
       }).stage
@@ -133,9 +149,10 @@ function StartupScriptListView({
 
   /* istanbul ignore next */
   const updateStageData = (script: StartupCommandConfiguration): void => {
+    const startupKey = getDeploymentSpecificYamlKeys(deploymentType)
     const path = isPropagating
-      ? 'stage.spec.serviceConfig.stageOverrides.startupCommand'
-      : 'stage.spec.serviceConfig.serviceDefinition.spec.startupCommand'
+      ? `stage.spec.serviceConfig.stageOverrides.${startupKey}`
+      : `stage.spec.serviceConfig.serviceDefinition.spec.${startupKey}`
 
     if (stage) {
       updateStage?.(
@@ -150,7 +167,8 @@ function StartupScriptListView({
   const handleSubmit = (script: StartupCommandConfiguration): void => {
     updateStageData(script)
 
-    trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { startupCommand: startupCommand?.store?.type })
+    const startupKey = getDeploymentSpecificYamlKeys(deploymentType)
+    trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { [startupKey]: startupCommand?.store?.type })
 
     hideConnectorModal()
     setConnectorView(false)
@@ -174,7 +192,7 @@ function StartupScriptListView({
       name: getString('pipeline.fileDetails'),
       expressions,
       allowableTypes,
-      stepName: getString('pipeline.startupCommand.fileDetails'),
+      stepName: getString('pipeline.startup.command.fileDetails'),
       initialValues: getLastStepInitialData(),
       handleSubmit: handleSubmit,
       isReadonly: isReadonly
@@ -372,7 +390,8 @@ function StartupScriptListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <StartupScriptWizard
-            connectorTypes={AllowedTypes}
+            connectorTypes={getDeploymentSpecificConnectorTypes(deploymentType)}
+            deploymentType={deploymentType}
             newConnectorView={connectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
@@ -425,7 +444,13 @@ function StartupScriptListView({
             variation={ButtonVariation.LINK}
             data-test-id="addStartupScript"
             onClick={addStartupScript}
-            text={getString('common.plusAddName', { name: getString('pipeline.startupCommand.name') })}
+            icon={'plus'}
+            text={getString('common.addName', {
+              name:
+                deploymentType === ServiceDeploymentType.Elastigroup
+                  ? getString('pipeline.startup.script.name')
+                  : getString('pipeline.startup.command.name')
+            })}
           />
         )}
       </Layout.Vertical>

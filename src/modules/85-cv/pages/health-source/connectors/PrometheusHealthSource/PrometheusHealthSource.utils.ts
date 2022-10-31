@@ -27,6 +27,7 @@ import {
 } from './PrometheusHealthSource.constants'
 import { HealthSourceTypes } from '../../types'
 import type {
+  AwsPrometheusHealthSourceType,
   PrometheusHealthSourceType,
   UpdatedHealthSource
 } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
@@ -41,7 +42,8 @@ import {
   validateCommonFieldsForMetricThreshold
 } from '../../common/MetricThresholds/MetricThresholds.utils'
 import type { PersistMappedMetricsType, PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
-import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { AWSDataSourceType } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 
 type UpdateSelectedMetricsMap = {
   updatedMetric: string
@@ -391,10 +393,7 @@ export function transformPrometheusHealthSourceToSetupSource(
         envFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.envFilter),
         additionalFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.additionalFilters),
         aggregator: metricDefinition.aggregation,
-        riskCategory:
-          metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
-            ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
-            : '',
+        riskCategory: metricDefinition?.analysis?.riskProfile?.riskCategory,
         serviceInstance:
           isTemplate && !isConnectorRuntimeOrExpression
             ? {
@@ -417,12 +416,22 @@ export function transformPrometheusHealthSourceToSetupSource(
   return setupSource
 }
 
+function getHealthSourceType(dataSourceType?: string): UpdatedHealthSource['type'] {
+  if (dataSourceType === AWSDataSourceType) {
+    return HealthSourceTypes.AwsPrometheus
+  }
+
+  return HealthSourceTypes.Prometheus
+}
+
 export function transformPrometheusSetupSourceToHealthSource(
   setupSource: PrometheusSetupSource,
   isMetricThresholdEnabled: boolean
-): PrometheusHealthSourceType {
-  const dsConfig: PrometheusHealthSourceType = {
-    type: HealthSourceTypes.Prometheus as UpdatedHealthSource['type'],
+): PrometheusHealthSourceType | AwsPrometheusHealthSourceType {
+  const { dataSourceType, region, workspaceId } = setupSource || {}
+
+  const dsConfig: PrometheusHealthSourceType | AwsPrometheusHealthSourceType = {
+    type: getHealthSourceType(dataSourceType),
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
@@ -432,7 +441,9 @@ export function transformPrometheusSetupSourceToHealthSource(
           : (setupSource?.connectorRef?.value as string),
       feature: PrometheusProductNames.APM,
       metricDefinitions: [],
-      metricPacks: []
+      metricPacks: [],
+      region,
+      workspaceId
     }
   }
 
@@ -465,7 +476,7 @@ export function transformPrometheusSetupSourceToHealthSource(
       continue
     }
 
-    const assignComponentPayload = createPayloadForAssignComponent({
+    const assignComponentPayload = createPayloadForAssignComponentV2({
       sli,
       riskCategory,
       healthScore,

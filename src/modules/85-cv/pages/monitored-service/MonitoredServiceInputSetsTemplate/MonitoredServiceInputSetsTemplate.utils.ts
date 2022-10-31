@@ -9,6 +9,7 @@ import { cloneDeep, defaultTo, get, set, isEmpty } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
+import { AWSDataSourceType } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { MonitoredServiceDTO } from 'services/cv'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
@@ -143,7 +144,14 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
   }
 }
 
-export const healthSourceTypeMappingForReferenceField = (type: ConnectorInfoDTO['type']): ConnectorInfoDTO['type'] => {
+export const healthSourceTypeMappingForReferenceField = (
+  type: ConnectorInfoDTO['type'],
+  dataSourceType?: string
+): ConnectorInfoDTO['type'] => {
+  if (dataSourceType === AWSDataSourceType) {
+    return Connectors.AWS
+  }
+
   switch (type) {
     case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
       return Connectors.ELK

@@ -46,7 +46,7 @@ export function DynatraceConfigStep(props: ConnectionConfigProps): JSX.Element {
         initialValues={{ ...initialValues }}
         validationSchema={Yup.object().shape({
           url: Yup.string().trim().required(getString('connectors.dynatrace.urlValidation')),
-          apiTokenRef: Yup.string().trim().required(getString('connectors.dynatrace.apiTokenValidation'))
+          apiTokenRef: Yup.string().trim().required(getString('connectors.apiTokenValidation'))
         })}
         onSubmit={(formData: ConnectorConfigDTO) => {
           trackEvent(ConnectorActions.CreateConnectorSubmit, {
@@ -61,7 +61,7 @@ export function DynatraceConfigStep(props: ConnectionConfigProps): JSX.Element {
             <FormInput.Text label={getString('UrlLabel')} name="url" />
             <ConnectorSecretField
               secretFieldValue={secretValue}
-              secretInputProps={{ label: getString('connectors.dynatrace.apiToken'), name: 'apiTokenRef' }}
+              secretInputProps={{ label: getString('connectors.apiToken'), name: 'apiTokenRef' }}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}

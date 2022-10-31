@@ -407,7 +407,7 @@ const RecommendationListPage: React.FC = () => {
 
   const { getString } = useStrings()
 
-  useDocumentTitle(getString('ce.recommendation.sideNavText'), true)
+  useDocumentTitle(getString('ce.recommendation.sideNavText'))
 
   const totalMonthlyCost = defaultTo(recommendationStats?.totalMonthlyCost, 0)
   const totalSavings = defaultTo(recommendationStats?.totalMonthlySaving, 0)

@@ -938,6 +938,7 @@ exports[`Jira Approval tests Basic snapshot - deploymentform mode: jira-approval
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1059,6 +1060,7 @@ exports[`Jira Approval tests Basic snapshot - inputset mode but no runtime value
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1315,6 +1317,7 @@ exports[`Jira Approval tests Basic snapshot - inputset mode: input set with erro
 }
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -2232,6 +2235,7 @@ exports[`Jira Approval tests deploymentform mode - readonly: jira-approval-deplo
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

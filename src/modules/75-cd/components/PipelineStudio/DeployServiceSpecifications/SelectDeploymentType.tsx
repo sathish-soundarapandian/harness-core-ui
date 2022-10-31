@@ -27,7 +27,7 @@ import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
-import deployServiceCsss from './DeployServiceSpecifications.module.scss'
+import deployServiceCss from './DeployServiceSpecifications.module.scss'
 
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
@@ -105,17 +105,17 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
-    return getNgSupportedDeploymentTypes({ SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE, NG_SVC_ENV_REDESIGN })
-  }, [SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE, NG_SVC_ENV_REDESIGN])
+    return getNgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG })
+  }, [SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
-    return getCgSupportedDeploymentTypes({ SSH_NG, ECS_NG })
-  }, [SSH_NG, ECS_NG])
+    return getCgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG })
+  }, [SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)
@@ -142,7 +142,7 @@ export default function SelectDeploymentType({
     if (!isCommunity) {
       return (
         <Layout.Vertical margin={{ top: 'medium' }}>
-          <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }} margin={{ bottom: 'large' }}>
+          <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }}>
             <CardList
               items={ngDeploymentTypes}
               isReadonly={isReadonly}
@@ -160,7 +160,8 @@ export default function SelectDeploymentType({
                 <TemplateBar
                   templateLinkConfig={customDeploymentData}
                   onOpenTemplateSelector={addOrUpdateTemplate}
-                  className={cx(deployServiceCsss.templateBar, templateBarOverrideClassName)}
+                  className={cx(deployServiceCss.templateBar, templateBarOverrideClassName)}
+                  isReadonly={isReadonly}
                 />
               </Layout.Vertical>
             ) : null}
@@ -187,6 +188,7 @@ export default function SelectDeploymentType({
           checked={gitOpsEnabled}
           onChange={handleGitOpsCheckChanged}
           disabled={isReadonly}
+          className={deployServiceCss.gitOpsCheck}
         />
       )
     }

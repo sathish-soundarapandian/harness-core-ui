@@ -17,7 +17,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('cd-main')
-    expect(result.current.label).toBe('common.purpose.cd.continuous')
+    expect(result.current.label).toBe('common.cdAndGitops')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -37,7 +37,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('cv-main')
-    expect(result.current.label).toBe('common.purpose.cv.serviceReliability')
+    expect(result.current.label).toBe('common.serviceReliabilityManagement')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -57,7 +57,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('ce-main')
-    expect(result.current.label).toBe('common.purpose.ce.cloudCost')
+    expect(result.current.label).toBe('common.purpose.ce.continuous')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -67,7 +67,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('sto-color-filled')
-    expect(result.current.label).toBe('common.purpose.sto.continuous')
+    expect(result.current.label).toBe('common.stoText')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -77,7 +77,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('chaos-main')
-    expect(result.current.label).toBe('common.chaosText')
+    expect(result.current.label).toBe('chaos.homepage.chaosHomePageTitle')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -98,7 +98,8 @@ describe('useModuleInfo tests', () => {
         defaultLicenseStoreValues: {
           licenseInformation: {
             SCM: {
-              licenseType: 'PAID'
+              licenseType: 'PAID',
+              id: '1212'
             }
           }
         }
@@ -108,6 +109,6 @@ describe('useModuleInfo tests', () => {
     expect(result.current['SCM'].icon).toBe('gitops-green')
     expect(result.current['SCM'].label).toBe('common.purpose.scm.name')
     expect(result.current['SCM'].shouldVisible).toBe(false)
-    expect(result.current['SCM'].licenseType).toBe('PAID')
+    expect(result.current['SCM'].hasLicense).toBe(true)
   })
 })

@@ -86,7 +86,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots 1`] =
             style="width: 20%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -276,6 +276,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots 1`] =
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="Prev"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -319,6 +320,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots 1`] =
           </span>
         </button>
         <button
+          aria-label="Next"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -456,7 +458,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots when 
             style="width: 15%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -688,6 +690,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots when 
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="Prev"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -731,6 +734,7 @@ exports[`<TemplatesListView /> tests should match snapshot with three dots when 
           </span>
         </button>
         <button
+          aria-label="Next"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -844,7 +848,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots 1`
             style="width: 20%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -991,6 +995,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots 1`
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="Prev"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -1034,6 +1039,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots 1`
           </span>
         </button>
         <button
+          aria-label="Next"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -1147,7 +1153,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots an
             style="width: 20%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -1294,6 +1300,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots an
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="Prev"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -1337,6 +1344,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots an
           </span>
         </button>
         <button
+          aria-label="Next"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -1462,7 +1470,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots wh
             style="width: 15%;"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
+              class="Layout--horizontal Layout--layout-spacing-large StyledProps--main templateColor templateLabelColor StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-medium"
             >
               <svg
                 fill="none"
@@ -1614,6 +1622,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots wh
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="Prev"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -1657,6 +1666,7 @@ exports[`<TemplatesListView /> tests should match snapshot without three dots wh
           </span>
         </button>
         <button
+          aria-label="Next"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
           disabled=""
           tabindex="-1"

@@ -74,22 +74,12 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
 }))
 
 describe('Unit tests for createting monitored source', () => {
-  let refetchDashboardWidgets: jest.Mock
   beforeEach(() => {
-    refetchDashboardWidgets = jest.fn()
-
     jest.spyOn(cvServices, 'useGetAllJourneys').mockReturnValue({
       data: {},
       loading: false,
       error: null,
       refetch: jest.fn()
-    } as any)
-
-    jest.spyOn(cvServices, 'useGetSLODashboardWidgets').mockReturnValue({
-      data: {},
-      loading: false,
-      error: null,
-      refetch: refetchDashboardWidgets
     } as any)
 
     jest.spyOn(cvServices, 'useGetSLOAssociatedMonitoredServices').mockReturnValue({
@@ -157,7 +147,7 @@ describe('Unit tests for createting monitored source', () => {
 
     // Table cv.healthSource.defineYourSource
     expect(getByText('cv.healthSource.defineYourSource')).toBeDefined()
-    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
+    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | 1234_project | harness')
   })
 
   test('should render loading state', () => {

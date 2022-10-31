@@ -6,7 +6,6 @@
  */
 
 import React, { useState, useMemo, useEffect, useContext, useCallback } from 'react'
-
 import {
   Container,
   Accordion,
@@ -19,7 +18,7 @@ import {
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
-import { debounce, defaultTo } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -32,7 +31,11 @@ import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSo
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
-import { useGetMetricPacks, AppDMetricDefinitions, useGetCompleteServiceInstanceMetricPath } from 'services/cv'
+import {
+  AppDMetricDefinitions,
+  useGetCompleteServiceInstanceMetricPath,
+  useGetRiskCategoryForCustomHealthMetric
+} from 'services/cv'
 import { AppDynamicsMonitoringSourceFieldNames } from '../../AppDHealthSource.constants'
 import { PATHTYPE } from './AppDCustomMetricForm.constants'
 import {
@@ -67,9 +70,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'APP_DYNAMICS' }
-  })
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const {
     data: completeServiceInsanceData,
@@ -109,8 +110,13 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
       })
     }
 
-    if (getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED) {
+    if (
+      formikValues?.continuousVerification &&
+      getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED
+    ) {
       formikSetField('serviceInstanceMetricPath', RUNTIME_INPUT_VALUE)
+    } else if (!formikValues?.continuousVerification && !isEmpty(formikValues?.serviceInstanceMetricPath)) {
+      formikSetField('serviceInstanceMetricPath', '')
     }
   }, [
     appdMultiType,
@@ -325,7 +331,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   }}
                   isTemplate={isTemplate}
                   expressions={expressions}
-                  metricPackResponse={metricPackResponse}
+                  riskProfileResponse={riskProfileResponse}
                   hideServiceIdentifier
                 />
               </>

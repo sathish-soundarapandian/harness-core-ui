@@ -32,6 +32,7 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import css from './JiraConnector.module.scss'
 
 interface JiraFormData {
@@ -95,6 +96,13 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
     connector_type: Connectors.Jira
   })
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
@@ -133,7 +141,7 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
                   stringId="username"
                   type={formik.values.username ? formik.values.username.type : ValueType.TEXT}
                 />
-                <SecretInput name={'passwordRef'} label={getString('connectors.apiKey')} />
+                <SecretInput name={'passwordRef'} label={getString('connectors.apiKey')} scope={scope} />
               </Layout.Vertical>
 
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

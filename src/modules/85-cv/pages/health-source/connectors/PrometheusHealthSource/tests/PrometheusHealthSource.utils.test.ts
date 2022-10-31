@@ -8,7 +8,12 @@
 import type { StringKeys } from 'framework/strings'
 import type { PrometheusSetupSource } from '../PrometheusHealthSource.constants'
 import { transformPrometheusSetupSourceToHealthSource, validateAssginComponent } from '../PrometheusHealthSource.utils'
-import { expectedResultPrometheusPayload, sourceDataPrometheusPayload } from './PrometheusHealthSource.mock'
+import {
+  dataSourceTypePayloadMock,
+  expectedAWSPrometheusPayload,
+  expectedResultPrometheusPayload,
+  sourceDataPrometheusPayload
+} from './PrometheusHealthSource.mock'
 
 function getString(key: StringKeys): StringKeys {
   return key
@@ -49,6 +54,12 @@ describe('Validate Prometheus Utils', () => {
     expect(
       transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource, true)
     ).toEqual(expectedResultPrometheusPayload)
+  })
+
+  test('prometheus payload with data source type as AWS Prometheus', () => {
+    expect(transformPrometheusSetupSourceToHealthSource(dataSourceTypePayloadMock, true)).toEqual(
+      expectedAWSPrometheusPayload
+    )
   })
 
   test('prometheus payload without metric thresholds', () => {

@@ -434,7 +434,7 @@ const PerspectiveDetailsPage: React.FC = () => {
 
   const persName = perspectiveData?.name || perspectiveName
 
-  useDocumentTitle([getString('ce.perspectives.sideNavText'), persName], true)
+  useDocumentTitle([getString('ce.perspectives.sideNavText'), persName])
 
   const [openDownloadCSVModal] = useDownloadPerspectiveGridAsCsv({
     perspectiveName: persName,

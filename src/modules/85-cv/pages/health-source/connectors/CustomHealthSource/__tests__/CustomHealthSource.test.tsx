@@ -41,6 +41,9 @@ describe('Verify CustomHealthSource', () => {
     jest
       .spyOn(cvServices, 'useGetMetricPacks')
       .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: getSampleData } as any))
+    jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: getSampleData } as any))
   })
 
   test('should render CustomHealthSource', () => {

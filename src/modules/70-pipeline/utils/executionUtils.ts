@@ -26,7 +26,8 @@ import type {
   ExecutionGraph,
   ExecutionNode,
   ExecutionNodeAdjacencyList,
-  ResponsePipelineExecutionDetail
+  ResponsePipelineExecutionDetail,
+  InterruptEffectDTO
 } from 'services/pipeline-ng'
 import {
   ExecutionPipelineNode,
@@ -140,6 +141,7 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   IgnoreFailed: 'tick-circle',
   Expired: 'expired',
   Aborted: 'banned',
+  AbortedByFreeze: 'banned',
   Discontinuing: 'banned',
   Suspended: 'banned',
   Queued: 'queued',
@@ -153,6 +155,30 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   Pausing: 'pause',
   InputWaiting: 'waiting',
   WaitStepRunning: 'waiting'
+}
+
+export type InterruptType = InterruptEffectDTO['interruptType']
+
+export const Interrupt: Record<InterruptType, InterruptType> = {
+  UNKNOWN: 'UNKNOWN',
+  ABORT: 'ABORT',
+  ABORT_ALL: 'ABORT_ALL',
+  PAUSE: 'PAUSE',
+  PAUSE_ALL: 'PAUSE_ALL',
+  RESUME: 'RESUME',
+  RESUME_ALL: 'RESUME_ALL',
+  RETRY: 'RETRY',
+  IGNORE: 'IGNORE',
+  WAITING_FOR_MANUAL_INTERVENTION: 'WAITING_FOR_MANUAL_INTERVENTION',
+  MARK_FAILED: 'MARK_FAILED',
+  MARK_SUCCESS: 'MARK_SUCCESS',
+  NEXT_STEP: 'NEXT_STEP',
+  END_EXECUTION: 'END_EXECUTION',
+  MARK_EXPIRED: 'MARK_EXPIRED',
+  CUSTOM_FAILURE: 'CUSTOM_FAILURE',
+  EXPIRE_ALL: 'EXPIRE_ALL',
+  PROCEED_WITH_DEFAULT: 'PROCEED_WITH_DEFAULT',
+  UNRECOGNIZED: 'UNRECOGNIZED'
 }
 
 /**
@@ -1242,4 +1268,15 @@ export const processForCIData = ({
   })
 
   return newNodeMap
+}
+
+export function isMultiSvcOrMultiEnv(type?: string): boolean {
+  return !!type && ['MULTI_SERVICE_DEPLOYMENT', 'MULTI_ENV_DEPLOYMENT', 'MULTI_SERVICE_ENV_DEPLOYMENT'].includes(type)
+}
+
+export function getInterruptHistoriesFromType(
+  interruptHistories: InterruptEffectDTO[] | undefined,
+  interruptType: InterruptType
+): InterruptEffectDTO[] {
+  return defaultTo(interruptHistories, []).filter(row => row.interruptType === interruptType)
 }

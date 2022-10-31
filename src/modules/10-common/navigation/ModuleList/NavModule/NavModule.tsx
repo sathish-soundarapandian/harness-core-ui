@@ -47,6 +47,7 @@ const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkbox
       flex={{ justifyContent: 'space-between' }}
       padding={{ top: 'small', bottom: 'small', left: 'large', right: 'large' }}
       background={Color.PRIMARY_9}
+      width={checkboxProps ? 316 : 278}
       onClick={() => {
         if (!active) {
           onClick?.(module)

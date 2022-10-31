@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import { Button, Layout, StepProps, Heading, Text, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'

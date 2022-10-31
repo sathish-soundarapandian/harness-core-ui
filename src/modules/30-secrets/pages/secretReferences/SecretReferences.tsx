@@ -29,7 +29,7 @@ const SecretReferences: React.FC<ReferencedByProps> = props => {
 
   return (
     <>
-      <EntitySetupUsage entityType={EntityType.Secrets} entityIdentifier={secretId} />
+      <EntitySetupUsage entityType={EntityType.Secrets} entityIdentifier={secretId} withSearchBarInPageHeader={false} />
     </>
   )
 }

@@ -8,14 +8,31 @@
 import React from 'react'
 import { act, fireEvent, render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { DashboardModel } from 'services/custom-dashboards'
+import * as customDashboardServices from 'services/custom-dashboards'
+import { DashboardsContextProvider } from '@dashboards/pages/DashboardsContext'
 import { DashboardType } from '@dashboards/types/DashboardTypes.types'
+import { FolderType } from '@dashboards/constants/FolderType'
 import type { StringKeys } from 'framework/strings'
 import DashboardList, { DashboardListProps } from '../DashboardList'
 
 const testTitle = 'test title'
 
-const testDashboard: DashboardModel = {
+const mockFolderOne: customDashboardServices.FolderModel = {
+  id: '1',
+  name: 'testName',
+  title: 'testTitle',
+  type: FolderType.ACCOUNT,
+  child_count: 0,
+  created_at: '01/01/2022'
+}
+
+const mockGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+  resource: [mockFolderOne],
+  items: 1,
+  pages: 1
+}
+
+const testDashboard: customDashboardServices.DashboardModel = {
   id: '1',
   type: DashboardType.SHARED,
   description: 'testTag',
@@ -26,11 +43,7 @@ const testDashboard: DashboardModel = {
   data_source: [],
   last_accessed_at: '',
   resourceIdentifier: '1',
-  folder: {
-    id: '',
-    title: '',
-    created_at: ''
-  }
+  folder: mockFolderOne
 }
 
 const defaultProps: DashboardListProps = {
@@ -43,7 +56,9 @@ const defaultProps: DashboardListProps = {
 const renderComponent = (props: DashboardListProps): RenderResult => {
   return render(
     <TestWrapper>
-      <DashboardList {...props} />
+      <DashboardsContextProvider>
+        <DashboardList {...props} />
+      </DashboardsContextProvider>
     </TestWrapper>
   )
 }
@@ -54,6 +69,10 @@ describe('DashboardList', () => {
   const editText: StringKeys = 'edit'
 
   beforeEach(() => {
+    jest.clearAllMocks()
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
+  })
+  afterAll(() => {
     jest.clearAllMocks()
   })
 
@@ -66,6 +85,7 @@ describe('DashboardList', () => {
   }
 
   test('it should show an empty dashboard list with no dashboard data', () => {
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
     renderComponent(defaultProps)
 
     const headerName: StringKeys = 'name'
@@ -78,6 +98,7 @@ describe('DashboardList', () => {
   })
 
   test('it should show dashboard list with dashboard data', () => {
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
     const testProps: DashboardListProps = {
       ...defaultProps,
       dashboards: [testDashboard]
@@ -87,6 +108,7 @@ describe('DashboardList', () => {
   })
 
   test('it should allow for opening of read only context menu on shared dashboard data', async () => {
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
     const testProps: DashboardListProps = {
       ...defaultProps,
       dashboards: [testDashboard]
@@ -101,7 +123,8 @@ describe('DashboardList', () => {
   })
 
   test('it should allow for opening of editable context menu on account dashboard data', async () => {
-    const testAccountDashboard: DashboardModel = {
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+    const testAccountDashboard: customDashboardServices.DashboardModel = {
       ...testDashboard,
       resourceIdentifier: 'shared',
       type: DashboardType.ACCOUNT
@@ -122,7 +145,7 @@ describe('DashboardList', () => {
 
   test('it should trigger callback for cloning a dashboard', async () => {
     const mockCallback = jest.fn()
-    const testAccountDashboard: DashboardModel = {
+    const testAccountDashboard: customDashboardServices.DashboardModel = {
       ...testDashboard,
       type: DashboardType.ACCOUNT
     }
@@ -145,7 +168,7 @@ describe('DashboardList', () => {
 
   test('it should trigger callback for editing a dashboard', async () => {
     const mockCallback = jest.fn()
-    const testAccountDashboard: DashboardModel = {
+    const testAccountDashboard: customDashboardServices.DashboardModel = {
       ...testDashboard,
       type: DashboardType.ACCOUNT
     }
@@ -168,7 +191,7 @@ describe('DashboardList', () => {
 
   test('it should trigger callback for deleting a dashboard', async () => {
     const mockCallback = jest.fn()
-    const testAccountDashboard: DashboardModel = {
+    const testAccountDashboard: customDashboardServices.DashboardModel = {
       ...testDashboard,
       type: DashboardType.ACCOUNT
     }

@@ -15,11 +15,12 @@ import {
   Text,
   ModalErrorHandlerBinding,
   ModalErrorHandler,
-  ButtonVariation
+  ButtonVariation,
+  MultiSelectOption
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { pick } from 'lodash-es'
+import { pick, get } from 'lodash-es'
 import {
   usePutSecret,
   usePutSecretFileV2,
@@ -180,6 +181,20 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       orgIdentifier: propsSecret?.orgIdentifier
     }
   })
+  const convertRegionsMultiSelectDataToPayload = (data: MultiSelectOption[]): string => {
+    const returnString: string[] = []
+    data.forEach(val => {
+      returnString.push(val.value.toString())
+    })
+    return returnString.toString()
+  }
+  const convertPayloadtoRegionsMultiSelectData = (data: string) => {
+    const returnOptions: MultiSelectOption[] = []
+    data?.split(',').forEach(val => {
+      returnOptions.push({ value: val, label: val })
+    })
+    return returnOptions
+  }
 
   const loading = loadingCreateText || loadingUpdateText || loadingCreateFile || loadingUpdateFile
   const editing = !!propsSecret
@@ -212,6 +227,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
           projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
           spec: {
+            ...(get(data, 'regions') &&
+              get(data, 'configureRegions') && {
+                additionalMetadata: {
+                  values: {
+                    ...(get(data, 'regions') && {
+                      regions: convertRegionsMultiSelectDataToPayload(get(data, 'regions'))
+                    })
+                  }
+                }
+              }),
             ...pick(data, ['secretManagerIdentifier'])
           } as SecretFileSpecDTO
         } as SecretDTOV2
@@ -230,6 +255,17 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
         orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
         projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
         spec: {
+          ...(((get(data, 'regions') && get(data, 'configureRegions')) || get(data, 'version')) && {
+            additionalMetadata: {
+              values: {
+                ...(get(data, 'regions') &&
+                  data.valueType === 'Inline' && {
+                    regions: convertRegionsMultiSelectDataToPayload(get(data, 'regions'))
+                  }),
+                ...(get(data, 'version') && data.valueType === 'Reference' && { version: get(data, 'version') })
+              }
+            }
+          }),
           value: data.templateInputs ? JSON.stringify(data.templateInputs) : data.value,
           ...pick(data, ['secretManagerIdentifier', 'valueType'])
         } as SecretTextSpecDTO
@@ -338,7 +374,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     setSelectedSecretManager(selectedSM)
     setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
   }, [defaultSecretManagerId, connectorDetails])
-
   return (
     <>
       <ModalErrorHandler bind={setModalErrorHandler} />
@@ -364,7 +399,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           ...(editing &&
             secret &&
             (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' &&
-            pick(secret?.spec, ['value']))
+            pick(secret?.spec, ['value'])),
+          ...(editing &&
+            secret && {
+              regions: convertPayloadtoRegionsMultiSelectData(get(secret, 'spec.additionalMetadata.values.regions'))
+            }),
+          ...(editing && secret && pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version'])),
+          ...(editing &&
+            get(secret, 'spec.additionalMetadata.values.regions') && {
+              configureRegions: !!get(secret, 'spec.additionalMetadata.values.regions')
+            })
         }}
         formName="createUpdateSecretForm"
         enableReinitialize
@@ -381,7 +425,13 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               ? Yup.object().shape({
                   environmentVariables: VariableSchemaWithoutHook(getString)
                 })
-              : Yup.object()
+              : Yup.object(),
+          version: Yup.string()
+            .trim()
+            .when('valueType', {
+              is: 'Reference',
+              then: Yup.string().required(getString('secrets.secret.referenceSecretVersionRqrd'))
+            })
         })}
         validate={formData => {
           props.onChange?.({
@@ -459,9 +509,17 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               ) : null}
               {typeOfSelectedSecretManager === 'Vault' ||
               typeOfSelectedSecretManager === 'AzureKeyVault' ||
-              typeOfSelectedSecretManager === 'AwsSecretManager' ? (
-                <VaultFormFields formik={formikProps} type={type} editing={editing} readonly={readOnlySecretManager} />
+              typeOfSelectedSecretManager === 'AwsSecretManager' ||
+              typeOfSelectedSecretManager === 'GcpSecretManager' ? (
+                <VaultFormFields
+                  secretManagerType={typeOfSelectedSecretManager}
+                  formik={formikProps}
+                  type={type}
+                  editing={editing}
+                  readonly={readOnlySecretManager}
+                />
               ) : null}
+
               <Button
                 intent="primary"
                 type="submit"

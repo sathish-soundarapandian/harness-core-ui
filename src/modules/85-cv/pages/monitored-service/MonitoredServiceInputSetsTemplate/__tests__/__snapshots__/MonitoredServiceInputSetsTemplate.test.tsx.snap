@@ -846,6 +846,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render error state 1`] = 
             api call failed
           </p>
           <button
+            aria-label="Retry"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
             type="button"
           >

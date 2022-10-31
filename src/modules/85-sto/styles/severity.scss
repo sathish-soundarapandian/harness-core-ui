@@ -6,35 +6,29 @@
  */
 
 @mixin severityColors() {
-  --critical-bg: var(--red-800);
-  --high-bg: var(--orange-900);
-  --medium-bg: var(--orange-600);
-  --low-bg: var(--purple-500);
-  --info-bg: var(--grey-600);
-  --unassigned-bg: var(--grey-600);
+  --critical-bg: var(--red-300);
+  --high-bg: var(--orange-400);
+  --medium-bg: var(--yellow-700);
+  --low-bg: var(--purple-200);
+  --info-bg: var(--grey-200);
+  --unassigned-bg: var(--grey-200);
 }
 
 .critical {
   background-color: var(--critical-bg) !important;
-  color: var(--white) !important;
 }
 .high {
   background-color: var(--high-bg) !important;
-  color: var(--white) !important;
 }
 .medium {
   background-color: var(--medium-bg) !important;
-  color: var(--white) !important;
 }
 .low {
   background-color: var(--low-bg) !important;
-  color: var(--white) !important;
 }
 .info {
   background-color: var(--info-bg) !important;
-  color: var(--white) !important;
 }
 .unassigned {
   background-color: var(--unassigned-bg) !important;
-  color: var(--white) !important;
 }

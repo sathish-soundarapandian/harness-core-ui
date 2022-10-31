@@ -22,6 +22,7 @@ import {
   FreezeToggleCell,
   FreezeWindowListColumnActions
 } from './FreezeWindowListCells'
+import { ToggleAllSelection } from './ToggleAllSelection'
 import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListTableProps extends FreezeWindowListColumnActions {
@@ -42,7 +43,8 @@ export function FreezeWindowListTable({
   onViewFreezeRow,
   getViewFreezeRowLink,
   selectedItems,
-  disabled
+  disabled,
+  freezeStatusMap
 }: FreezeWindowListTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -67,14 +69,15 @@ export function FreezeWindowListTable({
     }
     return [
       {
-        Header: '',
+        Header: <ToggleAllSelection data={content} />,
         id: 'rowSelectToggle',
         width: '2.5%',
         Cell: RowSelectCell,
         disableSortBy: true,
         onRowSelectToggle,
         selectedItems,
-        disabled
+        disabled,
+        freezeStatusMap
       },
       {
         Header: '',
@@ -83,7 +86,8 @@ export function FreezeWindowListTable({
         Cell: FreezeToggleCell,
         disableSortBy: true,
         onToggleFreezeRow,
-        disabled
+        disabled,
+        freezeStatusMap
       },
       {
         Header: 'Name',
@@ -105,7 +109,8 @@ export function FreezeWindowListTable({
         accessor: 'status',
         width: '15%',
         Cell: StatusCell,
-        disableSortBy: true
+        disableSortBy: true,
+        freezeStatusMap
       },
       {
         Header: getString('common.lastModified'),
@@ -123,10 +128,11 @@ export function FreezeWindowListTable({
         getViewFreezeRowLink,
         onDeleteRow,
         onToggleFreezeRow,
-        disabled
+        disabled,
+        freezeStatusMap
       }
     ] as unknown as Column<FreezeSummaryResponse>[]
-  }, [currentOrder, currentSort, selectedItems, disabled])
+  }, [currentOrder, currentSort, selectedItems, disabled, freezeStatusMap])
 
   return (
     <TableV2
@@ -144,7 +150,7 @@ export function FreezeWindowListTable({
           : undefined
       }
       sortable
-      onRowClick={rowDetails => onViewFreezeRow(rowDetails as any)}
+      onRowClick={rowDetails => onViewFreezeRow(rowDetails)}
       className={css.table}
     />
   )

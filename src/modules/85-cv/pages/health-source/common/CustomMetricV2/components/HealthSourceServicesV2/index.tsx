@@ -11,7 +11,7 @@ import css from './HealthSourceServicesV2.module.scss'
 export default function HealthSourceServicesV2<T extends CommonCustomMetricPropertyType>(): JSX.Element {
   const { values: formValues } = useFormikContext<T>()
 
-  const { metricPacksResponse } = useCustomMetricV2HelperContext()
+  const { riskProfileResponse } = useCustomMetricV2HelperContext()
 
   const { selectedCustomMetricIndex, customMetrics } = formValues
 
@@ -19,7 +19,7 @@ export default function HealthSourceServicesV2<T extends CommonCustomMetricPrope
     sli: `customMetrics.${selectedCustomMetricIndex}.sli.enabled`,
     serviceHealth: `customMetrics.${selectedCustomMetricIndex}.analysis.liveMonitoring.enabled`,
     deploymentVerification: `customMetrics.${selectedCustomMetricIndex}.analysis.deploymentVerification.enabled`,
-    riskProfileCategory: `customMetrics.${selectedCustomMetricIndex}.analysis.riskProfile.category`,
+    riskProfileCategory: `customMetrics.${selectedCustomMetricIndex}.analysis.riskProfile.riskCategory`,
     higherBaselineDeviation: `customMetrics.${selectedCustomMetricIndex}.analysis.higherBaselineDeviation`,
     lowerBaselineDeviation: `customMetrics.${selectedCustomMetricIndex}.analysis.lowerBaselineDeviation`
   }
@@ -38,9 +38,9 @@ export default function HealthSourceServicesV2<T extends CommonCustomMetricPrope
           continuousVerification: deploymentVerification?.enabled,
           riskCategory: riskProfile?.category
         }}
-        metricPackResponse={metricPacksResponse}
         fieldNames={fieldNames}
         hideServiceIdentifier
+        riskProfileResponse={riskProfileResponse}
       />
 
       {canShowServiceInstance(customMetrics, selectedCustomMetricIndex) && <ServiceInstance />}

@@ -7,9 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly configureOptions: string
   readonly editServiceDialog: string
   readonly editor: string
   readonly formRow: string
+  readonly inputFieldLayout: string
   readonly inputSetSpinner: string
   readonly inputWidth: string
   readonly serviceActionWrapper: string

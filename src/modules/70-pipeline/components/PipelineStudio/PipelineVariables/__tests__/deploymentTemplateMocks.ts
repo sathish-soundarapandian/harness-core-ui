@@ -50,7 +50,7 @@ export const deploymentTemplate = {
     },
     instanceAttributes: [
       {
-        name: 'hostname',
+        name: 'instancename',
         jsonPath: 'klVcayjvQtyPVldlk2Ercg',
         description: 'y-ZWNcQqSqyhIQm1-4_NEg',
         __uuid: 'p5em0zFlR9eQdsKKpvxUlw'
@@ -118,7 +118,7 @@ export const originalDeploymentTemplate = {
     },
     instanceAttributes: [
       {
-        name: 'hostname',
+        name: 'instancename',
         jsonPath: 'ip',
         description: 'IP address of the host'
       },

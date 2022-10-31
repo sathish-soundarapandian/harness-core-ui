@@ -151,6 +151,7 @@ exports[`Test K8sRollingRollback Step inputSet 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -835,6 +836,7 @@ exports[`Test K8sRollingRollback Step should render inputSet view 1`] = `
           {}
         </pre>
         <button
+          aria-label="Submit"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           type="button"
         >
@@ -878,6 +880,7 @@ exports[`Test K8sRollingRollback Step should render inputSet view and test valid
           {}
         </pre>
         <button
+          aria-label="Submit"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           type="button"
         >

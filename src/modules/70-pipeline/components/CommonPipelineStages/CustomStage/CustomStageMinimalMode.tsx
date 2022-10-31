@@ -8,6 +8,7 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import { Button, Container, FormikForm, Text } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
@@ -87,6 +88,7 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
               iconProps={{ size: 16 }}
               margin={{ bottom: 'medium' }}
               className={css.addStageHeading}
+              style={{ fontVariant: FontVariation.H5, color: Color.GREY_800 }}
             >
               {getString('pipelineSteps.build.create.aboutYourStage')}
             </Text>

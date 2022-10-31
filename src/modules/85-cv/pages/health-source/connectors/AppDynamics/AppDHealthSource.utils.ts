@@ -41,7 +41,7 @@ import {
   getMetricPacksForPayload,
   validateCommonFieldsForMetricThreshold
 } from '../../common/MetricThresholds/MetricThresholds.utils'
-import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 
 export const convertStringBasePathToObject = (baseFolder: string | BasePathData): BasePathData => {
   let basePathObj = {} as any
@@ -110,10 +110,7 @@ export const createAppDynamicsData = (sourceData: any): AppDynamicsData => {
         completeMetricPath: metricDefinition.completeMetricPath,
         metricName: metricDefinition.metricName,
         metricIdentifier: metricDefinition.identifier,
-        riskCategory:
-          metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
-            ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
-            : '',
+        riskCategory: metricDefinition?.analysis?.riskProfile?.riskCategory,
         lowerBaselineDeviation:
           metricDefinition?.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
         higherBaselineDeviation:
@@ -468,7 +465,7 @@ export const createAppDynamicsPayload = (
         }|${metricPath[Object.keys(metricPath)[Object.keys(metricPath).length - 1]]?.path}`
       }
 
-      const assignComponentPayload = createPayloadForAssignComponent({
+      const assignComponentPayload = createPayloadForAssignComponentV2({
         sli,
         riskCategory,
         healthScore,
@@ -477,12 +474,19 @@ export const createAppDynamicsPayload = (
         higherBaselineDeviation
       })
 
+      let serviceInstanceMetricPathData = {}
+      if (assignComponentPayload.analysis?.deploymentVerification?.enabled) {
+        serviceInstanceMetricPathData = {
+          completeServiceInstanceMetricPath: serviceInstanceMetricPath
+        }
+      }
+
       specPayload?.metricDefinitions?.push({
         identifier: metricIdentifier,
         metricName,
         completeMetricPath: derivedCompleteMetricPath,
         groupName: groupName?.value as string,
-        completeServiceInstanceMetricPath: serviceInstanceMetricPath,
+        ...serviceInstanceMetricPathData,
         ...assignComponentPayload
       })
     }
@@ -550,8 +554,15 @@ export const createAppDFormData = (
   const mappedMetricsData = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric?.split(' ').join('_')
   const { completeMetricPath = '', serviceInstanceMetricPath = '' } = mappedMetricsData || {}
-  if (isTemplate && serviceInstanceMetricPath === '' && mappedMetricsData) {
+  if (
+    isTemplate &&
+    serviceInstanceMetricPath === '' &&
+    mappedMetricsData &&
+    mappedMetricsData?.continuousVerification
+  ) {
     mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
+  } else if (!mappedMetricsData?.continuousVerification && !isEmpty(mappedMetricsData?.serviceInstanceMetricPath)) {
+    mappedMetricsData.serviceInstanceMetricPath = ''
   }
 
   const isTierRuntimeOrExpression = getMultiTypeFromValue(nonCustomFeilds?.appDTier) !== MultiTypeInputType.FIXED

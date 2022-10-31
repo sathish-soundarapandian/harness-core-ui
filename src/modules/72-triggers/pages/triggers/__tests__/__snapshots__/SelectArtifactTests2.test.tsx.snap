@@ -284,6 +284,7 @@ exports[`Select Artifact - For Artifact tests initial render 1`] = `
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
     >
       <button
+        aria-label="select"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         data-name="selectBtn"
         disabled=""
@@ -297,6 +298,7 @@ exports[`Select Artifact - For Artifact tests initial render 1`] = `
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -384,6 +386,7 @@ exports[`Select Artifact - For Artifact tests on click of apply button 1`] = `
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
     >
       <button
+        aria-label="back"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon Button--variation Button--variation-secondary"
         type="button"
       >
@@ -413,6 +416,7 @@ exports[`Select Artifact - For Artifact tests on click of apply button 1`] = `
         </span>
       </button>
       <button
+        aria-label="filters.apply"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -423,6 +427,7 @@ exports[`Select Artifact - For Artifact tests on click of apply button 1`] = `
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -745,6 +750,7 @@ exports[`Select Artifact - For Artifact tests on click of select button 1`] = `
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
     >
       <button
+        aria-label="select"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         data-name="selectBtn"
         type="button"
@@ -756,6 +762,7 @@ exports[`Select Artifact - For Artifact tests on click of select button 1`] = `
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -1080,6 +1087,7 @@ exports[`Select Artifact - For Artifact tests when selected tag is not runtime i
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
     >
       <button
+        aria-label="select"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         data-name="selectBtn"
         type="button"
@@ -1091,6 +1099,7 @@ exports[`Select Artifact - For Artifact tests when selected tag is not runtime i
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >

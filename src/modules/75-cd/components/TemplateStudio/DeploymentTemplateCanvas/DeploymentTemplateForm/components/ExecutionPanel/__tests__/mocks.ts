@@ -16,7 +16,7 @@ export const initialValues = {
     fetchInstancesScript: {},
     instanceAttributes: [
       {
-        name: 'hostname',
+        name: 'instancename',
         jsonPath: '',
         description: ''
       }
@@ -40,5 +40,23 @@ export const stepTemplateMock = {
     type: 'Http',
     timeout: '1m 40s',
     spec: { url: '<+input>', method: 'GET', headers: [], outputVariables: [], requestBody: '<+input>' }
+  }
+}
+
+export const multipleStepsInitialView = {
+  infrastructure: {
+    variables: [],
+    fetchInstancesScript: {},
+    instanceAttributes: [
+      {
+        name: 'instancename',
+        jsonPath: '',
+        description: ''
+      }
+    ],
+    instancesListPath: ''
+  },
+  execution: {
+    stepTemplateRefs: ['http_project_level', 'shell_project_level']
   }
 }

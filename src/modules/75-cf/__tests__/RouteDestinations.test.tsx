@@ -22,7 +22,8 @@ describe('RouteDestinations', () => {
     FF_PIPELINE: true,
     FFM_1512: false,
     FFM_1827: false,
-    NG_SETTINGS: false
+    NG_SETTINGS: false,
+    FFM_3959_FF_MFE_Environment_Detail: false
   }
 
   const renderRoutes = (flagOverrides: Partial<Record<FeatureFlag, boolean>> = {}): ReactElement[] => {
@@ -47,6 +48,18 @@ describe('RouteDestinations', () => {
     const routes = renderRoutes({ FF_PIPELINE: false })
 
     expect(routesHavePageName(routes, 'PipelineRouteDestinations')).toBeFalsy()
+  })
+
+  test('it should render the NGUI version of the env detail page when FFM_3959_FF_MFE_Environment_Detail is false', async () => {
+    const routes = renderRoutes({ FFM_3959_FF_MFE_Environment_Detail: false })
+
+    expect(routesHavePageName(routes, 'EnvironmentDetails')).toBeTruthy()
+  })
+
+  test('it should not render the NGUI version of the env detail page when FFM_3959_FF_MFE_Environment_Detail is true', async () => {
+    const routes = renderRoutes({ FFM_3959_FF_MFE_Environment_Detail: true })
+
+    expect(routesHavePageName(routes, 'EnvironmentDetails')).toBeFalsy()
   })
 })
 

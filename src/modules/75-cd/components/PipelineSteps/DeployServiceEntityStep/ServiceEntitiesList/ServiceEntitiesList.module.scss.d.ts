@@ -9,6 +9,8 @@
 declare const styles: {
   readonly card: string
   readonly cardsContainer: string
+  readonly editServiceDialog: string
+  readonly marginBottom: string
   readonly row: string
   readonly serviceIcon: string
   readonly serviceInputs: string

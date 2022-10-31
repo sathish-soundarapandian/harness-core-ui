@@ -6,7 +6,7 @@
  */
 
 import type { IOptionProps } from '@blueprintjs/core'
-import type { MetricPackDTO } from 'services/cv'
+import type { MetricPackDTO, RiskCategoryDTO } from 'services/cv'
 
 export function getRiskCategoryOptions(metricPacks?: MetricPackDTO[]): IOptionProps[] {
   if (!metricPacks?.length) {
@@ -26,6 +26,24 @@ export function getRiskCategoryOptions(metricPacks?: MetricPackDTO[]): IOptionPr
           value: `${metricPack.category}/${metric.type}`
         })
       }
+    }
+  }
+
+  return riskCategoryOptions
+}
+
+export function getRiskCategoryOptionsV2(riskCategories?: RiskCategoryDTO[]): IOptionProps[] {
+  if (!Array.isArray(riskCategories) || !riskCategories?.length) {
+    return []
+  }
+
+  const riskCategoryOptions: IOptionProps[] = []
+  for (const riskCategory of riskCategories) {
+    if (riskCategory?.identifier && riskCategory?.displayName) {
+      riskCategoryOptions.push({
+        label: riskCategory.displayName,
+        value: riskCategory.identifier
+      })
     }
   }
 

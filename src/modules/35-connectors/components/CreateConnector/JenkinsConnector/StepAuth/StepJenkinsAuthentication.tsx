@@ -28,6 +28,7 @@ import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../CreateJenkinsConnector.module.scss'
 
@@ -100,6 +101,13 @@ const StepJenkinsAuthentication: React.FC<StepProps<StepJenkinsAuthenticationPro
       nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepJenkinsAuthenticationProps)
     }
 
+    const scope: ScopedObjectDTO | undefined = props.isEditMode
+      ? {
+          orgIdentifier: prevStepData?.orgIdentifier,
+          projectIdentifier: prevStepData?.projectIdentifier
+        }
+      : undefined
+
     return loadingConnectorSecrets ? (
       <PageSpinner />
     ) : (
@@ -162,10 +170,14 @@ const StepJenkinsAuthentication: React.FC<StepProps<StepJenkinsAuthenticationPro
                       stringId="username"
                       type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
                     />
-                    <SecretInput name={'password'} label={getString('connectors.jenkins.passwordAPIToken')} />
+                    <SecretInput
+                      name={'password'}
+                      label={getString('connectors.jenkins.passwordAPIToken')}
+                      scope={scope}
+                    />
                   </>
                 ) : (
-                  <SecretInput name={'bearerToken'} label={getString('connectors.bearerToken')} />
+                  <SecretInput name={'bearerToken'} label={getString('connectors.bearerToken')} scope={scope} />
                 )}
               </Layout.Vertical>
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

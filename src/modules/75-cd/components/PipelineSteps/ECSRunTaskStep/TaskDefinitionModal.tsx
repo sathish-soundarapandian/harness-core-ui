@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, noop } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import { AllowedTypes, Button, IconProps, StepProps, StepWizard } from '@harness/uicore'
@@ -84,7 +84,7 @@ export const TaskDefinitionModal = (props: TaskDefinitionModalProps): React.Reac
     availableManifestTypes
   } = props
 
-  const [store, setStore] = useState('')
+  const [store, setStore] = useState(defaultTo(initialValues?.type, ''))
   const [isEditMode, setIsEditMode] = useState(false)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -109,7 +109,9 @@ export const TaskDefinitionModal = (props: TaskDefinitionModalProps): React.Reac
   }
 
   const getLastStepInitialData = useCallback((): ManifestConfig => {
-    if (initialValues) {
+    if (!isEmpty(store) && initialValues?.type !== store) {
+      return null as unknown as ManifestConfig
+    } else if (initialValues) {
       return {
         identifier: '',
         type: selectedManifest as ManifestTypes,
@@ -121,7 +123,7 @@ export const TaskDefinitionModal = (props: TaskDefinitionModalProps): React.Reac
       }
     }
     return { identifier: '', type: selectedManifest as ManifestTypes, spec: {} }
-  }, [initialValues, selectedManifest])
+  }, [initialValues, selectedManifest, store])
 
   const handleSubmit = (manifestObj: ManifestConfigWrapper): void => {
     updateManifestList(manifestObj)

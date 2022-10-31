@@ -96,7 +96,7 @@ const getCloudWatchSpec = (params: CreatePayloadUtilParams): CloudWatchMetricsHe
     region,
     connectorRef: setupSourceData.connectorRef,
     feature: CloudWatchProductNames.METRICS,
-    metricDefinitions: updateFormikValuesForPayload(customMetrics)
+    metricDefinitions: updateFormikValuesForPayload(customMetrics) as CloudWatchMetricDefinition[]
   }
 }
 
@@ -193,8 +193,8 @@ export const validateForm = (
             )
           }
 
-          if (!analysis.riskProfile?.category) {
-            errors[`customMetrics.${index}.analysis.riskProfile.category`] = getString(
+          if (!analysis.riskProfile?.riskCategory) {
+            errors[`customMetrics.${index}.analysis.riskProfile.riskCategory`] = getString(
               'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory'
             )
           }

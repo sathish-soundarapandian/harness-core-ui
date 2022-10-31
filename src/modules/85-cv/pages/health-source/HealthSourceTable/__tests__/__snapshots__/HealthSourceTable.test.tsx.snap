@@ -236,6 +236,7 @@ exports[`HealthSource table Verify HealthSource Table in CV 1`] = `
         </div>
       </div>
       <button
+        aria-label="cv.healthSource.addHealthSource"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
         data-testid="addHealthSource-button"
         type="button"
@@ -279,6 +280,7 @@ exports[`HealthSource table Verify HealthSource Table in Verify step 1`] = `
       connectors.cdng.healthSources.label
     </p>
     <button
+      aria-label="plusAdd"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
       data-testid="plusAdd-button"
       style="padding-left: 0px;"

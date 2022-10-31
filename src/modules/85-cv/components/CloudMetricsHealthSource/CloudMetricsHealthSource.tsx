@@ -17,7 +17,6 @@ import {
   useConfirmationDialog
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { transformSampleDataIntoHighchartOptions } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource.utils'
@@ -31,8 +30,7 @@ import MetricDashboardWidgetNav from '@cv/components/MetricDashboardWidgetNav/Me
 import type { CloudMetricsHealthSourceProps } from '@cv/components/CloudMetricsHealthSource/CloudMetricsHealthSource.type'
 import SelectHealthSourceServices from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices'
 import MetricErrorAndLoading from '@cv/pages/health-source/common/MetricErrorAndLoading/MetricErrorAndLoading'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetLabelNames, useGetMetricPacks } from 'services/cv'
+import { useGetLabelNames, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import css from '@cv/components/CloudMetricsHealthSource/CloudMetricHealthSource.module.scss'
 
 export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSourceProps<T>): JSX.Element {
@@ -48,7 +46,6 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
     onNextClicked,
     manualQueries,
     addManualQueryTitle,
-    dataSourceType,
     dashboardDetailRequest,
     dashboardDetailMapper,
     formikProps,
@@ -62,7 +59,6 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
   const { getString } = useStrings()
   const { onPrevious } = useContext(SetupSourceTabsContext)
   const [shouldShowChart, setShouldShowChart] = useState<boolean>(false)
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
   const isQueryRuntimeOrExpression = getMultiTypeFromValue(selectedMetricInfo?.query) !== MultiTypeInputType.FIXED
   const sampleData = useMemo(() => {
@@ -74,9 +70,8 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
       setShouldShowChart(false)
     }
   }, [selectedMetricInfo?.timeseriesData])
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: dataSourceType }
-  })
+
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('cv.monitoringSources.prometheus.querySettingsNotEditable'),
@@ -161,7 +156,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                             serviceInstance,
                             continuousVerification
                           }}
-                          metricPackResponse={metricPackResponse}
+                          riskProfileResponse={riskProfileResponse}
                           labelNamesResponse={
                             { data: { data: serviceInstanceList } } as ReturnType<typeof useGetLabelNames>
                           }

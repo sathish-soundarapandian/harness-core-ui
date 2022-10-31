@@ -10,7 +10,6 @@ import React, { useEffect, useLayoutEffect, useState, useRef, useMemo } from 're
 import classNames from 'classnames'
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable'
 import { v4 as uuid } from 'uuid'
-import { Event } from '@pipeline/components/Diagram'
 import {
   CANVAS_CLICK_EVENT,
   dispatchCustomEvent,
@@ -25,6 +24,7 @@ import GraphActions from '../GraphActions/GraphActions'
 import { PipelineGraphRecursive } from './PipelineGraphNode'
 import type { NodeCollapsibleProps, NodeIds, PipelineGraphState, SVGPathRecord, GetNodeMethod, KVPair } from '../types'
 import GraphConfigStore from './GraphConfigStore'
+import { Event } from '../Constants'
 import css from './PipelineGraph.module.scss'
 
 interface ControlPosition {

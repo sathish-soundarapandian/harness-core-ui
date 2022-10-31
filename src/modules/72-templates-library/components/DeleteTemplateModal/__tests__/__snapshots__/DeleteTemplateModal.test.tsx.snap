@@ -335,6 +335,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
               >
                 <button
+                  aria-label="Delete Selected"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                   disabled=""
                   tabindex="-1"
@@ -347,6 +348,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -719,6 +721,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
               >
                 <button
+                  aria-label="Delete Selected"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -729,6 +732,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -1109,6 +1113,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
               >
                 <button
+                  aria-label="Delete Selected"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -1119,6 +1124,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >

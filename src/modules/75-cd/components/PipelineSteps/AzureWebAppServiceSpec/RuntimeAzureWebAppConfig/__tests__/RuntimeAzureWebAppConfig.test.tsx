@@ -35,6 +35,7 @@ describe('Azure Web App config tests', () => {
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           type={AzureWebAppConfigType.startupCommand}
           stepViewType={StepViewType.InputSet}
+          path="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec"
         />
       </TestWrapper>
     )
@@ -54,6 +55,7 @@ describe('Azure Web App config tests', () => {
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           type={AzureWebAppConfigType.applicationSettings}
           stepViewType={StepViewType.InputSet}
+          path="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec"
         />
       </TestWrapper>
     )
@@ -73,6 +75,7 @@ describe('Azure Web App config tests', () => {
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           type={AzureWebAppConfigType.connectionStrings}
           stepViewType={StepViewType.InputSet}
+          path="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec"
         />
       </TestWrapper>
     )

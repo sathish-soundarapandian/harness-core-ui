@@ -6,7 +6,7 @@
  */
 
 import type { DynatraceMetricInfo } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
-import type { useGetMetricPacks } from 'services/cv'
+import type { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 
 export type CreatedMetricsWithSelectedIndex = {
   createdMetrics: string[]
@@ -24,7 +24,7 @@ export interface DynatraceCustomMetricsProps {
   selectedServiceId: string
   isTemplate?: boolean
   expressions?: string[]
-  metricPackResponse: ReturnType<typeof useGetMetricPacks>
+  riskProfileResponse: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
 }
 
 export type SelectedAndMappedMetrics = {

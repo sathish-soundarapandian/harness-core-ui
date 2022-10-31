@@ -45,7 +45,7 @@ const AzureWebAppConfigInputField = (props: ApplicationConfigProps): React.React
   if (props.azureWebAppConfig?.store?.type === 'Harness') {
     if (props.azureWebAppConfig?.store.spec.secretFiles) {
       return (
-        <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+        <Layout.Vertical className={cx(css.inputWidth, css.fileStoreVerticalSpacing)}>
           <FileStoreList
             name={`${props.path}.${props.type}.store.spec.secretFiles`}
             type={fileTypes.ENCRYPTED}
@@ -56,7 +56,7 @@ const AzureWebAppConfigInputField = (props: ApplicationConfigProps): React.React
       )
     }
     return (
-      <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+      <Layout.Vertical className={cx(css.inputWidth, css.fileStoreVerticalSpacing)}>
         <FileStoreList
           name={`${props.path}.${props.type}.store.spec.files`}
           type={fileTypes.FILE_STORE}
@@ -93,7 +93,8 @@ export function ApplicationConfig(props: ApplicationConfigProps): React.ReactEle
       case AzureWebAppConfigType.connectionStrings:
         return getString('pipeline.appServiceConfig.connectionStrings.filePath')
       case AzureWebAppConfigType.startupCommand:
-        return getString('pipeline.startupCommand.scriptFilePath')
+      case AzureWebAppConfigType.startupScript:
+        return getString('pipeline.startup.scriptFilePath')
       /* istanbul ignore next */
       default:
         return ''
@@ -107,7 +108,9 @@ export function ApplicationConfig(props: ApplicationConfigProps): React.ReactEle
       case AzureWebAppConfigType.connectionStrings:
         return getString('pipeline.appServiceConfig.connectionStrings.name')
       case AzureWebAppConfigType.startupCommand:
-        return getString('pipeline.startupCommand.name')
+        return getString('pipeline.startup.command.name')
+      case AzureWebAppConfigType.startupScript:
+        return getString('pipeline.startup.script.name')
       /* istanbul ignore next */
       default:
         return ''
@@ -115,7 +118,7 @@ export function ApplicationConfig(props: ApplicationConfigProps): React.ReactEle
   }
   return (
     <div
-      className={cx(css.nopadLeft, css.accordionSummary)}
+      className={cx(css.nopadLeft, css.configSection)}
       id={`Stage.${props.stageIdentifier}.Service.AzureWebAppConfig`}
     >
       {!props.fromTrigger && <div className={css.subheading}>{getHeading(props.type)}</div>}

@@ -27,6 +27,7 @@ import {
   defaultPayload
 } from './AppDMonitoredSource.mock'
 import AppDMonitoredSource from '../AppDHealthSource'
+import { riskCategoryMock } from '../../__tests__/HealthSources.mock'
 
 jest.mock('uuid')
 jest.mock('@common/hooks/useFeatureFlag')
@@ -70,6 +71,9 @@ describe('Unit tests for createAppd monitoring source', () => {
     jest
       .spyOn(cvServices, 'useGetMetricPacks')
       .mockImplementation(() => ({ loading: false, error: null, data: metricPack, refetch: refetchMock } as any))
+    jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
     jest
       .spyOn(cvServices, 'useGetAppdynamicsMetricStructure')
       .mockImplementation(

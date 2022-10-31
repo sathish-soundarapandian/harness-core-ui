@@ -125,6 +125,7 @@ exports[`Create Step Verification Script Delegate Click back button 1`] = `
     class="Layout--horizontal StyledProps--main StyledProps--padding-xxxlarge"
   >
     <button
+      aria-label="back"
       class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
       disabled=""
       id="stepReviewScriptBackButton"
@@ -183,6 +184,7 @@ exports[`Create Step Verification Script Delegate Click back button 1`] = `
       </span>
     </button>
     <button
+      aria-label="done"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--padding-small Button--with-current-color"
       type="button"
     >
@@ -321,6 +323,7 @@ exports[`Create Step Verification Script Delegate Click back button 2`] = `
     class="Layout--horizontal StyledProps--main StyledProps--padding-xxxlarge"
   >
     <button
+      aria-label="back"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
       id="stepReviewScriptBackButton"
       type="button"
@@ -351,6 +354,7 @@ exports[`Create Step Verification Script Delegate Click back button 2`] = `
       </span>
     </button>
     <button
+      aria-label="done"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--padding-small Button--with-current-color"
       type="button"
     >
@@ -489,6 +493,7 @@ exports[`Create Step Verification Script Delegate render data 1`] = `
     class="Layout--horizontal StyledProps--main StyledProps--padding-xxxlarge"
   >
     <button
+      aria-label="back"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
       id="stepReviewScriptBackButton"
       type="button"
@@ -519,6 +524,7 @@ exports[`Create Step Verification Script Delegate render data 1`] = `
       </span>
     </button>
     <button
+      aria-label="done"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--padding-small Button--with-current-color"
       type="button"
     >

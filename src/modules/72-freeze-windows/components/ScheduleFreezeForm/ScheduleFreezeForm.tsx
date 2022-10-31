@@ -9,11 +9,12 @@ import React, { ReactNode } from 'react'
 import { FormikForm, Formik, Layout, FormInput, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { omit } from 'lodash-es'
+import moment from 'moment'
 import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { DOES_NOT_REPEAT, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
 import type { FreezeWindow } from 'services/cd-ng'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { DateTimePicker } from './DateTimePicker'
+import { DateTimePicker, DATE_PARSE_FORMAT } from './DateTimePicker'
 import css from './ScheduleFreezeForm.module.scss'
 
 interface ScheduleFreezeFormProps {
@@ -25,33 +26,65 @@ interface ScheduleFreezeFormProps {
 }
 
 export type FreezeWindowFormData = FreezeWindow & {
-  endTimeMode: '0' | '1'
+  endTimeMode: 'duration' | 'date'
   recurrence: {
     spec: {
-      recurrenceEndMode: '0' | '1'
+      recurrenceEndMode: 'never' | 'date'
     }
   }
+}
+
+function getEndTimeValidationSchema(): Yup.StringSchema<string | undefined> {
+  return Yup.string()
+    .required('End Time is required')
+    .test({
+      test(value: string): boolean | Yup.ValidationError {
+        const startTime = this.parent.startTime
+        if (moment(value).diff(startTime, 'minutes') < 0) {
+          return this.createError({ message: 'End Time should not be before the Start Time' })
+        } else if (moment(value).diff(startTime, 'minutes') < 30) {
+          return this.createError({ message: 'End Time should be at least "30 minutes" from Start Time' })
+        } else if (moment(value).diff(startTime, 'year') > 1) {
+          return this.createError({ message: 'End Time should be less than an year from Start Time' })
+        }
+
+        return true
+      }
+    })
+}
+
+function getRecurrenceEndDateValidationSchema(): Yup.StringSchema<string | undefined> {
+  return Yup.string()
+    .required('Recurrence End Date is required')
+    .test({
+      test(value: string): boolean | Yup.ValidationError {
+        if (moment(value).diff((this as any).from[2].value.endTime, 'minutes') < 0) {
+          return this.createError({ message: 'Recurrence End Date should be after the End Time' })
+        }
+        return true
+      }
+    })
 }
 
 const validationSchema = Yup.object().shape({
   timeZone: Yup.string().required('Timezone is required'),
   startTime: Yup.string().required('Start Time is required'),
-  endTimeMode: Yup.string().oneOf(['0', '1']),
+  endTimeMode: Yup.string().oneOf(['duration', 'date']),
   duration: Yup.string().when('endTimeMode', {
-    is: '0',
-    then: getDurationValidationSchema({ minimum: '10m' }).required('Minimum duration is 10 minutes')
+    is: 'duration',
+    then: getDurationValidationSchema({ minimum: '30m' })
   }),
   endTime: Yup.string().when('endTimeMode', {
-    is: '1',
-    then: Yup.string().required('End Time is required')
+    is: 'date',
+    then: getEndTimeValidationSchema()
   }),
   recurrence: Yup.object().shape({
     type: Yup.string(),
     spec: Yup.object().shape({
-      recurrenceEndMode: Yup.string().oneOf(['0', '1']),
+      recurrenceEndMode: Yup.string().oneOf(['never', 'date']),
       until: Yup.string().when('recurrenceEndMode', {
-        is: '1',
-        then: Yup.string().required('Recurrence End Date is required')
+        is: 'date',
+        then: getRecurrenceEndDateValidationSchema()
       })
     })
   })
@@ -63,22 +96,41 @@ const recurrenceList: SelectOption[] = [
   ...RECURRENCE.map(item => ({ value: item, label: item }))
 ]
 
-const processInitialvalues = (freezeWindow: FreezeWindow): any => {
-  return {
+const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData => {
+  const processedValues = {
     ...freezeWindow,
-    endTimeMode: freezeWindow?.endTime ? '1' : '0',
+    timeZone: freezeWindow?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
+    startTime: freezeWindow?.startTime ?? moment().format(DATE_PARSE_FORMAT),
+    endTime: freezeWindow?.endTime ?? moment(freezeWindow?.startTime).add(30, 'minutes').format(DATE_PARSE_FORMAT),
+    duration: freezeWindow?.duration ?? '30m',
+    endTimeMode: freezeWindow?.endTime ? 'date' : 'duration',
     recurrence: {
       ...freezeWindow.recurrence,
       spec: {
-        ...freezeWindow.recurrence?.spec,
-        recurrenceEndMode: freezeWindow?.recurrence?.type && freezeWindow?.recurrence?.spec?.until ? '1' : '0'
+        until:
+          freezeWindow?.recurrence?.spec?.until ??
+          moment(freezeWindow?.endTime).endOf('year').format(DATE_PARSE_FORMAT),
+        recurrenceEndMode: freezeWindow?.recurrence?.type && freezeWindow?.recurrence?.spec?.until ? 'date' : 'never'
       }
     }
-  }
+  } as FreezeWindowFormData
+
+  return processedValues
 }
 
 const processFormData = (form: FreezeWindowFormData): FreezeWindow => {
-  return omit(form, ['endTimeMode', 'recurrence.spec.recurrenceEndMode']) as FreezeWindow
+  const processedForm = omit(form, ['endTimeMode', 'recurrence.spec.recurrenceEndMode'])
+  return {
+    ...processedForm,
+    duration: form.endTimeMode === 'duration' ? processedForm.duration : undefined,
+    endTime: form.endTimeMode === 'date' ? processedForm.endTime : undefined,
+    recurrence: processedForm.recurrence?.type
+      ? {
+          type: processedForm.recurrence?.type,
+          spec: form.recurrence.spec.recurrenceEndMode === 'date' ? processedForm.recurrence.spec : undefined
+        }
+      : undefined
+  } as FreezeWindow
 }
 
 export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
@@ -100,7 +152,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
       {formikProps => {
         return (
           <FormikForm>
-            <Layout.Vertical width={'350px'} className={css.scheduleFreezeForm}>
+            <Layout.Vertical width={'320px'} className={css.scheduleFreezeForm}>
               <FormInput.DropDown
                 label="Timezone"
                 name="timeZone"
@@ -110,23 +162,27 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                 }}
                 usePortal
               />
-              <DateTimePicker name="startTime" label="Start Time" />
+              <DateTimePicker name="startTime" label="Start Time" defaultToCurrentTime />
               <FormInput.RadioGroup
                 name="endTimeMode"
                 label="End Time"
                 items={[
                   {
                     label: (
-                      <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }}>
-                        <FormInput.DurationInput name="duration" disabled={formikProps.values?.endTimeMode === '1'} />
-                        <span>from start time</span>
+                      <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }} className={css.endTime}>
+                        <FormInput.DurationInput
+                          name="duration"
+                          disabled={formikProps.values.endTimeMode === 'date'}
+                          inputProps={{ placeholder: 'Enter w/d/h/m' }}
+                        />
+                        <span className={css.text}>from start time</span>
                       </Layout.Horizontal>
                     ),
-                    value: '0'
+                    value: 'duration'
                   },
                   {
-                    label: <DateTimePicker name="endTime" disabled={formikProps.values?.endTimeMode === '0'} />,
-                    value: '1'
+                    label: <DateTimePicker name="endTime" disabled={formikProps.values.endTimeMode === 'duration'} />,
+                    value: 'date'
                   }
                 ]}
               />
@@ -150,15 +206,15 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
                   name="recurrence.spec.recurrenceEndMode"
                   label="Recurrence End Date"
                   items={[
-                    { label: 'Never', value: '0' },
+                    { label: 'Never', value: 'never' },
                     {
                       label: (
                         <DateTimePicker
                           name="recurrence.spec.until"
-                          disabled={formikProps.values?.recurrence?.spec.recurrenceEndMode === '0'}
+                          disabled={formikProps.values?.recurrence?.spec.recurrenceEndMode === 'never'}
                         />
                       ),
-                      value: '1'
+                      value: 'date'
                     }
                   ]}
                 />

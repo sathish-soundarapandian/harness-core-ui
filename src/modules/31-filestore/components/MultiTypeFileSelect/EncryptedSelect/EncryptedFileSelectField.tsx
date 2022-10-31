@@ -9,7 +9,7 @@ import React from 'react'
 import { connect, FormikContextType } from 'formik'
 import { Link } from 'react-router-dom'
 
-import { Layout, Icon, Text } from '@harness/uicore'
+import { Layout, Icon, Text, FormError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
@@ -28,6 +28,7 @@ interface SelectEncryptedProps {
   placeholder?: string
   allowSelection?: boolean
   value: string
+  isSshWinRm?: boolean
 }
 
 interface FormikFileSelectInput extends SelectEncryptedProps {
@@ -41,12 +42,12 @@ interface EncryptedData {
 
 function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactElement {
   const { getString } = useStrings()
-  const { formik, name, readonly = false, onChange, value = '' } = props
+  const { formik, name, readonly = false, onChange, value = '', isSshWinRm = false } = props
   const secretValue = get(formik.values, name) || ''
 
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
-      type: 'SecretFile',
+      type: isSshWinRm ? 'SecretFile' : undefined,
       onSuccess: secretVal => {
         const { projectIdentifier, orgIdentifier, identifier } = secretVal
         let result = `${Scope.ACCOUNT}.${identifier}`
@@ -96,7 +97,7 @@ function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactEleme
 
   return (
     <FormGroup
-      helperText={errorCheck() ? get(formik?.errors, name) : null}
+      helperText={errorCheck() ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null}
       intent={errorCheck() ? Intent.DANGER : Intent.NONE}
       style={{ width: '100%' }}
     >

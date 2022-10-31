@@ -14,7 +14,11 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 
 import DeployEnvironmentEntityWidget from './DeployEnvironmentEntityWidget'
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityCustomStepProps } from './types'
+import type {
+  DeployEnvironmentEntityConfig,
+  DeployEnvironmentEntityCustomInputStepProps,
+  DeployEnvironmentEntityCustomStepProps
+} from './types'
 import { processInitialValues, processFormValues } from './utils'
 import DeployEnvironmentEntityInputStep from './DeployEnvironmentEntityInputStep'
 
@@ -45,21 +49,25 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
       return (
         <DeployEnvironmentEntityInputStep
           initialValues={initialValues}
-          readonly={readonly}
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
-          stepViewType={stepViewType}
-          {...(customStepProps as Required<DeployEnvironmentEntityCustomStepProps>)}
+          {...(customStepProps as Required<DeployEnvironmentEntityCustomInputStepProps>)}
         />
       )
     }
 
     return (
       <DeployEnvironmentEntityWidget
-        initialValues={processInitialValues(initialValues)}
+        initialValues={processInitialValues(
+          initialValues,
+          customStepProps as DeployEnvironmentEntityCustomInputStepProps,
+          onUpdate
+        )}
         readonly={readonly}
         allowableTypes={allowableTypes}
-        onUpdate={values => onUpdate?.(processFormValues(values))}
+        onUpdate={values =>
+          onUpdate?.(processFormValues(values, customStepProps as DeployEnvironmentEntityCustomInputStepProps))
+        }
         {...(customStepProps as Required<DeployEnvironmentEntityCustomStepProps>)}
       />
     )

@@ -107,9 +107,10 @@ describe('ActiveServiceInstancePopover', () => {
         <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
       </TestWrapper>
     )
-    expect(getByText('hostname:')!).toBeDefined()
-    expect(getByText('instance2')!).toBeDefined()
-    expect(getByText('version:')!).toBeDefined()
-    expect(getByText('2021.07.10_app_2.war')!).toBeDefined()
+    expect(getByText('hostname:')!).toBeInTheDocument()
+    expect(getByText('instance2')!).toBeInTheDocument()
+    expect(getByText('version:')!).toBeInTheDocument()
+    expect(getByText('library/nginx:stable-perl')!).toBeInTheDocument()
+    expect(getByText('2021.07.10_app_2.war')!).toBeInTheDocument()
   })
 })

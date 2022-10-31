@@ -7,9 +7,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import set from 'lodash-es/set'
-import get from 'lodash-es/get'
-import { isNull, isUndefined, omitBy } from 'lodash-es'
+import { get, set, isNull, isUndefined, omitBy } from 'lodash-es'
 import {
   Container,
   Button,

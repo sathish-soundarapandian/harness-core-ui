@@ -32,6 +32,7 @@ import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../CreateGcpConnector.module.scss'
 
@@ -113,6 +114,13 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
     connector_type: Connectors.Gcp
   })
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: props?.orgIdentifier,
+        projectIdentifier: props?.projectIdentifier
+      }
+    : undefined
+
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
@@ -155,6 +163,7 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
                     label={getString('connectors.k8.serviceAccountKey')}
                     type={'SecretFile'}
                     tooltipProps={{ dataTooltipId: 'gcpConnectorSecretKeyTooltip' }}
+                    scope={scope}
                   />
                 ) : (
                   <></>

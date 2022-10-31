@@ -10,10 +10,28 @@ import { act, fireEvent, render, RenderResult, screen, within } from '@testing-l
 import { TestWrapper } from '@common/utils/testUtils'
 import type { DashboardModel } from 'services/custom-dashboards'
 import { DashboardType } from '@dashboards/types/DashboardTypes.types'
+import { DashboardsContextProvider } from '@dashboards/pages/DashboardsContext'
+import { FolderType } from '@dashboards/constants/FolderType'
 import type { StringKeys } from 'framework/strings'
+import * as customDashboardServices from 'services/custom-dashboards'
 import DashboardCard, { DashboardCardProps } from '../DashboardCard'
 
 const testTitle = 'test title'
+
+const mockFolderOne: customDashboardServices.FolderModel = {
+  id: '1',
+  name: 'testName',
+  title: 'testTitle',
+  type: FolderType.ACCOUNT,
+  child_count: 0,
+  created_at: '01/01/2022'
+}
+
+const mockGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+  resource: [mockFolderOne],
+  items: 1,
+  pages: 1
+}
 
 const defaultTestDashboard: DashboardModel = {
   id: '1',
@@ -26,11 +44,7 @@ const defaultTestDashboard: DashboardModel = {
   data_source: [],
   last_accessed_at: '',
   resourceIdentifier: '1',
-  folder: {
-    id: '',
-    title: '',
-    created_at: ''
-  }
+  folder: mockFolderOne
 }
 
 const defaultProps: DashboardCardProps = {
@@ -43,7 +57,9 @@ const defaultProps: DashboardCardProps = {
 const renderComponent = (props: DashboardCardProps): RenderResult => {
   return render(
     <TestWrapper>
-      <DashboardCard {...props} />
+      <DashboardsContextProvider>
+        <DashboardCard {...props} />
+      </DashboardsContextProvider>
     </TestWrapper>
   )
 }
@@ -61,11 +77,17 @@ describe('DashboardCard', () => {
   const cloneText: StringKeys = 'projectCard.clone'
   const deleteText: StringKeys = 'delete'
   const editText: StringKeys = 'edit'
+
   beforeEach(() => {
     jest.clearAllMocks()
+    jest
+      .spyOn(customDashboardServices, 'useGetFolders')
+      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
   })
 
   test('it should show read only dashboard card for a shared dashboard', async () => {
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
+
     const { container } = renderComponent(defaultProps)
 
     expect(screen.getByText(testTitle)).toBeInTheDocument()
@@ -78,6 +100,7 @@ describe('DashboardCard', () => {
   })
 
   test('it should show editable dashboard card for an account dashboard', async () => {
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockReturnValue({ data: {} } as any)
     const viewCount = 5678
 
     const testDashboard: DashboardModel = {

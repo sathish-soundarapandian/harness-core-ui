@@ -19,8 +19,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useGetSchemaYaml } from 'services/pipeline-ng'
-import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
+import { useGetSchemaYaml, useGetPipeline, useGetPipelineList } from 'services/pipeline-ng'
+import { useGetListOfBranchesWithStatus, useGetOrganizationList, useGetProjectList } from 'services/cd-ng'
 import SessionToken from 'framework/utils/SessionToken'
 import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
@@ -63,7 +63,11 @@ export const GovernanceRemoteComponentMounter = props => {
             useGetToken,
             useAnyEnterpriseLicense,
             useCurrentEnterpriseLicense,
-            useLicenseStore
+            useLicenseStore,
+            useGetPipelineList,
+            useGetPipeline,
+            useGetOrganizationList,
+            useGetProjectList
           }}
           components={{
             NGBreadcrumbs,

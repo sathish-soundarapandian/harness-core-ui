@@ -262,6 +262,7 @@ exports[`Inline Input Set Error Exp should open yaml view and render out of sync
                   pipeline.inputSetErrorStrip.errorInfo
                 </p>
                 <button
+                  aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   type="button"
                 >
@@ -286,6 +287,7 @@ exports[`Inline Input Set Error Exp should open yaml view and render out of sync
               class="Layout--horizontal StyledProps--main footer StyledProps--padding-xlarge"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -297,6 +299,7 @@ exports[`Inline Input Set Error Exp should open yaml view and render out of sync
               </button>
                  
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >
@@ -577,6 +580,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
                   pipeline.inputSetErrorStrip.errorInfo
                 </p>
                 <button
+                  aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   type="button"
                 >
@@ -601,6 +605,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
               class="Layout--horizontal StyledProps--main footer StyledProps--padding-xlarge"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -612,6 +617,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
               </button>
                  
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >
@@ -892,6 +898,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
                   pipeline.inputSetErrorStrip.errorInfo
                 </p>
                 <button
+                  aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   type="button"
                 >
@@ -916,6 +923,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
               class="Layout--horizontal StyledProps--main footer StyledProps--padding-xlarge"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -927,6 +935,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
               </button>
                  
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >

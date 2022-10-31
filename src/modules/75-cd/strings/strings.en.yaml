@@ -56,6 +56,7 @@ steps:
     hostsOptional: Hosts (Optional)
     previewHosts: Preview Hosts
     noHosts: No hosts provided
+    title: Select Hosts
   azureInfraStep:
     azure: 'Microsoft Azure'
     subscription: '{{ $.common.subscriptionId }}'
@@ -109,6 +110,13 @@ steps:
       prodListenerRuleARN: Prod Listener Rule ARN
       stageListener: Stage Listener
       stageListenerRuleARN: Stage Listener Rule ARN
+  elastigroup:
+    infraDetailHeader: Elastigroup Infrastructure Details
+    connectorSpot: Spot Connector
+    elastigroupConfig: Elastigroup Configuration
+    elastigroupConfigReq: Elastigroup Configuration is required
+    elastigroupTitle: Elastigroup Configuration Source
+    elastigroupConfigDetails: '{{$.common.configDetails}}'
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -168,12 +176,14 @@ pipelineSteps:
     specifyYourInfrastructure: Specify Infrastructure
     specifyYourInfrastructures: Specify Infrastructures
     specifyEnvironmentOrGroup: Specify environment or environment group
+    specifyGitOpsCluster: Specify GitOps Cluster
     specifyGitOpsClusters: Specify GitOps Clusters
     selectEnvironment: '- Select Environment -'
     selectEnvironments: '- Select Environments -'
     selectEnvironmentGroup: '- Select Environment Group -'
     selectInfrastructure: '- Select Infrastructure -'
     selectInfrastructures: '- Select Infrastructures -'
+    allInfrastructures: 'All Infrastructures'
     selectInfrastructureType: 'Select Infrastructure Type'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
@@ -187,8 +197,9 @@ pipelineSteps:
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
     environmentGroupIsRequired: 'Environment Group is required'
-    clusterIsRequired: 'Clusters are required'
-    multiEnvInfraToggleText: 'Deploy to multiple Environments or Infrastructures'
+    clusterIsRequired: 'Cluster is required'
+    multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
+    envGroupToggleText: 'Deploy to Environment Group'
     viewEnvironmentInputs: View environment inputs
     hideEnvironmentInputs: Hide environment inputs
     viewInfrastructureInputs: View infrastructure inputs
@@ -200,10 +211,14 @@ pipelineSteps:
     multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures?. If you choose to proceed, your existing environment will be migrated automatically.
     singleEnvironmentDialogTitleText: Deploy to single environment?
     singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment?. If you choose to proceed, your existing environments will be lost.
-    deleteEnvironmentFromListDialogTitleText: Remove environment from list?
-    deleteEnvironmentFromListConfirmationText: Are you sure you want to remove {{name}} environment from the list?
-    deleteInfrastructureFromListDialogTitleText: Remove infrastructure from list?
-    deleteInfrastructureFromListConfirmationText: Are you sure you want to remove {{name}} infrastructure from the list?
+    deleteEnvironmentFromListDialogTitleText: Remove Environment from list?
+    deleteEnvironmentFromListConfirmationText: Are you sure you want to remove Environment - {{name}} from the list?
+    deleteInfrastructureFromListDialogTitleText: Remove Infrastructure from list?
+    deleteInfrastructureFromListConfirmationText: Are you sure you want to remove Infrastructure - {{name}} from the list?
+    deleteClusterFromListDialogTitleText: Remove Cluster from list?
+    deleteClusterFromListConfirmationText: Are you sure you want to remove Cluster - {{name}} from the list?
+    deleteEnvironmentGroupFromListDialogTitleText: Remove Environment Group from list?
+    deleteEnvironmentGroupFromListConfirmationText: Are you sure you want to remove Environment Group - {{name}} from the list?
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage
@@ -494,7 +509,8 @@ getStartedWithCD:
   envName: Environment Name
   infraName: Infrastructure Name
   setupDelegate: Setup Delegate
-  delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateInfo1: Harness Continuous Delivery empowers teams to deliver new features, fast and securely. The first step to creating deployment pipelines is connecting to your target environment by installing a Harness Delegate.
+  delegateInfo2: The delegate is a worker process that runs on your infrastructure execute tasks on your infrastructure on behalf of Harness platform.
   delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
 ecsRollingDeployStep:
@@ -526,17 +542,17 @@ azureBlueprint:
 validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
-delegateInstallation: Install the Delegate to deploy your cluster
+welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate
 installDelegate: Install Delegate
 instructionsDelegate: Instructions to Install the Delegate
-downloadYAML: DOWNLOAD THE YAML
+downloadYAML: Download the YAML
 previewYAML: Preview Yaml
-installCluster: INSTALL ON YOUR CLUSTER
+installCluster: Install on your Cluster
 checkCluster: Check if you can connect to your cluster
 delegateInstallCommand: Install the delegate by running the following command
-delegateConnectionWait: WAITING FOR DELEGATE TO CONNECT
+delegateConnectionWait: Waiting for Delegate to connect
 delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
 delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
@@ -571,7 +587,10 @@ miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
 useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
 removeStepTemplate: Remove Step Template
+duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+artifactSource:
+  artifactRepositoryTypeIsRequired: Artifact Repository Type is required
 azureArm:
   description: Deploy resources using Azure Resource Manager (ARM).
   location: Location

@@ -74,6 +74,7 @@ export function ExecutionListFilter(): React.ReactElement {
   })
 
   const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({
+    queryParams: { accountId },
     lazy: isFiltersDrawerOpen
   })
 

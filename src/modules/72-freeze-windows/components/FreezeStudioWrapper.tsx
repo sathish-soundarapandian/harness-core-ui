@@ -6,13 +6,13 @@
  */
 
 import React from 'react'
-import { FreezeWindowProvider } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import { FreezeWindowStudio } from './FreezeWindowStudio/FreezeWindowStudio'
+import { FreezeWindowProvider } from '@freeze-windows/context/FreezeWindowContext'
+import { FreezeWindowStudioPage } from '../pages/FreezeWindowStudioPage'
 
 export const FreezeStudioWrapper = () => {
   return (
     <FreezeWindowProvider>
-      <FreezeWindowStudio />
+      <FreezeWindowStudioPage />
     </FreezeWindowProvider>
   )
 }

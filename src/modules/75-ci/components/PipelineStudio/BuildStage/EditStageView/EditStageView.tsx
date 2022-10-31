@@ -18,7 +18,7 @@ import {
   MultiTypeInputType
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
@@ -249,7 +249,7 @@ export const EditStageView: React.FC<EditStageView> = ({
           {formikProps => (
             <FormikForm>
               <Text
-                font={{ size: 'medium', weight: 'semi-bold' }}
+                style={{ fontVariant: FontVariation.H5, color: Color.GREY_800 }}
                 icon={icon}
                 iconProps={{ size: 24, margin: { right: 'xsmall' } }}
                 margin={{ bottom: 'medium' }}

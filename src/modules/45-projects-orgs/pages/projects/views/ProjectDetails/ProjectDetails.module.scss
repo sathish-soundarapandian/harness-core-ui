@@ -42,6 +42,10 @@
   min-width: 1200px;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 .activityCard {
   width: 250px;
   height: 500px;
@@ -56,4 +60,19 @@
 .divider {
   height: 16px;
   border: 1px solid var(--grey-400);
+}
+
+.glanceCardContainer {
+  display: flex;
+  gap: var(--spacing-xlarge);
+}
+
+.glanceCard {
+  height: 116px;
+  width: 116px;
+  min-width: unset;
+}
+
+.timeRangeSelect {
+  width: 150px !important;
 }

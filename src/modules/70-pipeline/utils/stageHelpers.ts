@@ -63,7 +63,8 @@ export enum ServiceDeploymentType {
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
   AzureWebApp = 'AzureWebApp',
-  ECS = 'ECS'
+  ECS = 'ECS',
+  Elastigroup = 'Elastigroup'
 }
 
 export enum RepositoryFormatTypes {
@@ -71,13 +72,15 @@ export enum RepositoryFormatTypes {
   Docker = 'docker',
   Maven = 'maven',
   NPM = 'npm',
-  NuGet = 'nuget'
+  NuGet = 'nuget',
+  Raw = 'raw'
 }
 
 export const nexus2RepositoryFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NPM', value: RepositoryFormatTypes.NPM },
-  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet },
+  { label: 'Raw', value: RepositoryFormatTypes.Raw }
 ]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
@@ -318,6 +321,10 @@ export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => 
   return deploymentType === ServiceDeploymentType.AzureWebApp
 }
 
+export const isElastigroupDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Elastigroup
+}
+
 export const isCustomDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.CustomDeployment
 }
@@ -348,7 +355,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.AzureWebApp]: 'Web App Infrastructure Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
-  [ServiceDeploymentType.WinRm]: 'WinRM'
+  [ServiceDeploymentType.WinRm]: 'WinRM',
+  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details' //todospt
 }
 
 export const getSelectedDeploymentType = (
@@ -598,6 +606,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.EcsService
     case ServiceDeploymentType.CustomDeployment:
       return StepType.CustomDeploymentServiceSpec
+    case ServiceDeploymentType.Elastigroup:
+      return StepType.Elastigroup
     default:
       return StepType.K8sServiceSpec
   }

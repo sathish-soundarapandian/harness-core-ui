@@ -56,6 +56,7 @@ import type {
 const CV_HOME = `/cv/home`
 
 const routes = {
+  toMainDashboard: withAccountId(() => '/main-dashboard'),
   toHome: withAccountId(() => '/home'),
   toGenericError: withAccountId(() => '/error'),
   toSetup: withAccountId(
@@ -106,7 +107,7 @@ const routes = {
       accountId: _accountId,
       windowIdentifier,
       ...rest
-    }: Partial<{ windowIdentifier: string } & ProjectPathProps & ModulePathParams>) => {
+    }: Partial<{ windowIdentifier: string; sectionId?: string } & ProjectPathProps & ModulePathParams>) => {
       // TemplateStudioPathProps
       const queryString = qs.stringify(rest, { skipNulls: true })
       let path
@@ -758,10 +759,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps & ModulePathParams>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/dashboard`
   ),
-  toDeployments: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/deployments`
-  ),
+  toDeployments: withAccountId(({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) => {
+    const basePath = module || 'home'
+    return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/deployments`
+  }),
   toGetStartedWithCI: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/get-started`
@@ -780,17 +781,20 @@ const routes = {
       ...rest
     }: PipelineType<PipelinePathProps> & PipelineStudioQueryParams & RunPipelineQueryParams) => {
       const queryString = qs.stringify(rest, { skipNulls: true })
+      const basePath = module || 'home'
+
       if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio/?${queryString}`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio/?${queryString}`
       } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio/`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio/`
       }
     }
   ),
-  toPipelines: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
-  ),
+  toPipelines: withAccountId(({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) => {
+    return module
+      ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
+      : `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
+  }),
   toGitOps: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
@@ -853,9 +857,13 @@ const routes = {
     }
   ),
   toPipelineDetail: withAccountId(
-    ({ orgIdentifier, projectIdentifier, pipelineIdentifier, module }: PipelineType<PipelinePathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}`
+    ({ orgIdentifier, projectIdentifier, pipelineIdentifier, module }: PipelineType<PipelinePathProps>) => {
+      const basePath = module || 'home'
+
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}`
+    }
   ),
+
   toPipelineLogs: withAccountId(
     ({
       orgIdentifier,
@@ -865,8 +873,10 @@ const routes = {
       executionIdentifier,
       stageIdentifier,
       stepIndentifier: stepIndenitifer
-    }: PipelineType<PipelineLogsPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/execution/${executionIdentifier}/logs/${stageIdentifier}/${stepIndenitifer}`
+    }: PipelineType<PipelineLogsPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/execution/${executionIdentifier}/logs/${stageIdentifier}/${stepIndenitifer}`
+    }
   ),
   toInputSetList: withAccountId(
     ({
@@ -878,10 +888,11 @@ const routes = {
       ...rest
     }: PipelineType<PipelinePathProps> & GitQueryParams) => {
       const queryString = qs.stringify(rest, { skipNulls: true })
+      const basePath = module || 'home'
       if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets?${queryString}`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets?${queryString}`
       } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets`
       }
     }
   ),
@@ -895,11 +906,12 @@ const routes = {
       module,
       ...rest
     }: PipelineType<InputSetPathProps> & InputSetGitQueryParams) => {
+      const basePath = module || 'home'
       const queryString = qs.stringify(rest, { skipNulls: true })
       if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets/${inputSetIdentifier}?${queryString}`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets/${inputSetIdentifier}?${queryString}`
       } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets/${inputSetIdentifier}`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/input-sets/${inputSetIdentifier}`
       }
     }
   ),
@@ -912,11 +924,12 @@ const routes = {
       module,
       ...rest
     }: PipelineType<PipelinePathProps> & GitQueryParams) => {
+      const basePath = module || 'home'
       const queryString = qs.stringify(rest, { skipNulls: true })
       if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers?${queryString}`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers?${queryString}`
       } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers`
       }
     }
   ),
@@ -944,11 +957,12 @@ const routes = {
         ...(isNewTrigger && artifactType && { artifactType }),
         ...(isNewTrigger && scheduleType && { scheduleType })
       }
+      const basePath = module || 'home'
       const queryString = qs.stringify(queryParams, { skipNulls: true })
       if (queryString.length > 0) {
-        return `${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}?${queryString}`
+        return `${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}?${queryString}`
       } else {
-        return `${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}`
+        return `${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}`
       }
     }
   ),
@@ -961,11 +975,12 @@ const routes = {
       module,
       ...rest
     }: PipelineType<PipelinePathProps> & GitQueryParams) => {
+      const basePath = module || 'home'
       const queryString = qs.stringify(rest, { skipNulls: true })
       if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions?${queryString}`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions?${queryString}`
       } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions`
       }
     }
   ),
@@ -979,11 +994,12 @@ const routes = {
       module,
       ...rest
     }: PipelineType<TriggerPathProps> & GitQueryParams) => {
+      const basePath = module || 'home'
       const queryString = qs.stringify(rest, { skipNulls: true })
       if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}/detail?${queryString}`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}/detail?${queryString}`
       } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}/detail`
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}/detail`
       }
     }
   ),
@@ -995,19 +1011,30 @@ const routes = {
       executionIdentifier,
       module,
       source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}`
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}`
+    }
   ),
   toExecutionPipelineView: withAccountId(
     ({
+      accountId: _accountId,
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
       module,
-      source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
+      source,
+      ...rest
+    }: PipelineType<ExecutionPathProps> & GitQueryParams) => {
+      const basePath = module || 'home'
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
+      }
+    }
   ),
   toExecutionInputsView: withAccountId(
     ({
@@ -1017,8 +1044,10 @@ const routes = {
       executionIdentifier,
       module,
       source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/inputs`
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/inputs`
+    }
   ),
   toExecutionArtifactsView: withAccountId(
     ({
@@ -1028,8 +1057,10 @@ const routes = {
       executionIdentifier,
       module,
       source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/artifacts`
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/artifacts`
+    }
   ),
   toExecutionTestsView: withAccountId(
     ({
@@ -1039,8 +1070,10 @@ const routes = {
       executionIdentifier,
       module,
       source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/tests`
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/tests`
+    }
   ),
   toExecutionCommitsView: withAccountId(
     ({
@@ -1061,8 +1094,10 @@ const routes = {
       executionIdentifier,
       module,
       source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/policy-evaluations`
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/policy-evaluations`
+    }
   ),
   toExecutionSecurityView: withAccountId(
     ({
@@ -1072,8 +1107,10 @@ const routes = {
       executionIdentifier,
       module,
       source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/security`
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/security`
+    }
   ),
   toExecutionErrorTrackingView: withAccountId(
     ({
@@ -1083,8 +1120,10 @@ const routes = {
       executionIdentifier,
       module,
       source
-    }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
+    }
   ),
   /********************************************************************************************************************/
   toTemplates: withAccountId(
@@ -1465,6 +1504,21 @@ const routes = {
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/CodeErrors`
   ),
 
+  toCVCodeErrorsAgents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors/agents`
+  ),
+
+  toCVCodeErrorsAgentsTokens: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors/agents-tokens`
+  ),
+
+  toCVCodeErrorsAgentsControl: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors`
+  ),
+
   toCVMonitoringServicesInputSets: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservicesinputset`
@@ -1595,6 +1649,7 @@ const routes = {
       `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
   ),
   toProjects: withAccountId(() => '/home/projects'),
+  toAllProjects: withAccountId(() => '/home/projects/all'),
   toLandingDashboard: withAccountId(() => '/home/get-started'),
   /********************************************************************************************************************/
   toCE: withAccountId(() => `/ce`),
@@ -1789,6 +1844,19 @@ const routes = {
   toChaosExperiment: withAccountId(
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}`
+  ),
+  toNewChaosExperiment: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/new`
+  ),
+  toChaosExperimentRun: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      expIdentifier,
+      expRunIdentifier
+    }: Partial<ProjectPathProps> & { expIdentifier: string; expRunIdentifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${expIdentifier}/runs/${expRunIdentifier}`
   ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>

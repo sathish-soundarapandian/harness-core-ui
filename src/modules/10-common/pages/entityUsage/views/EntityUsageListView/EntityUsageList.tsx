@@ -9,6 +9,7 @@ import React, { useMemo } from 'react'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { Text, Layout, Icon, TableV2 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import cx from 'classnames'
 import type {
   EntityDetail,
   EntityReference,
@@ -24,6 +25,7 @@ import css from './EntityUsageList.module.scss'
 interface EntityUsageListProps {
   entityData: ResponsePageEntitySetupUsageDTO | null
   gotoPage: (pageNumber: number) => void
+  withNoSpaceAroundTable?: boolean
 }
 
 interface ReferredByEntity extends EntityDetail {
@@ -103,7 +105,7 @@ export const RenderGitDetails: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row
   ) : null
 }
 
-const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage }) => {
+const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage, withNoSpaceAroundTable = false }) => {
   const data: EntitySetupUsageDTO[] = entityData?.data?.content || []
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -145,7 +147,7 @@ const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage 
 
   return (
     <TableV2<EntitySetupUsageDTO>
-      className={css.table}
+      className={cx(css.table, withNoSpaceAroundTable ? css.tableWithNoSpace : css.tableWithSpace)}
       columns={columns}
       data={data}
       pagination={{

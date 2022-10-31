@@ -41,6 +41,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -383,7 +384,8 @@ export default function DeployServiceEntityWidget({
           formikRef.current = formik
           const { values } = formik
 
-          const isMultiSvc = !isNil(values.services)
+          // Multi Service is disabled for gitops enabled temporarily
+          const isMultiSvc = !isNil(values.services) && !gitOpsEnabled
           const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
             Array.isArray(values.services) && values.services
@@ -408,46 +410,83 @@ export default function DeployServiceEntityWidget({
                 >
                   <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                     {isMultiSvc ? (
-                      <FormMultiTypeMultiSelectDropDown
-                        tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
-                        name="services"
-                        disabled={readonly || (isFixed && loading)}
-                        dropdownProps={{
-                          items: selectOptions,
-                          placeholder: placeHolderForServices,
-                          disabled: loading || readonly
-                        }}
-                        multiTypeProps={{
-                          width: 300,
-                          expressions,
-                          allowableTypes
-                        }}
-                        enableConfigureOptions
-                      />
+                      <div className={css.inputFieldLayout}>
+                        <FormMultiTypeMultiSelectDropDown
+                          tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                          label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
+                          name="services"
+                          disabled={readonly || (isFixed && loading)}
+                          dropdownProps={{
+                            items: selectOptions,
+                            placeholder: placeHolderForServices,
+                            disabled: loading || readonly
+                          }}
+                          multiTypeProps={{
+                            width: 300,
+                            expressions,
+                            allowableTypes
+                          }}
+                          enableConfigureOptions
+                        />
+                        {getMultiTypeFromValue(formik?.values.services) === MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            className={css.configureOptions}
+                            style={{ alignSelf: 'center' }}
+                            value={formik?.values.services as string}
+                            type="String"
+                            variableName="skipResourceVersioning"
+                            showRequiredField={false}
+                            showDefaultField={true}
+                            showAdvanced={true}
+                            onChange={value => {
+                              formik.setFieldValue('services', value)
+                            }}
+                          />
+                        )}
+                      </div>
                     ) : (
-                      <FormInput.MultiTypeInput
-                        tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
-                        name="service"
-                        useValue
-                        disabled={readonly || (isFixed && loading)}
-                        placeholder={placeHolderForService}
-                        multiTypeInputProps={{
-                          width: 300,
-                          expressions,
-                          selectProps: { items: selectOptions },
-                          allowableTypes,
-                          defaultValueToReset: '',
-                          onTypeChange: setServiceInputType
-                        }}
-                        selectItems={selectOptions}
-                      />
+                      <div className={css.inputFieldLayout}>
+                        <FormInput.MultiTypeInput
+                          tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                          label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
+                          name="service"
+                          useValue
+                          disabled={readonly || (isFixed && loading)}
+                          placeholder={placeHolderForService}
+                          multiTypeInputProps={{
+                            width: 300,
+                            expressions,
+                            selectProps: { items: selectOptions },
+                            allowableTypes,
+                            defaultValueToReset: '',
+                            onTypeChange: setServiceInputType
+                          }}
+                          selectItems={selectOptions}
+                        />
+                        {getMultiTypeFromValue(formik?.values.service) === MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            className={css.configureOptions}
+                            style={{ alignSelf: 'center' }}
+                            value={defaultTo(formik?.values.service, '')}
+                            type="String"
+                            variableName="skipResourceVersioning"
+                            showRequiredField={false}
+                            showDefaultField={true}
+                            showAdvanced={true}
+                            onChange={value => {
+                              formik.setFieldValue('service', value)
+                            }}
+                          />
+                        )}
+                      </div>
                     )}
+
+                    {/* </div> */}
                     {isFixed ? (
                       <RbacButton
                         size={ButtonSize.SMALL}
-                        text={getString('cd.pipelineSteps.serviceTab.plusNewService')}
+                        icon={'plus'}
+                        text={getString('cd.addService')}
                         variation={ButtonVariation.LINK}
                         data-testid="add-new-service"
                         disabled={readonly}
@@ -462,7 +501,7 @@ export default function DeployServiceEntityWidget({
                       />
                     ) : null}
                   </Layout.Horizontal>
-                  {MULTI_SERVICE_INFRA ? (
+                  {MULTI_SERVICE_INFRA && !gitOpsEnabled ? (
                     <Toggle
                       className={css.serviceActionWrapper}
                       checked={isMultiSvc}

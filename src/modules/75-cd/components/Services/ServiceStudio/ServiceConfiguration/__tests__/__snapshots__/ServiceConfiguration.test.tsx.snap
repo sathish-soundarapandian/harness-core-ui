@@ -50,6 +50,7 @@ exports[`Service Configuration handle switch from visual to yaml 1`] = `
           </span>
         </span>
         <button
+          aria-label="common.editYaml"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >
@@ -107,6 +108,12 @@ exports[`Service Configuration renders correctly 1`] = `
           class="FormikForm--main"
         >
           <div>
+            <div
+              class="tabHeading"
+              id="serviceBasicInfo"
+            >
+              cd.pipelineSteps.serviceTab.aboutYourService
+            </div>
             <div
               class="bp3-card bp3-elevation-0 Card--card sectionCard"
             >
@@ -289,7 +296,7 @@ exports[`Service Configuration renders correctly 1`] = `
           class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
         >
           <div
-            class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+            class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
@@ -464,7 +471,7 @@ exports[`Service Configuration renders correctly 1`] = `
           </div>
         </div>
         <label
-          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox gitOpsCheck StyledProps--main"
         >
           <input
             name="gitOpsEnabled"
@@ -534,6 +541,7 @@ exports[`Service Configuration test the rbac functionality to update readonly co
           </span>
         </span>
         <button
+          aria-label="common.editYaml"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >

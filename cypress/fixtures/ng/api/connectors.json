@@ -211,8 +211,8 @@
           "name": "appdtest",
           "identifier": "appdtest",
           "description": "",
-          "orgIdentifier": null,
-          "projectIdentifier": null,
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
           "tags": {},
           "type": "AppDynamics",
           "spec": {
@@ -258,8 +258,8 @@
           "name": "NewRelicConn",
           "identifier": "newrelic",
           "description": null,
-          "orgIdentifier": null,
-          "projectIdentifier": null,
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
           "tags": {},
           "type": "NewRelic",
           "spec": {
@@ -345,8 +345,8 @@
           "name": "gcp-qa-target",
           "identifier": "gcpqatarget",
           "description": "",
-          "orgIdentifier": null,
-          "projectIdentifier": null,
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
           "tags": {},
           "type": "Gcp",
           "spec": {
@@ -391,8 +391,8 @@
           "name": "prometheus-sale",
           "identifier": "prometheussale",
           "description": null,
-          "orgIdentifier": null,
-          "projectIdentifier": null,
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectI",
           "tags": {},
           "type": "Prometheus",
           "spec": {

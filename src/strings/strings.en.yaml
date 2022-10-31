@@ -679,11 +679,11 @@ delegate:
     prerequisites: 'Kubernetes Prerequisites'
     prerequisites_info1: 'You have access to your Kubernetes cluster and install Harness Delegates as YAML or Helm Chart'
     prerequisites_info2: 'If you are using Harness SaaS, your machine must be able to connect to the Harness SaaS URL: '
-    prerequisites_info3: 'Your Kubernetes cluster has unallocated resources required to run the Harness Delegate workload'
     prerequisites_worload: '{{label}} - {{ram}} GB memory, {{cpu}} CPU'
     permissions_title: 'You need the following Kubernetes permissions to install the Delegate:'
     permissions_info1: 'Permission to create namespace (for the Harness Delegate namespace)'
     permissions_info2: 'Permission to create StatefulSets (for the Harness Delegate Pod to be created)'
+    permissions_info3: 'Permission to create deployments (for the Harness Delegate Pod to be created)'
     url: 'https:app.harness.io:443/'
   stepOneWizard: 'Create Delegate'
   reviewScript:
@@ -982,7 +982,7 @@ validation:
   secretEngine: Secret Engine is required
   engineVersionNumber: Secret Engine Version can only be a positive number
   engineVersion: Secret Engine Version is required
-  renewalNumber: 'Renewal interval can only be a positive number'
+  renewalNumber: 'Renewal interval cannot be negative number'
   renewalInterval: 'Renewal interval is required'
   authToken: 'Auth Token is required'
   appRole: 'App Role Id is required'

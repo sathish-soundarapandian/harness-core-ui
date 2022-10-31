@@ -150,7 +150,7 @@ function StartupScriptWizardStepTwo({
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
-                name: getString('pipeline.startupCommand.scriptFilePath')
+                name: getString('pipeline.startup.scriptFilePath')
               })
             ),
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
@@ -261,8 +261,8 @@ function StartupScriptWizardStepTwo({
                   )}
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
-                      label={getString('pipeline.startupCommand.scriptFilePath')}
-                      placeholder={getString('pipeline.startupCommand.scriptFilePath')}
+                      label={getString('pipeline.startup.scriptFilePath')}
+                      placeholder={getString('pipeline.startup.scriptFilePath')}
                       name={'paths'}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />

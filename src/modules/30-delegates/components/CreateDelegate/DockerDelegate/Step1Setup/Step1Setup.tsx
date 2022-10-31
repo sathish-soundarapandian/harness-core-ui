@@ -8,7 +8,7 @@
 import React, { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikHelpers } from 'formik'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import {
   Layout,
   Formik,

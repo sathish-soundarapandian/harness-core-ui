@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
 import produce from 'immer'
 import { PrimaryArtifact, ServiceSpec, useGetArtifactSourceInputs } from 'services/cd-ng'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -49,7 +49,8 @@ function PrimaryArtifactRef({
   allowableTypes,
   readonly,
   formik,
-  serviceIdentifier = ''
+  serviceIdentifier = '',
+  stepViewType
 }: PrimaryArtifactRefProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -71,8 +72,14 @@ function PrimaryArtifactRef({
     if (
       typeof artifactSourceTemplate === 'string' &&
       getMultiTypeFromValue(artifactSourceTemplate) === MultiTypeInputType.RUNTIME &&
-      !isEmpty(serviceInputsFormikValue)
+      //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
+      stepViewType !== StepViewType.TemplateUsage &&
+      //Autoselect primary artifact if there is only 1 artifact source
+      (!isEmpty(serviceInputsFormikValue) || artifactSources.length === 1)
     ) {
+      if (artifactSources.length === 1) {
+        formik?.setFieldValue(`${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
+      }
       const sourceIdentifierToSourceInputMap = get(
         artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
         `${initialValues.artifacts?.primary?.primaryArtifactRef}`
@@ -90,7 +97,7 @@ function PrimaryArtifactRef({
   const onPrimaryArtifactRefChange = (value: SelectOption): void => {
     if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED) {
       updateStageFormTemplate(undefined, `${path}.artifacts.primary.sources`)
-      const isRuntime = isValueRuntimeInput(value)
+      const isRuntime = isValueRuntimeInput(value) && stepViewType === StepViewType.TemplateUsage
 
       formik?.setValues(
         produce(formik?.values, (draft: any) => {
@@ -102,7 +109,8 @@ function PrimaryArtifactRef({
     }
     const sourceIdentifierToSourceInputMap = get(
       artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
-      `${value.value as string}`
+      value?.value as string,
+      ''
     )
 
     if (sourceIdentifierToSourceInputMap) {
@@ -116,6 +124,14 @@ function PrimaryArtifactRef({
           })
         )
       }
+    } else {
+      updateStageFormTemplate(undefined, `${path}.artifacts.primary.sources`)
+      formik?.setValues(
+        produce(formik?.values, (draft: any) => {
+          set(draft, `${path}.artifacts.primary.primaryArtifactRef`, value?.value)
+          set(draft, `${path}.artifacts.primary.sources`, undefined)
+        })
+      )
     }
   }
 

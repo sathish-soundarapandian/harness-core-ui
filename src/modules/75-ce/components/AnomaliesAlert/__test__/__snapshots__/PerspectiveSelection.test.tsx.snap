@@ -93,6 +93,7 @@ exports[`Test case for Anomalies alert perspective selection Should be able to l
     </div>
   </div>
   <button
+    aria-label="saveAndContinue"
     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main actionBtn Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
     disabled=""
     tabindex="-1"

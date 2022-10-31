@@ -6,10 +6,12 @@ import {
   defaultFormikValue,
   formValuesMock,
   formValuesMockInvalidMetricIdentifier,
+  formValuesMockInvalidRiskCategory,
   formValuesMockNoAssign,
   formValuesMockNoServiceInstance,
   identifierInvalidValidationError,
   initialValueMock,
+  riskCategoryErrorMock,
   sampleDataForTest,
   serviceInstanceErrorMock
 } from './CloudWatch.mock'
@@ -51,6 +53,12 @@ describe('CloudWatch utils', () => {
     const result = validateForm(formValuesMockInvalidMetricIdentifier as unknown as CloudWatchFormType, key => key)
 
     expect(result).toEqual(identifierInvalidValidationError)
+  })
+
+  test('validateForm should give correct validation, if risk category is invalid', () => {
+    const result = validateForm(formValuesMockInvalidRiskCategory as unknown as CloudWatchFormType, key => key)
+
+    expect(result).toEqual(riskCategoryErrorMock)
   })
 
   test('getSampleDataHightchartPoints should give correct chart data', () => {

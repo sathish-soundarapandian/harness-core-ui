@@ -78,6 +78,7 @@ exports[`Test cases for Perspective Summary section Should render the Budget car
           $---
         </p>
         <button
+          aria-label="ce.perspectives.budgets.addBudget"
           class="bp3-button Button--button StyledProps--font StyledProps--main addBudgetText Button--with-current-color Button--variation Button--variation-link"
           type="button"
         >

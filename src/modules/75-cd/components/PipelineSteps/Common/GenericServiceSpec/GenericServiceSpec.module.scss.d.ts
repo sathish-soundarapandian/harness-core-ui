@@ -14,6 +14,7 @@ declare const styles: {
   readonly artifactsAccordion: string
   readonly cardSection: string
   readonly configureOptions: string
+  readonly connectorConfigOptions: string
   readonly connectorMargin: string
   readonly customVariables: string
   readonly disabled: string
@@ -22,6 +23,7 @@ declare const styles: {
   readonly inputWidth: string
   readonly inputheader: string
   readonly layoutVerticalSpacing: string
+  readonly listHeader: string
   readonly listLabel: string
   readonly manifestVariablesTable: string
   readonly mtop: string

@@ -6,6 +6,14 @@
  */
 
 .environment-entity-widget {
+  display: grid;
+  width: 1000px;
+  grid-template-areas:
+    'input-field toggle'
+    'main-content main-content';
+  align-items: start;
+  row-gap: var(--spacing-xsmall);
+
   :global {
     .bp3-form-group {
       margin-bottom: 0px;
@@ -16,12 +24,7 @@
   }
 
   .toggle {
-    position: relative;
-    margin-bottom: calc(-1 * var(--spacing-9)) !important;
-  }
-
-  .toggle-margin {
-    margin-bottom: calc(-1 * var(--spacing-12)) !important;
+    grid-area: toggle;
   }
 
   .radio-group {
@@ -42,6 +45,10 @@
         background-color: var(--primary-7) !important;
       }
     }
+
+    > :last-child {
+      margin-right: 0 !important;
+    }
   }
 }
 
@@ -51,4 +58,9 @@
 
 .inputSetSpinner {
   margin-bottom: var(--spacing-6);
+}
+
+.git-ops-stage {
+  align-items: center;
+  row-gap: var(--spacing-medium);
 }

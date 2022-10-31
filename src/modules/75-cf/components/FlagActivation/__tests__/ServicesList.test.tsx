@@ -416,7 +416,7 @@ describe('EditServicesModal', () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'cf.featureFlagDetail.noServices' })).toBeInTheDocument()
       expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'plus newService' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'newService' })).toBeInTheDocument()
     })
   })
 
@@ -431,7 +431,7 @@ describe('EditServicesModal', () => {
     renderComponent()
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    userEvent.click(await screen.findByRole('button', { name: 'plus newService' }))
+    userEvent.click(await screen.findByRole('button', { name: 'newService' }))
 
     expect(screen.getByTestId('location')).toHaveTextContent(
       '/account/dummy/cv/orgs/dummy/projects/dummy/monitoringservices/setup'

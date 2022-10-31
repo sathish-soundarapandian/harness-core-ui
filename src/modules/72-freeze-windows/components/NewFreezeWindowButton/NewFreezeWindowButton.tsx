@@ -14,7 +14,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 
 interface NewFreezeWindowButtonProps {
   text?: string
@@ -42,7 +42,7 @@ export const NewFreezeWindowButton: FC<NewFreezeWindowButtonProps> = ({ text }) 
     <RbacButton
       variation={ButtonVariation.PRIMARY}
       icon="plus"
-      text={text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
+      text={/* istanbul ignore next */ text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
       onClick={goToFreezeWindowStudio}
       permission={{
         permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,

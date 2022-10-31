@@ -190,6 +190,7 @@ exports[`Test HarnessServicetModal should validate create mode save 1`] = `
         class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
       >
         <button
+          aria-label="save"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           data-id="service-save"
           type="button"
@@ -202,6 +203,7 @@ exports[`Test HarnessServicetModal should validate create mode save 1`] = `
         </button>
            
         <button
+          aria-label="cancel"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
           type="button"
         >
@@ -380,6 +382,7 @@ exports[`Test HarnessServicetModal should validate edit mode snapshot 1`] = `
         class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
       >
         <button
+          aria-label="save"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           data-id="service-save"
           type="button"
@@ -392,6 +395,7 @@ exports[`Test HarnessServicetModal should validate edit mode snapshot 1`] = `
         </button>
            
         <button
+          aria-label="cancel"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
           type="button"
         >
@@ -628,6 +632,7 @@ exports[`Test HarnessServicetModal validation are present if submited with empty
         class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
       >
         <button
+          aria-label="save"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           data-id="service-save"
           type="button"
@@ -640,6 +645,7 @@ exports[`Test HarnessServicetModal validation are present if submited with empty
         </button>
            
         <button
+          aria-label="cancel"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
           type="button"
         >

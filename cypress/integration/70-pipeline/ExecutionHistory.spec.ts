@@ -76,17 +76,8 @@ describe('Pipeline Execution History', () => {
       cy.get('[data-testid="status-select"]').click()
     })
 
-    cy.get('.bp3-menu > :nth-child(1)')
-      .should('contain', 'Aborted')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[0]=Aborted')
-
-    cy.get('.bp3-menu > :nth-child(3)')
-      .should('contain', 'Failed')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[1]=Failed')
+    cy.get('.bp3-menu').findByText('Aborted').click().url({ decode: true }).should('contain', 'status[0]=Aborted')
+    cy.get('.bp3-menu').findByText('Failed').click().url({ decode: true }).should('contain', 'status[1]=Failed')
     cy.get('.MultiSelectDropDown--counter').should('contain', 2)
     cy.get('body').click(0, 0)
 

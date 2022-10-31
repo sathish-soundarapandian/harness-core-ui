@@ -32,6 +32,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import css from './GCPSecretManagerConfig.module.scss'
 const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = props => {
   const { accountId, prevStepData, nextStep, previousStep } = props
@@ -65,6 +66,13 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
     category: Category.CONNECTOR,
     connector_type: Connectors.GcpSecretManager
   })
+
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
 
   return loadingConnectorSecrets ? (
     <PageSpinner />
@@ -101,6 +109,7 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
                   label={getString('connectors.gcpSecretManager.gcpSMSecretFile')}
                   connectorTypeContext={'GcpSecretManager'}
                   type="SecretFile"
+                  scope={scope}
                 />
                 <FormInput.CheckBox
                   name="default"

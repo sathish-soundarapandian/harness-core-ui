@@ -487,6 +487,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
 }
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -980,6 +981,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

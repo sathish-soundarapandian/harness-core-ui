@@ -11,8 +11,10 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   connectorIdentifier,
   dataLogsIndexes,
@@ -25,7 +27,7 @@ import {
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
-describe('Configure Datadog health source', () => {
+describe.skip('Configure Datadog health source', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       return false
@@ -81,13 +83,14 @@ describe('Configure Datadog health source', () => {
 
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
 
     cy.findByRole('button', { name: /Submit/i }).click()
     cy.contains('h3', 'Query Specifications').should('be.visible')
 
-    cy.wait('@getMetrics')
+    cy.wait('@riskCategoryCall')
     cy.wait('@getActiveMetrics')
 
     // Triggering validations.
@@ -111,7 +114,7 @@ describe('Configure Datadog health source', () => {
     cy.mapMetricToServices(true)
     cy.contains('span', 'Fetch records').click()
     // Creating the monitored service with Datadog health source.
-    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByRole('button', { name: /Submit/i }).click({ force: true })
   })
 
   it('Add new Datadog logs health source for a monitored service ', () => {

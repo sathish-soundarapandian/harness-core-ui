@@ -36,7 +36,6 @@ import {
   UNSAVED_FILTER,
   flattenObject
 } from '@common/components/Filter/utils/FilterUtils'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -55,16 +54,11 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getDelegateStatusSelectOptions } from './utils/DelegateHelper'
-import DelegateListingItem, { DelegateListingHeader } from './DelegateListingItem'
+import DelegateListingItem from './DelegateListingItem'
 
 import css from './DelegatesPage.module.scss'
 
 const POLLING_INTERVAL = 10000
-
-const fullSizeContentStyle: React.CSSProperties = {
-  width: '100%',
-  height: '100%'
-}
 
 interface DelegatesListProps {
   filtersMockData?: UseGetMockData<ResponsePageFilterDTO>
@@ -514,9 +508,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
       )}
       <Layout.Vertical className={css.listBody}>
         {showDelegateLoader ? (
-          <Container style={fullSizeContentStyle}>
-            <ContainerSpinner />
-          </Container>
+          <PageSpinner />
         ) : delegateFetchError && shouldShowError(delegateFetchError) ? (
           <div style={{ paddingTop: '200px' }}>
             <PageError
@@ -532,19 +524,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
           <Container className={css.delegateListContainer}>
             {delegateGroups.length ? (
               <Container width="100%">
-                <DelegateListingHeader />
-                {delegateGroups.map((delegate: DelegateGroupDetails) => (
-                  <DelegateListingItem
-                    key={delegate.delegateGroupIdentifier}
-                    delegate={delegate}
-                    setOpenTroubleshoter={() =>
-                      setOpenTroubleshoter({
-                        isConnected: troubleshoterOpen?.isConnected,
-                        delegateType: delegate?.delegateType
-                      })
-                    }
-                  />
-                ))}
+                <DelegateListingItem data={delegateGroups} />
               </Container>
             ) : (
               <div className={css.emptyStateContainer}>

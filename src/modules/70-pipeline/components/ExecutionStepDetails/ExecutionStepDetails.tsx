@@ -21,7 +21,7 @@ import { useStrings } from 'framework/strings'
 import factory from '@pipeline/factories/ExecutionFactory'
 import { isCDStage, isCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import { isExecutionCompletedWithBadState, isExecutionRunning, isExecutionSuccess } from '@pipeline/utils/statusHelpers'
-import { NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
+import { getInterruptHistoriesFromType, Interrupt, NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
 
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
 import css from './ExecutionStepDetails.module.scss'
@@ -50,7 +50,8 @@ export default function ExecutionStepDetails(): React.ReactElement {
   const originalStep = defaultTo(allNodeMap?.[selectedStepId], {})
   const selectedStep = defaultTo(retryStep ? allNodeMap[retryStep] : originalStep, {})
   const stepDetails = factory.getStepDetails(selectedStep.stepType as StepType)
-  const interruptHistories = defaultTo(originalStep.interruptHistories, []).filter(row => row.interruptType === 'RETRY')
+  const interruptHistories = getInterruptHistoriesFromType(originalStep.interruptHistories, Interrupt.RETRY)
+
   const selectedStage = pipelineStagesMap.get(selectedStageId)
 
   let retryCount = interruptHistories.length

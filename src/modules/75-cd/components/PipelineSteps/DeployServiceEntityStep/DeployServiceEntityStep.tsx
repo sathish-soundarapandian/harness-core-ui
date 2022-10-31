@@ -101,6 +101,7 @@ export class DeployServiceEntityStep extends Step<DeployServiceEntityData> {
           readonly={readonly}
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
+          stepViewType={stepViewType}
           {...(customStepProps as DeployServiceEntityCustomProps)}
         />
       )

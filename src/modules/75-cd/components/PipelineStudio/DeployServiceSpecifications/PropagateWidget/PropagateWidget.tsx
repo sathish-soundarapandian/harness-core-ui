@@ -7,11 +7,10 @@
 
 import React from 'react'
 import { FormInput, SelectOption, Layout, Radio, Container, HarnessDocTooltip } from '@wings-software/uicore'
-import { noop } from 'lodash-es'
+import { noop, isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
-import isEmpty from 'lodash/isEmpty'
 import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'

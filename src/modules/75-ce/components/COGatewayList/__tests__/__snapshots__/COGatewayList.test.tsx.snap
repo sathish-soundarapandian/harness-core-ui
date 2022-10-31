@@ -104,6 +104,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
         style="width: 55%;"
       >
         <button
+          aria-label="ce.co.newAutoStoppingRule"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
           type="button"
         >
@@ -357,6 +358,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
+                    aria-label="projectsOrgs.landingDashboard.last30Days"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                     type="button"
                   >
@@ -2031,6 +2033,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                   class="Layout--horizontal StyledProps--main"
                 >
                   <button
+                    aria-label="Prev"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -2074,6 +2077,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="Next"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -2222,6 +2226,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
         style="width: 55%;"
       >
         <button
+          aria-label="ce.co.newAutoStoppingRule"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
           type="button"
         >
@@ -2450,6 +2455,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
+                    aria-label="projectsOrgs.landingDashboard.last30Days"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                     type="button"
                   >
@@ -4124,6 +4130,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                   class="Layout--horizontal StyledProps--main"
                 >
                   <button
+                    aria-label="Prev"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -4167,6 +4174,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="Next"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -4345,6 +4353,7 @@ exports[`Test COGatewayList error from services API should show error 1`] = `
         </a>
       </p>
       <button
+        aria-label="ce.co.newAutoStoppingRule"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         type="button"
       >
@@ -4497,6 +4506,7 @@ exports[`Test COGatewayList render based on the content render page loader on in
         </a>
       </p>
       <button
+        aria-label="ce.co.newAutoStoppingRule"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         type="button"
       >
@@ -4649,6 +4659,7 @@ exports[`Test COGatewayList render based on the content render table loader comp
         </a>
       </p>
       <button
+        aria-label="ce.co.newAutoStoppingRule"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         type="button"
       >
@@ -4801,6 +4812,7 @@ exports[`Test COGatewayList render based on the content should show error messag
         </a>
       </p>
       <button
+        aria-label="ce.co.newAutoStoppingRule"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         type="button"
       >

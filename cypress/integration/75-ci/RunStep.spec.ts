@@ -16,7 +16,9 @@ import {
   templatesListRoute,
   stepLibrary,
   pipelineVariablesCall,
-  stagesExecutionList
+  stagesExecutionList,
+  pipelineYAMLAPI,
+  pipelineSummaryCallAPIWIthMetadataOnly
 } from '../../support/70-pipeline/constants'
 import { getRuntimeInputKeys } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
@@ -158,6 +160,10 @@ describe('Input Sets', () => {
     cy.intercept('POST', inputSetsTemplateCall, {
       fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
     }).as('fetchServiceTemplate')
+    cy.intercept('GET', pipelineYAMLAPI, { fixture: 'pipeline/api/inputSet/pipelineYAML' }).as('pipelineYAML')
+    cy.intercept('GET', pipelineSummaryCallAPIWIthMetadataOnly, {
+      fixture: 'pipeline/api/inputSet/pipelineSummary'
+    }).as('pipelineMetadata')
     cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
       fixture: 'ci/api/runStep/fetchPipelineTemplate'
     }).as('fetchPipelineTemplate')
@@ -169,6 +175,8 @@ describe('Input Sets', () => {
 
   it('INPUT SET: Show all runtime inputs in Visual view with correct full-page styling', () => {
     cy.visitPageAssertion()
+    cy.wait('@pipelineYAML')
+    cy.wait('@pipelineMetadata')
     cy.wait('@emptyInputSetList')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')

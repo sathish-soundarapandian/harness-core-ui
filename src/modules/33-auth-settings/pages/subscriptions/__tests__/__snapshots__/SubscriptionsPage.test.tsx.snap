@@ -35,6 +35,7 @@ exports[`Subscriptions Page it renders a page error when the account call fails 
         hello
       </p>
       <button
+        aria-label="Retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -84,6 +85,7 @@ exports[`Subscriptions Page it renders a page error when the license call fails 
         hello
       </p>
       <button
+        aria-label="Retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >

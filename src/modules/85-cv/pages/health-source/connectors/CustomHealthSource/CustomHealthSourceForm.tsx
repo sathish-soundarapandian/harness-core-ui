@@ -5,12 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Container, Layout, Accordion } from '@wings-software/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { useStrings } from 'framework/strings'
-import { generateCustomMetricPack } from './CustomHealthSource.utils'
-
+import { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import SelectHealthSourceServices from '../../common/SelectHealthSourceServices/SelectHealthSourceServices'
 import MapMetricsToServices from './components/MapMetricsToServices/MapMetricsToServices'
 import QueryMapping from './components/QueryMapping/QueryMapping'
@@ -33,7 +32,7 @@ export default function CustomHealthSourceForm(props: CustomHealthSourceFormInte
   const { formValue, onFieldChange, onValueChange, mappedMetrics, selectedMetric, connectorIdentifier } = props
   const { getString } = useStrings()
 
-  const metricPacks = useMemo(() => generateCustomMetricPack(), [])
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
   const [sampleDataLoading, setSampleDataLoading] = useState(false)
@@ -111,7 +110,7 @@ export default function CustomHealthSourceForm(props: CustomHealthSourceFormInte
                   continuousVerification: !!formValue.continuousVerification
                 }}
                 hideServiceIdentifier
-                metricPackResponse={metricPacks}
+                riskProfileResponse={riskProfileResponse}
                 hideCV={formValue.queryType === QueryType.SERVICE_BASED}
                 hideSLIAndHealthScore={formValue.queryType === QueryType.HOST_BASED}
               />

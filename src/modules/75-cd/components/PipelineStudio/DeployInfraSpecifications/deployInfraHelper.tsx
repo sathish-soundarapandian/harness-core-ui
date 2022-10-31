@@ -19,7 +19,8 @@ import {
   isCustomDeploymentType,
   isServerlessDeploymentType,
   isSSHWinRMDeploymentType,
-  ServiceDeploymentType
+  ServiceDeploymentType,
+  isElastigroupDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
@@ -197,6 +198,14 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.Elastigroup: {
+      const { connectorRef, configuration } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        configuration,
+        allowSimultaneousDeployments
+      }
+    }
     default: {
       return {}
     }
@@ -217,10 +226,8 @@ export interface InfrastructureGroup {
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
   getString: UseStringsReturn['getString'],
-  featureFlags: Record<string, boolean>
+  isSvcEnvEntityEnabled: boolean
 ): InfrastructureGroup[] => {
-  const { NG_DEPLOYMENT_TEMPLATE } = featureFlags
-
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: '',
@@ -245,7 +252,7 @@ export const getInfraGroups = (
   const customDeploymentInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: '',
-      items: NG_DEPLOYMENT_TEMPLATE ? getInfraGroupItems([InfraDeploymentType.CustomDeployment], getString) : []
+      items: isSvcEnvEntityEnabled ? getInfraGroupItems([InfraDeploymentType.CustomDeployment], getString) : []
     }
   ]
 
@@ -272,6 +279,19 @@ export const getInfraGroups = (
     }
   ]
 
+  const elastigroupInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('pipeline.serviceDeploymentTypes.elastigroup'),
+          icon: 'service-elastigroup',
+          value: InfraDeploymentType.Elastigroup
+        }
+      ]
+    }
+  ]
+
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
@@ -292,6 +312,8 @@ export const getInfraGroups = (
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
       return ecsInfraGroups
+    case isElastigroupDeploymentType(deploymentType):
+      return elastigroupInfraGroups
     case isCustomDeploymentType(deploymentType):
       return customDeploymentInfraGroups
     default:
@@ -358,6 +380,11 @@ const infraGroupItems: {
     label: 'cd.steps.azureInfraStep.azure',
     icon: 'microsoft-azure',
     value: InfraDeploymentType.KubernetesAzure
+  },
+  [InfraDeploymentType.Elastigroup]: {
+    label: 'pipeline.serviceDeploymentTypes.elastigroup',
+    icon: 'service-elastigroup',
+    value: InfraDeploymentType.Elastigroup
   }
 }
 
@@ -384,6 +411,11 @@ export const isServerlessInfrastructureType = (infrastructureType?: string): boo
 export const isAzureWebAppInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.AzureWebApp
 }
+
+export const isElastigroupInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.Elastigroup
+}
+
 export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.CustomDeployment
 }

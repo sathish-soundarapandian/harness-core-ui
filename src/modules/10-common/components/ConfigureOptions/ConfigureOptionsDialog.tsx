@@ -220,7 +220,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                 disabled={isReadonly}
               />
               <Button
-                variation={ButtonVariation.SECONDARY}
+                variation={ButtonVariation.TERTIARY}
                 text={<String stringID="cancel" />}
                 onClick={() => closeModal()}
               />

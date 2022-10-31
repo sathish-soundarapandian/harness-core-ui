@@ -74,7 +74,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   const { contentfulModuleMap, loading } = useGetContentfulModules()
 
   useEffect(() => {
-    if (activeModuleIndexFromProps) {
+    if (typeof activeModuleIndexFromProps !== 'undefined') {
       setActiveModuleIndex(activeModuleIndexFromProps)
     }
   }, [activeModuleIndexFromProps])

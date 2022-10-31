@@ -50,7 +50,6 @@ import type { Pipeline } from '@pipeline/utils/types'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 
 import { Failure, getConnectorListV2Promise, GetConnectorQueryParams, useGetConnector } from 'services/cd-ng'
@@ -99,6 +98,7 @@ import {
   TriggerTypes
 } from './ManifestWizardPageUtils'
 import type { TriggerProps } from '../Trigger'
+import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -166,13 +166,7 @@ export default function ManifestTriggerWizard(
     }
   })
 
-  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
-  const { supportingGitSimplification } = useAppStore()
-
-  const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && supportingGitSimplification,
-    [isGitSyncEnabled, supportingGitSimplification]
-  )
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const [connectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
@@ -182,7 +176,7 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      ...(gitAwareForTriggerEnabled
+      ...(isNewGitSyncRemotePipeline
         ? {
             ignoreError,
             branch,
@@ -198,7 +192,7 @@ export default function ManifestTriggerWizard(
       projectIdentifier,
       pipelineIdentifier,
       ignoreError,
-      gitAwareForTriggerEnabled,
+      isNewGitSyncRemotePipeline,
       branch,
       pipelineConnectorRef,
       pipelineRepoName,
@@ -260,9 +254,9 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
     })
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete res.inputYaml
       if (values.inputSetSelected?.length) {
         res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
@@ -449,7 +443,7 @@ export default function ManifestTriggerWizard(
           // set error
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
-      } else if (gitAwareForTriggerEnabled) {
+      } else if (isNewGitSyncRemotePipeline) {
         pipelineJson = resolvedPipeline
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
@@ -574,7 +568,7 @@ export default function ManifestTriggerWizard(
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
     setErrorToasterMessage('')
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete triggerYaml.inputYaml
 
       // Set pipelineBranchName to proper expression when it's left empty
@@ -586,7 +580,7 @@ export default function ManifestTriggerWizard(
       }
     }
     const successCallback = ({ status, data, message }: ResponseNGTriggerResponseWithMessage): void => {
-      if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+      if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
         retryTriggerSubmit({ message })
       } else if (data?.errors && !isEmpty(data?.errors)) {
         const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -617,7 +611,7 @@ export default function ManifestTriggerWizard(
     }
 
     const errorCallback = (err: any): void => {
-      if (err?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+      if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
         retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
       } else {
         setErrorToasterMessage(getErrorMessage(err))
@@ -660,7 +654,7 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
     })
     submitTrigger(triggerYaml)
   }
@@ -988,9 +982,19 @@ export default function ManifestTriggerWizard(
     latestYaml?: any // validate from YAML view
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
+    let _pipelineBranchNameError = ''
     let _inputSetRefsError = ''
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
+      // Custom validation when pipeline Reference Branch Name is an expression for non-webhook triggers
+      if (formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
+        const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
+
+        if (isHarnessExpression(pipelineBranchName)) {
+          _pipelineBranchNameError = getString('triggers.branchNameCantBeExpression')
+        }
+      }
+
       // inputSetRefs is required if Input Set is required to run pipeline
       if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
         _inputSetRefsError = getString('triggers.inputSetIsRequired')
@@ -1014,8 +1018,8 @@ export default function ManifestTriggerWizard(
       orgPipeline: values.pipeline,
       setSubmitting
     })
-    const gitXErrors = gitAwareForTriggerEnabled
-      ? omitBy({ pipelineBranchName: {}, inputSetRefs: _inputSetRefsError }, value => !value)
+    const gitXErrors = isNewGitSyncRemotePipeline
+      ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
     // https://github.com/formium/formik/issues/1392
     const errors: any = await {

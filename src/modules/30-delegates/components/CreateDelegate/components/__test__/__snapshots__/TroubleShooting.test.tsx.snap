@@ -11,6 +11,7 @@ exports[`Create Common Problems Tab render data 1`] = `
       style="border-bottom: 0.5px solid #B0B1C4;"
     >
       <button
+        aria-label="back"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
         type="button"
       >
@@ -44,6 +45,7 @@ exports[`Create Common Problems Tab render data 1`] = `
         delegates.delegateNotInstalled.tabs.commonProblems.hereIsWhatYouCanDo
       </p>
       <button
+        aria-label="restart"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
         type="button"
       >
@@ -129,6 +131,7 @@ exports[`Create Common Problems Tab render data 1`] = `
         class="StyledProps--font StyledProps--main"
       >
         <button
+          aria-label="yes"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
           type="button"
         >
@@ -139,6 +142,7 @@ exports[`Create Common Problems Tab render data 1`] = `
           </span>
         </button>
         <button
+          aria-label="no"
           class="bp3-button Button--button StyledProps--font StyledProps--main noBtn Button--with-current-color"
           type="button"
         >
@@ -165,6 +169,7 @@ exports[`Create Common Problems Tab show event error btn 1`] = `
       style="border-bottom: 0.5px solid #B0B1C4;"
     >
       <button
+        aria-label="back"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
         type="button"
       >
@@ -198,6 +203,7 @@ exports[`Create Common Problems Tab show event error btn 1`] = `
         delegates.delegateNotInstalled.tabs.commonProblems.hereIsWhatYouCanDo
       </p>
       <button
+        aria-label="restart"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
         type="button"
       >

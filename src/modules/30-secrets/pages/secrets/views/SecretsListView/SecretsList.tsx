@@ -24,7 +24,7 @@ import {
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { SecretResponseWrapper, useDeleteSecretV2 } from 'services/cd-ng'
-import type { PageSecretResponseWrapper, SecretTextSpecDTO } from 'services/cd-ng'
+import type { PageSecretResponseWrapper, SecretTextSpecDTO, SecretDTOV2 } from 'services/cd-ng'
 import { getStringForType } from '@secrets/utils/SSHAuthUtils'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
@@ -131,9 +131,14 @@ const RenderColumnStatus: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
 
   return null
 }
+interface SecretMenuItemProps {
+  secret: SecretDTOV2
+  onSuccessfulEdit: any
+  onSuccessfulDelete: any
+}
 
-const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({ row, column }) => {
-  const data = row.original.secret
+export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({ secret, onSuccessfulEdit, onSuccessfulDelete }) => {
+  const data = secret
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
@@ -143,9 +148,13 @@ const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({ row, c
     requestOptions: { headers: { 'content-type': 'application/json' } }
   })
 
-  const { openCreateSSHCredModal } = useCreateSSHCredModal({ onSuccess: (column as any).refreshSecrets })
-  const { openCreateWinRmCredModal } = useCreateWinRmCredModal({ onSuccess: (column as any).refreshSecrets })
-  const { openCreateSecretModal } = useCreateUpdateSecretModal({ onSuccess: (column as any).refreshSecrets })
+  const { openCreateSSHCredModal } = useCreateSSHCredModal({ onSuccess: onSuccessfulEdit })
+  const { openCreateWinRmCredModal } = useCreateWinRmCredModal({
+    onSuccess: onSuccessfulEdit
+  })
+  const { openCreateSecretModal } = useCreateUpdateSecretModal({
+    onSuccess: onSuccessfulEdit
+  })
 
   const permissionRequest = {
     resource: {
@@ -166,7 +175,7 @@ const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({ row, c
         try {
           await deleteSecret(data.identifier)
           showSuccess(`Secret ${data.name} deleted`)
-          ;(column as any).refreshSecrets?.()
+          onSuccessfulDelete()
         } catch (err) {
           showError(getRBACErrorMessage(err))
         }
@@ -233,7 +242,15 @@ const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({ row, c
     </Layout.Horizontal>
   )
 }
-
+export const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({ row, column }) => {
+  return (
+    <SecretMenuItem
+      secret={row.original.secret}
+      onSuccessfulEdit={(column as any).refreshSecrets}
+      onSuccessfulDelete={(column as any).refreshSecrets}
+    />
+  )
+}
 const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch, gotoPage }) => {
   const history = useHistory()
   const data: SecretResponseWrapper[] = useMemo(() => secrets?.content || [], [secrets?.content])

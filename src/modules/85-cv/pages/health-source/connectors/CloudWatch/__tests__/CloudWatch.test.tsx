@@ -9,8 +9,8 @@ import CloudWatch from '../CloudWatch'
 import {
   emptyHealthSource,
   emptySampleDataMockResponse,
-  metricPack,
   mockData,
+  riskCategoryMock,
   sampleDataMockResponse,
   submitRequestDataPayload,
   submitRequestFormikPayload,
@@ -18,8 +18,8 @@ import {
 } from './CloudWatch.mock'
 
 jest.mock('services/cv', () => ({
-  useGetMetricPacks: jest.fn().mockImplementation(() => {
-    return { loading: false, error: null, data: metricPack } as any
+  useGetRiskCategoryForCustomHealthMetric: jest.fn().mockImplementation(() => {
+    return { loading: false, error: null, data: riskCategoryMock } as any
   }),
   useGetRegions: jest.fn().mockImplementation(() => {
     return { data: { data: ['region 1', 'region 2'] } } as any
@@ -168,7 +168,7 @@ describe('CloudWatch', () => {
 
     //expect modal to show and fill out new name
     await waitFor(() =>
-      expect(screen.getByText('cv.monitoringSources.prometheus.newPrometheusGroupName')).not.toBeNull()
+      expect(screen.getByText('cv.healthSource.connectors.CloudWatch.groupModalTitle')).not.toBeNull()
     )
     await setFieldValue({
       container: document.body,
@@ -255,7 +255,9 @@ describe('CloudWatch', () => {
 
     expect(riskCategoryLabel).toBeInTheDocument()
 
-    const riskProfileRadio = screen.getByLabelText('Errors/Number of Errors')
+    screen.debug(container, 30000)
+
+    const riskProfileRadio = screen.getByLabelText('Performance/Response Time')
 
     expect(riskProfileRadio).toBeInTheDocument()
   })
@@ -323,7 +325,7 @@ describe('CloudWatch', () => {
   test('should show loading skeleton for metric packs, if metric pack call is in progress', () => {
     const onSubmit = jest.fn()
 
-    const getMetricPackSpy = jest.spyOn(cvService, 'useGetMetricPacks')
+    const getMetricPackSpy = jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric')
     getMetricPackSpy.mockReturnValue({
       data: null,
       loading: true,

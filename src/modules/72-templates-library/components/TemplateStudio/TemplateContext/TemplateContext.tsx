@@ -6,9 +6,8 @@
  */
 
 import React from 'react'
-import merge from 'lodash-es/merge'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, isEqual, maxBy } from 'lodash-es'
+import { merge, cloneDeep, defaultTo, isEqual, maxBy } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import type { Color } from '@harness/design-system'

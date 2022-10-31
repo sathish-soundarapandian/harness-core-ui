@@ -5,17 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { forwardRef, Fragment, useState } from 'react'
-import { Intent } from '@blueprintjs/core'
-import {
-  FormError,
-  Formik,
-  FormikForm,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  Text
-} from '@wings-software/uicore'
+import React, { forwardRef, Fragment, useEffect, useRef, useState } from 'react'
+import { Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
@@ -60,7 +51,8 @@ function FormContent({
   stepViewType,
   getServiceNowStagingTablesQuery,
   readonly,
-  isNewStep
+  isNewStep,
+  handleErrorMessage
 }: ServiceNowImportSetFormContentInterface): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -80,16 +72,20 @@ function FormContent({
     'pipeline.serviceNowImportSetStep.fetchingStagingTableNamePlaceholder'
   )
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
+  const errorMessage = get(getServiceNowStagingTablesQuery.error, 'data.message')
 
-  let errorMessage = get(getServiceNowStagingTablesQuery.error, 'data.message')
-  /* istanbul ignore next */
-  if (errorMessage) {
-    try {
-      errorMessage = JSON.parse(errorMessage)
-      // eslint-disable-next-line no-empty
-    } catch (_) {}
-    errorMessage = get(errorMessage, 'error.message', errorMessage)
-  }
+  useEffect(() => {
+    if (errorMessage) {
+      let tempErrorMessage
+      try {
+        tempErrorMessage = JSON.parse(errorMessage)
+        // eslint-disable-next-line no-empty
+      } catch (_) {}
+      tempErrorMessage = get(tempErrorMessage, 'error.message', errorMessage)
+      formik.setFieldValue('spec.stagingTableName', '')
+      handleErrorMessage(tempErrorMessage)
+    }
+  }, [getServiceNowStagingTablesQuery.error, connectorRefFixedValue])
 
   const stagingTableFixedValue =
     getMultiTypeFromValue(formik.values.spec.stagingTableName) === MultiTypeInputType.FIXED &&
@@ -110,9 +106,11 @@ function FormContent({
 
   /* istanbul ignore else */
   if (!isEmpty(serviceNowStagingTablesOptions))
-    serviceNowStagingTablesOptions = sortBy(serviceNowStagingTablesOptions, 'label')
+    serviceNowStagingTablesOptions = sortBy(serviceNowStagingTablesOptions, stagingTable =>
+      stagingTable.label.toLowerCase()
+    )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
       getServiceNowStagingTablesQuery.refetch({
         queryParams: {
@@ -247,25 +245,6 @@ function FormContent({
             }}
           />
         </div>
-        {errorMessage &&
-        getMultiTypeFromValue(formik.values.spec.stagingTableName) === MultiTypeInputType.FIXED &&
-        isEmpty(formik.values.spec.stagingTableName) ? (
-          <FormError
-            className={css.marginTop}
-            errorMessage={
-              <Text
-                lineClamp={1}
-                width={350}
-                margin={{ bottom: 'medium' }}
-                intent={Intent.DANGER}
-                tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
-              >
-                {errorMessage}
-              </Text>
-            }
-            name="spec.stagingTableName"
-          ></FormError>
-        ) : null}
         <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
           <MultiTypeFieldSelector
             name="spec.importData.spec.jsonBody"
@@ -311,6 +290,7 @@ function ServiceNowImportSetStepMode(
 ): JSX.Element {
   const { onUpdate, readonly, isNewStep, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
+  const errorMessage = useRef<string>('')
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -350,9 +330,15 @@ function ServiceNowImportSetStepMode(
           connectorRef: ConnectorRefSchema({
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
-          stagingTableName: Yup.string().required(
-            getString('pipeline.serviceNowImportSetStep.validations.stagingTableRequired')
-          ),
+          stagingTableName: Yup.lazy((value?: string): Yup.Schema<string | undefined> => {
+            if (
+              !isEmpty(errorMessage.current) &&
+              getMultiTypeFromValue(value) === MultiTypeInputType.FIXED &&
+              isEmpty(value)
+            )
+              return Yup.string().required(errorMessage.current)
+            return Yup.string().required(getString('pipeline.serviceNowImportSetStep.validations.stagingTableRequired'))
+          }),
           importData: Yup.object().shape({
             spec: Yup.object().shape({
               jsonBody: Yup.lazy((value): Yup.Schema<string | undefined> => {
@@ -401,6 +387,7 @@ function ServiceNowImportSetStepMode(
               getServiceNowStagingTablesQuery={getServiceNowStagingTablesQuery}
               readonly={readonly}
               isNewStep={isNewStep}
+              handleErrorMessage={(message: string) => (errorMessage.current = message)}
             />
           </FormikForm>
         )

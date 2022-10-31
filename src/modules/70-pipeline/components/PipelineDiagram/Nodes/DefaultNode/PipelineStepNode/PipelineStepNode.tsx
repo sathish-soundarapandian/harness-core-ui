@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName, Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
+import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import stepsfactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
@@ -217,7 +217,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}
@@ -229,7 +229,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}

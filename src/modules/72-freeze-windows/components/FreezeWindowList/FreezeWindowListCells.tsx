@@ -12,12 +12,12 @@ import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Chec
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
-import cx from 'classnames'
+import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
-import type { FreezeSummaryResponse, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
-import { useCurrentActiveTime } from '@freeze-windows/hooks/useCurrentActiveTime'
+import type { FreezeSummaryResponse, FreezeWindow, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
+import { FreezeStatus } from '@freeze-windows/utils/freezeWindowUtils'
 import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListColumnActions {
@@ -28,6 +28,7 @@ export interface FreezeWindowListColumnActions {
   getViewFreezeRowLink: (freezeWindow: FreezeSummaryResponse) => string
   selectedItems: string[]
   disabled: boolean
+  freezeStatusMap: Record<string, FreezeStatus>
 }
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
@@ -57,7 +58,7 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
         </Link>
 
         {data.description && (
-          <Popover className={Classes.DARK} position={Position.LEFT} interactionKind={PopoverInteractionKind.HOVER}>
+          <Popover className={Classes.DARK} position={Position.TOP} interactionKind={PopoverInteractionKind.HOVER}>
             <Icon name="description" width={16} height={20} />
             <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
               <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
@@ -89,38 +90,51 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
 
 export const FreezeTimeCell: CellType = ({ row }) => {
   const data = row.original
-  const freezeWindow = data.freezeWindows?.[0]
+  const freezeWindow = data.windows?.[0] || ({} as FreezeWindow)
+  const { startTime, duration, endTime, timeZone, recurrence } = freezeWindow
   return (
-    <Layout.Vertical spacing="small">
-      <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
-        {freezeWindow?.recurrence?.type}
-        {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
-      </Text>
-      <Layout.Horizontal spacing="small">
-        <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
-          {freezeWindow?.startTime} - {freezeWindow?.endTime}
+    <Layout.Vertical>
+      <Layout.Horizontal margin={{ bottom: 'small' }}>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+          {moment(startTime).format('lll')}
         </Text>
-        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-          {freezeWindow?.timeZone}
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
+          &nbsp;{duration ? 'for' : 'to'}
         </Text>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+          &nbsp;{duration || moment(endTime).format('lll')}
+        </Text>
+      </Layout.Horizontal>
+
+      <Layout.Horizontal>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+          {timeZone}
+        </Text>
+
+        {recurrence && (
+          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+            &nbsp;| {recurrence?.type}
+            {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+          </Text>
+        )}
       </Layout.Horizontal>
     </Layout.Vertical>
   )
 }
 
-export const StatusCell: CellType = ({ row }) => {
+export const StatusCell: CellType = ({ row, column }) => {
   const { getString } = useStrings()
   const data = row.original
-  const { startTime, endTime } = (data as any).currentOrUpcomingActiveWindow || {}
-  const isActive = useCurrentActiveTime(startTime, endTime, data.status === 'Enabled')
+  const status = column.freezeStatusMap[data.identifier!]
 
   return (
     <Text
       font={{ variation: FontVariation.TINY_SEMI }}
-      color={isActive ? Color.PRIMARY_7 : Color.GREY_700}
-      className={cx(css.status, isActive ? css.active : css.inactive)}
+      color={status === FreezeStatus.ACTIVE ? Color.PRIMARY_7 : Color.GREY_700}
+      className={css.status}
+      data-state={status}
     >
-      {isActive ? getString('active') : getString('inactive')}
+      {status || getString('inactive')}
     </Text>
   )
 }

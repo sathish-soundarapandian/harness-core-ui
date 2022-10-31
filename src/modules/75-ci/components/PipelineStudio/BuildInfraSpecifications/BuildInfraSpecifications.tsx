@@ -1190,14 +1190,25 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         name={'os'}
         style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
         multiTypeInputProps={{
-          selectItems: [
-            { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-            { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
-            {
-              label: getString('pipeline.infraSpecifications.osTypes.windows'),
-              value: OsTypes.Windows
-            }
-          ],
+          selectItems:
+            CIBuildInfrastructureType.KubernetesDirect === buildInfraType
+              ? [
+                  { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                  {
+                    label: getString('pipeline.infraSpecifications.osTypes.windows'),
+                    value: OsTypes.Windows
+                  }
+                ]
+              : CIBuildInfrastructureType.Cloud === buildInfraType
+              ? [{ label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux }]
+              : [
+                  { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                  { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
+                  {
+                    label: getString('pipeline.infraSpecifications.osTypes.windows'),
+                    value: OsTypes.Windows
+                  }
+                ],
           multiTypeInputProps: {
             allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
             disabled: isReadonly
@@ -1221,16 +1232,24 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           name={'arch'}
           style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
           multiTypeInputProps={{
-            selectItems: [
-              {
-                label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-                value: ArchTypes.Amd64
-              },
-              {
-                label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-                value: ArchTypes.Arm64
-              }
-            ],
+            selectItems:
+              CIBuildInfrastructureType.Cloud === buildInfraType
+                ? [
+                    {
+                      label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+                      value: ArchTypes.Amd64
+                    }
+                  ]
+                : [
+                    {
+                      label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+                      value: ArchTypes.Amd64
+                    },
+                    {
+                      label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+                      value: ArchTypes.Arm64
+                    }
+                  ],
             multiTypeInputProps: {
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
               disabled: isReadonly
@@ -1437,7 +1456,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             />
           </div>
         )}
-        {renderHarnessImageConnectorRefField()}
       </>
     )
   }, [expressions])
@@ -1561,6 +1579,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             </Container>
           </Container>
           {renderTimeOutFields()}
+          {renderHarnessImageConnectorRefField()}
         </>
       )
     },

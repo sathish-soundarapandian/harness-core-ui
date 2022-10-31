@@ -54,6 +54,7 @@ exports[`connectivity status fail render should match snapshot 1`] = `
       </p>
     </div>
     <button
+      aria-label="test"
       class="bp3-button Button--button StyledProps--font StyledProps--main testBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary Button--size Button--small"
       type="button"
     >
@@ -225,6 +226,7 @@ exports[`connectivity status unknown render should match snapshot 1`] = `
       </p>
     </div>
     <button
+      aria-label="test"
       class="bp3-button Button--button StyledProps--font StyledProps--main testBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary Button--size Button--small"
       type="button"
     >

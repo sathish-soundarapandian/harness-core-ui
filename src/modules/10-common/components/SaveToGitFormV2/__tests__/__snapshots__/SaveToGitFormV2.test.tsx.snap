@@ -275,6 +275,7 @@ exports[`SaveToGitFormV2 test Creating new branch and PR in SaveToGitFormV2 1`] 
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                 type="submit"
               >
@@ -285,6 +286,7 @@ exports[`SaveToGitFormV2 test Creating new branch and PR in SaveToGitFormV2 1`] 
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                 type="button"
               >

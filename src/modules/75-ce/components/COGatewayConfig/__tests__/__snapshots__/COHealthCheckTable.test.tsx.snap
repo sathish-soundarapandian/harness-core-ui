@@ -15,6 +15,7 @@ exports[`HealthCheck table tests render table 1`] = `
           class="FieldArray--text"
         />
         <button
+          aria-label="Add"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
           data-id="btn-add"
           type="button"
@@ -243,6 +244,7 @@ exports[`HealthCheck table tests update table values 1`] = `
           class="FieldArray--text"
         />
         <button
+          aria-label="Add"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
           data-id="btn-add"
           type="button"

@@ -59,7 +59,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.installDelegate')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const kubernetesBtn = getByText('kubernetesText') as HTMLElement
@@ -88,7 +88,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
     await waitFor(() => expect(getByText('cd.miniKube')).toBeInTheDocument())
     const backBtn = getByText('back') as HTMLElement
     backBtn.click()
-    const mainScreenBtn = getByText('cd.installDelegate')
+    const mainScreenBtn = getByText('getStarted')
     await waitFor(() => expect(mainScreenBtn).toBeInTheDocument())
   })
   test('go to create pipeline flow', async () => {
@@ -101,7 +101,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.installDelegate')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const kubernetesBtn = getByText('kubernetesText') as HTMLElement
@@ -135,7 +135,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.installDelegate')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const kubernetesBtn = getByText('kubernetesText') as HTMLElement
@@ -156,7 +156,7 @@ describe('Test the initial flow for docker delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.installDelegate')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement
@@ -189,7 +189,7 @@ describe('Test the initial flow for docker delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.installDelegate')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement
@@ -211,7 +211,7 @@ describe('Test the initial flow for docker delegate Creation', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.installDelegate')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement

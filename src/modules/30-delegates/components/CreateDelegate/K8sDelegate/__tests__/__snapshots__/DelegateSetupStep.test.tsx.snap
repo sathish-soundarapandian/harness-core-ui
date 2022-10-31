@@ -434,10 +434,33 @@ exports[`Create DelegateSetup Step render data 1`] = `
                           </div>
                         </div>
                         <div
-                          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--interactive"
+                          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--selected Card--interactive"
                           data-index="1"
                           tabindex="0"
                         >
+                          <span
+                            class="Card--corner"
+                          >
+                            <span
+                              class="Card--badge"
+                            />
+                            <span
+                              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                              data-icon="main-tick"
+                            >
+                              <svg
+                                height="10"
+                                viewBox="0 0 11 8"
+                                width="10"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </span>
                           <div>
                             <div
                               class="Card--cardIcon"
@@ -619,6 +642,7 @@ exports[`Create DelegateSetup Step render data 1`] = `
                       </div>
                     </div>
                     <button
+                      aria-label="add"
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon"
                       type="button"
                     >
@@ -792,6 +816,7 @@ exports[`Create DelegateSetup Step render data 1`] = `
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main backBtn footerBtn StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
                 id="delegateSetupBackBtn"
                 type="button"
@@ -822,6 +847,7 @@ exports[`Create DelegateSetup Step render data 1`] = `
                 </span>
               </button>
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main submitBtn footerBtn StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="submit"
               >

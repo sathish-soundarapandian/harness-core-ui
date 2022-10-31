@@ -93,7 +93,8 @@ jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn(),
   createPipelinePromise: jest.fn(),
   useGetInputsetYaml: () => jest.fn(),
-  useGetTemplateFromPipeline: jest.fn()
+  useGetTemplateFromPipeline: jest.fn(),
+  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('@common/hooks', () => ({

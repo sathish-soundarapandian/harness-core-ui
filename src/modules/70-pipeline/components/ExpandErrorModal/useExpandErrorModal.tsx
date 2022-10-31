@@ -31,7 +31,7 @@ const modalProps: IDialogProps = {
   }
 }
 
-const useExpandErrorModal = (props: UseExpandErrorModalProps): UseExpandErrorModalReturn => {
+export const useExpandErrorModal = (props: UseExpandErrorModalProps): UseExpandErrorModalReturn => {
   const [error, setError] = useState<JSX.Element>()
   const [showModal, hideModal] = useModalHook(
     () => (

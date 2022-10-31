@@ -280,6 +280,31 @@ const getGitApiAccessSpec = (formData: FormData): Record<string, any> => {
   }
 }
 
+export const buildSpotPayload = (formData: FormData) => {
+  const savedData: any = {
+    name: formData.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData.identifier,
+    tags: formData?.tags,
+    type: Connectors.SPOT,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
+      credential: {
+        type: CredTypeValues.ManualConfig,
+        spec: {
+          [formData.accountId.type === ValueType.TEXT ? 'accountId' : 'accountIdRef']: formData.accountId.value,
+          apiTokenRef: formData.apiTokenRef.referenceString
+        }
+      }
+    }
+  }
+
+  return { connector: savedData }
+}
+
 export const buildGithubPayload = (formData: FormData) => {
   const savedData: any = {
     name: formData.name,
@@ -639,6 +664,30 @@ export const setupKubFormData = async (connectorInfo: ConnectorInfoDTO, accountI
     skipDefaultValidation: false,
 
     ...authData
+  }
+
+  return formData
+}
+
+export const setupSpotFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo?.projectIdentifier,
+    orgIdentifier: connectorInfo?.orgIdentifier
+  }
+
+  const authdata = connectorInfo?.spec?.credential?.spec
+  const formData = {
+    accountId:
+      authdata?.accountId || authdata?.accountIdRef
+        ? {
+            value: authdata.accountId || authdata.accountIdRef,
+            type: authdata.accountIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+    apiTokenRef: await setSecretField(authdata?.apiTokenRef, scopeQueryParams),
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
+    delegate: connectorInfo?.spec?.delegateSelectors || undefined
   }
 
   return formData
@@ -2012,7 +2061,7 @@ export const setupVaultFormData = async (connectorInfo: ConnectorInfoDTO, accoun
     secretId: secretId || undefined,
     authToken: authToken || undefined,
     sinkPath: connectorInfoSpec?.sinkPath || '',
-    renewalIntervalMinutes: connectorInfoSpec?.renewalIntervalMinutes || 10,
+    renewalIntervalMinutes: connectorInfoSpec?.renewalIntervalMinutes,
     vaultAwsIamRole: connectorInfoSpec.vaultAwsIamRole,
     xvaultAwsIamServerId,
     useAwsIam: connectorInfoSpec.useAwsIam,
@@ -2197,6 +2246,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Custom Secrets Manager'
     case Connectors.GcpSecretManager:
       return 'GCP Secrets Manager'
+    case Connectors.SPOT:
+      return 'Spot'
     default:
       return ''
   }

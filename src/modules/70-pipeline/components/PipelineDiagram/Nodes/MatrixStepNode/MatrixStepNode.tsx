@@ -10,7 +10,6 @@ import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, lowerCase } from 'lodash-es'
-import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -24,6 +23,7 @@ import {
   matrixNodeNameToJSON,
   MAX_ALLOWED_MATRIX_COLLAPSED_NODES
 } from '../utils'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
@@ -171,7 +171,7 @@ export function MatrixStepNode(props: any): JSX.Element {
                   isDark: true
                 }}
               >
-                <Icon size={26} name={'conditional-skip-new'} color="white" />
+                <Icon size={26} name={'conditional-skip-new'} />
               </Text>
             </div>
           )}
@@ -183,7 +183,7 @@ export function MatrixStepNode(props: any): JSX.Element {
                   isDark: true
                 }}
               >
-                <Icon size={26} name={'conditional-skip-new'} color="white" />
+                <Icon size={26} name={'conditional-skip-new'} />
               </Text>
             </div>
           )}

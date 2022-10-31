@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Icon, Layout, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
+import cx from 'classnames'
 import GlanceCard, { GlanceCardProps } from '@common/components/GlanceCard/GlanceCard'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CountChangeDetails, ResponseExecutionResponseCountOverview, useGetCounts } from 'services/dashboard-service'
@@ -19,7 +20,7 @@ import type { UseGetMockData } from '@common/utils/testUtils'
 import DashboardAPIErrorWidget from '../DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 import css from './OverviewGlanceCards.module.scss'
 
-enum OverviewGalanceCard {
+export enum OverviewGalanceCard {
   PROJECT = 'PROJECT',
   SERVICES = 'SERVICES',
   ENV = 'ENV',
@@ -33,6 +34,7 @@ interface RenderGlanceCardData extends Omit<GlanceCardProps, 'title'> {
 interface RenderGlanceCardProps {
   loading: boolean
   data: RenderGlanceCardData
+  className?: string
 }
 
 const projectsTitleId = 'projectsText'
@@ -108,25 +110,32 @@ const getDataForCard = (
 }
 
 const RenderGlanceCard: React.FC<RenderGlanceCardProps> = props => {
-  const { loading, data } = props
+  const { loading, data, className } = props
   const { getString } = useStrings()
   return loading ? (
-    <Card className={css.loadingWrapper}>
+    <Card className={cx(css.loadingWrapper, className)}>
       <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
     </Card>
   ) : (
-    <GlanceCard {...data} title={getString(data.title)} />
+    <GlanceCard {...data} title={getString(data.title)} className={className} />
   )
+}
+
+interface CardProps {
+  className?: string
 }
 
 export interface OverviewGlanceCardsProp {
   glanceCardData: ResponseExecutionResponseCountOverview
   mockData?: UseGetMockData<ResponseExecutionResponseCountOverview>
+  hideCards?: OverviewGalanceCard[]
+  glanceCardProps?: CardProps
+  className?: string
 }
 
 const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
-  const { glanceCardData } = props
-  const { accountId } = useParams<ProjectPathProps>()
+  const { glanceCardData, hideCards = [], glanceCardProps, className } = props
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const [pageLoadGlanceCardData, setPageLoadGlanceCardData] =
@@ -154,7 +163,9 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
         queryParams: {
           accountIdentifier: accountId,
           startTime: Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000,
-          endTime: Date.now()
+          endTime: Date.now(),
+          projectIdentifier,
+          orgIdentifier
         }
       })
     }
@@ -176,19 +187,39 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
   const { projectsCountDetail, envCountDetail, servicesCountDetail, pipelinesCountDetail } =
     countResponse?.data?.response || glanceCardData?.data?.response || {}
 
+  const { className: glanceCardClass } = glanceCardProps || {}
+
   return (
     <Layout.Horizontal spacing="large" className={css.container}>
-      <div className={css.glanceCards}>
-        <RenderGlanceCard loading={!!loading} data={getDataForCard(OverviewGalanceCard.PROJECT, projectsCountDetail)} />
-        <RenderGlanceCard
-          loading={!!loading}
-          data={getDataForCard(OverviewGalanceCard.SERVICES, servicesCountDetail)}
-        />
-        <RenderGlanceCard loading={!!loading} data={getDataForCard(OverviewGalanceCard.ENV, envCountDetail)} />
-        <RenderGlanceCard
-          loading={!!loading}
-          data={getDataForCard(OverviewGalanceCard.PIPELINES, pipelinesCountDetail)}
-        />
+      <div className={cx(css.glanceCards, className)}>
+        {hideCards?.indexOf(OverviewGalanceCard.PROJECT) > -1 ? null : (
+          <RenderGlanceCard
+            loading={!!loading}
+            className={glanceCardClass}
+            data={getDataForCard(OverviewGalanceCard.PROJECT, projectsCountDetail)}
+          />
+        )}
+        {hideCards?.indexOf(OverviewGalanceCard.SERVICES) > -1 ? null : (
+          <RenderGlanceCard
+            loading={!!loading}
+            className={glanceCardClass}
+            data={getDataForCard(OverviewGalanceCard.SERVICES, servicesCountDetail)}
+          />
+        )}
+        {hideCards?.indexOf(OverviewGalanceCard.ENV) > -1 ? null : (
+          <RenderGlanceCard
+            loading={!!loading}
+            className={glanceCardClass}
+            data={getDataForCard(OverviewGalanceCard.ENV, envCountDetail)}
+          />
+        )}
+        {hideCards?.indexOf(OverviewGalanceCard.PIPELINES) > -1 ? null : (
+          <RenderGlanceCard
+            loading={!!loading}
+            className={glanceCardClass}
+            data={getDataForCard(OverviewGalanceCard.PIPELINES, pipelinesCountDetail)}
+          />
+        )}
       </div>
     </Layout.Horizontal>
   )

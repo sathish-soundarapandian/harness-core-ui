@@ -15,7 +15,7 @@ import {
   ExecutionNode,
   HandleManualInterventionInterruptQueryParams
 } from 'services/pipeline-ng'
-import { Strategy, strategyIconMap } from '@pipeline/utils/FailureStrategyUtils'
+import { Strategy, strategyIconMap, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
@@ -26,7 +26,7 @@ import css from './ManualInterventionVerifyStep.module.scss'
 
 export interface ManualInterventionVerifyStepProps {
   step: ExecutionNode
-  allowedStrategies?: Strategy[]
+  allowedStrategies?: StrategyType[]
 }
 
 export function ManualInterventionVerifyStep(props: ManualInterventionVerifyStepProps): React.ReactElement {

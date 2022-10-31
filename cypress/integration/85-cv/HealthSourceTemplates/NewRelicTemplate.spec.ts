@@ -9,8 +9,10 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   metricPackCall,
   metricPackResponse,
@@ -60,6 +62,7 @@ describe('Create empty monitored service', () => {
 
     cy.intercept('GET', applicationCall, applicationResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricDataCall, metricDataResponse).as('MetricDataCall')
 
     // Fill Define HealthSource Tab with NewRelic
@@ -112,6 +115,7 @@ describe('Create empty monitored service', () => {
     cy.intercept('GET', applicationCall, applicationResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
     cy.intercept('GET', metricDataCall, metricDataResponse).as('MetricDataCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', sampleDataCall, sampleDataResponse).as('SampleDataCall')
 
     // Fill Define HealthSource Tab with NewRelic
@@ -157,7 +161,7 @@ describe('Create empty monitored service', () => {
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
-    cy.get('input[value="Performance/ERROR"]').click({ force: true })
+    cy.get('input[value="Performance_Throughput"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
 
     cy.contains('span', 'Submit').click({ force: true })
@@ -178,7 +182,7 @@ describe('Create empty monitored service', () => {
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="sli"]').should('be.checked')
     cy.get('input[name="continuousVerification"]').should('be.checked')
-    cy.get('input[value="Performance/ERROR"]').should('be.checked')
+    cy.get('input[value="Performance_Throughput"]').should('be.checked')
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
   })
 
@@ -190,6 +194,7 @@ describe('Create empty monitored service', () => {
     cy.intercept('GET', applicationCall, applicationResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
     cy.intercept('GET', metricDataCall, metricDataResponse).as('MetricDataCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', sampleDataCall, sampleDataResponse).as('SampleDataCall')
 
     // Fill Define HealthSource Tab with NewRelic
@@ -226,7 +231,7 @@ describe('Create empty monitored service', () => {
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
-    cy.get('input[value="Performance/ERROR"]').click({ force: true })
+    cy.get('input[value="Performance_Throughput"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
 
     cy.contains('span', 'Submit').click({ force: true })
@@ -246,7 +251,7 @@ describe('Create empty monitored service', () => {
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="sli"]').should('be.checked')
     cy.get('input[name="continuousVerification"]').should('be.checked')
-    cy.get('input[value="Performance/ERROR"]').should('be.checked')
+    cy.get('input[value="Performance_Throughput"]').should('be.checked')
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
   })
 
@@ -269,6 +274,7 @@ describe('Create empty monitored service', () => {
 
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
     cy.intercept('GET', metricDataCall, metricDataResponse).as('MetricDataCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.contains('p', 'Open/Edit Template').click()
     cy.wait('@applyTemplates')
@@ -287,7 +293,7 @@ describe('Create empty monitored service', () => {
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="sli"]').should('be.checked')
     cy.get('input[name="continuousVerification"]').should('be.checked')
-    cy.get('input[value="Performance/ERROR"]').should('be.checked')
+    cy.get('input[value="Performance_Throughput"]').should('be.checked')
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
   })
 })

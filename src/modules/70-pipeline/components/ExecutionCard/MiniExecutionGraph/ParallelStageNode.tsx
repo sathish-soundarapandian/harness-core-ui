@@ -28,6 +28,7 @@ const StagePriority: Record<ExecutionStatus, number> = {
   IgnoreFailed: 20,
   Expired: 18,
   Aborted: 19,
+  AbortedByFreeze: 19,
   Discontinuing: 19,
   Suspended: 17,
   Queued: 0,
@@ -44,7 +45,7 @@ const StagePriority: Record<ExecutionStatus, number> = {
 }
 const STEP_DETAILS_LIMIT = 4
 
-export interface ParallelNodeProps extends PipelinePathProps, ModulePathParams {
+export interface ParallelNodeProps extends PipelinePathProps, Partial<ModulePathParams> {
   stages: GraphLayoutNode[]
   planExecutionId: string
   source: ExecutionPathProps['source']

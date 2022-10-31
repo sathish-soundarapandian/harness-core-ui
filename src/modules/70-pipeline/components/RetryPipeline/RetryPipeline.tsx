@@ -98,13 +98,23 @@ interface RetryPipelineProps {
   pipelineIdentifier: string
   modules?: string[]
   onClose: () => void
+  params: PipelineType<{
+    orgIdentifier: string
+    projectIdentifier: string
+    pipelineIdentifier: string
+    executionIdentifier: string
+    accountId: string
+    stagesExecuted?: string[]
+  }> &
+    GitQueryParams
 }
 
 function RetryPipeline({
   executionIdentifier: executionId,
   pipelineIdentifier: pipelineIdf,
   modules,
-  onClose
+  onClose,
+  params
 }: RetryPipelineProps): React.ReactElement {
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -129,12 +139,8 @@ function RetryPipeline({
 
   const { pipelineExecutionDetail } = useExecutionContext()
 
-  const repoIdentifier = isGitSyncEnabled
-    ? pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier
-    : pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
-  const branch = pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch
-  const connectorRef = pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef
-  const storeType = pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
+  const { connectorRef, repoIdentifier: _repoId, repoName, branch, storeType } = params
+  const repoIdentifier = isGitSyncEnabled ? _repoId : repoName
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const { inputSetType, inputSetValue, inputSetLabel, inputSetRepoIdentifier, inputSetBranch } = useQueryParams<
     GitQueryParams & RunPipelineQueryParams
@@ -234,7 +240,7 @@ function RetryPipeline({
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      moduleType: module,
+      moduleType: module || '',
       planExecutionId: planExecutionIdentifier,
       retryStages: (!isParallelStage
         ? [selectedStage?.value]
@@ -510,7 +516,11 @@ function RetryPipeline({
                 executionIdentifier: retryPipelineData?.planExecution?.uuid || '',
                 accountId,
                 module,
-                source
+                source,
+                connectorRef,
+                repoName: repoIdentifier,
+                branch,
+                storeType
               })
             )
           }
@@ -535,7 +545,11 @@ function RetryPipeline({
       formErrors,
       isParallelStage,
       selectedStage,
-      isAllStage
+      isAllStage,
+      connectorRef,
+      repoIdentifier,
+      branch,
+      storeType
     ]
   )
 
@@ -672,6 +686,7 @@ function RetryPipeline({
         branch={branch}
         connectorRef={connectorRef}
         storeType={storeType}
+        onClose={onClose}
       />
     )
   }

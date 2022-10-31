@@ -17,7 +17,7 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { Strategy, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
 
 import { StrategyStepsList } from './StrategyStepsList'
 import css from './StrategySelection.module.scss'
@@ -30,8 +30,8 @@ export interface BaseStepProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formik: FormikContextType<any>
   name: string
-  parentStrategy?: Strategy
-  allowedStrategies: Strategy[]
+  parentStrategy?: StrategyType
+  allowedStrategies: StrategyType[]
   disabled?: boolean
 }
 
@@ -200,8 +200,8 @@ export function RetryStep(props: BaseStepProps): React.ReactElement {
 export interface StrategySelectionProps {
   label: string
   name: string
-  allowedStrategies: Strategy[]
-  parentStrategy?: Strategy
+  allowedStrategies: StrategyType[]
+  parentStrategy?: StrategyType
   disabled?: boolean
 }
 
@@ -214,7 +214,7 @@ export function StrategySelection(props: ConnectedStrategySelectionProps): React
 
   const typePath = `${name}.type`
   const specPath = `${name}.spec`
-  const value: Strategy | undefined = get(formik.values, typePath)
+  const value: StrategyType | undefined = get(formik.values, typePath)
 
   function handleOnChange(): void {
     formik.setFieldValue(specPath, undefined)

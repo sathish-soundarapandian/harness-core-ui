@@ -11,12 +11,12 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import SVGMarker from '../SVGMarker'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { getPositionOfAddIcon } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
@@ -174,7 +174,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}
@@ -186,7 +186,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}

@@ -30,7 +30,6 @@ common:
   serverName: 'Server name'
   pathMatch: 'Path match'
 allRegions: 'All Regions'
-allClusters: 'All Clusters'
 enforcementMessage:
   exceededSpendLimit: You have exceeded your cloud spend subscription limit. Consider increasing your limits to manage higher cloud spend.
   exceededSpendLimitFreePlan: 'You have used {{ usage }} / {{ limit }} free cloud spend incuded in your current plan. Consider upgrading to manage higher cloud spend.'
@@ -226,7 +225,7 @@ co:
         infoText2: 'A Harness Delegate is a service that can run in local network or VPC to connect artifact servers, infrastructure and verification providers to install projects and pipelines. If the cluster you would like to monitor does not have a Harness delegate connected to it, you will have to create a connector'
         createNewConnectorBtn: '+ Create a new connector'
     review:
-      configDetails: 'Configuration Details'
+      configDetails: '{{$.common.configDetails}}'
       cloudAccountDetails: 'Cloud account details'
       selectedCloudAccount: 'Selected cloud account'
       nameOfRule: 'Name of the rule'

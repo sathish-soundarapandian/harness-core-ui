@@ -39,6 +39,7 @@ describe('Unit tests for SplunkMetricsHealthSource', () => {
     jest.spyOn(cvService, 'useGetLabelNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue({ data: { data: [] } } as any)
+    jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetSplunkMetricSampleData').mockReturnValue({
       loading: false,
       error: null,

@@ -66,6 +66,7 @@ import { getConnectorName, getConnectorValue } from '@pipeline/components/Pipeli
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 import css from './GcpInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -246,7 +247,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
+                  <ConnectorConfigureOptions
                     value={formik.values.connectorRef as string}
                     type={
                       <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
@@ -264,6 +265,15 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                     }}
                     isReadonly={readonly}
                     className={css.marginTop}
+                    connectorReferenceFieldProps={{
+                      accountIdentifier: accountId,
+                      projectIdentifier,
+                      orgIdentifier,
+                      type: 'Gcp',
+                      label: getString('connector'),
+                      disabled: readonly,
+                      gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                    }}
                   />
                 )}
               </Layout.Horizontal>
@@ -575,6 +585,10 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
               }
             }}
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template?.connectorRef
+            }}
           />
         </div>
       )}

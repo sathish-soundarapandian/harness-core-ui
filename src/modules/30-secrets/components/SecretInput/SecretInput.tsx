@@ -31,7 +31,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useStrings } from 'framework/strings'
 import { getReference } from '@common/utils/utils'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import css from './SecretInput.module.scss'
 
 export interface SecretInputProps {
@@ -51,6 +51,7 @@ export interface SecretInputProps {
   tooltipProps?: DataTooltipInterface
   // To enable File and Text Secret Selection both.
   isMultiTypeSelect?: boolean
+  scope?: ScopedObjectDTO
 }
 
 interface FormikSecretInput extends SecretInputProps {
@@ -71,7 +72,8 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
     connectorTypeContext,
     allowSelection = true,
     privateSecret,
-    isMultiTypeSelect = false
+    isMultiTypeSelect = false,
+    scope
   } = props
   const secretReference = get(formik.values, name)
 
@@ -84,7 +86,8 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
         onSuccess?.(secret)
       },
       secretsListMockData,
-      connectorTypeContext: connectorTypeContext
+      connectorTypeContext: connectorTypeContext,
+      scope
     },
     [name, onSuccess]
   )

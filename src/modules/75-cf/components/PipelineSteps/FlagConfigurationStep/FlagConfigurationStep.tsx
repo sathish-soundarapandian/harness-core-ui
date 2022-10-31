@@ -6,16 +6,17 @@
  */
 
 import React, { ReactElement } from 'react'
-import { IconName, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
-
-import type { FormikErrors } from 'formik'
+import * as Yup from 'yup'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { IconName } from '@harness/icons'
+import { FormikErrors, yupToFormErrors } from 'formik'
 import { isEmpty, set } from 'lodash-es'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StepElementConfig } from 'services/cd-ng'
-import type { StringsMap } from 'stringTypes'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import flagChangesValidationSchema from './FlagChanges/flagChangesValidationSchema'
 import FlagConfigurationInputSetStep from './FlagConfigurationInputSetStep'
 import {
   FlagConfigurationStepVariablesView,
@@ -28,8 +29,8 @@ export class FlagConfigurationStep extends PipelineStep<FlagConfigurationStepDat
   protected type = StepType.FlagConfiguration
   protected stepName = 'Flag Configuration'
   protected stepIcon: IconName = 'flag'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.FlagConfiguration'
-  protected isHarnessSpecific = true
+  protected stepDescription: StringKeys = 'pipeline.stepDescription.FlagConfiguration'
+  protected isHarnessSpecific = false
 
   renderStep(props: StepProps<FlagConfigurationStepData>): ReactElement {
     switch (props.stepViewType) {
@@ -104,8 +105,19 @@ export class FlagConfigurationStep extends PipelineStep<FlagConfigurationStepDat
       set(errors, 'spec.feature', getString?.('fieldRequired', { field: 'feature' }))
     }
 
-    if (template?.spec?.instructions === RUNTIME_INPUT_VALUE && isEmpty(data?.spec?.instructions)) {
-      set(errors, 'spec.instructions', getString?.('fieldRequired', { field: 'instructions' }))
+    if (template?.spec?.instructions === RUNTIME_INPUT_VALUE) {
+      try {
+        const schema = Yup.object({
+          spec: Yup.object({
+            instructions: flagChangesValidationSchema(getString as UseStringsReturn['getString'])
+          })
+        })
+        schema.validateSync(data, { abortEarly: false })
+      } catch (e) {
+        if (e instanceof Yup.ValidationError) {
+          Object.assign(errors, yupToFormErrors(e))
+        }
+      }
     }
 
     return errors

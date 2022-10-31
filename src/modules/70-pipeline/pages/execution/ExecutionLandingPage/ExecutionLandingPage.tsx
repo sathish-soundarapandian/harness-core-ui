@@ -8,7 +8,7 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { Intent } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams, useLocation, useHistory } from 'react-router-dom'
 import { get, isEmpty, pickBy } from 'lodash-es'
 import { Text, Icon, PageError, PageSpinner, Layout } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -33,7 +33,7 @@ import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { joinAsASentence } from '@common/utils/StringUtils'
 import { String, useStrings } from 'framework/strings'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecutionWarning/PipelineExecutionWarning'
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import { EvaluationModal } from '@governance/EvaluationModal'
@@ -41,10 +41,16 @@ import ExecutionContext, { GraphCanvasState } from '@pipeline/context/ExecutionC
 import { ModuleName } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { usePolling } from '@common/hooks/usePolling'
-import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
-import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
-import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
+import { useReportSummary, useGetToken } from 'services/ti-service'
+import { hasCIStage, hasOverviewDetail, hasServiceDetail } from '@pipeline/utils/stageHelpers'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import routes from '@common/RouteDefinitions'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
+import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
+import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
+import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
+
 import css from './ExecutionLandingPage.module.scss'
 
 export const POLL_INTERVAL = 2 /* sec */ * 1000 /* ms */
@@ -128,7 +134,7 @@ const setStageIds = ({
 
 export default function ExecutionLandingPage(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { getString } = useStrings()
-  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, module } =
+  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, module, pipelineIdentifier } =
     useParams<PipelineType<ExecutionPathProps>>()
   const [allNodeMap, setAllNodeMap] = React.useState<Record<string, ExecutionNode>>({})
 
@@ -149,7 +155,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
   >(PreferenceScope.USER, 'executionViewType')
-  const queryParams = useQueryParams<ExecutionPageQueryParams>()
+  const queryParams = useQueryParams<ExecutionPageQueryParams & GitQueryParams>()
   const initialSelectedView = savedExecutionView || 'graph'
   const { view } = queryParams
   const isLogView = view === 'log' || (!view && initialSelectedView === 'log')
@@ -189,6 +195,34 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       accountIdentifier: accountId
     },
     lazy: true
+  })
+
+  const HAS_CI = hasCIStage(data?.data?.pipelineExecutionSummary)
+  const IS_SERVICEDETAIL = hasServiceDetail(data?.data?.pipelineExecutionSummary)
+  const IS_OVERVIEWPAGE = hasOverviewDetail(data?.data?.pipelineExecutionSummary)
+  const history = useHistory()
+  const CI_TESTTAB_NAVIGATION = useFeatureFlag(FeatureFlag.CI_TESTTAB_NAVIGATION)
+  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
+  const { data: serviceToken } = useGetToken({
+    queryParams: { accountId }
+  })
+
+  const { data: reportSummary, loading: reportSummaryLoading } = useReportSummary({
+    queryParams: {
+      accountId,
+      orgId: orgIdentifier,
+      projectId: projectIdentifier,
+      pipelineId: pipelineIdentifier,
+      buildId: data?.data?.pipelineExecutionSummary?.runSequence?.toString() || '',
+      stageId: '',
+      report: 'junit' as const
+    },
+    lazy: !HAS_CI,
+    requestOptions: {
+      headers: {
+        'X-Harness-Token': serviceToken || ''
+      }
+    }
   })
 
   useEffect(() => {
@@ -273,6 +307,26 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
   }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId, autoStageNodeExecutionId])
 
+  useEffect(() => {
+    if (HAS_CI && CI_TESTTAB_NAVIGATION && reportSummary?.failed_tests) {
+      const route = routes.toExecutionTestsView({
+        orgIdentifier,
+        pipelineIdentifier: pipelineIdentifier,
+        executionIdentifier: executionIdentifier,
+        projectIdentifier,
+        accountId,
+        module,
+        source
+      })
+      //opening in new tab is required for cards present in dashboards
+      if (IS_SERVICEDETAIL || IS_OVERVIEWPAGE) {
+        window.open(`#${route}`)
+      } else {
+        history.push(route)
+      }
+    }
+  }, [reportSummary])
+
   return (
     <ExecutionContext.Provider
       value={{
@@ -307,7 +361,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         projectIdentifier={projectIdentifier}
         planExecutionId={executionIdentifier}
       >
-        {loading && !data ? <PageSpinner /> : null}
+        {(!data && loading) || reportSummaryLoading ? <PageSpinner /> : null}
         {error ? (
           <PageError message={getRBACErrorMessage(error) as string} />
         ) : (

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import truncate from 'lodash/truncate'
+import { truncate } from 'lodash-es'
 import cx from 'classnames'
 import { Text, Icon, Container, Layout } from '@wings-software/uicore'
 

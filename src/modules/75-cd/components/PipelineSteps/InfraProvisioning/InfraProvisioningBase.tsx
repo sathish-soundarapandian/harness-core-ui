@@ -43,7 +43,6 @@ export const InfraProvisioningBase = (
   _formikRef: StepFormikFowardRef<InfraProvisioningData>
 ): JSX.Element => {
   const {
-    stepsFactory,
     state: {
       pipelineView,
       selectionState: { selectedStageId = '' },
@@ -55,13 +54,11 @@ export const InfraProvisioningBase = (
     updateStage,
     updatePipelineView,
     isReadonly,
-    getStageFromPipeline,
-    getStagePathFromPipeline
+    getStageFromPipeline
   } = usePipelineContext()
   const { getTemplate } = useTemplateSelector()
   const { getString } = useStrings()
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
   const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { accountId } = useParams<ProjectPathProps>()
@@ -237,16 +234,13 @@ export const InfraProvisioningBase = (
                   {(_props: any) => {
                     return (
                       <ExecutionGraph
-                        gridStyle={{ startX: 50, startY: 80 }}
                         rollBackPropsStyle={{ top: '10px' }}
                         rollBackBannerStyle={{ top: '10px', backgroundColor: 'rgba(0,0,0,0)' }}
                         canvasButtonsLayout={'horizontal'}
-                        canvasButtonsTooltipPosition={'top'}
                         allowAddGroup={true}
                         isReadonly={isReadonly}
                         hasRollback={true}
                         hasDependencies={false}
-                        stepsFactory={stepsFactory}
                         templateTypes={templateTypes}
                         stage={formik.values.provisioner as any}
                         originalStage={formik.values.originalProvisioner as any}
@@ -259,7 +253,6 @@ export const InfraProvisioningBase = (
                           })
                         }}
                         // Check and update the correct stage path here
-                        pathToStage={`${stagePath}.stage.spec.execution`}
                         onAddStep={(event: ExecutionGraphAddStepEvent) => {
                           if (event.isTemplate) {
                             addTemplate(event)

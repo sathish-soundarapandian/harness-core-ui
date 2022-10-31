@@ -9,24 +9,22 @@ import { flatMap, findIndex, cloneDeep, set, noop, isEmpty } from 'lodash-es'
 import { Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
-import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@projectstorm/react-diagrams-core'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
+import type { PageConnectorResponse, DeploymentStageConfig, ServiceDefinition } from 'services/cd-ng'
 import type { StageElementWrapperConfig, PipelineInfoConfig, EntityGitDetails } from 'services/pipeline-ng'
-import type * as Diagram from '@pipeline/components/Diagram'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
-import type { StageType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
-import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineOrStageStatus } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { EmptyStageName } from '../PipelineConstants'
 import type { PipelineContextInterface, StagesMap } from '../PipelineContext/PipelineContext'
 import { getStageFromPipeline } from '../PipelineContext/helpers'
@@ -44,7 +42,7 @@ export enum MoveDirection {
 export type AddStage = (
   newStage: StageElementWrapperConfig,
   isParallel?: boolean,
-  event?: Diagram.DefaultNodeEvent,
+  event?: any,
   insertAt?: number,
   openSetupAfterAdd?: boolean,
   pipeline?: PipelineInfoConfig
@@ -69,7 +67,6 @@ export interface PopoverData {
   groupSelectedStageId?: string
   isParallel?: boolean
   event?: any
-  addStage?: AddStage
   addStageNew?: AddStageNew
   onSubmitPrimaryData?: (values: StageElementWrapperConfig, identifier: string) => void
   onClickGroupStage?: (stageId: string, type: StageType) => void
@@ -149,8 +146,8 @@ export const getNewStageFromType = (type: string, clearDefaultValues = false): S
 }
 
 export interface Listeners {
-  nodeListeners: NodeModelListener
-  linkListeners: LinkModelListener
+  nodeListeners: any
+  linkListeners: any
 }
 
 export const EmptyNodeSeparator = '$node$'
@@ -172,14 +169,16 @@ export const getStatus = (
 
   const connectorScope = getScopeFromValue(connectorRef)
   const connector = getIdentifierFromValue(connectorRef)
-  const filteredConnector = fetchedConnectorResponse?.content?.find(item => item.connector?.identifier === connector)
-  const scope = getScopeFromDTO({
-    accountIdentifier: accountId,
-    orgIdentifier: filteredConnector?.connector?.orgIdentifier,
-    projectIdentifier: filteredConnector?.connector?.projectIdentifier
+  const filteredConnector = fetchedConnectorResponse?.content?.find(item => {
+    const scope = getScopeFromDTO({
+      accountIdentifier: accountId,
+      orgIdentifier: item?.connector?.orgIdentifier,
+      projectIdentifier: item?.connector?.projectIdentifier
+    })
+    return item.connector?.identifier === connector && scope === connectorScope
   })
 
-  const status = scope === connectorScope ? filteredConnector?.status?.status : ''
+  const status = filteredConnector?.status?.status ?? ''
   const color = status && status === 'FAILURE' ? Color.RED_500 : status ? Color.GREEN_500 : ''
   return { status, color }
 }
@@ -313,11 +312,6 @@ export const getDependantStages = (pipeline: PipelineInfoConfig, node?: StageEle
   })
   return dependantStages
 }
-export const resetDiagram = (engine: DiagramEngine): void => {
-  engine.getModel().setZoomLevel(100)
-  engine.getModel().setOffset(0, 0)
-  engine.repaintCanvas()
-}
 
 export const isDuplicateStageId = (id: string, stages: StageElementWrapperConfig[], updateMode?: boolean): boolean => {
   const flattenedStages = getFlattenedStages({
@@ -441,7 +435,7 @@ export const getLinkEventListeners = (
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
   stageMap: Map<string, StageState>
-): LinkModelListener => {
+): Listeners['linkListeners'] => {
   const {
     state: { pipeline, templateTypes, gitDetails, storeMetadata },
     contextType = 'Pipeline',
@@ -566,7 +560,7 @@ export const getNodeEventListerner = (
   confirmMoveStage: () => void,
   stageMap: Map<string, StageState>,
   sectionId?: string | null
-): NodeModelListener => {
+): Listeners['nodeListeners'] => {
   const {
     state: {
       pipeline,
@@ -823,11 +817,9 @@ export interface MoveStageDetailsType {
 interface MoveStageParams {
   moveStageDetails: MoveStageDetailsType
   pipelineContext: PipelineContextInterface
-  updateStageOnAddLink: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void
   updateStageOnAddLinkNew: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void
   resetPipelineStages: (stages: StageElementWrapperConfig[]) => void
   stageMap: Map<string, StageState>
-  addStage: AddStage
   addStageNew: AddStageNew
 }
 export const moveStage = ({
@@ -872,5 +864,16 @@ export const moveStage = ({
       )
       resetPipelineStages(updatedStages)
     }
+  }
+}
+
+export const getDeploymentSpecificYamlKeys = (
+  deploymentType: ServiceDefinition['type']
+): 'startupCommand' | 'startupScript' => {
+  switch (deploymentType) {
+    case ServiceDeploymentType.Elastigroup:
+      return 'startupScript'
+    default:
+      return 'startupCommand'
   }
 }

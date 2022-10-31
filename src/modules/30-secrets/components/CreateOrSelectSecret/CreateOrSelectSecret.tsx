@@ -18,6 +18,7 @@ import type {
   SecretDTOV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import css from './CreateOrSelectSecret.module.scss'
 
 export interface SecretReference {
@@ -39,6 +40,7 @@ export interface CreateOrSelectSecretProps {
   handleInlineWinRmSecretCreation: () => void
   secretType?: SelectOption
   setSecretType?: (val: SelectOption) => void
+  scope?: ScopedObjectDTO
 }
 
 const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
@@ -50,7 +52,8 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
   handleInlineSSHSecretCreation,
   handleInlineWinRmSecretCreation,
   secretType,
-  setSecretType
+  setSecretType,
+  scope
 }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   return (
@@ -65,8 +68,8 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
           })
         }}
         accountIdentifier={accountId}
-        orgIdentifier={orgIdentifier}
-        projectIdentifier={projectIdentifier}
+        orgIdentifier={scope ? scope.orgIdentifier : orgIdentifier}
+        projectIdentifier={scope ? scope.projectIdentifier : projectIdentifier}
         mock={secretsListMockData}
         connectorTypeContext={connectorTypeContext}
         handleInlineSSHSecretCreation={handleInlineSSHSecretCreation}

@@ -3,8 +3,10 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   metricPack,
   service,
@@ -27,6 +29,7 @@ describe('Create empty monitored service', () => {
   it('Add new Dynatrace monitored service ', () => {
     cy.intercept('GET', service.call, service.response).as('ServiceCall')
     cy.intercept('GET', metricPack.call, metricPack.response).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -77,6 +80,7 @@ describe('Create empty monitored service', () => {
     cy.intercept('GET', queries.call, queries.response).as('QueriesCall')
     cy.intercept('GET', service.call, service.response).as('ServiceCall')
     cy.intercept('GET', metricPack.call, metricPack.response).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -97,8 +101,9 @@ describe('Create empty monitored service', () => {
 
     cy.contains('span', 'Add Metric').click()
 
+    // Delete all custom metric
     cy.get('span[data-icon="main-delete"]').click({ multiple: true })
-    cy.findByRole('button', { name: /Add Metric/i }).should('be.visible')
+    cy.contains('span', 'Add Metric').should('be.visible')
 
     cy.contains('span', 'Add Metric').click()
     cy.wait('@QueriesCall')
@@ -161,6 +166,7 @@ describe('Create empty monitored service', () => {
       cy.intercept('GET', queries.call, queries.response).as('QueriesCall')
       cy.intercept('GET', service.call, service.response).as('ServiceCall')
       cy.intercept('GET', metricPack.call, metricPack.response).as('MetricPackCall')
+      cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
       cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -188,6 +194,7 @@ describe('Create empty monitored service', () => {
       cy.intercept('GET', queries.call, queries.response).as('QueriesCall')
       cy.intercept('GET', service.call, service.response).as('ServiceCall')
       cy.intercept('GET', metricPack.call, metricPack.response).as('MetricPackCall')
+      cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
       cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -305,6 +312,7 @@ describe('Create empty monitored service', () => {
       cy.intercept('GET', queries.call, queries.response).as('QueriesCall')
       cy.intercept('GET', service.call, service.response).as('ServiceCall')
       cy.intercept('GET', metricPack.call, metricPack.response).as('MetricPackCall')
+      cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
       cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -342,6 +350,7 @@ describe('Create empty monitored service', () => {
       cy.intercept('GET', queries.call, queries.response).as('QueriesCall')
       cy.intercept('GET', service.call, service.response).as('ServiceCall')
       cy.intercept('GET', metricPack.call, metricPack.response).as('MetricPackCall')
+      cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
       cy.addNewMonitoredServiceWithServiceAndEnv()
 

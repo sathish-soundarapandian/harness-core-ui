@@ -248,6 +248,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
                         />
                       </label>
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="thumbnail-select-change"
                         type="button"
@@ -292,6 +293,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1091,6 +1093,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
                     </div>
                   </div>
                   <button
+                    aria-label="newLabel Docker Registry connector"
                     class="bp3-button Button--button StyledProps--font StyledProps--main addNewArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     id="new-artifact-connector"
                     type="button"
@@ -1126,6 +1129,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   type="button"
                 >
@@ -1155,6 +1159,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   disabled=""
                   tabindex="-1"
@@ -1332,6 +1337,7 @@ exports[`Artifact WizardStep tests renders correctly with connector Data 1`] = `
                       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="thumbnail-select-change"
                         type="button"
@@ -1376,6 +1382,7 @@ exports[`Artifact WizardStep tests renders correctly with connector Data 1`] = `
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1666,6 +1673,7 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
                         />
                       </label>
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="thumbnail-select-change"
                         type="button"
@@ -1710,6 +1718,7 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1884,6 +1893,7 @@ exports[`Artifact WizardStep tests renders without crashing 1`] = `
                       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="thumbnail-select-change"
                         type="button"
@@ -1928,6 +1938,7 @@ exports[`Artifact WizardStep tests renders without crashing 1`] = `
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >

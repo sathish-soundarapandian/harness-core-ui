@@ -200,6 +200,7 @@ exports[`Should render the create connector dialog Should render the connector m
         </div>
       </section>
       <button
+        aria-label="Next"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main nextButton StyledProps--intent-primary Button--with-current-color"
         disabled=""
         tabindex="-1"

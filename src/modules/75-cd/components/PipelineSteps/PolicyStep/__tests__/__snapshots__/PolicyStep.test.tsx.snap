@@ -451,6 +451,7 @@ exports[`Test Policy Step render edit view as edit step 1`] = `
             </button>
           </div>
           <button
+            aria-label="common.policiesSets.addOrModifyPolicySet"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addModifyButton Button--without-shadow"
             type="button"
           >
@@ -878,6 +879,7 @@ exports[`Test Policy Step render edit view as new step 1`] = `
           class="bp3-form-content"
         >
           <button
+            aria-label="common.policiesSets.addOrModifyPolicySet"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addModifyButton Button--without-shadow"
             type="button"
           >
@@ -1479,6 +1481,7 @@ exports[`Test Policy Step render runtime inputs in edit step 1`] = `
             </button>
           </div>
           <button
+            aria-label="common.policiesSets.addOrModifyPolicySet"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addModifyButton Button--without-shadow"
             type="button"
           >
@@ -1718,6 +1721,7 @@ exports[`Test Policy Step renders deployment form 1`] = `
           class="bp3-form-content"
         >
           <button
+            aria-label="common.policiesSets.addOrModifyPolicySet"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addModifyButton Button--without-shadow"
             type="button"
           >
@@ -1834,6 +1838,7 @@ exports[`Test Policy Step renders deployment form 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -1861,6 +1866,7 @@ exports[`Test Policy Step renders empty input sets 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -2054,6 +2060,7 @@ exports[`Test Policy Step renders input sets 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

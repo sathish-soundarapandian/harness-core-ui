@@ -22,7 +22,7 @@ describe.skip('Ssh/WinRM -E2E flow', () => {
   const repositoriesDetailCall = `/ng/api/artifacts/artifactory/repositoriesDetails?routingId=accountId&connectorRef=artifactorytest&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&repositoryType=generic`
   const artifactListV2 = `/ng/api/connectors/listV2?routingId=accountId&pageIndex=0&pageSize=10&searchTerm=&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&includeAllConnectorsAvailableAtScope=true`
   const environmentCall = `/ng/api/environmentsV2/upsert?routingId=accountId&accountIdentifier=accountId`
-  const sshSecretsCall = `/ng/api/v2/secrets?accountIdentifier=accountId&type=SSHKey&searchTerm=&projectIdentifier=project1&orgIdentifier=default&pageIndex=0&pageSize=10`
+  const sshSecretsCall = `/ng/api/v2/secrets?accountIdentifier=accountId&type=SSHKey&searchTerm=&projectIdentifier=project1&orgIdentifier=default&pageIndex=0&pageSize=10&includeAllSecretsAccessibleAtScope=true`
   const infraCall = `/ng/api/infrastructures?routingId=accountId&accountIdentifier=accountId`
   const strategiesCall = `/ng/api/pipelines/configuration/strategies?routingId=accountId`
   const basicStrategy = `/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=accountId&serviceDefinitionType=Ssh&strategyType=Basic`
@@ -144,7 +144,7 @@ describe.skip('Ssh/WinRM -E2E flow', () => {
 
     //add new service
     cy.wait('@servicesV2Call')
-    cy.contains('span', 'New Service').click()
+    cy.contains('span', 'Add Service').click()
     cy.wait(1000)
     cy.contains('div[id="serviceDefinition"]', 'Service Definition').should('be.visible')
     cy.fillName('testService_Cypress')

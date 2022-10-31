@@ -30,6 +30,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -272,6 +273,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -302,6 +304,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -367,6 +370,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -609,6 +613,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -639,6 +644,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -704,6 +710,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -946,6 +953,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -976,6 +984,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -1079,6 +1088,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -1541,6 +1551,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -1571,6 +1582,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -1636,6 +1648,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -1878,6 +1891,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -1908,6 +1922,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -1973,6 +1988,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -2215,6 +2231,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -2245,6 +2262,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -2310,6 +2328,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -2552,6 +2571,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -2582,6 +2602,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -2685,6 +2706,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -3027,6 +3049,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -3057,6 +3080,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >
@@ -3160,6 +3184,7 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
                 class="bp3-popover-target"
               >
                 <button
+                  aria-label="cd.artifactRepoTooltip"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   style="padding: 0px; margin: 0px;"
                   tabindex="0"
@@ -3382,6 +3407,7 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-name="tf-remote-back-btn"
             type="button"
@@ -3412,6 +3438,7 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="submit"
           >

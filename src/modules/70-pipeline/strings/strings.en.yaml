@@ -134,8 +134,8 @@ jenkinsStep:
     jobName: Jobname is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
-  unstableStatusAsSuccess: Treat unstable Jenkins status as success
-  useConnectorUrlForJobExecution: Use this URL for job execution
+  unstableStatusAsSuccess: Treat unstable Job status as success
+  useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
@@ -421,6 +421,9 @@ failureStrategies:
     MarkedAsSuccess: Marked As Success
     MarkAsFail: Mark As Fail
     MarkedAsFail: Marked As Fail
+    PipelineRollback: Rollback Pipeline
+    ProceedWithDefaultValues: Proceed with Default Values
+    StepGroupRollback: Rollback Step Group
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -551,6 +554,7 @@ executionStatus:
   Failed: FAILED
   Success: SUCCESS
   Aborted: ABORTED
+  AbortedByFreeze: ABORTED BY FREEZE
   Error: ERROR
   Paused: PAUSED
   Pausing: PAUSING
@@ -568,6 +572,7 @@ executionStatus:
 executionFilters:
   labels:
     Aborted: Aborted
+    AbortedByFreeze: Aborted by Freeze
     Expired: Expired
     Failed: '{{ $.failed }}'
     Running: Running
@@ -649,7 +654,7 @@ dashboards:
   activeDeployments: Active Deployments
   pendingDeployments: Pending Approval/Manual Intervention
   baselineTargets: Target Baselines
-  baselineActivityComingSoon: Baseline target activity coming soon!
+  noTargetBaselines: No Baseline Targets set
   noRepositories: No Repositories found
   noFailedBuilds: No Failed Builds found
   noActiveBuilds: No Active Builds found
@@ -732,7 +737,7 @@ testsReports:
   testCasesExecution: Tests Execution
   testExecutions: Test Executions
   noFailedTestsFound: No failed tests found
-  showOnlyFailedTests: Show only failed tests
+  showAllTests: Show all tests
   hangTight: Hang tight! Report is being generated...
   noTestResults: No test results
   testsWillAppear: Tests will appear here if they were reported or uploaded to Harness.
@@ -823,6 +828,7 @@ artifactsSelection:
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
   groupIdPlaceholder: Enter Group ID
+  groupPlaceholder: Enter Group
   extension: Extension
   extensionPlaceholder: Enter Extension
   classifier: Classifier
@@ -874,6 +880,7 @@ artifactsSelection:
     artifactPath: Artifact Path is required
     artifactId: Artifact ID is required
     groupId: Group ID is required
+    group: Group is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
@@ -1045,6 +1052,9 @@ stepDescription:
   HelmDeploy: Performs native Helm deployments. Requires Helm and Tiller and supports basic deployments. Helm charts are also supported in Harness Kubernetes deployments without requiring Helm or Tiller and using all deployment strategies.
   HelmRollback: Rolls back all the deployed objects to the previous version.
   ServiceNowApproval: Use ServiceNow issues to approve steps and stages.
+  ServiceNowCreate: Create a Service Now ticket as part of the pipeline execution
+  ServiceNowUpdate: Update a Service Now ticket as part of the pipeline execution
+  ServiceNowImportSet: Create or Update Service Now issues using Service Now Import Set APIs
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
@@ -1055,7 +1065,14 @@ stepDescription:
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
-  ECSRollingDeploy: Use a rolling update to schedule new aws instances on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
+  ECSRollingDeploy: Roll out a new ECS service version.
+  ECSRollingRollback: Roll back the ECS service version deployed using the ECS Rolling Deploy step.
+  ECSCanaryDeploy: Deploy a new ECS service version to one instance for validation.
+  ECSCanaryDelete: Delete the ECS service version deployed by the ECS Canary Deploy step.
+  ECSBlueGreenCreateService: Stage a new service version to a target group.
+  ECSBlueGreenSwapTargetGroups: Swap stage and prod routes for a Blue/Green deployment.
+  ECSBlueGreenRollback: Roll back the new ECS service version and upscale the old version to its previous task number.
+  ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
 executionStrategy:
@@ -1160,6 +1177,7 @@ runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
 noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
+numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironment}} Environment(s)'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
@@ -1219,6 +1237,7 @@ imageVersionDeprecated: Image version outdated
 unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s) {{summary}}'
 invalidRequest: Invalid Request
 serviceDeploymentTypes:
+  elastigroup: Elastigroup
   kubernetes: '{{$.kubernetesText}}'
   amazonEcs: '{{$.delegate.cardData.amazonECS.name}}'
   amazonAmi: AWS AMI
@@ -1237,6 +1256,7 @@ serviceDeploymentTypes:
   customDeployment: Deployment Template
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
+  spotElastigroup: Spot Elastigroup
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1268,13 +1288,13 @@ cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is in
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
-  unsyncedTemplateInfo: Some template(s) referenced in this {{entity}} have gone out of sync.
-  updatedTemplateInfo: Some template(s) referenced in this {{entity}} have been updated.
+  unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
+  updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:
   title: Template Error Inspection
   subtitle: Error Trace
-  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced templates.
-  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated templates.
+  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced entities.
+  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated entities.
   originalYamlLabel: Original
   refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
@@ -1341,6 +1361,7 @@ lastExecution: 'Last Execution'
 executionId: Execution Id
 imageTag: 'image: {{image}}'
 fileSource: 'File Source'
+configSource: Configuration Source
 fileDetails: 'File Details'
 appServiceConfig:
   title: App Services Configuration
@@ -1360,11 +1381,17 @@ appServiceConfig:
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
     overrides: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Overrides'
-startupCommand:
-  name: Startup Command
-  subtitle: 'Specify Azure Web App Startup Command Store Type'
-  fileDetails: '{{$.pipeline.startupCommand.name}} File Details'
-  fileSource: '{{$.pipeline.startupCommand.name}} File Source'
+startup:
+  script:
+    name: Startup Script
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.script.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.script.name}} File Details'
+    fileSource: '{{$.pipeline.startup.script.name}} File Source'
+  command:
+    name: Startup Command
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.command.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.command.name}} File Details'
+    fileSource: '{{$.pipeline.startup.command.name}} File Source'
   scriptFilePath: 'Script File Path'
   fileValidation: 'file is required'
   plainText: 'Plain Text'
@@ -1423,3 +1450,5 @@ customDeployment:
 step:
   validation:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
+runDisabledOnFreeze: Cannot run pipeline due to an active freeze
+viewFreeze: View freeze details

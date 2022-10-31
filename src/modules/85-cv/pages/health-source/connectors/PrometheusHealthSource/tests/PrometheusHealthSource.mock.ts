@@ -6,6 +6,8 @@
  */
 
 import { cloneDeep } from 'lodash-es'
+import { AWSDataSourceType } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
+import type { PrometheusSetupSource } from '../PrometheusHealthSource.constants'
 
 export const MockManualQueryData = {
   isEdit: true,
@@ -38,8 +40,7 @@ export const MockManualQueryData = {
               liveMonitoring: { enabled: true },
               deploymentVerification: { enabled: true, serviceInstanceFieldName: 'serviceInstanceFieldName' },
               riskProfile: {
-                category: 'Infrastructure',
-                metricType: 'INFRA',
+                riskCategory: 'Infrastructure/INFRA',
                 thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
               }
             }
@@ -95,7 +96,7 @@ const mockPromethesuTemplate = {
         groupName: 'g1',
         sli: { enabled: true },
         analysis: {
-          riskProfile: { category: 'Performance', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] },
+          riskProfile: { riskCategory: 'Performance/ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] },
           liveMonitoring: { enabled: true },
           deploymentVerification: {
             enabled: true,
@@ -273,8 +274,7 @@ export const manualQueryMock = {
               deploymentVerification: { enabled: true, serviceInstanceFieldName: 'serviceInstanceFieldName' },
               liveMonitoring: { enabled: true },
               riskProfile: {
-                category: 'Infrastructure',
-                metricType: 'INFRA',
+                riskCategory: 'Infrastructure/INFRA',
                 thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
               }
             },
@@ -320,8 +320,7 @@ export const manualQueryMock2 = {
           deploymentVerification: { enabled: true, serviceInstanceFieldName: 'serviceInstanceFieldName' },
           liveMonitoring: { enabled: true },
           riskProfile: {
-            category: 'Infrastructure',
-            metricType: 'INFRA',
+            riskCategory: 'Infrastructure/INFRA',
             thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
           }
         },
@@ -384,6 +383,34 @@ export const sourceDataPrometheusPayload = {
       }
     }
   ]
+}
+
+export const expectedAWSPrometheusPayload = {
+  identifier: 'test',
+  name: 'test',
+  spec: {
+    connectorRef: 'testprometheus2',
+    feature: 'apm',
+    metricDefinitions: [],
+    metricPacks: [{ identifier: 'Custom', metricThresholds: [] }],
+    region: 'region 1',
+    workspaceId: 'wp1'
+  },
+  type: 'AwsPrometheus'
+}
+
+export const dataSourceTypePayloadMock: PrometheusSetupSource = {
+  isEdit: true,
+  mappedServicesAndEnvs: new Map(),
+  region: 'region 1',
+  workspaceId: 'wp1',
+  dataSourceType: AWSDataSourceType,
+  healthSourceIdentifier: 'test',
+  healthSourceName: 'test',
+  connectorRef: 'testprometheus2',
+  ignoreThresholds: [],
+  failFastThresholds: [],
+  product: { label: 'test', value: 'test' }
 }
 
 export const expectedResultPrometheusPayload = {

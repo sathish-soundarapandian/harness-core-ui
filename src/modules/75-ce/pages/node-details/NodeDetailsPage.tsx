@@ -190,7 +190,7 @@ const NodeDetailsPage: () => JSX.Element = () => {
     ? (summaryData.perspectiveGrid.data[0]?.instanceDetails as InstanceDetails)
     : ({} as InstanceDetails)
 
-  useDocumentTitle([getString('ce.perspectives.nodeDetails.header'), infoData.name || nodeId], true)
+  useDocumentTitle([getString('ce.perspectives.nodeDetails.header'), infoData.name || nodeId])
 
   const breadcrumbsLinks = useMemo(
     () => [

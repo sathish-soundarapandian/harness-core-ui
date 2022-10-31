@@ -58,7 +58,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
     resourceDetails
   const attributeSelectionEnabled = addAttributeModalBody
   const staticResourcesSelectionEnabled = !disableSpecificResourcesSelection && addResourceModalBody
-  const hideRadioBtnSet = disableSpecificResourcesSelection && !attributeSelectionEnabled
+  const hideRadioBtnSet = (disableSpecificResourcesSelection && !attributeSelectionEnabled) || disableAddingResources
   const staticResourceValues = isAtrributeFilterEnabled
     ? (resourceValues as AttributeFilter).attributeValues
     : resourceValues
@@ -72,7 +72,11 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
             color={Color.BLACK}
             font={{ weight: 'semi-bold' }}
             icon={icon}
-            iconProps={{ size: 30, padding: { right: 'medium' } }}
+            iconProps={{
+              size: 30,
+              padding: { right: 'medium' },
+              className: css.iconColor
+            }}
           >
             {getString(label)}
           </Text>
@@ -81,7 +85,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.radioBtnSet}>
             <Container className={css.radioBtnCtr}>
               <Radio
-                label={getString('rbac.resourceGroup.all')}
+                label={getString('common.all')}
                 data-testid={`dynamic-${resourceType}`}
                 checked={isDynamicResourceSelector(resourceValues)}
                 onChange={e => onResourceSelectionChange(resourceType, e.currentTarget.checked)}
@@ -105,6 +109,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
                   <Radio
                     label={getString('common.specified')}
                     data-testid={`static-${resourceType}`}
+                    disabled={disableAddingResources}
                     checked={!isDynamicResourceSelector(resourceValues) && !isAtrributeFilterEnabled}
                     onChange={e => onResourceSelectionChange(resourceType, e.currentTarget.checked, [])}
                     className={css.radioBtnLabel}

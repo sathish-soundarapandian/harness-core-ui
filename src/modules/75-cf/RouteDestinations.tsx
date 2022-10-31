@@ -66,6 +66,7 @@ import CFTrialHomePage from './pages/home/CFTrialHomePage'
 import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPage'
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import ConfigurePath from './pages/onboarding/ConfigurePath'
+import FFUIApp from './pages/FFUIApp/FFUIApp'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -147,7 +148,7 @@ registerFeatureFlagPipelineStage()
 registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
-  const { FF_PIPELINE, FFM_1512, FFM_1827, NG_SETTINGS } = useFeatureFlags()
+  const { FF_PIPELINE, FFM_1512, FFM_1827, NG_SETTINGS, FFM_3959_FF_MFE_Environment_Detail } = useFeatureFlags()
 
   return (
     <>
@@ -292,9 +293,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.EnvironmentDetails}
       >
-        <FFGitSyncProvider>
-          <EnvironmentDetails />
-        </FFGitSyncProvider>
+        {FFM_3959_FF_MFE_Environment_Detail ? <FFUIApp /> : <EnvironmentDetails />}
       </RouteWithLayout>
 
       <RouteWithLayout

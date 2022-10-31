@@ -21,9 +21,7 @@ import {
 import * as Yup from 'yup'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import isEmpty from 'lodash-es/isEmpty'
-// eslint-disable-next-line no-restricted-imports
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import { ExpressionBreakdownInterface, scheduleTabsId } from '@common/components/SchedulePanel/components/utils'
 import { String, useStrings } from 'framework/strings'

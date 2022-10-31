@@ -25,7 +25,7 @@ import routes from '@common/RouteDefinitions'
 import { Project, useGetProjectAggregateDTOList } from 'services/cd-ng'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
 import pointerImage from './pointer.svg'
@@ -80,6 +80,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
           }
           data-testid="project-select-dropdown"
           className={css.popoverTarget}
+          aria-label={getString('selectProject')}
         />
       ) : (
         <Button
@@ -152,10 +153,8 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
   )
 }
 export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, moduleFilter }) => {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { selectedProject, updateAppStore } = useAppStore()
   const { getString } = useStrings()
-  const history = useHistory()
 
   useEffect(() => {
     // deselect current project if user switches module
@@ -173,27 +172,9 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, modu
         </Text>
         <div className={cx(css.projectSelector, { [css.selectProjectDisplay]: !selectedProject })}>
           {selectedProject && (
-            <Button
-              minimal
-              tooltipProps={{
-                isDark: true,
-                fill: true
-              }}
-              tooltip={
-                <Layout.Vertical padding="medium" spacing="small">
-                  <Text color={Color.GREY_300}>{getString('projectsOrgs.manageAProject')}</Text>
-                  <Text color={Color.WHITE}>{selectedProject.name}</Text>
-                </Layout.Vertical>
-              }
-              onClick={() => {
-                history.push(routes.toProjectDetails({ accountId, orgIdentifier, projectIdentifier }))
-              }}
-              className={cx(css.popoverTarget, css.selectedProject)}
-            >
-              <Text color={Color.WHITE} padding="xsmall" className={css.projectText}>
-                {selectedProject.name}
-              </Text>
-            </Button>
+            <Text color={Color.WHITE} padding="xsmall" className={css.projectText}>
+              {selectedProject.name}
+            </Text>
           )}
           <ProjectSelect onSelect={onSelect} />
         </div>

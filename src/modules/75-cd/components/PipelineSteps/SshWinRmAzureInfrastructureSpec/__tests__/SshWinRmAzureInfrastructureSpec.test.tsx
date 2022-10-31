@@ -53,6 +53,7 @@ jest.mock('services/cd-ng', () => ({
   getAzureResourceGroupsBySubscriptionPromise: jest.fn(() => Promise.resolve(resourceGroupsResponse.data)),
   useGetSubscriptionTags: jest.fn(() => tagsResponse),
   useGetAzureResourceGroupsV2: jest.fn(() => resourceGroupsResponse),
+  getSubscriptionTagsPromise: jest.fn(() => Promise.resolve(tagsResponse.data)),
   useGetSubscriptionTagsV2: jest.fn(() => tagsResponse)
 }))
 
@@ -105,6 +106,7 @@ jest.mock('@connectors/components/ConnectorReferenceField/FormMultiTypeConnector
 const connectorRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.connectorRef'
 const subscriptionPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.subscriptionId'
 const resourceGroupPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.resourceGroup'
+const subscriptionTagsPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.tags'
 
 describe('Test Azure Infrastructure Spec snapshot', () => {
   beforeEach(() => {
@@ -207,14 +209,15 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.click(addTags!)
     expect(getByText(container, 'keyLabel')).toBeTruthy()
     expect(container).toMatchSnapshot()
-    const tagEl = getByPlaceholderText('- Select -') as HTMLElement
+    const tagEl = container.querySelector('[name="tagslabel1"]') as HTMLElement
     fireEvent.change(tagEl!, { target: { value: 'newKey' } })
     const tagValEl = container.querySelector('[name=".tags."]') as HTMLElement
     fireEvent.change(tagValEl!, { target: { value: 'newValue' } })
     const deleteTag = container.querySelector('[data-icon="trash"]') as HTMLElement
     fireEvent.click(deleteTag!)
     expect(queryByText(container, 'keyLabel')).toBeNull()
-    await waitFor(() => expect(onUpdateHandler).toHaveBeenCalled())
+    expect(subscriptionInput).not.toBeDisabled()
+    await waitFor(() => expect(container.querySelector('[value="newValue"]')).toBeDefined())
   })
   test('Should call onUpdate if valid values entered - edit view', async () => {
     const onUpdateHandler = jest.fn()
@@ -249,6 +252,32 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.click(addTags!)
     expect(getByText(container, 'keyLabel')).toBeTruthy()
     await waitFor(() => expect(onUpdateHandler).toHaveBeenCalled())
+  })
+  test('Validations Test', () => {
+    const response = new SshWinRmAzureInfrastructureSpec().validateInputSet({
+      data: {
+        credentialsRef: '',
+        connectorRef: '',
+        subscriptionId: '',
+        resourceGroup: '',
+        hostConnectionType: 'Hostname',
+        tags: {
+          key: 'value'
+        }
+      },
+      template: {
+        credentialsRef: '<+input>',
+        connectorRef: '<+input>',
+        subscriptionId: '<+input>',
+        resourceGroup: '<+input>',
+        hostConnectionType: 'Hostname',
+        tags: {
+          key: 'value'
+        }
+      },
+      viewType: StepViewType.TriggerForm
+    })
+    expect(response).toMatchSnapshot('Required Fields check snap')
   })
 })
 
@@ -295,6 +324,20 @@ describe('Test Azure Infrastructure Spec autocomplete', () => {
     expect(list).toHaveLength(0)
 
     list = await step.getResourceGroupListForYaml(resourceGroupPath, getInvalidYaml(), getParams())
+    expect(list).toHaveLength(0)
+  })
+  test('Test tags names autocomplete', async () => {
+    const step = new SshWinRmAzureInfrastructureSpec() as any
+    let list: CompletionItemInterface[]
+
+    list = await step.getTagsForYaml(subscriptionTagsPath, getYaml(), getParams())
+    expect(list).toHaveLength(2)
+    expect(list[0].insertText).toBe('tag1')
+
+    list = await step.getTagsForYaml('invalid path', getYaml(), getParams())
+    expect(list).toHaveLength(0)
+
+    list = await step.getTagsForYaml(subscriptionTagsPath, getInvalidYaml(), getParams())
     expect(list).toHaveLength(0)
   })
 })

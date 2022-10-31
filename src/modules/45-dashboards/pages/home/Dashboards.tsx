@@ -17,6 +17,7 @@ import { DashboardLayoutViews } from '@dashboards/types/DashboardTypes.types'
 import DashboardList from '@dashboards/components/DashboardList/DashboardList'
 import CloneDashboardForm from './CloneDashboardForm'
 import UpdateDashboardForm from './UpdateDashboardForm'
+import { useDashboardsContext } from '../DashboardsContext'
 import css from './HomePage.module.scss'
 
 export interface DashboardsProps {
@@ -36,10 +37,17 @@ const Dashboards: React.FC<DashboardsProps> = ({
 }): React.ReactElement => {
   const [selectedDashboard, setSelectedDashboard] = useState<DashboardModel>()
 
+  const { editableFolders } = useDashboardsContext()
+
   const [showCloneModal, hideCloneModal] = useModalHook(
     () => (
       <Dialog isOpen={true} enforceFocus={false} onClose={hideCloneModal} className={cx(css.dashboardDialog)}>
-        <CloneDashboardForm formData={selectedDashboard} hideModal={hideCloneModal} reloadDashboards={triggerRefresh} />
+        <CloneDashboardForm
+          editableFolders={editableFolders}
+          formData={selectedDashboard}
+          hideModal={hideCloneModal}
+          reloadDashboards={triggerRefresh}
+        />
       </Dialog>
     ),
     [selectedDashboard]
@@ -48,7 +56,12 @@ const Dashboards: React.FC<DashboardsProps> = ({
   const [showEditModal, hideEditModal] = useModalHook(
     () => (
       <Dialog isOpen={true} enforceFocus={false} onClose={hideEditModal} className={cx(css.dashboardDialog)}>
-        <UpdateDashboardForm formData={selectedDashboard} hideModal={hideEditModal} reloadDashboards={triggerRefresh} />
+        <UpdateDashboardForm
+          editableFolders={editableFolders}
+          formData={selectedDashboard}
+          hideModal={hideEditModal}
+          reloadDashboards={triggerRefresh}
+        />
       </Dialog>
     ),
     [selectedDashboard]

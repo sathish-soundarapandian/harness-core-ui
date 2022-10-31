@@ -98,19 +98,16 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       templateTypes
     },
     contextType,
-    stepsFactory,
     getStageFromPipeline,
     updatePipelineView,
     isReadonly,
     updateStage,
     setSelectedStepId,
-    getStagePathFromPipeline,
     updatePipeline,
     setSelectedSectionId
   } = pipelineContext
 
   const query = useQueryParams()
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
   const [stageData, setStageData] = React.useState<BuildStageElementConfig | undefined>()
   const poolName =
     ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.poolName ||
@@ -348,7 +345,6 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                 hasRollback={false}
                 isReadonly={isReadonly}
                 hasDependencies={true}
-                stepsFactory={stepsFactory}
                 stage={selectedStageClone}
                 originalStage={originalStage}
                 ref={executionRef}
@@ -370,7 +366,6 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                   }
                 }}
                 // Check and update the correct stage path here
-                pathToStage={`${stagePath}.stage.spec.execution`}
                 onAddStep={(event: ExecutionGraphAddStepEvent) => {
                   if (event.parentIdentifier === STATIC_SERVICE_GROUP_NAME) {
                     updatePipelineView({

@@ -17,8 +17,8 @@ exports[`EditStageView snapshot test should render properly 1`] = `
         >
           <div>
             <p
-              class="StyledProps--font StyledProps--main addStageHeading StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--margin-bottom-medium"
-              style="display: flex; align-items: center;"
+              class="StyledProps--font StyledProps--main addStageHeading StyledProps--margin-bottom-medium"
+              style="font-variant: h5; display: flex; align-items: center;"
             >
               <span
                 class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
@@ -251,6 +251,7 @@ exports[`EditStageView snapshot test should render properly 1`] = `
               </label>
             </div>
             <button
+              aria-label="pipelineSteps.build.create.setupStage"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-small Button--with-current-color"
               type="submit"
             >
@@ -285,8 +286,8 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
         >
           <div>
             <p
-              class="StyledProps--font StyledProps--main addStageHeading StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--margin-bottom-medium"
-              style="display: flex; align-items: center;"
+              class="StyledProps--font StyledProps--main addStageHeading StyledProps--margin-bottom-medium"
+              style="font-variant: h5; display: flex; align-items: center;"
             >
               <span
                 class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
@@ -787,6 +788,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
               </div>
             </div>
             <button
+              aria-label="pipelineSteps.build.create.setupStage"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-small Button--with-current-color"
               type="submit"
             >

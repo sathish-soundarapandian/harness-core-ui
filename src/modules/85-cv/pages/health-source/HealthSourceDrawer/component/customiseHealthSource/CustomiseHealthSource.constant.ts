@@ -11,3 +11,8 @@ export const omitServiceEnvironmentKeys = [
   'environmentIdentifier',
   'environmentName'
 ]
+
+export const CustomHealthMetric = {
+  Log: 'CustomHealthLog',
+  Metric: 'CustomHealthMetric'
+}

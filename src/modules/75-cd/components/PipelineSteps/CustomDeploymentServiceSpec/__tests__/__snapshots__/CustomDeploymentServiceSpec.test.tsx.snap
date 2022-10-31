@@ -27,6 +27,7 @@ exports[`CustomDeploymentServiceSpec tests When stepViewType is Edit render prop
           >
             <section />
             <button
+              aria-label="pipeline.artifactsSelection.addPrimaryArtifact"
               class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               id="add-artifact"
               type="button"

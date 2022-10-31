@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
@@ -139,86 +146,92 @@ export const FileSelectList = (props: ListProps): React.ReactElement => {
     }
   }, [initialValue, name])
 
+  const fieldArray = (): React.ReactElement => (
+    <>
+      <FieldArray
+        name={name}
+        render={() => {
+          return value.map(({ id, value: valueValue }, index: number) => {
+            return (
+              <div className={css.group} key={id}>
+                <div style={{ flexGrow: 1 }} className={css.selectFieldWrapper}>
+                  <MultiTypeFileSelect
+                    hideError={true}
+                    name={`${name}[${index}]`}
+                    label={''}
+                    defaultValueToReset={''}
+                    style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
+                    disableTypeSelection={false}
+                    supportListOfExpressions={true}
+                    allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                    onTypeChange={() => {
+                      changeValue(id, '')
+                    }}
+                    expressionRender={() => {
+                      return (
+                        <ExpressionInput
+                          name={`${name}[${index}]`}
+                          value={valueValue}
+                          disabled={disabled}
+                          inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                          items={expressions}
+                          onChange={val => {
+                            changeValue(id, (val as string)?.trim())
+                          }}
+                        />
+                      )
+                    }}
+                  >
+                    <div className={css.selectFieldWrapper}>
+                      {type === SELECT_FILES_TYPE.FILE_STORE ? (
+                        <FileStoreSelect
+                          name={`${name}[${index}]`}
+                          readonly={disabled}
+                          placeholder={placeholder}
+                          onChange={val => {
+                            changeValue(id, (val as string)?.trim())
+                          }}
+                        />
+                      ) : (
+                        <EncryptedFileSelect
+                          name={`${name}[${index}]`}
+                          value={valueValue}
+                          placeholder={placeholder}
+                          readonly={disabled}
+                          onChange={val => {
+                            changeValue(id, (val as string)?.trim())
+                          }}
+                        />
+                      )}
+                    </div>
+                  </MultiTypeFileSelect>
+                </div>
+                {showAddTrashButtons(disabled, allowOnlyOne) && (
+                  <Button
+                    icon="main-trash"
+                    iconProps={{ size: 20 }}
+                    minimal
+                    onClick={removeValue(id)}
+                    data-testid={`remove-${name}-[${index}]`}
+                    className={css.trashButton}
+                  />
+                )}
+              </div>
+            )
+          })
+        }}
+      />
+
+      {showAddTrashButtons(disabled, allowOnlyOne) && (
+        <Button intent="primary" minimal text={getString('plusAdd')} data-testid={`add-${name}`} onClick={addValue} />
+      )}
+    </>
+  )
+
   return (
     <div style={style}>
       <div className={cx(css.label, labelClassName)}>{label}</div>
-      <Card style={{ width: '100%' }}>
-        <FieldArray
-          name={name}
-          render={() => {
-            return value.map(({ id, value: valueValue }, index: number) => {
-              return (
-                <div className={css.group} key={id}>
-                  <div style={{ flexGrow: 1 }} className={css.selectFieldWrapper}>
-                    <MultiTypeFileSelect
-                      name={`${name}[${index}]`}
-                      label={''}
-                      defaultValueToReset={''}
-                      style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
-                      disableTypeSelection={false}
-                      supportListOfExpressions={true}
-                      allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                      onTypeChange={() => {
-                        changeValue(id, '')
-                      }}
-                      expressionRender={() => {
-                        return (
-                          <ExpressionInput
-                            name={`${name}[${index}]`}
-                            value={valueValue}
-                            disabled={disabled}
-                            inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                            items={expressions}
-                            onChange={val => {
-                              changeValue(id, (val as string)?.trim())
-                            }}
-                          />
-                        )
-                      }}
-                    >
-                      <div className={css.selectFieldWrapper}>
-                        {type === SELECT_FILES_TYPE.FILE_STORE ? (
-                          <FileStoreSelect
-                            name={`${name}[${index}]`}
-                            readonly={disabled}
-                            placeholder={placeholder}
-                            onChange={val => {
-                              changeValue(id, (val as string)?.trim())
-                            }}
-                          />
-                        ) : (
-                          <EncryptedFileSelect
-                            name={`${name}[${index}]`}
-                            value={valueValue}
-                            placeholder={placeholder}
-                            readonly={disabled}
-                            onChange={val => {
-                              changeValue(id, (val as string)?.trim())
-                            }}
-                          />
-                        )}
-                      </div>
-                    </MultiTypeFileSelect>
-                  </div>
-                  {showAddTrashButtons(disabled, allowOnlyOne) && (
-                    <Button
-                      icon="main-trash"
-                      iconProps={{ size: 20 }}
-                      minimal
-                      onClick={removeValue(id)}
-                      data-testid={`remove-${name}-[${index}]`}
-                    />
-                  )}
-                </div>
-              )
-            })
-          }}
-        />
-
-        {showAddTrashButtons(disabled, allowOnlyOne) && (
-          <Button intent="primary" minimal text={getString('plusAdd')} data-testid={`add-${name}`} onClick={addValue} />
-        )}
-      </Card>
+      {allowOnlyOne ? fieldArray() : <Card style={{ width: '100%' }}>{fieldArray()}</Card>}
 
       {(touched || hasSubmitted) && error && typeof error === 'string' ? (
         <Text intent={Intent.DANGER} margin={{ top: 'xsmall' }}>

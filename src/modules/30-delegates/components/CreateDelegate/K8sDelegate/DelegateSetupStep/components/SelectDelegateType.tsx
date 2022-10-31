@@ -11,7 +11,7 @@ import type { FormikProps } from 'formik'
 import type { IconName } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { delegateInstaller } from '../DelegateSetupStep.constants'
-import type { DelegateInstallerDetails } from '../DelegateSetupStep.types'
+import { DelegateInstallerDetails, DelegateType } from '../DelegateSetupStep.types'
 
 export interface FormikForSelectDelegateType {
   delegateType: string
@@ -29,7 +29,7 @@ const SelectDelegateType = (props: SelectDelegateTypeProps): JSX.Element => {
   const { formikProps } = props
   const { getString } = useStrings()
   const [selectedInstaller, setSelectedInstaller] = useState<DelegateInstallerDetails | undefined>(
-    getDelegateType(formikProps?.values.delegateType)
+    getDelegateType(DelegateType.KUBERNETES)
   )
   return (
     <Container padding={{ top: 'medium', bottom: 'medium' }}>

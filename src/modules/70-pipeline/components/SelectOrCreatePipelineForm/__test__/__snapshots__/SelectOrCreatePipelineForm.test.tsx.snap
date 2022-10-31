@@ -95,6 +95,7 @@ exports[`SelectOrCreatePipelineForm Rendering should open create pipeline modal 
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
         >
           <button
+            aria-label="continue"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             type="submit"
           >
@@ -105,6 +106,7 @@ exports[`SelectOrCreatePipelineForm Rendering should open create pipeline modal 
             </span>
           </button>
           <button
+            aria-label="pipeline.createANewPipeline"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-small StyledProps--inline StyledProps--border Button--with-current-color"
             style="width: 200px; height: 33px;"
             type="button"
@@ -217,6 +219,7 @@ exports[`SelectOrCreatePipelineForm Rendering should render SelectOrCreatePipeli
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
         >
           <button
+            aria-label="continue"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             type="submit"
           >
@@ -227,6 +230,7 @@ exports[`SelectOrCreatePipelineForm Rendering should render SelectOrCreatePipeli
             </span>
           </button>
           <button
+            aria-label="pipeline.createANewPipeline"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-small StyledProps--inline StyledProps--border Button--with-current-color"
             style="width: 200px; height: 33px;"
             type="button"

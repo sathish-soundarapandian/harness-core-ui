@@ -28,7 +28,8 @@ import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 const templateTypeYamlKeyMap: { [key: string]: string } = {
   monitoredservice: 'monitoredService',
   secretmanager: 'secretManager',
-  customdeployment: 'customDeployment'
+  customdeployment: 'customDeployment',
+  artifactsource: 'artifactSource'
 }
 
 export interface MonitoredServiceConfig {

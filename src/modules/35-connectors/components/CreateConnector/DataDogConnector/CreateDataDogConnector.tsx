@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { cvConnectorHOC } from '../CommonCVConnector/CVConnectorHOC'
 import type { ConnectionConfigProps } from '../CommonCVConnector/constants'
 import { initializeDatadogConnectorWithStepData } from './utils'
@@ -53,6 +54,13 @@ export function DatadogConfigStep(props: ConnectionConfigProps): JSX.Element {
     return <PageSpinner />
   }
 
+  const scope: ScopedObjectDTO | undefined = props.isEditMode
+    ? {
+        orgIdentifier: prevStepData?.orgIdentifier,
+        projectIdentifier: prevStepData?.projectIdentifier
+      }
+    : undefined
+
   return (
     <Container className={css.credentials}>
       <StepDetailsHeader connectorTypeLabel={getString('connectors.title.datadog')} />
@@ -76,8 +84,12 @@ export function DatadogConfigStep(props: ConnectionConfigProps): JSX.Element {
         <FormikForm className={css.form}>
           <Layout.Vertical spacing="large" height={450}>
             <FormInput.Text label={getString('UrlLabel')} name="url" />
-            <SecretInput label={getString('connectors.datadog.encryptedAPPKeyLabel')} name="applicationKeyRef" />
-            <SecretInput label={getString('connectors.encryptedAPIKeyLabel')} name="apiKeyRef" />
+            <SecretInput
+              label={getString('connectors.datadog.encryptedAPPKeyLabel')}
+              name="applicationKeyRef"
+              scope={scope}
+            />
+            <SecretInput label={getString('connectors.encryptedAPIKeyLabel')} name="apiKeyRef" scope={scope} />
           </Layout.Vertical>
           <Layout.Horizontal spacing="xlarge">
             <Button onClick={() => props.previousStep?.({ ...props.prevStepData })} text={getString('back')} />

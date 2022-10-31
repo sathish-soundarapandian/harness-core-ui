@@ -18,14 +18,14 @@ import {
   HandleManualInterventionInterruptQueryParams
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
+import { StrategyType, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 
 import css from './ManualInterventionTab.module.scss'
 
 export interface ManualInterventionTabProps {
   step: ExecutionNode
-  allowedStrategies: Strategy[]
+  allowedStrategies: StrategyType[]
 }
 
 export function ManualInterventionTab(props: ManualInterventionTabProps): React.ReactElement {
@@ -57,7 +57,7 @@ export function ManualInterventionTab(props: ManualInterventionTabProps): React.
     })
   }
 
-  const STRATEGIES: Strategy[][] = React.useMemo(() => chunk(allowedStrategies, 5), [allowedStrategies])
+  const STRATEGIES: StrategyType[][] = React.useMemo(() => chunk(allowedStrategies, 5), [allowedStrategies])
 
   React.useEffect(() => {
     if (error) {

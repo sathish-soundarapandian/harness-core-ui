@@ -345,6 +345,7 @@ exports[`Test SLOTargetAndBudgetPolicy component should render SLOTargetAndBudge
                 class="NoDataCard--buttonContainer"
               >
                 <button
+                  aria-label="cv.notifications.newNotificationRule"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
                   type="button"
                 >

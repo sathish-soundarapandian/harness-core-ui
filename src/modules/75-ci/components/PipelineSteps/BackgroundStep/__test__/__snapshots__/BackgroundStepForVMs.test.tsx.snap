@@ -658,6 +658,7 @@ exports[`Background Step Edit View edit mode works 1`] = `
                   </button>
                 </div>
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.entrypoint"
                   style="padding: 0px;"
@@ -1885,6 +1886,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.entrypoint"
                   style="padding: 0px;"
@@ -2338,6 +2340,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                             class="bp3-form-content"
                           >
                             <button
+                              aria-label="plusAdd"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                               data-testid="add-spec.reportPaths"
                               style="padding: 0px;"
@@ -2435,6 +2438,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                             class="bp3-form-content"
                           >
                             <button
+                              aria-label="plusAdd"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                               data-testid="add-spec.envVariables"
                               style="padding: 0px;"
@@ -2537,6 +2541,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                             class="bp3-form-content"
                           >
                             <button
+                              aria-label="plusAdd"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                               data-testid="add-spec.portBindings"
                               style="padding: 0px;"
@@ -3069,6 +3074,7 @@ exports[`Background Step Edit View should render properly for AWS VMs build infr
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.entrypoint"
                   style="padding: 0px;"
@@ -3264,6 +3270,7 @@ exports[`Background Step InputSet View should not render any fields 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -3726,6 +3733,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                   </button>
                 </div>
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.entrypoint"
                   type="button"
@@ -4096,6 +4104,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                   </button>
                 </div>
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.reports.spec.paths"
                   type="button"
@@ -4194,6 +4203,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.envVariables"
                   style="padding: 0px;"
@@ -4298,6 +4308,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.portBindings"
                   style="padding: 0px;"
@@ -4517,6 +4528,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -4554,6 +4566,7 @@ exports[`Background Step InputSet View should render properly 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

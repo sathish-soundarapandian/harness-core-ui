@@ -16,15 +16,15 @@ export interface SectionNoDataProps extends Pick<NoDataProps, 'message' | 'descr
 
 const SectionNoData: FC<PropsWithChildren<SectionNoDataProps>> = ({ message, description, panels, children }) => (
   <NoData message={message} description={description}>
-    <Layout.Horizontal spacing="xxxlarge" flex={{ alignItems: 'center', justifyContent: 'center' }}>
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'center' }}>
       {panels.map(panel => (
         <Layout.Horizontal
           flex={{ align: 'center-center' }}
           style={{ textAlign: 'center' }}
-          spacing="huge"
+          spacing="xlarge"
           key={panel.description}
         >
-          <Layout.Vertical flex={{ alignItems: 'center' }} spacing="huge" padding={{ bottom: 'huge', top: 'small' }}>
+          <Layout.Vertical flex={{ alignItems: 'center' }} padding={{ bottom: 'huge', top: 'small' }}>
             <img src={panel.imageURL} alt="" width={150} height={150} />
             <Text width={160} font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
               {panel.description}

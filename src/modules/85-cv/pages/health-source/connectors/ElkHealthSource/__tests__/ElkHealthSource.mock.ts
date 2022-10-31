@@ -9,9 +9,9 @@ import { getMappedServicesAndEnvs } from '../ElkHealthSource.utils'
 
 const mappedServicesAndEnvs = new Map()
 
-mappedServicesAndEnvs.set('ELK Logs Query', {
+mappedServicesAndEnvs.set('ElasticSearch Logs Query', {
   serviceInstance: '_sourcetype',
-  metricName: 'ELK Logs Query',
+  metricName: 'ElasticSearch Logs Query',
   query: 'error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )'
 })
 
@@ -22,15 +22,15 @@ export const params = {
 }
 
 export const ElkPayload = {
-  type: 'ELKLog',
+  type: 'ElasticSearch',
   identifier: 'elk1',
   name: 'elk1',
   spec: {
     connectorRef: 'ddsfdsfdf',
-    feature: 'ELK Logs',
+    feature: 'ElasticSearch Logs',
     queries: [
       {
-        name: 'ELK Logs Query',
+        name: 'ElasticSearch Logs Query',
         query: '*',
         serviceInstanceIdentifier: '_source.space.description',
         index: '.kibana_1',
@@ -54,10 +54,10 @@ export const data = {
       type: 'ELKLog',
       spec: {
         connectorRef: 'account.ELK',
-        feature: 'ELK Logs',
+        feature: 'ElasticSearch Logs',
         queries: [
           {
-            name: 'ELK Logs Query',
+            name: 'ElasticSearch Logs Query',
             query: '*',
             index: '.kibana_1',
             serviceInstanceIdentifier: '_source.updated_at',
@@ -72,13 +72,13 @@ export const data = {
     {
       name: 'elk1',
       identifier: 'elk1',
-      type: 'ELKLog',
+      type: 'ElasticSearchLog',
       spec: {
         connectorRef: 'ddsfdsfdf',
-        feature: 'ELK Logs',
+        feature: 'ElasticSearch Logs',
         queries: [
           {
-            name: 'ELK Logs Query',
+            name: 'ElasticSearch Logs Query',
             query: '*',
             index: '.kibana_1',
             serviceInstanceIdentifier: '_source.space.description',
@@ -102,7 +102,7 @@ export const data = {
     type: 'ELKLog',
     spec: {
       connectorRef: 'ddsfdsfdf',
-      feature: 'ELK Logs',
+      feature: 'ElasticSearch Logs',
       queries: [
         {
           name: 'ELK Logs Query',
@@ -118,7 +118,7 @@ export const data = {
   },
   healthSourceName: 'elk1',
   healthSourceIdentifier: 'elk1',
-  sourceType: 'ELKLog',
+  sourceType: 'ElasticSearch',
   product: 'ElkLogs'
 }
 export const setupSource = {
@@ -145,7 +145,7 @@ export const setupSourcewithoutProduct = {
   identifier: 'elk1',
   isEdit: true,
   product: undefined,
-  type: 'ELKLog' as any,
+  type: 'ElasticSearch' as any,
   mappedServicesAndEnvs: getMappedServicesAndEnvs(data),
   messageIdentifier: undefined,
   timeStampFormat: undefined
@@ -155,7 +155,7 @@ export const setupSource_noData = {
   accountId: 'kmpySmUISimoRrJL6NL73w',
   orgIdentifier: 'default',
   projectIdentifier: 'Demo',
-  type: 'ELKLog' as any,
+  type: 'ElasticSearch' as any,
   mappedServicesAndEnvs: getMappedServicesAndEnvs(null),
   messageIdentifier: undefined,
   timeStampFormat: undefined
@@ -165,7 +165,7 @@ export const setupSourceMappedMetric = {
   accountId: 'kmpySmUISimoRrJL6NL73w',
   orgIdentifier: 'default',
   projectIdentifier: 'Demo',
-  type: 'ELKLog' as any,
+  type: 'ElasticSearch' as any,
   mappedServicesAndEnvs: getMappedServicesAndEnvs(null),
   messageIdentifier: undefined,
   timeStampFormat: undefined

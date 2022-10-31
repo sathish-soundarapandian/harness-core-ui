@@ -245,6 +245,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render 1`
             </div>
           </div>
           <button
+            aria-label="editDetails"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             id="editDetailsBtn"
             type="button"
@@ -496,6 +497,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render 1`
             na
           </p>
           <button
+            aria-label="connectors.stepThreeName"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
             type="button"
           >
@@ -786,6 +788,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render at
             </div>
           </div>
           <button
+            aria-label="editDetails"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             id="editDetailsBtn"
             type="button"
@@ -1037,6 +1040,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render at
             na
           </p>
           <button
+            aria-label="connectors.stepThreeName"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
             type="button"
           >

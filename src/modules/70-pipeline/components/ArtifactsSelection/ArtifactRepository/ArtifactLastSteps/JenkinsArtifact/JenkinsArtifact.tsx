@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState, useRef } from 'react'
+import cx from 'classnames'
 import {
   Formik,
   Layout,
@@ -60,7 +61,8 @@ function FormComponent({
   previousStep,
   isReadonly = false,
   formik,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName = ''
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const lastOpenedJob = useRef<any>(null)
@@ -78,7 +80,8 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.label)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const isTemplateContext = context === ModalViewFor.Template
 
   const {
     refetch: refetchJobs,
@@ -238,7 +241,7 @@ function FormComponent({
 
   return (
     <FormikForm>
-      <div className={css.connectorForm}>
+      <div className={cx(css.connectorForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
@@ -418,20 +421,22 @@ function FormComponent({
           )}
         </div>
       </div>
-      <Layout.Horizontal spacing="medium">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => previousStep?.(prevStepData)}
-        />
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          type="submit"
-          text={getString('submit')}
-          rightIcon="chevron-right"
-        />
-      </Layout.Horizontal>
+      {!isTemplateContext && (
+        <Layout.Horizontal spacing="medium">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            onClick={() => previousStep?.(prevStepData)}
+          />
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            type="submit"
+            text={getString('submit')}
+            rightIcon="chevron-right"
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }
@@ -440,6 +445,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const getInitialValues = (): JenkinsArtifactType => {
     return getArtifactFormData(
@@ -462,6 +468,17 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
             : formData.spec?.jobName
       }
     })
+  }
+
+  const handleValidate = (formData: JenkinsArtifactType) => {
+    if (isTemplateContext) {
+      submitFormData(
+        {
+          ...formData
+        },
+        getConnectorIdValue(prevStepData)
+      )
+    }
   }
 
   const schemaObject = {
@@ -488,13 +505,16 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData(
             {

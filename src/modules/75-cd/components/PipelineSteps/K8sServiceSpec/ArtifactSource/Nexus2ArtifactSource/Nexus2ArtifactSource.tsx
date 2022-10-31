@@ -28,7 +28,6 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags
@@ -213,7 +212,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -226,6 +225,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={''}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
+              configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
               width={391}
               setRefValue

@@ -19,11 +19,9 @@ import {
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
-import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import {
   PipelineInfoConfig,
-  StageElementWrapperConfig,
   useGetTemplateFromPipeline,
   getInputSetForPipelinePromise,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
@@ -45,8 +43,6 @@ import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
-  filterArtifactIndex,
-  getFilteredStage,
   TriggerTypes,
   eventTypes,
   getTriggerInputSetsBranchQueryParameter,
@@ -54,98 +50,13 @@ import {
   TriggerGitEventTypes,
   TriggerGitEvent,
   ciCodebaseBuildIssueComment
-} from '@triggers/components/Triggers/ManifestTrigger/ManifestWizardPageUtils'
+} from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import css from '@triggers/pages/triggers/views/WebhookPipelineInputPanel.module.scss'
 
-interface ManifestPipelineInputPanelProps {
+interface ManifestTriggerInputPanelFormProps {
   formikProps?: any
   isEdit?: boolean
-  gitAwareForTriggerEnabled?: boolean
-}
-
-const applyArtifactToPipeline = (newPipelineObject: any, formikProps: FormikProps<any>): PipelineInfoConfig => {
-  const artifactIndex = filterArtifactIndex({
-    runtimeData: newPipelineObject?.stages,
-    stageId: formikProps?.values?.stageId,
-    artifactId: formikProps?.values?.selectedArtifact?.identifier,
-    isManifest: false
-  })
-  const filteredStage = getFilteredStage(newPipelineObject?.stages, formikProps?.values?.stageId)
-  if (artifactIndex >= 0) {
-    const selectedArtifact = {
-      sidecar: {
-        type: formikProps?.values?.selectedArtifact?.type,
-        spec: {
-          ...formikProps?.values?.selectedArtifact?.spec
-        }
-      }
-    }
-
-    const filteredStageArtifacts =
-      filteredStage.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.sidecars
-    filteredStageArtifacts[artifactIndex] = selectedArtifact
-  } else if (artifactIndex < 0) {
-    const selectedArtifact = {
-      type: formikProps?.values?.selectedArtifact?.type,
-      spec: {
-        ...formikProps?.values?.selectedArtifact?.spec
-      }
-    }
-
-    const filteredStageArtifacts = defaultTo(
-      filteredStage.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts,
-      {}
-    )
-    filteredStageArtifacts.primary = selectedArtifact
-  }
-  return newPipelineObject
-}
-// Selected Artifact is applied to inputYaml on Pipeline Input Panel in KubernetesManifests.tsx
-// This is to apply the selected artifact values
-// to the applied input sets pipeline stage values
-const applySelectedArtifactToPipelineObject = (
-  pipelineObj: PipelineInfoConfig,
-  formikProps: FormikProps<any>
-): PipelineInfoConfig => {
-  // Cloning or making into a new object
-  // so the original pipeline is not effected
-  const newPipelineObject = { ...pipelineObj }
-  if (!newPipelineObject) {
-    return {} as PipelineInfoConfig
-  }
-
-  const { triggerType } = formikProps.values
-
-  if (triggerType === TriggerTypes.MANIFEST) {
-    const artifactIndex = filterArtifactIndex({
-      runtimeData: newPipelineObject?.stages,
-      stageId: formikProps?.values?.stageId,
-      artifactId: formikProps?.values?.selectedArtifact?.identifier,
-      isManifest: true
-    })
-    if (artifactIndex >= 0) {
-      const filteredStage =
-        (newPipelineObject?.stages || []).find(
-          (stage: StageElementWrapperConfig) => stage.stage?.identifier === formikProps?.values?.stageId
-        ) || {}
-
-      const selectedArtifact = {
-        manifest: {
-          type: formikProps?.values?.selectedArtifact?.type,
-          spec: {
-            ...formikProps?.values?.selectedArtifact?.spec
-          }
-        }
-      }
-
-      const filteredStageManifests = (filteredStage.stage?.spec as any)?.serviceConfig?.serviceDefinition?.spec
-        ?.manifests
-      filteredStageManifests[artifactIndex] = selectedArtifact
-    }
-  } else if (triggerType === TriggerTypes.ARTIFACT && newPipelineObject) {
-    return applyArtifactToPipeline(newPipelineObject, formikProps)
-  }
-  return newPipelineObject
 }
 
 const getPipelineWithInjectedWithCloneCodebase = ({
@@ -191,15 +102,16 @@ const getPipelineWithInjectedWithCloneCodebase = ({
   }
 }
 
-function WebhookPipelineInputPanelForm({
+function ManifestTriggerInputPanelForm({
   formikProps,
-  isEdit,
-  gitAwareForTriggerEnabled
-}: ManifestPipelineInputPanelProps): React.ReactElement {
+  isEdit
+}: ManifestTriggerInputPanelFormProps): React.ReactElement {
   const {
     values: { inputSetSelected, pipeline, resolvedPipeline },
     values
   } = formikProps
+
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
@@ -225,9 +137,7 @@ function WebhookPipelineInputPanelForm({
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
+      branch
     },
     body: {
       stageIdentifiers: []
@@ -235,11 +145,11 @@ function WebhookPipelineInputPanelForm({
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
-      gitAwareForTriggerEnabled,
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
       pipelineBranchName: formikProps?.values?.pipelineBranchName,
       branch
     })
-  }, [gitAwareForTriggerEnabled, branch, formikProps?.values?.pipelineBranchName])
+  }, [isNewGitSyncRemotePipeline, branch, formikProps?.values?.pipelineBranchName])
 
   const onReconcile = (inpSetId: string): void => {
     remove(invalidInputSetIds, id => id === inpSetId)
@@ -252,7 +162,7 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch
+      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch
     }
   })
 
@@ -260,7 +170,7 @@ function WebhookPipelineInputPanelForm({
     const shouldInjectCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
 
     if (
-      !gitAwareForTriggerEnabled &&
+      !isNewGitSyncRemotePipeline &&
       !hasEverRendered &&
       shouldInjectCloneCodebase &&
       !isEdit &&
@@ -295,7 +205,7 @@ function WebhookPipelineInputPanelForm({
     resolvedPipeline,
     triggerIdentifier,
     isEdit,
-    gitAwareForTriggerEnabled
+    isNewGitSyncRemotePipeline
   ])
 
   const inputSetQueryParams = useMemo(
@@ -309,7 +219,7 @@ function WebhookPipelineInputPanelForm({
       repoName,
       storeType,
       branch: getTriggerInputSetsBranchQueryParameter({
-        gitAwareForTriggerEnabled,
+        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
         pipelineBranchName: formikProps?.values?.pipelineBranchName,
         branch
       })
@@ -325,7 +235,7 @@ function WebhookPipelineInputPanelForm({
       repoName,
       storeType,
       branch,
-      gitAwareForTriggerEnabled
+      isNewGitSyncRemotePipeline
     ]
   )
 
@@ -425,9 +335,7 @@ function WebhookPipelineInputPanelForm({
         if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
           const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline)
 
-          const newPipelineObject = clearRuntimeInput(
-            merge(pipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
-          )
+          const newPipelineObject = clearRuntimeInput(merge(pipeline, pipelineObject.pipeline))
 
           const mergedPipeline = mergeTemplateWithInputSetData({
             inputSetPortion: { pipeline: parsedInputSets },
@@ -480,12 +388,12 @@ function WebhookPipelineInputPanelForm({
 
   const showPipelineInputSetForm = useMemo(() => {
     // With GitX enabled, only show when at least one input set is selected
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       return showPipelineInputSetSelector && !!selectedInputSets?.length
     }
 
     return showPipelineInputSetSelector
-  }, [showPipelineInputSetSelector, gitAwareForTriggerEnabled, selectedInputSets])
+  }, [showPipelineInputSetSelector, isNewGitSyncRemotePipeline, selectedInputSets])
 
   // When Pipeline Reference Branch is changed (by typing new value), re-merge Input Sets
   const reevaluateInputSetMerge = useCallback(
@@ -546,7 +454,7 @@ function WebhookPipelineInputPanelForm({
   // Don't show spinner when fetching is triggered by typing from
   // Pipeline Reference. Giving users a better experience
   const isPipelineBranchNameInFocus = (): boolean =>
-    !!gitAwareForTriggerEnabled &&
+    !!isNewGitSyncRemotePipeline &&
     !!document.activeElement &&
     document.activeElement === document.querySelector('input[name="pipelineBranchName"]')
 
@@ -556,7 +464,7 @@ function WebhookPipelineInputPanelForm({
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
-      ) : template?.data?.inputSetTemplateYaml || gitAwareForTriggerEnabled ? (
+      ) : template?.data?.inputSetTemplateYaml || isNewGitSyncRemotePipeline ? (
         <div className={css.inputsetGrid}>
           <div className={css.inputSetContent}>
             {showPipelineInputSetSelector && (
@@ -572,7 +480,7 @@ function WebhookPipelineInputPanelForm({
                     onChange={value => {
                       setInputSetError('')
                       setSelectedInputSets(value)
-                      if (gitAwareForTriggerEnabled) {
+                      if (isNewGitSyncRemotePipeline) {
                         formikProps.setValues({
                           ...formikProps.values,
                           inputSetRefs: (value || []).map(v => v.value),
@@ -582,9 +490,9 @@ function WebhookPipelineInputPanelForm({
                     }}
                     value={selectedInputSets}
                     selectedValueClass={css.inputSetSelectedValue}
-                    selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
+                    selectedRepo={isNewGitSyncRemotePipeline ? repoName : repoIdentifier}
                     selectedBranch={inputSetSelectedBranch}
-                    showNewInputSet={gitAwareForTriggerEnabled}
+                    showNewInputSet={isNewGitSyncRemotePipeline}
                     onNewInputSetClick={() => setShowNewInputSetModal(true)}
                     invalidInputSetReferences={invalidInputSetIds}
                     loadingMergeInputSets={mergingInputSets}
@@ -603,7 +511,7 @@ function WebhookPipelineInputPanelForm({
                 )}
               </div>
             )}
-            {gitAwareForTriggerEnabled && (
+            {isNewGitSyncRemotePipeline && (
               <Container padding={{ top: 'medium' }}>
                 <Text
                   color={Color.BLACK_100}
@@ -640,8 +548,8 @@ function WebhookPipelineInputPanelForm({
                   viewType={StepViewType.InputSet}
                   maybeContainerClass={css.pipelineInputSetForm}
                   viewTypeMetadata={{ isTrigger: true }}
-                  readonly={gitAwareForTriggerEnabled}
-                  gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+                  readonly={isNewGitSyncRemotePipeline}
+                  gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
                 />
               )}
           </div>
@@ -660,10 +568,10 @@ function WebhookPipelineInputPanelForm({
   )
 }
 
-const ManifestPipelineInputPanel: React.FC<ManifestPipelineInputPanelProps> = props => {
+const ManifestPipelineInputPanel: React.FC<ManifestTriggerInputPanelFormProps> = props => {
   return (
     <NestedAccordionProvider>
-      <WebhookPipelineInputPanelForm {...props} />
+      <ManifestTriggerInputPanelForm {...props} />
     </NestedAccordionProvider>
   )
 }

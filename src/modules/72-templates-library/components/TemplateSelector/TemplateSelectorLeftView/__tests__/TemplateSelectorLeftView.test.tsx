@@ -159,7 +159,8 @@ describe('<TemplateSelectorLeftView> tests', () => {
           childTypes: ['ShellScript'],
           filterType: 'Template',
           templateEntityTypes: ['Step'],
-          templateIdentifiers: ['manjutesttemplate']
+          templateIdentifiers: ['manjutesttemplate'],
+          listingScope: { accountIdentifier: 'accountId', orgIdentifier: 'default', projectIdentifier: 'Yogesh_Test' }
         }
       })
     )
@@ -235,7 +236,8 @@ describe('<TemplateSelectorLeftView> tests', () => {
           childTypes: ['HarnessApproval', 'ShellScript'],
           filterType: 'Template',
           templateEntityTypes: ['Step'],
-          templateIdentifiers: ['manjutesttemplate']
+          templateIdentifiers: ['manjutesttemplate'],
+          listingScope: { accountIdentifier: 'accountId', orgIdentifier: 'default', projectIdentifier: 'Yogesh_Test' }
         },
         queryParams: defaultQueryParams
       })

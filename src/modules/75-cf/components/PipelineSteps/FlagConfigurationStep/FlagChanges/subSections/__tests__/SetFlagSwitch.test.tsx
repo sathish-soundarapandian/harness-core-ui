@@ -9,9 +9,9 @@ import React from 'react'
 import { get } from 'lodash-es'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
-import SetFlagSwitch, { SetFlagSwitchProps } from '../SetFlagSwitch'
+import SetFlagSwitch, { SetFlagSwitchProps, setFlagSwitchSchema } from '../SetFlagSwitch'
 import { prefixInstructionField } from './utils.mocks'
 
 let formValues = {}
@@ -19,7 +19,7 @@ let formValues = {}
 const renderComponent = (props: Partial<SetFlagSwitchProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <Formik formName="test" onSubmit={jest.fn()} initialValues={{}}>
+      <Formik onSubmit={jest.fn()} initialValues={{}}>
         {({ values }) => {
           formValues = values
 
@@ -69,5 +69,19 @@ describe('SetFlagSwitch', () => {
     userEvent.click(screen.getByText('common.OFF'))
 
     expect(get(formValues, prefixInstructionField('spec.state'))).toBe('off')
+  })
+})
+
+describe('setFlagSwitchSchema', () => {
+  const getStringMock = jest.fn().mockImplementation(str => str)
+
+  test('it should throw when state is not specified', async () => {
+    expect(() => setFlagSwitchSchema(getStringMock).validateSync({ spec: {} })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.setFlagSwitch.state'
+    )
+  })
+
+  test('it should not throw when state is specified', async () => {
+    expect(() => setFlagSwitchSchema(getStringMock).validateSync({ spec: { state: 'ON' } })).not.toThrow()
   })
 })

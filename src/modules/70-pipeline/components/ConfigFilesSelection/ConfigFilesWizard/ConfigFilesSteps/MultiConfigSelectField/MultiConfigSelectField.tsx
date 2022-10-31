@@ -17,16 +17,19 @@ import {
   EXPRESSION_INPUT_PLACEHOLDER,
   Layout,
   Icon,
-  AllowedTypes
+  AllowedTypes,
+  FormError,
+  Container
 } from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-
+import { FormGroup, Intent } from '@blueprintjs/core'
 import { FieldArray, connect, FormikContextType } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { errorCheck } from '@common/utils/formikHelpers'
+import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import type { FileUsage } from '@filestore/interfaces/FileStore'
@@ -65,6 +68,7 @@ export interface MultiTypeMapProps {
   fileUsage?: FileUsage
   addFileLabel?: string
   isAttachment?: boolean
+  deploymentType?: string
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -87,6 +91,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     fileUsage,
     addFileLabel,
     isAttachment = false,
+    deploymentType,
     ...restProps
   } = props
 
@@ -166,7 +171,11 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     {...providedDrag.draggableProps}
                                     {...providedDrag.dragHandleProps}
                                   >
-                                    <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                                    <Layout.Horizontal
+                                      spacing="medium"
+                                      flex={{ alignItems: 'center' }}
+                                      margin={{ bottom: hasError && 'medium' }}
+                                    >
                                       {!restrictToSingleEntry && (
                                         <>
                                           <Icon name="drag-handle-vertical" />
@@ -198,17 +207,36 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             ])}
                                             expressionRender={() => {
                                               return (
-                                                <ExpressionInput
-                                                  name={`${name}[${index}]`}
-                                                  value={get(formik?.values, `${name}[${index}]`)}
-                                                  disabled={false}
-                                                  inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                                                  items={expressions}
-                                                  onChange={val =>
-                                                    /* istanbul ignore next */
-                                                    formik?.setFieldValue(`${name}[${index}]`, val)
-                                                  }
-                                                />
+                                                <Container className={css.fieldExpressionHelperWrapper}>
+                                                  <FormGroup
+                                                    helperText={
+                                                      errorCheck(`${name}[${index}]`, formik) ? (
+                                                        <FormError
+                                                          name={`${name}[${index}]`}
+                                                          errorMessage={get(formik?.errors, `${name}[${index}]`)}
+                                                        />
+                                                      ) : null
+                                                    }
+                                                    intent={
+                                                      errorCheck(`${name}[${index}]`, formik)
+                                                        ? Intent.DANGER
+                                                        : Intent.NONE
+                                                    }
+                                                    style={{ width: '100%' }}
+                                                  >
+                                                    <ExpressionInput
+                                                      name={`${name}[${index}]`}
+                                                      value={get(formik?.values, `${name}[${index}]`)}
+                                                      disabled={false}
+                                                      inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                                                      items={expressions}
+                                                      onChange={val =>
+                                                        /* istanbul ignore next */
+                                                        formik?.setFieldValue(`${name}[${index}]`, val)
+                                                      }
+                                                    />
+                                                  </FormGroup>
+                                                </Container>
                                               )
                                             }}
                                           >
@@ -217,6 +245,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                                 <FileSelectField
                                                   value={get(formik?.values, `${name}[${index}]`)}
                                                   name={`${name}[${index}]`}
+                                                  isSshWinRm={isSshOrWinrmDeploymentType(defaultTo(deploymentType, ''))}
                                                   onChange={(newValue, i) => {
                                                     replace(i as number, {
                                                       ...restValue,

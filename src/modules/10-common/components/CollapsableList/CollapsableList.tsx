@@ -13,12 +13,17 @@ import type { IconProps } from '@harness/icons'
 import { Collapse, Pagination, PaginationProps } from '@wings-software/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
-import type { EntityReferenceResponse } from '../EntityReference/EntityReference'
+import {
+  EntityReferenceResponse,
+  getScopeFromDTO,
+  ScopedObjectDTO,
+  TAB_ID
+} from '../EntityReference/EntityReference.types'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 
 import css from './CollapsableList.module.scss'
 
-export interface CollapsableTableProps<T> {
+export interface CollapsableTableProps<T extends ScopedObjectDTO> {
   selectedRecord: T | undefined
   setSelectedRecord: (val: T | undefined) => void
   selectedRecords: ScopeAndIdentifier[]
@@ -31,16 +36,15 @@ export interface CollapsableTableProps<T> {
     selected?: boolean
   }) => JSX.Element
   pagination: PaginationProps
-  selectedScope: Scope
   disableCollapse?: boolean
   isMultiSelect?: boolean
+  selectedTab?: TAB_ID
 }
 
-export function CollapsableList<T>(props: CollapsableTableProps<T>): JSX.Element {
+export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTableProps<T>): JSX.Element {
   const {
     disableCollapse = false,
     isMultiSelect = false,
-    selectedScope,
     selectedRecord,
     setSelectedRecord,
     selectedRecords,
@@ -49,7 +53,7 @@ export function CollapsableList<T>(props: CollapsableTableProps<T>): JSX.Element
 
   const isSelected = (item: EntityReferenceResponse<T>): boolean => {
     if (isMultiSelect)
-      return selectedRecords.some(sR => sR.scope === selectedScope && sR.identifier === item.identifier)
+      return selectedRecords.some(sR => sR.identifier === item.identifier && getScopeFromDTO(item.record) === sR.scope)
     return selectedRecord === item.record
   }
 
@@ -59,10 +63,12 @@ export function CollapsableList<T>(props: CollapsableTableProps<T>): JSX.Element
 
     if (isMultiSelect) {
       setSelectedRecords(prev => {
-        const existingRecord = prev.find(el => el.identifier === item.identifier && el.scope === selectedScope)
+        const existingRecord = prev.find(
+          el => el.identifier === item.identifier && getScopeFromDTO(item.record) === el.scope
+        )
         return existingRecord
           ? prev.filter(el => el !== existingRecord)
-          : [...prev, { scope: selectedScope, identifier: item.identifier }]
+          : [...prev, { scope: getScopeFromDTO(item.record), identifier: item.identifier }]
       })
     } else {
       setSelectedRecord(props.selectedRecord === item.record ? undefined : item.record)
@@ -87,7 +93,7 @@ export function CollapsableList<T>(props: CollapsableTableProps<T>): JSX.Element
               <div onClick={onItemClick(item)} className={css.collapeHeaderContent}>
                 {props.recordRender({
                   item,
-                  selectedScope,
+                  selectedScope: getScopeFromDTO(item.record),
                   selected: isSelected(item)
                 })}
               </div>
@@ -95,7 +101,7 @@ export function CollapsableList<T>(props: CollapsableTableProps<T>): JSX.Element
           >
             {props.collapsedRecordRender?.({
               item,
-              selectedScope,
+              selectedScope: getScopeFromDTO(item.record),
               selected: isSelected(item)
             })}
           </Collapse>

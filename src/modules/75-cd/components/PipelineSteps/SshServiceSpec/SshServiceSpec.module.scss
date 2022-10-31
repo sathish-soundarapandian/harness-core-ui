@@ -77,6 +77,10 @@
   font-weight: 600;
 }
 
+.listHeader {
+  margin-bottom: 4px !important;
+}
+
 .configFileVariablesTable {
   & + & {
     margin-top: var(--spacing-large);

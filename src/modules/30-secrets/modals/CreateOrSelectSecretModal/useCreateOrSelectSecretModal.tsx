@@ -21,6 +21,7 @@ import { ReferenceSelectDialogTitle } from '@common/components/ReferenceSelect/R
 
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { SecretFormData } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import useCreateUpdateSecretModal from '../CreateSecretModal/useCreateUpdateSecretModal'
 import css from './useCreateOrSelectSecretModal.module.scss'
 
@@ -31,6 +32,7 @@ export interface UseCreateOrSelectSecretModalProps {
   connectorTypeContext?: ConnectorInfoDTO['type']
   handleInlineSSHSecretCreation?: () => void
   handleInlineWinRmSecretCreation?: () => void
+  scope?: ScopedObjectDTO
 }
 
 export interface UseCreateOrSelectSecretModalReturn {
@@ -144,6 +146,7 @@ const useCreateOrSelectSecretModal = (
           }}
           secretType={secretType}
           setSecretType={setSecretType}
+          scope={props.scope}
         />
       </Dialog>
     )

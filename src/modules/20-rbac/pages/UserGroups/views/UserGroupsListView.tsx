@@ -15,7 +15,8 @@ import {
   Icon,
   TableV2,
   useConfirmationDialog,
-  useToaster
+  useToaster,
+  ButtonSize
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
@@ -200,8 +201,9 @@ const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = 
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       <RoleBindingsList data={data} length={2} />
       <ManagePrincipalButton
-        text={getString('common.plusNumber', { number: getString('common.role') })}
-        variation={ButtonVariation.LINK}
+        text={`${getString('common.manage')} ${getString('roles')}`}
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.SMALL}
         data-testid={`addRole-${row.original.userGroupDTO.identifier}`}
         className={css.roleButton}
         onClick={event => {
@@ -347,6 +349,19 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
           }}
         />
         <Menu>
+          <RbacMenuItem
+            icon="res-roles"
+            text={getString('rbac.manageRoleBindings')}
+            onClick={event => {
+              event.stopPropagation()
+              ;(column as any).openRoleAssignmentModal(
+                PrincipalType.USER_GROUP,
+                row.original.userGroupDTO,
+                row.original.roleAssignmentsMetadataDTO
+              )
+            }}
+            permission={permissionRequest}
+          />
           {renderMenuItem(
             'edit',
             getString('edit'),
@@ -404,7 +419,8 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
         Cell: RenderColumnMenu,
         reload: reload,
         openUserGroupModal: openUserGroupModal,
-        disableSortBy: true
+        disableSortBy: true,
+        openRoleAssignmentModal
       }
     ],
     [openRoleAssignmentModal, openUserGroupModal, reload]

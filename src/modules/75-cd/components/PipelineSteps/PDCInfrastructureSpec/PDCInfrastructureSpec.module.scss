@@ -70,6 +70,12 @@
   }
 }
 
+.specifyFilterRadioGroup {
+  label {
+    margin: auto var(--spacing) auto 0;
+  }
+  margin: var(--spacing-7) 0;
+}
 .previewHostsLabel {
   margin-bottom: 0 !important;
   margin-right: var(--spacing);
@@ -95,4 +101,8 @@
 
 .runtimeWidth {
   width: 400px;
+}
+
+.showPreviewBtn {
+  margin-top: 0px !important;
 }

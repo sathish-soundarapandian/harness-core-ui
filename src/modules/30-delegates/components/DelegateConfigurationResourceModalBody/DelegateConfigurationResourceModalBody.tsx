@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import get from 'lodash-es/get'
+import { get } from 'lodash-es'
 import type { Column } from 'react-table'
 import { Container, Layout, Text, Icon } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'

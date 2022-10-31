@@ -9,6 +9,7 @@ import React from 'react'
 import { Text } from '@wings-software/uicore'
 import classNames from 'classnames'
 import { Color } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { String, StringKeys } from 'framework/strings'
@@ -149,6 +150,13 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       return getConnectorDisplaySummaryLabel(
         'common.template.label',
         textRenderer(`${connector?.spec?.template?.templateRef}(${connector?.spec?.template?.versionLabel})`)
+      )
+    case Connectors.SPOT:
+      return getConnectorDisplaySummaryLabel(
+        'common.accountId',
+        textRenderer(
+          defaultTo(connector?.spec?.credential?.spec?.accountId, connector?.spec?.credential?.spec?.accountIdRef)
+        )
       )
     default:
       return ''

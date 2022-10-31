@@ -41,7 +41,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import LandingDashboardWelcomeView from './LandingDashboardWelcomeView'
 import css from './LandingDashboardPage.module.scss'
 
-const modules: Array<ModuleName> = [ModuleName.CD]
+export const DASHBOARD_MODULES: Array<ModuleName> = [ModuleName.CD]
 
 const LandingDashboardPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
@@ -108,7 +108,7 @@ const LandingDashboardPage: React.FC = () => {
             <LandingDashboardSummaryWidget glanceCardData={data} />
 
             <Layout.Vertical spacing="large">
-              {modules.map(moduleName => {
+              {DASHBOARD_MODULES.map(moduleName => {
                 const moduleHandler = LandingDashboardFactory.getModuleDashboardHandler(moduleName)
                 return moduleHandler ? (
                   <LandingDashboardWidgetWrapper
@@ -138,6 +138,7 @@ const LandingDashboardPage: React.FC = () => {
 const LandingDashboardPageWithCallout = () => {
   const isFeatureFlagEnabled = useFeatureFlag(FeatureFlag.JDK11_UPGRADE_BANNER)
   const [showBanner, setShowBanner] = useState(isFeatureFlagEnabled)
+  const { getString } = useStrings()
   return (
     <>
       {showBanner && (
@@ -156,6 +157,7 @@ const LandingDashboardPageWithCallout = () => {
             to make sure Delegates continue to use these certificates.
           </Text>
           <Button
+            aria-label={getString('close')}
             variation={ButtonVariation.ICON}
             size={ButtonSize.LARGE}
             icon="cross"

@@ -57,6 +57,7 @@ function FormComponent({
   isMultiArtifactSource
 }: any) {
   const { getString } = useStrings()
+  const isTemplateContext = context === ModalViewFor.Template
 
   useEffect(() => {
     if (!isNil(formik.values?.version)) {
@@ -196,20 +197,22 @@ function FormComponent({
           </div>
         )}
       </div>
-      <Layout.Horizontal spacing="medium">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => previousStep?.(prevStepData)}
-        />
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          type="submit"
-          text={getString('submit')}
-          rightIcon="chevron-right"
-        />
-      </Layout.Horizontal>
+      {!isTemplateContext && (
+        <Layout.Horizontal spacing="medium">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            onClick={() => previousStep?.(prevStepData)}
+          />
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            type="submit"
+            text={getString('submit')}
+            rightIcon="chevron-right"
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }
@@ -220,6 +223,7 @@ export function GithubPackageRegistry(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
     return getArtifactFormData(
       initialValues,
@@ -254,6 +258,17 @@ export function GithubPackageRegistry(
     })
   }
 
+  const handleValidate = (formData: GithubPackageRegistryInitialValuesType) => {
+    if (isTemplateContext) {
+      submitFormData(
+        {
+          ...formData
+        },
+        getConnectorIdValue(prevStepData)
+      )
+    }
+  }
+
   const schemaObject = {
     versionType: Yup.string().required(),
     spec: Yup.object().shape({
@@ -282,13 +297,16 @@ export function GithubPackageRegistry(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? sidecarSchema : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData(
             {

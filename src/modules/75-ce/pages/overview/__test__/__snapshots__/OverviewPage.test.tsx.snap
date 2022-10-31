@@ -29,6 +29,7 @@ exports[`test cases for Overview Page should be able to render the overview dash
           class="bp3-popover-target"
         >
           <button
+            aria-label="projectsOrgs.landingDashboard.last30Days"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
             type="button"
           >

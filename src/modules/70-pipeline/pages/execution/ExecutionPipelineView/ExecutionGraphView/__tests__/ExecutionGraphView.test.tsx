@@ -8,10 +8,16 @@
 import React from 'react'
 import { render, fireEvent, within } from '@testing-library/react'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
-import type { ExecutionNode } from 'services/pipeline-ng'
-
-import type { ExecutionPipelineNode } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
-import type { ExecutionStageDiagramProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagram'
+import type { ExecutionPathProps, GitQueryParams, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
+import {
+  accountPathProps,
+  executionPathProps,
+  modulePathProps,
+  orgPathProps,
+  pipelinePathProps,
+  projectPathProps
+} from '@common/utils/routeUtils'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
 import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
@@ -49,54 +55,6 @@ mockIntersectionObserver.mockReturnValue({
 })
 window.IntersectionObserver = mockIntersectionObserver
 
-function renderNode(
-  data: ExecutionPipelineNode<ExecutionNode>,
-  itemClickHandler: ExecutionStageDiagramProps<ExecutionNode>['itemClickHandler']
-): React.ReactElement {
-  const { parallel, group, item } = data
-
-  if (parallel) {
-    return (
-      <div data-stage="parallel" key={parallel[0].item?.identifier}>
-        {parallel.map(e => renderNode(e, itemClickHandler))}
-      </div>
-    )
-  }
-  if (group) {
-    return (
-      <div data-stage="group" key={group.identifier} data-group={group.name}>
-        {group.items.map(e => renderNode(e, itemClickHandler))}
-      </div>
-    )
-  }
-
-  if (item) {
-    return (
-      <div
-        data-item={item.identifier}
-        data-status={item.status}
-        key={item.identifier}
-        onClick={e => {
-          e.stopPropagation()
-          itemClickHandler?.({ ...e, stage: item } as any)
-        }}
-      >
-        {item?.name}
-      </div>
-    )
-  }
-
-  return <div data-item="empty" />
-}
-
-jest.mock('@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagram', () => {
-  // eslint-disable-next-line react/function-component-definition
-  return function ExecutionStageDiagramMock(props: ExecutionStageDiagramProps<ExecutionNode>) {
-    const { data, itemClickHandler } = props
-    return <div data-testid="execution-stage-diagram-mock">{data?.items.map(e => renderNode(e, itemClickHandler))}</div>
-  }
-})
-
 const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
   pipelineExecutionDetail: mock.data as any,
   allNodeMap: mock.data.executionGraph.nodeMap as any,
@@ -109,7 +67,12 @@ const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
   selectedStepId: '',
   loading: false,
   isDataLoadedForSelectedStage: true,
-  queryParams: {},
+  queryParams: {
+    connectorRef: 'testConnector',
+    repoName: 'testRepo',
+    branch: 'testBranch',
+    storeType: 'REMOTE'
+  },
   logsToken: 'token',
   setLogsToken: jest.fn(),
   addNewNodeToMap: jest.fn(),
@@ -124,6 +87,32 @@ fetchMock.mockResolvedValue({
   json: () => new Promise(resolve => resolve({})),
   headers: { get: () => 'application/json' }
 })
+
+const PATH = routes.toExecutionPipelineView({
+  ...accountPathProps,
+  ...modulePathProps,
+  ...orgPathProps,
+  ...projectPathProps,
+  ...pipelinePathProps,
+  ...executionPathProps
+})
+
+const PATH_PARAMS: ExecutionPathProps & ModulePathParams = {
+  accountId: 'testAccount',
+  orgIdentifier: 'testOrg',
+  projectIdentifier: 'testProject',
+  pipelineIdentifier: 'testPipeline',
+  executionIdentifier: 'testExec',
+  module: 'cd',
+  source: 'executions'
+}
+
+const QUERY_PARAMS: GitQueryParams = {
+  connectorRef: 'testConnector',
+  repoName: 'testRepo',
+  branch: 'testBranch',
+  storeType: 'REMOTE'
+}
 
 describe('<ExecutionGraphView /> tests', () => {
   const dateToString = jest.spyOn(Date.prototype, 'toLocaleString')
@@ -174,13 +163,22 @@ describe('<ExecutionGraphView /> tests', () => {
 
   test('stage selection works', async () => {
     const { getByTestId } = render(
-      <TestWrapper>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS as unknown as any} queryParams={QUERY_PARAMS as unknown as any}>
         <ExecutionContext.Provider value={contextValue()}>
           <ExecutionGraphView />
           <CurrentLocation />
         </ExecutionContext.Provider>
       </TestWrapper>
     )
+
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE
+      </div>
+    `)
+
     const stage = (await document.querySelector('.nodeNameText.stageName')) as HTMLElement
     fireEvent.click(within(stage).getByText('Google1'))
 
@@ -188,7 +186,7 @@ describe('<ExecutionGraphView /> tests', () => {
       <div
         data-testid="location"
       >
-        /?stage=google_1
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE&stage=google_1
       </div>
     `)
   })
@@ -217,13 +215,21 @@ describe('<ExecutionGraphView /> tests', () => {
 
   test('step selection works', async () => {
     const { findByText, getByTestId } = render(
-      <TestWrapper>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS as unknown as any} queryParams={QUERY_PARAMS as unknown as any}>
         <ExecutionContext.Provider value={contextValue()}>
           <ExecutionGraphView />
           <CurrentLocation />
         </ExecutionContext.Provider>
       </TestWrapper>
     )
+
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE
+      </div>
+    `)
 
     const step = await findByText('Rollout Deployment')
 
@@ -233,7 +239,7 @@ describe('<ExecutionGraphView /> tests', () => {
       <div
         data-testid="location"
       >
-        /?stage=google_1&step=K8sRollingUuid
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE&stage=google_1&step=K8sRollingUuid
       </div>
     `)
   })

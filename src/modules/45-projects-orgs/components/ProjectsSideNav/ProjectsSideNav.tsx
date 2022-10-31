@@ -16,32 +16,64 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
-
+import css from './ProjectSideNav.module.scss'
 export default function ProjectsSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const routeMatch = useRouteMatch()
   const history = useHistory()
-  const { updateAppStore } = useAppStore()
+  const { selectedProject, updateAppStore } = useAppStore()
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const { getString } = useStrings()
+
+  const projectDetailsParams = {
+    accountId: params.accountId,
+    projectIdentifier: selectedProject?.identifier ? selectedProject.identifier : '',
+    orgIdentifier: selectedProject?.orgIdentifier ? selectedProject.orgIdentifier : ''
+  }
 
   return (
     <Layout.Vertical spacing="small">
-      <ProjectSelector
-        onSelect={data => {
-          updateAppStore({ selectedProject: data })
-          // changing project
-          history.push(
-            compile(routeMatch.path)({
-              ...routeMatch.params,
-              projectIdentifier: data.identifier,
-              orgIdentifier: data.orgIdentifier
-            })
-          )
-        }}
-      />
-      <SidebarLink label={getString('overview')} to={routes.toProjectDetails(params)} />
-      <ProjectSetupMenu />
+      {NEW_LEFT_NAVBAR_SETTINGS && (
+        <>
+          <SidebarLink
+            label={getString('rbac.scopeItems.allProjects')}
+            to={routes.toAllProjects({ accountId: params.accountId })}
+            icon="nav-project"
+            style={{ marginTop: 'var(--spacing-medium)', marginBottom: 'var(--spacing-small)' }}
+            className={css.iconColor}
+            exact
+          />
+          <div className={css.divStyle} />
+        </>
+      )}
+      {selectedProject && (
+        <>
+          <ProjectSelector
+            onSelect={data => {
+              updateAppStore({ selectedProject: data })
+              // changing project
+              history.push(
+                compile(routeMatch.path)({
+                  ...routeMatch.params,
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier
+                })
+              )
+            }}
+          />
+          <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
+          {NEW_LEFT_NAVBAR_SETTINGS && (
+            <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
+          )}
+          {NEW_LEFT_NAVBAR_SETTINGS && (
+            <SidebarLink label={getString('executionsText')} to={routes.toDeployments(projectDetailsParams)} />
+          )}
+
+          <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
+        </>
+      )}
     </Layout.Vertical>
   )
 }

@@ -285,6 +285,7 @@ exports[`test should validate edit mode snapshot 1`] = `
                   />
                 </label>
                 <button
+                  aria-label="Change"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                   data-testid="thumbnail-select-change"
                   type="button"
@@ -328,6 +329,7 @@ exports[`test should validate edit mode snapshot 1`] = `
           class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
         >
           <button
+            aria-label="save"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             data-id="environment-save"
             type="button"
@@ -340,6 +342,7 @@ exports[`test should validate edit mode snapshot 1`] = `
           </button>
              
           <button
+            aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
             type="button"
           >
@@ -605,6 +608,7 @@ exports[`test should validate save 1`] = `
                   />
                 </label>
                 <button
+                  aria-label="Change"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                   data-testid="thumbnail-select-change"
                   type="button"
@@ -648,6 +652,7 @@ exports[`test should validate save 1`] = `
           class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
         >
           <button
+            aria-label="save"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             data-id="environment-save"
             type="button"
@@ -660,6 +665,7 @@ exports[`test should validate save 1`] = `
           </button>
              
           <button
+            aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
             type="button"
           >
@@ -925,6 +931,7 @@ exports[`test validation are present if submited with empty value  1`] = `
                   />
                 </label>
                 <button
+                  aria-label="Change"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                   data-testid="thumbnail-select-change"
                   type="button"
@@ -968,6 +975,7 @@ exports[`test validation are present if submited with empty value  1`] = `
           class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
         >
           <button
+            aria-label="save"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             data-id="environment-save"
             type="button"
@@ -980,6 +988,7 @@ exports[`test validation are present if submited with empty value  1`] = `
           </button>
              
           <button
+            aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
             type="button"
           >

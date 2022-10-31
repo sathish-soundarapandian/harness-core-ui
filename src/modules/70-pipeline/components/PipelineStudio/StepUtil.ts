@@ -20,9 +20,10 @@ import type {
   StepElementConfig,
   PipelineInfoConfig,
   ExecutionWrapperConfig,
-  StageElementConfig
+  StageElementConfig,
+  PipelineStageConfig
 } from 'services/pipeline-ng'
-import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import type { DeployStageConfig, InfraStructureDefinitionYaml } from '@pipeline/utils/DeployStageInterface'
@@ -777,34 +778,94 @@ export const validatePipeline = ({
     pipeline.stages?.forEach((stageObj, index) => {
       if (stageObj.stage) {
         const originalStage = getStageFromPipeline(stageObj.stage.identifier, originalPipeline)
-        const errorsResponse = validateStage({
-          stage: stageObj.stage as StageElementConfig,
-          template: template?.stages?.[index]?.stage,
-          originalStage: originalStage?.stage,
-          getString,
-          viewType
-        })
-        if (!isEmpty(errorsResponse)) {
-          set(errors, `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage`, errorsResponse)
+        if (stageObj.stage.type === StageType.PIPELINE) {
+          const chainedPipeline = (stageObj.stage?.spec as PipelineStageConfig)?.pipelineInputs
+            ?.pipeline as PipelineInfoConfig
+          const chainedPipelineTemplate = (template?.stages?.[index]?.stage?.spec as PipelineStageConfig)
+            ?.pipelineInputs?.pipeline as PipelineInfoConfig
+          const _originalPipeline = (originalPipeline?.stages?.[index]?.stage?.spec as PipelineStageConfig)
+            ?.pipelineInputs?.pipeline as PipelineInfoConfig
+
+          const chainedPipelineErrorsResponse = validatePipeline({
+            pipeline: chainedPipeline,
+            template: chainedPipelineTemplate,
+            originalPipeline: _originalPipeline,
+            resolvedPipeline,
+            viewType,
+            getString,
+            path,
+            viewTypeMetadata,
+            selectedStageData
+          })
+          if (!isEmpty(chainedPipelineErrorsResponse)) {
+            set(
+              errors,
+              `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage.spec.pipelineInputs.pipeline`,
+              chainedPipelineErrorsResponse
+            )
+          }
+        } else {
+          const errorsResponse = validateStage({
+            stage: stageObj.stage as StageElementConfig,
+            template: template?.stages?.[index]?.stage,
+            originalStage: originalStage?.stage,
+            getString,
+            viewType
+          })
+          if (!isEmpty(errorsResponse)) {
+            set(errors, `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage`, errorsResponse)
+          }
         }
       }
       if (stageObj.parallel) {
         stageObj.parallel.forEach((stageP, indexP: number) => {
           if (stageP.stage) {
             const originalStage = getStageFromPipeline(stageP.stage.identifier, originalPipeline)
-            const errorsResponse = validateStage({
-              stage: stageP.stage as StageElementConfig,
-              template: template?.stages?.[index].parallel?.[indexP]?.stage,
-              originalStage: originalStage?.stage,
-              getString,
-              viewType
-            })
-            if (!isEmpty(errorsResponse)) {
-              set(
-                errors,
-                `${isEmpty(path) ? '' : `${path}.`}stages[${index}].parallel[${indexP}].stage`,
-                errorsResponse
-              )
+            if (stageP.stage.type === StageType.PIPELINE) {
+              const chainedPipeline = (stageP.stage?.spec as PipelineStageConfig)?.pipelineInputs
+                ?.pipeline as PipelineInfoConfig
+              const chainedPipelineTemplate = (
+                template?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
+              )?.pipelineInputs?.pipeline as PipelineInfoConfig
+              const _originalPipeline = (
+                originalPipeline?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
+              )?.pipelineInputs?.pipeline as PipelineInfoConfig
+
+              const chainedPipelineErrorsResponse = validatePipeline({
+                pipeline: chainedPipeline,
+                template: chainedPipelineTemplate,
+                originalPipeline: _originalPipeline,
+                resolvedPipeline,
+                viewType,
+                getString,
+                path,
+                viewTypeMetadata,
+                selectedStageData
+              })
+              if (!isEmpty(chainedPipelineErrorsResponse)) {
+                set(
+                  errors,
+                  `${
+                    isEmpty(path) ? '' : `${path}.`
+                  }stages[${index}].parallel[${indexP}].stage.spec.pipelineInputs.pipeline`,
+                  chainedPipelineErrorsResponse
+                )
+              }
+            } else {
+              const errorsResponse = validateStage({
+                stage: stageP.stage as StageElementConfig,
+                template: template?.stages?.[index].parallel?.[indexP]?.stage,
+                originalStage: originalStage?.stage,
+                getString,
+                viewType
+              })
+              if (!isEmpty(errorsResponse)) {
+                set(
+                  errors,
+                  `${isEmpty(path) ? '' : `${path}.`}stages[${index}].parallel[${indexP}].stage`,
+                  errorsResponse
+                )
+              }
             }
           }
         })

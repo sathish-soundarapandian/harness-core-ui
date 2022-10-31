@@ -320,6 +320,7 @@ const ResourceGroupDetails: React.FC = () => {
           <ResourceGroupScope
             resourceGroup={resourceGroup}
             includedScopes={includedScopes}
+            isHarnessManaged={isHarnessManaged}
             onSuccess={scopes => {
               setIncludedScopes(_scopes => scopes)
               setSelectedScope(_scope => getSelectedScopeType(resourceGroupScope, scopes))
@@ -335,6 +336,7 @@ const ResourceGroupDetails: React.FC = () => {
                 onResourceCategorySelect={onResourceCategorySelect}
                 preSelectedResourceList={Array.from(selectedResourcesMap.keys())}
                 disableAddingResources={disableAddingResources}
+                isHarnessManaged={isHarnessManaged}
                 onSelectionTypeChange={onSelectionTypeChange}
               />
             </Container>

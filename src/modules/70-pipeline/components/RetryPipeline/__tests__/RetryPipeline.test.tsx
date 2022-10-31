@@ -33,7 +33,14 @@ const commonProps = {
   pipelineIdentifier: 'pid',
   executionIdentifier: 'executionId',
   modules: ['cd'],
-  onClose: jest.fn()
+  onClose: jest.fn(),
+  params: {
+    accountId: 'testAccount',
+    orgIdentifier: 'testOrg',
+    projectIdentifier: 'testProject',
+    pipelineIdentifier: 'testPipeline',
+    executionIdentifier: 'testExecution'
+  }
 }
 
 const mockCreateInputSet = jest.fn()

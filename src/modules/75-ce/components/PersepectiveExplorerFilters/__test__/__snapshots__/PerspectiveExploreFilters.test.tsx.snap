@@ -68,6 +68,7 @@ exports[`Test case for perspective explore filters Should render as expected 1`]
           class="bp3-popover-target"
         >
           <button
+            aria-label="2022-19-05 - 2022-19-05"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
             type="button"
           >
@@ -129,6 +130,7 @@ exports[`Test case for perspective explore filters Should render as expected 1`]
           class="bp3-popover-target"
         >
           <button
+            aria-label="ce.perspectives.timeAggregation.daily"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeGranularityButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withRightIcon"
             data-testid="groupBy"
             type="button"

@@ -40,6 +40,7 @@ import { String as LocaleString } from 'framework/strings'
 import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -500,6 +501,24 @@ const CENonMFERoutes = (
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CESideNavProps}
+      path={routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })}
+      exact
+      pageName={PAGE_NAME.CECOCreateGatewayPage}
+    >
+      <CECOCreateGatewayPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECORules({ ...accountPathProps, params: '' })}
+      exact
+      pageName={PAGE_NAME.CECODashboardPage}
+    >
+      <CECODashboardPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
       path={routes.toCECORuleDetails({ ...accountPathProps, id: ':ruleId' })}
       exact
       pageName={PAGE_NAME.CECORuleDetailsPage}
@@ -604,6 +623,46 @@ const CENonMFERoutes = (
     >
       <BIDashboard />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps })}
+      exact
+      pageName={PAGE_NAME.CECOLoadBalancersPage}
+    >
+      <CECOLoadBalancersPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECOEditGateway({
+        ...accountPathProps,
+        ...projectPathProps,
+        gatewayIdentifier: ':gatewayIdentifier'
+      })}
+      exact
+      pageName={PAGE_NAME.CECOEditGatewayPage}
+    >
+      <CECOEditGatewayPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCommitmentOrchestration({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
+    >
+      <CommitmentOrchestration />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCommitmentOrchestrationSetup({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
+    >
+      <CommitmentOrchestrationSetup />
+    </RouteWithLayout>
   </>
 )
 
@@ -693,7 +752,17 @@ const CERoutes: React.FC = () => {
           clusterName: ':clusterName',
           nodeId: ':nodeId'
         }),
-        routes.toCEDashboards({ ...accountPathProps })
+        routes.toCEDashboards({ ...accountPathProps }),
+        routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps }),
+        routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps }),
+        routes.toCECOEditGateway({
+          ...accountPathProps,
+          ...projectPathProps,
+          gatewayIdentifier: ':gatewayIdentifier'
+        }),
+        routes.toCECORules({ ...accountPathProps, params: '' }),
+        routes.toCommitmentOrchestration({ ...accountPathProps }),
+        routes.toCommitmentOrchestrationSetup({ ...accountPathProps })
       ]
     : []
 
@@ -721,39 +790,6 @@ const CERoutes: React.FC = () => {
         </RouteWithLayout>
 
         {!enableMicroFrontend && CENonMFERoutes.props.children}
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECORules({ ...accountPathProps, params: '' })}
-          exact
-          pageName={PAGE_NAME.CECODashboardPage}
-        >
-          <CECODashboardPage />
-        </RouteWithLayout>
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps })}
-          exact
-          pageName={PAGE_NAME.CECOCreateGatewayPage}
-        >
-          <CECOCreateGatewayPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECOEditGateway({
-            ...accountPathProps,
-            ...projectPathProps,
-            gatewayIdentifier: ':gatewayIdentifier'
-          })}
-          exact
-          pageName={PAGE_NAME.CECOEditGatewayPage}
-        >
-          <CECOEditGatewayPage />
-        </RouteWithLayout>
 
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
@@ -790,15 +826,6 @@ const CERoutes: React.FC = () => {
         >
           <CloudIntegrationPage />
         </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps })}
-          exact
-          pageName={PAGE_NAME.CECOLoadBalancersPage}
-        >
-          <CECOLoadBalancersPage />
-        </RouteWithLayout>
 
         {enableMicroFrontend ? (
           <RouteWithLayout path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]} sidebarProps={CESideNavProps}>
@@ -808,31 +835,13 @@ const CERoutes: React.FC = () => {
                 RecommendationFilters,
                 AnomaliesFilter,
                 ConnectorReferenceField,
-                GatewayListFilters
+                GatewayListFilters,
+                FeatureWarningBanner
               }}
               ChildApp={CcmMicroFrontendPath}
             />
           </RouteWithLayout>
         ) : null}
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCommitmentOrchestration({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-        >
-          <CommitmentOrchestration />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCommitmentOrchestrationSetup({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-        >
-          <CommitmentOrchestrationSetup />
-        </RouteWithLayout>
 
         <Route path="*">
           <NotFoundPage />

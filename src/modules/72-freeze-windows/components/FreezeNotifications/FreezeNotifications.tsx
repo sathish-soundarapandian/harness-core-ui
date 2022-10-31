@@ -15,7 +15,7 @@ import NotificationTable, {
   RenderColumnEventsContent
 } from '@pipeline/components/Notifications/NotificationTable'
 import { Actions } from '@pipeline/components/Notifications/NotificationUtils'
-import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
+import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import type { FreezeNotificationRules } from '@freeze-windows/types'
 import { FreezeEvents } from './FreezeEvents'
 import css from '@pipeline/components/PipelineStudio/PipelineNotifications/PipelineNotifications.module.scss'
@@ -37,6 +37,7 @@ export const FreezeNotifications = () => {
   const { getString } = useStrings()
   const {
     isReadOnly,
+    isActiveFreeze,
     state: { freezeObj },
     updateFreeze: updateFreezeInContext,
     setDrawerType
@@ -86,7 +87,7 @@ export const FreezeNotifications = () => {
   return (
     <>
       <NotificationsHeader
-        isReadonly={isReadOnly}
+        isReadonly={isReadOnly || isActiveFreeze}
         applyChanges={applyChanges}
         discardChanges={() => setDrawerType()}
         name={freezeObj.name as string}
@@ -133,7 +134,7 @@ export const FreezeNotifications = () => {
           pageItemCount={PAGE_SIZE}
           pageSize={PAGE_SIZE}
           pageIndex={page}
-          isReadonly={isReadOnly}
+          isReadonly={isReadOnly || isActiveFreeze}
           EventsTabComponent={FreezeEvents}
           eventsColumnConfig={eventsColumnConfig as any}
         />

@@ -60,6 +60,7 @@ import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJe
 import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmConnector'
 import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
 import CreateGCPSecretManager from '../CreateConnector/GCPSecretManager/CreateGCPSecretManager'
+import SpotConnector from '../CreateConnector/SpotConnector/SpotConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -108,7 +109,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG } = useFeatureFlags()
+  const { CVNG_ENABLED, PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG, SPOT_ELASTIGROUP_NG } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -199,6 +200,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateCustomSMConnector {...commonProps} />
     case Connectors.GcpSecretManager:
       return PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG ? <CreateGCPSecretManager {...commonProps} /> : null
+    case Connectors.SPOT:
+      return SPOT_ELASTIGROUP_NG ? <SpotConnector {...commonProps} /> : null
     default:
       return null
   }

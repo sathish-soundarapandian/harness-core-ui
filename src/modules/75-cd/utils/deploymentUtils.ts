@@ -28,7 +28,8 @@ export const deploymentIconMap: Record<ServiceDeploymentType, IconName> = {
   [ServiceDeploymentType.awsCodeDeploy]: 'app-aws-code-deploy',
   [ServiceDeploymentType.awsLambda]: 'service-aws-lamda',
   [ServiceDeploymentType.pcf]: 'service-pivotal',
-  [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment'
+  [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
+  [ServiceDeploymentType.Elastigroup]: 'service-elastigroup'
 }
 
 export interface DeploymentTypeItem {
@@ -42,13 +43,12 @@ export interface DeploymentTypeItem {
 
 export interface GetNgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
-  ECS_NG?: boolean
-  NG_DEPLOYMENT_TEMPLATE?: boolean
   NG_SVC_ENV_REDESIGN?: boolean
+  SPOT_ELASTIGROUP_NG?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE, NG_SVC_ENV_REDESIGN } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -80,25 +80,30 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.WinRm
     })
   }
-  if (ECS_NG) {
+  if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.amazonEcs',
       icon: deploymentIconMap[ServiceDeploymentType.ECS],
       value: ServiceDeploymentType.ECS
     })
   }
-  if (NG_DEPLOYMENT_TEMPLATE) {
+  if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.customDeployment',
       icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
       value: ServiceDeploymentType.CustomDeployment
     })
-  }
-  if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.azureWebApp',
       icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
       value: ServiceDeploymentType.AzureWebApp
+    })
+  }
+  if (SPOT_ELASTIGROUP_NG) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.elastigroup',
+      icon: deploymentIconMap[ServiceDeploymentType.Elastigroup],
+      value: ServiceDeploymentType.Elastigroup
     })
   }
 
@@ -107,11 +112,12 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
 
 export interface GetCgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
-  ECS_NG?: boolean
+  NG_SVC_ENV_REDESIGN?: boolean
+  SPOT_ELASTIGROUP_NG?: boolean
 }
 
 export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { ECS_NG, SSH_NG } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN } = props
 
   const types: DeploymentTypeItem[] = [
     {
@@ -136,7 +142,7 @@ export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTyp
     }
   ]
 
-  if (!ECS_NG) {
+  if (!NG_SVC_ENV_REDESIGN) {
     types.unshift({
       label: 'pipeline.serviceDeploymentTypes.amazonEcs',
       icon: deploymentIconMap[ServiceDeploymentType.ECS],

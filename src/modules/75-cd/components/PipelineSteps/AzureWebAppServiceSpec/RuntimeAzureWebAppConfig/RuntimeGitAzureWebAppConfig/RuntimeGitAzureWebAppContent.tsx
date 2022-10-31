@@ -40,6 +40,12 @@ const GitAzureWebAppConfigContent = ({
   const [showRepoName, setShowRepoName] = useState(true)
   const [connector, setConnector] = useState(undefined)
 
+  const pathFieldName =
+    isFieldRuntime(`${azureWebAppConfigPath}.store.spec.paths`, initialValues) ||
+    isFieldRuntime(`${azureWebAppConfigPath}.store.spec.paths[0]`, initialValues)
+      ? 'paths'
+      : 'paths[0]'
+
   React.useEffect(() => {
     if (shouldDisplayRepositoryName(connector)) {
       setShowRepoName(false)
@@ -52,7 +58,7 @@ const GitAzureWebAppConfigContent = ({
     <Layout.Vertical data-name={`azureWebAppConfig-${type}`} className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
       <>
         {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.connectorRef`, template) && (
-          <div data-name="connectorRefContainer" className={css.verticalSpacingInput}>
+          <div data-name="connectorRefContainer" className={css.connectorInputSpacing}>
             <FormMultiTypeConnectorField
               disabled={readonly}
               name={`${path}.${azureWebAppConfigPath}.store.spec.connectorRef`}
@@ -92,7 +98,7 @@ const GitAzureWebAppConfigContent = ({
         )}
 
         {(isFieldRuntime(`${azureWebAppConfigPath}.store.spec.repoName`, template) || showRepoName) && (
-          <div className={css.verticalSpacingInput}>
+          <div className={css.inputSpacing}>
             <FormInput.MultiTextInput
               disabled={readonly}
               name={`${path}.${azureWebAppConfigPath}.store.spec.repoName`}
@@ -106,7 +112,7 @@ const GitAzureWebAppConfigContent = ({
         )}
 
         {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.branch`, template) && (
-          <div className={css.verticalSpacingInput}>
+          <div className={css.inputSpacing}>
             <FormInput.MultiTextInput
               disabled={readonly}
               name={`${path}.${azureWebAppConfigPath}.store.spec.branch`}
@@ -119,7 +125,7 @@ const GitAzureWebAppConfigContent = ({
           </div>
         )}
         {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.commitId`, template) && (
-          <div className={css.verticalSpacingInput}>
+          <div className={css.inputSpacing}>
             <FormInput.MultiTextInput
               disabled={readonly}
               name={`${path}.${azureWebAppConfigPath}.store.spec.commitId`}
@@ -132,10 +138,10 @@ const GitAzureWebAppConfigContent = ({
           </div>
         )}
         {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.paths`, template) && (
-          <div className={css.verticalSpacingInput}>
+          <div className={css.inputSpacing}>
             <FormInput.MultiTextInput
               disabled={readonly}
-              name={`${path}.${azureWebAppConfigPath}.store.spec.paths[0]`}
+              name={`${path}.${azureWebAppConfigPath}.store.spec.${pathFieldName}`}
               multiTextInputProps={{
                 expressions,
                 allowableTypes

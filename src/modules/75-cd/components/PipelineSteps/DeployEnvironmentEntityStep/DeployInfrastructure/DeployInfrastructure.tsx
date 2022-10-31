@@ -6,9 +6,10 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { get, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
+import { v4 as uuid } from 'uuid'
 
 import {
   AllowedTypes,
@@ -27,6 +28,7 @@ import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
+import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -47,7 +49,8 @@ import { useGetInfrastructuresData } from './useGetInfrastructuresData'
 
 import css from './DeployInfrastructure.module.scss'
 
-interface DeployInfrastructureProps extends Required<Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled'>> {
+interface DeployInfrastructureProps
+  extends Required<Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled' | 'stageIdentifier'>> {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
   allowableTypes: AllowedTypes
@@ -85,15 +88,15 @@ export default function DeployInfrastructure({
   allowableTypes,
   environmentIdentifier,
   isMultiInfrastructure,
-  stageIdentifier,
   deploymentType,
   customDeploymentRef
 }: DeployInfrastructureProps): JSX.Element {
-  const { values, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
+  const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentRef || {}
   const { getTemplate } = useTemplateSelector()
+  const uniquePathForInfrastructures = React.useRef(`_pseudo_field_${uuid()}`)
 
   // State
   const [selectedInfrastructures, setSelectedInfrastructures] = useState(
@@ -203,17 +206,32 @@ export default function DeployInfrastructure({
             },
             {
               infrastructures: {},
-              infrastructureInputs: {},
-              deployToAllInfrastructures: values.deployToAllInfrastructures
+              infrastructureInputs: {}
             }
           )
 
           setValues({
             ...values,
+            // set value of unique path created to handle infrastructures if some infrastructures are already selected, else select All
+            [uniquePathForInfrastructures.current]: selectedInfrastructures.map(infraId => ({
+              label: defaultTo(
+                infrastructuresList.find(infrastructureInList => infrastructureInList.identifier === infraId)?.name,
+                infraId
+              ),
+              value: infraId
+            })),
             infrastructures: { ...values.infrastructures, ...updatedInfrastructures.infrastructures },
             infrastructureInputs: { ...values.infrastructureInputs, ...updatedInfrastructures.infrastructureInputs }
           })
         }
+      } else if (isMultiInfrastructure && isEmpty(selectedInfrastructures)) {
+        // set value of unique path to All in case no infrastructures are selected or runtime if infrastructures is set to runtime
+        // This is specifically used for on load
+        const infraIdentifierValue =
+          getMultiTypeFromValue(values.infrastructures?.[environmentIdentifier]) === MultiTypeInputType.RUNTIME
+            ? values.infrastructures?.[environmentIdentifier]
+            : [SELECT_ALL_OPTION]
+        setFieldValue(`${uniquePathForInfrastructures.current}`, infraIdentifierValue)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -224,7 +242,7 @@ export default function DeployInfrastructure({
   let placeHolderForInfrastructures =
     values.infrastructures && Array.isArray(values.infrastructures[environmentIdentifier])
       ? getString('common.infrastructures')
-      : getString('cd.pipelineSteps.environmentTab.selectInfrastructures')
+      : getString('cd.pipelineSteps.environmentTab.allInfrastructures')
 
   if (loading) {
     placeHolderForInfrastructures = getString('loading')
@@ -246,11 +264,21 @@ export default function DeployInfrastructure({
     closeAddNewModal()
 
     const newFormValues = produce(values, draft => {
-      if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
-        draft.infrastructures[environmentIdentifier].push({
-          label: newInfrastructureInfo.name,
-          value: newInfrastructureInfo.identifier
-        })
+      if (draft.category === 'multi') {
+        if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
+          draft.infrastructures[environmentIdentifier].push({
+            label: newInfrastructureInfo.name,
+            value: newInfrastructureInfo.identifier
+          })
+        } else {
+          set(draft, `infrastructures.${environmentIdentifier}`, [
+            {
+              label: newInfrastructureInfo.name,
+              value: newInfrastructureInfo.identifier
+            }
+          ])
+        }
+        set(draft, uniquePathForInfrastructures.current, draft.infrastructures?.[environmentIdentifier])
       } else {
         draft.infrastructure = newInfrastructureInfo.identifier
       }
@@ -270,9 +298,11 @@ export default function DeployInfrastructure({
         draft.infrastructure = ''
         delete draft.infrastructures
       } else if (draft.infrastructures && Array.isArray(draft.infrastructures[environmentIdentifier])) {
-        draft.infrastructures[environmentIdentifier] = draft.infrastructures[environmentIdentifier].filter(
+        const filteredInfrastructures = draft.infrastructures[environmentIdentifier].filter(
           infra => infra.value !== infrastructureToDelete
         )
+        draft.infrastructures[environmentIdentifier] = filteredInfrastructures
+        set(draft, uniquePathForInfrastructures.current, filteredInfrastructures)
       }
     })
 
@@ -286,17 +316,24 @@ export default function DeployInfrastructure({
           <FormMultiTypeMultiSelectDropDown
             label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructures')}
             tooltipProps={{ dataTooltipId: 'specifyYourInfrastructures' }}
-            name={`infrastructures.${environmentIdentifier}`}
+            name={uniquePathForInfrastructures.current}
             // Form group disabled
             disabled={disabled}
             dropdownProps={{
               placeholder: placeHolderForInfrastructures,
               items: selectOptions,
               // Field disabled
-              disabled
+              disabled,
+              isAllSelectionSupported: true
             }}
             onChange={items => {
-              setSelectedInfrastructures(getSelectedInfrastructuresFromOptions(items))
+              if (items?.at(0)?.value === 'All') {
+                setFieldValue(`infrastructures.${environmentIdentifier}`, undefined)
+                setSelectedInfrastructures([])
+              } else {
+                setFieldValue(`infrastructures.${environmentIdentifier}`, items)
+                setSelectedInfrastructures(getSelectedInfrastructuresFromOptions(items))
+              }
             }}
             multiTypeProps={{
               width: 280,
@@ -349,7 +386,6 @@ export default function DeployInfrastructure({
           onInfrastructureEntityUpdate={onInfrastructureEntityUpdate}
           onRemoveInfrastructureFromList={onRemoveInfrastructureFromList}
           environmentIdentifier={environmentIdentifier}
-          stageIdentifier={stageIdentifier}
           customDeploymentRef={customDeploymentRef}
         />
       )}

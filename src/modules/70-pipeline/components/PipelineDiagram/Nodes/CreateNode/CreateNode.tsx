@@ -15,7 +15,6 @@ interface CreateNodeProps {
   className?: string
   name: string
   titleClassName?: string
-
   hidden?: boolean
 }
 export default function CreateNode(props: CreateNodeProps): React.ReactElement {

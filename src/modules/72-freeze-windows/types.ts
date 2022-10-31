@@ -7,7 +7,7 @@
 
 import type { SelectOption } from '@harness/uicore'
 import type { PartiallyRequired } from '@pipeline/utils/types'
-import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams } from 'services/cd-ng'
+import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams, FreezeResponse } from 'services/cd-ng'
 import type { NotificationRules } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -39,10 +39,18 @@ export interface EntityConfig {
   entities: EntityType[]
 }
 
+export interface FreezeObj extends FreezeResponse {
+  entityConfigs: EntityConfig[]
+}
+
+export interface ValidationErrorType {
+  entity?: Array<Record<string, string>>
+}
+
 export enum EnvironmentType {
   All = 'All',
-  PROD = 'PROD',
-  NON_PROD = 'NON_PROD'
+  Production = 'Production',
+  PreProduction = 'PreProduction'
 }
 
 export interface WindowPathProps extends ProjectPathProps {
@@ -70,6 +78,7 @@ export interface ResourcesInterface {
   servicesMap: Record<string, SelectOption>
   freezeWindowLevel: FreezeWindowLevels
   projectsByOrgId: Record<string, ProjctsByOrgId>
+  fetchProjectsForOrgId: (orgId: string) => void
 }
 
 type OptionalFreezeListUrlQueryParams = Pick<GetFreezeListQueryParams, 'page' | 'size'> &

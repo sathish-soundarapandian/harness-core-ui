@@ -29,7 +29,7 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
   const [fieldType, setFieldType] = React.useState(FILE_TYPE_VALUES.FILE_STORE)
 
   React.useEffect(() => {
-    if (!Array.isArray(configFile?.spec.store.spec.files)) {
+    if (!Array.isArray(configFile?.spec?.store?.spec?.files) && configFile?.spec?.store?.spec?.files) {
       setFilesType('files')
       setFieldType(FILE_TYPE_VALUES.FILE_STORE)
     } else {

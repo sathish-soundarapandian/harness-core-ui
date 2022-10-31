@@ -277,6 +277,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
             </button>
           </div>
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-spec.filePaths"
             type="button"
@@ -494,6 +495,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -935,6 +937,7 @@ exports[`Test K8sApplyStep should render edit view as edit step 1`] = `
             </div>
             <span>
               <button
+                aria-label="addFileText"
                 class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 disabled=""
                 tabindex="-1"
@@ -1340,6 +1343,7 @@ exports[`Test K8sApplyStep should render edit view as edit step 1`] = `
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"
@@ -2013,6 +2017,7 @@ exports[`Test K8sApplyStep should render edit view as edit step with all runtime
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"
@@ -2367,6 +2372,7 @@ exports[`Test K8sApplyStep should render edit view as new step 1`] = `
             </div>
             <span>
               <button
+                aria-label="addFileText"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="button"
               >
@@ -2581,6 +2587,7 @@ exports[`Test K8sApplyStep should render edit view as new step 1`] = `
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"
@@ -2768,6 +2775,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
             </button>
           </div>
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-/abc.spec.filePaths"
             type="button"
@@ -2992,7 +3000,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
       >
         <span
           class="Tooltip--acenter bp3-label"
-          data-tooltip-id="stepTestUtilForm_undefined.spec.overrides[0].spec.store.spec.connectorRef"
+          data-tooltip-id="stepTestUtilForm_/abc.spec.overrides[0].manifest.spec.store.spec.connectorRef"
         >
           connector
         </span>
@@ -3013,7 +3021,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                data-testid="cr-field-undefined.spec.overrides[0].spec.store.spec.connectorRef"
+                data-testid="cr-field-/abc.spec.overrides[0].manifest.spec.store.spec.connectorRef"
                 style="width: 400px;"
                 type="button"
               >
@@ -3087,11 +3095,11 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
       >
         <label
           class="bp3-label"
-          for="undefined.spec.overrides[0].spec.store.spec.branch"
+          for="/abc.spec.overrides[0].manifest.spec.store.spec.branch"
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="stepTestUtilForm_undefined.spec.overrides[0].spec.store.spec.branch"
+            data-tooltip-id="stepTestUtilForm_/abc.spec.overrides[0].manifest.spec.store.spec.branch"
           >
             pipelineSteps.deploy.inputSet.branch
           </span>
@@ -3112,7 +3120,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
               <input
                 autocomplete="off"
                 class="bp3-input"
-                name="undefined.spec.overrides[0].spec.store.spec.branch"
+                name="/abc.spec.overrides[0].manifest.spec.store.spec.branch"
                 type="text"
                 value=""
               />
@@ -3176,7 +3184,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
                 >
                   <input
                     class="bp3-input"
-                    data-testid="value-undefined.spec.overrides[0].spec.store.spec.paths-[0]"
+                    data-testid="value-/abc.spec.overrides[0].manifest.spec.store.spec.paths-[0]"
                     type="text"
                     value=""
                   />
@@ -3185,7 +3193,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
             </div>
             <button
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-              data-testid="remove-undefined.spec.overrides[0].spec.store.spec.paths-[0]"
+              data-testid="remove-/abc.spec.overrides[0].manifest.spec.store.spec.paths-[0]"
               type="button"
             >
               <span
@@ -3216,8 +3224,9 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
             </button>
           </div>
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-            data-testid="add-undefined.spec.overrides[0].spec.store.spec.paths"
+            data-testid="add-/abc.spec.overrides[0].manifest.spec.store.spec.paths"
             type="button"
           >
             <span
@@ -3238,6 +3247,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -3484,6 +3494,7 @@ exports[`Test K8sApplyStep should render null for StepviewType.template 1`] = `
             </div>
             <span>
               <button
+                aria-label="addFileText"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="button"
               >
@@ -3698,6 +3709,7 @@ exports[`Test K8sApplyStep should render null for StepviewType.template 1`] = `
         </div>
       </div>
       <button
+        aria-label="pipelineSteps.serviceTab.manifestList.addManifest"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-testid="addManifest"
         id="add-manifest"

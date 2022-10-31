@@ -1242,6 +1242,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon Button--variation Button--variation-secondary"
                   type="button"
                 >
@@ -1271,6 +1272,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                   </span>
                 </button>
                 <button
+                  aria-label="triggers.updateTrigger"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -1300,6 +1302,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -1985,6 +1988,7 @@ exports[`Manifest Trigger Tests function getArtifactSpecObj by displaying select
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -2014,6 +2018,7 @@ exports[`Manifest Trigger Tests function getArtifactSpecObj by displaying select
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -2699,6 +2704,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -2728,6 +2734,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -3366,6 +3373,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
     >
       <button
+        aria-label="filters.apply"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -3376,6 +3384,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -4079,6 +4088,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -4108,6 +4118,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -4375,6 +4386,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
     >
       <button
+        aria-label="filters.apply"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -4385,6 +4397,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -4793,6 +4806,7 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon Button--variation Button--variation-secondary"
                   type="button"
                 >
@@ -4822,6 +4836,7 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -4851,6 +4866,7 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -5339,6 +5355,7 @@ exports[`Manifest Trigger Tests throws validation error when select artifact/man
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -5368,6 +5385,7 @@ exports[`Manifest Trigger Tests throws validation error when select artifact/man
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >

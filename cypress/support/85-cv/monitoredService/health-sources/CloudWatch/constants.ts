@@ -1,12 +1,11 @@
 const accountId = 'accountId'
-const project = 'project1'
-const org = 'default'
 
 export const longInvalidName = Array.from({ length: 63 }).fill('a').join('')
 
 export const awsRegionsCall = `/cv/api/cloudwatch/metrics/regions?routingId=${accountId}`
 export const sampleDataCall = `/cv/api/cloudwatch/metrics/fetch-sample-data?*`
 export const metricPackCall = '/cv/api/metric-pack?*&dataSourceType=CLOUDWATCH_METRICS'
+export const riskCategoryCall = '/cv/api/risk-category?*'
 export const monitoredServicePostCall = `/cv/api/monitored-service?routingId=${accountId}&accountId=${accountId}`
 
 export const sampleDataMockResponse = {

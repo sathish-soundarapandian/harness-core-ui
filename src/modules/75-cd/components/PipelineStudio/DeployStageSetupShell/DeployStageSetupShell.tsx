@@ -85,13 +85,11 @@ export default function DeployStageSetupShell(): JSX.Element {
     contextType,
     stagesMap,
     isReadonly,
-    stepsFactory,
     updateStage,
     getStageFromPipeline,
     updatePipelineView,
     scope,
     setSelectedStepId,
-    getStagePathFromPipeline,
     setSelectedSectionId
   } = pipelineContext
 
@@ -358,7 +356,6 @@ export default function DeployStageSetupShell(): JSX.Element {
   const originalStage = selectedStageId
     ? getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId, originalPipeline).stage
     : undefined
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
 
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
@@ -480,10 +477,8 @@ export default function DeployStageSetupShell(): JSX.Element {
               isReadonly={isReadonly}
               hasDependencies={false}
               addLinkedTemplatesLabel={addLinkedTemplatesLabel}
-              stepsFactory={stepsFactory}
               originalStage={originalStage}
               ref={executionRef}
-              pathToStage={`${stagePath}.stage.spec.execution`}
               templateTypes={templateTypes}
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               stage={selectedStage!}

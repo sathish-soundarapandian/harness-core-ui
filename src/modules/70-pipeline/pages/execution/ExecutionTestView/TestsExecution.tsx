@@ -71,17 +71,17 @@ const getEntireExecutionSummary = (executionSummaryContent: TestSuite[]): any =>
   }))
 
 const getUngroupedExecutionSummary = ({
-  showFailedTestsOnly,
+  showAllTests,
   reportSummaryData,
   testCaseSearchTerm,
   executionSummary
 }: {
-  showFailedTestsOnly?: boolean
+  showAllTests?: boolean
   reportSummaryData?: TestReportSummary | null
   testCaseSearchTerm?: string
   executionSummary?: TestSuites
 }) => {
-  if (!showFailedTestsOnly && !testCaseSearchTerm && reportSummaryData) {
+  if (!showAllTests && !testCaseSearchTerm && reportSummaryData) {
     return reportSummaryData
   } else if (executionSummary?.content) {
     return getEntireExecutionSummary(executionSummary?.content)
@@ -100,7 +100,7 @@ export function TestsExecution({
   const context = useExecutionContext()
   const { getString } = useStrings()
   const status = (context?.pipelineExecutionDetail?.pipelineExecutionSummary?.status || '').toUpperCase()
-  const [showFailedTestsOnly, setShowFailedTestsOnly] = useState(false)
+  const [showAllTests, setShowAllTests] = useState(false)
   const [showGroupedView, setShowGroupedView] = useState(true)
   const [expandedIndex, setExpandedIndex] = useState<number | undefined>(0)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<{
@@ -127,6 +127,7 @@ export function TestsExecution({
       testCaseSearchTerm,
       sort: sortBy,
       pageSize: PAGE_SIZE,
+      status: showAllTests ? undefined : ('failed' as const),
       order: 'DESC' as const,
       ...optionalKeys
     }
@@ -140,7 +141,8 @@ export function TestsExecution({
     context?.pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence,
     pageIndex,
     sortBy,
-    testCaseSearchTerm
+    testCaseSearchTerm,
+    showAllTests
   ])
   const {
     data: executionSummary,
@@ -194,7 +196,7 @@ export function TestsExecution({
       sort: sortBy,
       pageIndex,
       testCaseSearchTerm: searchTerm,
-      status: showFailedTestsOnly ? 'failed' : undefined
+      status: showAllTests ? undefined : 'failed'
     })
   }
 
@@ -382,17 +384,17 @@ export function TestsExecution({
         <Container width={`calc(100% - ${showCallGraph ? CALL_GRAPH_WIDTH : 0}px)`}>
           <Container flex>
             <Switch
-              label={getString('pipeline.testsReports.showOnlyFailedTests')}
+              label={getString('pipeline.testsReports.showAllTests')}
               style={{ alignSelf: 'center' }}
-              checked={showFailedTestsOnly}
+              checked={showAllTests}
               onChange={e => {
-                setShowFailedTestsOnly(e.currentTarget.checked)
+                setShowAllTests(e.currentTarget.checked)
                 setPageIndex(0)
                 refetchData({
                   ...queryParams,
                   sort: sortBy,
                   pageIndex: 0,
-                  status: e.currentTarget.checked ? 'failed' : undefined
+                  status: e.currentTarget.checked ? undefined : 'failed'
                 })
               }}
             />
@@ -432,7 +434,7 @@ export function TestsExecution({
                         ...queryParams,
                         sort: item.value as SortByKey,
                         pageIndex: 0,
-                        status: showFailedTestsOnly ? 'failed' : undefined
+                        status: showAllTests ? undefined : 'failed'
                       })
                     }}
                   />
@@ -486,13 +488,13 @@ export function TestsExecution({
                   {showGroupedView ? (
                     executionSummary?.content?.map((summary, index) => (
                       <TestsExecutionItem
-                        key={(summary.name || '') + showFailedTestsOnly + testCaseSearchTerm}
+                        key={(summary.name || '') + showAllTests + testCaseSearchTerm}
                         buildIdentifier={String(
                           context?.pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence || ''
                         )}
                         executionSummary={summary}
                         serviceToken={serviceToken}
-                        status={showFailedTestsOnly ? 'failed' : undefined}
+                        status={showAllTests ? undefined : 'failed'}
                         expanded={index === expandedIndex ? true : undefined}
                         stageId={stageId}
                         stepId={stepId}
@@ -506,18 +508,18 @@ export function TestsExecution({
                     ))
                   ) : (
                     <TestsExecutionItem
-                      key={`${showFailedTestsOnly}${testCaseSearchTerm}`}
+                      key={`${showAllTests}${testCaseSearchTerm}`}
                       buildIdentifier={String(
                         context?.pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence || ''
                       )}
                       executionSummary={getUngroupedExecutionSummary({
-                        showFailedTestsOnly,
+                        showAllTests,
                         reportSummaryData,
                         testCaseSearchTerm,
                         executionSummary
                       })}
                       serviceToken={serviceToken}
-                      status={showFailedTestsOnly ? 'failed' : undefined}
+                      status={showAllTests ? undefined : 'failed'}
                       stageId={stageId}
                       stepId={stepId}
                       expanded={true}
@@ -528,7 +530,7 @@ export function TestsExecution({
                   )}
                 </Layout.Vertical>
               )}
-              {executionSummary.content.length === 0 && showFailedTestsOnly && (
+              {executionSummary.content.length === 0 && !showAllTests && (
                 <Text font={{ align: 'center' }} margin={{ top: 'medium' }}>
                   {getString('pipeline.testsReports.noFailedTestsFound')}
                 </Text>
@@ -536,7 +538,7 @@ export function TestsExecution({
             </>
           )}
 
-          {showGroupedView && (executionSummary?.data?.totalItems || 0) > 20 && (
+          {showGroupedView && (executionSummary?.data?.totalItems || 0) > PAGE_SIZE && (
             <Pagination
               pageSize={executionSummary?.data?.pageSize || 0}
               pageIndex={pageIndex}

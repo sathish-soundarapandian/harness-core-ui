@@ -8,17 +8,18 @@
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { ModalErrorHandlerBinding, Layout, Container, useToaster } from '@harness/uicore'
-import { CreateDashboardResponse, useCreateDashboard } from 'services/custom-dashboards'
+import { CreateDashboardResponse, FolderModel, useCreateDashboard } from 'services/custom-dashboards'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
 import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
 
 interface CreateDashboardFormProps {
+  editableFolders: FolderModel[]
   hideModal: () => void
 }
 
-const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ hideModal }) => {
+const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ editableFolders, hideModal }) => {
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<DashboardPathProps>()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
@@ -56,11 +57,12 @@ const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ hideModal }) 
     <Layout.Horizontal>
       <Container width="50%">
         <DashboardForm
+          editableFolders={editableFolders}
           title={getString('dashboards.createModal.stepOne')}
-          modalErrorHandler={modalErrorHandler}
           setModalErrorHandler={setModalErrorHandler}
           loading={loading}
           onComplete={onComplete}
+          mode="CREATE"
         />
       </Container>
       <Container width="50%" flex={{ align: 'center-center' }} padding="xxlarge">

@@ -57,6 +57,7 @@ import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesU
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { errorCheck } from '@common/utils/formikHelpers'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
@@ -335,6 +336,9 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
             {formikProps => {
               window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.OVERVIEW }))
               formikRef.current = formikProps as FormikProps<unknown> | null
+              const removeMarginClass = !(errorCheck('name', formikProps) || get(formikProps, `errors.identifier`)) && {
+                className: css.zeroMargin
+              }
               return (
                 <FormikForm>
                   {isContextTypeNotStageTemplate(contextType) && (
@@ -347,7 +351,10 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                               identifierProps={{
                                 inputLabel: getString('stageNameLabel'),
                                 isIdentifierEditable: !context,
-                                inputGroupProps: { disabled: isReadonly }
+                                inputGroupProps: {
+                                  disabled: isReadonly,
+                                  ...removeMarginClass
+                                }
                               }}
                               descriptionProps={{ disabled: isReadonly }}
                               tagsProps={{ disabled: isReadonly }}
@@ -369,10 +376,14 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           identifierProps={{
                             inputLabel: getString('stageNameLabel'),
                             isIdentifierEditable: !context && !isReadonly,
-                            inputGroupProps: { disabled: isReadonly }
+                            inputGroupProps: {
+                              disabled: isReadonly,
+                              ...removeMarginClass
+                            }
                           }}
                           descriptionProps={{ disabled: isReadonly }}
                           tagsProps={{ disabled: isReadonly }}
+                          className={css.nameIdDescriptionTags}
                         />
                       )}
                     </>

@@ -29,7 +29,7 @@ describe('GetStartedWithFF', () => {
     expect(screen.getByTestId('or-image')).toBeVisible()
   })
 
-  test('it should take the user to the Onboarding page once the button is clicked', async () => {
+  test('it should take the user to the first step of the Onboarding wizard once the button is clicked', async () => {
     renderComponent()
 
     const getStartedBtn = screen.getByText('cf.featureFlags.getStartedWithFF')
@@ -37,9 +37,11 @@ describe('GetStartedWithFF', () => {
 
     userEvent.click(getStartedBtn)
 
-    await waitFor(() =>
-      expect(screen.getByTestId('location')).toHaveTextContent('/account/dummy/cf/orgs/dummy/projects/dummy/onboarding')
-    )
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/account/dummy/cf/orgs/dummy/projects/dummy/onboarding/detail'
+      )
+    })
   })
 
   test('it should not display the component if hidden is true', () => {

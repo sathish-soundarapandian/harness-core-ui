@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import {
   Container,
   Formik,
@@ -19,12 +20,13 @@ import {
   MultiTypeInputType
 } from '@harness/uicore'
 import { Switch } from '@blueprintjs/core'
-
 import { Form, FieldArray } from 'formik'
 import produce from 'immer'
 import * as Yup from 'yup'
 import { get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+
 import { useStrings } from 'framework/strings'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
@@ -116,6 +118,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
   const { showError } = useToaster()
   const [isVerifyEnabled, setIsVerifyEnabled] = React.useState(false)
   const isWinRm = isWinRmDeploymentType(serviceDefinitionType())
+  const { accountId } = useParams<AccountPathProps>()
 
   const packageTypes = React.useMemo(() => {
     return isWinRm ? packageTypeItemsWinrm : packageTypeItems
@@ -166,6 +169,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
 
   const { mutate, loading } = usePostExecutionStrategyYaml({
     queryParams: {
+      accountIdentifier: accountId,
       serviceDefinitionType: serviceDefinitionType(),
       strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : ExecutionType.ROLLING,
       ...(isVerifyEnabled && { includeVerify: true })

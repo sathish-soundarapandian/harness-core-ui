@@ -105,6 +105,8 @@ const getLabelByType = (type: string): string => {
     case Connectors.VAULT:
     case Connectors.LOCAL:
       return 'connectors.name_labels.SecretManager'
+    case Connectors.SPOT:
+      return 'connectors.name_labels.Spot'
     default:
       return 'connector'
   }
@@ -332,6 +334,20 @@ const getGcpSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowIn
     }
   ]
 }
+
+const getSpotSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'common.accountId',
+      value: connector?.spec?.credential?.spec?.accountId || connector?.spec?.credential?.spec?.accountIdRef
+    },
+    {
+      label: 'connectors.apiToken',
+      value: connector?.spec?.credential?.spec?.apiTokenRef
+    }
+  ]
+}
+
 const getCustomSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -448,8 +464,9 @@ const getVaultSchema = (
       label: 'connectors.hashiCorpVault.renewal',
       value:
         data.accessType !== HashiCorpVaultAccessTypes.VAULT_AGENT &&
-        data.accessType !== HashiCorpVaultAccessTypes.AWS_IAM
-          ? data.renewalIntervalMinutes
+        data.accessType !== HashiCorpVaultAccessTypes.AWS_IAM &&
+        data.accessType !== HashiCorpVaultAccessTypes.K8s_AUTH
+          ? data.renewalIntervalMinutes?.toString()
           : undefined
     },
     {
@@ -877,6 +894,8 @@ const getSchemaByType = (
       return getCustomSMSchema(connector)
     case Connectors.GcpSecretManager:
       return getGcpSMSchema(connector)
+    case Connectors.SPOT:
+      return getSpotSchema(connector)
     default:
       return []
   }

@@ -57,6 +57,7 @@ exports[`FlowControl tests should call editItem when edit icon is clicked 1`] = 
         class="mainActions"
       >
         <button
+          aria-label="applyChanges"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
           type="button"
         >
@@ -67,6 +68,7 @@ exports[`FlowControl tests should call editItem when edit icon is clicked 1`] = 
           </span>
         </button>
         <button
+          aria-label="pipeline.discard"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--size Button--small"
           type="button"
         >
@@ -398,6 +400,7 @@ exports[`FlowControl tests should render fine 1`] = `
         class="mainActions"
       >
         <button
+          aria-label="applyChanges"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
           type="button"
         >
@@ -408,6 +411,7 @@ exports[`FlowControl tests should render fine 1`] = `
           </span>
         </button>
         <button
+          aria-label="pipeline.discard"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--size Button--small"
           type="button"
         >

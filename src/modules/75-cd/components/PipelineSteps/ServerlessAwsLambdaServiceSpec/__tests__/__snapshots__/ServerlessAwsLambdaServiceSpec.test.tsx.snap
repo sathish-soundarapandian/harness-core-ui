@@ -10,7 +10,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
       id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests"
     >
       <div
-        class="tabSubHeading ng-tooltip-native"
+        class="tabSubHeading listHeader ng-tooltip-native"
         data-tooltip-id="ServerlessAwsLambdaDeploymentTypeManifests"
       >
         pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests
@@ -35,6 +35,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
           >
             <button
+              aria-label="pipeline.manifestType.addManifestLabel"
               class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-test-id="addManifest"
               id="add-manifest"
@@ -74,7 +75,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
       id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts"
     >
       <div
-        class="tabSubHeading ng-tooltip-native"
+        class="tabSubHeading listHeader ng-tooltip-native"
         data-tooltip-id="ServerlessAwsLambdaDeploymentTypeArtifacts"
       >
         pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts
@@ -91,6 +92,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
           >
             <section />
             <button
+              aria-label="pipeline.artifactsSelection.addPrimaryArtifact"
               class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               id="add-artifact"
               type="button"
@@ -121,6 +123,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
               </span>
             </button>
             <button
+              aria-label="pipeline.artifactsSelection.addSidecar"
               class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               id="add-artifact"
               type="button"
@@ -168,7 +171,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
         id="common.variables"
       >
         <div
-          class="tabSubHeading"
+          class="tabSubHeading listHeader"
         >
           common.variables
         </div>

@@ -11,6 +11,7 @@ import { render } from '@testing-library/react'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import type { AbortFailureActionConfig } from 'services/pipeline-ng'
 import { errorTypesForStages } from '../StrategySelection/StrategyConfig'
 import { Basic } from '../FailureStrategyPanel.stories'
 
@@ -25,7 +26,7 @@ describe('CD <FailureStrategyPanel /> tests', () => {
                 errors: errorTypesForStages[StageType.DEPLOY],
                 action: {
                   type: Strategy.Abort
-                }
+                } as AbortFailureActionConfig
               }
             }
           ]

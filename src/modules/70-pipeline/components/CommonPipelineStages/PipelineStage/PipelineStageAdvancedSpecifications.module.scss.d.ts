@@ -12,10 +12,14 @@ declare const styles: {
   readonly createStageGrid: string
   readonly dialogView: string
   readonly disabled: string
+  readonly divider: string
   readonly editStageGrid: string
   readonly inputContainer: string
+  readonly inputSetFormRunPipeline: string
   readonly navigationButtons: string
   readonly noPadVertical: string
+  readonly noPipelineInputSetForm: string
+  readonly pipelineHeader: string
   readonly removeLink: string
   readonly sectionCard: string
   readonly sideDescription: string

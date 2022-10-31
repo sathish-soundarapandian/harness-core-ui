@@ -5,5 +5,45 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Annually'] as const
+import moment from 'moment'
+import type { CurrentOrUpcomingWindow, FreezeDetailedResponse, FreezeSummaryResponse } from 'services/cd-ng'
+
+export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Yearly'] as const
 export const DOES_NOT_REPEAT = 'Does not repeat'
+
+export type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
+
+export const scopeText: Record<Scope, string> = {
+  account: 'Account',
+  org: 'Organization',
+  project: 'Project'
+}
+
+export enum FreezeStatus {
+  EXPIRED = 'EXPIRED',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
+}
+
+export const getFreezeStatus = (
+  currentOrUpcomingWindow?: CurrentOrUpcomingWindow,
+  isEnabled?: boolean
+): FreezeStatus => {
+  if (!currentOrUpcomingWindow) {
+    return FreezeStatus['EXPIRED']
+  } else if (
+    isEnabled &&
+    moment().isBetween(moment(currentOrUpcomingWindow.startTime), moment(currentOrUpcomingWindow.endTime))
+  ) {
+    return FreezeStatus['ACTIVE']
+  }
+
+  return FreezeStatus['INACTIVE']
+}
+
+export const getComputedFreezeStatusMap = (content: FreezeSummaryResponse[] = []): Record<string, FreezeStatus> => {
+  return content.reduce((acc, item) => {
+    acc[item.identifier!] = getFreezeStatus(item.currentOrUpcomingWindow, item.status === 'Enabled')
+    return acc
+  }, {} as Record<string, FreezeStatus>)
+}

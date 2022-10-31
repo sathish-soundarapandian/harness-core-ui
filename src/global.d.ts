@@ -110,6 +110,24 @@ declare module 'chaos/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'chaos/PipelineExperimentSelect' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'chaos/ExperimentPreview' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'chaos/ChaosStepExecution' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'ffui/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp
@@ -130,6 +148,16 @@ declare module 'stoV2/App' {
 }
 
 declare module 'ccmui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'ciui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'tiui/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

@@ -185,13 +185,13 @@ export const CreateK8sDelegate = ({
   return (
     <>
       <Layout.Vertical>
-        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
+        <Text font="normal" className={css.subHeading}>
           {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.downloadYAML')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
@@ -242,7 +242,7 @@ export const CreateK8sDelegate = ({
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical className={css.panelLeft}>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.installCluster')}
               </Text>
               <Layout.Horizontal>
@@ -281,7 +281,7 @@ export const CreateK8sDelegate = ({
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
               <StepProcessing

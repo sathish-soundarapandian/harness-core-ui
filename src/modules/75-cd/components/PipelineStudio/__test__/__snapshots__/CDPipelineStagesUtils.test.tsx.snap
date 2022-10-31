@@ -18,6 +18,7 @@ exports[`Testing Empty pipeline stages should render empty stage view on right s
           pipeline.addStage.title
         </h6>
         <button
+          aria-label="common.useTemplate"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
           type="button"
         >

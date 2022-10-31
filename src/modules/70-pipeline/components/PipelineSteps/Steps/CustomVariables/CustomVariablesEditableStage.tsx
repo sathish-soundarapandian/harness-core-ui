@@ -71,8 +71,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     isDescriptionEnabled,
     validationSchema,
     isDrawerMode,
-    addVariableLabel,
-    fromEnvironmentConfiguration
+    addVariableLabel
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -169,6 +168,9 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                     }
                     const key = uids.current[index]
                     const yamlData = yamlProperties?.[index] || {}
+                    if (!variable) {
+                      return null
+                    }
 
                     return (
                       <div key={key} className={cx(css.tableRow, 'variablesTableRow')}>
@@ -273,13 +275,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={
-                        fromEnvironmentConfiguration
-                          ? `${getString('common.newName', {
-                              name: getString('variableLabel')
-                            })} ${getString('common.override')}`
-                          : getString(defaultTo(addVariableLabel, 'common.addVariable'))
-                      }
+                      text={getString(defaultTo(addVariableLabel, 'common.addVariable'))}
                     />
                   )}
                 </div>

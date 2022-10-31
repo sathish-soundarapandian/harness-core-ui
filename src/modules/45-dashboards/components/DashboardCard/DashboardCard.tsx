@@ -17,10 +17,8 @@ import routes from '@common/RouteDefinitions'
 import type { DashboardModel } from 'services/custom-dashboards'
 import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import DashboardTags from '@dashboards/components/DashboardTags/DashboardTags'
+import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import type { PermissionRequest } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import { useStrings } from 'framework/strings'
 
@@ -42,6 +40,13 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
   const [menuOpen, setMenuOpen] = useState(false)
+  const { editableFolders } = useDashboardsContext()
+
+  const isCloneable = !!editableFolders.length
+
+  const isEditable: boolean = React.useMemo(() => {
+    return !!editableFolders.some(folder => folder.id === dashboard.folder.id)
+  }, [editableFolders, dashboard])
 
   const onCardMenuInteraction = (nextOpenState: boolean, e?: React.SyntheticEvent<HTMLElement>): void => {
     e?.preventDefault()
@@ -72,14 +77,6 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     folderId: folderId === 'shared' ? 'shared' : dashboard?.resourceIdentifier
   })
 
-  const permissionObj: PermissionRequest = {
-    permission: PermissionIdentifier.EDIT_DASHBOARD,
-    resource: {
-      resourceType: ResourceType.DASHBOARDS,
-      resourceIdentifier: dashboard?.resourceIdentifier
-    }
-  }
-
   return (
     <Link to={cardPath}>
       <Card interactive className={cx(moduleTagCss.card)}>
@@ -88,13 +85,13 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             menuContent={
               <Menu>
                 {dashboard?.type === DashboardType.ACCOUNT && (
-                  <RbacMenuItem icon="edit" text={getString('edit')} onClick={onEditClick} permission={permissionObj} />
+                  <RbacMenuItem icon="edit" text={getString('edit')} onClick={onEditClick} disabled={!isEditable} />
                 )}
                 <RbacMenuItem
                   icon="duplicate"
                   text={getString('projectCard.clone')}
                   onClick={onCloneClick}
-                  permission={permissionObj}
+                  disabled={!isCloneable}
                 />
                 {dashboard?.type === DashboardType.ACCOUNT && (
                   <>
@@ -103,7 +100,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                       icon="trash"
                       text={getString('delete')}
                       onClick={onDeleteClick}
-                      permission={permissionObj}
+                      disabled={!isEditable}
                     />
                   </>
                 )}

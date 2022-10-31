@@ -7,6 +7,7 @@
 
 import type { CustomDeploymentNGVariable, StoreConfigWrapper } from 'services/cd-ng'
 import type { VariableMergeServiceResponse, PipelineInfoConfig, ShellScriptInlineSource } from 'services/pipeline-ng'
+import type { ArtifactSourceConfigDetails } from '@pipeline/components/ArtifactSourceConfigRuntimeInputs/ArtifactSourceConfigRuntimeInputs'
 
 export interface PipelineVariablesData {
   variablesPipeline: PipelineInfoConfig
@@ -44,4 +45,13 @@ export interface DeploymentTemplateConfig extends DeploymentConfig {
     [key: string]: string
   }
   type?: string
+}
+
+export interface ArtifactSourceTemplateConfig extends ArtifactSourceConfigDetails {
+  description?: string
+  identifier: string
+  name?: string
+  tags?: {
+    [key: string]: string
+  }
 }

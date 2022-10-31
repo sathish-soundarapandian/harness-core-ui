@@ -6,6 +6,7 @@ exports[`<SaveTemplatePopover /> tests should match snapshot 1`] = `
     class="SplitButton--splitButton"
   >
     <button
+      aria-label="save"
       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main SplitButton--main border-right-0 Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
       disabled=""
       tabindex="-1"

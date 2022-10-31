@@ -1053,6 +1053,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
             </div>
           </div>
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main paddingZero StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-volumes"
             type="button"
@@ -1142,6 +1143,7 @@ exports[`<Volumes /> tests Initial Default render 1`] = `
           data-name="volumes"
         >
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main paddingZero StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-volumes"
             type="button"

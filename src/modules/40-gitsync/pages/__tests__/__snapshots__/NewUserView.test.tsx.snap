@@ -38,6 +38,7 @@ exports[`GitSync Page render 1`] = `
       gitExperienceNewUserText
     </p>
     <button
+      aria-label="enableGitExperience"
       class="bp3-button Button--button StyledProps--font StyledProps--main gitEnableBtn StyledProps--intent-primary StyledProps--margin-large StyledProps--font StyledProps--font-size-medium Button--with-current-color"
       type="button"
     >

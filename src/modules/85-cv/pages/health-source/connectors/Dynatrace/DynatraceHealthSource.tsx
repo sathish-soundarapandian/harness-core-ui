@@ -17,7 +17,7 @@ import {
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { TimeSeriesMetricPackDTO, useGetMetricPacks } from 'services/cv'
+import { TimeSeriesMetricPackDTO, useGetMetricPacks, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import type {
   DynatraceFormDataInterface,
   DynatraceHealthSourceProps
@@ -79,9 +79,12 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
   })
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
   const metricPackResponse = useGetMetricPacks({
     queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'DYNATRACE' }
   })
+
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const dynatraceMetricFormData = useMemo(
     () => mapDynatraceDataToDynatraceForm(dynatraceMetricData, mappedMetrics, selectedMetric, showCustomMetric),
@@ -206,7 +209,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
                   selectedServiceId={(selectedServiceValue as string) || ''}
                   isTemplate={isTemplate}
                   expressions={expressions}
-                  metricPackResponse={metricPackResponse}
+                  riskProfileResponse={riskProfileResponse}
                 />
               </CustomMetric>
             ) : (

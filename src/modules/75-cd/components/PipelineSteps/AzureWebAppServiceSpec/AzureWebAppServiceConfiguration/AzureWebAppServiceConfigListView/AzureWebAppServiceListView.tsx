@@ -621,7 +621,7 @@ function AzureWebAppListView({
             icon="plus"
             text={
               pipelineView
-                ? getString('common.newName', {
+                ? getString('common.addName', {
                     name: getString('pipeline.appServiceConfig.applicationSettings.name')
                   })
                 : `${getString('common.newName', {
@@ -647,7 +647,7 @@ function AzureWebAppListView({
             icon="plus"
             text={
               pipelineView
-                ? getString('common.newName', {
+                ? getString('common.addName', {
                     name: getString('pipeline.appServiceConfig.connectionStrings.name')
                   })
                 : `${getString('common.newName', {

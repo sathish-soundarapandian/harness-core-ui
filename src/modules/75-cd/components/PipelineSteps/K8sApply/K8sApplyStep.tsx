@@ -433,6 +433,7 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             allowableTypes={allowableTypes}
             overrideValue={overrideValue}
             index={index}
+            inputSetData={inputSetData}
             {...props}
             key={overrideValue?.manifest?.identifier}
           />

@@ -238,6 +238,7 @@ exports[`Wizard tests Interactivity Tab Change: Show warning for each touched pa
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -267,6 +268,7 @@ exports[`Wizard tests Interactivity Tab Change: Show warning for each touched pa
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -508,6 +510,7 @@ exports[`Wizard tests Renders/snapshots Initial Render - 3 panels 1`] = `
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -537,6 +540,7 @@ exports[`Wizard tests Renders/snapshots Initial Render - 3 panels 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
@@ -804,6 +808,7 @@ exports[`Wizard tests Renders/snapshots Initial Render with Visual YAML buttons 
                 class="Layout--horizontal StyledProps--main footer nonYamlViewFooter"
               >
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="button"
                 >
@@ -833,6 +838,7 @@ exports[`Wizard tests Renders/snapshots Initial Render with Visual YAML buttons 
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main cancel Button--with-current-color Button--variation Button--variation-tertiary"
                   type="button"
                 >
