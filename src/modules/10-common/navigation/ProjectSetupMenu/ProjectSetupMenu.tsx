@@ -98,10 +98,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
             to={routes.toTemplates({ ...params, templateType: 'MonitoredService' })}
           />
         )}
-        {OPA_PIPELINE_GOVERNANCE && isCIorCDorSTO && canUsePolicyEngine && (
-          <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
-        )}
-        {OPA_PIPELINE_GOVERNANCE && isCV && canUsePolicyEngine && (
+        {OPA_PIPELINE_GOVERNANCE && canUsePolicyEngine && (
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
         )}
         {showDeploymentFreeze ? (
