@@ -47,6 +47,13 @@ export const resetTag = (formik: FormikValues): void => {
     formik.setFieldValue('tag', '')
 }
 
+export const resetVersion = (formik: FormikValues): void => {
+  formik.values.versionType === 'value' &&
+    getMultiTypeFromValue(formik.values.version?.value) === MultiTypeInputType.FIXED &&
+    formik.values.version?.value?.length &&
+    formik.setFieldValue('version', '')
+}
+
 export const resetArtifactPath = (formik: FormikValues): void => {
   getMultiTypeFromValue(formik.values.artifactPath?.value) === MultiTypeInputType.FIXED &&
     formik.values.artifactPath?.value?.length &&
@@ -347,6 +354,16 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           package: '',
           version: RUNTIME_INPUT_VALUE
         }
+      }
+    case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
+      return {
+        identifier: '',
+        versionType: TagTypes.Value,
+        version: '',
+        versionRegex: '',
+        amiTags: [],
+        amiFilters: [],
+        region: ''
       }
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       return {

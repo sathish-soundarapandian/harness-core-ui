@@ -866,6 +866,7 @@ artifactsSelection:
   googleArtifactRegistryTitle: Google Artifact Registry
   githubPackageRegistryTitle: Github Package Registry
   azureArtifactRegistryTitle: Azure Artifact Registry
+  AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
     sidecarId: Sidecar Name
     sidecarIdPlaceholder: Enter Artifact Name

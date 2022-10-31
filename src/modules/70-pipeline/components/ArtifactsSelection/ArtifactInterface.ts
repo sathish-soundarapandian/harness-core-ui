@@ -172,6 +172,17 @@ export interface GithubPackageRegistryInitialValuesType {
   }
 }
 
+export interface AmazonMachineImageInitialValuesType {
+  identifier?: string
+  connectorRef?: string
+  region?: string
+  amiFilters?: VariableInterface[]
+  amiTags?: VariableInterface[]
+  version?: string
+  versionRegex?: string
+  versionType?: string
+}
+
 export interface GithubPackageRegistryProps {
   key: string
   name: string

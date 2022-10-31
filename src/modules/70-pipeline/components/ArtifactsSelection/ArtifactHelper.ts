@@ -82,7 +82,7 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
   AzureArtifacts: 'pipeline.artifactsSelection.azureArtifactRegistryTitle',
-  AmazonMachineImage: 'pipeline.artifactsSelection.azureArtifactRegistryTitle'
+  AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -97,7 +97,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
-  GithubPackageRegistry: 'GithubPackageRegistry'
+  GithubPackageRegistry: 'GithubPackageRegistry',
+  AmazonMachineImage: 'AmazonMachineImage'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -111,7 +112,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Jenkins: Connectors.JENKINS,
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
-  GithubPackageRegistry: Connectors.GITHUB
+  GithubPackageRegistry: Connectors.GITHUB,
+  AmazonMachineImage: Connectors.AWS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -125,7 +127,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
-  GithubPackageRegistry: 'Github'
+  GithubPackageRegistry: 'Github',
+  AmazonMachineImage: 'AWS'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
@@ -135,7 +138,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.AmazonMachineImage
   ],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
