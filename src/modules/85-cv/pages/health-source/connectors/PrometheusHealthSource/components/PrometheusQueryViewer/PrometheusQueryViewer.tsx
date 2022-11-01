@@ -254,7 +254,10 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
               orgIdentifier,
               query: query || '',
               tracingId: Utils.randomId(),
-              connectorIdentifier: connectorIdentifier as string
+              connectorIdentifier: connectorIdentifier as string,
+              dataSourceType: dataSourceType as GetMetricNamesQueryParams['dataSourceType'],
+              region,
+              workspaceId
             }
           })
         }
