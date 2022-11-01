@@ -16,6 +16,7 @@ declare const styles: {
   readonly container: string
   readonly default: string
   readonly ff: string
+  readonly iac: string
   readonly srm: string
   readonly sto: string
 }

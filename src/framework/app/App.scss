@@ -20,9 +20,9 @@ body,
 }
 
 body {
-  --font-family: 'Inter', sans-serif;
-  --font-family-mono: Monaco, 'Ubuntu Mono', 'Courier New', monospace;
-  --font-family-reenie-beanie: 'Reenie Beanie';
+  --font-family: "Inter", sans-serif;
+  --font-family-mono: Monaco, "Ubuntu Mono", "Courier New", monospace;
+  --font-family-reenie-beanie: "Reenie Beanie";
   --font-size: var(--font-size-small);
   min-width: 1280px;
 }
@@ -64,9 +64,14 @@ body {
   --chaos-border: #ff006a;
   --chaos-background: #fff1f7;
 
+  // Infrastructure as Code
+  --iac-foreground: #a0a0a0;
+  --iac-border: #d9d9d9;
+  --iac-background: #f5f5f5;
+
   // Default Colors
   --default-module-border: white;
 }
 /* stylelint-enable  color-no-hex */
 
-@import '@common/styles/index.scss';
+@import "@common/styles/index.scss";
