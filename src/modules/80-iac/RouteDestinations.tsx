@@ -20,22 +20,20 @@ import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import IacSideNav from './components/IacSideNav'
 import '@iac/PipelineStages'
 import { getStyles } from './Utils'
+import type { IacCustomMicroFrontendProps } from './IacCustomMicroFrontendProps.types'
 
+// eslint-disable-next-line import/no-unresolved
 const RemoteIacApp = lazy(() => import('iac/MicroFrontendApp'))
 // eslint-disable-next-line import/no-unresolved
 export const TestStepForm = lazy(() => import('iac/TestStepForm'))
 // eslint-disable-next-line import/no-unresolved
 export const TestInputStep = lazy(() => import('iac/TestInputStep'))
+// eslint-disable-next-line import/no-unresolved
 export const IacStepUtils = import('iac/StepUtils')
+// eslint-disable-next-line import/no-unresolved
 const VariableView = lazy(() => import('iac/VariableView'))
+// eslint-disable-next-line import/no-unresolved
 const IacStageRemote = lazy(() => import('iac/IacStage'))
-
-type IacCustomMicroFrontendProps = {
-  children?: React.ReactNode
-  customComponents: unknown
-  customHooks: unknown // TODO - add type
-  customFunctions: unknown
-}
 
 const IacSideNavProps: SidebarContext = {
   navComponent: IacSideNav,
@@ -63,21 +61,50 @@ const RedirectToIacProject = (): React.ReactElement => {
   }
 }
 
-const IacApp = (): React.ReactElement => (
+const IacApp = (props: any): React.ReactElement => (
   <ChildAppMounter<IacCustomMicroFrontendProps>
     ChildApp={RemoteIacApp}
-    customComponents={{ FormMultiTypeConnectorField }}
-    customFunctions={{}}
-    customHooks={{}}
+    customComponents={{
+      FormMultiTypeConnectorField,
+      ApprovalStageOverview,
+      ApprovalStageExecution,
+      ApprovalAdvancedSpecifications,
+      SaveTemplateButton,
+      VariablesListTable
+    }}
+    customFunctions={{
+      createTemplate,
+      getStyles,
+      isDuplicateStageId,
+      getNameAndIdentifierSchema
+    }}
+    customHooks={{
+      usePipelineContext
+    }}
+    {...props}
   />
 )
 
 export const StepVariableView = (props: any): React.ReactElement => (
   <ChildAppMounter<IacCustomMicroFrontendProps>
     ChildApp={VariableView}
-    customComponents={{ VariablesListTable }}
-    customFunctions={{}}
-    customHooks={{}}
+    customComponents={{
+      FormMultiTypeConnectorField,
+      ApprovalStageOverview,
+      ApprovalStageExecution,
+      ApprovalAdvancedSpecifications,
+      SaveTemplateButton,
+      VariablesListTable
+    }}
+    customFunctions={{
+      createTemplate,
+      getStyles,
+      isDuplicateStageId,
+      getNameAndIdentifierSchema
+    }}
+    customHooks={{
+      usePipelineContext
+    }}
     {...props}
   />
 )
@@ -86,6 +113,7 @@ export const IacStage = (props: any): React.ReactElement => (
   <ChildAppMounter<IacCustomMicroFrontendProps>
     ChildApp={RemoteIacApp}
     customComponents={{
+      FormMultiTypeConnectorField,
       ApprovalStageOverview,
       ApprovalStageExecution,
       ApprovalAdvancedSpecifications,

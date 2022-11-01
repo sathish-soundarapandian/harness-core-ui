@@ -1,11 +1,11 @@
-import React, { lazy } from 'react'
+import React from 'react'
 import type { UseStringsReturn } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import type { StageAttributes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { IacStage } from '@iac/RouteDestinations'
 
-const getStageAttributes = (getString: UseStringsReturn['getString']): StageAttributes => ({
+const getStageAttributes = (_getString: UseStringsReturn['getString']): StageAttributes => ({
   name: 'Iac',
   type: StageType.IAC,
   icon: 'sto-color-filled',
@@ -14,7 +14,7 @@ const getStageAttributes = (getString: UseStringsReturn['getString']): StageAttr
   openExecutionStrategy: true
 })
 
-const getStageEditorImplementation = (isEnabled: boolean, getString: UseStringsReturn['getString']) => {
+const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStringsReturn['getString']): JSX.Element => {
   return (
     <IacStage
       icon={'sto-color-filled'}
