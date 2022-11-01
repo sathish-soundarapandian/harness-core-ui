@@ -2962,6 +2962,8 @@ export interface StringsMap {
   'projectsOrgs.welcomeSecondLine': string
   'projectsOrgs.whyCreateProject': string
   'projectsOrgs.youHaveNoProjects': string
+  'scm.branches': string
+  'scm.files': string
   'scm.homepageHeading': string
   'scm.learnMore': string
   'scm.title': string

@@ -165,10 +165,10 @@ export const servicePathProps: ServicePathProps = {
 export const scmPathProps: Required<SCMPathProps> = {
   ...projectPathProps,
   repoName: ':repoName',
-  ref: ':ref*',
-  filePath: ':filePath',
-  pullRequestId: ':pullRequestId',
-  commitId: ':commitId'
+  gitRef: ':gitRef*',
+  resourcePath: ':resourcePath*',
+  commitRef: ':commitRef*',
+  branch: ':branch*'
 }
 
 export function withAccountId<T>(fn: (args: T) => string) {

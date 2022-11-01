@@ -125,8 +125,10 @@ export enum PAGE_NAME {
   ErrorTrackingListPage = 'ErrorTrackingListPage',
   OPAPolicyDashboard = 'OPAPolicyDashboard',
   SCMHomePage = 'SCMHomePage',
-  SCMRepositoriesListing = 'RepositoriesListing',
-  SCMRepository = 'Repository',
+  SCMRepositoriesListing = 'SCMRepositoriesListing',
+  SCMRepository = 'SCMRepository',
+  SCMRepositoryCommits = 'SCMRepositoryCommits',
+  SCMRepositoryBranches = 'SCMRepositoryBranches',
   ExecutionList = 'ExecutionList',
   CFConfigurePath = 'CFConfigurePath'
 }

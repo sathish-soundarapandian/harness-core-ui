@@ -8,7 +8,7 @@
 import React, { ReactElement } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, NavLinkProps } from 'react-router-dom'
-import { Text, Layout, IconName, Icon, Container } from '@wings-software/uicore'
+import { Text, Layout, IconName, Icon, Container, TextProps } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import css from './SideNav.module.scss'
 
@@ -47,11 +47,12 @@ interface SidebarLinkProps extends NavLinkProps {
   label: string
   icon?: IconName
   className?: string
+  textProps?: TextProps
 }
 
-export const SidebarLink: React.FC<SidebarLinkProps> = ({ label, icon, className, ...others }) => (
+export const SidebarLink: React.FC<SidebarLinkProps> = ({ label, icon, className, textProps, ...others }) => (
   <Link className={cx(css.link, className)} activeClassName={css.selected} {...others}>
-    <Text icon={icon} className={css.text}>
+    <Text icon={icon} className={css.text} {...textProps}>
       {label}
     </Text>
   </Link>

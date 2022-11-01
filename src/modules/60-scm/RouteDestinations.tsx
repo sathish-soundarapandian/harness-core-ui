@@ -8,13 +8,13 @@
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
-import { scmPathProps as pathProps } from '@common/utils/routeUtils'
+import { scmPathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { SCMPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@scm/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { RemoteRepoResources, RemoteRepos } from './SCMApp'
+import { Repository, RepositoriesListing, RepositoryCommits, RepositoryBranches } from './SCMApp'
 import SCMHomePage from './pages/home/SCMHomePage'
 
 export const sidebarProps: SidebarContext = {
@@ -36,49 +36,86 @@ const RedirectToDefaultSCMRoute: React.FC = () => {
 
 export function SCMRouteDestinations(): React.ReactElement {
   return (
-    <Route path={routes.toSCM(pathProps)}>
-      <Route path={routes.toSCM(pathProps)} exact>
+    <Route path={routes.toSCM(scmPathProps)}>
+      <Route path={routes.toSCM(scmPathProps)} exact>
         <RedirectToDefaultSCMRoute />
       </Route>
-      <RouteWithLayout path={routes.toSCMHome(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMHomePage}>
+      <RouteWithLayout
+        path={routes.toSCMHome(scmPathProps)}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.SCMHomePage}
+      >
         <SCMHomePage />
       </RouteWithLayout>
       <RouteWithLayout
         path={routes.toSCMRepositoriesListing({
-          space: [pathProps.accountId, pathProps.orgIdentifier, pathProps.projectIdentifier].join('/')
+          space: [scmPathProps.accountId, scmPathProps.orgIdentifier, scmPathProps.projectIdentifier].join('/')
         })}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.SCMRepositoriesListing}
         exact
       >
-        <RemoteRepos />
+        <RepositoriesListing />
+      </RouteWithLayout>
+      <RouteWithLayout
+        path={routes.toSCMRepositoryCommits({
+          repoPath: [
+            scmPathProps.accountId,
+            scmPathProps.orgIdentifier,
+            scmPathProps.projectIdentifier,
+            scmPathProps.repoName
+          ].join('/'),
+          commitRef: scmPathProps.commitRef
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.SCMRepositoryCommits}
+        exact
+      >
+        <RepositoryCommits />
+      </RouteWithLayout>
+      <RouteWithLayout
+        path={routes.toSCMRepositoryBranches({
+          repoPath: [
+            scmPathProps.accountId,
+            scmPathProps.orgIdentifier,
+            scmPathProps.projectIdentifier,
+            scmPathProps.repoName
+          ].join('/'),
+          branch: scmPathProps.branch
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.SCMRepositoryCommits}
+        exact
+      >
+        <RepositoryBranches />
       </RouteWithLayout>
       <RouteWithLayout
         path={[
           routes.toSCMRepository({
             repoPath: [
-              pathProps.accountId,
-              pathProps.orgIdentifier,
-              pathProps.projectIdentifier,
-              pathProps.repoName
+              scmPathProps.accountId,
+              scmPathProps.orgIdentifier,
+              scmPathProps.projectIdentifier,
+              scmPathProps.repoName
             ].join('/'),
-            gitRef: ':gitRef*',
-            resourcePath: ':resourcePath*'
+            gitRef: scmPathProps.gitRef,
+            resourcePath: scmPathProps.resourcePath
           }),
           routes.toSCMRepository({
             repoPath: [
-              pathProps.accountId,
-              pathProps.orgIdentifier,
-              pathProps.projectIdentifier,
-              pathProps.repoName
+              scmPathProps.accountId,
+              scmPathProps.orgIdentifier,
+              scmPathProps.projectIdentifier,
+              scmPathProps.repoName
             ].join('/'),
-            gitRef: ':gitRef*'
+            gitRef: scmPathProps.gitRef
           })
         ]}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.SCMRepository}
+        pageName={PAGE_NAME.SCMRepositoryBranches}
+        exact
       >
-        <RemoteRepoResources />
+        <Repository />
       </RouteWithLayout>
     </Route>
   )

@@ -48,7 +48,9 @@ import type {
   VariablesPathProps,
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
-  TemplateType
+  TemplateType,
+  SCMProps,
+  RequireField
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -1353,6 +1355,7 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding`
   ),
+
   toCFOnboardingDetail: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding/detail`
@@ -1362,12 +1365,9 @@ const routes = {
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/configurePath`
   ),
 
-  // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
-  // toSCM and toSCMHome are only available within Harness (not in SCM standalone version)
   toSCM: withAccountId(() => `/code`),
   toSCMHome: withAccountId(() => `/code/home`),
-
-  toSCMRepositoriesListing: ({ space }: { space: string }) => {
+  toSCMRepositoriesListing: ({ space }: Required<Pick<SCMProps, 'space'>>) => {
     const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
   },
@@ -1375,19 +1375,23 @@ const routes = {
     repoPath,
     gitRef,
     resourcePath
-  }: {
-    repoPath: string
-    gitRef?: string
-    resourcePath?: string
-  }) => {
+  }: RequireField<Pick<SCMProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    // TODO: this is a workaround until backend stops lowercase everything
-    // https://harness.slack.com/archives/C03Q1Q4C9J8/p1666521412586789
-    const url = `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/tree${
       gitRef ? '/' + gitRef : ''
     }${resourcePath ? '/~/' + resourcePath : ''}`
-    console.log('toSCMRepo', { url })
-    return url
+  },
+  toSCMRepositoryCommits: ({ repoPath, commitRef }: Required<Pick<SCMProps, 'repoPath' | 'commitRef'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
+      commitRef ? '/' + commitRef : ''
+    }`
+  },
+  toSCMRepositoryBranches: ({ repoPath, branch }: Required<Pick<SCMProps, 'repoPath' | 'branch'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
+      branch ? '/' + branch : ''
+    }`
   },
 
   /********************************************************************************************************************/

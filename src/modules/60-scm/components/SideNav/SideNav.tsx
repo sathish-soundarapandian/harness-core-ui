@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import type { SCMPathProps } from '@common/interfaces/RouteInterfaces'
@@ -15,10 +15,11 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import css from './SideNav.module.scss'
 
 export default function SCMSideNav(): React.ReactElement {
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<SCMPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, repoName, commitRef } = useParams<SCMPathProps>()
   const history = useHistory()
   const { updateAppStore } = useAppStore()
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
@@ -28,6 +29,8 @@ export default function SCMSideNav(): React.ReactElement {
       routes.toSCMRepositoriesListing({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
     )
   }
+
+  console.log({ commitRef })
 
   return (
     <Layout.Vertical spacing="small">
@@ -40,88 +43,58 @@ export default function SCMSideNav(): React.ReactElement {
           <SidebarLink
             label={getString('repositories')}
             to={routes.toSCMRepositoriesListing({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
+            {...(repoName ? { activeClassName: '' } : {})}
           />
 
-          {/** TODO: DON"T COMMIT THESE
-          <SidebarLink label="Repos" to={routes.toSCMRepos({ accountId, orgIdentifier, projectIdentifier })} />
-          <SidebarLink label="NewRepo" to={routes.toSCMNewRepo({ accountId, orgIdentifier, projectIdentifier })} />
-          <SidebarLink
-            label="RepoFiles"
-            to={routes.toSCMFiles({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              repoName: 'testRepo',
-              branchName: 'dev'
-            })}
-          />
-          <SidebarLink
-            label="RepoFileDetails"
-            to={routes.toSCMFileDetails({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              repoName: 'testRepo',
-              branchName: 'dev',
-              filePath: 'README.md'
-            })}
-          />
+          {repoName && (
+            <SidebarLink
+              className={css.subNav}
+              icon="file"
+              textProps={{
+                iconProps: {
+                  size: 14
+                }
+              }}
+              label={getString('scm.files')}
+              to={routes.toSCMRepository({
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
+              })}
+            />
+          )}
 
-          <SidebarLink
-            label="RepoCommits"
-            to={routes.toSCMCommits({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              repoName: 'testRepo',
-              branchName: 'dev'
-            })}
-          />
+          {repoName && (
+            <SidebarLink
+              className={css.subNav}
+              icon="git-branch-existing"
+              textProps={{
+                iconProps: {
+                  size: 14
+                }
+              }}
+              label={getString('commits')}
+              to={routes.toSCMRepositoryCommits({
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
+                commitRef: ''
+              })}
+            />
+          )}
 
-          <SidebarLink
-            label="RepoCommitDetails"
-            to={routes.toSCMCommitDetails({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              repoName: 'testRepo',
-              branchName: 'dev',
-              commitId: 'abc-xyz'
-            })}
-          />
-
-          <SidebarLink
-            label="RepoPullRequests"
-            to={routes.toSCMPullRequests({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              repoName: 'testRepo',
-              branchName: 'dev'
-            })}
-          />
-
-          <SidebarLink
-            label="RepoPullRequestDetails"
-            to={routes.toSCMPullRequestDetails({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              repoName: 'testRepo',
-              branchName: 'dev',
-              pullRequestId: 'adkajdl'
-            })}
-          />
-
-          <SidebarLink
-            label="RepoSettings"
-            to={routes.toSCMRepoSettings({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              repoName: 'testRepo'
-            })}
-          />*/}
+          {repoName && (
+            <SidebarLink
+              className={css.subNav}
+              icon="git-branch"
+              textProps={{
+                iconProps: {
+                  size: 14
+                }
+              }}
+              label={getString('scm.branches')}
+              to={routes.toSCMRepositoryBranches({
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
+                branch: ''
+              })}
+            />
+          )}
         </>
       )}
     </Layout.Vertical>

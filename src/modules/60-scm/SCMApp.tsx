@@ -7,19 +7,12 @@
 
 import React, { Suspense, lazy, useMemo } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
-import RbacButton from '@rbac/components/Button/Button'
-import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SessionToken from 'framework/utils/SessionToken'
-import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import type { RemoteViewProps } from './SCMUtils'
@@ -28,10 +21,10 @@ import type { RemoteViewProps } from './SCMUtils'
 const RemoteSCMApp = lazy(() => import('scm/App'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
+const RemoveRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepository = lazy(() => import('scm/Repository'))
+const RemoveRepository = lazy(() => import('scm/Repository'))
 
 const SCMRemoteComponentMounter: React.FC<{
   component: JSX.Element
@@ -55,17 +48,7 @@ const SCMRemoteComponentMounter: React.FC<{
           }}
           routes={pick(routes, ['toSCM', 'toSCMHome', 'toSCMRepositoriesListing', 'toSCMRepository'])}
           hooks={{
-            usePermission,
-            useFeatureFlags,
-            useAppStore,
-            useGetToken,
-            useAnyEnterpriseLicense,
-            useCurrentEnterpriseLicense,
-            useLicenseStore
-          }}
-          components={{
-            RbacButton,
-            RbacOptionsMenuButton
+            useGetToken
           }}
         >
           {component}
@@ -75,10 +58,18 @@ const SCMRemoteComponentMounter: React.FC<{
   )
 }
 
-export const RemoteRepos: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepositoriesListing {...props} />} />
+export const RepositoriesListing: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<RemoveRepositoriesListing {...props} />} />
 )
 
-export const RemoteRepoResources: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepository {...props} />} />
+export const Repository: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<RemoveRepository {...props} />} />
+)
+
+export const RepositoryCommits: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<h1>Commit</h1>} />
+)
+
+export const RepositoryBranches: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<h1>Branches</h1>} />
 )

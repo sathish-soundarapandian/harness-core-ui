@@ -1,0 +1,15 @@
+.subNav {
+  padding-left: var(--spacing-medium);
+  margin-left: var(--spacing-xxlarge);
+
+  > p {
+    > span {
+      color: var(--white) !important;
+      padding-right: var(--spacing-small) !important;
+
+      svg path {
+        fill: var(--white);
+      }
+    }
+  }
+}

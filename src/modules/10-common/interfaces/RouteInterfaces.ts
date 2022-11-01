@@ -246,17 +246,21 @@ export interface GovernancePathProps
   evaluationId?: string
 }
 
-export interface SCMPathProps
-  extends RequireField<
-    Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'>>,
-    'accountId' | 'orgIdentifier' | 'projectIdentifier'
-  > {
+export interface SCMProps {
+  space?: string
+  repoPath?: string
   repoName?: string
-  ref?: string
-  filePath?: string
-  pullRequestId?: string
-  commitId?: string
+  gitRef?: string
+  resourcePath?: string
+  commitRef?: string
+  branch?: string
 }
+
+export type SCMPathProps = RequireField<
+  Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'>>,
+  'accountId' | 'orgIdentifier' | 'projectIdentifier'
+> &
+  Omit<SCMProps, 'space' | 'repoPath'>
 
 export interface AccountLevelGitOpsPathProps {
   entity: string
