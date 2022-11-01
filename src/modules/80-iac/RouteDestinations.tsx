@@ -61,26 +61,32 @@ const RedirectToIacProject = (): React.ReactElement => {
   }
 }
 
+const customComponents = {
+  FormMultiTypeConnectorField,
+  ApprovalStageOverview,
+  ApprovalStageExecution,
+  ApprovalAdvancedSpecifications,
+  SaveTemplateButton,
+  VariablesListTable
+}
+
+const customFunctions = {
+  createTemplate,
+  getStyles,
+  isDuplicateStageId,
+  getNameAndIdentifierSchema
+}
+
+const customHooks = {
+  usePipelineContext
+}
+
 const IacApp = (props: any): React.ReactElement => (
   <ChildAppMounter<IacCustomMicroFrontendProps>
     ChildApp={RemoteIacApp}
-    customComponents={{
-      FormMultiTypeConnectorField,
-      ApprovalStageOverview,
-      ApprovalStageExecution,
-      ApprovalAdvancedSpecifications,
-      SaveTemplateButton,
-      VariablesListTable
-    }}
-    customFunctions={{
-      createTemplate,
-      getStyles,
-      isDuplicateStageId,
-      getNameAndIdentifierSchema
-    }}
-    customHooks={{
-      usePipelineContext
-    }}
+    customComponents={customComponents}
+    customFunctions={customFunctions}
+    customHooks={customHooks}
     {...props}
   />
 )
@@ -88,23 +94,9 @@ const IacApp = (props: any): React.ReactElement => (
 export const StepVariableView = (props: any): React.ReactElement => (
   <ChildAppMounter<IacCustomMicroFrontendProps>
     ChildApp={VariableView}
-    customComponents={{
-      FormMultiTypeConnectorField,
-      ApprovalStageOverview,
-      ApprovalStageExecution,
-      ApprovalAdvancedSpecifications,
-      SaveTemplateButton,
-      VariablesListTable
-    }}
-    customFunctions={{
-      createTemplate,
-      getStyles,
-      isDuplicateStageId,
-      getNameAndIdentifierSchema
-    }}
-    customHooks={{
-      usePipelineContext
-    }}
+    customComponents={customComponents}
+    customFunctions={customFunctions}
+    customHooks={customHooks}
     {...props}
   />
 )
@@ -112,22 +104,9 @@ export const StepVariableView = (props: any): React.ReactElement => (
 export const IacStage = (props: any): React.ReactElement => (
   <ChildAppMounter<IacCustomMicroFrontendProps>
     ChildApp={RemoteIacApp}
-    customComponents={{
-      FormMultiTypeConnectorField,
-      ApprovalStageOverview,
-      ApprovalStageExecution,
-      ApprovalAdvancedSpecifications,
-      SaveTemplateButton
-    }}
-    customFunctions={{
-      createTemplate,
-      getStyles,
-      isDuplicateStageId,
-      getNameAndIdentifierSchema
-    }}
-    customHooks={{
-      usePipelineContext
-    }}
+    customComponents={customComponents}
+    customFunctions={customFunctions}
+    customHooks={customHooks}
     {...props}
   >
     <IacStageRemote {...props} />
