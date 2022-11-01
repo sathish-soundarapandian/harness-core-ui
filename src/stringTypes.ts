@@ -153,6 +153,7 @@ export interface StringsMap {
   'common.config': string
   'common.configDetails': string
   'common.configureModuleList': string
+  'common.configureNav': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
   'common.configureOptions.configureOptions': string

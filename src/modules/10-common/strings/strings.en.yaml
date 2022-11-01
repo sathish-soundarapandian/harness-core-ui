@@ -1093,3 +1093,4 @@ freezeActiveBannerText: All deployments have been disabled on the {{scope}} from
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
 freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 resourceIdentifier: Resource Identifier
+configureNav: Or configure your nav!
