@@ -30,7 +30,7 @@ export class TestStep extends PipelineStep<any> {
   protected stepName = 'test'
   protected stepDescription: keyof StringsMap = 'cd.azureArm.description'
 
-  validateFunc: () => void = () => void 0
+  validateFunc: (args: unknown) => void = () => void 0
 
   protected defaultValues = {
     type: StepType.CreateAzureARMResource,
@@ -51,7 +51,7 @@ export class TestStep extends PipelineStep<any> {
   }
 
   async setValidate(): Promise<void> {
-    const { validateInputSet } = await IacStepUtils
+    const { validateInputSet } = (await IacStepUtils) as unknown as { validateInputSet: (args: unknown) => void }
     this.validateFunc = validateInputSet
   }
 
