@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CVCreateSloV2 Cancel without adding any values 1`] = `
+<div>
+  <div>
+    <h1>
+      Not Found
+    </h1>
+    <div
+      data-testid="location"
+    >
+      /account/undefined/cv/orgs/undefined/projects/undefined/slos
+    </div>
+  </div>
+</div>
+`;

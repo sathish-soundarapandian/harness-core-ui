@@ -84,7 +84,6 @@ export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data:
         </Layout.Vertical>
       )
     default:
-      break
+      return <></>
   }
-  return <></>
 }

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreatePreview should render CreatePreview with empty value 1`] = `<div />`;

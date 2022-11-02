@@ -14,7 +14,7 @@ import routes from '@common/RouteDefinitions'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { userJourneyResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import CVCreateSLOV2 from '../CVCreateSLOV2'
-import { SLODetailsData } from './CVCreateSLOV2.mock'
+import { calendarMonthly, calendarWeekly, calendarQuarterly, SLODetailsData } from './CVCreateSLOV2.mock'
 
 jest.useFakeTimers()
 
@@ -57,6 +57,17 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('CVCreateSloV2', () => {
+  test('Cancel without adding any values', async () => {
+    const { container, getByText } = render(
+      <TestWrapper>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+    act(() => {
+      userEvent.click(getByText('cancel'))
+    })
+    expect(container).toMatchSnapshot()
+  })
   test('should render CVCreateSloV2 and show validations', async () => {
     const { container } = render(
       <TestWrapper>
@@ -289,7 +300,7 @@ describe('CVCreateSloV2', () => {
     )
   })
 
-  test('Should update and save composite SLO', async () => {
+  test('Should update and save composite SLO by updating SLO Target', async () => {
     const updateSLO = jest.fn()
     updateSLO.mockReturnValueOnce({ data: SLODetailsData })
     jest
@@ -323,5 +334,235 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
+  })
+
+  test('Should be able to canel with unsaved changes', async () => {
+    const updateSLO = jest.fn()
+    updateSLO.mockReturnValueOnce({ data: SLODetailsData })
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: SLODetailsData, mutate: updateSLO } as any)
+
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    const sloName = container.querySelector('input[name ="name"]')
+    await waitFor(() => expect(sloName).toBeInTheDocument())
+    userEvent.clear(sloName!)
+    userEvent.type(sloName!, 'updated composite slo')
+
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
+    })
+
+    fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
+
+    await act(() => {
+      userEvent.click(screen.getByText('cancel'))
+    })
+
+    await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
+
+    act(() => {
+      userEvent.click(document.querySelector('.bp3-dialog button')!)
+    })
+  })
+
+  test('Should update and save composite SLO by updating SLO name', async () => {
+    const updateSLO = jest.fn()
+    updateSLO.mockReturnValueOnce({ data: SLODetailsData })
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: SLODetailsData, mutate: updateSLO } as any)
+
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    const sloName = container.querySelector('input[name ="name"]')
+    await waitFor(() => expect(sloName).toBeInTheDocument())
+    userEvent.clear(sloName!)
+    userEvent.type(sloName!, 'updated composite slo')
+
+    await act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+
+    await waitFor(() => expect(screen.getByText('cv.slos.sloUpdated')).toBeInTheDocument())
+  })
+
+  test('Should save composite slo of calendar weekly type', async () => {
+    const calendarTypeSLO = {
+      ...SLODetailsData
+    }
+    calendarTypeSLO.resource.serviceLevelObjectiveV2.sloTarget = { ...calendarWeekly } as any
+    const updateSLO = jest.fn()
+    updateSLO.mockReturnValueOnce({ data: calendarTypeSLO })
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: calendarTypeSLO, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: calendarTypeSLO, mutate: updateSLO } as any)
+
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    const sloName = container.querySelector('input[name ="name"]')
+    await waitFor(() => expect(sloName).toBeInTheDocument())
+    userEvent.clear(sloName!)
+    userEvent.type(sloName!, 'updated composite slo')
+
+    await act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+  })
+
+  test('Should save composite slo of calendar monthly type', async () => {
+    const calendarTypeSLO = {
+      ...SLODetailsData
+    }
+    calendarTypeSLO.resource.serviceLevelObjectiveV2.sloTarget = { ...calendarMonthly } as any
+    const updateSLO = jest.fn()
+    updateSLO.mockReturnValueOnce({ data: calendarTypeSLO })
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: calendarTypeSLO, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: calendarTypeSLO, mutate: updateSLO } as any)
+
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    const sloName = container.querySelector('input[name ="name"]')
+    await waitFor(() => expect(sloName).toBeInTheDocument())
+    userEvent.clear(sloName!)
+    userEvent.type(sloName!, 'updated composite slo')
+
+    await act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+  })
+
+  test('Should save composite slo of calendar quarterly type', async () => {
+    const calendarTypeSLO = {
+      ...SLODetailsData
+    }
+    calendarTypeSLO.resource.serviceLevelObjectiveV2.sloTarget = { ...calendarQuarterly } as any
+    const updateSLO = jest.fn()
+    updateSLO.mockReturnValueOnce({ data: calendarTypeSLO })
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: calendarTypeSLO, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: calendarTypeSLO, mutate: updateSLO } as any)
+
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    const sloName = container.querySelector('input[name ="name"]')
+    await waitFor(() => expect(sloName).toBeInTheDocument())
+    userEvent.clear(sloName!)
+    userEvent.type(sloName!, 'updated composite slo')
+
+    await act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+  })
+
+  test('should save new composite slo', async () => {
+    const createSLO = jest.fn()
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useSaveSLOV2Data').mockReturnValue({ data: SLODetailsData, mutate: createSLO } as any)
+    render(
+      <TestWrapper>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    await waitFor(() => expect(screen.getByText('new slov2')).toBeInTheDocument())
+    act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+    await waitFor(() => expect(screen.getByText('cv.slos.sloCreated')).toBeInTheDocument())
+  })
+
+  test('should be able to update SLO weights', async () => {
+    const createSLO = jest.fn()
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useSaveSLOV2Data').mockReturnValue({ data: SLODetailsData, mutate: createSLO } as any)
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    })
+    const firstWeight = container.querySelector('[name="weightagePercentage"]')
+    act(() => {
+      userEvent.clear(firstWeight!)
+      userEvent.type(firstWeight!, '55')
+    })
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(screen.getByText('45')).toBeInTheDocument()
+    act(() => {
+      userEvent.clear(firstWeight!)
+      userEvent.type(firstWeight!, '101')
+    })
+  })
+
+  test('should open in loading state', async () => {
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: {}, loading: true, error: null, refetch: jest.fn() } as any))
+    const { container } = render(
+      <TestWrapper>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="steps-spinner"]')).toBeInTheDocument()
+  })
+
+  test('should open in error state', async () => {
+    jest.spyOn(cvServices, 'useGetServiceLevelObjectiveV2').mockImplementation(
+      () =>
+        ({
+          data: {},
+          loading: false,
+          error: {
+            data: {
+              responseMessages: ['error']
+            }
+          },
+          refetch: jest.fn()
+        } as any)
+    )
+    const { container } = render(
+      <TestWrapper>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="error"]')).toBeInTheDocument()
   })
 })
