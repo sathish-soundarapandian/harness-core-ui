@@ -115,7 +115,7 @@ import type {
   FlatValidWebhookFormikValuesInterface,
   TriggerConfigDTO
 } from '../TriggerWizardInterface'
-import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
+import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
@@ -207,7 +207,7 @@ export default function WebhookTriggerWizard(
       })
     )
 
-  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
 
@@ -217,7 +217,7 @@ export default function WebhookTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      ...(gitAwareForTriggerEnabled
+      ...(isNewGitSyncRemotePipeline
         ? {
             ignoreError,
             branch,
@@ -233,7 +233,7 @@ export default function WebhookTriggerWizard(
       projectIdentifier,
       pipelineIdentifier,
       ignoreError,
-      gitAwareForTriggerEnabled,
+      isNewGitSyncRemotePipeline,
       branch,
       pipelineConnectorRef,
       pipelineRepoName,
@@ -603,7 +603,7 @@ export default function WebhookTriggerWizard(
             // set error
             showError(getString('triggers.cannotParseInputValues'))
           }
-        } else if (gitAwareForTriggerEnabled) {
+        } else if (isNewGitSyncRemotePipeline) {
           pipelineJson = resolvedPipeline
         }
 
@@ -716,7 +716,7 @@ export default function WebhookTriggerWizard(
             // set error
             showError(getString('triggers.cannotParseInputValues'))
           }
-        } else if (gitAwareForTriggerEnabled) {
+        } else if (isNewGitSyncRemotePipeline) {
           pipelineJson = resolvedPipeline
         }
 
@@ -875,8 +875,8 @@ export default function WebhookTriggerWizard(
           }
         },
         inputYaml: stringifyPipelineRuntimeInput,
-        pipelineBranchName: gitAwareForTriggerEnabled ? pipelineBranchName : null,
-        inputSetRefs: gitAwareForTriggerEnabled ? inputSetRefs : null
+        pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
+        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
       } as NGTriggerConfigV2
       if (triggerYaml.source?.spec?.spec) {
         triggerYaml.source.spec.spec.spec.payloadConditions = persistIncomplete
@@ -921,8 +921,8 @@ export default function WebhookTriggerWizard(
           }
         },
         inputYaml: stringifyPipelineRuntimeInput,
-        pipelineBranchName: gitAwareForTriggerEnabled ? pipelineBranchName : null,
-        inputSetRefs: gitAwareForTriggerEnabled ? inputSetRefs : null
+        pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : null,
+        inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : null
       } as NGTriggerConfigV2
 
       if (secureToken && triggerYaml.source?.spec) {
@@ -965,7 +965,7 @@ export default function WebhookTriggerWizard(
       delete res.source.spec.spec.event
     }
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete res.inputYaml
       if (values.inputSetSelected?.length) {
         res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
@@ -1104,7 +1104,7 @@ export default function WebhookTriggerWizard(
     if (!formikProps) return {}
     let _inputSetRefsError = ''
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       // inputSetRefs is required if Input Set is required to run pipeline
       if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
         _inputSetRefsError = getString('triggers.inputSetIsRequired')
@@ -1128,7 +1128,7 @@ export default function WebhookTriggerWizard(
       orgPipeline: values.pipeline,
       setSubmitting
     })
-    const gitXErrors = gitAwareForTriggerEnabled
+    const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
     // https://github.com/formium/formik/issues/1392
@@ -1157,7 +1157,7 @@ export default function WebhookTriggerWizard(
   }, [])
 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete triggerYaml.inputYaml
 
       // Set pipelineBranchName to proper expression when it's left empty
@@ -1172,7 +1172,7 @@ export default function WebhookTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1189,7 +1189,7 @@ export default function WebhookTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: getErrorMessage((err as any)?.data) || getString('triggers.retryTriggerSave')
@@ -1208,7 +1208,7 @@ export default function WebhookTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -1225,7 +1225,7 @@ export default function WebhookTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
