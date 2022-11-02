@@ -137,7 +137,7 @@ const getModuleInfo = (
   moduleInfo: ModuleInfo,
   accountId: string,
   hasLicense: boolean,
-  shouldVisible = false,
+  shouldVisible: boolean,
   color: string
 ) => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
@@ -162,7 +162,7 @@ const useNavModuleInfo = (module: NavModuleName) => {
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
-    featureFlags[featureFlagName],
+    !!featureFlags[featureFlagName],
     color
   ) as useNavModuleInfoReturnType
 }
@@ -182,7 +182,7 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
         moduleInfoMap[module],
         accountId,
         !!licenseInformation[module]?.id,
-        featureFlags[moduleInfoMap[module].featureFlagName],
+        !!featureFlags[moduleInfoMap[module].featureFlagName],
         moduleInfoMap[module].color
       )
     }
