@@ -110,7 +110,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
       name: '',
       identifier: '',
       description: '',
-      delegateType: '',
+      delegateType: DelegateType.KUBERNETES,
       size: DelegateSize.LAPTOP,
       sesssionIdentifier: '',
       tokenName: '',
