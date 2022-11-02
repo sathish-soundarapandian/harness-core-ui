@@ -140,7 +140,7 @@ describe('Test cases for CVSLODetailsPage', () => {
   test('it should handle the suffix day/days', () => {
     jest
       .spyOn(cvServices, 'useGetSLODetails')
-      .mockReturnValue({ data: responseSLODashboardDetail2, loading: false } as any)
+      .mockReturnValue({ data: responseSLODashboardDetail2, loading: false, refetch: jest.fn } as any)
 
     renderComponent()
 

@@ -19,8 +19,6 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
         
       </p>
     </div>
-    0
-    
   </div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
@@ -86,6 +84,258 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
 </div>
 `;
 
+exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Period Type
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        Calendar
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="70"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Period Type
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        Calendar
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="99"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Period Type
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        Calendar
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="88"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
 <div>
   <div
@@ -102,7 +352,7 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
       >
-        
+        Rolling
       </p>
     </div>
     <div
@@ -111,26 +361,12 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
       >
-        Period length
+        Period Length
       </p>
       <p
         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
       >
         10
-      </p>
-    </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-    >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
-      >
-        Window ends
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
-      >
-        Rolling
       </p>
     </div>
   </div>
