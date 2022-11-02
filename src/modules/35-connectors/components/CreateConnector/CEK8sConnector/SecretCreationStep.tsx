@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Button, Heading, Layout, StepProps } from '@wings-software/uicore'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -15,6 +15,7 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
+import routes from '@common/RouteDefinitions'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import CopyCodeSection from './components/CopyCodeSection'
 import css from './CEK8sConnector.module.scss'
@@ -74,14 +75,10 @@ const SecretCreationStep: React.FC<StepProps<StepSecretManagerProps> & SecretCre
       </Heading>
       <ol type="1">
         <li>
-          {getString('connectors.ceK8.secretCreationStep.step1')}
-          <a
-            href={`${window.location.origin}/#/account/${accountId}/access-management/api-keys`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            here
-          </a>
+          {getString('connectors.ceK8.secretCreationStep.step1')}{' '}
+          <Link to={routes.toServiceAccounts({ accountId })} target="_blank">
+            {getString('connectors.ceAws.crossAccountRoleStep2.instructions.templateRedirection')}
+          </Link>
         </li>
         <li>{getString('connectors.ceK8.secretCreationStep.step2')}</li>
         <CopyCodeSection snippet={getString('connectors.ceK8.secretCreationStep.namespaceCommand')} />
