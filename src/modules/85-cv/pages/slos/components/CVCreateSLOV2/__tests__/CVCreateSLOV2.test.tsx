@@ -16,6 +16,21 @@ import { userJourneyResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.
 import CVCreateSLOV2 from '../CVCreateSLOV2'
 import { SLODetailsData } from './CVCreateSLOV2.mock'
 
+jest.useFakeTimers()
+
+const testPath = routes.toCVSLODetailsPage({
+  identifier: ':identifier',
+  accountId: ':accountId',
+  orgIdentifier: ':orgIdentifier',
+  projectIdentifier: ':projectIdentifier'
+})
+const testPathParams = {
+  orgIdentifier: 'cvng',
+  accountId: 'default',
+  projectIdentifier: 'project1',
+  identifier: 'new_slov2'
+}
+
 jest.mock('services/cv', () => ({
   useSaveSLOV2Data: jest.fn().mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useUpdateSLOV2Data: jest
@@ -99,7 +114,7 @@ describe('CVCreateSloV2', () => {
       .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
 
     const { container, getByText } = render(
-      <TestWrapper pathParams={{ orgIdentifier: 'default', projectIdentifier: 'project1', identifier: 'new_slov2' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CVCreateSLOV2 isComposite />
       </TestWrapper>
     )
@@ -136,9 +151,7 @@ describe('CVCreateSloV2', () => {
     })
     SLODetailsData.resource.serviceLevelObjectiveV2.spec.serviceLevelObjectivesDetails.forEach(async sloObjective => {
       await waitFor(() => expect(getByText(sloObjective.serviceLevelObjectiveRef)).toBeInTheDocument())
-      await waitFor(() => expect(getByText(sloObjective.weightagePercentage.toString())).toBeInTheDocument())
     })
-    //
     await waitFor(() =>
       expect(container.querySelector('input[name="SLOTargetPercentage"]')).toHaveValue(
         SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage
@@ -283,19 +296,6 @@ describe('CVCreateSloV2', () => {
       .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
       .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
     jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: SLODetailsData, mutate: updateSLO } as any)
-
-    const testPath = routes.toCVSLODetailsPage({
-      identifier: ':identifier',
-      accountId: ':accountId',
-      orgIdentifier: ':orgIdentifier',
-      projectIdentifier: ':projectIdentifier'
-    })
-    const testPathParams = {
-      orgIdentifier: 'cvng',
-      accountId: 'default',
-      projectIdentifier: 'project1',
-      identifier: 'new_slov2'
-    }
 
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testPathParams}>
