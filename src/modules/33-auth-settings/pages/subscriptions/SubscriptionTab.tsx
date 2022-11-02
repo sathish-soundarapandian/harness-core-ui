@@ -74,7 +74,6 @@ const SubscriptionTab = ({
   licenseData,
   refetchGetLicense
 }: SubscriptionTabProps): ReactElement => {
-  const { PLANS_ENABLED } = useFeatureFlags()
   const isCommunity = useGetCommunity()
 
   const [selectedSubscriptionTab, setSelectedSubscriptionTab] = useState<SubscriptionTabInfo>(SUBSCRIPTION_TABS[0])
@@ -117,16 +116,16 @@ const SubscriptionTab = ({
 
       const isSelected = tab === selectedSubscriptionTab
       const buttonClassnames = cx(css.subscriptionTabButton, isSelected && css.selected)
-
+      const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
       return (
         <Button className={buttonClassnames} key={tab.label} round onClick={handleTabClick}>
           {getString(tab.label)}
         </Button>
       )
     })
-
+   
     // show Plans tab only when feature flag is on, always show for community edition
-    if (!isCommunity && !PLANS_ENABLED) {
+    if (!isCommunity && isOnPrem) {
       tabs.splice(1, 1)
     }
 

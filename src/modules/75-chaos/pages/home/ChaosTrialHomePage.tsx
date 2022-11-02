@@ -25,11 +25,11 @@ import bgImageURL from '../../images/chaos.svg'
 const ChaosTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
-
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isFreeEnabled = !isOnPrem
   const module = 'chaos'
   const moduleType = 'CHAOS'
 

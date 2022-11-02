@@ -26,12 +26,12 @@ import bgImage from './images/cehomebg.svg'
 
 const CETrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isFreeEnabled = !isOnPrem
   const module = 'ce'
   const moduleType = 'CE'
   const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)

@@ -14,8 +14,8 @@ import bgImageURL from './ff.svg'
 
 const CFTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isFreeEnabled =!isOnPrem
 
   const startBtnDescription = isFreeEnabled
     ? getString('common.startFreePlan', { module: 'FF' })

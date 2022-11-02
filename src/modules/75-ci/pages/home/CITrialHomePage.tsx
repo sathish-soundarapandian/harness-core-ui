@@ -24,13 +24,12 @@ import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const [loading, setLoading] = useState<boolean>(false)
   const { status: currentCIStatus } = licenseInformation['CI'] || {}
-
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
   useEffect(() => {
     setLoading(true)
     try {
@@ -62,7 +61,7 @@ const CITrialHomePage: React.FC = () => {
 
   useTelemetry({ pageName: PageNames.CIStartTrial })
 
-  const startBtnDescription = FREE_PLAN_ENABLED
+  const startBtnDescription = !isOnPrem
     ? getString('common.startFreePlan', { module: 'CI' })
     : getString('ci.ciTrialHomePage.startTrial.startBtn.description')
 

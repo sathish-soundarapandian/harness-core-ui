@@ -60,11 +60,12 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { accountId } = useParams<{
     accountId: string
   }>()
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED, PLANS_ENABLED } = useFeatureFlags()
+  const  FREE_PLAN_ENABLED  = !isOnPrem
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
@@ -96,7 +97,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
       handleStartTrial()
     }
   }
-
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
   const { trackEvent } = useTelemetry()
   return (
     <Layout.Vertical spacing="small">
@@ -114,7 +115,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
         onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
         disabled={loading}
       />
-      {PLANS_ENABLED && (
+      {!isOnPrem && (
         <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
           {getString('common.exploreAllPlans')}
         </Link>
@@ -130,8 +131,8 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
-
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isFreeEnabled = !isOnPrem
 
   const startTrialRequestBody: StartTrialDTORequestBody = {
     moduleType: module.toUpperCase() as any,

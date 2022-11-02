@@ -113,8 +113,9 @@ const getModulesWithSubscriptionsRoutesMap = ({
 const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
+  const FREE_PLAN_ENABLED = !isOnPrem
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()
