@@ -259,6 +259,7 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
           />
           <Button
             width={150}
+            data-testid={'addSloButton'}
             disabled={selectedSlos.length < 2}
             variation={ButtonVariation.PRIMARY}
             text={getString('add')}

@@ -6,22 +6,22 @@
  */
 
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, queryByAttribute, render } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockSLODashboardWidgetsData } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
+import { mockSLODashboardWidgetsData } from './SLOList.mock'
 import { SLOList } from '../SLOList'
 
 const serviceLevelObjectivesDetails = [
   {
     accountId: 'default',
-    serviceLevelObjectiveRef: 'hHJYxnUFTCypZdmYr0Q0tQ',
+    serviceLevelObjectiveRef: 'SLO3',
     weightagePercentage: 50
   },
   {
     accountId: 'default',
-    serviceLevelObjectiveRef: '7b-_GIZxRu6VjFqAqqdVDQ',
+    serviceLevelObjectiveRef: 'SLO4',
     weightagePercentage: 50
   }
 ]
@@ -86,8 +86,17 @@ describe('SLOList', () => {
         <SLOList filter={undefined} onAddSLO={jest.fn()} hideDrawer={jest.fn()} serviceLevelObjectivesDetails={[]} />
       </TestWrapper>
     )
+    const addSloButton = queryByAttribute('data-testid', container, 'addSloButton')
+    expect(addSloButton).toBeDisabled()
     act(() => {
-      fireEvent.click(container.querySelector('[type="checkbox"]')!)
+      fireEvent.click(container.querySelectorAll('[type="checkbox"]')[0]!)
+    })
+    act(() => {
+      fireEvent.click(container.querySelectorAll('[type="checkbox"]')[1]!)
+    })
+    expect(queryByAttribute('data-testid', container, 'addSloButton')).not.toBeDisabled()
+    act(() => {
+      fireEvent.click(addSloButton!)
     })
     expect(container).toMatchSnapshot()
   })

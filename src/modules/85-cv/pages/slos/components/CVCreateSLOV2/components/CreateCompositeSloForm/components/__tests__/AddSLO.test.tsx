@@ -10,6 +10,7 @@ import { fireEvent, render } from '@testing-library/react'
 import { Formik } from 'formik'
 import { Button } from '@harness/uicore'
 import { act } from 'react-test-renderer'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { getDistribution } from '../AddSlos/AddSLOs.utils'
 import { AddSLOs } from '../AddSlos/AddSLOs'
@@ -46,7 +47,7 @@ describe('Validate  AddSLO', () => {
   })
 
   test('should render AddSLOs with existing values values', () => {
-    const { getByText } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <Formik initialValues={{ serviceLevelObjectivesDetails }} onSubmit={jest.fn()}>
           {formikProps => (
@@ -65,6 +66,10 @@ describe('Validate  AddSLO', () => {
       </TestWrapper>
     )
     expect(getByText('cv.CompositeSLO.AddSLO')).toBeInTheDocument()
+    const firstWeight = container.querySelector('[name="weightagePercentage"]')
+    act(() => {
+      userEvent.type(firstWeight!, '1')
+    })
     act(() => {
       fireEvent.click(getByText('Update'))
     })
