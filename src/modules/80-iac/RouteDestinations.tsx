@@ -1,9 +1,9 @@
 import React, { lazy } from 'react'
-import { Redirect, useParams } from 'react-router-dom'
+import { Redirect, useLocation, useParams } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -78,7 +78,8 @@ const customFunctions = {
 }
 
 const customHooks = {
-  usePipelineContext
+  usePipelineContext,
+  useLocation
 }
 
 const IacApp = (props: any): React.ReactElement => (
@@ -120,7 +121,10 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={IacSideNavProps}
-      path={[routes.toIacMicroFrontend({ ...projectPathProps }), routes.toIac({ ...accountPathProps })]}
+      path={[
+        routes.toIacMicroFrontend({ ...projectPathProps, ...accountPathProps, ...orgPathProps }),
+        routes.toIac({ ...accountPathProps })
+      ]}
     >
       <IacApp />
     </RouteWithLayout>
