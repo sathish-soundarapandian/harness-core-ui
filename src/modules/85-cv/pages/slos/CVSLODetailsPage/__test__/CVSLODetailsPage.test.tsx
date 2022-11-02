@@ -72,7 +72,7 @@ describe('Test cases for CVSLODetailsPage', () => {
   test('it should render the component with correct title and take a snapshot', () => {
     jest
       .spyOn(cvServices, 'useGetSLODetails')
-      .mockReturnValue({ data: responseSLODashboardDetail, loading: false } as any)
+      .mockReturnValue({ data: responseSLODashboardDetail, loading: false, refetch: jest.fn } as any)
 
     const { container } = renderComponent()
 
@@ -82,7 +82,7 @@ describe('Test cases for CVSLODetailsPage', () => {
   })
 
   test('it should handle the loading state', () => {
-    jest.spyOn(cvServices, 'useGetSLODetails').mockReturnValue({ data: null, loading: true } as any)
+    jest.spyOn(cvServices, 'useGetSLODetails').mockReturnValue({ data: null, loading: true, refetch: jest.fn } as any)
 
     const { container } = renderComponent()
 
@@ -128,6 +128,7 @@ describe('Test cases for CVSLODetailsPage', () => {
     await waitFor(() => {
       expect(cvServices.useGetSLODetails).toHaveBeenLastCalledWith({
         identifier,
+        lazy: true,
         queryParams: {
           accountId,
           orgIdentifier,
