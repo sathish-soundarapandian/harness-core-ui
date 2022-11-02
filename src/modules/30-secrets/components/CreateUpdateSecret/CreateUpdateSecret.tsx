@@ -15,7 +15,8 @@ import {
   Text,
   ModalErrorHandlerBinding,
   ModalErrorHandler,
-  ButtonVariation
+  ButtonVariation,
+  MultiSelectOption
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -180,6 +181,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       orgIdentifier: propsSecret?.orgIdentifier
     }
   })
+  const convertRegionsMultiSelectDataToPayload = (data: MultiSelectOption[]): string =>
+    data.map(val => val.value.toString()).join(',')
+
+  const convertPayloadtoRegionsMultiSelectData = (data: string) => {
+    const returnOptions: MultiSelectOption[] = []
+    data?.split(',').forEach(val => {
+      returnOptions.push({ value: val, label: val })
+    })
+    return returnOptions
+  }
 
   const loading = loadingCreateText || loadingUpdateText || loadingCreateFile || loadingUpdateFile
   const editing = !!propsSecret
@@ -216,7 +227,9 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               get(data, 'configureRegions') && {
                 additionalMetadata: {
                   values: {
-                    ...(get(data, 'regions') && { regions: get(data, 'regions') })
+                    ...(get(data, 'regions') && {
+                      regions: convertRegionsMultiSelectDataToPayload(get(data, 'regions'))
+                    })
                   }
                 }
               }),
@@ -241,7 +254,10 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           ...(((get(data, 'regions') && get(data, 'configureRegions')) || get(data, 'version')) && {
             additionalMetadata: {
               values: {
-                ...(get(data, 'regions') && data.valueType === 'Inline' && { regions: get(data, 'regions') }),
+                ...(get(data, 'regions') &&
+                  data.valueType === 'Inline' && {
+                    regions: convertRegionsMultiSelectDataToPayload(get(data, 'regions'))
+                  }),
                 ...(get(data, 'version') && data.valueType === 'Reference' && { version: get(data, 'version') })
               }
             }
@@ -341,6 +357,10 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     }
   }
 
+  const isGcpSMInlineEditMode = () =>
+    selectedSecretManager?.type === 'GcpSecretManager' &&
+    editing &&
+    (secret?.type === 'SecretText' && (secret?.spec as SecretTextSpecDTO)?.valueType) === 'Inline'
   // update selectedSecretManager and readOnly flag in state when we get new data
   useEffect(() => {
     const selectedSM = editing
@@ -381,8 +401,10 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
             (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' &&
             pick(secret?.spec, ['value'])),
           ...(editing &&
-            secret &&
-            pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version', 'regions'])),
+            secret && {
+              regions: convertPayloadtoRegionsMultiSelectData(get(secret, 'spec.additionalMetadata.values.regions'))
+            }),
+          ...(editing && secret && pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version'])),
           ...(editing &&
             get(secret, 'spec.additionalMetadata.values.regions') && {
               configureRegions: !!get(secret, 'spec.additionalMetadata.values.regions')
@@ -404,12 +426,15 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                   environmentVariables: VariableSchemaWithoutHook(getString)
                 })
               : Yup.object(),
-          version: Yup.string()
-            .trim()
-            .when('valueType', {
-              is: 'Reference',
-              then: Yup.string().required(getString('secrets.secret.referenceSecretVersionRqrd'))
-            })
+          version:
+            selectedSecretManager?.type === 'GcpSecretManager'
+              ? Yup.string()
+                  .trim()
+                  .when('valueType', {
+                    is: 'Reference',
+                    then: Yup.string().required(getString('secrets.secret.referenceSecretVersionRqrd'))
+                  })
+              : Yup.string()
         })}
         validate={formData => {
           props.onChange?.({
@@ -470,7 +495,9 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                 inputLabel={getString('secrets.labelSecretName')}
                 idName="identifier"
                 isIdentifierEditable={!editing}
-                inputGroupProps={{ disabled: loadingSecret }}
+                inputGroupProps={{
+                  disabled: isGcpSMInlineEditMode() || loading
+                }}
               />
 
               {!typeOfSelectedSecretManager ? <Text>{getString('secrets.secret.messageSelectSM')}</Text> : null}
