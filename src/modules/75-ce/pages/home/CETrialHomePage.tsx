@@ -23,10 +23,11 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams } from '@common/hooks'
 import bgImage from './images/cehomebg.svg'
+import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
 const CETrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()

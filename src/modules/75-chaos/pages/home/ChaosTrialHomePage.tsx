@@ -11,8 +11,6 @@ import { useToaster } from '@harness/uicore'
 import pick from 'lodash-es/pick'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useQueryParams } from '@common/hooks'
@@ -21,11 +19,12 @@ import { ResponseModuleLicenseDTO, useStartFreeLicense, useStartTrialLicense } f
 import useChaosTrialModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
 import bgImageURL from '../../images/chaos.svg'
+import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
 const ChaosTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
-  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()

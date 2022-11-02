@@ -21,6 +21,7 @@ import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/
 import bgImageURL from './images/ci.svg'
 
 import css from './CITrialHomePage.module.scss'
+import { Hosting } from '../get-started-with-ci/InfraProvisioningWizard/Constants'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
@@ -29,7 +30,7 @@ const CITrialHomePage: React.FC = () => {
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const [loading, setLoading] = useState<boolean>(false)
   const { status: currentCIStatus } = licenseInformation['CI'] || {}
-  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   useEffect(() => {
     setLoading(true)
     try {

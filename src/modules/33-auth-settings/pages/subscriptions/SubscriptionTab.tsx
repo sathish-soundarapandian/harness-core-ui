@@ -27,6 +27,7 @@ import SubscriptionOverview from './overview/SubscriptionOverview'
 import SubscriptionBanner from './SubscriptionBanner'
 import SubscriptionPlans from './plans/SubscriptionPlans'
 import css from './SubscriptionsPage.module.scss'
+import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
 export interface SubscriptionTabInfo {
   name: SubscriptionTabNames
@@ -75,13 +76,12 @@ const SubscriptionTab = ({
   refetchGetLicense
 }: SubscriptionTabProps): ReactElement => {
   const isCommunity = useGetCommunity()
-
   const [selectedSubscriptionTab, setSelectedSubscriptionTab] = useState<SubscriptionTabInfo>(SUBSCRIPTION_TABS[0])
   const { getString } = useStrings()
   const { tab: queryTab } = useQueryParams<{ tab?: SubscriptionTabNames }>()
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
-
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { isFreeOrCommunity, edition, isExpired, expiredDays, days } = trialInfo
 
   useEffect(() => {
@@ -116,14 +116,13 @@ const SubscriptionTab = ({
 
       const isSelected = tab === selectedSubscriptionTab
       const buttonClassnames = cx(css.subscriptionTabButton, isSelected && css.selected)
-      const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
       return (
         <Button className={buttonClassnames} key={tab.label} round onClick={handleTabClick}>
           {getString(tab.label)}
         </Button>
       )
     })
-   
+
     // show Plans tab only when feature flag is on, always show for community edition
     if (!isCommunity && isOnPrem) {
       tabs.splice(1, 1)

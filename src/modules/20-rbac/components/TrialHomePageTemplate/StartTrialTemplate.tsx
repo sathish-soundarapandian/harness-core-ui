@@ -29,6 +29,7 @@ import { useFeatureFlags, useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
 import { FeatureFlag } from '@common/featureFlags'
 import css from './StartTrialTemplate.module.scss'
+import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
 interface StartTrialTemplateProps {
   title: string
@@ -60,7 +61,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { accountId } = useParams<{
     accountId: string
   }>()
-  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
@@ -97,7 +98,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
       handleStartTrial()
     }
   }
-  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+
   const { trackEvent } = useTelemetry()
   return (
     <Layout.Vertical spacing="small">

@@ -17,7 +17,7 @@ import { getModuleLink } from '@projects-orgs/components/ModuleListCard/ModuleLi
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getModuleDescriptionsForModuleSelectionDialog, getModuleFullLengthTitle } from '@projects-orgs/utils/utils'
-import { getModuleIcon, useGetCommunity, isOnPrem } from '@common/utils/utils'
+import { getModuleIcon, useGetCommunity } from '@common/utils/utils'
 import {
   Project,
   StartFreeLicenseQueryParams,
@@ -31,6 +31,7 @@ import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStor
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import css from './useModuleSelect.module.scss'
+import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
 export interface UseModuleSelectModalProps {
   onSuccess?: () => void
@@ -113,7 +114,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
 const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const FREE_PLAN_ENABLED = !isOnPrem
   const history = useHistory()
