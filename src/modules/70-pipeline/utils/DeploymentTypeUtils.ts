@@ -19,8 +19,8 @@ export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> 
   WinRm: 'pipeline.serviceDeploymentTypes.winrm',
   AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp',
   ECS: 'pipeline.serviceDeploymentTypes.amazonEcs',
-  CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeployment',
-  Elastigroup: 'pipeline.serviceDeploymentTypes.elastigroup'
+  Elastigroup: 'pipeline.serviceDeploymentTypes.spotElastigroup',
+  CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeployment'
 }
 
 export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
@@ -43,6 +43,6 @@ export const executionStrategyTypes: Record<ServiceDefinition['type'], StringKey
   ServerlessAwsLambda: 'pipeline.serviceDeploymentTypes.serverlessAwsType',
   AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp',
   CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeploy',
-  ECS: 'ce.common.containerService',
-  Elastigroup: 'pipeline.serviceDeploymentTypes.elastigroup'
+  Elastigroup: 'pipeline.serviceDeploymentTypes.spotElastigroup',
+  ECS: 'ce.common.containerService'
 }

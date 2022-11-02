@@ -113,6 +113,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
 export interface GetCgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
   NG_SVC_ENV_REDESIGN?: boolean
+  SPOT_ELASTIGROUP_NG?: boolean
 }
 
 export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTypesProps): DeploymentTypeItem[] {

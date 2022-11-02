@@ -52,7 +52,14 @@ export const getExecutionPipelineViewLink = (
     accountId,
     module,
     executionIdentifier: planExecutionId || '-1',
-    source
+    source,
+    connectorRef: pipelineExecutionSummary.connectorRef,
+    repoName: defaultTo(
+      pipelineExecutionSummary.gitDetails?.repoName,
+      pipelineExecutionSummary.gitDetails?.repoIdentifier
+    ),
+    branch: pipelineExecutionSummary.gitDetails?.branch,
+    storeType: pipelineExecutionSummary.storeType
   })
 }
 
@@ -149,7 +156,7 @@ export const ExecutionCell: CellType = ({ row }) => {
   const data = row.original
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
 
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
   const name =

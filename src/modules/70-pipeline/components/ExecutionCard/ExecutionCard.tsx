@@ -196,7 +196,11 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
         projectIdentifier,
         accountId,
         module,
-        source
+        source,
+        connectorRef: pipelineExecution.connectorRef,
+        repoName: defaultTo(pipelineExecution.gitDetails?.repoName, pipelineExecution.gitDetails?.repoIdentifier),
+        branch: pipelineExecution.gitDetails?.branch,
+        storeType: pipelineExecution.storeType
       })
 
       //opening in new tab is required for cards present in dashboards

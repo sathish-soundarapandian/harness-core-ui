@@ -63,6 +63,7 @@ import css from '../../ArtifactConnector.module.scss'
 export interface specInterface {
   artifactId?: string
   groupId?: string
+  group?: string
   extension?: string
   classifier?: string
   packageName?: string
@@ -126,6 +127,10 @@ export function Nexus3Artifact({
       groupId: Yup.string().when('repositoryFormat', {
         is: val => val === RepositoryFormatTypes.Maven,
         then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
+      }),
+      group: Yup.string().when('repositoryFormat', {
+        is: val => val === RepositoryFormatTypes.Raw,
+        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.group'))
       }),
       packageName: Yup.string().when('repositoryFormat', {
         is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
@@ -271,6 +276,15 @@ export function Nexus3Artifact({
             formikValues.spec.repositoryUrl || '',
             formikValues.spec.repositoryPort || ''
           ])
+        : formikValues.repositoryFormat === RepositoryFormatTypes.Raw
+        ? lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
+          lastQueryData.repository !== formikValues.repository ||
+          lastQueryData.group !== formikValues.spec.group ||
+          shouldFetchTags(prevStepData, [
+            formikValues.repositoryFormat,
+            formikValues.repository,
+            formikValues.spec.group || ''
+          ])
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.packageName !== formikValues.spec.packageName ||
@@ -306,6 +320,10 @@ export function Nexus3Artifact({
             artifactPath: formikValues.spec.artifactPath,
             ...optionalFields
           }
+        } else if (formikValues.repositoryFormat === RepositoryFormatTypes.Raw) {
+          repositoryDependentFields = {
+            group: formikValues.spec.group
+          }
         } else {
           repositoryDependentFields = {
             packageName: formikValues.spec.packageName
@@ -334,6 +352,8 @@ export function Nexus3Artifact({
           formikValue.repository,
           formikValue.spec.artifactPath
         ])
+      : formikValue.repositoryFormat === RepositoryFormatTypes.Raw
+      ? !checkIfQueryParamsisNotEmpty([formikValue.repositoryFormat, formikValue.repository, formikValue.spec.group])
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
@@ -350,7 +370,6 @@ export function Nexus3Artifact({
     ) as Nexus2InitialValuesType
   }
   const submitFormData = (formData: Nexus2InitialValuesType & { connectorId?: string }): void => {
-    // const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
     let specData: specInterface =
       formData.repositoryFormat === RepositoryFormatTypes.Maven
         ? {
@@ -362,6 +381,10 @@ export function Nexus3Artifact({
         : formData.repositoryFormat === RepositoryFormatTypes.Docker
         ? {
             artifactPath: formData.spec.artifactPath
+          }
+        : formData.repositoryFormat === RepositoryFormatTypes.Raw
+        ? {
+            group: formData.spec.group
           }
         : {
             packageName: formData.spec.packageName
@@ -464,6 +487,12 @@ export function Nexus3Artifact({
                         groupId: '',
                         ...optionalValues
                       })
+                    } else if (value.value === RepositoryFormatTypes.Raw) {
+                      setLastQueryData({
+                        repository: '',
+                        repositoryFormat: value.value as string,
+                        group: ''
+                      })
                     } else {
                       setLastQueryData({
                         repository: '',
@@ -497,16 +526,6 @@ export function Nexus3Artifact({
                       items: getRepository(),
                       allowCreatingNewItems: true
                     },
-                    // onChange: (value: any) => {
-                    //   formik.setValues({
-                    //     ...formik.values,
-                    //     spec: {
-                    //       ...formik.values?.spec,
-                    //       packageName: value?.label || value,
-                    //       version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
-                    //     }
-                    //   })
-                    // },
                     onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                       if (
                         e?.target?.type !== 'text' ||
@@ -742,6 +761,31 @@ export function Nexus3Artifact({
                     </div>
                   )}
                 </>
+              ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Raw ? (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('rbac.group')}
+                    name="spec.group"
+                    placeholder={getString('pipeline.artifactsSelection.groupPlaceholder')}
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                  />
+                  {getMultiTypeFromValue(formik.values?.spec?.group) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        value={formik.values?.spec?.group || ''}
+                        type="String"
+                        variableName="spec.group"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => {
+                          formik.setFieldValue('spec.group', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput

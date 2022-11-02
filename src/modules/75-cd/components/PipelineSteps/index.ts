@@ -80,6 +80,7 @@ import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastruc
 import { UpdateReleaseRepo } from '../UpdateReleaseRepo/UpdateReleaseRepo'
 import { ShellScriptProvisionStep } from './ShellScriptProvision/ShellScriptProvisionStep'
 import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/ElastigroupInfraSpec'
+import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -154,3 +155,4 @@ factory.registerStep(new CustomDeploymentServiceSpec())
 factory.registerStep(new CustomDeploymentInfrastructureSpec())
 factory.registerStep(new ShellScriptProvisionStep())
 factory.registerStep(new ElastigroupInfrastructureSpec())
+factory.registerStep(new ElastigroupServiceSpec())

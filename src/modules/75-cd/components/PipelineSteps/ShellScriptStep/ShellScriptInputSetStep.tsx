@@ -19,6 +19,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { scriptInputType, scriptOutputType, ShellScriptData, ShellScriptFormData } from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
@@ -35,7 +36,7 @@ export interface ShellScriptInputSetStepProps {
 }
 
 export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepProps): React.ReactElement {
-  const { template, path, readonly, initialValues, allowableTypes } = props
+  const { template, path, readonly, initialValues, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
@@ -47,7 +48,9 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -69,6 +72,10 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             defaultValueToReset=""
             disabled={readonly}
             allowedTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disableTypeSelection={readonly}
             skipRenderValueInExpressionLabel
             expressionRender={() => {
@@ -209,6 +216,9 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               disabled: readonly,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disabled={readonly}
             name={`${prefix}spec.executionTarget.host`}
             fieldPath={`spec.executionTarget.host`}
@@ -223,6 +233,10 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             type="SSHKey"
             expressions={expressions}
             allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             name={`${prefix}spec.executionTarget.connectorRef`}
             label={getString('sshConnector')}
             disabled={readonly}
@@ -240,6 +254,9 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               expressions,
               disabled: readonly,
               allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             name={`${prefix}spec.executionTarget.workingDirectory`}
             fieldPath={`spec.executionTarget.workingDirectory`}

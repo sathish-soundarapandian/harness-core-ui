@@ -125,6 +125,10 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
       value: instanceData.artifactName || ''
     }
   ]
+  const customDeploymentInstanceInfoData = Object.keys(instanceInfoDTOProperties).map(instanceDetailsKey => ({
+    label: instanceDetailsKey,
+    value: instanceInfoDTOProperties?.[instanceDetailsKey]
+  }))
 
   function instanceInfoData(deploymentType: string | undefined): any {
     switch (deploymentType) {
@@ -167,10 +171,13 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
           }
         ]
       case ServiceDeploymentType.CustomDeployment:
-        return Object.keys(instanceInfoDTOProperties).map(instanceDetailsKey => ({
-          label: instanceDetailsKey,
-          value: instanceInfoDTOProperties?.[instanceDetailsKey]
-        }))
+        return [
+          ...customDeploymentInstanceInfoData,
+          {
+            label: getString('cd.serviceDashboard.artifact'),
+            value: instanceData.artifactName || ''
+          }
+        ]
       default:
         return ((instanceData?.instanceInfoDTO as K8sInstanceInfoDTO)?.containerList || []).length
           ? [

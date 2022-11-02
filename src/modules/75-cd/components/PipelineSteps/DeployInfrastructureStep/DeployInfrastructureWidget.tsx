@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 
 import { Formik, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
+
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -38,11 +40,15 @@ export function DeployInfrastructureWidget({
   const { getString } = useStrings()
 
   const formikRef = useRef<FormikProps<DeployStageConfig> | null>(null)
+  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.environment?.environmentRef)
+  )
 
   const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
   useEffect(() => {
     subscribeForm({ tab: DeployTabs.ENVIRONMENT, form: formikRef as any })
     return () => unSubscribeForm({ tab: DeployTabs.ENVIRONMENT, form: formikRef as any })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -71,15 +77,17 @@ export function DeployInfrastructureWidget({
                   readonly={readonly}
                   allowableTypes={allowableTypes}
                   serviceRef={serviceRef}
+                  environmentRefType={environmentRefType}
+                  setEnvironmentRefType={setEnvironmentRefType}
                 />
-                {formik.values.environment?.environmentRef &&
-                  getMultiTypeFromValue(formik.values.environment?.environmentRef) === MultiTypeInputType.FIXED && (
-                    <DeployInfrastructures
-                      initialValues={initialValues}
-                      allowableTypes={allowableTypes}
-                      readonly={readonly}
-                    />
-                  )}
+                {formik.values.environment?.environmentRef && !isMultiTypeRuntime(environmentRefType) && (
+                  <DeployInfrastructures
+                    initialValues={initialValues}
+                    allowableTypes={allowableTypes}
+                    readonly={readonly}
+                    environmentRefType={environmentRefType}
+                  />
+                )}
               </>
             ) : (
               <DeployEnvironmentOrEnvGroup

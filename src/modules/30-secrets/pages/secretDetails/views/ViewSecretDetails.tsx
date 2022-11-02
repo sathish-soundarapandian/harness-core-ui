@@ -9,6 +9,7 @@ import React from 'react'
 import { ButtonVariation, Container, Layout, VisualYamlToggle } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore/dist/components/VisualYamlToggle/VisualYamlToggle'
+import { get } from 'lodash-es'
 import type {
   KerberosConfigDTO,
   SecretResponseWrapper,
@@ -208,8 +209,19 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
           value: getString('encrypted').toLowerCase(),
           valueColor: Color.GREY_350
         })
-      if (secretTextSpec.valueType == 'Reference')
+      if (secretTextSpec.valueType == 'Reference') {
         items.push({ label: getString('secrets.labelPath'), value: secretTextSpec.value })
+      }
+      if (get(secretTextSpec, 'additionalMetadata.values.regions'))
+        items.push({
+          label: getString('regionLabel'),
+          value: get(secretTextSpec, 'additionalMetadata.values.regions')
+        })
+      if (get(secretTextSpec, 'additionalMetadata.values.version'))
+        items.push({
+          label: getString('version'),
+          value: get(secretTextSpec, 'additionalMetadata.values.version')
+        })
       items.push({
         label: getString('secrets.labelSecretsManager'),
         value: (secret.spec as SecretTextSpecDTO).secretManagerIdentifier
@@ -221,6 +233,11 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
         value: getString('encryptedFile').toLowerCase(),
         valueColor: Color.GREY_350
       })
+      if (get(secret, 'spec.additionalMetadata.values.regions'))
+        items.push({
+          label: getString('regionLabel'),
+          value: get(secret, 'spec.additionalMetadata.values.regions')
+        })
       items.push({
         label: getString('secrets.labelSecretsManager'),
         value: (secret.spec as SecretTextSpecDTO).secretManagerIdentifier

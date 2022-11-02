@@ -543,7 +543,6 @@ describe('AWS Prometheus', () => {
     cy.contains('p', 'Amazon Web services').click()
 
     cy.wait('@awsRegionsCall')
-    cy.wait('@awsWorkspacesCall')
 
     cy.get('button[data-testid="cr-field-connectorRef"]').should('not.be.disabled')
 
@@ -562,11 +561,22 @@ describe('AWS Prometheus', () => {
     cy.findByPlaceholderText('- Select an AWS Region -').click()
     cy.contains('p', 'region 1').click()
 
+    cy.wait('@awsWorkspacesCall')
+
     cy.findByPlaceholderText('- Select a Workspace Id -').click()
     cy.contains('p', 'Workspace 1').click()
 
     cy.contains('span', 'AWS Region is required').should('not.exist')
     cy.contains('span', 'Workspace Id is required').should('not.exist')
+
+    cy.get('input[value="region 1"]').click()
+
+    cy.contains('p', 'region 2').click()
+
+    cy.contains('span', 'Workspace Id is required').should('exist')
+
+    cy.findByPlaceholderText('- Select a Workspace Id -').click()
+    cy.contains('p', 'Workspace 1').click()
 
     cy.findByRole('button', { name: /Next/i }).click()
 
@@ -617,7 +627,7 @@ describe('AWS Prometheus', () => {
       expect(sources?.healthSources?.[0]?.type).equals('AwsPrometheus')
       expect(sources?.healthSources?.[0]?.name).equals('awsPrometheusTest')
       expect(sources?.healthSources?.[0]?.identifier).equals('awsPrometheusTest')
-      expect(sources?.healthSources?.[0]?.spec?.region).equals('region 1')
+      expect(sources?.healthSources?.[0]?.spec?.region).equals('region 2')
       expect(sources?.healthSources?.[0]?.spec?.workspaceId).equals('sjksm43455n-34x53c45vdssd-fgdfd232sdfad')
     })
   })
@@ -645,8 +655,14 @@ describe('AWS Prometheus', () => {
 
     cy.contains('div', 'AwsPrometheusTest').click({ force: true })
 
+    cy.wait('@awsRegionsCall')
+    cy.wait('@awsWorkspacesCall')
+
     cy.findByPlaceholderText('- Select an AWS Region -').should('be.disabled')
     cy.findByPlaceholderText('- Select a Workspace Id -').should('be.disabled')
+
+    cy.get('input[value="region 1"]').should('exist')
+    cy.get('input[value="Workspace 1"]').should('exist')
 
     cy.findByTestId(/thumbnail-select-change/).should('be.disabled')
   })

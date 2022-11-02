@@ -6,7 +6,7 @@
  */
 
 import type { CompletionItemKind } from 'vscode-languageserver-types'
-import type { YamlSnippetMetaData, GetYamlSchemaQueryParams } from 'services/cd-ng'
+import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 
 export interface YamlBuilderHandlerBinding {
   getLatestYaml: () => string
@@ -45,11 +45,6 @@ export interface YamlBuilderProps {
   theme?: Theme
   yamlSanityConfig?: YamlSanityConfig
   /* Snippet section related props */
-  showSnippetSection?: boolean
-  showIconMenu?: boolean
-  snippets?: YamlSnippetMetaData[]
-  onSnippetCopy?: (identifier: string) => Promise<void>
-  snippetFetchResponse?: SnippetFetchResponse
   onChange?: (isEditorDirty: boolean) => void
   onErrorCallback?: (error: Record<string, any>) => void
   renderCustomHeader?: () => React.ReactElement | null

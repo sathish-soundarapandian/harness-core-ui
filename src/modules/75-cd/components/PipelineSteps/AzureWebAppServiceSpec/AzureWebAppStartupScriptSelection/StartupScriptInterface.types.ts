@@ -91,6 +91,7 @@ export interface StartupScriptWizardStepsProps<T> {
   isReadonly: boolean
   handleStoreChange: (store?: T) => void
   connectorTypes: Array<ConnectorTypes>
+  deploymentType: ServiceDefinition['type']
 }
 
 export interface StartupScriptWizardStepTwoProps {
@@ -127,6 +128,7 @@ export interface StartupScriptListViewProps {
   isReadonly: boolean
   allowableTypes: MultiTypeAllowedTypes
   startupCommand: StartupCommandConfiguration
+  deploymentType: ServiceDefinition['type']
 }
 
 export interface StartupScriptLastStepProps {
@@ -143,6 +145,7 @@ export interface StartupScriptLastStepProps {
 
 export interface StartupScriptPropType {
   stepName: string
+  stepSubtitle: string
   expressions: string[]
   allowableTypes: MultiTypeAllowedTypes
   isReadonly: boolean

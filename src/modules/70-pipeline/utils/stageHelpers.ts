@@ -606,6 +606,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.EcsService
     case ServiceDeploymentType.CustomDeployment:
       return StepType.CustomDeploymentServiceSpec
+    case ServiceDeploymentType.Elastigroup:
+      return StepType.Elastigroup
     default:
       return StepType.K8sServiceSpec
   }

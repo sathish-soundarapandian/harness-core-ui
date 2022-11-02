@@ -373,7 +373,10 @@ export default function DeployStageSetupShell(): JSX.Element {
           variation={ButtonVariation.SECONDARY}
           icon="chevron-left"
           onClick={() => {
-            handleTabChange(TabsOrder[Math.max(0, TabsOrder.indexOf(selectedTabId) - 1)])
+            let nextTab = TabsOrder[Math.max(0, TabsOrder.indexOf(selectedTabId) - 1)]
+            if (selectedTabId === DeployTabs.ENVIRONMENT) nextTab = DeployTabs.SERVICE
+            setSelectedTabId(nextTab)
+            setSelectedSectionId(nextTab)
           }}
         />
       )}

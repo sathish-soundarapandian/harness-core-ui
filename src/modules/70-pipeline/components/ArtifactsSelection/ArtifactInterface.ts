@@ -271,6 +271,7 @@ export interface Nexus2InitialValuesType {
   spec: {
     artifactId?: string
     groupId?: string
+    group?: string
     extension?: string
     classifier?: string
     packageName?: string

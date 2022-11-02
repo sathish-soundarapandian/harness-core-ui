@@ -78,13 +78,13 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          <Card className={css.sectionCard} id={getString('pipeline.startupCommand.name')}>
+          <Card className={css.sectionCard} id={getString('pipeline.startup.command.name')}>
             <div
               className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('optionalField', {
-                name: getString('pipeline.startupCommand.name')
+                name: getString('pipeline.startup.command.name')
               })}
               <HarnessDocTooltip
                 tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}

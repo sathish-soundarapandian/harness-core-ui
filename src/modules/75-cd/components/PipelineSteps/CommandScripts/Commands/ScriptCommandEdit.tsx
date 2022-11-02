@@ -69,7 +69,10 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
           }
           name="spec.workingDirectory"
           multiTextInputProps={{
-            multiTextInputProps: { expressions, allowableTypes },
+            multiTextInputProps: {
+              expressions,
+              allowableTypes
+            },
             disabled: readonly,
             placeholder: getString('cd.enterWorkDirectory')
           }}

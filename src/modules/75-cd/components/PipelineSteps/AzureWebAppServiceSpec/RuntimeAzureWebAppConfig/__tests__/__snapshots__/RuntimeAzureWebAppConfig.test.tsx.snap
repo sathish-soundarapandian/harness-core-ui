@@ -585,7 +585,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
     <div
       class="subheading"
     >
-      pipeline.startupCommand.name
+      pipeline.startup.command.name
     </div>
     <div>
       <div
@@ -809,7 +809,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
               class="bp3-label"
               for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.paths"
             >
-              pipeline.startupCommand.scriptFilePath
+              pipeline.startup.scriptFilePath
                
               <span
                 class="bp3-text-muted"

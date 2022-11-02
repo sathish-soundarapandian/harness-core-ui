@@ -54,7 +54,10 @@ export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement
           }
           name="spec.destinationPath"
           multiTextInputProps={{
-            multiTextInputProps: { expressions, allowableTypes },
+            multiTextInputProps: {
+              expressions,
+              allowableTypes
+            },
             disabled: readonly,
             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
           }}

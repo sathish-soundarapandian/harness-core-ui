@@ -11,14 +11,14 @@ import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
+import type { PageConnectorResponse, DeploymentStageConfig, ServiceDefinition } from 'services/cd-ng'
 import type { StageElementWrapperConfig, PipelineInfoConfig, EntityGitDetails } from 'services/pipeline-ng'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
-import type { StageType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
@@ -864,5 +864,16 @@ export const moveStage = ({
       )
       resetPipelineStages(updatedStages)
     }
+  }
+}
+
+export const getDeploymentSpecificYamlKeys = (
+  deploymentType: ServiceDefinition['type']
+): 'startupCommand' | 'startupScript' => {
+  switch (deploymentType) {
+    case ServiceDeploymentType.Elastigroup:
+      return 'startupScript'
+    default:
+      return 'startupCommand'
   }
 }

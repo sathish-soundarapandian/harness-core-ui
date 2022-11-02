@@ -296,12 +296,10 @@ const CreateConnectorFromYamlPage: React.FC = () => {
             fileName={`${gitResourceDetails.name}`.concat('.yaml')}
             entityType="Connectors"
             bind={setYamlHandler}
-            showIconMenu={true}
             schema={connectorSchema?.data}
             existingJSON={editorContent}
             height="calc(100vh - 250px)"
             onChange={onConnectorChange}
-            showSnippetSection={false}
             isReadOnlyMode={creating}
             yamlSanityConfig={{ removeEmptyString: false }}
           />

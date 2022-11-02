@@ -21,7 +21,7 @@ export interface NewPipelineSelectProps {
 }
 
 export default function NewPipelineSelect(props: NewPipelineSelectProps): React.ReactElement {
-  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   const [query, setQuery] = React.useState('')
   const { getString } = useStrings()
 
@@ -29,7 +29,6 @@ export default function NewPipelineSelect(props: NewPipelineSelectProps): React.
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      module,
       orgIdentifier,
       searchTerm: query,
       size: 10

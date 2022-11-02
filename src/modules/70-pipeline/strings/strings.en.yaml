@@ -39,11 +39,10 @@ pipelineTimeoutHelpText: Enter a timeout for the entire Pipeline. You can change
 stageExecutionSettings: Stage Execution Settings
 stageExecutionsHelperText: Allow selective stage(s) executions?
 sslVerify: SSL Verify
-noPipelineText: There are no pipelines in your project
-noDeploymentText: There are no deployments in your project
-runModalNoPipelineText: There are no pipelines in your project. Please create a new pipeline
-noBuildsText: There are no builds in your project
-noBuildsLabel: No builds
+noPipelinesLabel: No pipelines
+noPipelinesText: There are no pipelines in your project. Click the button below to create a pipeline.
+noRunsLabel: No {{moduleRunType}} in your project
+noRunsText: Your project does not have any {{moduleRunType}} yet. Click the button below to run a pipeline.
 parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
@@ -554,6 +553,7 @@ executionStatus:
   Failed: FAILED
   Success: SUCCESS
   Aborted: ABORTED
+  AbortedByFreeze: ABORTED BY FREEZE
   Error: ERROR
   Paused: PAUSED
   Pausing: PAUSING
@@ -571,6 +571,7 @@ executionStatus:
 executionFilters:
   labels:
     Aborted: Aborted
+    AbortedByFreeze: Aborted by Freeze
     Expired: Expired
     Failed: '{{ $.failed }}'
     Running: Running
@@ -826,6 +827,7 @@ artifactsSelection:
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
   groupIdPlaceholder: Enter Group ID
+  groupPlaceholder: Enter Group
   extension: Extension
   extensionPlaceholder: Enter Extension
   classifier: Classifier
@@ -877,6 +879,7 @@ artifactsSelection:
     artifactPath: Artifact Path is required
     artifactId: Artifact ID is required
     groupId: Group ID is required
+    group: Group is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
@@ -996,7 +999,7 @@ dependencyRequired: 'Connector is required to fetch buckets'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
-myPipelineRunsText: My Pipeline Runs
+myExecutionsText: My Executions
 noRegions: No regions found
 noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
@@ -1252,6 +1255,7 @@ serviceDeploymentTypes:
   customDeployment: Deployment Template
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
+  spotElastigroup: Spot Elastigroup
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1329,6 +1333,7 @@ configFiles:
     files: 'File(s) is required'
     file: 'This field is required'
     fileSelection: 'Select atleast one config file'
+    duplicateIdError: 'Failed to create Config File: There is already a Config File with identifier {{ configFileIdentifier }} present or soft deleted. Please provide a new unique identifier and save again.'
 OverviewEmptyStates:
   createPipelineHeaderMsg: Set up a Pipeline and run your first {{executionLabel}}!
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like {{pipelineOperation1}} and {{pipelineOperation2}} software.
@@ -1376,11 +1381,17 @@ appServiceConfig:
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
     overrides: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Overrides'
-startupCommand:
-  name: Startup Command
-  subtitle: 'Specify Azure Web App Startup Command Store Type'
-  fileDetails: '{{$.pipeline.startupCommand.name}} File Details'
-  fileSource: '{{$.pipeline.startupCommand.name}} File Source'
+startup:
+  script:
+    name: Startup Script
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.script.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.script.name}} File Details'
+    fileSource: '{{$.pipeline.startup.script.name}} File Source'
+  command:
+    name: Startup Command
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.command.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.command.name}} File Details'
+    fileSource: '{{$.pipeline.startup.command.name}} File Source'
   scriptFilePath: 'Script File Path'
   fileValidation: 'file is required'
   plainText: 'Plain Text'

@@ -77,7 +77,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Service',
   width: '100%',
   height: 350,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -484,7 +483,6 @@ export default function AddEditServiceOverride({
                 {...yamlBuilderReadOnlyModeProps}
                 existingJSON={existingJSON}
                 bind={setYamlHandler}
-                showSnippetSection={false}
                 onChange={handleYamlChange}
               />
             )}

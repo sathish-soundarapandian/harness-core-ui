@@ -16,6 +16,7 @@ import {
 } from '@wings-software/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import UserGroupsInput, { FormikUserGroupsInput } from './UserGroupsInput'
 import { InpuSetFunction, parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { getIdentifierFromValue } from '../EntityReference/EntityReference'
@@ -30,12 +31,26 @@ export interface FormMultiTypeUserGroupInputProps
     isTemplatizedView: true
     templateValue: string
   }
+  enableConfigureOptions?: boolean
+  configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
 }
 
 export type Extended = FormikUserGroupsInput & FormMultiTypeUserGroupInputProps
 
 export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
-  const { disabled, children, label, tooltipProps, formik, name, expressions, allowableTypes, templateProps } = props
+  const {
+    disabled,
+    children,
+    label,
+    tooltipProps,
+    formik,
+    name,
+    expressions,
+    allowableTypes,
+    templateProps,
+    enableConfigureOptions = false,
+    configureOptionsProps
+  } = props
 
   const value = get(formik?.values, name)
 
@@ -65,6 +80,8 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
         <ExpressionsListInput name={name} value={value} readOnly={disabled} expressions={expressions} />
       )}
       style={{ flexGrow: 1, marginBottom: 0 }}
+      enableConfigureOptions={enableConfigureOptions}
+      configureOptionsProps={configureOptionsProps}
     >
       <UserGroupsInput
         label=""

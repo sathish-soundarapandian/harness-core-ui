@@ -12,6 +12,9 @@ export interface DefineHealthSourceFormInterface {
   healthSourceList: any[]
   dataSourceType?: string
   sourceType?: string
+  connectorRef?: string
+  region?: string
+  workspaceId?: string
 }
 
 export interface ConnectorDisableFunctionProps {

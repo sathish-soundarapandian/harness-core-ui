@@ -549,7 +549,7 @@ exports[`Resource Groups Page render data 1`] = `
                       style="display: flex; align-items: center;"
                     >
                       <span
-                        class="bp3-icon bp3-icon-lock StyledProps--main Text--icon StyledProps--padding-right-medium"
+                        class="bp3-icon bp3-icon-lock StyledProps--main iconColor StyledProps--padding-right-medium"
                         icon="lock"
                       >
                         <svg
@@ -647,7 +647,7 @@ exports[`Resource Groups Page render data 1`] = `
                       style="display: flex; align-items: center;"
                     >
                       <span
-                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-medium"
+                        class="bp3-icon StyledProps--main iconColor StyledProps--padding-right-medium"
                         data-icon="environment"
                       >
                         <svg

@@ -44,6 +44,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -153,7 +154,7 @@ function HelmDeployWidget(props: HelmDeployProps, formikRef: StepFormikFowardRef
   )
 }
 
-const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowableTypes }) => {
+const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
@@ -165,7 +166,9 @@ const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowabl
             label={getString('pipelineSteps.timeoutLabel')}
             disabled={inputSetData?.readonly}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: inputSetData?.readonly

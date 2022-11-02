@@ -13,8 +13,10 @@ import cx from 'classnames'
 import { Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { useQueryParams } from '@common/hooks'
 import type { SidecarArtifact } from 'services/cd-ng'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
@@ -26,7 +28,8 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
+  const { supportingGitSimplification } = useAppStore()
   const artifactSource = props.artifact ? artifactSourceBaseFactory.getArtifactSource(props.artifact.type) : null
   const runtimeMode = isTemplatizedView(props.stepViewType)
   const isArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts', false)
@@ -68,7 +71,7 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
           orgIdentifier,
           accountId,
           pipelineIdentifier,
-          repoIdentifier,
+          repoIdentifier: supportingGitSimplification && storeType === StoreType.REMOTE ? repoName : repoIdentifier,
           branch,
           isSidecar: true,
           artifact: artifactDefaultValue

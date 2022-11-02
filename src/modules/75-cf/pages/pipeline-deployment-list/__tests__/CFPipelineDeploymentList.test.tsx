@@ -149,7 +149,7 @@ describe('CFPipelineDeploymentList', () => {
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline'
+      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline?connectorRef=account.PRenvHarnessYamlGithub&repoName=ng-pr-manifests&branch=feat%2FCDS-41594-gitops&storeType=REMOTE'
     )
   })
 

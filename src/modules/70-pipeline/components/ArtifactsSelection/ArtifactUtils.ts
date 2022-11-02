@@ -363,6 +363,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           repositoryPort: '',
           artifactId: '',
           groupId: '',
+          group: '',
           extension: '',
           classifier: '',
           packageName: ''

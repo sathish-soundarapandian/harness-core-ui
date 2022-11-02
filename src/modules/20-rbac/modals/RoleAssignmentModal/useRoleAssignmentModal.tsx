@@ -38,7 +38,7 @@ const getTitle = (principal: PrincipalType, isInviteOrAssignRoles: boolean): key
   if (principal === PrincipalType.USER_GROUP && isInviteOrAssignRoles) {
     return 'rbac.userGroupPage.assignRoles'
   }
-  return 'rbac.addRole'
+  return 'rbac.manageRoleBindings'
 }
 
 export const useRoleAssignmentModal = ({

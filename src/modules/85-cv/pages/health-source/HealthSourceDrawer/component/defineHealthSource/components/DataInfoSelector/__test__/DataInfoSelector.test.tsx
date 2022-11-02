@@ -1,4 +1,5 @@
 import React from 'react'
+import { Formik } from 'formik'
 import { render, screen } from '@testing-library/react'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -16,7 +17,9 @@ describe('DataInfoSelector', () => {
   test('should test whether loading placeholder is being shown in dropdowns during API call in progress', () => {
     render(
       <TestWrapper>
-        <DataInfoSelector />
+        <Formik initialValues={{}} onSubmit={() => void 0}>
+          <DataInfoSelector />
+        </Formik>
       </TestWrapper>
     )
 
@@ -37,7 +40,7 @@ describe('DataInfoSelector', () => {
 
     const getWorkspaceSpy = jest.spyOn(cvService, 'useGetPrometheusWorkspaces')
     getWorkspaceSpy.mockReturnValue({
-      data: { data: [] },
+      data: { data: [{ workspaceId: 'abc', name: 'abc_name' }] },
       loading: false,
       absolutePath: '',
       cancel: () => Promise.resolve(void 0),
@@ -48,7 +51,9 @@ describe('DataInfoSelector', () => {
 
     render(
       <TestWrapper>
-        <DataInfoSelector isEdit />
+        <Formik initialValues={{ region: 'region 1', workspaceId: 'abc' }} onSubmit={() => void 0}>
+          <DataInfoSelector isEdit />
+        </Formik>
       </TestWrapper>
     )
 

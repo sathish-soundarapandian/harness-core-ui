@@ -61,35 +61,6 @@ exports[`Create Delegate Wizard render data 1`] = `
             </span>
             <div
               class="StyledProps--font StyledProps--main cardBody"
-              data-type="DOCKER"
-            >
-              <img
-                src="test-file-stub"
-              />
-              <div
-                class="Layout--vertical StyledProps--main cardContent"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main cardHeader StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey900"
-                >
-                  delegate.cardData.docker.name
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main subTitle"
-                  style="color: rgb(107, 109, 133);"
-                >
-                  delegate.cardData.docker.text
-                </p>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--interactive"
-            data-index="1"
-            tabindex="0"
-          >
-            <div
-              class="StyledProps--font StyledProps--main cardBody"
               data-type="K8sCluster"
             >
               <span
@@ -131,6 +102,35 @@ exports[`Create Delegate Wizard render data 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--interactive"
+            data-index="1"
+            tabindex="0"
+          >
+            <div
+              class="StyledProps--font StyledProps--main cardBody"
+              data-type="DOCKER"
+            >
+              <img
+                src="test-file-stub"
+              />
+              <div
+                class="Layout--vertical StyledProps--main cardContent"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main cardHeader StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey900"
+                >
+                  delegate.cardData.docker.name
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main subTitle"
+                  style="color: rgb(107, 109, 133);"
+                >
+                  delegate.cardData.docker.text
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div
@@ -139,32 +139,96 @@ exports[`Create Delegate Wizard render data 1`] = `
       <div
         class="section2"
       >
-        <div>
+        <p
+          class="StyledProps--font StyledProps--main prereq"
+        >
+          delegate.kubernetes.prerequisites
+        </p>
+        <div
+          class="StyledProps--font StyledProps--main"
+          style="display: flex; flex-direction: column; justify-content: space-between; flex: 1; height: 340px; font-size: 13px; line-height: 20px; letter-spacing: 0.233333px;"
+        >
           <p
-            class="StyledProps--font StyledProps--main prereqTitle"
+            class="StyledProps--font StyledProps--main preReqContent StyledProps--font-size-normal"
           >
-            delegates.delegateCreation.dockerPrerequisites.title
+            delegate.kubernetes.prerequisites_info1
           </p>
-          <p
-            class="StyledProps--font StyledProps--main ensureText StyledProps--font-size-normal"
+          <div
+            class="StyledProps--font StyledProps--main"
           >
-            delegates.delegateCreation.dockerPrerequisites.ensureInst
-          </p>
-          <p
-            class="StyledProps--font StyledProps--main prereqText StyledProps--font-size-normal"
+            <span
+              class="StyledProps--font StyledProps--main preReqContent StyledProps--inline"
+            >
+              delegate.kubernetes.prerequisites_info2
+            </span>
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-weight-bold"
+            >
+              https://app.harness.io
+            </span>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
           >
-            delegates.delegateCreation.dockerPrerequisites.sysReq
-          </p>
-          <p
-            class="StyledProps--font StyledProps--main prereqText StyledProps--font-size-normal"
-          >
-            delegates.delegateCreation.dockerPrerequisites.minCPU
-          </p>
-          <p
-            class="StyledProps--font StyledProps--main prereqText StyledProps--font-size-normal"
-          >
-            delegates.delegateCreation.dockerPrerequisites.minMem
-          </p>
+            <div
+              class="Layout--horizontal StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main preReqContent"
+                style="display: flex; align-items: center;"
+              >
+                <span
+                  class="bp3-icon bp3-icon-arrow-right StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                  icon="arrow-right"
+                >
+                  <svg
+                    data-icon="arrow-right"
+                    height="8"
+                    viewBox="0 0 16 16"
+                    width="8"
+                  >
+                    <desc>
+                      arrow-right
+                    </desc>
+                    <path
+                      d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                delegate.kubernetes.permissions_info1
+              </p>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main preReqContent"
+                style="display: flex; align-items: center;"
+              >
+                <span
+                  class="bp3-icon bp3-icon-arrow-right StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                  icon="arrow-right"
+                >
+                  <svg
+                    data-icon="arrow-right"
+                    height="8"
+                    viewBox="0 0 16 16"
+                    width="8"
+                  >
+                    <desc>
+                      arrow-right
+                    </desc>
+                    <path
+                      d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                delegate.kubernetes.permissions_info2
+              </p>
+            </div>
+          </div>
         </div>
         <div
           class="StyledProps--font StyledProps--main"

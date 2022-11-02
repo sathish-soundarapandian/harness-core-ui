@@ -230,7 +230,6 @@ export function LoopingStrategy({
                       </Container>
                       <Container>
                         <YamlBuilderMemo
-                          showSnippetSection={false}
                           fileName={''}
                           key={selectedStrategy}
                           entityType={'Pipelines'}

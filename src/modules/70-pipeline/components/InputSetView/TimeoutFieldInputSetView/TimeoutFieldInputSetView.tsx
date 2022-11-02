@@ -6,30 +6,28 @@
  */
 
 import React from 'react'
-import { DataTooltipInterface, MultiTypeInputType } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
+import { MultiTypeInputType } from '@harness/uicore'
+import { defaultTo, get } from 'lodash-es'
+import { Container, getMultiTypeFromValue, Layout } from '@wings-software/uicore'
 import {
   FormMultiTypeDurationField,
-  MultiTypeDurationProps
+  FormMultiTypeDurationProps
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
 
-interface TimeoutFieldInpuSetViewProps {
-  name: string
+interface TimeoutFieldInputSetViewProps extends Omit<FormMultiTypeDurationProps, 'label'> {
   label: string
-  placeholder?: string
-  multiTypeDurationProps?: Omit<MultiTypeDurationProps, 'name' | 'onChange' | 'value'>
   fieldPath: string
   template: any
-  disabled?: boolean
-  className?: string
-  tooltipProps?: DataTooltipInterface
 }
 
-export function TimeoutFieldInputSetView(props: TimeoutFieldInpuSetViewProps): JSX.Element {
-  const { name, label, placeholder, template, fieldPath, tooltipProps, multiTypeDurationProps, className, disabled } =
-    props
+export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): JSX.Element {
+  const { template, fieldPath, ...rest } = props
+  const { formik, name, label, placeholder, tooltipProps, multiTypeDurationProps, className, disabled } = rest
+  const { enableConfigureOptions = true, configureOptionsProps } = multiTypeDurationProps || {}
+  const value = get(formik?.values, name, '')
 
   const { getMultiTypeInputWithAllowedValues } = useRenderMultiTypeInputWithAllowedValues({
     name: name,
@@ -44,17 +42,29 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInpuSetViewProps): J
   })
 
   if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
-    return getMultiTypeInputWithAllowedValues()
+    return (
+      <Container className={className}>
+        <Layout.Horizontal spacing={'medium'}>
+          {getMultiTypeInputWithAllowedValues()}
+          {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={value}
+              type={'String'}
+              variableName={name}
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={val => formik?.setFieldValue(name, val)}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+              style={{ marginTop: 'var(--spacing-6)' }}
+              {...configureOptionsProps}
+              isReadonly={disabled}
+            />
+          )}
+        </Layout.Horizontal>
+      </Container>
+    )
   }
 
-  return (
-    <FormMultiTypeDurationField
-      multiTypeDurationProps={multiTypeDurationProps}
-      className={className}
-      label={label}
-      name={name}
-      disabled={disabled}
-      placeholder={placeholder}
-    />
-  )
+  return <FormMultiTypeDurationField {...rest} />
 }

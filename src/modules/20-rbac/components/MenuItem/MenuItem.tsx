@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { IMenuItemProps, Menu, MenuItem, PopoverInteractionKind } from '@blueprintjs/core'
-import { Popover } from '@wings-software/uicore'
+import { IMenuItemProps, Menu, MenuItem, PopoverInteractionKind, MaybeElement } from '@blueprintjs/core'
+import { Icon, Popover } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { usePermission, PermissionsRequest } from '@rbac/hooks/usePermission'
 import { useGetFirstDisabledFeature } from '@common/hooks/useFeatures'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
@@ -15,12 +16,18 @@ import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier
 import { getPermissionRequestFromProps, getTooltip } from '@rbac/utils/utils'
 import css from './MenuItem.module.scss'
 
-export interface RbacMenuItemProps extends IMenuItemProps {
+export interface RbacMenuItemProps extends Omit<IMenuItemProps, 'icon'> {
   permission?: Omit<PermissionsRequest, 'permissions'> & { permission: PermissionIdentifier }
   featuresProps?: FeaturesProps
+  icon?: IconName | MaybeElement
 }
 
-const RbacMenuItem: React.FC<RbacMenuItemProps> = ({ permission: permissionRequest, featuresProps, ...restProps }) => {
+const RbacMenuItem: React.FC<RbacMenuItemProps> = ({
+  permission: permissionRequest,
+  featuresProps,
+  icon,
+  ...restProps
+}) => {
   const [canDoAction] = usePermission(getPermissionRequestFromProps(permissionRequest), [permissionRequest])
 
   const { featureEnabled, disabledFeatureName } = useGetFirstDisabledFeature(featuresProps?.featuresRequest)
@@ -47,7 +54,7 @@ const RbacMenuItem: React.FC<RbacMenuItemProps> = ({ permission: permissionReque
   const enabled = canDoAction && featureEnabled
 
   if (noRequest || enabled) {
-    return <Menu.Item {...restProps} />
+    return <Menu.Item {...restProps} icon={icon ? <Icon className={css.icon} name={icon as IconName} /> : null} />
   }
 
   return (
@@ -66,7 +73,7 @@ const RbacMenuItem: React.FC<RbacMenuItemProps> = ({ permission: permissionReque
           event.stopPropagation()
         }}
       >
-        <MenuItem {...restProps} disabled />
+        <MenuItem {...restProps} icon={icon ? <Icon className={css.icon} name={icon as IconName} /> : null} disabled />
       </div>
     </Popover>
   )

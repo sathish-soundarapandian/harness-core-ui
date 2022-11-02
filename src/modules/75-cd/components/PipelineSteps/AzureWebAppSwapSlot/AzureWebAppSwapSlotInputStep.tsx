@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { AzureWebAppSwapSlotData, AzureWebAppSwapSlotProps } from './SwapSlot.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -22,7 +23,7 @@ const isRuntime = (value: string): boolean => getMultiTypeFromValue(value) === M
 export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotData = AzureWebAppSwapSlotData>(
   props: AzureWebAppSwapSlotProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, allowableTypes } = props
+  const { inputSetData, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -37,7 +38,9 @@ export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotDat
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly
@@ -58,6 +61,9 @@ export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotDat
               expressions,
               disabled: readonly,
               allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             fieldPath={'spec.targetSlot'}
             template={inputSetData?.template}

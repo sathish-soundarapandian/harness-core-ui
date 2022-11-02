@@ -880,7 +880,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                   class="Layout--horizontal StyledProps--main actions"
                 >
                   <span
-                    class="bp3-icon StyledProps--main StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
                     data-icon="Edit"
                   >
                     <svg
@@ -905,7 +905,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="bp3-icon StyledProps--main StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
                     data-icon="main-trash"
                   >
                     <svg

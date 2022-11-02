@@ -35,6 +35,41 @@ exports[`ExecutionStatusIcon Aborted 1`] = `
 </div>
 `;
 
+exports[`ExecutionStatusIcon AbortedByFreeze 1`] = `
+<div>
+  <span
+    class="bp3-popover-wrapper bp3-dark"
+  >
+    <span
+      class="bp3-popover-target"
+    >
+      <span
+        class="bp3-icon StyledProps--main statusIcon abortedbyfreeze"
+        data-icon="circle-stop"
+        tabindex="0"
+      >
+        <svg
+          fill="none"
+          height="14"
+          viewBox="0 0 10 10"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6.238 3.647H3.762a.107.107 0 00-.108.107v2.502c0 .06.048.108.108.108h2.476c.059 0 .107-.048.107-.108V3.754a.107.107 0 00-.107-.107z"
+            fill="currentColor"
+          />
+          <path
+            d="M5 .313a4.688 4.688 0 100 9.375A4.688 4.688 0 005 .312zm0 8.591a3.905 3.905 0 110-7.81 3.905 3.905 0 010 7.81z"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+    </span>
+  </span>
+</div>
+`;
+
 exports[`ExecutionStatusIcon ApprovalRejected 1`] = `
 <div>
   <span

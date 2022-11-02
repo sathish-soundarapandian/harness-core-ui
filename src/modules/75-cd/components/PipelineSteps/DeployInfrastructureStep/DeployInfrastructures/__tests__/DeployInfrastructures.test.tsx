@@ -68,6 +68,7 @@ describe('Deploy infrastructures test', () => {
             initialValues={{
               infrastructureRef: ''
             }}
+            environmentRefType={MultiTypeInputType.FIXED}
           />
         </Formik>
       </TestWrapper>
@@ -119,6 +120,7 @@ describe('Deploy infrastructures test', () => {
             initialValues={{
               infrastructureRef: 'infra1'
             }}
+            environmentRefType={MultiTypeInputType.FIXED}
           />
         </Formik>
       </TestWrapper>
@@ -157,6 +159,7 @@ describe('Deploy infrastructures test', () => {
             initialValues={{
               infrastructureRef: ''
             }}
+            environmentRefType={MultiTypeInputType.FIXED}
           />
         </Formik>
       </TestWrapper>
@@ -198,6 +201,7 @@ describe('Deploy infrastructures test', () => {
             initialValues={{
               infrastructureRef: ''
             }}
+            environmentRefType={MultiTypeInputType.FIXED}
           />
         </Formik>
       </TestWrapper>

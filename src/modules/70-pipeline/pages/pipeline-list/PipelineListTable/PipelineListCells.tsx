@@ -349,7 +349,11 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
       executionIdentifier,
       accountId,
       module,
-      source: source || 'deployments'
+      source: source || 'deployments',
+      connectorRef: data.connectorRef,
+      repoName: defaultTo(data.gitDetails?.repoName, data.gitDetails?.repoIdentifier),
+      branch: data.gitDetails?.branch,
+      storeType: data.storeType
     }),
     'aria-label': `Execution ${executionIdentifier}`
   })

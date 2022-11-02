@@ -114,8 +114,8 @@ export default function SelectDeploymentType({
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
-    return getCgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN })
-  }, [SSH_NG, NG_SVC_ENV_REDESIGN])
+    return getCgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG })
+  }, [SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)

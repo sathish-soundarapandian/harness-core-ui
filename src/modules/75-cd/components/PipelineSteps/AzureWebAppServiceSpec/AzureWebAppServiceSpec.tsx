@@ -709,7 +709,7 @@ export class AzureWebAppServiceSpec extends Step<ServiceSpec> {
           if (!value) {
             set(
               errors,
-              `configFiles[${index}].configFile.spec.store.spec.files[${secretFileIndex}]`,
+              `configFiles[${index}].configFile.spec.store.spec.secretFiles[${secretFileIndex}]`,
               getString?.('fieldRequired', { field: 'File' })
             )
           }

@@ -23,6 +23,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useGetServiceNowIssueCreateMetadata, useGetServiceNowTicketTypes } from 'services/cd-ng'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowTicketTypeSelectOption, SnowApprovalDeploymentModeProps } from './types'
 import { getDateTimeOptions } from './ServiceNowApprovalChangeWindow'
@@ -31,7 +32,7 @@ import css from './ServiceNowApproval.module.scss'
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
 
 function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Element {
-  const { inputSetData, initialValues, allowableTypes, formik } = formContentProps
+  const { inputSetData, initialValues, allowableTypes, formik, stepViewType } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -124,7 +125,9 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             allowableTypes,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
@@ -150,6 +153,9 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           multiTypeProps={{
             allowableTypes,
             expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
           onChange={(value, _valueType, type) => {
             if (type === MultiTypeInputType.FIXED && !isEmpty(value)) {
@@ -206,6 +212,9 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
             expressions,
             allowableTypes
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           className={css.deploymentViewMedium}
           fieldPath="spec.ticketNumber"
           template={template}
@@ -219,6 +228,9 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           name={`${prefix}spec.approvalCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}
@@ -232,6 +244,9 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           name={`${prefix}spec.rejectionCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}

@@ -148,7 +148,7 @@ describe('CDPipelineDeploymentList', () => {
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline'
+      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline?storeType=INLINE'
     )
   })
 

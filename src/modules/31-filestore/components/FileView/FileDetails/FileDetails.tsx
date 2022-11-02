@@ -337,7 +337,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                 </Layout.Horizontal>
                 {!isUnsupported && (
                   <MonacoEditor
-                    height={!isModalView ? window.innerHeight - 218 : 400}
+                    height={!isModalView ? window.innerHeight - 218 : 350}
                     value={get(formikProps.values, 'fileEditor')}
                     language={language}
                     options={{

@@ -96,7 +96,6 @@ export const FreezeWindowStudioYAMLView = () => {
         existingJSON={{ freeze: freezeObj }}
         // existingYaml
         bind={setYamlHandler}
-        showSnippetSection={false}
         schema={freezeSchema?.data}
         // onExpressionTrigger
         yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}

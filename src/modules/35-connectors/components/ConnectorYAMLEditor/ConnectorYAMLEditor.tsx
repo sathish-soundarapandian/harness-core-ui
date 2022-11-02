@@ -289,14 +289,10 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
       <div className={css.fullWidth}>
         <YamlBuilder
           {...yamlBuilderProps}
-          // snippets={snippetMetaData?.data?.yamlSnippets}
-          // onSnippetCopy={onSnippetCopy}
-          // snippetFetchResponse={snippetFetchResponse}
           schema={connectorSchema?.data}
           isReadOnlyMode={false}
           bind={setYamlHandler}
           onChange={onConnectorChange}
-          showSnippetSection={false}
         />
         <Layout.Horizontal spacing="small">
           <Button

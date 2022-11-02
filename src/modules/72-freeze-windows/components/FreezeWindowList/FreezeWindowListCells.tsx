@@ -12,7 +12,6 @@ import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Chec
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
-import cx from 'classnames'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -132,7 +131,8 @@ export const StatusCell: CellType = ({ row, column }) => {
     <Text
       font={{ variation: FontVariation.TINY_SEMI }}
       color={status === FreezeStatus.ACTIVE ? Color.PRIMARY_7 : Color.GREY_700}
-      className={cx(css.status, status === FreezeStatus.ACTIVE ? css.active : css.inactive)}
+      className={css.status}
+      data-state={status}
     >
       {status || getString('inactive')}
     </Text>

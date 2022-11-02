@@ -53,7 +53,7 @@ exports[`StartupScriptWizard & stepOne initial render with stepOne 1`] = `
       <span
         class="StepWizard--title StepWizard--header"
       >
-        pipeline.startupCommand.name
+        pipeline.startup.command.name
       </span>
       <div
         class="StepWizard--navStep StepWizard--activeStep"
@@ -88,7 +88,7 @@ exports[`StartupScriptWizard & stepOne initial render with stepOne 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          pipeline.startupCommand.fileDetails
+          pipeline.startup.command.fileDetails
         </p>
       </div>
     </div>
@@ -103,12 +103,12 @@ exports[`StartupScriptWizard & stepOne initial render with stepOne 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-xxxlarge"
         >
-          pipeline.startupCommand.fileSource
+          pipeline.startup.command.fileSource
         </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
         >
-          pipeline.startupCommand.subtitle
+          pipeline.startup.command.subtitle
         </p>
         <div
           class="OverlaySpinner--overlaySpinner"
@@ -682,7 +682,7 @@ exports[`StartupScriptWizard & stepOne runtime stepOne 1`] = `
       <span
         class="StepWizard--title StepWizard--header"
       >
-        pipeline.startupCommand.name
+        pipeline.startup.command.name
       </span>
       <div
         class="StepWizard--navStep StepWizard--activeStep"
@@ -717,7 +717,7 @@ exports[`StartupScriptWizard & stepOne runtime stepOne 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          pipeline.startupCommand.fileDetails
+          pipeline.startup.command.fileDetails
         </p>
       </div>
     </div>
@@ -732,12 +732,12 @@ exports[`StartupScriptWizard & stepOne runtime stepOne 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-xxxlarge"
         >
-          pipeline.startupCommand.fileSource
+          pipeline.startup.command.fileSource
         </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
         >
-          pipeline.startupCommand.subtitle
+          pipeline.startup.command.subtitle
         </p>
         <div
           class="OverlaySpinner--overlaySpinner"

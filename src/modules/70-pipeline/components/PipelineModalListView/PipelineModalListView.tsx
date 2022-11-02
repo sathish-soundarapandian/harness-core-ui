@@ -6,8 +6,7 @@
  */
 
 import React, { useState } from 'react'
-
-import { Button, Text, Container, ExpandingSearchInput, Layout } from '@wings-software/uicore'
+import { Button, Text, Container, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import {
@@ -22,6 +21,7 @@ import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { getModuleRunType } from '@pipeline/utils/runPipelineUtils'
 import RunPipelineListView from './RunPipelineListView'
 import css from './PipelineModalListView.module.scss'
 
@@ -45,7 +45,6 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
       accountId: string
     }>
   >()
-  const isCIModule = module === 'ci'
 
   const [data, setData] = React.useState<PagePMSPipelineSummaryResponse | undefined>()
 
@@ -57,10 +56,10 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      module,
       orgIdentifier,
       searchTerm: searchParam,
       page,
+      sort: ['executionSummaryInfo.lastExecutionTs', 'DESC'],
       size: 5,
       ...(gitFilter?.repo &&
         gitFilter.branch && {
@@ -68,7 +67,8 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
           branch: gitFilter.branch
         })
     },
-    mock: mockData
+    mock: mockData,
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
   const fetchPipelines = React.useCallback(async () => {
@@ -126,7 +126,7 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
 
         {!data?.content?.length ? (
           <Text className={css.noResultSection} font={{ size: 'medium' }}>
-            {getString(isCIModule ? 'pipeline.runModalNoPipelineText' : 'pipeline.noDeploymentText')}
+            {getString('pipeline.noRunsText', { moduleRunType: getModuleRunType(module) })}
           </Text>
         ) : (
           <RunPipelineListView data={data} refetch={fetchPipelines} gotoPage={pageNumber => setPage(pageNumber)} />
