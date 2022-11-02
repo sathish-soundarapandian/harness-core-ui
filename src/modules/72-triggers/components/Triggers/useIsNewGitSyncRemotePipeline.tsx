@@ -4,24 +4,17 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-import { useMemo } from 'react'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams } from '@common/hooks'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 
-const useGitAwareForTriggerEnabled = (): boolean => {
+const useIsNewGitSyncRemotePipeline = (): boolean => {
   const { storeType } = useQueryParams<GitQueryParams>()
 
-  const { isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
-
-  const gitAwareForTriggerEnabled = useMemo(
-    () => (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) || storeType === StoreType.REMOTE,
-    [isGitSyncEnabled, gitSyncEnabledOnlyForFF, storeType]
-  )
-
-  return gitAwareForTriggerEnabled
+  /* 
+    Check if this pipeline is git synced in new git experience
+  */
+  return storeType === StoreType.REMOTE
 }
 
-export default useGitAwareForTriggerEnabled
+export default useIsNewGitSyncRemotePipeline
