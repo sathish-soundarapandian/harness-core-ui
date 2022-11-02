@@ -17,7 +17,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
@@ -419,4 +419,12 @@ export function getFilteredAllowableTypes(allowableTypes: AllowedTypes, viewType
   return viewType === StepViewType.TemplateUsage
     ? allowableTypes
     : ((allowableTypes as MultiTypeInputType[]).filter(allowedType => !isMultiTypeRuntime(allowedType)) as AllowedTypes)
+}
+
+export function getAllowableTypesWithoutFixedValue(allowableTypes: MultiTypeInputType[]): AllowedTypes {
+  return allowableTypes.filter(type => !isMultiTypeFixed(type)) as AllowedTypes
+}
+
+export function getAllowableTypesWithoutExpression(allowableTypes: MultiTypeInputType[]): AllowedTypes {
+  return allowableTypes.filter(type => !isMultiTypeExpression(type)) as AllowedTypes
 }
