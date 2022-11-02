@@ -4,14 +4,16 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
+import React from 'react'
 import { DropDown, Layout, SelectOption } from '@harness/uicore'
+// eslint-disable-next-line @typescript-eslint/no-duplicate-imports
+
 import { useStrings } from 'framework/strings'
 // import { useStrings } from 'framework/strings'
 // import { useEffect } from '@storybook/addons'
 
 // import { useStrings } from 'framework/strings'
-import React, { useState } from 'react'
+
 // import css from './RepoFilter.module.scss'
 
 export interface RepoSelectOption {
@@ -37,7 +39,7 @@ const RepoFilter: React.FC<RepoFilterProps> = props => {
   ]
   //   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>(dropDown)
 
-  const [selectedRepo, setSelectedRepo] = useState<string>('')
+  const [selectedRepo, setSelectedRepo] = React.useState<string>('')
 
   const onChangeRepo = (selected: SelectOption): void => {
     if (selected.value === selectedRepo) {

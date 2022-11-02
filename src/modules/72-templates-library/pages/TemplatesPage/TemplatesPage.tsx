@@ -13,6 +13,7 @@ import {
   GridListToggle,
   HarnessDocTooltip,
   Layout,
+  SelectOption,
   Views
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -46,14 +47,14 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
-import RepoFilter from '@common/components/RepoFilter/RepoFilter'
+// import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
   const { templateType } = useQueryParams<{ templateType?: TemplateType }>()
-  const { updateQueryParams } = useUpdateQueryParams<{ templateType?: TemplateType }>()
+  const { updateQueryParams } = useUpdateQueryParams<{ templateType?: TemplateType; repoName?: string }>()
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [sort, setSort] = useState<string[]>([SortFields.LastUpdatedAt, Sort.DESC])
@@ -62,6 +63,8 @@ export default function TemplatesPage(): React.ReactElement {
   const [templateIdentifierToSettings, setTemplateIdentifierToSettings] = React.useState<string>()
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | undefined>()
   const [gitFilter, setGitFilter] = useState<GitFilterScope | null>(null)
+  const [selectedRepo, setSelectedRepo] = useState<string>('')
+  // const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>([])
   const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const {
@@ -182,6 +185,21 @@ export default function TemplatesPage(): React.ReactElement {
     reloadTemplates()
   }, [reloadTemplates])
 
+  const dropDown = [
+    { label: 'Repo1', value: 'Repo1' },
+    { label: 'Repo2', value: 'Repo2' },
+    { label: 'Repo3', value: 'Repo3' },
+    { label: 'Repo4', value: 'Repo4' }
+  ]
+
+  const onChangeRepo = (selected: SelectOption): void => {
+    if (selected.value === selectedRepo) {
+      return
+    }
+    updateQueryParams({ repoName: (selected.value || []) as string })
+    setSelectedRepo(selected.value as string)
+  }
+
   return (
     <>
       <Page.Header
@@ -212,6 +230,15 @@ export default function TemplatesPage(): React.ReactElement {
             placeholder={getString('all')}
             popoverClassName={css.dropdownPopover}
           />
+          <DropDown
+            onChange={selected => onChangeRepo(selected)}
+            value={selectedRepo}
+            filterable={true}
+            addClearBtn={true}
+            items={dropDown}
+            placeholder={getString('repository')}
+          />
+
           {isGitSyncEnabled ? (
             <GitSyncStoreProvider>
               <GitFilters
@@ -223,9 +250,7 @@ export default function TemplatesPage(): React.ReactElement {
                 defaultValue={gitFilter || undefined}
               />
             </GitSyncStoreProvider>
-          ) : (
-            <RepoFilter />
-          )}
+          ) : null}
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
           <ExpandingSearchInput
