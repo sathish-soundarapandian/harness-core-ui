@@ -100,7 +100,35 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
       >
-        Calendar
+        Calender
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Period Length
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        Monthly
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Window ends
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        10
       </p>
     </div>
   </div>
@@ -184,7 +212,35 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
       >
-        Calendar
+        Calender
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Period Length
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        Weekly
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Window ends
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        Mon
       </p>
     </div>
   </div>
@@ -268,7 +324,21 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
       >
-        Calendar
+        Calender
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      >
+        Period Length
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      >
+        Quarterly
       </p>
     </div>
   </div>

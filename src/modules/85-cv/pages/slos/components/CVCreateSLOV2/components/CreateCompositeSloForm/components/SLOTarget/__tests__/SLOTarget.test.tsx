@@ -38,20 +38,20 @@ describe('Valiate SLOTarget', () => {
   test('should render SLOTarget for calendar', () => {
     const { container: monthlyCalendarContainer } = render(
       <Wrapper
-        data={{ SLOTargetPercentage: 70, periodType: 'Calendar', periodLengthType: 'Monthly', dayOfMonth: 10 }}
+        data={{ SLOTargetPercentage: 70, periodType: 'Calender', periodLengthType: 'Monthly', dayOfMonth: 10 }}
       />
     )
     expect(monthlyCalendarContainer).toMatchSnapshot()
 
     const { container: weeklyCalendarContainer } = render(
       <Wrapper
-        data={{ SLOTargetPercentage: 99, periodType: 'Calendar', periodLengthType: 'Weekly', dayOfWeek: 'Mon' }}
+        data={{ SLOTargetPercentage: 99, periodType: 'Calender', periodLengthType: 'Weekly', dayOfWeek: 'Mon' }}
       />
     )
     expect(weeklyCalendarContainer).toMatchSnapshot()
 
     const { container: quaterlyCalendarContainer } = render(
-      <Wrapper data={{ SLOTargetPercentage: 88, periodType: 'Calendar', periodLengthType: 'Quarterly' }} />
+      <Wrapper data={{ SLOTargetPercentage: 88, periodType: 'Calender', periodLengthType: 'Quarterly' }} />
     )
     expect(quaterlyCalendarContainer).toMatchSnapshot()
   })

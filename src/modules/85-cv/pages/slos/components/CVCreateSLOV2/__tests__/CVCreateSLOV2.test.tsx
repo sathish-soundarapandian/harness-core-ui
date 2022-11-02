@@ -77,7 +77,6 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
     userEvent.type(sloName!, 'composite slo 1')
-    // await waitFor(() => expect(screen.getByText('cv.slos.validations.nameValidation')).not.toBeInTheDocument())
 
     // Cancel should open modal
     act(() => {
@@ -85,8 +84,12 @@ describe('CVCreateSloV2', () => {
     })
     const modal = findDialogContainer()
     expect(modal).toBeTruthy()
-    fireEvent.click(modal?.querySelector('button')!)
-    fireEvent.click(modal?.querySelector('button')?.lastChild!)
+    fireEvent.click(await findByText(modal!, 'cancel'))
+
+    act(() => {
+      userEvent.click(screen.getByText('cancel'))
+    })
+    fireEvent.click(await findByText(modal!, 'common.ok'))
   })
 
   test('Validate values populate while editing Rolling type composiye SLO', async () => {
@@ -150,7 +153,40 @@ describe('CVCreateSloV2', () => {
     )
   })
 
-  test('Should render warning modals', async () => {
+  test('Should render all tabs preview', async () => {
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+
+    render(
+      <TestWrapper pathParams={{ orgIdentifier: 'default', projectIdentifier: 'project1', identifier: 'new_slov2' }}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(screen.getByText('new slov2')).toBeInTheDocument()
+    expect(screen.getByText('Second_Journey')).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(screen.getByText('Rolling')).toBeInTheDocument()
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(screen.getByText('hHJYxnUFTCypZdmYr0Q0tQ')).toBeInTheDocument()
+    expect(screen.getByText('7b-_GIZxRu6VjFqAqqdVDQ')).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(screen.getByText('87')).toBeInTheDocument()
+  })
+
+  test('Should render period update warning modals', async () => {
     jest
       .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
       .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
@@ -178,7 +214,6 @@ describe('CVCreateSloV2', () => {
       userEvent.click(periodTypeDropDown!)
     })
 
-    // const options = findPopoverContainer()?.querySelectorAll('.Select--menuItem')
     await waitFor(() => {
       expect(document.querySelector('ul.bp3-menu')).toBeTruthy()
     })
@@ -207,6 +242,36 @@ describe('CVCreateSloV2', () => {
 
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
       'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
+    )
+
+    // click again
+    act(() => {
+      userEvent.click(periodTypeDropDown!)
+    })
+
+    await waitFor(() => {
+      expect(document.querySelector('ul.bp3-menu')).toBeTruthy()
+    })
+
+    expect(document.querySelectorAll('ul.bp3-menu li')[1]?.textContent).toEqual(
+      'cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'
+    )
+    expect(document.querySelectorAll('ul.bp3-menu li')[0]?.textContent).toEqual(
+      'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
+    )
+
+    await act(() => {
+      userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
+    })
+
+    const okButton = await findByText(findDialogContainer()!, 'common.ok')
+
+    await act(() => {
+      userEvent.click(okButton)
+    })
+
+    expect(container.querySelector('[name="periodType"]')).toHaveValue(
+      'cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'
     )
   })
 })
