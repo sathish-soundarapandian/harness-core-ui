@@ -17,6 +17,7 @@ import {
   Page,
   Checkbox,
   Button,
+  Container,
   ButtonVariation,
   ExpandingSearchInput
 } from '@harness/uicore'
@@ -81,6 +82,9 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
     const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
     const updatedSLOObjective = selectedSlos.map((item, index) => {
       return {
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
         serviceLevelObjectiveRef: item?.sloIdentifier,
         weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
       }
@@ -144,6 +148,21 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
     )
   }
 
+  const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
+    const slo = row?.original
+    const { tags = {} } = slo || {}
+    const tagsString = Object.keys(tags).join(' ')
+    return (
+      <Text
+        className={css.titleInSloTable}
+        title={tagsString}
+        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      >
+        {tagsString}
+      </Text>
+    )
+  }
+
   const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
     const slo = row.original
     return (
@@ -183,57 +202,70 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
   return (
     <>
       <Page.Header
-        title={
-          <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-            <Text>SLOs matching the time window.</Text>
-            <ExpandingSearchInput alwaysExpanded width={250} />
-          </Layout.Horizontal>
-        }
+        title={<Text>SLOs matching the time window.</Text>}
+        toolbar={<ExpandingSearchInput alwaysExpanded width={250} />}
       />
-
-      <Page.Body
-        loading={dashboardWidgetsLoading}
-        error={dashboardWidgetsError}
-        retryOnError={() => refetchDashboardWidgets()}
-      >
-        <TableV2
-          sortable={false}
-          columns={[
-            {
-              Header: '',
-              id: 'selectSlo',
-              Cell: RenderCheckBoxes
-            },
-            {
-              Header: getString('cv.slos.sloName').toUpperCase(),
-              Cell: RenderSLOName
-            },
-            {
-              Header: getString('cv.slos.monitoredService').toUpperCase(),
-              Cell: RenderMonitoredService
-            },
-            {
-              Header: getString('cv.slos.target').toUpperCase(),
-              Cell: RenderTarget
-            },
-            {
-              Header: getString('cv.slos.userJourney').toUpperCase(),
-              Cell: RenderUserJourney
-            }
-          ]}
-          data={content || []}
-          pagination={{
-            pageSize,
-            pageIndex,
-            pageCount: totalPages,
-            itemCount: totalItems,
-            gotoPage: nextPage => {
-              setPageNumber(nextPage)
-            }
-          }}
-        />
-        <Button variation={ButtonVariation.SECONDARY} text={'Add'} onClick={addSLos} />
-      </Page.Body>
+      <Container margin={'medium'}>
+        <Page.Body
+          loading={dashboardWidgetsLoading}
+          error={dashboardWidgetsError}
+          retryOnError={() => refetchDashboardWidgets()}
+        >
+          <TableV2
+            sortable={false}
+            columns={[
+              {
+                Header: '',
+                id: 'selectSlo',
+                width: '50px',
+                Cell: RenderCheckBoxes
+              },
+              {
+                Header: getString('cv.slos.sloName').toUpperCase(),
+                width: '20%',
+                Cell: RenderSLOName
+              },
+              {
+                Header: getString('cv.slos.monitoredService').toUpperCase(),
+                width: '20%',
+                Cell: RenderMonitoredService
+              },
+              {
+                Header: getString('cv.slos.userJourney').toUpperCase(),
+                width: '20%',
+                Cell: RenderUserJourney
+              },
+              {
+                Header: getString('tagsLabel').toUpperCase(),
+                width: '20%',
+                Cell: RenderTags
+              },
+              {
+                Header: getString('cv.slos.target').toUpperCase(),
+                width: '20%',
+                Cell: RenderTarget
+              }
+            ]}
+            data={content || []}
+            pagination={{
+              pageSize,
+              pageIndex,
+              pageCount: totalPages,
+              itemCount: totalItems,
+              gotoPage: nextPage => {
+                setPageNumber(nextPage)
+              }
+            }}
+          />
+          <Button
+            width={150}
+            disabled={selectedSlos.length < 2}
+            variation={ButtonVariation.PRIMARY}
+            text={getString('add')}
+            onClick={addSLos}
+          />
+        </Page.Body>
+      </Container>
     </>
   )
 }

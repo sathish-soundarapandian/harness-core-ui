@@ -8,6 +8,7 @@
 import React from 'react'
 import { Layout, Text, Color, SelectOption, MultiSelectOption } from '@harness/uicore'
 import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { PeriodLengthTypes, PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import { CreateCompositeSLOSteps } from '../../CreateCompositeSloForm.types'
 
 export const LabelAndValue = ({ label, value }: { label: string; value: string }) => {
@@ -18,6 +19,22 @@ export const LabelAndValue = ({ label, value }: { label: string; value: string }
       </Text>
       <Text color={Color.GREY_1000}>{value}</Text>
     </Layout.Horizontal>
+  )
+}
+
+export const CalenderValuePreview = ({ data }: { data: SLOV2Form }): JSX.Element => {
+  let content = <></>
+  if (data.periodLengthType === PeriodLengthTypes.MONTHLY) {
+    content = <LabelAndValue label={'Window ends'} value={data.dayOfMonth?.toString() || ''} />
+  }
+  if (data.periodLengthType === PeriodLengthTypes.WEEKLY) {
+    content = <LabelAndValue label={'Window ends'} value={data.dayOfWeek?.toString() || ''} />
+  }
+  return (
+    <>
+      <LabelAndValue label={'Period Length'} value={data.periodLengthType || ''} />
+      {content}
+    </>
   )
 }
 
@@ -40,8 +57,10 @@ export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data:
       return (
         <Layout.Vertical spacing="medium">
           <LabelAndValue label={'Period Type'} value={data.periodType || ''} />
-          {data.periodLength && <LabelAndValue label={'Period Length'} value={data.periodLength || ''} />}
-          {data.periodLengthType && <LabelAndValue label={'Window ends'} value={data.periodLengthType || ''} />}
+          {data.periodType === PeriodTypes.ROLLING && (
+            <LabelAndValue label={'Period Length'} value={data.periodLength || ''} />
+          )}
+          {data.periodType === PeriodTypes.CALENDAR && <CalenderValuePreview data={data} />}
         </Layout.Vertical>
       )
     case CreateCompositeSLOSteps.Set_SLO_Target:

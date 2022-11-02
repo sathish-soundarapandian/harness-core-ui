@@ -15,13 +15,38 @@ export const getDistribution = (
   const clonedArr = [...originalList]
   const length = originalList.length
   const remaining = 100 - Number(weight)
-  const newWeight = remaining / (length - 1)
+  const newWeight = (remaining / (length - 1)).toFixed(2)
+
+  for (let idx = 0; idx < originalList.length; idx++) {
+    if (currentIndex === idx) {
+      clonedArr[idx].weightagePercentage = Number(weight)
+    } else if (idx === originalList.length - 1) {
+      const lastOne = (100 - (weight + Number(newWeight) * (length - 2))).toFixed(2)
+      // Number((100 - (remaining + Number(newWeight) * (length - 2))).toFixed(2))
+      clonedArr[idx].weightagePercentage = Number(lastOne)
+    } else {
+      clonedArr[idx].weightagePercentage = Number(newWeight)
+    }
+  }
+
+  return clonedArr
+}
+
+export const getDistributionRec = (
+  weight: number,
+  currentIndex: number,
+  originalList: ServiceLevelObjectiveDetailsDTO[]
+): ServiceLevelObjectiveDetailsDTO[] => {
+  const clonedArr = [...originalList]
+  const length = originalList.length
+  const remaining = 100 - Number(weight)
+  const newWeight = (remaining / (length - 1)).toFixed(2)
 
   for (let idx = 0; idx < originalList.length; idx++) {
     if (currentIndex === idx) {
       clonedArr[idx].weightagePercentage = Number(weight)
     } else {
-      clonedArr[idx].weightagePercentage = newWeight
+      clonedArr[idx].weightagePercentage = Number(newWeight)
     }
   }
 

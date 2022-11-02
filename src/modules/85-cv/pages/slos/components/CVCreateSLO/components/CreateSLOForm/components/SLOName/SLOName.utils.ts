@@ -27,7 +27,7 @@ interface CreateServiceProps {
   getString: UseStringsReturn['getString']
   handleCreateUserJourney: (newOption: ServiceResponseDTO) => Promise<void>
   activeUserJourney: any[] | SelectOption | undefined
-  onChange: (label: string, value: MultiSelectOption[] | string) => void
+  onChange: (label: string, value: string[] | string) => void
 }
 
 export const createServiceProps = ({
@@ -47,7 +47,9 @@ export const createServiceProps = ({
     onSelect: (selectedUserJourney: SelectOption | MultiSelectOption[]) =>
       onChange(
         SLOV2FormFields.USER_JOURNEY_REF,
-        Array.isArray(selectedUserJourney) ? selectedUserJourney : (selectedUserJourney.value as string)
+        Array.isArray(selectedUserJourney)
+          ? selectedUserJourney.map(userJpurney => userJpurney.value as string)
+          : (selectedUserJourney.value as string)
       ),
     onNewCreated: handleCreateUserJourney,
     modalTitle: getString('cv.slos.userJourney'),

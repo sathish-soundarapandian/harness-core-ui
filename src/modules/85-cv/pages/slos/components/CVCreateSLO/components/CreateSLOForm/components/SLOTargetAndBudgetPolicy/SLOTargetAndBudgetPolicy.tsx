@@ -36,12 +36,18 @@ import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 interface SLOPeriodInterface {
   periodType?: string
   periodLengthType?: string
+  verticalOrientation?: boolean
 }
 
-export const SloPeriodLength = ({ periodType, periodLengthType }: SLOPeriodInterface): JSX.Element => {
+export const SloPeriodLength = ({
+  periodType,
+  periodLengthType,
+  verticalOrientation
+}: SLOPeriodInterface): JSX.Element => {
   const { getString } = useStrings()
+  const ComponentLayout = verticalOrientation ? Layout.Vertical : Layout.Horizontal
   return (
-    <Layout.Horizontal spacing="medium">
+    <ComponentLayout spacing="medium">
       <FormInput.Select
         name={SLOFormFields.PERIOD_TYPE}
         label={getString('cv.slos.sloTargetAndBudget.periodType')}
@@ -78,7 +84,7 @@ export const SloPeriodLength = ({ periodType, periodLengthType }: SLOPeriodInter
           items={getPeriodLengthOptionsForRolling()}
         />
       )}
-    </Layout.Horizontal>
+    </ComponentLayout>
   )
 }
 

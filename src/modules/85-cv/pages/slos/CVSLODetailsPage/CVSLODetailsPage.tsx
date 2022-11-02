@@ -61,8 +61,15 @@ const CVSLODetailsPage: React.FC = () => {
       accountId,
       orgIdentifier,
       projectIdentifier
-    }
+    },
+    lazy: true
   })
+
+  useEffect(() => {
+    if (identifier && !sloType) {
+      refetch()
+    }
+  }, [identifier, refetch, sloType])
 
   const { mutate: resetErrorBudget, loading: resetErrorBudgetLoading } = useResetErrorBudget({
     identifier: '',
@@ -141,7 +148,7 @@ const CVSLODetailsPage: React.FC = () => {
                   error={getErrorMessage(error)}
                   retryOnError={() => refetch()}
                   noData={{
-                    when: () => !sloDashboardWidget
+                    when: () => !sloDashboardWidget && !sloType
                   }}
                 >
                   {sloType ? <CVCreateSLOV2 isComposite /> : <CVCreateSLO />}

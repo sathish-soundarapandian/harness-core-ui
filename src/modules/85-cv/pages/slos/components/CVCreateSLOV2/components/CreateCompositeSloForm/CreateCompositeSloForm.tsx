@@ -38,7 +38,7 @@ export const CreateCompositeSloForm = ({
   const formikProps = useFormikContext<SLOV2Form>()
   const isStepValid = useCallback(
     (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps),
-    [formikProps.values]
+    [formikProps.values, formikProps.errors]
   )
 
   const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)

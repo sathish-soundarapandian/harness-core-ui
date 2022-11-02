@@ -1674,6 +1674,7 @@ export interface Error {
     | 'NO_AVAILABLE_DELEGATES'
     | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
+    | 'DELEGATE_NOT_REGISTERED'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
     | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
@@ -1769,6 +1770,7 @@ export interface Error {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2089,6 +2091,7 @@ export interface Failure {
     | 'NO_AVAILABLE_DELEGATES'
     | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
+    | 'DELEGATE_NOT_REGISTERED'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
     | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
@@ -2184,6 +2187,7 @@ export interface Failure {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4157,6 +4161,7 @@ export interface ResponseMessage {
     | 'NO_AVAILABLE_DELEGATES'
     | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
+    | 'DELEGATE_NOT_REGISTERED'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
     | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
@@ -4252,6 +4257,7 @@ export interface ResponseMessage {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5357,6 +5363,9 @@ export interface ServiceLevelObjectiveDTO {
 }
 
 export interface ServiceLevelObjectiveDetailsDTO {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceLevelObjectiveRef: string
   weightagePercentage: number
 }
@@ -5475,17 +5484,17 @@ export type SpotConnector = ConnectorConfigDTO & {
 
 export interface SpotCredential {
   spec?: SpotCredentialSpec
-  type: 'ManualConfig'
+  type: 'PermanentTokenConfig'
 }
 
 export interface SpotCredentialSpec {
   [key: string]: any
 }
 
-export type SpotManualConfigSpec = SpotCredentialSpec & {
-  accountId?: string
-  accountIdRef?: string
+export type SpotPermanentTokenConfigSpec = SpotCredentialSpec & {
   apiTokenRef: string
+  spotAccountId?: string
+  spotAccountIdRef?: string
 }
 
 export interface StackTraceElement {
@@ -6194,8 +6203,6 @@ export type MonitoredServiceDTORequestBody = MonitoredServiceDTO
 
 export type NotificationRuleDTORequestBody = NotificationRuleDTO
 
-export type SLOErrorBudgetResetDTORequestBody = SLOErrorBudgetResetDTO
-
 export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSeriesAnalysisDTO
 
 export type ServiceLevelIndicatorDTORequestBody = ServiceLevelIndicatorDTO
@@ -6206,7 +6213,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -7013,18 +7020,6 @@ export interface GetPrometheusWorkspacesQueryParams {
   connectorIdentifier: string
   region: string
   tracingId: string
-}
-
-export interface AwsPrometheusWorkspaceDTO {
-  name?: string
-  workspaceId?: string
-}
-
-export interface ResponseListAwsPrometheusWorkspaceDTO {
-  correlationId?: string
-  data?: AwsPrometheusWorkspaceDTO[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
 export type GetPrometheusWorkspacesProps = Omit<
@@ -9625,7 +9620,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9639,7 +9634,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -9654,7 +9649,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9668,7 +9663,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9680,7 +9675,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9689,7 +9684,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -12636,184 +12631,6 @@ export const updateSLOV2DataPromise = (
     UpdateSLOV2DataPathParams
   >('PUT', getConfig('cv/api'), `/slo/v2/${identifier}`, props, signal)
 
-export interface GetServiceLevelObjectiveV2LogsQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-  logType: 'ApiCallLog' | 'ExecutionLog'
-  errorLogsOnly?: boolean
-  startTime: number
-  endTime: number
-  pageNumber?: number
-  pageSize?: number
-}
-
-export interface GetServiceLevelObjectiveV2LogsPathParams {
-  identifier: string
-}
-
-export type GetServiceLevelObjectiveV2LogsProps = Omit<
-  GetProps<
-    RestResponsePageCVNGLogDTO,
-    unknown,
-    GetServiceLevelObjectiveV2LogsQueryParams,
-    GetServiceLevelObjectiveV2LogsPathParams
-  >,
-  'path'
-> &
-  GetServiceLevelObjectiveV2LogsPathParams
-
-/**
- * get service level objective logs
- */
-export const GetServiceLevelObjectiveV2Logs = ({ identifier, ...props }: GetServiceLevelObjectiveV2LogsProps) => (
-  <Get<
-    RestResponsePageCVNGLogDTO,
-    unknown,
-    GetServiceLevelObjectiveV2LogsQueryParams,
-    GetServiceLevelObjectiveV2LogsPathParams
-  >
-    path={`/slo/v2/${identifier}/logs`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetServiceLevelObjectiveV2LogsProps = Omit<
-  UseGetProps<
-    RestResponsePageCVNGLogDTO,
-    unknown,
-    GetServiceLevelObjectiveV2LogsQueryParams,
-    GetServiceLevelObjectiveV2LogsPathParams
-  >,
-  'path'
-> &
-  GetServiceLevelObjectiveV2LogsPathParams
-
-/**
- * get service level objective logs
- */
-export const useGetServiceLevelObjectiveV2Logs = ({ identifier, ...props }: UseGetServiceLevelObjectiveV2LogsProps) =>
-  useGet<
-    RestResponsePageCVNGLogDTO,
-    unknown,
-    GetServiceLevelObjectiveV2LogsQueryParams,
-    GetServiceLevelObjectiveV2LogsPathParams
-  >((paramsInPath: GetServiceLevelObjectiveV2LogsPathParams) => `/slo/v2/${paramsInPath.identifier}/logs`, {
-    base: getConfig('cv/api'),
-    pathParams: { identifier },
-    ...props
-  })
-
-/**
- * get service level objective logs
- */
-export const getServiceLevelObjectiveV2LogsPromise = (
-  {
-    identifier,
-    ...props
-  }: GetUsingFetchProps<
-    RestResponsePageCVNGLogDTO,
-    unknown,
-    GetServiceLevelObjectiveV2LogsQueryParams,
-    GetServiceLevelObjectiveV2LogsPathParams
-  > & { identifier: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    RestResponsePageCVNGLogDTO,
-    unknown,
-    GetServiceLevelObjectiveV2LogsQueryParams,
-    GetServiceLevelObjectiveV2LogsPathParams
-  >(getConfig('cv/api'), `/slo/v2/${identifier}/logs`, props, signal)
-
-export interface GetNotificationRulesForSLOV2QueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-  pageNumber?: number
-  pageSize?: number
-}
-
-export interface GetNotificationRulesForSLOV2PathParams {
-  identifier: string
-}
-
-export type GetNotificationRulesForSLOV2Props = Omit<
-  GetProps<
-    ResponsePageNotificationRuleResponse,
-    unknown,
-    GetNotificationRulesForSLOV2QueryParams,
-    GetNotificationRulesForSLOV2PathParams
-  >,
-  'path'
-> &
-  GetNotificationRulesForSLOV2PathParams
-
-/**
- * get notification rules for SLO
- */
-export const GetNotificationRulesForSLOV2 = ({ identifier, ...props }: GetNotificationRulesForSLOV2Props) => (
-  <Get<
-    ResponsePageNotificationRuleResponse,
-    unknown,
-    GetNotificationRulesForSLOV2QueryParams,
-    GetNotificationRulesForSLOV2PathParams
-  >
-    path={`/slo/v2/${identifier}/notification-rules`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetNotificationRulesForSLOV2Props = Omit<
-  UseGetProps<
-    ResponsePageNotificationRuleResponse,
-    unknown,
-    GetNotificationRulesForSLOV2QueryParams,
-    GetNotificationRulesForSLOV2PathParams
-  >,
-  'path'
-> &
-  GetNotificationRulesForSLOV2PathParams
-
-/**
- * get notification rules for SLO
- */
-export const useGetNotificationRulesForSLOV2 = ({ identifier, ...props }: UseGetNotificationRulesForSLOV2Props) =>
-  useGet<
-    ResponsePageNotificationRuleResponse,
-    unknown,
-    GetNotificationRulesForSLOV2QueryParams,
-    GetNotificationRulesForSLOV2PathParams
-  >((paramsInPath: GetNotificationRulesForSLOV2PathParams) => `/slo/v2/${paramsInPath.identifier}/notification-rules`, {
-    base: getConfig('cv/api'),
-    pathParams: { identifier },
-    ...props
-  })
-
-/**
- * get notification rules for SLO
- */
-export const getNotificationRulesForSLOV2Promise = (
-  {
-    identifier,
-    ...props
-  }: GetUsingFetchProps<
-    ResponsePageNotificationRuleResponse,
-    unknown,
-    GetNotificationRulesForSLOV2QueryParams,
-    GetNotificationRulesForSLOV2PathParams
-  > & { identifier: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ResponsePageNotificationRuleResponse,
-    unknown,
-    GetNotificationRulesForSLOV2QueryParams,
-    GetNotificationRulesForSLOV2PathParams
-  >(getConfig('cv/api'), `/slo/v2/${identifier}/notification-rules`, props, signal)
-
 export interface DeleteSLODataQueryParams {
   accountId: string
   orgIdentifier: string
@@ -13321,7 +13138,7 @@ export type ResetErrorBudgetProps = Omit<
     RestResponseSLOErrorBudgetResetDTO,
     unknown,
     ResetErrorBudgetQueryParams,
-    SLOErrorBudgetResetDTORequestBody,
+    SLOErrorBudgetResetDTO,
     ResetErrorBudgetPathParams
   >,
   'path' | 'verb'
@@ -13336,7 +13153,7 @@ export const ResetErrorBudget = ({ identifier, ...props }: ResetErrorBudgetProps
     RestResponseSLOErrorBudgetResetDTO,
     unknown,
     ResetErrorBudgetQueryParams,
-    SLOErrorBudgetResetDTORequestBody,
+    SLOErrorBudgetResetDTO,
     ResetErrorBudgetPathParams
   >
     verb="POST"
@@ -13351,7 +13168,7 @@ export type UseResetErrorBudgetProps = Omit<
     RestResponseSLOErrorBudgetResetDTO,
     unknown,
     ResetErrorBudgetQueryParams,
-    SLOErrorBudgetResetDTORequestBody,
+    SLOErrorBudgetResetDTO,
     ResetErrorBudgetPathParams
   >,
   'path' | 'verb'
@@ -13366,7 +13183,7 @@ export const useResetErrorBudget = ({ identifier, ...props }: UseResetErrorBudge
     RestResponseSLOErrorBudgetResetDTO,
     unknown,
     ResetErrorBudgetQueryParams,
-    SLOErrorBudgetResetDTORequestBody,
+    SLOErrorBudgetResetDTO,
     ResetErrorBudgetPathParams
   >('POST', (paramsInPath: ResetErrorBudgetPathParams) => `/slo/${paramsInPath.identifier}/resetErrorBudget`, {
     base: getConfig('cv/api'),
@@ -13385,7 +13202,7 @@ export const resetErrorBudgetPromise = (
     RestResponseSLOErrorBudgetResetDTO,
     unknown,
     ResetErrorBudgetQueryParams,
-    SLOErrorBudgetResetDTORequestBody,
+    SLOErrorBudgetResetDTO,
     ResetErrorBudgetPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -13394,7 +13211,7 @@ export const resetErrorBudgetPromise = (
     RestResponseSLOErrorBudgetResetDTO,
     unknown,
     ResetErrorBudgetQueryParams,
-    SLOErrorBudgetResetDTORequestBody,
+    SLOErrorBudgetResetDTO,
     ResetErrorBudgetPathParams
   >('POST', getConfig('cv/api'), `/slo/${identifier}/resetErrorBudget`, props, signal)
 

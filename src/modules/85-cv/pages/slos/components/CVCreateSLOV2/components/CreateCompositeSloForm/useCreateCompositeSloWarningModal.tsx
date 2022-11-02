@@ -43,10 +43,10 @@ function useCreateCompositeSloWarningModal({
           <Layout.Horizontal>
             <Container width="70%" padding={{ right: 'large' }}>
               <Heading level={2} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'xxlarge' }}>
-                {getString('cv.slos.reviewChanges')} Cancel
+                {getString('unsavedChanges')}
               </Heading>
               <Text color={Color.GREY_600} font={{ weight: 'light' }} style={{ lineHeight: 'var(--spacing-xlarge)' }}>
-                {getString('triggers.triggerCouldNotBeSavedContent')}
+                {getString('common.unsavedChangesLong')}
               </Text>
             </Container>
             <Container margin={{ top: 'small' }}>
@@ -98,10 +98,10 @@ function useCreateCompositeSloWarningModal({
           <Layout.Horizontal>
             <Container width="70%" padding={{ right: 'large' }}>
               <Heading level={2} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'xxlarge' }}>
-                {getString('cv.slos.reviewChanges')} Period Update
+                {getString('cv.CompositeSLO.PeriodChangeWarning.title')}
               </Heading>
               <Text color={Color.GREY_600} font={{ weight: 'light' }} style={{ lineHeight: 'var(--spacing-xlarge)' }}>
-                {getString('triggers.triggerCouldNotBeSavedContent')}
+                {getString('cv.CompositeSLO.PeriodChangeWarning.message')}
               </Text>
             </Container>
             <Container margin={{ top: 'small' }}>

@@ -8,7 +8,7 @@
 import { isEqual, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
-import type { CalenderSLOTargetSpec, RollingSLOTargetSpec, ServiceLevelObjectiveV2DTO } from 'services/cv'
+import type { CalenderSLOTargetSpec, RollingSLOTargetSpec, ServiceLevelObjectiveV2DTO, SLOTargetDTO } from 'services/cv'
 import { PeriodLengthTypes, PeriodTypes } from '../CVCreateSLO/CVCreateSLO.types'
 import { SLOV2Form, SLOV2FormFields } from './CVCreateSLOV2.types'
 
@@ -30,7 +30,7 @@ export const getSLOV2InitialFormData = (
       // for Rolling
       [SLOV2FormFields.PERIOD_LENGTH]: serviceLevelObjective?.sloTarget?.spec?.periodLength,
       // for Calendar
-      [SLOV2FormFields.PERIOD_LENGTH_TYPE]: serviceLevelObjective?.sloTarget?.spec?.spec?.type,
+      [SLOV2FormFields.PERIOD_LENGTH_TYPE]: serviceLevelObjective?.sloTarget?.spec?.type,
       [SLOV2FormFields.DAY_OF_MONTH]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfMonth,
       [SLOV2FormFields.DAY_OF_WEEK]: serviceLevelObjective?.sloTarget?.spec?.spec?.dayOfWeek,
       // Add SLOs
@@ -55,6 +55,38 @@ export const getSLOV2InitialFormData = (
   }
 }
 
+const getSLOTarget = (values: SLOV2Form): SLOTargetDTO['spec'] => {
+  if (values.periodType === PeriodTypes.ROLLING) {
+    return {
+      periodLength: values.periodLength
+    }
+  } else if (values.periodType === PeriodTypes.CALENDAR) {
+    const { dayOfMonth, dayOfWeek } = values
+    if (values.periodLengthType === PeriodLengthTypes.MONTHLY) {
+      return {
+        type: values.periodLengthType,
+        spec: { dayOfMonth }
+      }
+    }
+    if (values.periodLengthType === PeriodLengthTypes.WEEKLY) {
+      return {
+        type: values.periodLengthType,
+        spec: { dayOfWeek }
+      }
+    }
+    if (values.periodLengthType === PeriodLengthTypes.QUARTERLY) {
+      return {
+        type: values.periodLengthType,
+        spec: {}
+      }
+    }
+    return {
+      periodLength: values.periodLength
+    }
+  }
+  return {}
+}
+
 export const createSLOV2RequestPayload = (
   values: SLOV2Form,
   orgIdentifier: string,
@@ -73,9 +105,7 @@ export const createSLOV2RequestPayload = (
     sloTarget: {
       sloTargetPercentage: values.SLOTargetPercentage,
       type: values.periodType,
-      spec: {
-        periodLength: values.periodLength
-      }
+      spec: { ...getSLOTarget(values) }
     },
     spec: { serviceLevelObjectivesDetails: values.serviceLevelObjectivesDetails }
   }

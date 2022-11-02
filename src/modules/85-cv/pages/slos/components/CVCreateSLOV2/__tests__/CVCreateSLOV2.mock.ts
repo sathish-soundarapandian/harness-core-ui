@@ -42,3 +42,42 @@ export const SLODetailsData = {
   },
   responseMessages: []
 }
+
+export const rolling = {
+  type: 'Rolling',
+  sloTargetPercentage: 87.0,
+  spec: {
+    periodLength: '3d'
+  }
+}
+
+export const calendarWeekly = {
+  type: 'Calender',
+  sloTargetPercentage: 77,
+  spec: {
+    type: 'Weekly',
+    spec: {
+      dayOfWeek: 'Fri'
+    }
+  }
+}
+
+export const calendarMonthly = {
+  type: 'Calender',
+  sloTargetPercentage: 77,
+  spec: {
+    type: 'Monthly',
+    spec: {
+      dayOfMonth: '4'
+    }
+  }
+}
+
+export const calendarQuarterly = {
+  type: 'Calender',
+  sloTargetPercentage: 99,
+  spec: {
+    type: 'Quarterly',
+    spec: {}
+  }
+}

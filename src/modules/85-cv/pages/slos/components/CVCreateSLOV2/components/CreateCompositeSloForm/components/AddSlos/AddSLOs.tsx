@@ -96,14 +96,16 @@ export const AddSLOs = (): JSX.Element => {
 
   return (
     <>
+      {Boolean(serviceLevelObjectivesDetails.length) && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
       <Button
         variation={ButtonVariation.SECONDARY}
         text={getString('cv.CompositeSLO.AddSLO')}
         iconProps={{ name: 'plus' }}
         onClick={showDrawer}
+        margin={{ bottom: 'large', top: 'large' }}
       />
       {Boolean(serviceLevelObjectivesDetails.length) && (
-        <TableV2 columns={columns} data={serviceLevelObjectivesDetails} />
+        <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
       )}
     </>
   )

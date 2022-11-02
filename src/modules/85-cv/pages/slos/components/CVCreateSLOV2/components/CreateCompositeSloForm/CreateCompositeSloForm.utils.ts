@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
-import { PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
+import { PeriodLengthTypes, PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 
@@ -28,13 +28,23 @@ export const validateSetSLOTimeWindow = (formikProps: FormikProps<SLOV2Form>): b
   formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH, true)
   formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_TYPE, true)
   formikProps.setFieldTouched(CompositeSLOFormFields.PERIOD_LENGTH_TYPE, true)
+  formikProps.setFieldTouched(CompositeSLOFormFields.DAY_OF_MONTH, true)
+  formikProps.setFieldTouched(CompositeSLOFormFields.DAY_OF_WEEK, true)
 
-  const { periodType, periodLength, periodLengthType } = formikProps.values
+  const { periodType, periodLength, periodLengthType, dayOfMonth, dayOfWeek } = formikProps.values
   if (periodType === PeriodTypes.ROLLING) {
     return Boolean(periodLength)
   }
   if (periodType === PeriodTypes.CALENDAR) {
-    return Boolean(periodLengthType)
+    if (periodLengthType === PeriodLengthTypes.MONTHLY) {
+      return Boolean(periodLengthType) && Boolean(dayOfMonth)
+    }
+    if (periodLengthType === PeriodLengthTypes.WEEKLY) {
+      return Boolean(periodLengthType) && Boolean(dayOfWeek)
+    }
+    if (periodLengthType === PeriodLengthTypes.QUARTERLY) {
+      return Boolean(periodLengthType)
+    }
   }
   return false
 }

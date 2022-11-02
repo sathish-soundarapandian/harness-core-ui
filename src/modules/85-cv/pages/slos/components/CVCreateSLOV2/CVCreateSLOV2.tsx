@@ -44,7 +44,7 @@ import { CreateCompositeSloForm } from './components/CreateCompositeSloForm/Crea
 import type { SLOV2Form } from './CVCreateSLOV2.types'
 import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.module.scss'
 
-const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
+const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element => {
   const history = useHistory()
   const { getString } = useStrings()
 
@@ -196,7 +196,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
   // TODO: Update with swagger
   const sloType = isComposite ? 'Composite' : 'Simple'
   return (
-    <>
+    <Container margin={{ bottom: 'large' }}>
       {!identifier && (
         <Page.Header
           breadcrumbs={<NGBreadcrumbs links={links} />}
@@ -233,7 +233,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }) => {
           )
         }
       </Formik>
-    </>
+    </Container>
   )
 }
 

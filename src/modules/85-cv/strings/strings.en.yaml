@@ -824,9 +824,13 @@ CompositeSLO:
   DefineSLO: Define SLO Identification
   SetTimeWindow: Set SLO Time Window
   AddSLO: Add SLOs
+  AddSLOMessage: By default, all services are equally weighted. If you assign a service a custom weighting, the remaining services will be computed automatically to receive 100 percent for the composite SLO.
   SetTarget: Set SLO Target
   ErrorBudgetPolicy: Error Budget Policy
   Weightage: Weightage
+  PeriodChangeWarning:
+    title: Review Period Type Change
+    message: Updating period type will reset selected SLOs, Do you want to continue ?
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
@@ -985,3 +989,5 @@ codeErrorsHeading: Review code errors related to your project
 codeErrorsAgents: '{{projectName}} Code Error Agents'
 codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
 codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
+CVStepper:
+  StepError: Required fields are missing or incorrect data

@@ -934,6 +934,7 @@ export interface StringsMap {
   'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
+  'common.unsavedChangesLong': string
   'common.updating': string
   'common.upgrade': string
   'common.useSSL': string
@@ -6851,9 +6852,13 @@ export interface StringsMap {
   'ci.titleResources': string
   'ci.titleSettings': string
   'ci.welcome': string
+  'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
+  'cv.CompositeSLO.AddSLOMessage': string
   'cv.CompositeSLO.DefineSLO': string
   'cv.CompositeSLO.ErrorBudgetPolicy': string
+  'cv.CompositeSLO.PeriodChangeWarning.message': string
+  'cv.CompositeSLO.PeriodChangeWarning.title': string
   'cv.CompositeSLO.SetTarget': string
   'cv.CompositeSLO.SetTimeWindow': string
   'cv.CompositeSLO.Weightage': string

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -89,7 +89,7 @@ describe('CVCreateSloV2', () => {
     fireEvent.click(modal?.querySelector('button')?.lastChild!)
   })
 
-  test('Validate values populate while editing SLO', async () => {
+  test('Validate values populate while editing Rolling type composiye SLO', async () => {
     jest
       .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
       .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
@@ -147,6 +147,66 @@ describe('CVCreateSloV2', () => {
       expect(
         getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage.toString())
       ).toBeInTheDocument()
+    )
+  })
+
+  test('Should render warning modals', async () => {
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+
+    const { container } = render(
+      <TestWrapper pathParams={{ orgIdentifier: 'default', projectIdentifier: 'project1', identifier: 'new_slov2' }}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText('back'))
+    })
+
+    const periodTypeDropDown = container.querySelectorAll('[icon="chevron-down"]')[0]
+    act(() => {
+      userEvent.click(periodTypeDropDown!)
+    })
+
+    // const options = findPopoverContainer()?.querySelectorAll('.Select--menuItem')
+    await waitFor(() => {
+      expect(document.querySelector('ul.bp3-menu')).toBeTruthy()
+    })
+
+    expect(document.querySelectorAll('ul.bp3-menu li')[1]?.textContent).toEqual(
+      'cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'
+    )
+    expect(document.querySelectorAll('ul.bp3-menu li')[0]?.textContent).toEqual(
+      'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
+    )
+
+    act(() => {
+      userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
+    })
+
+    expect(container.querySelector('[name="periodType"]')).toHaveValue(
+      'cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'
+    )
+
+    const modal = findDialogContainer()
+    const cancelButton = await findByText(modal!, 'cancel')
+
+    act(() => {
+      userEvent.click(cancelButton)
+    })
+
+    expect(container.querySelector('[name="periodType"]')).toHaveValue(
+      'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
     )
   })
 })

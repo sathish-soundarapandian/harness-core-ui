@@ -7,6 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
+import { Container } from '@harness/uicore'
 import { PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import { SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { SloPeriodLength } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
@@ -34,5 +35,9 @@ export default function PeriodLength({ periodType, periodLengthType }: PeriodInt
     }
   }, [periodType])
 
-  return <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} />
+  return (
+    <Container width={200}>
+      <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} verticalOrientation />
+    </Container>
+  )
 }

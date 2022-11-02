@@ -9,8 +9,9 @@ import React from 'react'
 import type { FormikContextType } from 'formik'
 import { Layout, Icon, Container, FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import { LabelAndValue } from '../CreatePreview/CreatePreview'
+import { SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
+import { CalenderValuePreview, LabelAndValue } from '../CreatePreview/CreatePreview'
 
 interface SLOTargetProps {
   formikProps: FormikContextType<SLOV2Form>
@@ -22,16 +23,14 @@ const SLOTarget = ({ formikProps }: SLOTargetProps): JSX.Element => {
     <>
       <Layout.Horizontal spacing="medium" margin={{ bottom: 'small' }}>
         <LabelAndValue label="Period Type" value={formikProps.values.periodType || ''} />
-        {formikProps.values.periodLength && (
-          <LabelAndValue label="Period length" value={formikProps.values.periodLength || ''} />
+        {formikProps.values.periodType === PeriodTypes.ROLLING && (
+          <LabelAndValue label={'Period Length'} value={formikProps.values.periodLength || ''} />
         )}
-        {formikProps.values.periodLengthType && (
-          <LabelAndValue label="Window ends" value={formikProps.values.periodLengthType || ''} />
-        )}
+        {formikProps.values.periodType === PeriodTypes.CALENDAR && <CalenderValuePreview data={formikProps.values} />}
       </Layout.Horizontal>
       <Container width={250} margin={{ top: 'medium' }}>
         <FormInput.Text
-          name={'SLOTargetPercentage'}
+          name={SLOV2FormFields.SLO_TARGET_PERCENTAGE}
           label={getString('cv.SLOTarget')}
           inputGroup={{
             type: 'number',
