@@ -26,6 +26,17 @@ const RemoveRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
 // eslint-disable-next-line import/no-unresolved
 const RemoveRepository = lazy(() => import('scm/Repository'))
 
+// eslint-disable-next-line import/no-unresolved
+const RemoveRepositoryCommits = lazy(() => import('scm/RepositoryCommits'))
+
+const exportedRoutes = pick(routes, [
+  'toSCM',
+  'toSCMHome',
+  'toSCMRepositoriesListing',
+  'toSCMRepository',
+  'toSCMRepositoryCommits'
+])
+
 const SCMRemoteComponentMounter: React.FC<{
   component: JSX.Element
 }> = ({ component }) => {
@@ -46,7 +57,7 @@ const SCMRemoteComponentMounter: React.FC<{
           on401={() => {
             global401HandlerUtils(history)
           }}
-          routes={pick(routes, ['toSCM', 'toSCMHome', 'toSCMRepositoriesListing', 'toSCMRepository'])}
+          routes={exportedRoutes}
           hooks={{
             useGetToken
           }}
@@ -67,7 +78,7 @@ export const Repository: React.FC<RemoteViewProps> = props => (
 )
 
 export const RepositoryCommits: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<h1>Commit</h1>} />
+  <SCMRemoteComponentMounter component={<RemoveRepositoryCommits {...props} />} />
 )
 
 export const RepositoryBranches: React.FC<RemoteViewProps> = props => (
