@@ -10,6 +10,7 @@ import { act } from 'react-dom/test-utils'
 import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
+import routes from '@common/RouteDefinitions'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { userJourneyResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import CVCreateSLOV2 from '../CVCreateSLOV2'
@@ -273,5 +274,54 @@ describe('CVCreateSloV2', () => {
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
       'cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'
     )
+  })
+
+  test('Should update and save composite SLO', async () => {
+    const updateSLO = jest.fn()
+    updateSLO.mockReturnValueOnce({ data: SLODetailsData })
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: SLODetailsData, mutate: updateSLO } as any)
+
+    const testPath = routes.toCVSLODetailsPage({
+      identifier: ':identifier',
+      accountId: ':accountId',
+      orgIdentifier: ':orgIdentifier',
+      projectIdentifier: ':projectIdentifier'
+    })
+    const testPathParams = {
+      orgIdentifier: 'cvng',
+      accountId: 'default',
+      projectIdentifier: 'project1',
+      identifier: 'new_slov2'
+    }
+
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    const sloName = container.querySelector('input[name ="name"]')
+    await waitFor(() => expect(sloName).toBeInTheDocument())
+    userEvent.clear(sloName!)
+    userEvent.type(sloName!, 'updated composite slo')
+
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
+    })
+
+    fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
+
+    await act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+
+    await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
+
+    act(() => {
+      userEvent.click(document.querySelector('.bp3-dialog button')!)
+    })
   })
 })
