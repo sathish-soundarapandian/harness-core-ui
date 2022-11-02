@@ -15,6 +15,7 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { userJourneyResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import CVCreateSLOV2 from '../CVCreateSLOV2'
 import { calendarMonthly, calendarWeekly, calendarQuarterly, SLODetailsData } from './CVCreateSLOV2.mock'
+import { getSLOTarget } from '../CVCreateSLOV2.utils'
 
 jest.useFakeTimers()
 
@@ -57,6 +58,14 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('CVCreateSloV2', () => {
+  test('CVCreateSLOV2 when isComposite is false', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <CVCreateSLOV2 isComposite={false} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
   test('Cancel without adding any values', async () => {
     const { container, getByText } = render(
       <TestWrapper>
@@ -564,5 +573,10 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
     expect(container.querySelector('[data-icon="error"]')).toBeInTheDocument()
+  })
+
+  test('should validate getSLOTarget with empty periodType', () => {
+    expect(getSLOTarget({} as any)).toEqual({})
+    expect(getSLOTarget({ periodType: 'Calender' } as any)).toEqual({})
   })
 })

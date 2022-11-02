@@ -55,7 +55,7 @@ export const getSLOV2InitialFormData = (
   }
 }
 
-const getSLOTarget = (values: SLOV2Form): SLOTargetDTO['spec'] => {
+export const getSLOTarget = (values: SLOV2Form): SLOTargetDTO['spec'] => {
   if (values.periodType === PeriodTypes.ROLLING) {
     return {
       periodLength: values.periodLength

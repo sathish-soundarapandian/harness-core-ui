@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useCreateCompositeSloWarningModal validate with prevStepData as null values 1`] = `
+<div>
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      open SaveCancel Modal
+    </span>
+  </button>
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      open Period Update Modal 
+    </span>
+  </button>
+</div>
+`;
+
+exports[`useCreateCompositeSloWarningModal validate with prevStepData as undefined values 1`] = `
+<div>
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      open SaveCancel Modal
+    </span>
+  </button>
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    type="button"
+  >
+    <span
+      class="bp3-button-text"
+    >
+      open Period Update Modal 
+    </span>
+  </button>
+</div>
+`;

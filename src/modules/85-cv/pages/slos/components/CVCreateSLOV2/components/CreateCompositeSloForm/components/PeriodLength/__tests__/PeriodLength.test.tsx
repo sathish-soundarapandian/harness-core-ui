@@ -8,30 +8,29 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { CreatePreview, CalenderValuePreview } from '../CreatePreview'
+import PeriodLength from '../PeriodLength'
 
-describe('CreatePreview', () => {
-  test('should render CreatePreview with empty value', () => {
+describe('PeriodLength', () => {
+  test('Validate with no props', () => {
     const { container } = render(
       <TestWrapper>
-        <CreatePreview id={'' as any} data={{} as any} />
+        <PeriodLength />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
   })
-
-  test('should render CalenderValuePreview with empty value', () => {
+  test('Validate with empty periodLengthType', () => {
     const { container } = render(
       <TestWrapper>
-        <CalenderValuePreview
-          data={
-            {
-              periodLengthType: undefined,
-              dayOfMonth: undefined,
-              dayOfWeek: undefined
-            } as any
-          }
-        />
+        <PeriodLength periodLengthType="" />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+  test('Validate with empty periodType', () => {
+    const { container } = render(
+      <TestWrapper>
+        <PeriodLength periodType="" />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
