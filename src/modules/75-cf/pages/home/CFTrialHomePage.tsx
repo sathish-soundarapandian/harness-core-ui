@@ -8,6 +8,7 @@
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { CFTrialTemplate } from './CFTrialTemplate'
+import { isOnPrem } from '@common/utils/utils'
 
 const CFTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
@@ -18,10 +19,9 @@ const CFTrialHomePage: React.FC = () => {
       url: 'https://docs.harness.io/article/0a2u2ppp8s-getting-started-with-continuous-features'
     },
     startBtn: {
-      description:
-        window.deploymentType === 'ON_PREM'
-          ? getString('cf.cfTrialHomePage.startTrial.startBtn.description')
-          : getString('cf.cfTrialHomePage.startFreePlanBtn')
+      description: isOnPrem()
+        ? getString('cf.cfTrialHomePage.startTrial.startBtn.description')
+        : getString('cf.cfTrialHomePage.startFreePlanBtn')
     }
   }
 
