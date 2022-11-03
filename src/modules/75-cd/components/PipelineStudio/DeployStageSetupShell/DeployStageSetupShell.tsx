@@ -128,10 +128,11 @@ export default function DeployStageSetupShell(): JSX.Element {
     const stageData = produce(selectedStage, draft => {
       if (draft) {
         if (isNewService) {
-          set(draft, 'stage.spec.service', {
-            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
-            serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
-          })
+          isEmpty(get(draft, 'stage.spec.service.serviceRef')) &&
+            set(draft, 'stage.spec.service', {
+              serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
+              serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
+            })
         } else {
           set(draft, 'stage.spec.serviceConfig', {
             serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
