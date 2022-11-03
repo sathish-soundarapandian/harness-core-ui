@@ -175,6 +175,12 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: 
           disabled: isNewService
         },
         {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus2Registry]),
+          value: ENABLED_ARTIFACT_TYPES.Nexus2Registry,
+          iconName: ArtifactIconByType.Nexus2Registry as IconName,
+          disabled: isNewService
+        },
+        {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry]),
           value: ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
           iconName: ArtifactIconByType.GithubPackageRegistry as IconName,

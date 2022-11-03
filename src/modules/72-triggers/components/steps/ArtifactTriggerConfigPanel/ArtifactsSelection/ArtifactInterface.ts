@@ -42,6 +42,7 @@ export type ArtifactType =
   | 'Gcr'
   | 'Ecr'
   | 'Nexus3Registry'
+  | 'Nexus2Registry'
   | 'ArtifactoryRegistry'
   | 'CustomArtifact'
   | 'Acr'

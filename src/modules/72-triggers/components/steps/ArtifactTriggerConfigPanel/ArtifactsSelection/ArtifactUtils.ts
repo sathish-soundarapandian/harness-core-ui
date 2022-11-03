@@ -335,6 +335,22 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tagRegex: RUNTIME_INPUT_VALUE,
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl
       }
+    case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+      return {
+        identifier: '',
+        tagType: TagTypes.Value,
+        tag: RUNTIME_INPUT_VALUE,
+        tagRegex: RUNTIME_INPUT_VALUE,
+        imagePath: '',
+        repositoryFormat: 'maven',
+        repositoryName: '',
+        classifier: '',
+        artifactId: '',
+        extension: '',
+        groupId: '',
+        packageName: '',
+        repositoryUrl: ''
+      }
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
       return {
         identifier: '',

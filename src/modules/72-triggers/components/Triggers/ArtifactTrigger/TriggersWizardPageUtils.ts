@@ -29,7 +29,8 @@ import type {
   ArtifactTriggerConfig,
   CustomArtifactSpec,
   GithubPackagesSpec,
-  GarSpec
+  GarSpec,
+  Nexus2RegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -2087,6 +2088,22 @@ export const getTriggerArtifactInitialSpec = (
         repositoryUrl: '',
         tag
       } as NexusRegistrySpec
+    }
+    case 'Nexus2Registry': {
+      return {
+        connectorRef,
+        eventConditions,
+        imagePath,
+        repositoryFormat: 'maven',
+        repositoryName: '',
+        classifier: '',
+        artifactId: '',
+        extension: '',
+        groupId: '',
+        packageName: '',
+        repositoryUrl: '',
+        tag
+      } as Nexus2RegistrySpec
     }
     case 'Jenkins': {
       return {
