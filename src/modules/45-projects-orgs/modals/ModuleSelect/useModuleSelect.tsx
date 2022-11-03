@@ -30,8 +30,8 @@ import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFact
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
-import css from './useModuleSelect.module.scss'
 import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
+import css from './useModuleSelect.module.scss'
 
 export interface UseModuleSelectModalProps {
   onSuccess?: () => void

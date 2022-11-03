@@ -132,7 +132,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
-  const isOnPrem = (): boolean => window.deploymentType === ‘ON_PREM’
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const isFreeEnabled = !isOnPrem
 
   const startTrialRequestBody: StartTrialDTORequestBody = {
