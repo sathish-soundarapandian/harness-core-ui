@@ -11,6 +11,8 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as roleAssignmentModal from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import * as cdServices from 'services/cd-ng'
+import { SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
+import routes from '@common/RouteDefinitions'
 import CFTrialHomePage from '../CFTrialHomePage'
 
 jest.mock('services/cf')
@@ -56,9 +58,11 @@ describe('CFTrialHomePage', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    window.deploymentType = 'SAAS'
   })
 
   test('it should show a different description if trial enabled', async () => {
+    window.deploymentType = 'ON_PREM'
     renderComponent()
     await waitFor(() => expect(screen.getByText('cf.cfTrialHomePage.startTrial.startBtn.description')).toBeVisible())
   })
@@ -69,6 +73,7 @@ describe('CFTrialHomePage', () => {
   })
 
   test('it should show Start Free Plan page with corresponding for Developers descriptions if trial is not enabled', async () => {
+    // window.deploymentType = 'SAAS'
     renderComponent({ FREE_PLAN_ENABLED: true })
     await waitFor(() => {
       expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.title')).toBeVisible()
@@ -79,6 +84,7 @@ describe('CFTrialHomePage', () => {
   })
 
   test('it should show Start Free Plan page with corresponding for DevOps descriptions if trial is not enabled', async () => {
+    // window.deploymentType = 'SAAS'
     renderComponent({ FREE_PLAN_ENABLED: true })
     await waitFor(() => {
       expect(screen.getByText('cf.cfTrialHomePage.forDevOps.title')).toBeVisible()
@@ -101,6 +107,7 @@ describe('CFTrialHomePage', () => {
   })
 
   test('it should start free plan when Start Free Plan is clicked', async () => {
+    // window.deploymentType = 'SAAS'
     const handleStartButtonClick = jest.fn()
 
     jest.spyOn(cdServices, 'useStartFreeLicense').mockReturnValue({
@@ -108,13 +115,22 @@ describe('CFTrialHomePage', () => {
       loading: false
     } as any)
 
-    renderComponent({ FREE_PLAN_ENABLED: true })
+    renderComponent()
     expect(handleStartButtonClick).not.toHaveBeenCalled()
     userEvent.click(screen.getByText('cf.cfTrialHomePage.startFreePlanBtn'))
-    await waitFor(() => expect(handleStartButtonClick).toHaveBeenCalled())
+    await waitFor(() =>
+      expect(
+        screen
+          .getByTestId('location')
+          .innerHTML.endsWith(
+            routes.toSubscriptions({ accountId: 'dummy', moduleCard: 'cf', tab: SubscriptionTabNames.PLANS })
+          )
+      )
+    )
   })
 
   test('it should start trial when Start 14 day FF Enterprise trial is clicked', async () => {
+    window.deploymentType = 'ON_PREM'
     const handleEnterpriseButtonClick = jest.fn()
 
     jest.spyOn(cdServices, 'useStartTrialLicense').mockReturnValue({
