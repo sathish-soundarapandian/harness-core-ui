@@ -1891,7 +1891,8 @@ const routes = {
   toIacMicroFrontend: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iac/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
-  )
+  ),
+  toIacDashboard: withAccountId(() => `/iac/dashboard`)
 }
 
 export default routes
