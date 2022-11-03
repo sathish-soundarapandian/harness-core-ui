@@ -52,7 +52,7 @@ export default function ServiceEnvironmentInputSet({
             isMultiType: isReadOnlyInputSet,
             item: serviceOptions?.find(item => item?.value === serviceValue) || serviceValue,
             options: serviceOptions,
-            onSelect: selectedService => onChange('serviceRef', selectedService.value),
+            onSelect: (selectedService: SelectOption) => onChange('serviceRef', selectedService.value),
             onNewCreated: newOption => {
               if (newOption?.identifier && newOption.name) {
                 const newServiceOption = { label: newOption.name, value: newOption.identifier }

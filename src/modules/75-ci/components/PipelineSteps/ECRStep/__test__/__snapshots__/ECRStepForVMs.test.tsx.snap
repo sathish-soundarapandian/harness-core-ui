@@ -519,6 +519,7 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
                 class="bp3-form-content"
               >
                 <button
+                  aria-label="plusAdd"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                   data-testid="add-spec.tags"
                   style="padding: 0px;"
@@ -658,6 +659,7 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
                             class="bp3-form-content"
                           >
                             <button
+                              aria-label="plusAdd"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                               data-testid="add-spec.baseImageConnectorRefs"
                               style="padding: 0px;"
@@ -923,6 +925,7 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
                             class="bp3-form-content"
                           >
                             <button
+                              aria-label="plusAdd"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                               data-testid="add-spec.labels"
                               style="padding: 0px;"
@@ -1020,6 +1023,7 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
                             class="bp3-form-content"
                           >
                             <button
+                              aria-label="plusAdd"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                               data-testid="add-spec.buildArgs"
                               style="padding: 0px;"

@@ -722,6 +722,7 @@ exports[`Test full flow should render rows with checkbox and return selected dat
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
       >
         <button
+          aria-label="entityReference.apply"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           disabled=""
           tabindex="-1"
@@ -1481,6 +1482,7 @@ exports[`Test full flow should render rows with checkbox and return selected dat
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
       >
         <button
+          aria-label="entityReference.apply"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           type="button"
         >

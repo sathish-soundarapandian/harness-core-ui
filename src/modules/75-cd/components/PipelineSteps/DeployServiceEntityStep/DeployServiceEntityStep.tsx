@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { get, isEmpty, set } from 'lodash-es'
+import { get, isEmpty, noop, set } from 'lodash-es'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
-import type { FormikErrors } from 'formik'
+import { Formik, FormikErrors } from 'formik'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -96,14 +96,19 @@ export class DeployServiceEntityStep extends Step<DeployServiceEntityData> {
     } = props
     if (isTemplatizedView(stepViewType)) {
       return (
-        <DeployServiceEntityInputStep
-          initialValues={initialValues}
-          readonly={readonly}
-          inputSetData={inputSetData}
-          allowableTypes={allowableTypes}
-          stepViewType={stepViewType}
-          {...(customStepProps as DeployServiceEntityCustomProps)}
-        />
+        <Formik initialValues={initialValues} validate={onUpdate} onSubmit={noop}>
+          {/** Wrapping this component in formik to prevent the pseudo fields from corrupting the main input set formik.
+           * The onUpdate call takes care of picking only the required data and naturally eliminate the pseudo fields.
+           * The pseudo fields are present within the component - DeployServiceEntityInputStep */}
+          <DeployServiceEntityInputStep
+            initialValues={initialValues}
+            readonly={readonly}
+            inputSetData={inputSetData}
+            allowableTypes={allowableTypes}
+            stepViewType={stepViewType}
+            {...(customStepProps as DeployServiceEntityCustomProps)}
+          />
+        </Formik>
       )
     }
 

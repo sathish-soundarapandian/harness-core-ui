@@ -24,7 +24,7 @@ describe('NoEnvironment', () => {
   test('it should open Create Environment dialog when New environment button is clicked', async () => {
     renderComponent()
 
-    const btn = screen.getByRole('button', { name: 'plus newEnvironment' })
+    const btn = screen.getByRole('button', { name: 'newEnvironment' })
     expect(btn).toBeInTheDocument()
     expect(onCreated).not.toHaveBeenCalled()
 

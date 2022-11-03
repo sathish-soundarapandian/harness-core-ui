@@ -37,6 +37,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
             class="NoDataCard--buttonContainer"
           >
             <button
+              aria-label="cv.notifications.newNotificationRule"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
               type="button"
             >
@@ -110,6 +111,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
             class="NoDataCard--buttonContainer"
           >
             <button
+              aria-label="cv.notifications.newNotificationRule"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
               type="button"
             >
@@ -183,6 +185,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
             class="NoDataCard--buttonContainer"
           >
             <button
+              aria-label="cv.notifications.newNotificationRule"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
               type="button"
             >
@@ -256,6 +259,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
             class="NoDataCard--buttonContainer"
           >
             <button
+              aria-label="cv.notifications.newNotificationRule"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
               type="button"
             >
@@ -317,6 +321,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
           class="Layout--horizontal StyledProps--main headerActions StyledProps--flex"
         >
           <button
+            aria-label="notifications.name"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
             id="newNotificationBtn"
             type="button"
@@ -588,6 +593,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="Prev"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                 disabled=""
                 tabindex="-1"
@@ -631,6 +637,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
                 </span>
               </button>
               <button
+                aria-label="Next"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                 disabled=""
                 tabindex="-1"

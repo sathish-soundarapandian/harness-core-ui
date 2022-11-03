@@ -139,7 +139,7 @@ describe('TargetBasedOnConditions', () => {
 
     expect(screen.queryByTestId('rule-rows')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'plus cf.segmentDetail.addRule' }))
+    userEvent.click(screen.getByRole('button', { name: 'cf.segmentDetail.addRule' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('rule-rows')).toBeInTheDocument()
@@ -153,7 +153,7 @@ describe('TargetBasedOnConditions', () => {
 
     expect(screen.queryAllByText('common.or')).toHaveLength(0)
 
-    const addRowBtn = screen.getByRole('button', { name: 'plus cf.segmentDetail.addRule' })
+    const addRowBtn = screen.getByRole('button', { name: 'cf.segmentDetail.addRule' })
 
     userEvent.click(addRowBtn)
     expect(screen.queryAllByText('common.or')).toHaveLength(0)

@@ -8,6 +8,7 @@
 import React, { useRef, useState } from 'react'
 import { Container, Icon } from '@harness/uicore'
 import { debounce } from 'lodash-es'
+import cx from 'classnames'
 import {
   ModulesPreferenceStoreData,
   MODULES_CONFIG_PREFERENCE_STORE_KEY
@@ -15,7 +16,7 @@ import {
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { moduleToNavItemsMap } from '../util'
-import css from './ModulesContainer.module.scss'
+import css from '../MainNav.module.scss'
 
 export const MODULES_WINDOW_SIZE = 3
 
@@ -34,7 +35,7 @@ const ChevronButton: React.FC<ChevronButtonProps> = (props: ChevronButtonProps) 
 
   return (
     <Container
-      className={css.chevron}
+      className={cx(css.chevron, css.navBtn)}
       onClick={disabled ? undefined : handleClick}
       padding={{ top: 'small', bottom: 'small' }}
     >
@@ -97,9 +98,9 @@ const ModulesContainer = (): React.ReactElement => {
   const showChevronButtons = selectedModules.length > MODULES_WINDOW_SIZE
   return (
     <>
-      <div className={css.border} />
+      <div className={cx(css.border, css.navBtn)} />
       {showChevronButtons && <ChevronButton handleClick={handleUpClick} disabled={moduleStartIndex === 0} />}
-      <Container onScroll={handleOnScroll} className={css.container} style={{ height: modulesListHeight }}>
+      <Container onScroll={handleOnScroll} className={css.modules} style={{ height: modulesListHeight }}>
         {orderedModules
           .filter(moduleName => moduleMap[moduleName].shouldVisible && selectedModules.indexOf(moduleName) > -1)
           .map((moduleName, i) => {
@@ -119,7 +120,7 @@ const ModulesContainer = (): React.ReactElement => {
           disabled={moduleStartIndex + MODULES_WINDOW_SIZE >= selectedModules.length}
         />
       )}
-      <div className={css.border} />
+      <div className={cx(css.border, css.navBtn)} />
     </>
   )
 }

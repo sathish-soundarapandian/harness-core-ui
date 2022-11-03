@@ -93,7 +93,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
-  })
+  }),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 const commonRequest = (): any =>
@@ -263,7 +264,7 @@ describe('Execution List', () => {
     renderExecutionPage()
     expect(useGetListOfExecutions).toHaveBeenCalledWith(commonRequest())
     await screen.findByText('filters.executions.pipelineName')
-    jest.advanceTimersByTime(5000) // simulate 5 seconds poll interval
+    jest.advanceTimersByTime(20000) // simulate 20 seconds poll interval
     expect(useGetListOfExecutions).toHaveBeenCalledWith(commonRequest())
   })
 

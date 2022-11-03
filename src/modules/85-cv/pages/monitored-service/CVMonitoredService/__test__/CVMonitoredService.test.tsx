@@ -101,7 +101,7 @@ describe('Monitored Service list', () => {
     expect(getByText(getRiskLabelStringId(RiskValues.UNHEALTHY))).toBeDefined()
     expect(getByText(getRiskLabelStringId(RiskValues.NEED_ATTENTION))).toBeDefined()
     expect(getByText(getRiskLabelStringId(RiskValues.HEALTHY))).toBeDefined()
-    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
+    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | 1234_project | harness')
 
     expect(container.querySelector('.tags')).toBeInTheDocument()
     expect(container.querySelector('.tags p')?.textContent).toBe('6')

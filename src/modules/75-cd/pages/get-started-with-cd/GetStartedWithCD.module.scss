@@ -41,16 +41,18 @@
   padding-left: 3.5rem !important;
   position: relative;
 
+  .contentWrapper {
+    margin: auto;
+  }
   .buildImg {
     bottom: 15px;
     right: 0px;
-    padding-left: 10px;
+    margin-left: -24px;
   }
 
   .buttonRow {
     margin-top: 50px !important;
     align-items: center;
-    width: 85%;
   }
 }
 

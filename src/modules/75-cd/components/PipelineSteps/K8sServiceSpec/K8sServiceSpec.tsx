@@ -6,9 +6,7 @@
  */
 
 import React from 'react'
-import get from 'lodash-es/get'
-import isEmpty from 'lodash-es/isEmpty'
-import set from 'lodash-es/set'
+import { get, set, isEmpty } from 'lodash-es'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 
 import { parse } from 'yaml'

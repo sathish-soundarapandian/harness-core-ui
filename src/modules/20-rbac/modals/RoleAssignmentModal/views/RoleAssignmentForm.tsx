@@ -106,7 +106,7 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({ noRoleAssignmen
   return (
     <Container className={css.roleAssignments}>
       <FieldArray
-        label={getString('rbac.usersPage.assignRoleBindings')}
+        label={getString('rbac.roleBindings')}
         name="assignments"
         placeholder={noRoleAssignmentsText}
         insertRowAtBeginning={false}

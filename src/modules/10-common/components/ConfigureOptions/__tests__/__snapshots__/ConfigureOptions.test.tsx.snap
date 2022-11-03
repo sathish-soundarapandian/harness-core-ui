@@ -965,6 +965,7 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
                   class="advancedBtn"
                 >
                   <button
+                    aria-label="common.configureOptions.returnToBasic"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
                     type="button"
                   >
@@ -1259,6 +1260,7 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
                       class="bp3-popover-target"
                     >
                       <button
+                        aria-label="advancedTitle"
                         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
                         tabindex="0"
                         type="button"

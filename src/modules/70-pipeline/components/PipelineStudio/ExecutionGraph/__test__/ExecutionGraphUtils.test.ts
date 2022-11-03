@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { DefaultNodeModel } from '@pipeline/components/Diagram'
 import type { DependencyElement } from 'services/ci'
 import {
   addService,
@@ -26,9 +25,9 @@ describe('ExecutionGraphUtils', () => {
       }
     ]
 
-    const nodeModel: DefaultNodeModel = {
+    const nodeModel = {
       getIdentifier: () => 'id1'
-    } as DefaultNodeModel
+    } as any
 
     const ret = getDependencyFromNode(servicesData, nodeModel)
     expect(ret.node).toEqual(servicesData[0])

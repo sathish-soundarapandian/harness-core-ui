@@ -119,7 +119,8 @@ export enum StepType {
   FetchInstanceScript = 'FetchInstanceScript',
   Wait = 'Wait',
   ShellScriptProvision = 'ShellScriptProvision',
-  ChaosExperiment = 'Chaos' //todoChaos
+  ChaosExperiment = 'Chaos',
+  Elastigroup = 'Elastigroup'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

@@ -176,6 +176,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep - input sets are empty 1`] = `
             </div>
             <div
               class="bp3-form-group"
+              style="flex-grow: 1;"
             >
               <label
                 class="bp3-label"
@@ -196,49 +197,52 @@ exports[`CustomSMConfigStep CustomSMConfigStep - input sets are empty 1`] = `
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                    data-testid="create-or-select-secret"
-                    type="button"
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <span
-                      class="bp3-icon StyledProps--main"
-                      data-icon="key-main"
-                      style="height: 12px;"
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
                     >
-                      <svg
-                        height="24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
                       >
-                        <g
-                          fill="none"
-                          stroke="#1C1C28"
-                          stroke-width="0.5"
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                          />
-                          <path
-                            d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                          />
-                        </g>
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main"
-                        style="--text-line-clamp: 1;"
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
                       >
-                        account.sds
-                      </p>
-                    </span>
-                  </button>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          account.sds
+                        </p>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -282,6 +286,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep - input sets are empty 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -311,6 +316,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep - input sets are empty 1`] = `
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               type="submit"
             >
@@ -1032,6 +1038,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
             </div>
             <div
               class="bp3-form-group"
+              style="flex-grow: 1;"
             >
               <label
                 class="bp3-label"
@@ -1052,49 +1059,52 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                    data-testid="create-or-select-secret"
-                    type="button"
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <span
-                      class="bp3-icon StyledProps--main"
-                      data-icon="key-main"
-                      style="height: 12px;"
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
                     >
-                      <svg
-                        height="24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
                       >
-                        <g
-                          fill="none"
-                          stroke="#1C1C28"
-                          stroke-width="0.5"
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                          />
-                          <path
-                            d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                          />
-                        </g>
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main"
-                        style="--text-line-clamp: 1;"
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
                       >
-                        account.sds
-                      </p>
-                    </span>
-                  </button>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          account.sds
+                        </p>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1138,6 +1148,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1167,6 +1178,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               type="submit"
             >
@@ -1888,6 +1900,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
             </div>
             <div
               class="bp3-form-group"
+              style="flex-grow: 1;"
             >
               <label
                 class="bp3-label"
@@ -1908,49 +1921,52 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                    data-testid="create-or-select-secret"
-                    type="button"
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <span
-                      class="bp3-icon StyledProps--main"
-                      data-icon="key-main"
-                      style="height: 12px;"
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
                     >
-                      <svg
-                        height="24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
                       >
-                        <g
-                          fill="none"
-                          stroke="#1C1C28"
-                          stroke-width="0.5"
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                          />
-                          <path
-                            d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                          />
-                        </g>
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main"
-                        style="--text-line-clamp: 1;"
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
                       >
-                        account.sds
-                      </p>
-                    </span>
-                  </button>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          account.sds
+                        </p>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1994,6 +2010,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -2023,6 +2040,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               type="submit"
             >
@@ -2656,6 +2674,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
             </div>
             <div
               class="bp3-form-group"
+              style="flex-grow: 1;"
             >
               <label
                 class="bp3-label"
@@ -2676,49 +2695,52 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                    data-testid="create-or-select-secret"
-                    type="button"
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <span
-                      class="bp3-icon StyledProps--main"
-                      data-icon="key-main"
-                      style="height: 12px;"
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
                     >
-                      <svg
-                        height="24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
                       >
-                        <g
-                          fill="none"
-                          stroke="#1C1C28"
-                          stroke-width="0.5"
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                          />
-                          <path
-                            d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                          />
-                        </g>
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main"
-                        style="--text-line-clamp: 1;"
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
                       >
-                        account.sds
-                      </p>
-                    </span>
-                  </button>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          account.sds
+                        </p>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2762,6 +2784,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -2791,6 +2814,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               type="submit"
             >
@@ -3636,6 +3660,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
             </div>
             <div
               class="bp3-form-group"
+              style="flex-grow: 1;"
             >
               <label
                 class="bp3-label"
@@ -3656,49 +3681,52 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                    data-testid="create-or-select-secret"
-                    type="button"
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <span
-                      class="bp3-icon StyledProps--main"
-                      data-icon="key-main"
-                      style="height: 12px;"
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
                     >
-                      <svg
-                        height="24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
                       >
-                        <g
-                          fill="none"
-                          stroke="#1C1C28"
-                          stroke-width="0.5"
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                          />
-                          <path
-                            d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                          />
-                        </g>
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main"
-                        style="--text-line-clamp: 1;"
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
                       >
-                        account.sds
-                      </p>
-                    </span>
-                  </button>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          account.sds
+                        </p>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3742,6 +3770,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -3771,6 +3800,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               type="submit"
             >

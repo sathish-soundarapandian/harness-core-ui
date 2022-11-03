@@ -16,7 +16,6 @@ const PermissionYAMLPreview = (props: PermissionYAMLPreviewProps) => {
   return (
     <div>
       <YAMLBuilder
-        showSnippetSection={false}
         entityType="Service"
         height="400px"
         fileName={'ccm-k8s-connector.yaml'}

@@ -772,6 +772,7 @@ exports[`Load balancer advanced config remove health check data and add again wi
                               class="FieldArray--text"
                             />
                             <button
+                              aria-label="Add"
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
                               data-id="btn-add"
                               type="button"
@@ -1614,6 +1615,7 @@ exports[`Load balancer advanced config show routing table in case of empty selec
                               class="FieldArray--noData"
                             >
                               <button
+                                aria-label="Add"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
                                 data-id="btn-add-no-data"
                                 type="button"

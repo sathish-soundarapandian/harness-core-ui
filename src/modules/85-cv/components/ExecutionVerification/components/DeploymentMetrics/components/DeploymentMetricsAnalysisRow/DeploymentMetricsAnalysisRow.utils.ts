@@ -18,6 +18,7 @@ export function healthSourceTypeToLogo(healthSourceType: TransactionMetricInfo['
     case 'NEW_RELIC':
       return 'service-newrelic'
     case 'PROMETHEUS':
+    case 'AWS_PROMETHEUS':
       return 'service-prometheus'
     case 'SPLUNK':
       return 'service-splunk'

@@ -41,7 +41,7 @@ export const Connectors = {
   SERVICE_NOW: 'ServiceNow',
   CUSTOM_HEALTH: 'CustomHealth',
   ERROR_TRACKING: 'ErrorTracking',
-  ELK: 'ELK'
+  ELK: 'ELASTICSEARCH'
 }
 
 export const getConnectorIconByType = (type: string): string => {

@@ -200,7 +200,7 @@ const SLOName: React.FC<SLONameProps> = ({
             serviceProps={{
               item: activeUserJourney,
               options: userJourneyOptions,
-              onSelect: selectedUserJourney =>
+              onSelect: (selectedUserJourney: SelectOption) =>
                 formikProps.setFieldValue(SLOFormFields.USER_JOURNEY_REF, selectedUserJourney.value),
               modalTitle: TEXT_USER_JOURNEY,
               placeholder: getString('cv.slos.userJourneyPlaceholder'),

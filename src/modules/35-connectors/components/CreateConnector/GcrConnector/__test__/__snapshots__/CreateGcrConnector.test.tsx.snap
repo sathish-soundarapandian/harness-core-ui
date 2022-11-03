@@ -687,6 +687,7 @@ exports[`Create GCP connector Wizard Should render form 2`] = `
                 </div>
               </div>
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="submit"
               >
@@ -1393,6 +1394,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
                 </div>
               </div>
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="submit"
               >

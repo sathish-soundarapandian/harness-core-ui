@@ -110,6 +110,13 @@ steps:
       prodListenerRuleARN: Prod Listener Rule ARN
       stageListener: Stage Listener
       stageListenerRuleARN: Stage Listener Rule ARN
+  elastigroup:
+    infraDetailHeader: Elastigroup Infrastructure Details
+    connectorSpot: Spot Connector
+    elastigroupConfig: Elastigroup Configuration
+    elastigroupConfigReq: Elastigroup Configuration is required
+    elastigroupTitle: Elastigroup Configuration Source
+    elastigroupConfigDetails: '{{$.common.configDetails}}'
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -502,7 +509,8 @@ getStartedWithCD:
   envName: Environment Name
   infraName: Infrastructure Name
   setupDelegate: Setup Delegate
-  delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateInfo1: Harness Continuous Delivery empowers teams to deliver new features, fast and securely. The first step to creating deployment pipelines is connecting to your target environment by installing a Harness Delegate.
+  delegateInfo2: The delegate is a worker process that runs on your infrastructure execute tasks on your infrastructure on behalf of Harness platform.
   delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
 ecsRollingDeployStep:
@@ -534,17 +542,17 @@ azureBlueprint:
 validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
-delegateInstallation: Install the Delegate to deploy your cluster
+welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate
 installDelegate: Install Delegate
 instructionsDelegate: Instructions to Install the Delegate
-downloadYAML: DOWNLOAD THE YAML
+downloadYAML: Download the YAML
 previewYAML: Preview Yaml
-installCluster: INSTALL ON YOUR CLUSTER
+installCluster: Install on your Cluster
 checkCluster: Check if you can connect to your cluster
 delegateInstallCommand: Install the delegate by running the following command
-delegateConnectionWait: WAITING FOR DELEGATE TO CONNECT
+delegateConnectionWait: Waiting for Delegate to connect
 delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
 delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
@@ -579,7 +587,10 @@ miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
 useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
 removeStepTemplate: Remove Step Template
+duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+artifactSource:
+  artifactRepositoryTypeIsRequired: Artifact Repository Type is required
 azureArm:
   description: Deploy resources using Azure Resource Manager (ARM).
   location: Location

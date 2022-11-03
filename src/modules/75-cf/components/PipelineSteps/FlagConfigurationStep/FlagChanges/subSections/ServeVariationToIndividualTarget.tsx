@@ -6,13 +6,34 @@
  */
 
 import React, { FC, useMemo } from 'react'
+import * as Yup from 'yup'
 import { get } from 'lodash-es'
-import { useStrings } from 'framework/strings'
+import { useFormikContext } from 'formik'
+import { FormError } from '@harness/uicore'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { Target, Variation } from 'services/cf'
 import type { FlagConfigurationStepFormDataValues } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
 import SubSection, { SubSectionProps } from '../SubSection'
 import ServeVariationToItem from './ServeVariationToItem'
 import { CFPipelineInstructionType } from '../../types'
+
+export const serveVariationToIndividualTargetSchema = (getString: UseStringsReturn['getString']): Yup.Schema<any> =>
+  Yup.object({
+    spec: Yup.lazy<any>(spec => {
+      if (!spec?.targets?.length || !spec?.variation) {
+        return Yup.object({
+          variation: Yup.string().required(
+            getString('cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets')
+          )
+        })
+      }
+
+      return Yup.object({
+        variation: Yup.string(),
+        targets: Yup.array().of(Yup.string())
+      })
+    })
+  })
 
 export interface ServeVariationToIndividualTargetProps extends SubSectionProps {
   setField: (fieldName: string, value: unknown) => void
@@ -31,6 +52,7 @@ const ServeVariationToIndividualTarget: FC<ServeVariationToIndividualTargetProps
   ...props
 }) => {
   const { getString } = useStrings()
+  const { errors, isValid, touched } = useFormikContext()
 
   const selectedTargets = useMemo<Target[]>(() => {
     const selectedTargetIds = get(fieldValues, prefix('spec.targets'))
@@ -44,6 +66,14 @@ const ServeVariationToIndividualTarget: FC<ServeVariationToIndividualTargetProps
 
   return (
     <SubSection data-testid="flagChanges-serveVariationToIndividualTarget" {...props}>
+      {!isValid && errors && get(touched, prefix('identifier')) && get(errors, prefix('spec.variation')) && (
+        <FormError
+          name={prefix('spec.variation')}
+          errorMessage={getString(
+            'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets'
+          )}
+        />
+      )}
       <ServeVariationToItem
         dialogTitle={getString('cf.pipeline.flagConfiguration.addEditVariationToSpecificTargets')}
         itemLabel={getString('cf.shared.targets')}

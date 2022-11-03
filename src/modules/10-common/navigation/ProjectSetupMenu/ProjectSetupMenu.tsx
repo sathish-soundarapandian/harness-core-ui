@@ -23,9 +23,10 @@ import NavExpandable from '../NavExpandable/NavExpandable'
 
 interface ProjectSetupMenuProps {
   module?: Module
+  defaultExpanded?: boolean
 }
 
-const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
+const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpanded }) => {
   const { getString } = useStrings()
   const {
     accountId,
@@ -69,7 +70,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
     (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
   return (
-    <NavExpandable title={getString('common.projectSetup')} route={routes.toSetup(params)}>
+    <NavExpandable
+      title={getString('common.projectSetup')}
+      route={routes.toSetup(params)}
+      defaultExpanded={defaultExpanded}
+    >
       <Layout.Vertical spacing="small">
         <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectors(params)} />
         <SidebarLink label={getString('common.secrets')} to={routes.toSecrets(params)} />

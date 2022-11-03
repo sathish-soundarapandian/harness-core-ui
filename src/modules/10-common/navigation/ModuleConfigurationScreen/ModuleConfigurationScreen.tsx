@@ -74,7 +74,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   const { contentfulModuleMap, loading } = useGetContentfulModules()
 
   useEffect(() => {
-    if (activeModuleIndexFromProps) {
+    if (typeof activeModuleIndexFromProps !== 'undefined') {
       setActiveModuleIndex(activeModuleIndexFromProps)
     }
   }, [activeModuleIndexFromProps])
@@ -116,9 +116,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
           {loading ? (
             <PageSpinner />
           ) : (
-            contentfulModuleMap && (
-              <ModuleCarousel key={activeModule} module={activeModule} data={contentfulModuleMap[activeModule]} />
-            )
+            <ModuleCarousel key={activeModule} module={activeModule} data={contentfulModuleMap?.[activeModule]} />
           )}
         </Container>
       </Layout.Horizontal>

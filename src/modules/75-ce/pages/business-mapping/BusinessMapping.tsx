@@ -57,7 +57,7 @@ const BusinessMappingPage: () => React.ReactElement = () => {
     []
   )
 
-  useDocumentTitle(getString('ce.businessMapping.sideNavText'), true)
+  useDocumentTitle(getString('ce.businessMapping.sideNavText'))
 
   const businessMappingData = data?.resource || []
 

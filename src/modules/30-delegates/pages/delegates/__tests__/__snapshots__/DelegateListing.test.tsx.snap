@@ -188,6 +188,7 @@ exports[`Test delegate buttons click on filter 1`] = `
       class="Layout--horizontal StyledProps--main header"
     >
       <button
+        aria-label="delegates.newDelegate"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         data-testid="newDelegateButton"
         id="newDelegateBtn"
@@ -764,6 +765,7 @@ exports[`Test delegate buttons click on new delegate 1`] = `
       class="Layout--horizontal StyledProps--main header"
     >
       <button
+        aria-label="delegates.newDelegate"
         class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         data-testid="newDelegateButton"
         disabled=""

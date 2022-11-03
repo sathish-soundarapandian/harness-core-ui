@@ -18,7 +18,8 @@ import type { ArtifactType } from './ArtifactInterface'
 
 export enum ModalViewFor {
   PRIMARY = 1,
-  SIDECAR = 2
+  SIDECAR = 2,
+  Template = 3
 }
 
 export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
@@ -36,6 +37,7 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.WinRm ||
       deploymentType === ServiceDeploymentType.Ssh ||
       deploymentType === ServiceDeploymentType.AzureWebApp ||
+      deploymentType === ServiceDeploymentType.Elastigroup ||
       deploymentType === ServiceDeploymentType.CustomDeployment
     )
   )
@@ -62,7 +64,7 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Jenkins: 'service-jenkins',
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
-  GithubPackageRegistry: 'service-github',
+  GithubPackageRegistry: 'service-github-package',
   AzureArtifacts: 'service-github',
   AmazonMachineImage: 'service-github'
 }
@@ -182,6 +184,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr
   ],
+  Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonS3],
   CustomDeployment: [
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,

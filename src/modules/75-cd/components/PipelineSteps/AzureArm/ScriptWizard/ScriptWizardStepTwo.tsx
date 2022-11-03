@@ -166,7 +166,7 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
-                name: getString('pipeline.startupCommand.scriptFilePath')
+                name: getString('pipeline.startup.scriptFilePath')
               })
             ),
           repoName: Yup.string().test(

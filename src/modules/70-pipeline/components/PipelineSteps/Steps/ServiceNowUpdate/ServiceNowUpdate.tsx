@@ -38,7 +38,7 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
   protected type = StepType.ServiceNowUpdate
   protected stepName = 'ServiceNow Update'
   protected stepIcon: IconName = 'servicenow-update'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowApproval'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowUpdate'
   // initialValues on mount
   protected defaultValues: ServiceNowUpdateData = {
     identifier: '',

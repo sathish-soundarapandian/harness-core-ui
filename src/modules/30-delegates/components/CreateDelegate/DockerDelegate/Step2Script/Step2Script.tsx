@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import { Button, Layout, StepProps, Heading, Text, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
@@ -96,7 +96,6 @@ const Step2Script: React.FC<StepProps<DockerDelegateWizardData>> = props => {
       isEditModeSupported={false}
       hideErrorMesageOnReadOnlyMode={true}
       existingYaml={delegateDockerYaml as any}
-      showSnippetSection={false}
       width="568px"
       height="462px"
       theme="DARK"

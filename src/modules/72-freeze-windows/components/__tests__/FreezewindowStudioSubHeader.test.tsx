@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, getByText, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { FreezeWindowStudioSubHeader } from '../FreezeWindowStudioSubHeader/FreezeWindowStudioSubHeader'
@@ -43,5 +43,9 @@ describe('Freeze Window Studio Sub Header', () => {
     const portal = document.getElementsByClassName('bp3-dialog')[0]
     expect(portal).toMatchSnapshot('CreateNewFreezeWindow Modal Dialog')
     expect(container).toMatchSnapshot('Freeze Window Sub Header')
+
+    const cancelBtn = getByText(portal as HTMLElement, 'cancel')
+    expect(cancelBtn).toBeDefined()
+    fireEvent.click(cancelBtn)
   })
 })

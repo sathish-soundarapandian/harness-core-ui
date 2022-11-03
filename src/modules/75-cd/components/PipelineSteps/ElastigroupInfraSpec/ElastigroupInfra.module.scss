@@ -1,0 +1,136 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.formRow {
+  :global {
+    .bp3-form-group {
+      &.bp3-disabled .bp3-label {
+        color: var(--grey-500) !important;
+      }
+    }
+  }
+  > button {
+    margin-top: 25px !important;
+  }
+}
+
+.marginTop {
+  margin-top: 28px !important;
+}
+
+.lastRow {
+  :global(.bp3-form-group) {
+    margin-top: 12px;
+    margin-bottom: 0px !important;
+  }
+}
+
+.simultaneousDeployment {
+  display: inline-flex !important;
+}
+
+.fileStoreStyle {
+  margin-top: 0 !important;
+  margin-bottom: var(--spacing-4) !important;
+
+  :global {
+    .bp3-form-group {
+      margin-bottom: 0;
+    }
+    .bp3-form-helper-text {
+      display: none;
+    }
+  }
+}
+
+.connectorRef {
+  padding-bottom: 0px !important;
+  margin-bottom: var(--spacing-large) !important;
+}
+
+.elastiWizard {
+  width: 100%;
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}
+.modal {
+  [class*='bp3-dialog-header'] button {
+    z-index: 2;
+  }
+}
+
+.createConnectorWizard {
+  flex-grow: 1;
+  display: flex;
+}
+
+.optionsViewContainer {
+  margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
+
+  .elastiStepOne {
+    min-height: 470px;
+  }
+}
+
+.saveBtn {
+  position: relative;
+  bottom: 0;
+}
+
+.rowItem {
+  padding: var(--spacing-medium) 0;
+  border-bottom: solid 1px var(--grey-100);
+
+  span.type {
+    color: var(--grey-900) !important;
+    font-weight: 900;
+    display: grid;
+    grid-template-columns: 1fr 10px;
+  }
+  font-size: 14px !important;
+
+  > p {
+    cursor: pointer;
+    color: var(--primary-7) !important;
+  }
+
+  .columnId {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: var(--spacing-small);
+    align-items: start;
+    margin-top: 2px;
+    padding-left: var(--spacing-xsmall);
+  }
+}
+
+.elastigroupList {
+  display: grid;
+  grid-template-columns: 200px 200px 200px auto;
+  column-gap: var(--spacing-medium);
+  align-items: center;
+
+  &.list-header {
+    border-bottom: solid 1px var(--grey-100);
+    padding-bottom: var(--spacing-medium);
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  .elastigroupLocation {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .elastigroupListButton {
+    justify-content: flex-end;
+  }
+}

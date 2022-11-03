@@ -17,7 +17,8 @@ export enum TemplateType {
   Pipeline = 'Pipeline',
   CustomDeployment = 'CustomDeployment',
   MonitoredService = 'MonitoredService',
-  SecretManager = 'SecretManager'
+  SecretManager = 'SecretManager',
+  ArtifactSource = 'ArtifactSource'
 }
 
 export enum TemplateUsage {

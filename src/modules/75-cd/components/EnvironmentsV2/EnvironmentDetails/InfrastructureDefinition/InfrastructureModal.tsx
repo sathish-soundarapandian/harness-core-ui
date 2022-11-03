@@ -97,7 +97,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Infrastructure',
   width: '100%',
   height: 540,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -691,7 +690,6 @@ function BootstrapDeployInfraDefinition({
                 key={refreshYAMLBuilder}
                 schema={infrastructureDefinitionSchema?.data}
                 bind={setYamlHandler}
-                showSnippetSection={false}
                 isReadOnlyMode={!isYamlEditable}
                 onEnableEditMode={handleEditMode}
                 isEditModeSupported={!isReadOnly}

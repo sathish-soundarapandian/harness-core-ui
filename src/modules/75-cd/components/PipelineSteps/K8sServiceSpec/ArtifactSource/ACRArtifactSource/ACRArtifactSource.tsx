@@ -374,6 +374,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               placeholder={''}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
+              configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
               width={391}
               setRefValue

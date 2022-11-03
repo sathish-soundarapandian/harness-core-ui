@@ -107,7 +107,8 @@ jest.mock('services/cd-ng', () => ({
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
-  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 jest.mock('services/template-ng', () => ({
@@ -147,7 +148,7 @@ describe('CDPipelineDeploymentList', () => {
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline'
+      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline?storeType=INLINE'
     )
   })
 

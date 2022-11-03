@@ -46,7 +46,6 @@ interface ArtifactWizardProps {
   artifactInitialValue: InitialArtifactDataType
   types: Array<ArtifactType>
   lastSteps: JSX.Element
-  getOptionalConfigurationSteps?: JSX.Element | null
   newConnectorSteps?: any
   expressions: string[]
   labels: ConnectorRefLabelType
@@ -67,7 +66,6 @@ function ArtifactWizard({
   allowableTypes,
   selectedArtifact,
   changeArtifactType,
-  getOptionalConfigurationSteps,
   handleViewChange,
   artifactInitialValue,
   newConnectorView,
@@ -204,7 +202,6 @@ function ArtifactWizard({
         </StepWizard>
       ) : null}
       {lastSteps}
-      {getOptionalConfigurationSteps ? getOptionalConfigurationSteps : null}
     </StepWizard>
   )
 }

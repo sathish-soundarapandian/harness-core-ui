@@ -431,7 +431,7 @@ describe('Create empty monitored service', () => {
 
     // Delete all custom metric
     cy.get('span[data-icon="main-delete"]').click({ multiple: true })
-    cy.findByRole('button', { name: /Add Metric/i }).should('be.visible')
+    cy.contains('span', 'Add Metric').should('be.visible')
   })
 })
 

@@ -47,9 +47,9 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import {
   AzureInfrastructureSpecEditableProps,
   getValue,
@@ -59,6 +59,7 @@ import {
 } from './SshWinRmAzureInfrastructureInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './SshWinRmAzureInfrastructureSpec.module.scss'
+
 const errorMessage = 'data.message'
 
 const hostConnectionTypes = ['Hostname', 'PublicIP', 'PrivateIP']
@@ -362,7 +363,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     }
                   />
                   {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
-                    <ConfigureOptions
+                    <ConnectorConfigureOptions
                       value={formik.values?.connectorRef as string}
                       type={
                         <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
@@ -381,6 +382,15 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       }
                       isReadonly={readonly}
                       className={css.marginTop}
+                      connectorReferenceFieldProps={{
+                        accountIdentifier: accountId,
+                        projectIdentifier,
+                        orgIdentifier,
+                        type: Connectors.AZURE,
+                        label: getString('common.azureConnector'),
+                        disabled: readonly,
+                        gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                      }}
                     />
                   )}
                 </Layout.Horizontal>

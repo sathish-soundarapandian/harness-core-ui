@@ -114,7 +114,6 @@ const TemplateYamlView: React.FC = () => {
             existingJSON={{ template }}
             existingYaml={!valid ? templateYaml : undefined}
             bind={setYamlHandler}
-            showSnippetSection={false}
             schema={templateSchema?.data}
             onExpressionTrigger={() => {
               return Promise.resolve(

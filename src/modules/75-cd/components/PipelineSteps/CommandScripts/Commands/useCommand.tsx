@@ -11,14 +11,15 @@ import type { FieldArrayRenderProps } from 'formik'
 import { Dialog } from '@blueprintjs/core'
 import type { AllowedTypes } from '@harness/uicore'
 import { HideModal, useModalHook } from '@harness/use-modal'
-
+import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import {
   CommandType,
   CommandUnitType,
   CustomScriptCommandUnit,
   CopyCommandUnit,
-  DownloadArtifactCommandUnit
+  DownloadArtifactCommandUnit,
+  SourceType
 } from '../CommandScriptsTypes'
 import { CommandEdit } from './CommandEdit'
 
@@ -36,15 +37,17 @@ interface UseCommandReturnType {
 interface UseCommandProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
+  deploymentType?: string
 }
 
 export default function useCommands(props: UseCommandProps): UseCommandReturnType {
-  const { allowableTypes, readonly = false } = props
+  const { allowableTypes, readonly = false, deploymentType = '' } = props
+  const sourceTypeDefaultValue = isWinRmDeploymentType(deploymentType) ? SourceType.CONFIG : SourceType.ARTIFACT
   const [initialValues, setInitialValues] = useState<CommandUnitType>({
     identifier: '',
     name: '',
-    type: 'Copy',
-    spec: { sourceType: 'Artifact', destinationPath: '' }
+    type: CommandType.Copy,
+    spec: { sourceType: sourceTypeDefaultValue, destinationPath: '' }
   })
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [editIndex, setEditIndex] = useState<number>(0)
@@ -120,8 +123,8 @@ export default function useCommands(props: UseCommandProps): UseCommandReturnTyp
       setInitialValues({
         identifier: '',
         name: '',
-        type: 'Copy',
-        spec: { sourceType: 'Artifact', destinationPath: '' }
+        type: CommandType.Copy,
+        spec: { sourceType: sourceTypeDefaultValue, destinationPath: '' }
       })
     }
     showCommandModal()
@@ -149,10 +152,11 @@ export default function useCommands(props: UseCommandProps): UseCommandReturnTyp
           onAddEditCommand={onAddEditCommand}
           onCancelClick={hideCommandModal}
           readonly={readonly}
+          deploymentType={deploymentType}
         />
       </Dialog>
     )
-  }, [initialValues, allowableTypes, onAddEditCommand, isEdit, readonly])
+  }, [initialValues, allowableTypes, onAddEditCommand, isEdit, readonly, deploymentType])
 
   return {
     openCommandModal,

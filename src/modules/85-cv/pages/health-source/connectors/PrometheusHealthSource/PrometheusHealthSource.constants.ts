@@ -38,6 +38,9 @@ export interface PrometheusSetupSource {
   connectorRef?: { value: string } | string
   ignoreThresholds: PrometheusMetricThresholdType[]
   failFastThresholds: PrometheusMetricThresholdType[]
+  region?: string
+  dataSourceType?: string
+  workspaceId?: string
 }
 
 export type MapPrometheusQueryToService = {

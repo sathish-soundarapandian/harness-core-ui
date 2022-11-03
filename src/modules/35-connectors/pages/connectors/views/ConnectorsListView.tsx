@@ -24,8 +24,7 @@ import { Menu, Classes, Position, Intent, TextArea, Tooltip } from '@blueprintjs
 import { useParams, useHistory, Link } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import classNames from 'classnames'
-import { pick } from 'lodash-es'
-import defaultTo from 'lodash-es/defaultTo'
+import { pick, defaultTo } from 'lodash-es'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import {

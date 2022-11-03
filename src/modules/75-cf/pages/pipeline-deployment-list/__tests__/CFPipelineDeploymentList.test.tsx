@@ -107,7 +107,8 @@ jest.mock('services/cd-ng', () => ({
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
-  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 jest.mock('services/template-ng', () => ({
@@ -148,7 +149,7 @@ describe('CFPipelineDeploymentList', () => {
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline'
+      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline?connectorRef=account.PRenvHarnessYamlGithub&repoName=ng-pr-manifests&branch=feat%2FCDS-41594-gitops&storeType=REMOTE'
     )
   })
 

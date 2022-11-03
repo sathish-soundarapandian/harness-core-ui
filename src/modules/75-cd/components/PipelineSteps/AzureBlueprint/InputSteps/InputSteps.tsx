@@ -19,13 +19,14 @@ import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import { TemplateInputStep } from './TemplateInput'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<any> }): JSX.Element => {
-  const { inputSetData, readonly, path, allowableTypes } = props
+  const { inputSetData, readonly, path, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -41,7 +42,9 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly
@@ -66,6 +69,9 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
               orgIdentifier={orgIdentifier}
               style={{ marginBottom: 10 }}
               multiTypeProps={{ expressions, allowableTypes }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               disabled={readonly}
               width={300}
               setRefValue
@@ -84,6 +90,9 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
               multiTextInputProps={{
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               data-testid={`${path}.spec.configuration.assignmentName`}
               template={inputSetData?.template}

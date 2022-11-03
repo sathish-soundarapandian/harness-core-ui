@@ -7,7 +7,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import set from 'lodash-es/set'
+import { set, defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'
@@ -30,7 +30,6 @@ import {
   PageSpinner,
   useToaster
 } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'

@@ -53,6 +53,7 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure correct tabs
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="cv.externalAPICalls"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
             type="button"
           >
@@ -93,6 +94,7 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure correct tabs
             </span>
           </button>
           <button
+            aria-label="cv.executionLogs"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
             type="button"
           >
@@ -220,6 +222,7 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure correct tabs
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="cv.externalAPICalls"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
             type="button"
           >
@@ -260,6 +263,7 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure correct tabs
             </span>
           </button>
           <button
+            aria-label="cv.executionLogs"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
             type="button"
           >
@@ -436,6 +440,7 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure tabs are ren
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="cv.externalAPICalls"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
             type="button"
           >
@@ -476,6 +481,7 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure tabs are ren
             </span>
           </button>
           <button
+            aria-label="cv.executionLogs"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
             type="button"
           >

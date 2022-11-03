@@ -24,6 +24,7 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { HostScope, parseAttributes, parseHosts, PdcInfraTemplate } from './PDCInfrastructureInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
@@ -85,7 +86,8 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
   allowableTypes,
   initialValues,
   onUpdate,
-  path
+  path,
+  stepViewType
 }): JSX.Element => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -146,6 +148,9 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
               multiTypeTextArea={{
                 expressions,
                 allowableTypes,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 customValueGetter: () => {
                   const hostsValue = get(formik.values, `${path}.hosts`, '')
                   return isString(hostsValue) ? hostsValue : hostsValue?.join('\n')
@@ -175,6 +180,9 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                 multiTypeTextArea={{
                   expressions,
                   allowableTypes,
+                  configureOptionsProps: {
+                    isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                  },
                   customValueGetter: () => getHostNames(get(formik.values, path, {})),
                   onBlur: () => {
                     const prevValues = get(formik.values, path, {})
@@ -203,6 +211,9 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                 multiTypeTextArea={{
                   expressions,
                   allowableTypes,
+                  configureOptionsProps: {
+                    isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                  },
                   customValueGetter: () => getAttributeFilters(get(formik.values, path, {})),
                   onBlur: () => {
                     const prevValues = get(formik.values, path, {})
@@ -229,6 +240,10 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                   const credentialsRef = secret.referenceString
                   updateData({ credentialsRef })
                 }
+              }}
+              enableConfigureOptions={true}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
             />
           </div>

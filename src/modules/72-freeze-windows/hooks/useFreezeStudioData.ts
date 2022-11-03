@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import debounce from 'lodash-es/debounce'
+import { debounce } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceList } from 'services/cd-ng'

@@ -63,6 +63,7 @@ exports[`<MultiTypeMapInputSet /> tests Renders ok with minimal UI 1`] = `
           class="bp3-form-content"
         >
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-test"
             style="padding: 0px;"
@@ -144,6 +145,7 @@ exports[`<MultiTypeMapInputSet /> tests Should render properly 1`] = `
           class="bp3-form-content"
         >
           <button
+            aria-label="plusAdd"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
             data-testid="add-test"
             style="padding: 0px;"

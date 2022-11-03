@@ -78,7 +78,7 @@ describe('Test cases for CVSLODetailsPage', () => {
 
     expect(container).toMatchSnapshot()
 
-    expect(document.title).toBe('cv.srmTitle | cv.slos.title | harness')
+    expect(document.title).toBe('cv.srmTitle | cv.slos.title | PROJECT_IDENTIFIER | harness')
   })
 
   test('it should handle the loading state', () => {

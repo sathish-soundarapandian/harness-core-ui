@@ -12,7 +12,8 @@ import {
   Utils,
   useConfirmationDialog,
   MultiTypeInputType,
-  AllowedTypes
+  AllowedTypes,
+  SelectOption
 } from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
@@ -110,7 +111,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
                 allowableTypes: multiTypeByScope,
                 item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
                 options: serviceOptions,
-                onSelect: selectedService => serviceOnSelect(isTemplate, selectedService, formikProps),
+                onSelect: (selectedService: SelectOption) => serviceOnSelect(isTemplate, selectedService, formikProps),
                 onNewCreated: newOption => {
                   if (newOption?.identifier && newOption.name) {
                     const newServiceOption = { label: newOption.name, value: newOption.identifier }

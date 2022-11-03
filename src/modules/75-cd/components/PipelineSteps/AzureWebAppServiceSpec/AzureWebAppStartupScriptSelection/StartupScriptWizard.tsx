@@ -7,11 +7,36 @@
 
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { ServiceDefinition } from 'services/cd-ng'
 import type { ConnectorTypes, StartupScriptWizardStepsProps } from './StartupScriptInterface.types'
 import StartupScriptWizardStepOne from './StartupScriptWizardStepOne'
-
 import css from './StartupScriptSelection.module.scss'
+
+const getDeploymentTypeStrings = (
+  deploymentType: ServiceDefinition['type'],
+  getString: UseStringsReturn['getString']
+): Record<string, string> => {
+  switch (deploymentType) {
+    case ServiceDeploymentType.Elastigroup:
+      return {
+        title: getString('pipeline.startup.script.name'),
+        stepName: getString('pipeline.startup.script.fileSource'),
+        stepSubtitle: getString('pipeline.startup.script.subtitle', {
+          deploymentType: getString('pipeline.serviceDeploymentTypes.spotElastigroup')
+        })
+      }
+    default:
+      return {
+        title: getString('pipeline.startup.command.name'),
+        stepName: getString('pipeline.startup.command.fileSource'),
+        stepSubtitle: getString('pipeline.startup.command.subtitle', {
+          deploymentType: getString('cd.steps.azureWebAppInfra.azureWebApp')
+        })
+      }
+  }
+}
 
 export function StartupScriptWizard<T>({
   handleConnectorViewChange,
@@ -23,6 +48,7 @@ export function StartupScriptWizard<T>({
   newConnectorView,
   newConnectorSteps,
   lastSteps,
+  deploymentType,
   isReadonly
 }: StartupScriptWizardStepsProps<T>): React.ReactElement {
   const { getString } = useStrings()
@@ -31,6 +57,8 @@ export function StartupScriptWizard<T>({
     handleStoreChange?.(arg as unknown as T)
   }
 
+  const { title, stepName, stepSubtitle } = getDeploymentTypeStrings(deploymentType, getString)
+
   return (
     <StepWizard
       className={css.startupScriptWizard}
@@ -38,12 +66,13 @@ export function StartupScriptWizard<T>({
       iconProps={{
         size: 37
       }}
-      title={getString('pipeline.startupCommand.name')}
+      title={title}
     >
       <StartupScriptWizardStepOne
         name={getString('pipeline.fileSource')}
-        stepName={getString('pipeline.startupCommand.fileSource')}
-        key={getString('pipeline.startupCommand.fileSource')}
+        stepName={stepName}
+        stepSubtitle={stepSubtitle}
+        key={stepSubtitle}
         expressions={expressions}
         allowableTypes={allowableTypes}
         isReadonly={isReadonly}

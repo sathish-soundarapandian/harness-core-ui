@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import CreateNode from './CreateNode'
 import type { FireEventMethod } from '../../types'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
@@ -24,7 +24,7 @@ interface CreateNodeStepProps {
   identifier: string
   name: string
   disabled?: boolean
-  node: CreateNodeStepProps & { isSelected?: boolean }
+  node?: CreateNodeStepProps & { isSelected?: boolean }
   titleClassName?: string
   className?: string
   hidden?: boolean
@@ -33,6 +33,7 @@ interface CreateNodeStepProps {
 function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
   return (
     <div
+      data-testid="create-node-step"
       onMouseOver={(event: any) => {
         event?.stopPropagation()
         props.onMouseOver?.()

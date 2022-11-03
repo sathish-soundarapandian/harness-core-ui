@@ -43,7 +43,8 @@ export interface AzureWebAppServiceSpecFormProps {
 export enum AzureWebAppConfigType {
   applicationSettings = 'applicationSettings',
   connectionStrings = 'connectionStrings',
-  startupCommand = 'startupCommand'
+  startupCommand = 'startupCommand',
+  startupScript = 'startupScript'
 }
 
 export interface ApplicationConfigProps {

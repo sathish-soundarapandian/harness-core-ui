@@ -40,6 +40,12 @@ const GitAzureWebAppConfigContent = ({
   const [showRepoName, setShowRepoName] = useState(true)
   const [connector, setConnector] = useState(undefined)
 
+  const pathFieldName =
+    isFieldRuntime(`${azureWebAppConfigPath}.store.spec.paths`, initialValues) ||
+    isFieldRuntime(`${azureWebAppConfigPath}.store.spec.paths[0]`, initialValues)
+      ? 'paths'
+      : 'paths[0]'
+
   React.useEffect(() => {
     if (shouldDisplayRepositoryName(connector)) {
       setShowRepoName(false)
@@ -135,7 +141,7 @@ const GitAzureWebAppConfigContent = ({
           <div className={css.inputSpacing}>
             <FormInput.MultiTextInput
               disabled={readonly}
-              name={`${path}.${azureWebAppConfigPath}.store.spec.paths[0]`}
+              name={`${path}.${azureWebAppConfigPath}.store.spec.${pathFieldName}`}
               multiTextInputProps={{
                 expressions,
                 allowableTypes

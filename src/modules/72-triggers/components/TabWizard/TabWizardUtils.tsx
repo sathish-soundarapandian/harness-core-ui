@@ -233,7 +233,6 @@ export const renderYamlBuilder = ({
         {...yamlBuilderReadOnlyModeProps}
         existingJSON={convertFormikValuesToYaml?.(formikProps.values)}
         isReadOnlyMode={false}
-        showSnippetSection={false}
         bind={setYamlHandler}
         invocationMap={invocationMap}
         schema={schema}

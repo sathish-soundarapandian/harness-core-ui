@@ -1978,6 +1978,7 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
           </section>
         </section>
         <button
+          aria-label="pipeline.artifactsSelection.addSidecar"
           class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           id="add-artifact"
           type="button"
@@ -2534,6 +2535,7 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
           </section>
         </section>
         <button
+          aria-label="pipeline.artifactsSelection.addSidecar"
           class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           id="add-artifact"
           type="button"
@@ -3090,6 +3092,7 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
           </section>
         </section>
         <button
+          aria-label="pipeline.artifactsSelection.addSidecar"
           class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           id="add-artifact"
           type="button"

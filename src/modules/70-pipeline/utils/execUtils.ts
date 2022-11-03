@@ -14,7 +14,7 @@ import {
   getStatusProps
 } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
-import { Event } from '@pipeline/components/Diagram'
+import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
   StepGroupRollbackIdentifier,

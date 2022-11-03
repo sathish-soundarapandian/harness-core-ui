@@ -66,7 +66,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Environment',
   width: '100%',
   height: 600,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -493,7 +492,7 @@ export default function EnvironmentConfiguration({
                         onUpdate={values => {
                           formikProps.setFieldValue('variables', values.variables)
                         }}
-                        fromEnvironmentConfiguration={true}
+                        addVariableLabel={'variables.newVariable'}
                       />
                     </Card>
                   </Layout.Vertical>

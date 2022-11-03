@@ -82,7 +82,6 @@ export default function CDSideNav(): React.ReactElement {
     accountIdentifier: accountId,
     projectIdentifier,
     orgIdentifier,
-    module,
     lazy: true,
     size: 1
   })

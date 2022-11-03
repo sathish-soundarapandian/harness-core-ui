@@ -266,6 +266,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
                 >
                   <button
+                    aria-label="start"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     type="submit"
                   >
@@ -276,6 +277,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                     </span>
                   </button>
                   <button
+                    aria-label="cancel"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                     type="button"
                   >
@@ -1109,6 +1111,7 @@ exports[`Git experience git experience snapshot 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
                 >
                   <button
+                    aria-label="start"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     type="submit"
                   >
@@ -1119,6 +1122,7 @@ exports[`Git experience git experience snapshot 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="cancel"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                     type="button"
                   >

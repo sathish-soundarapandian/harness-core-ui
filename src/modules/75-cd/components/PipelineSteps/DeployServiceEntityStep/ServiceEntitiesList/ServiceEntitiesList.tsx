@@ -100,7 +100,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
   return (
     <>
       <div className={css.cardsContainer}>
-        {servicesData.map(row => {
+        {servicesData.map((row, index: number) => {
           return (
             <ServiceEntityCard
               key={row.service.identifier}
@@ -113,6 +113,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
               readonly={readonly}
               deploymentType={selectedDeploymentType}
               defaultExpanded={!isMultiSvc}
+              cardClassName={servicesData.length - 1 !== index ? css.marginBottom : ''}
             />
           )
         })}

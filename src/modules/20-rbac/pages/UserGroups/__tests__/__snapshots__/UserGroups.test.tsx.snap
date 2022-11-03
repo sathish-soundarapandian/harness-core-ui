@@ -12,7 +12,7 @@ exports[`UsersPage Test Add Roles 1`] = `
       class="bp3-heading"
     >
       <span>
-        rbac.addRole
+        rbac.manageRoleBindings
       </span>
     </h4>
   </div>
@@ -93,9 +93,10 @@ exports[`UsersPage Test Add Roles 1`] = `
                 <span
                   class="FieldArray--text"
                 >
-                  rbac.usersPage.assignRoleBindings
+                  rbac.roleBindings
                 </span>
                 <button
+                  aria-label="Add"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
                   data-id="btn-add"
                   type="button"
@@ -428,6 +429,7 @@ exports[`UsersPage Test Add Roles 1`] = `
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="common.apply"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -438,6 +440,7 @@ exports[`UsersPage Test Add Roles 1`] = `
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -468,6 +471,7 @@ exports[`UsersPage Test render data 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start"
       >
         <button
+          aria-label="rbac.userGroupPage.newUserGroup"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
           type="button"
         >
@@ -497,6 +501,7 @@ exports[`UsersPage Test render data 1`] = `
           </span>
         </button>
         <button
+          aria-label="rbac.userGroupPage.assignRoles"
           class="bp3-button Button--button StyledProps--font StyledProps--main assignRolesButton Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >
@@ -807,14 +812,15 @@ exports[`UsersPage Test render data 1`] = `
                   </span>
                 </span>
                 <button
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-Testing_User_Group"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -919,6 +925,7 @@ exports[`UsersPage Test render data 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="plusNumber"
                   class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
                   type="button"
                 >
@@ -939,14 +946,15 @@ exports[`UsersPage Test render data 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
               >
                 <button
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-dummyid"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -1211,14 +1219,15 @@ exports[`UsersPage Test render data 1`] = `
                   </span>
                 </span>
                 <button
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-Testing_User_Group_with_sso"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -1357,6 +1366,7 @@ exports[`UsersPage Test render data 1`] = `
                     class="bp3-popover-target"
                   >
                     <a
+                      aria-label="plusNumber"
                       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
                       disabled=""
                       role="button"
@@ -1381,14 +1391,15 @@ exports[`UsersPage Test render data 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
               >
                 <button
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-Testing_User_Group_with_sso_no_users"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -1462,6 +1473,7 @@ exports[`UsersPage Test render data 1`] = `
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="Prev"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
             disabled=""
             tabindex="-1"
@@ -1505,6 +1517,7 @@ exports[`UsersPage Test render data 1`] = `
             </span>
           </button>
           <button
+            aria-label="Next"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
             disabled=""
             tabindex="-1"

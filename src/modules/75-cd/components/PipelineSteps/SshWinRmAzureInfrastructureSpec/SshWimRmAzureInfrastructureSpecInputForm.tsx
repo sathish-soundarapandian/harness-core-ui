@@ -36,6 +36,7 @@ import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import {
   AzureInfrastructureSpecEditableProps,
   subscriptionLabel,
@@ -47,7 +48,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 const errorMessage = 'data.message'
 
 const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureSpecEditableProps & { path: string }> =
-  ({ template, initialValues, readonly = false, path, onUpdate, allowableTypes, allValues }) => {
+  ({ template, initialValues, readonly = false, path, onUpdate, allowableTypes, allValues, stepViewType }) => {
     const { accountId, projectIdentifier, orgIdentifier } = useParams<{
       projectIdentifier: string
       orgIdentifier: string
@@ -286,7 +287,6 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 dataTooltipId: 'azureInfraConnector'
               }}
               label={getString('connector')}
-              enableConfigureOptions={false}
               placeholder={getString('connectors.selectConnector')}
               disabled={readonly}
               multiTypeProps={{ allowableTypes, expressions }}
@@ -300,6 +300,10 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 }
               }
               gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: template?.connectorRef
+              }}
             />
           </div>
         )}
@@ -351,6 +355,9 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 },
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               fieldPath="subscriptionId"
               template={template}
@@ -427,6 +434,9 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 },
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               fieldPath="resourceGroup"
               template={template}

@@ -107,6 +107,7 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
           class="bp3-popover-target"
         >
           <button
+            aria-label="templatesLibrary.addNewTemplate"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-primary"
             type="button"
           >
@@ -501,6 +502,7 @@ exports[`<TemplatesPage /> tests should render error view correctly 1`] = `
           class="bp3-popover-target"
         >
           <button
+            aria-label="templatesLibrary.addNewTemplate"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-primary"
             type="button"
           >
@@ -732,6 +734,7 @@ exports[`<TemplatesPage /> tests should render error view correctly 1`] = `
           someerror
         </p>
         <button
+          aria-label="Retry"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -854,6 +857,7 @@ exports[`<TemplatesPage /> tests should render loading view correctly 1`] = `
           class="bp3-popover-target"
         >
           <button
+            aria-label="templatesLibrary.addNewTemplate"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-primary"
             type="button"
           >
@@ -1238,6 +1242,7 @@ exports[`<TemplatesPage /> tests should render no results view correctly 1`] = `
           class="bp3-popover-target"
         >
           <button
+            aria-label="templatesLibrary.addNewTemplate"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-primary"
             type="button"
           >
@@ -1455,6 +1460,7 @@ exports[`<TemplatesPage /> tests should render no results view correctly 1`] = `
           class="bp3-popover-target"
         >
           <button
+            aria-label="templatesLibrary.addNewTemplate"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--withRightIcon Button--variation Button--variation-primary"
             type="button"
           >

@@ -14,6 +14,7 @@ declare const styles: {
   readonly artifactsAccordion: string
   readonly cardSection: string
   readonly configureOptions: string
+  readonly connectorConfigOptions: string
   readonly connectorMargin: string
   readonly customVariables: string
   readonly disabled: string

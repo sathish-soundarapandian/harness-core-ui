@@ -6,13 +6,12 @@
  */
 
 import React from 'react'
-import { cloneDeep, get, isEmpty, isEqual, noop } from 'lodash-es'
+import { cloneDeep, get, isEmpty, isEqual, noop, merge } from 'lodash-es'
 import {
   AllowedTypesWithRunTime,
   MultiTypeInputType,
   VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
-import merge from 'lodash-es/merge'
 import {
   findAllByKey,
   PipelineContext,

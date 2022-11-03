@@ -8,6 +8,8 @@
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { SecretManagerTemplate } from '@cd/components/Templates/SecretManagerTemplate/SecretManagerTemplate'
 import { DeploymentTemplate } from '@cd/components/Templates/DeploymentTemplate/DeploymentTemplate'
+import { ArtifactSourceTemplate } from '@cd/components/Templates/ArtifactSourceTemplate/ArtifactSourceTemplate'
 
 templateFactory.registerTemplate(new DeploymentTemplate())
 templateFactory.registerTemplate(new SecretManagerTemplate())
+templateFactory.registerTemplate(new ArtifactSourceTemplate())

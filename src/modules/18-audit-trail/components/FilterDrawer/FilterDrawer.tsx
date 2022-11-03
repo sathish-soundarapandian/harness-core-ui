@@ -39,6 +39,7 @@ export interface AuditTrailFormType {
   organizations?: MultiSelectOption[]
   projects?: ProjectSelectOption[]
   resourceType?: MultiSelectOption[]
+  resourceIdentifier?: string
 }
 
 const FilterDrawer: React.FC<FilterDrawerProps> = ({

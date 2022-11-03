@@ -96,6 +96,7 @@ exports[`ManifestSelection tests click continue btn 1`] = `
                         />
                       </label>
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="thumbnail-select-change"
                         type="button"
@@ -283,6 +284,7 @@ exports[`ManifestSelection tests click continue btn 1`] = `
                   </div>
                 </div>
                 <button
+                  aria-label="newLabel Github connector"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addNewManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                   id="new-releaserepo-connector"
                   type="button"
@@ -318,6 +320,7 @@ exports[`ManifestSelection tests click continue btn 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -538,6 +541,7 @@ exports[`ManifestSelection tests click on git card 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="continue"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 disabled=""
                 tabindex="-1"
@@ -673,6 +677,7 @@ exports[`ManifestSelection tests connector as runtime 1`] = `
                         />
                       </label>
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="thumbnail-select-change"
                         type="button"
@@ -829,6 +834,7 @@ exports[`ManifestSelection tests connector as runtime 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -962,6 +968,7 @@ exports[`ManifestSelection tests renders Git Store 1`] = `
                         />
                       </label>
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="thumbnail-select-change"
                         type="button"
@@ -1149,6 +1156,7 @@ exports[`ManifestSelection tests renders Git Store 1`] = `
                   </div>
                 </div>
                 <button
+                  aria-label="newLabel Github connector"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addNewManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                   id="new-releaserepo-connector"
                   type="button"
@@ -1184,6 +1192,7 @@ exports[`ManifestSelection tests renders Git Store 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1404,6 +1413,7 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="continue"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 disabled=""
                 tabindex="-1"

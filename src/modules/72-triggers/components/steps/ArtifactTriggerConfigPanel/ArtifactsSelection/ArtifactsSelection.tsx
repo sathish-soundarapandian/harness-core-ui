@@ -68,6 +68,8 @@ import type {
   ImagePathProps,
   InitialArtifactDataType
 } from './ArtifactInterface'
+import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
+import { showConnectorStep } from './ArtifactUtils'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
 
 interface ArtifactsSelectionProps {
@@ -169,6 +171,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
           newConnectorView={connectorView}
           newConnectorSteps={getNewConnectorSteps()}
           handleViewChange={handleConnectorViewChange}
+          showConnectorStep={showConnectorStep(selectedArtifactType as ArtifactType)}
         />
       </Dialog>
     ),
@@ -413,6 +416,8 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <AmazonS3 {...artifactLastStepProps()} />
       case 'Acr':
         return <ACRArtifact {...artifactLastStepProps()} />
+      case 'CustomArtifact':
+        return <CustomArtifact {...artifactLastStepProps()} />
       case 'Jenkins':
         return <div>Not Supported Yet!</div>
       case 'DockerRegistry':

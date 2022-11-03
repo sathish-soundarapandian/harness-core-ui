@@ -16,6 +16,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { MergePRStepData } from './MergePrStep'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -32,7 +33,7 @@ export interface MergePrInputStepProps {
 }
 
 export default function MergePRInputStep(props: MergePrInputStepProps): React.ReactElement {
-  const { template, path, readonly, allowableTypes } = props
+  const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = defaultTo(path, '')
@@ -43,7 +44,9 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly

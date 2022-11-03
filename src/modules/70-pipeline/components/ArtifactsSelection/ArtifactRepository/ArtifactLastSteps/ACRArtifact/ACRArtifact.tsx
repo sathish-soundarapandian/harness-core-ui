@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useEffect } from 'react'
+import cx from 'classnames'
 import {
   Formik,
   FormInput,
@@ -70,12 +71,14 @@ export function ACRArtifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ACRArtifactProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const loadingItems = [{ label: 'Loading...', value: 'Loading Loading...' }]
 
@@ -437,6 +440,19 @@ export function ACRArtifact({
     handleSubmit(artifactObj)
   }
 
+  const handleValidate = (formData: ACRArtifactType & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorId: getConnectorIdValue(prevStepData),
+        subscriptionId: getValue(formData.subscriptionId),
+        registry: getValue(formData.registry),
+        repository: getValue(formData.repository)
+      })
+    }
+  }
+
   const getSelectItems = useCallback(() => {
     return (tagList as AcrBuildDetailsDTO[])?.map(tag => ({ label: tag.tag, value: tag.tag })) as SelectOption[]
   }, [tagList])
@@ -464,13 +480,16 @@ export function ACRArtifact({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="acrArtifact"
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -487,7 +506,7 @@ export function ACRArtifact({
           formikRef.current = formik
           return (
             <FormikForm>
-              <div className={css.connectorForm}>
+              <div className={cx(css.connectorForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
@@ -835,20 +854,22 @@ export function ACRArtifact({
                 ) : null}
               </div>
 
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  variation={ButtonVariation.SECONDARY}
-                  text={getString('back')}
-                  icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
-                />
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  text={getString('submit')}
-                  rightIcon="chevron-right"
-                />
-              </Layout.Horizontal>
+              {!isTemplateContext && (
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    text={getString('submit')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
+              )}
             </FormikForm>
           )
         }}

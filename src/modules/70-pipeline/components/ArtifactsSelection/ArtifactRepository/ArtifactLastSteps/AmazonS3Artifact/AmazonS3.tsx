@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
+import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge, omit } from 'lodash-es'
@@ -64,13 +65,15 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     artifactIdentifiers,
     isReadonly = false,
     selectedArtifact,
-    isMultiArtifactSource
+    isMultiArtifactSource,
+    formClassName = ''
   } = props
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState({ region: undefined })
@@ -243,6 +246,16 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     handleSubmit(artifactObj)
   }
 
+  const handleValidate = (formData: AmazonS3InitialValuesType & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorId: getConnectorIdValue(prevStepData)
+      })
+    }
+  }
+
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
       <Menu.Item
@@ -345,13 +358,16 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik<AmazonS3InitialValuesType>
         initialValues={getInitialValues()}
         formName="artifactoryArtifact"
         validationSchema={getValidationSchema()}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -362,7 +378,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       >
         {formik => (
           <FormikForm>
-            <div className={css.connectorForm}>
+            <div className={cx(css.connectorForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -496,20 +512,22 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 </div>
               )}
             </div>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isTemplateContext && (
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

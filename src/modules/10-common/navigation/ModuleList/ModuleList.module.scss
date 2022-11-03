@@ -22,6 +22,17 @@
   .clickable {
     cursor: pointer;
   }
+  .link {
+    text-decoration: none;
+  }
+  .secondaryTextContainer {
+    align-self: flex-end;
+    margin-top: var(--spacing-small) !important;
+    .secondaryText {
+      font-family: var(--font-family-reenie-beanie) !important;
+      font-size: 24px !important;
+    }
+  }
 }
 
 .backdrop {

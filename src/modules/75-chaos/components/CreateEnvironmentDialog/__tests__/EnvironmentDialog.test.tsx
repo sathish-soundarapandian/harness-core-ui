@@ -29,7 +29,7 @@ describe('EnvironmentDialog', () => {
       renderComponent()
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'plus newEnvironment' }))
+      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       // leave environment name blank and submit form
       userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
@@ -41,7 +41,7 @@ describe('EnvironmentDialog', () => {
       renderComponent()
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'plus newEnvironment' }))
+      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       // enter invalid text and submit form
       const environmentNameInputField = screen.getByRole('textbox', { name: '' })
@@ -56,7 +56,7 @@ describe('EnvironmentDialog', () => {
       renderComponent()
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'plus newEnvironment' }))
+      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       // enter valid environment name and submit form
       const environmentNameInputField = screen.getByRole('textbox', { name: '' })
@@ -90,7 +90,7 @@ describe('EnvironmentDialog', () => {
       })
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'plus newEnvironment' }))
+      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       const environmentNameInputField = screen.getByRole('textbox', { name: '' })
 

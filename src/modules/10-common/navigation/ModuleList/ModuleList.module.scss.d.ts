@@ -11,7 +11,10 @@ declare const styles: {
   readonly blue: string
   readonly clickable: string
   readonly configScreenWithoutReorder: string
+  readonly link: string
   readonly modulesList: string
   readonly modulesListContainer: string
+  readonly secondaryText: string
+  readonly secondaryTextContainer: string
 }
 export default styles

@@ -119,20 +119,6 @@ jest.mock('@pipeline/utils/templateUtils', () => ({
     })
 }))
 
-jest.mock('@pipeline/components/Diagram', () => ({
-  ...jest.requireActual('@pipeline/components/Diagram'),
-  CanvasWidget: () => {
-    return <div className={'canvas-widget-mock'} />
-  }
-}))
-
-jest.mock('@pipeline/components/CanvasButtons/CanvasButtons', () => ({
-  ...jest.requireActual('@pipeline/components/CanvasButtons/CanvasButtons'),
-  CanvasButtons: () => {
-    return <div className={'canvas-buttons-mock'} />
-  }
-}))
-
 const contextMock = produce(pipelineContextMock, draft => {
   set(draft, 'stage.pipeline', {
     name: 'Test Template Pipeline',

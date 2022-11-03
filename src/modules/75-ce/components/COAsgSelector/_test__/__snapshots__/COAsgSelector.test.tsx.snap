@@ -203,6 +203,7 @@ exports[`ASG selection modal component should add the selected ASG 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -246,6 +247,7 @@ exports[`ASG selection modal component should add the selected ASG 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -565,6 +567,7 @@ exports[`ASG selection modal component should refresh the list 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -608,6 +611,7 @@ exports[`ASG selection modal component should refresh the list 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -901,6 +905,7 @@ exports[`ASG selection modal component should render successfully 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -944,6 +949,7 @@ exports[`ASG selection modal component should render successfully 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import {
   Layout,
   SelectOption,
@@ -29,7 +29,7 @@ import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import type { AccountPathProps, OrgPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -43,11 +43,21 @@ enum OrgFilter {
   ALL = '$$ALL$$'
 }
 
+interface ProjectsPageQueryParams {
+  verify?: boolean
+  orgIdentifier?: string
+}
+
 const ProjectsListPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-  const { orgIdentifier } = useQueryParams<OrgPathProps>()
-  const { verify } = useQueryParams<{ verify?: boolean }>()
+  const {
+    preference: orgFilterPreference,
+    setPreference: setOrgFilterPreference,
+    clearPreference: clearOrgFilterPreference
+  } = usePreferenceStore<string>(PreferenceScope.USER, 'orgFilterOnProjectListing')
+  const { verify, orgIdentifier: orgIdentifierQuery } = useQueryParams<ProjectsPageQueryParams>()
   const { getString } = useStrings()
+  const orgFilter = orgIdentifierQuery || orgFilterPreference
   useDocumentTitle(getString('projectsText'))
 
   const { preference: savedProjectView, setPreference: setSavedProjectView } = usePreferenceStore<Views | undefined>(
@@ -95,16 +105,16 @@ const ProjectsListPage: React.FC = () => {
         }
       }) || [])
     ]
-  }, [orgsData?.data?.content, orgIdentifier, allOrgsSelectOption])
+  }, [orgsData?.data?.content, allOrgsSelectOption])
 
   React.useEffect(() => {
     setPage(0)
-  }, [searchParam, orgIdentifier])
+  }, [searchParam, orgFilter])
 
   const { data, loading, refetch, error } = useGetProjectAggregateDTOList({
     queryParams: {
       accountIdentifier: accountId,
-      orgIdentifier,
+      orgIdentifier: orgFilter,
       searchTerm: searchParam,
       pageIndex: page,
       pageSize: 100
@@ -141,7 +151,7 @@ const ProjectsListPage: React.FC = () => {
   return (
     <Container className={css.projectsPage} height="inherit">
       <Page.Header breadcrumbs={<NGBreadcrumbs />} title={getString('projectsText')} />
-      {data?.data?.totalItems || searchParam || loading || error || orgIdentifier ? (
+      {data?.data?.totalItems || searchParam || loading || error || orgFilter ? (
         <Layout.Horizontal spacing="large" className={css.header}>
           <RbacButton
             featuresProps={{
@@ -159,8 +169,13 @@ const ProjectsListPage: React.FC = () => {
             filterable={false}
             className={css.orgDropdown}
             items={organizations}
-            value={orgIdentifier || OrgFilter.ALL}
+            value={orgFilter || OrgFilter.ALL}
             onChange={item => {
+              if (item.value === OrgFilter.ALL) {
+                clearOrgFilterPreference()
+              } else {
+                setOrgFilterPreference(item.value as string)
+              }
               history.push({
                 pathname: routes.toProjects({ accountId }),
                 search: item.value !== OrgFilter.ALL ? `?orgIdentifier=${item.value.toString()}` : undefined

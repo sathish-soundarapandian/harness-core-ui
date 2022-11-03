@@ -110,7 +110,7 @@ export class AzureArmStep extends PipelineStep<AzureArmStepInfo> {
       isRequired &&
       isEmpty(data?.spec?.configuration?.template?.store?.spec?.paths)
     ) {
-      set(errors, 'spec.configuration.template.store.spec.paths', getString?.('pipeline.startupCommand.scriptFilePath'))
+      set(errors, 'spec.configuration.template.store.spec.paths', getString?.('pipeline.startup.scriptFilePath'))
     }
 
     if (
@@ -146,11 +146,7 @@ export class AzureArmStep extends PipelineStep<AzureArmStepInfo> {
       isRequired &&
       isEmpty(data?.spec?.configuration?.parameters?.store?.spec?.paths)
     ) {
-      set(
-        errors,
-        'spec.configuration.parameters.store.spec.paths',
-        getString?.('pipeline.startupCommand.scriptFilePath')
-      )
+      set(errors, 'spec.configuration.parameters.store.spec.paths', getString?.('pipeline.startup.scriptFilePath'))
     }
 
     if (

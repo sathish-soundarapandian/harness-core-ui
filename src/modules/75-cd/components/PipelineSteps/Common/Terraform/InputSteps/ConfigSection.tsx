@@ -30,6 +30,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -40,7 +41,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
-  const { inputSetData, readonly, initialValues, path, allowableTypes, formik } = props
+  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType } = props
   const config = inputSetData?.template?.spec?.configuration
   const store = config?.spec?.configFiles?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -123,6 +124,9 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
             multiTextInputProps={{
               expressions,
               allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
             fieldPath={'spec.configuration.spec.workspace'}

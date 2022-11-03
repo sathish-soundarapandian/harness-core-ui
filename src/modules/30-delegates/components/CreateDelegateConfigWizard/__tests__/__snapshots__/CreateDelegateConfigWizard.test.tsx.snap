@@ -258,6 +258,7 @@ exports[`Create Delegate Wizard render data 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
               >
                 <button
+                  aria-label="saveAndContinue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
                   type="submit"
                 >

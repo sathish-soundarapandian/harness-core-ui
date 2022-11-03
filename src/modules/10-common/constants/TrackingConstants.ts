@@ -262,7 +262,10 @@ export enum CCMActions {
 }
 
 export enum CIOnboardingActions {
-  SelectGitProvider = 'Git Provider Selected'
+  SelectGitProvider = 'Git Provider Selected',
+  GetStartedClicked = 'Clicked on Get Started for CI',
+  ConfigurePipelineClicked = 'Clicked on Configure Pipeline',
+  CreatePipelineClicked = 'Clicked on Create Pipeline'
 }
 
 export enum CDOnboardingActions {

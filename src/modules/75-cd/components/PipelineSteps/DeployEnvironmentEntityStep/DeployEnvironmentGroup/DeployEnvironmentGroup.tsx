@@ -30,6 +30,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 
+import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
+
 import CreateEnvironmentGroupModal from '@cd/components/EnvironmentGroups/CreateEnvironmentGroupModal'
 
 import type {
@@ -172,7 +174,7 @@ export default function DeployEnvironmentGroup({
           multiTypeInputProps={{
             width: 300,
             selectProps: { items: selectOptions },
-            allowableTypes,
+            allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
             defaultValueToReset: '',
             onChange: item => {
               setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))

@@ -23,6 +23,7 @@ export type ExecutionStatus = Exclude<
 
 export const ExecutionStatusEnum: Readonly<Record<ExecutionStatus, ExecutionStatus>> = {
   Aborted: 'Aborted',
+  AbortedByFreeze: 'AbortedByFreeze',
   Expired: 'Expired',
   Failed: 'Failed',
   NotStarted: 'NotStarted',
@@ -80,7 +81,11 @@ export function isExecutionExpired(status?: string): boolean {
 
 export function isExecutionAborted(status?: string): boolean {
   const st = changeCase(status)
-  return st === ExecutionStatusEnum.Aborted || st === ExecutionStatusEnum.Discontinuing
+  return (
+    st === ExecutionStatusEnum.Aborted ||
+    st === ExecutionStatusEnum.AbortedByFreeze ||
+    st === ExecutionStatusEnum.Discontinuing
+  )
 }
 
 export function isExecutionQueued(status?: string): boolean {

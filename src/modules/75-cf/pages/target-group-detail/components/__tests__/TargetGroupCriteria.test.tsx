@@ -97,7 +97,7 @@ describe('TargetGroupCriteria', () => {
 
     expect(screen.queryByTestId('edit-target-group-criteria-dialog')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit edit' }))
+    userEvent.click(screen.getByRole('button', { name: 'edit' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('edit-target-group-criteria-dialog')).toBeInTheDocument()

@@ -610,6 +610,7 @@ exports[`Configuration Configuration page 1`] = `
                     authSettings.authorizationEnabled
                   </p>
                   <button
+                    aria-label="test"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                     data-testid="ldap-config-test"
                     type="button"

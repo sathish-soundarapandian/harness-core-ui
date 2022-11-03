@@ -247,6 +247,7 @@ exports[`Test cloudformation remote tags step two should error on submit 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -277,6 +278,7 @@ exports[`Test cloudformation remote tags step two should error on submit 1`] = `
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -529,6 +531,7 @@ exports[`Test cloudformation remote tags step two should render with github comm
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -559,6 +562,7 @@ exports[`Test cloudformation remote tags step two should render with github comm
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -811,6 +815,7 @@ exports[`Test cloudformation remote tags step two should render with no initial 
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -841,6 +846,7 @@ exports[`Test cloudformation remote tags step two should render with no initial 
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"
@@ -1022,6 +1028,7 @@ exports[`Test cloudformation remote tags step two should submit with 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="back"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
             data-testid="back"
             type="button"
@@ -1052,6 +1059,7 @@ exports[`Test cloudformation remote tags step two should submit with 1`] = `
             </span>
           </button>
           <button
+            aria-label="submit"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"

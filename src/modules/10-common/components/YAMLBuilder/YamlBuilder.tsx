@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useRef, ReactElement, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import ReactMonacoEditor from 'react-monaco-editor'
@@ -30,7 +30,6 @@ import { Layout, Text, Collapse } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
-import SplitPane from 'react-split-pane'
 import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
@@ -42,7 +41,6 @@ import type {
   CompletionItemInterface,
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
-import SnippetSection from '@common/components/SnippetSection/SnippetSection'
 import { pluralize } from '@common/utils/StringUtils'
 import { getSchemaWithLanguageSettings, validateYAMLWithSchema } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -121,14 +119,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     isEditModeSupported = true,
     isHarnessManaged = false,
     hideErrorMesageOnReadOnlyMode = false,
-    showSnippetSection = true,
     invocationMap,
     bind,
-    showIconMenu = false,
     onExpressionTrigger,
-    snippets,
-    onSnippetCopy,
-    snippetFetchResponse,
     schema,
     onEnableEditMode,
     theme = 'LIGHT',
@@ -194,10 +187,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     setDynamicWidth(width as number)
   }, [width])
-
-  const handleResize = (newSize: number): void => {
-    setDynamicWidth(newSize)
-  }
 
   const getEditorCurrentVersion = (): number | undefined => {
     return editorRef.current?.editor?.getModel()?.getAlternativeVersionId()
@@ -579,18 +568,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     )
   }
 
-  const renderSnippetSection = (): ReactElement => {
-    return (
-      <SnippetSection
-        showIconMenu={showIconMenu}
-        entityType={entityType}
-        snippets={snippets}
-        onSnippetCopy={onSnippetCopy}
-        snippetFetchResponse={snippetFetchResponse}
-      />
-    )
-  }
-
   const renderHeader = useCallback(
     (): JSX.Element => (
       <div className={cx(css.header)}>
@@ -744,33 +721,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
   return (
-    <Layout.Vertical>
-      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
-        {showSnippetSection ? (
-          <SplitPane
-            split="vertical"
-            className={css.splitPanel}
-            onChange={handleResize}
-            maxSize={-1 * MIN_SNIPPET_SECTION_WIDTH}
-            style={{ height: defaultTo(dynamicHeight, DEFAULT_EDITOR_HEIGHT) }}
-            pane1Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH, width: dynamicWidth }}
-            pane2Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH }}
-          >
-            <div className={css.editor}>
-              {defaultTo(renderCustomHeader, renderHeader)()}
-              {renderEditor()}
-            </div>
-            {showSnippetSection ? renderSnippetSection() : null}
-          </SplitPane>
-        ) : (
-          <div className={css.editor}>
-            {defaultTo(renderCustomHeader, renderHeader)()}
-            {renderEditor()}
-          </div>
-        )}
+    <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
+      <div className={css.editor}>
+        {defaultTo(renderCustomHeader, renderHeader)()}
+        {renderEditor()}
       </div>
       {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
-    </Layout.Vertical>
+    </div>
   )
 }
 

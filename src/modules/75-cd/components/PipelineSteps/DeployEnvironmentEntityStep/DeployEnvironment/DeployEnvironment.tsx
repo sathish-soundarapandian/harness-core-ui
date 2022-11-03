@@ -35,6 +35,9 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
+import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -96,15 +99,21 @@ export default function DeployEnvironment({
   const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
+  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.environment)
+  )
 
   // Constants
   const isFixed =
-    getMultiTypeFromValue(isMultiEnvironment ? values.environments : values.environment) === MultiTypeInputType.FIXED
+    (isMultiEnvironment ? getMultiTypeFromValue(values.environments) : environmentRefType) === MultiTypeInputType.FIXED
+
+  const isExpression = environmentRefType === MultiTypeInputType.EXPRESSION
 
   // API
   const {
@@ -354,7 +363,7 @@ export default function DeployEnvironment({
             }}
             multiTypeProps={{
               width: 280,
-              allowableTypes
+              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
             }}
           />
         ) : (
@@ -366,13 +375,15 @@ export default function DeployEnvironment({
             disabled={disabled}
             placeholder={placeHolderForEnvironment}
             multiTypeInputProps={{
+              onTypeChange: setEnvironmentRefType,
               width: 300,
               selectProps: { items: selectOptions },
-              allowableTypes,
+              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
               defaultValueToReset: '',
               onChange: item => {
                 setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
-              }
+              },
+              expressions
             }}
             selectItems={selectOptions}
           />
@@ -403,7 +414,7 @@ export default function DeployEnvironment({
           />
         ) : null}
 
-        {isFixed && !isEmpty(selectedEnvironments) && (
+        {((isFixed && !isEmpty(selectedEnvironments)) || (isExpression && values.environment)) && (
           <>
             <EnvironmentEntitiesList
               loading={loading || updatingEnvironmentsData}
@@ -426,7 +437,7 @@ export default function DeployEnvironment({
                   <DeployCluster
                     initialValues={initialValues}
                     readonly={readonly}
-                    allowableTypes={allowableTypes}
+                    allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
                     isMultiCluster
                     environmentIdentifier={selectedEnvironments[0]}
                   />
@@ -438,6 +449,7 @@ export default function DeployEnvironment({
                     environmentIdentifier={selectedEnvironments[0]}
                     deploymentType={deploymentType}
                     customDeploymentRef={customDeploymentRef}
+                    lazyInfrastructure={isExpression}
                   />
                 )}
               </>

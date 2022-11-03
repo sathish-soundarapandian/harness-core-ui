@@ -6,7 +6,7 @@
  */
 
 import type { MultiSelectOption } from '@wings-software/uicore'
-import uniqBy from 'lodash/uniqBy'
+import { uniqBy } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 import type { AuditTrailFormType, ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { AuditEventDTO, AuditFilterProperties, ResourceScopeDTO } from 'services/audit'
@@ -129,7 +129,7 @@ export const showEventTypeMap: Record<ShowEventFilterType, StringKeys> = {
 
 export const getFilterPropertiesFromForm = (formData: AuditTrailFormType, accountId: string): AuditFilterProperties => {
   const filterProperties: AuditFilterProperties = { filterType: 'Audit' }
-  const { actions, modules, users, resourceType, organizations, projects } = formData
+  const { actions, modules, users, resourceType, organizations, projects, resourceIdentifier } = formData
   if (actions) {
     filterProperties['actions'] = actions.map(action => action.value) as AuditFilterProperties['actions']
   }
@@ -148,7 +148,8 @@ export const getFilterPropertiesFromForm = (formData: AuditTrailFormType, accoun
 
   if (resourceType) {
     filterProperties['resources'] = resourceType.map(type => ({
-      type: type.value
+      type: type.value,
+      identifier: resourceIdentifier || ''
     })) as AuditFilterProperties['resources']
   }
 
@@ -231,6 +232,9 @@ export const getFormValuesFromFilterProperties = (
         value: resource.type
       }
     })
+    if (resources.length === 1 && resources[0].identifier) {
+      formData['resourceIdentifier'] = resources[0].identifier
+    }
   }
 
   return {

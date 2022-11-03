@@ -7,10 +7,22 @@
 
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { render, fireEvent, findByText } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
-import { FilterCRUD } from '../FilterCRUD/FilterCRUD'
+import { render, fireEvent, findByText, waitFor, getAllByText as getAllByTextGlobal } from '@testing-library/react'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
+import { CrudOperation, FilterCRUD } from '../FilterCRUD/FilterCRUD'
 import filtersData from '../mocks/filters-mock.json'
+
+const createFilter = jest.fn()
+const updateFilter = jest.fn()
+const deleteFilter = jest.fn()
+
+function getDataConfig() {
+  return new Map<CrudOperation, (...rest: any[]) => Promise<any>>([
+    ['ADD', createFilter],
+    ['UPDATE', updateFilter],
+    ['DELETE', deleteFilter]
+  ])
+}
 
 const props = {
   filters: filtersData?.data?.content as any,
@@ -20,6 +32,7 @@ const props = {
   onDelete: jest.fn(),
   onClose: jest.fn(),
   onDuplicate: jest.fn(),
+  dataSvcConfig: getDataConfig(),
   onFilterSelect: jest.fn(),
   enableEdit: false,
   isRefreshingFilters: false
@@ -150,5 +163,85 @@ describe('Test FilterCRUD component', () => {
       name: 'filterWithUserOnlyVisibility'
     })
     expect(container).toMatchSnapshot()
+  })
+
+  test('Edit already created filter', async () => {
+    const { container, getByText } = setup()
+    expect(getByText('DockerOnly')).toBeDefined()
+    expect(container.querySelector('[id*="filtermenu-DockerOnly"]')).not.toBeNull()
+
+    const menu = container.querySelector('[id*="filtermenu-DockerOnly"]')
+    expect(menu).toBeDefined()
+
+    // click on menu
+    act(() => {
+      fireEvent.mouseOver(menu!)
+    })
+    await waitFor(() => expect(getAllByTextGlobal(document.body, 'edit')[0]).toBeInTheDocument())
+    const popover = findPopoverContainer()
+
+    expect(popover).not.toBeNull()
+    expect(popover).toMatchSnapshot()
+
+    const editbtn = getAllByTextGlobal(document.body, 'edit')[0]
+    expect(editbtn).toBeDefined()
+    // click edit
+    act(() => {
+      fireEvent.click(editbtn!)
+    })
+    await waitFor(() => expect(getByText('update')).toBeInTheDocument())
+
+    const filterNameNew = container.querySelector('input[name="name"]') as HTMLElement
+
+    // update name
+    act(() => {
+      fireEvent.change(filterNameNew!, {
+        target: { value: 'nexus-filter' }
+      })
+      fireEvent.click(getByText('filters.visibileToOnlyMe')!)
+    })
+
+    await waitFor(() => expect(container.querySelector('[value="nexus-filter"]')).toBeInTheDocument())
+    const updateBtn = getByText('update')
+    act(() => {
+      fireEvent.click(updateBtn)
+    })
+
+    await waitFor(() =>
+      expect(props.onSaveOrUpdate).toBeCalledWith(true, {
+        name: 'nexus-filter',
+        visible: undefined,
+        identifier: 'DockerOnly',
+        filterVisibility: 'OnlyCreator'
+      })
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('Duplicate a filter', async () => {
+    const { container, getByText } = setup()
+    expect(getByText('DockerOnly')).toBeDefined()
+    expect(container.querySelector('[id*="filtermenu-DockerOnly"]')).not.toBeNull()
+
+    const menu = container.querySelector('[id*="filtermenu-DockerOnly"]')
+    expect(menu).toBeDefined()
+
+    // click on menu
+    act(() => {
+      fireEvent.mouseOver(menu!)
+    })
+    await waitFor(() => expect(getAllByTextGlobal(document.body, 'duplicate')[0]).toBeInTheDocument())
+    const popover = findPopoverContainer()
+
+    expect(popover).not.toBeNull()
+    expect(popover).toMatchSnapshot()
+
+    const duplicateBtn = getAllByTextGlobal(document.body, 'duplicate')[0]
+    expect(duplicateBtn).toBeDefined()
+    // click duplicate
+    act(() => {
+      fireEvent.click(duplicateBtn!)
+    })
+    await waitFor(() => expect(createFilter).toBeCalled())
   })
 })

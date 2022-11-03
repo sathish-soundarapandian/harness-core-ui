@@ -44,8 +44,7 @@ export interface ExperimentPreviewProps {
 }
 
 export interface ChaosStepExecutionProps {
-  experimentID: string
-  experimentRunID: string | undefined
+  notifyID: string
   status: string
   expectedResilienceScore: number
   isManualInterruption: boolean

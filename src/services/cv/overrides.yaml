@@ -167,6 +167,8 @@ allowpaths:
   - /cloudwatch/metrics/regions
   - /cloudwatch/metrics/fetch-sample-data
   - /risk-category
+  - /aws/prometheus/workspaces
+  - /aws/regions
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

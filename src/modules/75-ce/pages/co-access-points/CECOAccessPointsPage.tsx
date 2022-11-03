@@ -12,7 +12,7 @@ import COAccessPointList from '../../components/COAccessPointList/COAccessPointL
 
 export const CECOAccessPointsPage: React.FC = () => {
   const { getString } = useStrings()
-  useDocumentTitle(getString('ce.co.accessPoint.loadbalancers'), true)
+  useDocumentTitle(getString('ce.co.accessPoint.loadbalancers'))
   return <COAccessPointList />
 }
 

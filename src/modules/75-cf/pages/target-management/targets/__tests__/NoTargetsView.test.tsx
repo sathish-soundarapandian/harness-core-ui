@@ -24,7 +24,7 @@ describe('NoTargetsView', () => {
   test('it should open Add new Target dialog when New Target button is clicked', async () => {
     renderComponent()
 
-    const btn = screen.getByRole('button', { name: 'plus cf.targets.create' })
+    const btn = screen.getByRole('button', { name: 'cf.targets.create' })
     expect(btn).toBeInTheDocument()
     expect(onNewTargetsCreated).not.toHaveBeenCalled()
 

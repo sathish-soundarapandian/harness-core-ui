@@ -211,7 +211,11 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     executionIdentifier,
     projectIdentifier,
     accountId,
-    module
+    module,
+    connectorRef,
+    repoName,
+    branch,
+    storeType
   })
   const pipelineDetailsView = routes.toPipelineStudio({
     orgIdentifier,
@@ -291,12 +295,13 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             executionIdentifier={executionIdentifier}
             pipelineIdentifier={pipelineIdentifier}
             modules={modules}
+            params={params}
           />
           <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
         </div>
       </Dialog>
     )
-  }, [pipelineIdentifier, executionIdentifier])
+  }, [pipelineIdentifier, executionIdentifier, params])
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
 

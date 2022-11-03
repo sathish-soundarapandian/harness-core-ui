@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useContext, useEffect } from 'react'
 import * as Yup from 'yup'
-import { Formik } from 'formik'
+import { Formik, FormikProps } from 'formik'
 import { cloneDeep, debounce, noop, get } from 'lodash-es'
 import { Card, Container, FormikForm } from '@wings-software/uicore'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
@@ -18,6 +18,9 @@ import type { StageElementConfig } from 'services/cd-ng'
 import type { ApprovalStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
+import { PipelineStageTabs } from './utils'
 import css from './PipelineStageOverview.module.scss'
 
 export interface PipelineStageOverviewProps {
@@ -39,6 +42,9 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
   const cloneOriginalData = cloneDeep(stage)
   const { getString } = useStrings()
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const formikRef = useRef<FormikProps<unknown> | null>(null)
+  const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateStageDebounced = useCallback(
     debounce((values: StageElementConfig): void => {
@@ -47,8 +53,14 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
     [stage?.stage, updateStage]
   )
 
+  useEffect(() => {
+    subscribeForm({ tab: PipelineStageTabs.OVERVIEW, form: formikRef })
+    return () => unSubscribeForm({ tab: PipelineStageTabs.OVERVIEW, form: formikRef })
+  }, [])
+
   return (
     <div className={css.pipelineStageOverviewWrapper}>
+      <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={css.content} ref={scrollRef}>
         <Container id="stageOverview" className={css.basicOverviewDetails}>
           <Formik
@@ -78,27 +90,32 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
             }}
             onSubmit={noop}
           >
-            {formikProps => (
-              <FormikForm>
-                {isContextTypeNotStageTemplate(contextType) && (
-                  <Card className={css.sectionCard}>
-                    <NameIdDescriptionTags
-                      formikProps={formikProps}
-                      descriptionProps={{
-                        disabled: isReadonly
-                      }}
-                      identifierProps={{
-                        isIdentifierEditable: false,
-                        inputGroupProps: { disabled: isReadonly }
-                      }}
-                      tagsProps={{
-                        disabled: isReadonly
-                      }}
-                    />
-                  </Card>
-                )}
-              </FormikForm>
-            )}
+            {formikProps => {
+              window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: PipelineStageTabs.OVERVIEW })) // to remove the error strip when there is no error
+              formikRef.current = formikProps as FormikProps<unknown> | null
+
+              return (
+                <FormikForm>
+                  {isContextTypeNotStageTemplate(contextType) && (
+                    <Card className={css.sectionCard}>
+                      <NameIdDescriptionTags
+                        formikProps={formikProps}
+                        descriptionProps={{
+                          disabled: isReadonly
+                        }}
+                        identifierProps={{
+                          isIdentifierEditable: false,
+                          inputGroupProps: { disabled: isReadonly }
+                        }}
+                        tagsProps={{
+                          disabled: isReadonly
+                        }}
+                      />
+                    </Card>
+                  )}
+                </FormikForm>
+              )
+            }}
           </Formik>
         </Container>
         <Container margin={{ top: 'xxlarge' }} className={css.actionButtons}>

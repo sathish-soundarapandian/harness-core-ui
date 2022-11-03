@@ -92,6 +92,7 @@ exports[`Audit trail Page render 1`] = `
             class="bp3-popover-target"
           >
             <button
+              aria-label="common.last7days"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main dateRange Button--with-current-color Button--without-shadow Button--withRightIcon"
               type="button"
             >

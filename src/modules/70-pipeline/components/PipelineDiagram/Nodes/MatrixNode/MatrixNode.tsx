@@ -10,7 +10,6 @@ import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
-import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { isMultiSvcOrMultiEnv, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -30,6 +29,7 @@ import {
   matrixNodeNameToJSON,
   MAX_ALLOWED_MATRIX_COLLAPSED_NODES
 } from '../utils'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'

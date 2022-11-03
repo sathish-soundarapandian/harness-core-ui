@@ -36,6 +36,7 @@ exports[`TrialInProgressTemplate snapshot test should render trial in progress 1
           class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
         >
           <button
+            aria-label="Create a project"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             style="width: 200px; height: 45px;"
             type="button"

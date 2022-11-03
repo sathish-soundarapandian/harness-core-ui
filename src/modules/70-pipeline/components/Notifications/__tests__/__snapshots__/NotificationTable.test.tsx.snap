@@ -9,6 +9,7 @@ exports[`Notification Table test render 1`] = `
       class="Layout--horizontal StyledProps--main headerActions StyledProps--flex"
     >
       <button
+        aria-label="notifications.name"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
         id="newNotificationBtn"
         type="button"
@@ -633,6 +634,7 @@ exports[`Notification Table test render 1`] = `
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="Prev"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
             disabled=""
             tabindex="-1"
@@ -676,6 +678,7 @@ exports[`Notification Table test render 1`] = `
             </span>
           </button>
           <button
+            aria-label="Next"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
             disabled=""
             tabindex="-1"
@@ -890,6 +893,7 @@ exports[`testing notification method selecting slack as notification method from
                     data-tooltip-id="testSlackConfigButton"
                   >
                     <button
+                      aria-label="test"
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
                       type="button"
                     >
@@ -941,6 +945,7 @@ exports[`testing notification method selecting slack as notification method from
                   class="Layout--horizontal Layout--layout-spacing-large StyledProps--main buttonGroupSlack"
                 >
                   <button
+                    aria-label="back"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                     type="button"
                   >
@@ -951,6 +956,7 @@ exports[`testing notification method selecting slack as notification method from
                     </span>
                   </button>
                   <button
+                    aria-label="finish"
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     disabled=""
                     tabindex="-1"

@@ -399,6 +399,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for exis
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-huge"
             >
               <button
+                aria-label="update"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -409,6 +410,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for exis
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >
@@ -557,6 +559,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for new 
                   </div>
                 </div>
                 <button
+                  aria-label="change"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
                   type="button"
                 >
@@ -803,6 +806,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for new 
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-huge"
             >
               <button
+                aria-label="add"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -813,6 +817,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for new 
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >

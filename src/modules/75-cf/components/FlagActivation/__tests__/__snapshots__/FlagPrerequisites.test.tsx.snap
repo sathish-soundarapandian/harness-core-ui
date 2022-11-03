@@ -380,6 +380,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
           </div>
         </div>
         <button
+          aria-label="cf.shared.prerequisites"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
           data-testid="prerequisites-button"
           type="button"
@@ -675,6 +676,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
           class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-large"
         >
           <button
+            aria-label="save"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             data-testid="save-prequisites-button"
             type="submit"
@@ -686,6 +688,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
             </span>
           </button>
           <button
+            aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
             type="button"
           >

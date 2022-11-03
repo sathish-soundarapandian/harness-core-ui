@@ -37,6 +37,7 @@ exports[`<TemplateSelector /> tests should match snapshot when selected template
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main btnContainer StyledProps--padding-xxlarge StyledProps--background-form"
             >
               <button
+                aria-label="templatesLibrary.useTemplateLabel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="button"
               >
@@ -47,6 +48,7 @@ exports[`<TemplateSelector /> tests should match snapshot when selected template
                 </span>
               </button>
               <button
+                aria-label="templatesLibrary.copyTemplateLabel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
                 type="button"
               >

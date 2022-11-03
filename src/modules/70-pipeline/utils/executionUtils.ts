@@ -141,6 +141,7 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   IgnoreFailed: 'tick-circle',
   Expired: 'expired',
   Aborted: 'banned',
+  AbortedByFreeze: 'banned',
   Discontinuing: 'banned',
   Suspended: 'banned',
   Queued: 'queued',

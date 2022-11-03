@@ -175,7 +175,7 @@ describe('OverrideYamlValues runtimefields tests', () => {
         <K8sOverrideValuesRuntimeFields
           initialValues={defaultProps.initialValues as any}
           allowableTypes={[]}
-          overrideValue={[]}
+          overrideValue={{ manifest: { identifier: '', type: 'K8sManifest', spec: {} } }}
           index={0}
         />
       </TestWrapper>

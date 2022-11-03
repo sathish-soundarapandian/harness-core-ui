@@ -67,7 +67,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'EnvironmentGroup',
   width: '100%',
   height: 300,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -340,7 +339,6 @@ export default function EnvironmentGroupDetails() {
                                 }}
                                 schema={environmentGroupSchema?.data}
                                 bind={setYamlHandler}
-                                showSnippetSection={false}
                               />
                             )}
                           </Container>
@@ -380,7 +378,6 @@ export default function EnvironmentGroupDetails() {
                                 }}
                                 schema={environmentGroupSchema?.data}
                                 bind={setYamlHandler}
-                                showSnippetSection={false}
                               />
                             )}
                           </Container>

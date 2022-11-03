@@ -7,8 +7,7 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
 import * as Yup from 'yup'
-import isEmpty from 'lodash/isEmpty'
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import {
@@ -37,7 +36,8 @@ export enum InfraDeploymentType {
   SshWinRmAzure = 'SshWinRmAzure',
   AzureWebApp = 'AzureWebApp',
   ECS = 'ECS',
-  CustomDeployment = 'CustomDeployment'
+  CustomDeployment = 'CustomDeployment',
+  Elastigroup = 'Elastigroup'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -313,4 +313,15 @@ export const isMultiArtifactSourceEnabled = (
   stage: DeploymentStageElementConfig
 ): boolean => {
   return isMultiArtifactSource && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.primary?.type)
+}
+
+export const shouldFetchFieldData = (fieldList: string[]) => {
+  const emptyOrRuntimeFields = fieldList.filter((currField: string) => {
+    return (
+      isEmpty(currField) ||
+      getMultiTypeFromValue(currField) === MultiTypeInputType.RUNTIME ||
+      getMultiTypeFromValue(currField) === MultiTypeInputType.EXPRESSION
+    )
+  })
+  return emptyOrRuntimeFields.length === 0
 }

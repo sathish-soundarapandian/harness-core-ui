@@ -63,7 +63,7 @@ describe('Unit tests for MapQueriesToHarnessServiceLayout', () => {
   const initialProps = {
     formikProps: {
       initialValues: {
-        metricName: 'ELK Logs Query',
+        metricName: 'ElasticSearch Logs Query',
         query: '',
         serviceInstance: ''
       }
@@ -98,7 +98,7 @@ describe('Unit tests for MapQueriesToHarnessServiceLayout', () => {
     const propsWhenQueryIsPresent = {
       formikProps: {
         initialValues: {
-          metricName: 'ELK Logs Query',
+          metricName: 'ElasticSearch Logs Query',
           query: 'Test',
           serviceInstance: ''
         }

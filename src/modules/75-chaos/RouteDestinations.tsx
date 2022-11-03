@@ -82,7 +82,7 @@ import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
 import ChaosTrialHomePage from './pages/home/ChaosTrialHomePage'
 import { ChaosExperimentStep } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentStep'
-import { ChaosExperimentExecView } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentExecutionView/ChaosExperimentExecView'
+import { ChaosExperimentExecView } from './components/PipelineSteps/ChaosExperimentExecutionView/ChaosExperimentExecView'
 
 // eslint-disable-next-line import/no-unresolved
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))
@@ -195,10 +195,11 @@ const RedirectToChaosProject = (): React.ReactElement => {
 export default function ChaosRoutes(): React.ReactElement {
   const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
 
-  // Register Chaos into RBAC Factory and AuditTrail only when Feature Flag is enabled
+  // Register Chaos into RBAC, PipelineStudio and AuditTrail Factory only when Feature Flag is enabled
   if (isChaosEnabled) {
     // Pipeline registrations
     PipelineStudioFactory.registerStep(new ChaosExperimentStep())
+
     // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
       icon: 'chaos-main',

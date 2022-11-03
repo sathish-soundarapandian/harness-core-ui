@@ -191,7 +191,7 @@ describe('EnvironmentsPage', () => {
     renderComponent()
 
     expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'plus newEnvironment' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'newEnvironment' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'chaos.noEnvironment.title' })).toBeInTheDocument()
   })
 })

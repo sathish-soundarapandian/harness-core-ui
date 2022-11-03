@@ -17,7 +17,6 @@ import HeatMap from './HeatMap/HeatMap'
 import { NavigationCheck } from './NavigationCheck/NavigationCheck'
 import { NameIdDescriptionTags, Description } from './NameIdDescriptionTags/NameIdDescriptionTags'
 import { ReferenceSelect } from './ReferenceSelect/ReferenceSelect'
-import SnippetSection from './SnippetSection/SnippetSection'
 import Toothpick from './Toothpick/Toothpick'
 import TimeSelect from './TimeSelect/TimeSelect'
 import { TimeAgo } from './TimeAgo/TimeAgo'
@@ -48,7 +47,6 @@ export {
   Page,
   PageSpinner,
   ReferenceSelect,
-  SnippetSection,
   Table,
   TagsPopover,
   TimeAgo,

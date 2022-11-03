@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption, AllowedTypes } from '@harness/uicore'
+import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { defaultTo, get } from 'lodash-es'
+import { cloneDeep, defaultTo, get } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -17,12 +17,13 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
-import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
@@ -72,7 +73,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-  const formikVariables = get(formik?.values, basePath, [])
+  const formikVariables = defaultTo(get(formik?.values, basePath), [])
+  // get doesn't return defaultValue if it gets null
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -80,6 +82,28 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   }>()
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  // this was necessary due to absence of YAML validations in run pipeline form. Add such logic here only when absolutely unavoidable
+  React.useEffect(() => {
+    const mergeTemplateBaseValues = defaultTo(cloneDeep(template?.variables), [])
+
+    let isYamlDirty = false
+    mergeTemplateBaseValues.forEach((variable, index) => {
+      const isVariablePresentIndex = formikVariables.findIndex(
+        (fVar: AllNGVariables) => fVar.name === variable.name && fVar.type === variable.type
+      )
+      if (isVariablePresentIndex !== -1) {
+        mergeTemplateBaseValues[index].value = formikVariables[isVariablePresentIndex].value
+      } else {
+        isYamlDirty = true
+      }
+    })
+
+    if (isYamlDirty) {
+      formik.setFieldValue(basePath, clearRuntimeInput(mergeTemplateBaseValues))
+    }
+  }, [])
+
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
       {stepViewType === StepViewType.StageVariable && initialValues.variables.length > 0 && (
@@ -98,11 +122,6 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return
         }
-        const parsedInput = parseInput(value as string)
-        const items: SelectOption[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
-          label: item,
-          value: variable.type === 'Number' ? parseFloat(item) : item
-        }))
 
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
@@ -136,34 +155,20 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                 />
               ) : (
                 <>
-                  {parsedInput?.allowedValues?.values ? (
-                    <FormInput.MultiTypeInput
-                      className="variableInput"
-                      name={`${basePath}[${index}].value`}
-                      label=""
-                      useValue
-                      selectItems={items}
-                      multiTypeInputProps={{
-                        allowableTypes,
-                        expressions,
-                        selectProps: { disabled: inputSetData?.readonly, items: items }
-                      }}
-                      disabled={inputSetData?.readonly}
-                    />
-                  ) : (
-                    <FormInput.MultiTextInput
-                      className="variableInput"
-                      name={`${basePath}[${index}].value`}
-                      multiTextInputProps={{
-                        textProps: { type: variable.type === 'Number' ? 'number' : 'text' },
-                        allowableTypes,
-                        expressions,
-                        defaultValueToReset: ''
-                      }}
-                      label=""
-                      disabled={inputSetData?.readonly}
-                    />
-                  )}
+                  <TextFieldInputSetView
+                    className="variableInput"
+                    name={`${basePath}[${index}].value`}
+                    multiTextInputProps={{
+                      textProps: { type: variable.type === 'Number' ? 'number' : 'text' },
+                      allowableTypes,
+                      expressions,
+                      defaultValueToReset: ''
+                    }}
+                    label=""
+                    disabled={inputSetData?.readonly}
+                    template={template}
+                    fieldPath={`variables[${index}].value`}
+                  />
                 </>
               )}
             </div>

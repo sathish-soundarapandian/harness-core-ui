@@ -512,6 +512,7 @@ exports[`DelegateSelectorStep should open Git Sync modal on clicking Save and Co
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                 type="submit"
               >
@@ -522,6 +523,7 @@ exports[`DelegateSelectorStep should open Git Sync modal on clicking Save and Co
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                 type="button"
               >
@@ -734,6 +736,7 @@ exports[`DelegateSelectorStep should render DelegateSelectorStep component 1`] =
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--margin-top-xxxlarge"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="awsBackButton"
               type="button"
@@ -764,6 +767,7 @@ exports[`DelegateSelectorStep should render DelegateSelectorStep component 1`] =
               </span>
             </button>
             <button
+              aria-label="saveAndContinue"
               class="bp3-button Button--button StyledProps--font StyledProps--main saveAndContinue StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               data-testid="delegateSaveAndContinue"
               type="submit"

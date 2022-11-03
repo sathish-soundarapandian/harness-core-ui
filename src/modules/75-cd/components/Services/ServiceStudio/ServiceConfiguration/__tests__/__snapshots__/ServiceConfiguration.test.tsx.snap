@@ -50,6 +50,7 @@ exports[`Service Configuration handle switch from visual to yaml 1`] = `
           </span>
         </span>
         <button
+          aria-label="common.editYaml"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >
@@ -540,6 +541,7 @@ exports[`Service Configuration test the rbac functionality to update readonly co
           </span>
         </span>
         <button
+          aria-label="common.editYaml"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
           type="button"
         >

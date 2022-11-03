@@ -235,6 +235,7 @@ exports[`Test Trigger Details Page Test should test snapshot view 1`] = `
             </div>
           </div>
           <button
+            aria-label="edit"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--withLeftIcon Button--variation Button--variation-secondary"
             type="button"
           >

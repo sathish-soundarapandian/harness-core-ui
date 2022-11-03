@@ -9,7 +9,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
     >
-      pipeline.startupCommand.fileDetails
+      pipeline.startup.command.fileDetails
     </p>
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -179,7 +179,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="startupScriptDetails_paths"
                   >
-                    pipeline.startupCommand.scriptFilePath
+                    pipeline.startup.scriptFilePath
                   </span>
                    
                   <span
@@ -199,7 +199,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="paths"
-                        placeholder="pipeline.startupCommand.scriptFilePath"
+                        placeholder="pipeline.startup.scriptFilePath"
                         type="text"
                         value="filePath"
                       />
@@ -241,6 +241,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -270,6 +271,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -315,7 +317,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
     >
-      pipeline.startupCommand.fileDetails
+      pipeline.startup.command.fileDetails
     </p>
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -632,7 +634,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="startupScriptDetails_paths"
                   >
-                    pipeline.startupCommand.scriptFilePath
+                    pipeline.startup.scriptFilePath
                   </span>
                    
                   <span
@@ -733,6 +735,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -762,6 +765,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

@@ -204,6 +204,7 @@ exports[`CreatePipelineForm Rendering should closeModal when click Setup Later 1
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
         >
           <button
+            aria-label="start"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             type="submit"
           >
@@ -214,6 +215,7 @@ exports[`CreatePipelineForm Rendering should closeModal when click Setup Later 1
             </span>
           </button>
           <button
+            aria-label="pipeline.createPipeline.setupLater"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
             type="reset"
           >
@@ -463,6 +465,7 @@ exports[`CreatePipelineForm Rendering should render CreatePipelineForm 1`] = `
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
         >
           <button
+            aria-label="start"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             type="submit"
           >
@@ -473,6 +476,7 @@ exports[`CreatePipelineForm Rendering should render CreatePipelineForm 1`] = `
             </span>
           </button>
           <button
+            aria-label="pipeline.createPipeline.setupLater"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
             type="reset"
           >
@@ -753,6 +757,7 @@ exports[`CreatePipelineForm Rendering should validate inputs 1`] = `
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
         >
           <button
+            aria-label="start"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             type="submit"
           >
@@ -763,6 +768,7 @@ exports[`CreatePipelineForm Rendering should validate inputs 1`] = `
             </span>
           </button>
           <button
+            aria-label="pipeline.createPipeline.setupLater"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
             type="reset"
           >

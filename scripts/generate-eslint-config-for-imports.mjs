@@ -32,15 +32,21 @@ for (const { dirName, moduleName } of flattenedLayers) {
       'no-restricted-imports': [
         noRestrictedImports[0],
         {
-          patterns: [
-            ...noRestrictedImports[1].patterns,
-            ...restrictedDirs.map(mod => `modules/${mod.dirName}/*`),
-            ...restrictedDirs.map(mod => `@${mod.moduleName}/*`)
-          ],
+          patterns: [...noRestrictedImports[1].patterns],
           paths: [...noRestrictedImports[1].paths]
         }
       ]
     }
+  }
+
+  if (restrictedDirs.length > 0) {
+    config.rules['no-restricted-imports'][1].patterns.push({
+      group: [
+        ...restrictedDirs.map(mod => `modules/${mod.dirName}/*`),
+        ...restrictedDirs.map(mod => `@${mod.moduleName}/*`)
+      ],
+      message: 'Import from higher layer modules is not allowed'
+    })
   }
 
   const customConfigFile = path.join(modulePath, 'custom.eslintrc.yml')

@@ -87,7 +87,7 @@ const CORuleDetailsPage: React.FC = () => {
     }
   })
 
-  useDocumentTitle(defaultTo(service?.name, 'Rule details'), true)
+  useDocumentTitle(defaultTo(service?.name, 'Rule details'))
 
   useEffect(() => {
     const serviceResponse = get(data, 'response.service', {})

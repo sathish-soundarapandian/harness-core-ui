@@ -18,6 +18,8 @@ import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextFi
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { PolicyStepData } from './PolicyStepTypes'
 import { MultiTypePolicySetSelector } from './PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
 
@@ -28,8 +30,9 @@ export default function PolicyInputSetStep(props: {
   template?: PolicyStepData
   path?: string
   allowableTypes: AllowedTypes
+  stepViewType?: StepViewType
 }): React.ReactElement {
-  const { readonly, template, path, allowableTypes } = props
+  const { readonly, template, path, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -44,7 +47,9 @@ export default function PolicyInputSetStep(props: {
             disabled={readonly}
             className={stepCss.duration}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               expressions,
               disabled: readonly,
               allowableTypes

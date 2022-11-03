@@ -7,7 +7,7 @@
 
 import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
-import { Button, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@wings-software/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
@@ -636,11 +636,32 @@ export function RightDrawer(): React.ReactElement {
       })
     }
   }
-  const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
-    cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.stepConfigHasChanges'),
-    titleText: stepData?.name || getString('pipeline.closeStepConfig'),
+
+  const customButtonContainer = (
+    <Container className={css.customButtons}>
+      <Button
+        text={getString('pipeline.discard')}
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => {
+          discardChanges()
+          closeConfirmBEUpdateError()
+        }}
+      />
+      <Button
+        text={getString('cancel')}
+        variation={ButtonVariation.TERTIARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => closeConfirmBEUpdateError()}
+      />
+    </Container>
+  )
+
+  const { openDialog: openConfirmBEUpdateError, closeDialog: closeConfirmBEUpdateError } = useConfirmationDialog({
+    contentText: getString('pipeline.stepConfigContent'),
+    titleText: getString('pipeline.closeStepConfig'),
     confirmButtonText: getString('applyChanges'),
+    customButtons: customButtonContainer,
     intent: Intent.WARNING,
     onCloseDialog: isConfirmed => {
       if (isConfirmed) {

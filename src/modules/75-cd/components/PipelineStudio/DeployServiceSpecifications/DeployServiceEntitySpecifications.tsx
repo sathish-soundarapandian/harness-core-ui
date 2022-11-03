@@ -179,9 +179,10 @@ export default function DeployServiceEntitySpecifications({
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
     return {
       ...pick(stage?.stage?.spec, ['service', 'services']),
-      ...(scope !== Scope.PROJECT && {
-        service: { serviceRef: RUNTIME_INPUT_VALUE }
-      })
+      ...(scope !== Scope.PROJECT &&
+        isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
+          service: { serviceRef: RUNTIME_INPUT_VALUE }
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

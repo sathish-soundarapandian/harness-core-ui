@@ -121,7 +121,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'InputSets',
   width: 620,
   height: 360,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -490,7 +489,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         invocationMap={factory.getInvocationMap()}
                         height="calc(100vh - 230px)"
                         width="calc(100vw - 350px)"
-                        showSnippetSection={false}
                         isEditModeSupported={isEditable}
                         fileName={getYamlFileName({
                           isPipelineRemote,

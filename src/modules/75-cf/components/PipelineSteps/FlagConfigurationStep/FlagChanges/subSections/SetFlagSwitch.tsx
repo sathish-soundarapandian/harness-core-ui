@@ -6,12 +6,20 @@
  */
 
 import React, { FC, useEffect } from 'react'
-import { FormInput } from '@wings-software/uicore'
-import { useStrings } from 'framework/strings'
+import * as Yup from 'yup'
+import { FormInput } from '@harness/uicore'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import { CFPipelineInstructionType } from '../../types'
 import SubSection, { SubSectionProps } from '../SubSection'
 import css from './SetFlagSwitch.module.scss'
+
+export const setFlagSwitchSchema = (getString: UseStringsReturn['getString']): Yup.Schema<any> =>
+  Yup.object({
+    spec: Yup.object({
+      state: Yup.string().required(getString('cf.featureFlags.flagPipeline.validation.setFlagSwitch.state'))
+    })
+  })
 
 export interface SetFlagSwitchProps extends SubSectionProps {
   prefix: (fieldName: string) => string

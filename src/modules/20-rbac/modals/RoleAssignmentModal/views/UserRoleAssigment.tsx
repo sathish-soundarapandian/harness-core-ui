@@ -222,9 +222,9 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
     )
   }
   const addRoleValues: FormData = {
-    title: getString('rbac.addRole'),
+    title: getString('rbac.manageRoleBindings'),
     handleSubmit: handleRoleAssignment,
-    label: getString('rbac.forUser')
+    label: getString('common.userLabel')
   }
   const formValues = isInvite ? inviteValues : addRoleValues
 

@@ -60,6 +60,7 @@ import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/Commo
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { K8sOverrideValuesRuntimeFields } from './K8sOverrideValuesRuntimeFields'
 import K8sOverrideValuesManifest from './K8sOverrideValuesManifest'
 import type {
@@ -267,20 +268,6 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   disabled={isDisabled}
                   multiTypeTextbox={{ expressions, allowableTypes }}
                 />
-                {getMultiTypeFromValue(values.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={(values.spec.skipDryRun || '') as string}
-                    type="String"
-                    variableName="spec.skipDryRun"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('spec.skipDryRun', value)
-                    }}
-                    isReadonly={isDisabled}
-                  />
-                )}
               </div>
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormMultiTypeCheckboxField
@@ -289,20 +276,6 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   label={getString('pipelineSteps.skipSteadyStateCheck')}
                   multiTypeTextbox={{ expressions, allowableTypes }}
                 />
-                {getMultiTypeFromValue(values.spec?.skipSteadyStateCheck) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={(values.spec.skipSteadyStateCheck || '') as string}
-                    type="String"
-                    variableName="spec.skipSteadyStateCheck"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('spec.skipSteadyStateCheck', value)
-                    }}
-                    isReadonly={isDisabled}
-                  />
-                )}
               </div>
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormMultiTypeCheckboxField
@@ -311,20 +284,6 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   disabled={isDisabled}
                   multiTypeTextbox={{ expressions, allowableTypes }}
                 />
-                {getMultiTypeFromValue(values.spec?.skipRendering) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={(values.spec.skipRendering || '') as string}
-                    type="String"
-                    variableName="spec.skipRendering"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('spec.skipRendering', value)
-                    }}
-                    isReadonly={isDisabled}
-                  />
-                )}
               </div>
               <div className={stepCss.divider} />
               <div>
@@ -347,7 +306,9 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -382,6 +343,10 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
               allowableTypes,
               disabled: readonly
             }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+            }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
             className={stepCss.checkbox}
@@ -398,6 +363,10 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
               allowableTypes,
               disabled: readonly
             }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+            }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipSteadyStateCheck`}
             className={stepCss.checkbox}
@@ -413,6 +382,10 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
               expressions,
               allowableTypes,
               disabled: readonly
+            }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
             }}
             disabled={readonly}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipRendering`}
@@ -433,6 +406,7 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             allowableTypes={allowableTypes}
             overrideValue={overrideValue}
             index={index}
+            inputSetData={inputSetData}
             {...props}
             key={overrideValue?.manifest?.identifier}
           />

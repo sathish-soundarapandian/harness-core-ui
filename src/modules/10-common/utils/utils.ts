@@ -122,6 +122,10 @@ export const getPREnvNameFromURL = (url: string): string => {
   return isPR() ? url.split(PR_ENV_HOST_NAME)?.[1]?.split('/')?.[1] : ''
 }
 
+export function isMultiTypeFixed(type: MultiTypeInputType): boolean {
+  return type === MultiTypeInputType.FIXED
+}
+
 export function isMultiTypeRuntime(type: MultiTypeInputType): boolean {
   return [MultiTypeInputType.EXECUTION_TIME, MultiTypeInputType.RUNTIME].includes(type)
 }
@@ -132,6 +136,10 @@ export function isValueRuntimeInput(
   const type = getMultiTypeFromValue(value)
 
   return isMultiTypeRuntime(type)
+}
+
+export function isMultiTypeExpression(type: MultiTypeInputType): boolean {
+  return type === MultiTypeInputType.EXPRESSION
 }
 
 export const getUserName = (user: UserMetadataDTO): string => {

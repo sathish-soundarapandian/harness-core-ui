@@ -53,6 +53,7 @@ exports[`SLOLogContent should render SLOLogContent component of type Execution L
             class="bp3-popover-target"
           >
             <button
+              aria-label="cv.lastOneHour"
               class="bp3-button bp3-align-left Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               style="width: 180px;"
               type="button"
@@ -193,6 +194,7 @@ exports[`SLOLogContent should render SLOLogContent component of type Execution L
           class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-left StyledProps--border-color-grey700"
         />
         <button
+          aria-label="cv.download"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
           type="button"
         >
@@ -256,6 +258,7 @@ exports[`SLOLogContent should render SLOLogContent component of type Execution L
           />
           <div>
             <button
+              aria-label="pipeline.verification.loadMore"
               class="bp3-button Button--button StyledProps--font StyledProps--main button StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary Button--size Button--small"
               type="button"
             >
@@ -285,6 +288,7 @@ exports[`SLOLogContent should render SLOLogContent component of type Execution L
               </span>
             </button>
             <button
+              aria-label="cv.bottom"
               class="bp3-button Button--button StyledProps--font StyledProps--main button Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary Button--size Button--small"
               type="button"
             >
@@ -374,6 +378,7 @@ exports[`SLOLogContent should render SLOLogContent component of type External AP
             class="bp3-popover-target"
           >
             <button
+              aria-label="cv.lastOneHour"
               class="bp3-button bp3-align-left Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               style="width: 180px;"
               type="button"
@@ -478,6 +483,7 @@ exports[`SLOLogContent should render SLOLogContent component of type External AP
           class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-left StyledProps--border-color-grey200"
         />
         <button
+          aria-label="cv.download"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
           type="button"
         >
@@ -592,6 +598,7 @@ exports[`SLOLogContent should render SLOLogContent component of type External AP
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="Prev"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                 disabled=""
                 tabindex="-1"
@@ -645,6 +652,7 @@ exports[`SLOLogContent should render SLOLogContent component of type External AP
                 </span>
               </button>
               <button
+                aria-label="Next"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                 type="button"
               >

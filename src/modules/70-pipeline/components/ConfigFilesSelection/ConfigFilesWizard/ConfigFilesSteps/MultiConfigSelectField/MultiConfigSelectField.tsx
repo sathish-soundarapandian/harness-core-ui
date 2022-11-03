@@ -17,10 +17,12 @@ import {
   EXPRESSION_INPUT_PLACEHOLDER,
   Layout,
   Icon,
-  AllowedTypes
+  AllowedTypes,
+  FormError,
+  Container
 } from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-
+import { FormGroup, Intent } from '@blueprintjs/core'
 import { FieldArray, connect, FormikContextType } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -169,7 +171,11 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     {...providedDrag.draggableProps}
                                     {...providedDrag.dragHandleProps}
                                   >
-                                    <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                                    <Layout.Horizontal
+                                      spacing="medium"
+                                      flex={{ alignItems: 'center' }}
+                                      margin={{ bottom: hasError && 'medium' }}
+                                    >
                                       {!restrictToSingleEntry && (
                                         <>
                                           <Icon name="drag-handle-vertical" />
@@ -201,17 +207,36 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             ])}
                                             expressionRender={() => {
                                               return (
-                                                <ExpressionInput
-                                                  name={`${name}[${index}]`}
-                                                  value={get(formik?.values, `${name}[${index}]`)}
-                                                  disabled={false}
-                                                  inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                                                  items={expressions}
-                                                  onChange={val =>
-                                                    /* istanbul ignore next */
-                                                    formik?.setFieldValue(`${name}[${index}]`, val)
-                                                  }
-                                                />
+                                                <Container className={css.fieldExpressionHelperWrapper}>
+                                                  <FormGroup
+                                                    helperText={
+                                                      errorCheck(`${name}[${index}]`, formik) ? (
+                                                        <FormError
+                                                          name={`${name}[${index}]`}
+                                                          errorMessage={get(formik?.errors, `${name}[${index}]`)}
+                                                        />
+                                                      ) : null
+                                                    }
+                                                    intent={
+                                                      errorCheck(`${name}[${index}]`, formik)
+                                                        ? Intent.DANGER
+                                                        : Intent.NONE
+                                                    }
+                                                    style={{ width: '100%' }}
+                                                  >
+                                                    <ExpressionInput
+                                                      name={`${name}[${index}]`}
+                                                      value={get(formik?.values, `${name}[${index}]`)}
+                                                      disabled={false}
+                                                      inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                                                      items={expressions}
+                                                      onChange={val =>
+                                                        /* istanbul ignore next */
+                                                        formik?.setFieldValue(`${name}[${index}]`, val)
+                                                      }
+                                                    />
+                                                  </FormGroup>
+                                                </Container>
                                               )
                                             }}
                                           >

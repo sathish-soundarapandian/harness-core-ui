@@ -101,8 +101,9 @@ describe('Create empty monitored service', () => {
 
     cy.contains('span', 'Add Metric').click()
 
+    // Delete all custom metric
     cy.get('span[data-icon="main-delete"]').click({ multiple: true })
-    cy.findByRole('button', { name: /Add Metric/i }).should('be.visible')
+    cy.contains('span', 'Add Metric').should('be.visible')
 
     cy.contains('span', 'Add Metric').click()
     cy.wait('@QueriesCall')

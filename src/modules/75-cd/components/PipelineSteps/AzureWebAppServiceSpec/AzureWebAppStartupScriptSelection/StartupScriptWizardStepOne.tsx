@@ -50,6 +50,7 @@ function StartupScriptWizardStepOne({
   handleConnectorViewChange,
   handleStoreChange,
   stepName,
+  stepSubtitle,
   isReadonly,
   connectorTypes,
   initialValues,
@@ -152,7 +153,7 @@ function StartupScriptWizardStepOne({
       </Text>
 
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.startupCommand.subtitle')}
+        {stepSubtitle}
       </Text>
 
       <Formik

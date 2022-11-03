@@ -176,6 +176,7 @@ exports[`Add Edit Service Override Test add new service override 1`] = `
                 class="Layout--vertical StyledProps--main"
               />
               <button
+                aria-label="common.newName common.override"
                 class="bp3-button Button--button StyledProps--font StyledProps--main addOverrideBtn Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                 type="button"
               >
@@ -212,6 +213,7 @@ exports[`Add Edit Service Override Test add new service override 1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-xxlarge"
       >
         <button
+          aria-label="save"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           data-testid="addVariableSave"
           disabled=""
@@ -225,6 +227,7 @@ exports[`Add Edit Service Override Test add new service override 1`] = `
           </span>
         </button>
         <button
+          aria-label="cancel"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
           data-testid="addVariableCancel"
           type="button"

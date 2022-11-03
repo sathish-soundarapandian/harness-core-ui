@@ -38,6 +38,7 @@ exports[`Test ConnectorSetting Should render ConnectorSetting - disable built in
       </span>
     </span>
     <button
+      aria-label="common.apply"
       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--padding-none Button--with-current-color Button--variation Button--variation-primary"
       data-testid="apply-connector-setting"
       disabled=""
@@ -92,6 +93,7 @@ exports[`Test ConnectorSetting Should render ConnectorSetting - disable built in
       </span>
     </span>
     <button
+      aria-label="common.apply"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-none Button--with-current-color Button--variation Button--variation-primary"
       data-testid="apply-connector-setting"
       type="button"
@@ -145,6 +147,7 @@ exports[`Test ConnectorSetting Should render ConnectorSetting initial load - Bui
       </span>
     </span>
     <button
+      aria-label="common.apply"
       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--padding-none Button--with-current-color Button--variation Button--variation-primary"
       data-testid="apply-connector-setting"
       disabled=""
@@ -200,6 +203,7 @@ exports[`Test ConnectorSetting Should render ConnectorSetting initial load - Bui
       </span>
     </span>
     <button
+      aria-label="common.apply"
       class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--padding-none Button--with-current-color Button--variation Button--variation-primary"
       data-testid="apply-connector-setting"
       disabled=""

@@ -93,7 +93,7 @@ export function HarnessConfigStep({
       ? Yup.mixed()
           .notOneOf(
             [...listOfConfigFiles.map(({ configFile }) => configFile.identifier)],
-            getString('validation.duplicateIdError')
+            getString('pipeline.configFiles.error.duplicateIdError', { configFileIdentifier: value })
           )
           .required(getString('validation.identifierRequired'))
       : listOfConfigFiles.map(({ configFile }) => configFile.identifier).indexOf(value) === fileIndex
@@ -101,7 +101,7 @@ export function HarnessConfigStep({
       : Yup.mixed()
           .notOneOf(
             [...listOfConfigFiles.map(({ configFile }) => configFile.identifier)],
-            getString('validation.duplicateIdError')
+            getString('pipeline.configFiles.error.duplicateIdError')
           )
           .required(getString('validation.identifierRequired'))
   })

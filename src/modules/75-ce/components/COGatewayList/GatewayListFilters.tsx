@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import type { ITagInputProps } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, pick } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, pick } from 'lodash-es'
 import {
   Container,
   FormInput,
   getErrorInfoFromErrorObject,
+  Icon,
   MultiSelectOption,
   SelectOption,
   useToaster
@@ -63,6 +65,8 @@ interface RulesFilterFormProps {
   namespaces: MultiSelectOption[]
   resourceTypes: MultiSelectOption[]
   serviceProviders: MultiSelectOption[]
+  onConnectorQueryChange: (query: string) => void
+  loadingConnectors: boolean
 }
 
 const RulesFilterForm: React.FC<RulesFilterFormProps> = ({
@@ -70,17 +74,34 @@ const RulesFilterForm: React.FC<RulesFilterFormProps> = ({
   users,
   namespaces,
   resourceTypes,
-  serviceProviders
+  serviceProviders,
+  onConnectorQueryChange,
+  loadingConnectors
 }) => {
   const { getString } = useStrings()
+
+  const handleQueryChange = useCallback(
+    debounce((query: string) => onConnectorQueryChange(query), 500),
+    [onConnectorQueryChange]
+  )
 
   return (
     <Container>
       <FormInput.MultiSelect
         items={connectors}
         name="cloud_account_id"
+        tagInputProps={
+          {
+            rightElement: loadingConnectors ? (
+              <Icon name="spinner" size={18} margin={{ top: 'xsmall', right: 'medium' }} />
+            ) : null
+          } as unknown as ITagInputProps
+        }
         multiSelectProps={{
-          allowCreatingNewItems: false
+          allowCreatingNewItems: false,
+          onQueryChange(query: string) {
+            handleQueryChange(query)
+          }
         }}
         label={getString('connector')}
       />
@@ -132,6 +153,8 @@ interface GatewayListFilterDrawerProps {
   connectorToIdMap: { [key: string]: MultiSelectOption }
   userToIdMap: { [key: string]: MultiSelectOption }
   resourceTypes: MultiSelectOption[]
+  onConnectorQueryChange: (query: string) => void
+  loadingConnectors: boolean
 }
 
 const GatewayListFilterDrawer: React.FC<GatewayListFilterDrawerProps> = ({
@@ -145,7 +168,9 @@ const GatewayListFilterDrawer: React.FC<GatewayListFilterDrawerProps> = ({
   users,
   connectorToIdMap,
   userToIdMap,
-  resourceTypes
+  resourceTypes,
+  onConnectorQueryChange,
+  loadingConnectors
 }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { showError } = useToaster()
@@ -303,6 +328,8 @@ const GatewayListFilterDrawer: React.FC<GatewayListFilterDrawerProps> = ({
           namespaces={namespaces}
           resourceTypes={resourceTypes}
           serviceProviders={allCloudProvidersList}
+          onConnectorQueryChange={onConnectorQueryChange}
+          loadingConnectors={loadingConnectors}
         />
       }
       initialFilter={{
@@ -366,7 +393,7 @@ const GatewayListFilters: React.FC<GatewayListFiltersProps> = ({ applyFilter, ap
     }
   })
 
-  const { mutate: fetchConnectors } = useGetConnectorListV2({
+  const { mutate: fetchConnectors, loading: loadingConnectors } = useGetConnectorListV2({
     queryParams: defaultQueryParams
   })
 
@@ -449,12 +476,17 @@ const GatewayListFilters: React.FC<GatewayListFiltersProps> = ({ applyFilter, ap
     }
   }
 
-  const fetchAndSetConnectors = async () => {
+  const fetchAndSetConnectors = async (query?: string) => {
     try {
-      const { data: connectorResponse } = await fetchConnectors({
-        filterType: 'Connector',
-        types: ['CEAws', 'CEAzure', 'CEK8sCluster', 'GcpCloudCost'] // only CCM connectors
-      })
+      const { data: connectorResponse } = await fetchConnectors(
+        {
+          filterType: 'Connector',
+          types: ['CEAws', 'CEAzure', 'CEK8sCluster', 'GcpCloudCost'] // only CCM connectors
+        },
+        {
+          queryParams: { ...defaultQueryParams, searchTerm: defaultTo(query, '') }
+        }
+      )
       const content = defaultTo(get(connectorResponse, 'content', []), []).map((item: ConnectorResponse) => ({
         label: get(item, 'connector.name', ''),
         value: get(item, 'connector.identifier', '')
@@ -526,9 +558,11 @@ const GatewayListFilters: React.FC<GatewayListFiltersProps> = ({ applyFilter, ap
         connectorToIdMap={connectorToIdMap}
         userToIdMap={userToIdMap}
         resourceTypes={resourceTypes}
+        onConnectorQueryChange={fetchAndSetConnectors}
+        loadingConnectors={loadingConnectors}
       />
     )
-  }, [savedFilters, selectedFilter, connectors, users, connectorToIdMap, userToIdMap])
+  }, [savedFilters, selectedFilter, connectors, users, connectorToIdMap, userToIdMap, loadingConnectors])
 
   return (
     <FilterSelector<FilterDTO>

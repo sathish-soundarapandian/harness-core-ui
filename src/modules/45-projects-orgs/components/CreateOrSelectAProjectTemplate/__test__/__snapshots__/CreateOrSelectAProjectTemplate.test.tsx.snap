@@ -21,6 +21,7 @@ exports[`Rendering that it should render 1`] = `
       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large"
     >
       <button
+        aria-label="projectsOrgs.selectAnExistingProject"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
         type="button"
       >
@@ -31,6 +32,7 @@ exports[`Rendering that it should render 1`] = `
         </span>
       </button>
       <button
+        aria-label="projectsOrgs.createANewProject"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >

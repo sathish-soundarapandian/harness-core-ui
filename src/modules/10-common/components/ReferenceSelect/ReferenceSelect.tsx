@@ -330,6 +330,8 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
                     background={Color.PRIMARY_2}
                     key={scope}
                     onClick={() => {
+                      if (disabled) return
+
                       onClick(scope)
                     }}
                     border={{ radius: 100 }}

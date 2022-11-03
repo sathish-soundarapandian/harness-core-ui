@@ -110,7 +110,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
   )[]

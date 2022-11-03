@@ -6,9 +6,8 @@
  */
 
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import get from 'lodash/get'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
-import { compact, isEmpty, map, merge } from 'lodash-es'
+import { get, compact, isEmpty, map, merge } from 'lodash-es'
 import type { EntityGitDetails, TemplateSummaryResponse } from 'services/template-ng'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { GetPipelineQueryParams, TemplateStepNode, StepElementConfig } from 'services/pipeline-ng'
@@ -25,7 +24,7 @@ export const FETCH_INSTANCE_SCRIPT_DEFAULT_TEXT = `#
 # environment variable and assign the script execution result with instance information
 #
 # Sample
-# INSTANCE_OUTPUT_PATH=$(echo ‘{“data”: [{“functionName”: “\${serviceVariable.functionName}“}]}’)
+# INSTANCE_OUTPUT_PATH=$(echo '{"data": [{"functionName": "\${serviceVariable.functionName}"}]}')
 #`
 export interface DrawerData {
   type: DrawerTypes
@@ -91,6 +90,7 @@ const DeploymentContext = React.createContext<DeploymentConfigValues>({
   gitDetails: {},
   templateDetailsByRef: {},
   updateDeploymentConfig: (_configValues: DeploymentConfig) => new Promise<void>(() => undefined),
+  /* istanbul ignore next */
   setTemplateDetailsByRef: (_templateDetailsByRef: TemplateDetailsByRef) => undefined,
   drawerData: { type: DrawerTypes.AddStep },
   setDrawerData: (_values: DrawerData) => undefined,
