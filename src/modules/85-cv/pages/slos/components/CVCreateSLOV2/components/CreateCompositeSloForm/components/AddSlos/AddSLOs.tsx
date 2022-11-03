@@ -98,6 +98,7 @@ export const AddSLOs = (): JSX.Element => {
     <>
       {Boolean(serviceLevelObjectivesDetails.length) && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
       <Button
+        data-testid={'addSlosButton'}
         variation={ButtonVariation.SECONDARY}
         text={getString('cv.CompositeSLO.AddSLO')}
         iconProps={{ name: 'plus' }}

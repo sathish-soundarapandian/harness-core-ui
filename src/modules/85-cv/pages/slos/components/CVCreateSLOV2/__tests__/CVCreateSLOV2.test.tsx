@@ -73,6 +73,13 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
     act(() => {
+      userEvent.click(getByText('save'))
+    })
+    expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    })
+    act(() => {
       userEvent.click(getByText('cancel'))
     })
     expect(container).toMatchSnapshot()

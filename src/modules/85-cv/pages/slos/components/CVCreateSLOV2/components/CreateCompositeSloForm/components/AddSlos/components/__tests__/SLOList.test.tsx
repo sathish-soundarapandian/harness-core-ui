@@ -96,8 +96,49 @@ describe('SLOList', () => {
     })
     expect(queryByAttribute('data-testid', container, 'addSloButton')).not.toBeDisabled()
     act(() => {
+      fireEvent.click(container.querySelectorAll('[type="checkbox"]')[1]!)
+    })
+    expect(queryByAttribute('data-testid', container, 'addSloButton')).toBeDisabled()
+    act(() => {
+      fireEvent.click(container.querySelectorAll('[type="checkbox"]')[1]!)
+    })
+    act(() => {
       fireEvent.click(addSloButton!)
     })
     expect(container).toMatchSnapshot()
+  })
+})
+
+describe('SLOList error and loading', () => {
+  test('should render loading state', () => {
+    jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
+      data: {},
+      loading: true,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+    const { container } = render(
+      <TestWrapper>
+        <SLOList filter="Rolling" onAddSLO={jest.fn()} hideDrawer={jest.fn()} serviceLevelObjectivesDetails={[]} />
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="steps-spinner"]')).toBeInTheDocument()
+  })
+  test('should render error state', () => {
+    jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
+      data: null,
+      loading: false,
+      error: true,
+      refetch: jest.fn()
+    } as any)
+    const { getByText } = render(
+      <TestWrapper>
+        <SLOList filter="Rolling" onAddSLO={jest.fn()} hideDrawer={jest.fn()} serviceLevelObjectivesDetails={[]} />
+      </TestWrapper>
+    )
+    expect(getByText('Retry')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(getByText('Retry'))
+    })
   })
 })

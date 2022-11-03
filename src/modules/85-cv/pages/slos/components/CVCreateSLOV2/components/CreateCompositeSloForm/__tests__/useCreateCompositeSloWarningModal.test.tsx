@@ -12,9 +12,10 @@ import { TestWrapper } from '@common/utils/testUtils'
 import useCreateCompositeSloWarningModal from '../useCreateCompositeSloWarningModal'
 
 const Wrapper = ({ onChange, prevStepData, handleRedirect }: any) => {
+  const prevData = React.useRef(prevStepData)
   const [openSaveCancelModal, openPeriodUpdateModal] = useCreateCompositeSloWarningModal({
     onChange,
-    prevStepData,
+    prevStepData: prevData,
     handleRedirect
   })
   return (
