@@ -225,7 +225,7 @@ co:
         infoText2: 'A Harness Delegate is a service that can run in local network or VPC to connect artifact servers, infrastructure and verification providers to install projects and pipelines. If the cluster you would like to monitor does not have a Harness delegate connected to it, you will have to create a connector'
         createNewConnectorBtn: '+ Create a new connector'
     review:
-      configDetails: 'Configuration Details'
+      configDetails: '{{$.common.configDetails}}'
       cloudAccountDetails: 'Cloud account details'
       selectedCloudAccount: 'Selected cloud account'
       nameOfRule: 'Name of the rule'

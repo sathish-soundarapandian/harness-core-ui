@@ -8,21 +8,12 @@
 import React, { FC } from 'react'
 import { Classes, Intent, Spinner, Switch } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
-import {
-  Dialog,
-  OverlaySpinner,
-  useConfirmationDialog,
-  useToaster,
-  Text,
-  Layout,
-  FontVariation,
-  Color
-} from '@harness/uicore'
+import { Dialog, OverlaySpinner, useConfirmationDialog, useToaster, Text, Layout, FontVariation } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -116,6 +107,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   const handleEnableGlobalFreeze = async (scheduledFreezeWindow: FreezeWindow): Promise<void> => {
     try {
       freeze.status = 'Enabled'
+      freeze.description = undefined
       freeze.windows = [scheduledFreezeWindow]
       const body = yamlStringify({ freeze: freeze })
       await updateGlobalFreeze(body)
@@ -143,29 +135,31 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
           checked={isGlobalFreezeEnabled}
         />
         <Text font={{ variation: FontVariation.SMALL }}>
-          {isGlobalFreezeEnabled
-            ? getString('freezeWindows.globalFreeze.enabled')
-            : getString('freezeWindows.globalFreeze.disabled')}
+          <String
+            stringID={
+              isGlobalFreezeEnabled ? 'freezeWindows.globalFreeze.enabled' : 'freezeWindows.globalFreeze.disabled'
+            }
+            useRichText
+            vars={{
+              scope: scopeText[scope]
+            }}
+          />
         </Text>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }}>&nbsp;{scopeText[scope]}</Text>
+
         {isGlobalFreezeEnabled && (
-          <>
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
-              &nbsp;from
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-              &nbsp;{moment(startTime).format('lll')}
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
-              &nbsp;{duration ? 'for' : 'to'}
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-              &nbsp;{duration || moment(endTime).format('lll')}
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-              &nbsp;{timeZone}
-            </Text>
-          </>
+          <Text font={{ variation: FontVariation.SMALL }}>
+            &nbsp;
+            <String
+              stringID="freezeWindows.globalFreeze.enabledWindow"
+              useRichText
+              vars={{
+                startTime: moment(startTime).format('lll'),
+                supportText: duration ? 'for' : 'to',
+                endTimeOrDuration: duration || moment(endTime).format('lll'),
+                timeZone
+              }}
+            />
+          </Text>
         )}
       </Layout.Horizontal>
     </OverlaySpinner>

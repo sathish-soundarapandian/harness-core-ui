@@ -11,12 +11,12 @@ exports[`Carousel Image and description render 1`] = `
       src="https://images.ctfassets.net/uu5c47kz2byk/4ebrw6LbQrQl9HoRPot1kr/03d1be15bbfa81026882106b6eee0697/Allow_Save_Despite_form_issues_1.png"
     />
     <p
-      class="StyledProps--font StyledProps--main primaryText StyledProps--color StyledProps--color-primary5 StyledProps--font-variation-h1-semi StyledProps--padding-top-xlarge StyledProps--padding-bottom-small"
+      class="StyledProps--font StyledProps--main primaryText StyledProps--color StyledProps--color-primary5 StyledProps--font-variation-h1-semi StyledProps--padding-top-xlarge StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large"
     >
       primary text
     </p>
     <p
-      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white StyledProps--font-variation-body1"
+      class="StyledProps--font StyledProps--main secondaryText StyledProps--color StyledProps--color-white StyledProps--font-variation-body1 StyledProps--padding-left-large StyledProps--padding-right-large"
     >
       secondory text
     </p>

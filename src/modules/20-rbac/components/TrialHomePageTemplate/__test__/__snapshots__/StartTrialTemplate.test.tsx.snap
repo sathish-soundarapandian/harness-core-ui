@@ -32,6 +32,7 @@ exports[`StartTrialTemplate snapshot test should call prop onClick when there is
           learn more description
         </a>
         <button
+          aria-label="Continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -95,6 +96,7 @@ exports[`StartTrialTemplate snapshot test should call the start button click han
           learn more description
         </a>
         <button
+          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -143,6 +145,7 @@ exports[`StartTrialTemplate snapshot test should display error msg when api call
           learn more description
         </a>
         <button
+          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -191,6 +194,7 @@ exports[`StartTrialTemplate snapshot test should open the modal when a button is
           learn more description
         </a>
         <button
+          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -239,6 +243,7 @@ exports[`StartTrialTemplate snapshot test should render start a trial by default
           learn more description
         </a>
         <button
+          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"

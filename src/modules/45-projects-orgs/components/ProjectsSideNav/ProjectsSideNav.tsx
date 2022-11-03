@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
-import { Layout } from '@wings-software/uicore'
+import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
+import { Container, Layout } from '@wings-software/uicore'
 import { compile } from 'path-to-regexp'
 
 import routes from '@common/RouteDefinitions'
@@ -22,6 +22,7 @@ import css from './ProjectSideNav.module.scss'
 export default function ProjectsSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const routeMatch = useRouteMatch()
+  const location = useLocation()
   const history = useHistory()
   const { selectedProject, updateAppStore } = useAppStore()
   const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
@@ -32,6 +33,12 @@ export default function ProjectsSideNav(): React.ReactElement {
     projectIdentifier: selectedProject?.identifier ? selectedProject.identifier : '',
     orgIdentifier: selectedProject?.orgIdentifier ? selectedProject.orgIdentifier : ''
   }
+
+  const allProjectsPath = matchPath(location.pathname, {
+    path: routes.toAllProjects({ accountId: params.accountId }),
+    exact: true,
+    strict: false
+  })
 
   return (
     <Layout.Vertical spacing="small">
@@ -49,7 +56,7 @@ export default function ProjectsSideNav(): React.ReactElement {
         </>
       )}
       {selectedProject && (
-        <>
+        <Container className={allProjectsPath?.isExact ? css.projectSelectorContainer : undefined}>
           <ProjectSelector
             onSelect={data => {
               updateAppStore({ selectedProject: data })
@@ -71,8 +78,8 @@ export default function ProjectsSideNav(): React.ReactElement {
             <SidebarLink label={getString('executionsText')} to={routes.toDeployments(projectDetailsParams)} />
           )}
 
-          <ProjectSetupMenu />
-        </>
+          <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
+        </Container>
       )}
     </Layout.Vertical>
   )

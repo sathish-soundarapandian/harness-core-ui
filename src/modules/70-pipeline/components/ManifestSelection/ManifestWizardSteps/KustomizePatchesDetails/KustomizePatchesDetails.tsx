@@ -44,7 +44,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { getRepositoryName } from '../ManifestUtils'
+import { getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -288,7 +288,7 @@ function KustomizePatchDetails({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
                 id: uuid('', nameSpace()),
                 path: path
               }))

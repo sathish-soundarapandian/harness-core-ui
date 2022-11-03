@@ -25,6 +25,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -60,7 +61,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   } = queryParams
   const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
 
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
   const location = useLocation()
   // TODO: Temporary, remove once released
@@ -100,7 +101,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       branch,
       repoIdentifier,
       searchTerm,
-      ...(!isExecutionHistoryView ? { module } : {})
+      ...(!isExecutionHistoryView && module ? { module } : {})
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -114,7 +115,10 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   })
 
   // Only do polling on first page and not initial default loading
-  const isPolling = usePolling(fetchExecutions, { startPolling: page === DEFAULT_PAGE_INDEX && !loading })
+  const isPolling = usePolling(fetchExecutions, {
+    startPolling: page === DEFAULT_PAGE_INDEX && !loading,
+    pollingInterval: 20_000
+  })
 
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity
@@ -126,7 +130,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   return (
     <>
       {showSubHeader && <ExecutionListSubHeader {...rest} />}
-
+      <GlobalFreezeBanner />
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
           <Container className={css.healthAndExecutions} data-testid="health-and-executions">

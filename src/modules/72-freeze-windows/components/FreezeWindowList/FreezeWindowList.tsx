@@ -62,7 +62,7 @@ export const FreezeWindowList: FC<FreezeWindowList> = ({ data, onToggleFreezeRow
   const onRowSelectToggle: (data: { freezeWindowId: string; checked: boolean }) => void = ({
     freezeWindowId,
     checked
-  }) => toggleRowSelect(freezeWindowId, checked)
+  }) => toggleRowSelect(checked, freezeWindowId)
 
   return (
     <FreezeWindowListTable

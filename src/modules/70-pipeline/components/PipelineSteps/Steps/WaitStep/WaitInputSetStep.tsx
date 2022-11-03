@@ -12,6 +12,8 @@ import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harnes
 import { useStrings } from 'framework/strings'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { WaitStepData } from './WaitStepTypes'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -21,8 +23,9 @@ export default function WaitInputSetStep(props: {
   template?: WaitStepData
   path?: string
   allowableTypes: AllowedTypes
+  stepViewType?: StepViewType
 }): React.ReactElement {
-  const { readonly, template, path } = props
+  const { readonly, template, path, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -30,15 +33,17 @@ export default function WaitInputSetStep(props: {
   return (
     <>
       {getMultiTypeFromValue(/* istanbul ignore next */ template?.spec?.duration) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.lg)}>
+        <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             name={`${prefix}spec.duration`}
             label={getString('pipeline.duration')}
             disabled={readonly}
-            className={stepCss.duration}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               expressions,
+              allowableTypes,
               disabled: readonly
             }}
             template={template}

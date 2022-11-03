@@ -7,8 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import _entries from 'lodash/entries'
-import _map from 'lodash/map'
+import { entries as _entries, map as _map } from 'lodash-es'
 import { Text, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

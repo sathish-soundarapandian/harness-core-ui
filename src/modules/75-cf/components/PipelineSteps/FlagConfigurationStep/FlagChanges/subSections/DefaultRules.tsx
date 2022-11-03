@@ -6,11 +6,28 @@
  */
 
 import React, { FC, useEffect, useMemo } from 'react'
-import { FormInput, SelectOption } from '@wings-software/uicore'
+import * as Yup from 'yup'
+import { FormInput, SelectOption } from '@harness/uicore'
 import type { Feature } from 'services/cf'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { CFPipelineInstructionType } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
 import SubSection, { SubSectionProps } from '../SubSection'
+
+export const defaultRulesSchema = (getString: UseStringsReturn['getString']): Yup.Schema<any> =>
+  Yup.object({
+    spec: Yup.lazy<any>(rules => {
+      if (!rules?.off && !rules?.on) {
+        return Yup.object({
+          on: Yup.string().required(getString('cf.featureFlags.flagPipeline.validation.defaultRules.onOrOffVariation'))
+        })
+      } else {
+        return Yup.object({
+          off: Yup.string(),
+          on: Yup.string()
+        })
+      }
+    })
+  })
 
 export interface DefaultRulesProps extends SubSectionProps {
   variations?: Feature['variations']

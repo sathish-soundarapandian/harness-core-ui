@@ -80,7 +80,7 @@ export const CECOEditGatewayPage: React.FC = () => {
 
   const [gatewayDetails, setGatewayDetails] = useState<GatewayDetails>()
 
-  useDocumentTitle([getString('ce.co.editAsRule'), _defaultTo(gatewayDetails?.name, '')], true)
+  useDocumentTitle([getString('ce.co.editAsRule'), _defaultTo(gatewayDetails?.name, '')])
 
   const checkAndFetchSchedules = (_service: Service) => {
     if (_service.cloud_account_id && _isEmpty(staticSchedulesData)) {

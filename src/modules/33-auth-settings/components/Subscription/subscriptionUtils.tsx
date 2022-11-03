@@ -127,7 +127,7 @@ export function getCostCalculatorBodyByModule({
             toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
             setNumberOfDevelopers={(value: number) => {
               updateQuantities({
-                devs: value || 1
+                devs: value || subscriptionDetails?.quantities?.featureFlag?.numberOfDevelopers || 1
               })
             }}
           />
@@ -150,7 +150,7 @@ export function getCostCalculatorBodyByModule({
             )}
             setNumberOfMAUs={(value: number) => {
               updateQuantities({
-                maus: value || sampleData.minValue
+                maus: value || subscriptionDetails?.quantities?.featureFlag?.numberOfMau || sampleData.minValue
               })
             }}
           />

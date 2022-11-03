@@ -149,6 +149,7 @@ exports[`Azure Access Point Configuration Name field should be disabled and shou
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="Continue"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main saveBtn StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 data-testid="saveAzureDetails"
                 disabled=""
@@ -181,6 +182,7 @@ exports[`Azure Access Point Configuration Name field should be disabled and shou
                 </span>
               </button>
               <button
+                aria-label="Cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
                 type="button"
               >
@@ -347,6 +349,7 @@ exports[`Azure Access Point Configuration render configuration dialog and fill d
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="Continue"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main saveBtn StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 data-testid="saveAzureDetails"
                 disabled=""
@@ -535,6 +538,7 @@ exports[`Azure Access Point Configuration render configuration dialog and fill d
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="Continue"
                 class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main saveBtn StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 data-testid="saveAzureDetails"
                 disabled=""

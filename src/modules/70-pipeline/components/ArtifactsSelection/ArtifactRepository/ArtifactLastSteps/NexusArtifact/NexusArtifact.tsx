@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useMemo } from 'react'
+import cx from 'classnames'
 import {
   Formik,
   Layout,
@@ -20,13 +21,19 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { merge, defaultTo } from 'lodash-es'
+import { merge, defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 
-import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForNexusArtifact } from 'services/cd-ng'
+import {
+  ConnectorConfigDTO,
+  DockerBuildDetailsDTO,
+  useGetBuildDetailsForNexusArtifact,
+  useGetRepositories
+} from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,
@@ -46,15 +53,17 @@ import {
   RepositoryFormatTypes
 } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
-import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
 export interface specInterface {
   artifactId?: string
   groupId?: string
+  group?: string
   extension?: string
   classifier?: string
   packageName?: string
@@ -79,8 +88,9 @@ export function Nexus3Artifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType,
-  isMultiArtifactSource
+  selectedDeploymentType = '',
+  isMultiArtifactSource,
+  formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
@@ -88,6 +98,14 @@ export function Nexus3Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isTemplateContext = context === ModalViewFor.Template
+  const commonParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch
+  }
 
   const schemaObject = {
     tagType: Yup.string(),
@@ -109,6 +127,10 @@ export function Nexus3Artifact({
       groupId: Yup.string().when('repositoryFormat', {
         is: val => val === RepositoryFormatTypes.Maven,
         then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
+      }),
+      group: Yup.string().when('repositoryFormat', {
+        is: val => val === RepositoryFormatTypes.Raw,
+        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.group'))
       }),
       packageName: Yup.string().when('repositoryFormat', {
         is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
@@ -150,7 +172,6 @@ export function Nexus3Artifact({
     error: nexusTagError
   } = useGetBuildDetailsForNexusArtifact({
     queryParams: {
-      // artifactId: lastQueryData.artifactId,
       ...lastQueryData,
       repository: lastQueryData.repository,
       connectorRef: getConnectorRefQueryData(),
@@ -163,6 +184,39 @@ export function Nexus3Artifact({
     lazy: true,
     debounce: 300
   })
+
+  const {
+    data: repositoryDetails,
+    refetch: refetchRepositoryDetails,
+    loading: fetchingRepository,
+    error: errorFetchingRepository
+  } = useMutateAsGet(useGetRepositories, {
+    lazy: true,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...commonParams,
+      connectorRef: getConnectorRefQueryData(),
+      repositoryFormat: ''
+    }
+  })
+
+  const selectRepositoryItems = useMemo(() => {
+    return repositoryDetails?.data?.map(repository => ({
+      value: defaultTo(repository.repositoryName, ''),
+      label: defaultTo(repository.repositoryName, '')
+    }))
+  }, [repositoryDetails?.data])
+
+  const getRepository = (): { label: string; value: string }[] => {
+    if (fetchingRepository) {
+      return [{ label: 'Loading Repository...', value: 'Loading Repository...' }]
+    }
+    return defaultTo(selectRepositoryItems, [])
+  }
 
   useEffect(() => {
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
@@ -177,6 +231,20 @@ export function Nexus3Artifact({
       setTagList(data?.data?.buildDetailsList)
     }
   }, [data?.data?.buildDetailsList, nexusTagError])
+
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={fetchingRepository}
+        onClick={handleClick}
+      />
+    </div>
+  ))
 
   const canFetchTags = useCallback(
     (formikValues: Nexus2InitialValuesType): boolean => {
@@ -207,6 +275,15 @@ export function Nexus3Artifact({
             formikValues.spec.artifactPath || '',
             formikValues.spec.repositoryUrl || '',
             formikValues.spec.repositoryPort || ''
+          ])
+        : formikValues.repositoryFormat === RepositoryFormatTypes.Raw
+        ? lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
+          lastQueryData.repository !== formikValues.repository ||
+          lastQueryData.group !== formikValues.spec.group ||
+          shouldFetchTags(prevStepData, [
+            formikValues.repositoryFormat,
+            formikValues.repository,
+            formikValues.spec.group || ''
           ])
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
@@ -243,6 +320,10 @@ export function Nexus3Artifact({
             artifactPath: formikValues.spec.artifactPath,
             ...optionalFields
           }
+        } else if (formikValues.repositoryFormat === RepositoryFormatTypes.Raw) {
+          repositoryDependentFields = {
+            group: formikValues.spec.group
+          }
         } else {
           repositoryDependentFields = {
             packageName: formikValues.spec.packageName
@@ -271,6 +352,8 @@ export function Nexus3Artifact({
           formikValue.repository,
           formikValue.spec.artifactPath
         ])
+      : formikValue.repositoryFormat === RepositoryFormatTypes.Raw
+      ? !checkIfQueryParamsisNotEmpty([formikValue.repositoryFormat, formikValue.repository, formikValue.spec.group])
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
@@ -287,7 +370,6 @@ export function Nexus3Artifact({
     ) as Nexus2InitialValuesType
   }
   const submitFormData = (formData: Nexus2InitialValuesType & { connectorId?: string }): void => {
-    // const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
     let specData: specInterface =
       formData.repositoryFormat === RepositoryFormatTypes.Maven
         ? {
@@ -299,6 +381,10 @@ export function Nexus3Artifact({
         : formData.repositoryFormat === RepositoryFormatTypes.Docker
         ? {
             artifactPath: formData.spec.artifactPath
+          }
+        : formData.repositoryFormat === RepositoryFormatTypes.Raw
+        ? {
+            group: formData.spec.group
           }
         : {
             packageName: formData.spec.packageName
@@ -341,15 +427,28 @@ export function Nexus3Artifact({
     handleSubmit(formatedFormData)
   }
 
+  const handleValidate = (formData: Nexus2InitialValuesType & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorId: getConnectorIdValue(prevStepData)
+      })
+    }
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isMultiArtifactSource ? sidecarSchema : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -360,7 +459,7 @@ export function Nexus3Artifact({
       >
         {formik => (
           <FormikForm>
-            <div className={css.artifactForm}>
+            <div className={cx(css.artifactForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -388,6 +487,12 @@ export function Nexus3Artifact({
                         groupId: '',
                         ...optionalValues
                       })
+                    } else if (value.value === RepositoryFormatTypes.Raw) {
+                      setLastQueryData({
+                        repository: '',
+                        repositoryFormat: value.value as string,
+                        group: ''
+                      })
                     } else {
                       setLastQueryData({
                         repository: '',
@@ -399,13 +504,44 @@ export function Nexus3Artifact({
                 />
               </div>
               <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
+                <FormInput.MultiTypeInput
+                  selectItems={getRepository()}
+                  disabled={isReadonly}
                   label={getString('repository')}
                   name="repository"
                   placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                  multiTextInputProps={{
+                  useValue
+                  multiTypeInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    selectProps: {
+                      noResults: (
+                        <NoTagResults
+                          tagError={errorFetchingRepository}
+                          isServerlessDeploymentTypeSelected={false}
+                          defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
+                        />
+                      ),
+                      itemRenderer: itemRenderer,
+                      items: getRepository(),
+                      allowCreatingNewItems: true
+                    },
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      if (
+                        e?.target?.type !== 'text' ||
+                        (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                        getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
+                      ) {
+                        return
+                      }
+                      refetchRepositoryDetails({
+                        queryParams: {
+                          ...commonParams,
+                          connectorRef: getConnectorRefQueryData(),
+                          repositoryFormat: formik.values?.repositoryFormat
+                        }
+                      })
+                    }
                   }}
                 />
 
@@ -625,6 +761,31 @@ export function Nexus3Artifact({
                     </div>
                   )}
                 </>
+              ) : formik.values?.repositoryFormat === RepositoryFormatTypes.Raw ? (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('rbac.group')}
+                    name="spec.group"
+                    placeholder={getString('pipeline.artifactsSelection.groupPlaceholder')}
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                  />
+                  {getMultiTypeFromValue(formik.values?.spec?.group) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        value={formik.values?.spec?.group || ''}
+                        type="String"
+                        variableName="spec.group"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => {
+                          formik.setFieldValue('spec.group', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput
@@ -668,20 +829,22 @@ export function Nexus3Artifact({
                 isImagePath={false}
               />
             </div>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isTemplateContext && (
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

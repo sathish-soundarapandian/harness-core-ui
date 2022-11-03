@@ -183,6 +183,41 @@ exports[`Audit trail filter form test render 1`] = `
     </div>
   </div>
   <div
+    class="bp3-form-group bp3-disabled"
+  >
+    <label
+      class="bp3-label"
+      for="resourceIdentifier"
+    >
+      <span
+        class="Tooltip--acenter"
+        data-tooltip-id="auditTrails_resourceIdentifier"
+      >
+        common.resourceIdentifier
+      </span>
+       
+      <span
+        class="bp3-text-muted"
+      />
+    </label>
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="bp3-input-group bp3-disabled"
+      >
+        <input
+          autocomplete="off"
+          class="bp3-input"
+          disabled=""
+          name="resourceIdentifier"
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div
     class="bp3-form-group"
   >
     <label

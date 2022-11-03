@@ -99,6 +99,8 @@ selectTimeFrame: Select Timeframe
 lastModified: 'Last Modified'
 servicePrefix: 'Service: {{ name }}'
 serviceInputs: Service inputs
+switchToBarChart: Switch to bar chart
+switchToLineChart: Switch to line chart
 accountSetting:
   connector:
     loading: 'Loading settings...'
@@ -201,6 +203,7 @@ validation:
   email:
     required: Email is required
     format: Please input valid email address
+    someAreInvalid: Some of the email addresses entered are invalid.
   repositoryName: Repository Name is required
   package: Package is required
   invalidYamlText: 'You have provided invalid or empty YAML. Please provide a valid YAML'
@@ -488,6 +491,7 @@ subscriptions:
     last30days: Last 30 days
     services: Active Services
     srvcInst: Active Service Instances
+    serviceLicenses: Service Licenses
     cdUsers: Active CD Users
     cdSITooltip: Service Instances represent the dynamic instantiation of a service you deploy via Harness. For a service representing a Docker image, Service Instances are the number of pods running with the docker image. For a service that deploys .NET web app, Service Instances are the number of VMs running the web app.
     cdServiceTooltip: A Service is an independent unit of software you deploy through Harness CD pipelines. An Active Service is a service deployed in the last 30 days.
@@ -982,6 +986,7 @@ moduleConfig:
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
 configureModuleList: Configure Module List
+codeErrorsAgents: Code Error Agents
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
 
@@ -1081,3 +1086,11 @@ schedulePanel:
   cronExpression: 'Cron Expression'
   cronExpressionRequired: 'Cron Expression required'
 allClusters: 'All Clusters'
+all: 'All {{name}}'
+sortedByCreatedTime: List sorted by created time
+configDetails: 'Configuration Details'
+freezeActiveBannerText: All deployments have been disabled on the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
+freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+resourceIdentifier: Resource Identifier
+configureNav: Or configure your nav!

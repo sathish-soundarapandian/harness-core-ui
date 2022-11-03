@@ -42,7 +42,6 @@ TriggerFactory.registerTrigger(new Github())
 TriggerFactory.registerTrigger(new Gitlab())
 TriggerFactory.registerTrigger(new Bitbucket())
 TriggerFactory.registerTrigger(new AzureRepo())
-TriggerFactory.registerTrigger(new Custom())
 
 // Scheduled Triggers
 TriggerFactory.registerTrigger(new Cron())
@@ -56,7 +55,7 @@ TriggerFactory.registerTrigger(new Ecr())
 TriggerFactory.registerTrigger(new Gcr())
 TriggerFactory.registerTrigger(new Jenkins())
 TriggerFactory.registerTrigger(new Nexus3Registry())
-
+TriggerFactory.registerTrigger(new Custom())
 // Manifest Triggers
 TriggerFactory.registerTrigger(new HelmChart())
 

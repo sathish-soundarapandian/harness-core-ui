@@ -500,6 +500,7 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
             >
               <button
+                aria-label="cf.featureFlags.newPrerequisite"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--font StyledProps--font-size-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--size Button--small"
                 data-testid="add-prerequisites-button"
                 style="padding: 0px;"

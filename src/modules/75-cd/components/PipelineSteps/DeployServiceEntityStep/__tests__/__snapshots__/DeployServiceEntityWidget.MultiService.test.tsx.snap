@@ -133,6 +133,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -209,7 +210,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -262,6 +263,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_3"
                   type="button"
@@ -293,6 +295,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_3"
                   type="button"
@@ -327,7 +330,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -380,6 +383,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_1"
                   type="button"
@@ -411,6 +415,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_1"
                   type="button"
@@ -447,6 +452,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
               class="toggleWrapper"
             >
               <button
+                aria-label="cd.pipelineSteps.serviceTab.viewServiceInputs"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                 data-testid="toggle-service-inputs"
                 type="button"
@@ -541,6 +547,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_2"
                   type="button"
@@ -572,6 +579,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_2"
                   type="button"
@@ -734,6 +742,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can select multip
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"

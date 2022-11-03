@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-
+import { ModuleName } from 'framework/types/ModuleName'
 import CDUsageInfo from '../overview/CDUsageInfo'
 
 jest.mock('@common/hooks/useGetUsageAndLimit', () => {
@@ -42,12 +42,40 @@ const useGetUsageAndLimitReturnMock = {
     }
   }
 }
+enum Edition {
+  ENTERPRISE = 'ENTERPRISE'
+}
+enum LicenseType {
+  PAID = 'PAID'
+}
+enum ModuleType {
+  CD = 'CD'
+}
+enum Status {
+  ACTIVE = 'ACTIVE'
+}
 
 describe('CDUsageInfo', () => {
   test('CDUsageInfo', () => {
+    const data = {
+      id: '622596d705bb66724f02cf12',
+      accountIdentifier: 'zEaak-FLS425IEO7OLzMUg',
+      moduleType: ModuleType.CD,
+      edition: Edition.ENTERPRISE,
+      licenseType: LicenseType.PAID,
+      status: Status.ACTIVE,
+      startTime: 1633977619398,
+      expiryTime: 1766494425000,
+      premiumSupport: false,
+      selfService: false,
+      createdAt: 1646630615316,
+      lastModifiedAt: 1646630615316,
+      cdLicenseType: 'SERVICES',
+      workloads: 100
+    }
     const { container } = render(
       <TestWrapper>
-        <CDUsageInfo />
+        <CDUsageInfo licenseData={data} module={ModuleName.CD} />
       </TestWrapper>
     )
 

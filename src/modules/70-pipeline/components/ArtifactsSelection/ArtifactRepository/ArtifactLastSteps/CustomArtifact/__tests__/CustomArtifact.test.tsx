@@ -69,7 +69,8 @@ const initialValues = {
   }
 }
 
-describe('Custom Artifact tests', () => {
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip('Custom Artifact tests', () => {
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>

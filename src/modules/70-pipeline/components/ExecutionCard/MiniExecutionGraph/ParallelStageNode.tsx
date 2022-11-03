@@ -28,6 +28,7 @@ const StagePriority: Record<ExecutionStatus, number> = {
   IgnoreFailed: 20,
   Expired: 18,
   Aborted: 19,
+  AbortedByFreeze: 19,
   Discontinuing: 19,
   Suspended: 17,
   Queued: 0,

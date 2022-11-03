@@ -17,6 +17,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { StepElementConfig } from 'services/cd-ng'
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface FetchInstanceScriptInputStepProps {
@@ -31,7 +32,7 @@ export interface FetchInstanceScriptInputStepProps {
 }
 
 export function FetchInstanceScriptInputStep(props: FetchInstanceScriptInputStepProps): React.ReactElement {
-  const { template, path, readonly, allowableTypes } = props
+  const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = defaultTo(path, '')
@@ -42,7 +43,9 @@ export function FetchInstanceScriptInputStep(props: FetchInstanceScriptInputStep
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly

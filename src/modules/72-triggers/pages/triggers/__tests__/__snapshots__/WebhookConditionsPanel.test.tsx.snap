@@ -396,6 +396,7 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
           </div>
         </div>
         <button
+          aria-label="Submit"
           class="bp3-button Button--button StyledProps--font StyledProps--main submitButton Button--with-current-color"
           type="submit"
         >
@@ -807,6 +808,7 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
           </div>
         </div>
         <button
+          aria-label="Submit"
           class="bp3-button Button--button StyledProps--font StyledProps--main submitButton Button--with-current-color"
           type="submit"
         >

@@ -9,5 +9,6 @@
 declare const styles: {
   readonly divStyle: string
   readonly iconColor: string
+  readonly projectSelectorContainer: string
 }
 export default styles

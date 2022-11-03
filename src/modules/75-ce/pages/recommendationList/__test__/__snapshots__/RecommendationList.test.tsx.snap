@@ -1436,6 +1436,7 @@ exports[`test cases for Recommendation List Page should be able to render page w
               </p>
             </div>
             <button
+              aria-label="ce.overview.addClusterBtn"
               class="bp3-button Button--button StyledProps--font StyledProps--main addClusterBtn Button--with-current-color Button--without-shadow"
               type="button"
             >

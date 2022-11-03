@@ -35,6 +35,7 @@ const DashboardViewPage: React.FC = () => {
   const [dashboardFilters, setDashboardFilters] = useQueryParamsState<string | undefined>('filters', undefined)
   const [dashboardLoading, setDashboardLoading] = React.useState<boolean>(false)
   const history = useHistory()
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
   const signedQueryUrl: string = useMemo(() => {
     const filters = dashboardFilters ? `&${dashboardFilters}` : ''
@@ -45,7 +46,7 @@ const DashboardViewPage: React.FC = () => {
     mutate: createSignedUrl,
     loading,
     error
-  } = useCreateSignedUrl({ queryParams: { accountId, dashboardId: viewId, src: signedQueryUrl } })
+  } = useCreateSignedUrl({ queryParams: { accountId, dashboardId: viewId, src: signedQueryUrl, timezone } })
 
   const responseMessages = useMemo(() => (error?.data as ErrorResponse)?.responseMessages, [error])
 

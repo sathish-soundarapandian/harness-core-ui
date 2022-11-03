@@ -13,7 +13,7 @@ import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupS
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
-import { StackdriverDefinition, useGetLabelNames, useGetMetricPacks } from 'services/cv'
+import { StackdriverDefinition, useGetLabelNames, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import GroupName from '@cv/components/GroupName/GroupName'
@@ -56,9 +56,9 @@ export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps)
 
   const connectorIdentifier = sourceData?.connectorRef || ''
   const [labelNameTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'PROMETHEUS' }
-  })
+
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
+
   const labelNamesResponse = useGetLabelNames({
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: labelNameTracingId }
   })
@@ -198,7 +198,7 @@ export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps)
                           hideSLIAndHealthScore
                           hideServiceIdentifier
                           showOnlySLI
-                          metricPackResponse={metricPackResponse}
+                          riskProfileResponse={riskProfileResponse}
                           labelNamesResponse={labelNamesResponse}
                         />
                       }

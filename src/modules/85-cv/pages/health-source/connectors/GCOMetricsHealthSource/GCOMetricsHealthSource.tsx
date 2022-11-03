@@ -24,16 +24,15 @@ import {
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
+import { noop, isEmpty } from 'lodash-es'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { Drawer } from '@blueprintjs/core'
-import isEmpty from 'lodash-es/isEmpty'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   StackdriverDefinition,
-  useGetMetricPacks,
+  useGetRiskCategoryForCustomHealthMetric,
   useGetStackdriverDashboardDetail,
   useGetStackdriverSampleData
 } from 'services/cv'
@@ -169,6 +168,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const { getString } = useStrings()
+
   const transformedData = useMemo(
     () => transformGCOMetricHealthSourceToGCOMetricSetupSource(data, isMetricThresholdEnabled),
     [data, isMetricThresholdEnabled]
@@ -251,9 +251,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
   const { loading: loadingDashBoardData } = stackDriverDashBoardRequest
 
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'STACKDRIVER' }
-  })
+  const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
   const metricFormData = updatedData.get(selectedMetric || '') || {}
   const formInitialValues = {
@@ -439,7 +437,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                               serviceInstanceMetricPath: formikProps.values?.serviceInstanceField
                             }}
                             hideServiceIdentifier
-                            metricPackResponse={metricPackResponse}
+                            riskProfileResponse={riskProfileResponse}
                             isTemplate={isTemplate}
                             expressions={expressions}
                             customServiceInstanceName={FieldNames.SERVICE_INSTANCE_FIELD}

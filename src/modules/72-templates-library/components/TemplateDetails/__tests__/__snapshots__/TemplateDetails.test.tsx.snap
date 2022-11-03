@@ -33,6 +33,7 @@ exports[`<TemplateDetails /> tests should match snapshot 1`] = `
               </p>
             </div>
             <button
+              aria-label="templatesLibrary.openInTemplateStudio"
               class="bp3-button Button--button StyledProps--font StyledProps--main openInStudio Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
               type="button"
             >

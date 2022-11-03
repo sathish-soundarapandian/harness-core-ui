@@ -32,9 +32,11 @@ export default function DynatraceHealthSourceContainer(props: DynatraceHealthSou
     },
     [isMetricThresholdEnabled, onSubmit, sourceData]
   )
+
   const dynatraceMetricData: DynatraceMetricData = useMemo(() => {
     return mapHealthSourceToDynatraceMetricData(sourceData, isMetricThresholdEnabled)
   }, [isMetricThresholdEnabled, sourceData])
+
   return (
     <DynatraceHealthSource
       dynatraceFormData={dynatraceMetricData}

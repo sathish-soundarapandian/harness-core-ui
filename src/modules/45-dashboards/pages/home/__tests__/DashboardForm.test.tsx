@@ -8,16 +8,28 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
+import { FolderType } from '@dashboards/constants/FolderType'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'
-import * as customDashboardServices from 'services/custom-dashboards'
+import type { FolderModel } from 'services/custom-dashboards'
 import DashboardForm, { DashboardFormProps } from '../DashboardForm'
 
+const mockFolderOne: FolderModel = {
+  id: '1',
+  name: 'testName',
+  title: 'testTitle',
+  type: FolderType.ACCOUNT,
+  child_count: 0,
+  created_at: '01/01/2022'
+}
+
 const defaultProps: DashboardFormProps = {
+  editableFolders: [mockFolderOne],
   title: '',
   loading: false,
   onComplete: jest.fn(),
-  setModalErrorHandler: jest.fn()
+  setModalErrorHandler: jest.fn(),
+  mode: 'CREATE'
 }
 
 const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
@@ -34,23 +46,7 @@ const renderComponent = (props: DashboardFormProps): RenderResult => {
   )
 }
 
-const mockEmptyGetFolderResponse: customDashboardServices.GetFolderResponse = {
-  resource: [
-    { id: 'shared', name: 'Shared Folder' },
-    { id: '1', name: 'folder_one' }
-  ] as any
-}
-
 describe('DashboardForm', () => {
-  beforeEach(() => {
-    jest
-      .spyOn(customDashboardServices, 'useGetFolders')
-      .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
-  })
-  afterEach(() => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReset()
-  })
-
   test('it should display a Dashboard Form with continue button', () => {
     renderComponent(defaultProps)
 
@@ -70,18 +66,6 @@ describe('DashboardForm', () => {
     expect(screen.getByDisplayValue('dashboard name')).toBeInTheDocument()
     expect(screen.getByText('tag_one')).toBeInTheDocument()
     expect(screen.getByText('tag_two')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('folder_one')).toBeInTheDocument()
-  })
-
-  test('it should select shared as the initial folder when the initial folder ID is not returned', () => {
-    const formData = {
-      description: 'tags',
-      folderId: '1234',
-      name: 'dashboard name'
-    }
-
-    renderComponent({ formData: formData, ...defaultProps })
-
-    expect(screen.getByDisplayValue('Shared Folder')).toBeInTheDocument()
+    expect(screen.getByDisplayValue(mockFolderOne.name)).toBeInTheDocument()
   })
 })

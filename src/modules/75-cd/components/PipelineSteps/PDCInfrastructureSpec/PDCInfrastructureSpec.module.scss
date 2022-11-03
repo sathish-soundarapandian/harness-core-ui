@@ -32,7 +32,7 @@
 }
 
 .connectorRef {
-  padding-bottom: 0px !important;
+  padding-bottom: var(--spacing-3);
 }
 
 .accordionPanel {
@@ -44,7 +44,7 @@
 }
 
 .simultaneousDeployment {
-  padding-top: var(--spacing) !important;
+  padding-top: var(--spacing-7) !important;
   border-top: 1px solid var(--grey-200);
 }
 
@@ -70,6 +70,18 @@
   }
 }
 
+.specifyFilterRadioGroup {
+  display: flex;
+  label {
+    margin: auto var(--spacing) auto 0;
+  }
+  margin: var(--spacing-5) 0;
+}
+
+.previewHostsButton {
+  margin-bottom: var(--spacing-7) !important;
+}
+
 .previewHostsLabel {
   margin-bottom: 0 !important;
   margin-right: var(--spacing);
@@ -87,6 +99,7 @@
 
 .credRefWidth {
   width: 433px !important;
+  padding-bottom: var(--spacing-2);
 }
 
 .connectorRuntime {
@@ -95,4 +108,8 @@
 
 .runtimeWidth {
   width: 400px;
+}
+
+.showPreviewBtn {
+  margin-top: 0px !important;
 }

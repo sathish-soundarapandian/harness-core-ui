@@ -32,7 +32,7 @@ import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from '
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { GitRepoName, ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
-import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import { ManifestDetailsCoreSection } from '../CommonManifestDetails/ManifestDetailsCoreSection'
 import { ManifestDetailsAdvancedSection } from '../CommonManifestDetails/ManifestDetailsAdvancedSection'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
@@ -85,11 +85,17 @@ function K8sValuesManifest({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
-            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : removeEmptyFieldsFromStringArray(initialValues?.spec?.valuesPaths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              }))
       }
     }
     return {

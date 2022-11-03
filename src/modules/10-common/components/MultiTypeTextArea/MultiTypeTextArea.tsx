@@ -58,6 +58,7 @@ export interface MultiTypeTextAreaProps
   textAreaProps?: Omit<ITextAreaProps, 'onChange' | 'value'>
   enableConfigureOptions?: boolean
   configureOptionsProps?: MultiTypeTextAreaConfigureOptionsProps
+  customValueGetter?: () => string
 }
 
 export const MultiTypeTextArea: React.FC<MultiTypeTextAreaProps> = props => {
@@ -138,7 +139,9 @@ export const FormMultiTypeTextArea: React.FC<FormMultiTypeTextAreaProps> = props
     ...rest
   } = restProps
 
-  const value: string = get(formik?.values, name, '')
+  const value: string = multiTypeTextArea?.customValueGetter
+    ? multiTypeTextArea?.customValueGetter()
+    : get(formik?.values, name, '')
   const customProps: MultiTypeTextAreaProps = {
     ...multiTypeTextArea,
     name,

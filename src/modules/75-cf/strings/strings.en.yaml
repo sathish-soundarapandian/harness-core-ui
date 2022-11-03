@@ -217,6 +217,17 @@ featureFlags:
     openExecution: Open Pipeline Execution
     pipelineDeleted: The Pipeline in use has been deleted from the Pipelines library
     targeting: When Flag is Enabled - Specific Targeting
+    validation:
+      setFlagSwitch:
+        state: Flag state is required
+      defaultRules:
+        onOrOffVariation: An ON or OFF variation is required
+      serveVariationToIndividualTarget:
+        variationTargets: Targets/variation is required
+      serveVariationToTargetGroup:
+        variationTargetGroups: Target Groups/variation is required
+      servePercentageRollout:
+        targetGroup: Target Group is required
 featureFlagDetail:
   variationCount: '{{ count }} variations'
   serviceDescription: Services this flag is associated with
@@ -2107,6 +2118,22 @@ onboarding:
 
 learnMore: '{{ $.cf.homepage.learnMore }}'
 cfTrialHomePage:
+  forDevelopers:
+    title: For Developers
+    createFlag: Create your first flag in 15 minutes
+    shipCode: Ship code as soon as it's ready without merge conflicts
+    realTime: Real-time user targeting. <br>No complex manual config management
+  forDevOps:
+    title: For DevOps
+    automatedFeature: Automated feature release governance
+    avoidRollbacks: Avoid production rollbacks
+    scaleManagement: Scale feature management org-wide
+  startFreePlanBtn: Start Free Plan
+  featureFlagsDescription: Ship more features and reduce risk with Feature Flags!
+  dontCode:
+    title: Don't write code?
+    description: If writing code and installing SDK's isn't your thing, you can have an engineer on your team get you started in 15 minutes
+    inviteDeveloper: Invite a Developer
   startTrial:
     description: Take your feature release processes to the next level using our Harness Feature Flags.
     startBtn:

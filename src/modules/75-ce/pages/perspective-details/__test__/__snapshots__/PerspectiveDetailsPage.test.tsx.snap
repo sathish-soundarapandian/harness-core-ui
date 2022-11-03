@@ -132,6 +132,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
       </div>
     </div>
     <button
+      aria-label="edit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
       type="button"
     >
@@ -196,6 +197,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
             class="filtersContainer"
           >
             <button
+              aria-label="+ add filter"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
               type="button"
             >
@@ -217,6 +219,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
             class="bp3-popover-target"
           >
             <button
+              aria-label="ce.perspectives.timeRangeConstants.last7Days"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
               type="button"
             >
@@ -278,6 +281,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
             class="bp3-popover-target"
           >
             <button
+              aria-label="ce.perspectives.timeAggregation.daily"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeGranularityButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withRightIcon"
               data-testid="groupBy"
               type="button"
@@ -338,6 +342,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
             $---
           </p>
           <button
+            aria-label="ce.perspectives.budgets.addBudget"
             class="bp3-button Button--button StyledProps--font StyledProps--main addBudgetText Button--with-current-color Button--variation Button--variation-link"
             type="button"
           >
@@ -781,6 +786,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
             ce.perspectives.groupByByCost
           </p>
           <button
+            aria-label="ce.perspectives.exportCSV"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-link"
             type="button"
           >
@@ -1068,6 +1074,7 @@ exports[`test cases for Perspective details Page should be able to render the de
       </div>
     </div>
     <button
+      aria-label="edit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
       type="button"
     >
@@ -1132,6 +1139,7 @@ exports[`test cases for Perspective details Page should be able to render the de
             class="filtersContainer"
           >
             <button
+              aria-label="+ add filter"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
               type="button"
             >
@@ -1153,6 +1161,7 @@ exports[`test cases for Perspective details Page should be able to render the de
             class="bp3-popover-target"
           >
             <button
+              aria-label="ce.perspectives.timeRangeConstants.last7Days"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
               type="button"
             >
@@ -1214,6 +1223,7 @@ exports[`test cases for Perspective details Page should be able to render the de
             class="bp3-popover-target"
           >
             <button
+              aria-label="ce.perspectives.timeAggregation.daily"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeGranularityButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withRightIcon"
               data-testid="groupBy"
               type="button"
@@ -1274,6 +1284,7 @@ exports[`test cases for Perspective details Page should be able to render the de
             $---
           </p>
           <button
+            aria-label="ce.perspectives.budgets.addBudget"
             class="bp3-button Button--button StyledProps--font StyledProps--main addBudgetText Button--with-current-color Button--variation Button--variation-link"
             type="button"
           >
@@ -1744,6 +1755,7 @@ exports[`test cases for Perspective details Page should be able to render the de
             ce.perspectives.groupByByCost
           </p>
           <button
+            aria-label="ce.perspectives.exportCSV"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-link"
             type="button"
           >

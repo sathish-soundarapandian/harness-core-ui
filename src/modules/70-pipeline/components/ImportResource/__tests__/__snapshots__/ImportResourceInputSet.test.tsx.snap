@@ -485,6 +485,7 @@ exports[`ImportResource - Input Set provide required values and click on import 
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
           >
             <button
+              aria-label="common.import"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -496,6 +497,7 @@ exports[`ImportResource - Input Set provide required values and click on import 
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -964,6 +966,7 @@ exports[`ImportResource - Input Set snapshot testing 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
           >
             <button
+              aria-label="common.import"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -975,6 +978,7 @@ exports[`ImportResource - Input Set snapshot testing 1`] = `
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >

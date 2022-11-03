@@ -37,7 +37,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Service',
   width: '100%',
   height: 'calc(100vh - 250px)',
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -146,7 +145,6 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
             existingJSON={serviceData}
             bind={setYamlHandler}
             schema={serviceSchema?.data}
-            showSnippetSection={false}
           />
           {isReadonly || !isYamlEditable ? (
             <div className={css.buttonsWrapper}>

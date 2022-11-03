@@ -43,6 +43,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -143,7 +144,7 @@ function HelmRollbackWidget(
   )
 }
 
-const HelmRollbackInputStep: React.FC<HelmRollbackProps> = ({ inputSetData, allowableTypes }) => {
+const HelmRollbackInputStep: React.FC<HelmRollbackProps> = ({ inputSetData, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -156,7 +157,9 @@ const HelmRollbackInputStep: React.FC<HelmRollbackProps> = ({ inputSetData, allo
             label={getString('pipelineSteps.timeoutLabel')}
             disabled={inputSetData?.readonly}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: inputSetData?.readonly

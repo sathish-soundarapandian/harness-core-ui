@@ -153,6 +153,7 @@ exports[`INPUT SET SELECTOR -> Input Sets Error Exp Input Set - should open reco
           class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
         >
           <button
+            aria-label="pipeline.inputSets.removeInvalidFields"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
             style="width: 232px;"
             type="button"
@@ -312,6 +313,7 @@ exports[`INPUT SET SELECTOR -> Input Sets Error Exp Overlay Input Set - should o
           class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
         >
           <button
+            aria-label="pipeline.inputSets.removeInvalidFields"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
             style="width: 232px;"
             type="button"

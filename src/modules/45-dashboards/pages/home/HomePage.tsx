@@ -119,7 +119,9 @@ const HomePage: React.FC = () => {
   const [selectedTags, setCheckboxFilter] = useQueryParamsState('tags', DEFAULT_FILTER)
   const [layoutView, setLayoutView] = useQueryParamsState('view', DashboardLayoutViews.GRID)
 
-  const { includeBreadcrumbs } = useDashboardsContext()
+  const { editableFolders, includeBreadcrumbs } = useDashboardsContext()
+
+  const hasEditableFolders = !!editableFolders.length
 
   const serialize = (obj: { [key: string]: boolean }): string => {
     return new URLSearchParams(Object.entries(obj).map(([k, v]) => [k, v.toString()])).toString()
@@ -190,10 +192,10 @@ const HomePage: React.FC = () => {
   const [showModal, hideModal] = useModalHook(
     () => (
       <Dialog isOpen={true} enforceFocus={false} onClose={hideModal} className={cx(css.dashboardDialog, css.create)}>
-        <CreateDashboardForm hideModal={hideModal} />
+        <CreateDashboardForm editableFolders={editableFolders} hideModal={hideModal} />
       </Dialog>
     ),
-    []
+    [editableFolders]
   )
 
   const permissionObj: PermissionRequest = {
@@ -245,7 +247,7 @@ const HomePage: React.FC = () => {
             onClick={showModal}
             icon="plus"
             className={css.createButton}
-            permission={permissionObj}
+            disabled={!hasEditableFolders}
           />
           <Container className={cx(moduleTagCss.predefinedTags, css.mainNavTag)}>
             <ModuleTagsFilter selectedFilter={selectedTags} setPredefinedFilter={setPredefinedFilter} />

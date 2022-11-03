@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStrings } from 'framework/strings'
 import bgImageURL from './ff.svg'
 import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
@@ -19,6 +18,13 @@ const CFTrialHomePage: React.FC = () => {
   const startBtnDescription = isFreeEnabled
     ? getString('common.startFreePlan', { module: 'FF' })
     : getString('cf.cfTrialHomePage.startTrial.startBtn.description')
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { CFTrialTemplate } from './CFTrialTemplate'
+
+const CFTrialHomePage: React.FC = () => {
+  const { getString } = useStrings()
+
 
   const startTrialProps = {
     description: getString('cf.cfTrialHomePage.startTrial.description'),
@@ -27,18 +33,13 @@ const CFTrialHomePage: React.FC = () => {
       url: 'https://docs.harness.io/article/0a2u2ppp8s-getting-started-with-continuous-features'
     },
     startBtn: {
-      description: startBtnDescription
+      description: useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+        ? getString('cf.cfTrialHomePage.startFreePlanBtn')
+        : getString('cf.cfTrialHomePage.startTrial.startBtn.description')
     }
   }
 
-  return (
-    <StartTrialTemplate
-      title={getString('cf.continuous')}
-      bgImageUrl={bgImageURL}
-      startTrialProps={startTrialProps}
-      module="cf"
-    />
-  )
+  return <CFTrialTemplate cfTrialProps={startTrialProps} />
 }
 
 export default CFTrialHomePage

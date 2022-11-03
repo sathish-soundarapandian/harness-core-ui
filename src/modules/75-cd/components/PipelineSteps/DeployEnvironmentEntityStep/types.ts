@@ -47,7 +47,7 @@ export interface DeployEnvironmentEntityCustomStepProps {
 }
 
 export interface DeployEnvironmentEntityCustomInputStepProps extends DeployEnvironmentEntityCustomStepProps {
-  pathSuffix?: string
+  pathToEnvironments?: string
   envGroupIdentifier?: string
   isMultiEnvironment?: boolean
   deployToAllEnvironments?: boolean

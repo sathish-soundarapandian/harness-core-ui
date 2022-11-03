@@ -7,11 +7,14 @@
 
 import React from 'react'
 import { act, fireEvent, render, screen, waitFor, getByText } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import * as cdng from 'services/cd-ng'
+import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { initialValues, multipleStepsInitialView } from './mocks'
 import { ExecutionPanel } from '../ExecutionPanel'
-import { initialValues } from './mocks'
 
 jest.mock('framework/Templates/TemplateSelectorContext/useTemplateSelector', () => ({
   useTemplateSelector: jest.fn().mockReturnValue({
@@ -59,6 +62,19 @@ jest.mock('@pipeline/utils/templateUtils', () => ({
         }
       }
     })
+}))
+
+jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
+  return { data: gitConfigs, refetch: jest.fn(), loading: false }
+})
+jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
+  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
+})
+
+jest.mock('@templates-library/components/TemplateSettingsModal/TemplateSettingsModal', () => ({
+  TemplateSettingsModal: () => {
+    return <div data-testid="settings-modal" />
+  }
 }))
 
 const DeploymentContextWrapper = ({
@@ -123,9 +139,9 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     await act(async () => {
       fireEvent.click(useTemplateBtn)
     })
-
+    expect(container).toMatchSnapshot()
     const stepCardViewButton = await waitFor(() =>
-      container.querySelector('[data-testid="step-card-http_project_level-1"]')
+      container.querySelector('[data-testid="step-card-http_project_level"]')
     )
     fireEvent.click(stepCardViewButton!)
 
@@ -136,6 +152,44 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     await act(async () => {
       fireEvent.click(getByText(dialogContainer, 'yes'))
     })
-    expect(container).toMatchSnapshot()
+  })
+
+  test('grid and list view actions', async () => {
+    const { container, queryByText } = render(
+      <TestWrapper>
+        <DeploymentContextWrapper initialValue={multipleStepsInitialView}>
+          <ExecutionPanel>{children}</ExecutionPanel>
+        </DeploymentContextWrapper>
+      </TestWrapper>
+    )
+    const gridToggle = screen.getByTestId('grid-view')
+    await waitFor(() => expect(gridToggle).toBeInTheDocument())
+    const listToggle = screen.getByTestId('list-view')
+    await waitFor(() => expect(listToggle).toBeInTheDocument())
+
+    const searchInput = container.querySelector('input[type="search"]') as HTMLInputElement
+    act(() => {
+      fireEvent.change(searchInput, { target: { value: 'shell' } })
+    })
+
+    await act(async () => {
+      fireEvent.click(listToggle)
+    })
+
+    const rows = container.querySelectorAll('div[role="row"]')
+    expect(rows.length).toBe(3)
+    await act(async () => {
+      userEvent.click(rows[1])
+    })
+    const settingsPanel = container.querySelectorAll('[data-icon="more"]')[0]!
+    await act(async () => {
+      userEvent.click(settingsPanel)
+    })
+    //edit settings
+    userEvent.click(settingsPanel)
+    expect(queryByText(`templatesLibrary.openEditTemplate`)).toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(queryByText('templatesLibrary.openEditTemplate')!)
+    })
   })
 })

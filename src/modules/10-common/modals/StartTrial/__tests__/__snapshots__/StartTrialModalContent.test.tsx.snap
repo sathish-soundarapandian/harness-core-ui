@@ -1032,6 +1032,7 @@ exports[`StartTrialModalContent Rendering Trial Modal with one license 1`] = `
       common.purpose.compare
     </a>
     <button
+      aria-label="common.launchFirstGen"
       class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       disabled=""
       style="width: 270px; height: 2.5px;"
@@ -1133,6 +1134,7 @@ exports[`StartTrialModalContent Rendering test that adding a source query param 
       common.purpose.ce.description
     </span>
     <button
+      aria-label="continue"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       style="width: 270px; height: 2.5px;"
       type="button"
@@ -1206,6 +1208,7 @@ exports[`StartTrialModalContent Rendering test that the warning container render
       common.purpose.ce.description
     </span>
     <button
+      aria-label="common.startTrial"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       style="width: 270px; height: 2.5px;"
       type="button"
@@ -1279,6 +1282,7 @@ exports[`StartTrialModalContent Rendering that the content renders 1`] = `
       common.purpose.ce.description
     </span>
     <button
+      aria-label="common.startTrial"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       style="width: 270px; height: 2.5px;"
       type="button"

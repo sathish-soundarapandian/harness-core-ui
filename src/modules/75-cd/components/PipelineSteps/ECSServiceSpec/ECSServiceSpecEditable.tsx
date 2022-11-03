@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { defaultTo, get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
 import { Card, HarnessDocTooltip } from '@wings-software/uicore'
@@ -20,7 +20,6 @@ import type {
   ManifestConfig
 } from 'services/cd-ng'
 
-import { useCache } from '@common/hooks/useCache'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
@@ -34,7 +33,6 @@ import {
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
@@ -66,7 +64,6 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
   const {
     state: {
-      pipeline,
       templateServiceData,
       selectionState: { selectedStageId }
     },
@@ -74,15 +71,12 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
 
-  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-  const { getCache } = useCache([getServiceCacheId])
-  const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!NG_ARTIFACT_SOURCES,
     stage?.stage as DeploymentStageElementConfig
@@ -92,14 +86,11 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const listOfManifests: ManifestConfigWrapper[] = useMemo(() => {
     /* istanbul ignore next */
     /* istanbul ignore else */
-    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.manifests, [])
-    }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
+  }, [isPropagating, stage])
 
   const taskDefinitionManifests: ManifestConfigWrapper[] = useMemo(() => {
     return listOfManifests.filter(currManifest => currManifest.manifest?.type === ManifestDataType.EcsTaskDefinition)
@@ -412,27 +403,26 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               />
             )}
           </Card>
-          {(isNewService || isServiceEntityPage) &&
-            NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2
-              <Card
-                className={css.sectionCard}
-                id={getString('pipelineSteps.configFiles')}
-                data-testid={'configFiles-card'}
+          {(isNewService || isServiceEntityPage) && ( //Config files are only available for creation or readonly mode for service V2
+            <Card
+              className={css.sectionCard}
+              id={getString('pipelineSteps.configFiles')}
+              data-testid={'configFiles-card'}
+            >
+              <div
+                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
               >
-                <div
-                  className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
-                >
-                  {getString('pipelineSteps.configFiles')}
-                </div>
-                <ConfigFilesSelection
-                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                  isPropagating={isPropagating}
-                  deploymentType={selectedDeploymentType}
-                  readonly={!!readonly}
-                />
-              </Card>
-            )}
+                {getString('pipelineSteps.configFiles')}
+              </div>
+              <ConfigFilesSelection
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
         </>
       )}
 
@@ -442,17 +432,13 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
           <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
-          {isReadonlyServiceMode ? (
-            <VariableListReadOnlyView />
-          ) : (
-            <WorkflowVariables
-              tabName={DeployTabs.SERVICE}
-              formName={'addEditServiceCustomVariableForm'}
-              factory={factory as any}
-              isPropagating={isPropagating}
-              readonly={!!readonly}
-            />
-          )}
+          <WorkflowVariables
+            tabName={DeployTabs.SERVICE}
+            formName={'addEditServiceCustomVariableForm'}
+            factory={factory as any}
+            isPropagating={isPropagating}
+            readonly={!!readonly}
+          />
         </Card>
       </div>
     </div>

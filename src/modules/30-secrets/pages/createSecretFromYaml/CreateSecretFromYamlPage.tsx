@@ -126,7 +126,6 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
           bind={setYamlHandler}
           height="calc(100vh - 250px)"
           schema={secretSchema?.data}
-          showSnippetSection={false}
         />
         <Layout.Horizontal spacing="large">
           <Button

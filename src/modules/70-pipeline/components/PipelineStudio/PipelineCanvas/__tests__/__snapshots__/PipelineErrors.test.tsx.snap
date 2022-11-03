@@ -46,6 +46,7 @@ exports[`PipelineErrors should render Stage errors and step errors in different 
         Stage 1 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -113,6 +114,7 @@ exports[`PipelineErrors should render Stage errors and step errors in different 
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -172,6 +174,7 @@ exports[`PipelineErrors should render Stage errors and step errors in different 
         Step Error 3
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -232,6 +235,7 @@ exports[`PipelineErrors should render multiple Stage - each with single error: m
         Stage 1 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -266,6 +270,7 @@ exports[`PipelineErrors should render multiple Stage - each with single error: m
         Stage 2 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -341,6 +346,7 @@ exports[`PipelineErrors should render multiple Stage - multiple errors: multiple
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -375,6 +381,7 @@ exports[`PipelineErrors should render multiple Stage - multiple errors: multiple
         Stage 2 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -450,6 +457,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -517,6 +525,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -551,6 +560,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         Stage 2 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -603,6 +613,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         Step Error 3
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -655,6 +666,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         Step Error 4
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -730,6 +742,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -797,6 +810,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -831,6 +845,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         Stage 2 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -883,6 +898,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         Step Error 3
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -973,6 +989,7 @@ exports[`PipelineErrors should render multiple pipeline error: multiple pipeline
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixErrors"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1039,6 +1056,7 @@ exports[`PipelineErrors should render multiple step errors in different stage: m
         Step Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1098,6 +1116,7 @@ exports[`PipelineErrors should render multiple step errors in different stage: m
         Step Error 3
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1179,6 +1198,7 @@ exports[`PipelineErrors should render multiple step errors in same stage: multip
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1254,6 +1274,7 @@ exports[`PipelineErrors should render one Stage - multiple error: one stage - mu
         </span>
       </span>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1314,6 +1335,7 @@ exports[`PipelineErrors should render one Stage error and step error in differen
         Stage 1 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1373,6 +1395,7 @@ exports[`PipelineErrors should render one Stage error and step error in differen
         Step Error 3
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1433,6 +1456,7 @@ exports[`PipelineErrors should render one Stage error and step error in same sta
         Stage 1 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1485,6 +1509,7 @@ exports[`PipelineErrors should render one Stage error and step error in same sta
         Step Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1545,6 +1570,7 @@ exports[`PipelineErrors should render one Stage error: one stage error 1`] = `
         Stage 1 Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStage"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1611,6 +1637,7 @@ exports[`PipelineErrors should render one step error: only one step error 1`] = 
         Step Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixStep"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >
@@ -1669,6 +1696,7 @@ exports[`PipelineErrors should render single pipeline error: one pipeline error 
         Pipeline Error 1
       </p>
       <button
+        aria-label="pipeline.errorFramework.fixErrors"
         class="bp3-button Button--button StyledProps--font StyledProps--main fixButton Button--with-current-color Button--variation Button--variation-primary Button--size Button--small"
         type="button"
       >

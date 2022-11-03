@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import isUndefined from 'lodash/isUndefined'
+import { isUndefined } from 'lodash-es'
 import type { GitSyncEntityDTO } from 'services/cd-ng'
 
 export function getIdentifierFromName(str: string): string {

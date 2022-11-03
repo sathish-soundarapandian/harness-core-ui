@@ -37,6 +37,14 @@ interface CodeSourceWrapper {
   size: number
 }
 
+export enum PipelineStageTabs {
+  OVERVIEW = 'OVERVIEW',
+  INPUTS = 'INPUTS',
+  ADVANCED = 'ADVANCED'
+}
+
+export const TabsHeadingOrder = [PipelineStageTabs.OVERVIEW, PipelineStageTabs.INPUTS, PipelineStageTabs.ADVANCED]
+
 export const PipelineNameIdTagCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
   const data = row.original
   return (

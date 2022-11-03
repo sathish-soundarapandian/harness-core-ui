@@ -147,7 +147,7 @@ describe('Unit tests for createting monitored source', () => {
 
     // Table cv.healthSource.defineYourSource
     expect(getByText('cv.healthSource.defineYourSource')).toBeDefined()
-    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
+    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | 1234_project | harness')
   })
 
   test('should render loading state', () => {

@@ -78,7 +78,7 @@ const RenderColumnSummary: Renderer<CellProps<ResourceGroupV2Response>> = ({ row
   const resourceFilter = resourceGroup.resourceFilter
   const resourceTypeName = (data: ResourceFilter): string => {
     if (data.includeAllResources) {
-      return getString('rbac.resourceGroup.all')
+      return getString('common.all')
     } else {
       return defaultTo(
         data.resources
@@ -86,7 +86,7 @@ const RenderColumnSummary: Renderer<CellProps<ResourceGroupV2Response>> = ({ row
             const label = RbacFactory.getResourceTypeHandler(resource?.resourceType as ResourceType)?.label
             if (label) {
               if (!resource.identifiers?.length) {
-                return getString('rbac.resourceGroup.all', {
+                return getString('common.all', {
                   name: getString(label)
                 })
               }

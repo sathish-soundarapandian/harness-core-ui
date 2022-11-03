@@ -85,13 +85,11 @@ export default function DeployStageSetupShell(): JSX.Element {
     contextType,
     stagesMap,
     isReadonly,
-    stepsFactory,
     updateStage,
     getStageFromPipeline,
     updatePipelineView,
     scope,
     setSelectedStepId,
-    getStagePathFromPipeline,
     setSelectedSectionId
   } = pipelineContext
 
@@ -130,10 +128,11 @@ export default function DeployStageSetupShell(): JSX.Element {
     const stageData = produce(selectedStage, draft => {
       if (draft) {
         if (isNewService) {
-          set(draft, 'stage.spec.service', {
-            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
-            serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
-          })
+          isEmpty(get(draft, 'stage.spec.service.serviceRef')) &&
+            set(draft, 'stage.spec.service', {
+              serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
+              serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
+            })
         } else {
           set(draft, 'stage.spec.serviceConfig', {
             serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
@@ -150,12 +149,20 @@ export default function DeployStageSetupShell(): JSX.Element {
     return debounceUpdateStage(stageData?.stage)
   }, [debounceUpdateStage, scope, selectedStage, isNewService])
 
+  //this will default the tab to execution for previously configured stages -- for new stages it will still takes user to service tab only
+  const defaultExecTab = (): boolean => {
+    if (isEmpty(incompleteTabs) && !(selectedStage?.stage && isEmpty(selectedStage?.stage?.spec?.execution))) {
+      return true
+    }
+    return false
+  }
+
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
     if (sectionId?.length && (TabsOrder.includes(sectionId) || sectionId === DeployTabs.ENVIRONMENT)) {
       setSelectedTabId(sectionId)
     } else {
-      setSelectedSectionId(DeployTabs.SERVICE)
+      setSelectedSectionId(defaultExecTab() ? DeployTabs.EXECUTION : DeployTabs.SERVICE)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])
@@ -358,7 +365,6 @@ export default function DeployStageSetupShell(): JSX.Element {
   const originalStage = selectedStageId
     ? getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId, originalPipeline).stage
     : undefined
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
 
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
@@ -376,7 +382,10 @@ export default function DeployStageSetupShell(): JSX.Element {
           variation={ButtonVariation.SECONDARY}
           icon="chevron-left"
           onClick={() => {
-            handleTabChange(TabsOrder[Math.max(0, TabsOrder.indexOf(selectedTabId) - 1)])
+            let nextTab = TabsOrder[Math.max(0, TabsOrder.indexOf(selectedTabId) - 1)]
+            if (selectedTabId === DeployTabs.ENVIRONMENT) nextTab = DeployTabs.SERVICE
+            setSelectedTabId(nextTab)
+            setSelectedSectionId(nextTab)
           }}
         />
       )}
@@ -480,10 +489,8 @@ export default function DeployStageSetupShell(): JSX.Element {
               isReadonly={isReadonly}
               hasDependencies={false}
               addLinkedTemplatesLabel={addLinkedTemplatesLabel}
-              stepsFactory={stepsFactory}
               originalStage={originalStage}
               ref={executionRef}
-              pathToStage={`${stagePath}.stage.spec.execution`}
               templateTypes={templateTypes}
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               stage={selectedStage!}

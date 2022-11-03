@@ -82,7 +82,7 @@ const ServeVariationToItem: FC<ServeVariationToItemProps> = ({
 
   return (
     <>
-      {selectedVariation && selectedItems.length && (
+      {selectedVariation && !!selectedItems.length && (
         <Layout.Vertical spacing="medium" border={{ bottom: true }} padding={{ bottom: 'medium' }}>
           <p className={css.variationParagraph}>
             {getString('cf.pipeline.flagConfiguration.serve')}

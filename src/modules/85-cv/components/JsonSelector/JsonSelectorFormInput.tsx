@@ -7,8 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
+import { get, isEmpty } from 'lodash-es'
 import { FormGroup, Dialog, Icon, Spinner } from '@blueprintjs/core'
 import { Container, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'

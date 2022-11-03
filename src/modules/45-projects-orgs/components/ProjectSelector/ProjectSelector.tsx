@@ -80,6 +80,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
           }
           data-testid="project-select-dropdown"
           className={css.popoverTarget}
+          aria-label={getString('selectProject')}
         />
       ) : (
         <Button

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import cx from 'classnames'
 import { Button, ButtonVariation, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
 import { Expander } from '@blueprintjs/core'
@@ -15,50 +15,62 @@ import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { PipelineStageOverview } from './PipelineStageOverview'
 import { PipelineStageAdvancedSpecifications } from './PipelineStageAdvancedSpecifications'
+import { PipelineStageInputSection } from './PipelineStageInputSection'
+import { PipelineStageTabs, TabsHeadingOrder } from './utils'
 import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module.scss'
 
 export function PipelineStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
-  const tabHeadings = [getString('overview'), getString('inputs'), getString('advancedTitle')]
   const layoutRef = useRef<HTMLDivElement>(null)
-  const [selectedTabId, setSelectedTabId] = React.useState<string>(tabHeadings[0])
+  const [selectedTabId, setSelectedTabId] = useState<PipelineStageTabs>(PipelineStageTabs.OVERVIEW)
   const pipelineContext = usePipelineContext()
+  const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const {
     state: {
       pipeline,
-      selectionState: { selectedStageId = '' }
+      selectionState: { selectedStageId = '' },
+      storeMetadata
     },
     contextType,
     getStageFromPipeline,
-    updatePipeline
+    updatePipeline,
+    setSelectedSectionId
   } = pipelineContext
 
   const { stage: selectedStage } = getStageFromPipeline<StageElementConfig>(selectedStageId)
 
+  const handleTabChange = (nextTab: PipelineStageTabs): void => {
+    checkErrorsForTab(selectedTabId).then(_ => {
+      updatePipeline(pipeline)
+      setSelectedTabId(nextTab)
+      setSelectedSectionId(nextTab)
+    })
+  }
+
   const actionBtns: React.ReactElement = (
     <Layout.Horizontal>
-      {selectedTabId !== tabHeadings[0] && (
+      {selectedTabId !== PipelineStageTabs.OVERVIEW && (
         <Button
-          text={getString('back')}
+          text={getString('previous')}
           variation={ButtonVariation.SECONDARY}
           icon="chevron-left"
-          onClick={() => {
-            updatePipeline(pipeline)
-            setSelectedTabId(tabHeadings[Math.max(0, tabHeadings.indexOf(selectedTabId) - 1)])
-          }}
+          onClick={() => handleTabChange(TabsHeadingOrder[Math.max(0, TabsHeadingOrder.indexOf(selectedTabId) - 1)])}
+          margin={{ right: 'medium' }}
         />
       )}
-      {selectedTabId !== tabHeadings[2] && (
+      {selectedTabId !== PipelineStageTabs.ADVANCED && (
         <Button
-          text={selectedTabId === tabHeadings[1] ? getString('save') : getString('next')}
+          text={getString('next')}
           variation={ButtonVariation.PRIMARY}
           rightIcon="chevron-right"
-          onClick={() => {
-            updatePipeline(pipeline)
-            setSelectedTabId(tabHeadings[Math.min(tabHeadings.length, tabHeadings.indexOf(selectedTabId) + 1)])
-          }}
+          onClick={() =>
+            handleTabChange(
+              TabsHeadingOrder[Math.min(TabsHeadingOrder.length, TabsHeadingOrder.indexOf(selectedTabId) + 1)]
+            )
+          }
         />
       )}
     </Layout.Horizontal>
@@ -76,20 +88,20 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
     <section ref={layoutRef} key={selectedStageId} className={approvalStepCss.approvalStageSetupShellWrapper}>
       <Tabs
         id="pipelineStageSetupShell"
-        onChange={(tabId: string) => setSelectedTabId(tabId)}
+        onChange={(tabId: PipelineStageTabs) => setSelectedTabId(tabId)}
         selectedTabId={selectedTabId}
         data-tabId={selectedTabId}
       >
         <Tab
-          id={tabHeadings[0]}
+          id={PipelineStageTabs.OVERVIEW}
           panel={<PipelineStageOverview>{actionBtns}</PipelineStageOverview>}
           title={
             <span className={approvalStepCss.tab}>
               <Icon name="tick" height={20} size={20} color={Color.GREEN_800} />
-              {tabHeadings[0]}
+              {getString('overview')}
             </span>
           }
-          data-testid={tabHeadings[0]}
+          data-testid={PipelineStageTabs.OVERVIEW}
         />
         <Icon
           name="chevron-right"
@@ -100,15 +112,15 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
           style={{ alignSelf: 'center' }}
         />
         <Tab
-          id={tabHeadings[1]}
+          id={PipelineStageTabs.INPUTS}
           title={
             <span className={approvalStepCss.tab}>
               <Icon name="deployment-success-legacy" height={20} size={20} />
-              {tabHeadings[1]}
+              {getString('inputs')}
             </span>
           }
-          panel={<div />}
-          data-testid={tabHeadings[1]}
+          panel={<PipelineStageInputSection storeMetadata={storeMetadata}>{actionBtns}</PipelineStageInputSection>}
+          data-testid={PipelineStageTabs.INPUTS}
           className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
         />
         <Icon
@@ -120,11 +132,11 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
           style={{ alignSelf: 'center' }}
         />
         <Tab
-          id={tabHeadings[2]}
+          id={PipelineStageTabs.ADVANCED}
           title={
             <span className={approvalStepCss.tab}>
               <Icon name="advanced" height={20} size={20} />
-              {tabHeadings[2]}
+              {getString('advancedTitle')}
             </span>
           }
           panel={
@@ -135,7 +147,7 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
               {actionBtns}
             </PipelineStageAdvancedSpecifications>
           }
-          data-testid={tabHeadings[2]}
+          data-testid={PipelineStageTabs.ADVANCED}
         />
         {isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
           <>

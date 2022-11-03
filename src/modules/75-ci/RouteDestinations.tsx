@@ -9,6 +9,8 @@ import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import CIPipelineDeploymentList from '@ci/pages/pipeline-deployment-list/CIPipelineDeploymentList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import ChildAppMounter from 'microfrontends/ChildAppMounter'
+
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
 import { BannerType } from '@common/layouts/Constants'
@@ -67,6 +69,10 @@ import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
+
+// eslint-disable-next-line import/no-unresolved
+const CiuiMicroFrontendPath = React.lazy(() => import('ciui/MicroFrontendApp'))
+const useCIMicroFrontend = false
 
 executionFactory.registerCardInfo(StageType.BUILD, {
   icon: 'ci-main',
@@ -189,7 +195,9 @@ const CIDashboardPageOrRedirect = (): React.ReactElement => {
   const { selectedProject } = useAppStore()
   const { CI_OVERVIEW_PAGE } = useFeatureFlags()
 
-  if (CI_OVERVIEW_PAGE) {
+  if (useCIMicroFrontend) {
+    return <ChildAppMounter ChildApp={CiuiMicroFrontendPath} />
+  } else if (CI_OVERVIEW_PAGE) {
     return <CIDashboardPage />
   } else if (selectedProject?.modules?.includes(ModuleName.CI)) {
     return <Redirect to={routes.toDeployments({ ...params, module: 'ci' })} />

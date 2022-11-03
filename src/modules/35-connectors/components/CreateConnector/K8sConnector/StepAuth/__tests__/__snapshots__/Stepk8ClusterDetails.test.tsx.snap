@@ -76,6 +76,7 @@ exports[`Stepk8ClusterDetails render  1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           data-name="k8sBackButton"
           type="button"
@@ -106,6 +107,7 @@ exports[`Stepk8ClusterDetails render  1`] = `
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
           type="submit"
         >
@@ -212,6 +214,7 @@ exports[`Stepk8ClusterDetails render  2`] = `
                 />
               </label>
               <button
+                aria-label="Change"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                 data-testid="thumbnail-select-change"
                 type="button"
@@ -563,6 +566,7 @@ exports[`Stepk8ClusterDetails render  2`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           data-name="k8sBackButton"
           type="button"
@@ -593,6 +597,7 @@ exports[`Stepk8ClusterDetails render  2`] = `
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
           type="submit"
         >
@@ -699,6 +704,7 @@ exports[`Stepk8ClusterDetails render  3`] = `
                 />
               </label>
               <button
+                aria-label="Change"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                 data-testid="thumbnail-select-change"
                 type="button"
@@ -1050,6 +1056,7 @@ exports[`Stepk8ClusterDetails render  3`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           data-name="k8sBackButton"
           type="button"
@@ -1080,6 +1087,7 @@ exports[`Stepk8ClusterDetails render  3`] = `
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
           type="submit"
         >
@@ -1187,6 +1195,7 @@ exports[`Stepk8ClusterDetails render edit mode  1`] = `
                 />
               </label>
               <button
+                aria-label="Change"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                 data-testid="thumbnail-select-change"
                 type="button"
@@ -1529,6 +1538,7 @@ exports[`Stepk8ClusterDetails render edit mode  1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           data-name="k8sBackButton"
           type="button"
@@ -1559,6 +1569,7 @@ exports[`Stepk8ClusterDetails render edit mode  1`] = `
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
           type="submit"
         >
@@ -1666,6 +1677,7 @@ exports[`Stepk8ClusterDetails render edit mode  service token 1`] = `
                 />
               </label>
               <button
+                aria-label="Change"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                 data-testid="thumbnail-select-change"
                 type="button"
@@ -1972,6 +1984,7 @@ exports[`Stepk8ClusterDetails render edit mode  service token 1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           data-name="k8sBackButton"
           type="button"
@@ -2002,6 +2015,7 @@ exports[`Stepk8ClusterDetails render edit mode  service token 1`] = `
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
           type="submit"
         >
@@ -2109,6 +2123,7 @@ exports[`Stepk8ClusterDetails render edit mode if correct auth type is not given
                 />
               </label>
               <button
+                aria-label="Change"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                 data-testid="thumbnail-select-change"
                 type="button"
@@ -2253,6 +2268,7 @@ exports[`Stepk8ClusterDetails render edit mode if correct auth type is not given
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           data-name="k8sBackButton"
           type="button"
@@ -2283,6 +2299,7 @@ exports[`Stepk8ClusterDetails render edit mode if correct auth type is not given
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
           type="submit"
         >
@@ -2390,6 +2407,7 @@ exports[`Stepk8ClusterDetails render edit mode oidc update 1`] = `
                 />
               </label>
               <button
+                aria-label="Change"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                 data-testid="thumbnail-select-change"
                 type="button"
@@ -2999,6 +3017,7 @@ exports[`Stepk8ClusterDetails render edit mode oidc update 1`] = `
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           data-name="k8sBackButton"
           type="button"
@@ -3029,6 +3048,7 @@ exports[`Stepk8ClusterDetails render edit mode oidc update 1`] = `
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-left-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
           type="submit"
         >

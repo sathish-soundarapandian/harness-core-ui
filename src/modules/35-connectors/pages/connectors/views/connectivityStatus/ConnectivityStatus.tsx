@@ -21,7 +21,7 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import type { IconProps } from '@harness/icons'
-import defaultTo from 'lodash-es/defaultTo'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   useGetTestConnectionResult,

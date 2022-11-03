@@ -33,8 +33,8 @@
           "name": "Git CTR",
           "identifier": "Git_CTR",
           "description": "To connect to Git",
-          "orgIdentifier": "undefined",
-          "projectIdentifier": "undefined",
+          "orgIdentifier": "",
+          "projectIdentifier": "",
           "tags": { "git": "" },
           "type": "Git",
           "spec": {
@@ -56,8 +56,8 @@
           "name": "Sample",
           "identifier": "SampleX",
           "description": "",
-          "orgIdentifier": "undefined",
-          "projectIdentifier": "undefined",
+          "orgIdentifier": "",
+          "projectIdentifier": "",
           "tags": {},
           "type": "Git",
           "spec": {

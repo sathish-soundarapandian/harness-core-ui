@@ -56,7 +56,7 @@ const ECSRecommendationDetailsPage: React.FC = () => {
     accountId: string
   }>()
 
-  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName], true)
+  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName])
 
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeValue>('timeRange', {
     value: TimeRangeType.LAST_7,

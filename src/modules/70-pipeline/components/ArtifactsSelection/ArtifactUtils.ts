@@ -82,6 +82,12 @@ export const helperTextData = (
         imagePath: formik.values?.imagePath,
         connectorRef: connectorIdValue
       }
+    case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+      return {
+        artifactArrayPath: formik.values?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath,
+        versionPath: formik.values?.spec?.scripts?.fetchAllArtifacts?.versionPath,
+        connectorRef: connectorIdValue
+      }
     case ENABLED_ARTIFACT_TYPES.Ecr:
       return {
         imagePath: formik.values?.imagePath,
@@ -332,6 +338,34 @@ export const isFieldFixedAndNonEmpty = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
 }
 
+export const formFillingMethod = {
+  MANUAL: 'manual',
+  SCRIPT: 'script'
+}
+
+export const customArtifactDefaultSpec = {
+  version: '',
+  timeout: '',
+  delegateSelectors: [],
+  inputs: [],
+  scripts: {
+    fetchAllArtifacts: {
+      artifactsArrayPath: '',
+      attributes: [],
+      versionPath: '',
+      spec: {
+        shell: shellScriptType[0].label,
+        source: {
+          spec: {
+            script: ''
+          },
+          type: 'Inline'
+        }
+      }
+    }
+  }
+}
+
 export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
@@ -363,6 +397,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           repositoryPort: '',
           artifactId: '',
           groupId: '',
+          group: '',
           extension: '',
           classifier: '',
           packageName: ''
@@ -411,26 +446,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
       return {
         identifier: '',
         spec: {
-          version: '',
-          timeout: '',
-          delegateSelectors: [],
-          inputs: [],
-          scripts: {
-            fetchAllArtifacts: {
-              artifactsArrayPath: '',
-              attributes: [],
-              versionPath: '',
-              spec: {
-                shell: shellScriptType[0].label,
-                source: {
-                  spec: {
-                    script: ''
-                  },
-                  type: 'Inline'
-                }
-              }
-            }
-          }
+          ...customArtifactDefaultSpec
         }
       }
     case ENABLED_ARTIFACT_TYPES.AmazonS3:

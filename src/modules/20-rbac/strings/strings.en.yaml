@@ -61,7 +61,7 @@ roleBindings: Role Bindings
 roleBinding: Role Bindings (Role - Resource Group)
 noRoleBinding: No Role Bindings
 activeUsers: Active Users
-addRole: Add Role
+manageRoleBindings: Manage Role Bindings
 addUser: Add User
 pendingUsers: Pending Users
 allResources: All Resources
@@ -108,7 +108,6 @@ usersPage:
   roleBinding: Role Binding (Role - Resource Group)
   pendingInvitation: '{{ $.common.pendingInvitation }}'
   resendInvite: Resend Invite
-  assignRoleBindings: Assign Role Bindings
   noDataText: There are no roles assigned to this User, Click on Add to start assigning roles
   selectRole: Select a role
   selectResourceGroup: Select a resource group
@@ -176,7 +175,6 @@ project: project
 org: organization
 account: account
 accountScope: Account scope
-forUser: For User
 generateToken: Generate Token
 myApiKeys: My {{$.common.apiKeys}}
 roleForm:
@@ -208,7 +206,6 @@ resourceGroup:
   limitAccess: 'To limit access to specific set of {{name}}, add them as a list.'
   resourceFilterSelection: In this scope, users get access to all resources within a resource type selected.
   selectResourceGroup: 'Select Resource Group'
-  all: 'All {{name}}'
   noResourceGroupTypes: 'No Resource Group types available'
   builtInResourceGroup: 'Built in resource-group'
   noResourceGroup: 'No Resource Group available'

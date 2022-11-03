@@ -10,5 +10,6 @@ declare const styles: {
   readonly backgroundModuleImage: string
   readonly image: string
   readonly primaryText: string
+  readonly secondaryText: string
 }
 export default styles

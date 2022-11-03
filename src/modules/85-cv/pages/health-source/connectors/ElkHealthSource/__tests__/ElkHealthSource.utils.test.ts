@@ -32,7 +32,7 @@ describe('Test Util functions', () => {
   })
   test('Test buildElkHealthSourceInfo with no data', () => {
     expect(getElkMappedMetric({ sourceData: setupSource, isConnectorRuntimeOrExpression: true })).toEqual({
-      selectedMetric: 'ELK Logs Query',
+      selectedMetric: 'ElasticSearch Logs Query',
       mappedMetrics: getMappedServicesAndEnvs(data)
     })
   })

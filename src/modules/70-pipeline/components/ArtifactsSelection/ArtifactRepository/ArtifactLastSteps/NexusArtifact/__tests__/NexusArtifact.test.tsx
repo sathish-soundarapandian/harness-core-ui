@@ -16,7 +16,35 @@ import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
+import type { ResponseListNexusRepositories } from 'services/cd-ng'
 import { Nexus3Artifact } from '../NexusArtifact'
+
+const mockRepositoryResponse: UseGetMockDataWithMutateAndRefetch<ResponseListNexusRepositories> = {
+  loading: false,
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  data: {
+    status: 'SUCCESS',
+    data: [
+      { repositoryName: 'docker-group', repositoryId: 'docker-group' },
+      { repositoryName: 'usheerdocker', repositoryId: 'usheerdocker' },
+      { repositoryName: 'ken-test-docker', repositoryId: 'ken-test-docker' },
+      { repositoryName: 'zee-repo', repositoryId: 'zee-repo' },
+      { repositoryName: 'cdp-qa-automation-2', repositoryId: 'cdp-qa-automation-2' },
+      { repositoryName: 'cdp-qa-automation-1', repositoryId: 'cdp-qa-automation-1' },
+      { repositoryName: 'francisco-swat', repositoryId: 'francisco-swat' },
+      { repositoryName: 'todolist', repositoryId: 'todolist' },
+      { repositoryName: 'aleksadocker', repositoryId: 'aleksadocker' },
+      { repositoryName: 'cdp-test-group1', repositoryId: 'cdp-test-group1' },
+      { repositoryName: 'cdp-test-group2', repositoryId: 'cdp-test-group2' },
+      { repositoryName: 'cdp-test-group3', repositoryId: 'cdp-test-group3' },
+      { repositoryName: 'docker-private', repositoryId: 'docker-private' },
+      { repositoryName: 'lukicm-test', repositoryId: 'lukicm-test' }
+    ],
+    correlationId: 'c938e28e-6359-481e-9e75-3141561c4186'
+  }
+}
 
 const props = {
   name: 'Artifact details',
@@ -38,12 +66,16 @@ jest.mock('services/cd-ng', () => ({
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   })
 }))
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => mockRepositoryResponse)
+}))
 const initialValues: Nexus2InitialValuesType = {
   identifier: '',
   tagType: TagTypes.Value,
-  tag: '',
+  tag: '<+input>',
   tagRegex: '',
-  repository: '',
+  repository: 'repository',
   spec: {
     artifactPath: '',
     repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
@@ -53,6 +85,13 @@ const initialValues: Nexus2InitialValuesType = {
 } as Nexus2InitialValuesType
 
 describe('Nexus Artifact tests', () => {
+  // beforeEach(() => {
+  //   // eslint-disable-next-line
+  //   // @ts-ignore
+  //   useMutateAsGet.mockImplementation(() => {
+  //     return mockRepositoryResponse
+  //   })
+  // })
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
@@ -70,6 +109,7 @@ describe('Nexus Artifact tests', () => {
     const tagInput = container.querySelector('input[name="tag"]')
     expect(tagInput).toBeDisabled()
   })
+
   // eslint-disable-next-line jest/no-disabled-tests
   test.skip(`unable to submit the form when either of imagename, repository and repositoryUrl are empty`, async () => {
     const { container } = render(
@@ -91,6 +131,7 @@ describe('Nexus Artifact tests', () => {
     const imagePathRequiredErr = await findByText(container, 'pipeline.artifactsSelection.validation.artifactPath')
     expect(imagePathRequiredErr).toBeDefined()
   })
+
   // eslint-disable-next-line jest/no-disabled-tests
   test.skip(`get RepositoryPort error, when repositoryPortorRepositoryURL is of type Repository port`, async () => {
     const { container, getByText } = render(
@@ -133,10 +174,23 @@ describe('Nexus Artifact tests', () => {
     expect(repositoryRequiredErr).toBeDefined()
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    // Select repository from dropdown
+    const repositoryDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
+    fireEvent.click(repositoryDropDownButton!)
+    expect(portalDivs.length).toBe(1)
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+    const selectItem = await findByText(selectListMenu as HTMLElement, 'cdp-test-group2')
+    act(() => {
+      fireEvent.click(selectItem)
+    })
+    const repositorySelect = queryByNameAttribute('repository') as HTMLInputElement
+    expect(repositorySelect.value).toBe('cdp-test-group2')
     await act(async () => {
       fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
       fireEvent.change(queryByNameAttribute('spec.artifactPath')!, { target: { value: 'artifact-path' } })
-      fireEvent.change(queryByNameAttribute('repository')!, { target: { value: 'repository' } })
       fireEvent.change(queryByNameAttribute('spec.repositoryUrl')!, { target: { value: 'repositoryUrl' } })
     })
     fireEvent.click(submitBtn)
@@ -147,7 +201,7 @@ describe('Nexus Artifact tests', () => {
         identifier: 'testidentifier',
         spec: {
           connectorRef: '',
-          repository: 'repository',
+          repository: 'cdp-test-group2',
           tag: '<+input>',
           repositoryFormat: 'docker',
           spec: {
@@ -210,12 +264,24 @@ describe('Nexus Artifact tests', () => {
     fireEvent.click(submitBtn)
     const repositoryRequiredErr = await findByText(container, 'common.git.validation.repoRequired')
     expect(repositoryRequiredErr).toBeDefined()
-
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    // Select repository from dropdown
+    const repositoryDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
+    fireEvent.click(repositoryDropDownButton!)
+    expect(portalDivs.length).toBe(1)
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+    const selectItem = await findByText(selectListMenu as HTMLElement, 'cdp-test-group2')
+    act(() => {
+      fireEvent.click(selectItem)
+    })
+    const repositorySelect = queryByNameAttribute('repository') as HTMLInputElement
+    expect(repositorySelect.value).toBe('cdp-test-group2')
     await act(async () => {
       fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
       fireEvent.change(queryByNameAttribute('spec.artifactPath')!, { target: { value: 'artifact-path' } })
-      fireEvent.change(queryByNameAttribute('repository')!, { target: { value: 'repository' } })
       fireEvent.change(queryByNameAttribute('spec.repositoryUrl')!, { target: { value: 'repositoryUrl' } })
     })
     fireEvent.click(getByText('Repository Port'))
@@ -233,7 +299,7 @@ describe('Nexus Artifact tests', () => {
         identifier: 'testidentifier',
         spec: {
           connectorRef: '',
-          repository: 'repository',
+          repository: 'cdp-test-group2',
           tag: '<+input>',
           repositoryFormat: 'docker',
           spec: {
@@ -243,7 +309,7 @@ describe('Nexus Artifact tests', () => {
         }
       })
     })
-    await waitFor(() => expect(container.querySelector('input[name="repository"]')).toHaveValue('repository'))
+    await waitFor(() => expect(container.querySelector('input[name="repository"]')).toHaveValue('cdp-test-group2'))
     await waitFor(() => expect(container.querySelector('input[name="spec.artifactPath"]')).toHaveValue('artifact-path'))
   })
 
@@ -270,12 +336,24 @@ describe('Nexus Artifact tests', () => {
     fireEvent.click(submitBtn)
     const repositoryRequiredErr = await findByText(container, 'common.git.validation.repoRequired')
     expect(repositoryRequiredErr).toBeDefined()
-
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    // Select repository from dropdown
+    const repositoryDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
+    fireEvent.click(repositoryDropDownButton!)
+    expect(portalDivs.length).toBe(1)
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+    const selectItem = await findByText(selectListMenu as HTMLElement, 'cdp-test-group2')
+    act(() => {
+      fireEvent.click(selectItem)
+    })
+    const repositorySelect = queryByNameAttribute('repository') as HTMLInputElement
+    expect(repositorySelect.value).toBe('cdp-test-group2')
     await act(async () => {
       await fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
       await fireEvent.change(queryByNameAttribute('spec.artifactPath')!, { target: { value: 'artifact-path' } })
-      await fireEvent.change(queryByNameAttribute('repository')!, { target: { value: 'repository' } })
       await fireEvent.change(queryByNameAttribute('spec.repositoryUrl')!, { target: { value: 'repositoryUrl' } })
     })
     expect(container).toMatchSnapshot()
@@ -294,7 +372,7 @@ describe('Nexus Artifact tests', () => {
         identifier: 'testidentifier',
         spec: {
           connectorRef: '',
-          repository: 'repository',
+          repository: 'cdp-test-group2',
           tagRegex: '<+input>',
           repositoryFormat: 'docker',
           spec: {
@@ -304,7 +382,7 @@ describe('Nexus Artifact tests', () => {
         }
       })
     })
-    await waitFor(() => expect(container.querySelector('input[name="repository"]')).toHaveValue('repository'))
+    await waitFor(() => expect(container.querySelector('input[name="repository"]')).toHaveValue('cdp-test-group2'))
     await waitFor(() => expect(container.querySelector('input[name="spec.artifactPath"]')).toHaveValue('artifact-path'))
   })
 })

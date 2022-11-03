@@ -128,8 +128,8 @@ const RenderGithubAuthForm: React.FC<{
   }
 }
 
-const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface> & ScopedObjectDTO> = props => {
-  const { orgIdentifier, projectIdentifier } = props
+const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface> & { scope?: ScopedObjectDTO }> = props => {
+  const { scope } = props
   const { getString } = useStrings()
   switch (props.values.apiAuthType) {
     case GitAPIAuthTypes.GITHUB_APP:
@@ -151,7 +151,7 @@ const RenderAPIAccessForm: React.FC<FormikProps<GithubFormInterface> & ScopedObj
             name="apiAccessToken"
             label={getString('personalAccessToken')}
             tooltipProps={{ dataTooltipId: 'gitHubPersonalAccessTooltip' }}
-            scope={{ projectIdentifier, orgIdentifier }}
+            scope={scope}
           />
         </Container>
       )

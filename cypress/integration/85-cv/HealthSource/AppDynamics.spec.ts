@@ -11,7 +11,8 @@ import {
   countOfServiceAPI,
   dataforMS,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   applicationCall,
@@ -26,6 +27,7 @@ import {
   metricStructureResponse,
   basePathCallWithoutTierAndApp
 } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Create empty monitored service', () => {
@@ -42,6 +44,7 @@ describe('Create empty monitored service', () => {
 
   it('Add new AppDynamics monitored service ', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
@@ -104,6 +107,7 @@ describe('Create empty monitored service', () => {
   it('Add new AppDynamics monitored service with custom metric', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -178,6 +182,7 @@ describe('Create empty monitored service', () => {
   it('Add new AppDynamics monitored service with multiple custom metric', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -292,6 +297,7 @@ describe('Create empty monitored service', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', dataforMS).as('monitoredServiceCall')
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -327,6 +333,7 @@ describe('Create empty monitored service', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', dataforMS).as('monitoredServiceCall')
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -424,7 +431,7 @@ describe('Create empty monitored service', () => {
 
     // Delete all custom metric
     cy.get('span[data-icon="main-delete"]').click({ multiple: true })
-    cy.findByRole('button', { name: /Add Metric/i }).should('be.visible')
+    cy.contains('span', 'Add Metric').should('be.visible')
   })
 })
 
@@ -456,6 +463,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should test metric thresholds renders correctly and should hide metric thresholds if no metric packs are selected', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -490,6 +498,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should add thresholds and do all the operations as expected', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -622,6 +631,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should show prompt, if metric packs containing metric thresholds are being removed', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
@@ -665,6 +675,7 @@ describe('Metric thresholds in AppDynamics', () => {
   it('should show prompt, if custom metrics containing metric thresholds are being deleted', () => {
     cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
     cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
     cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')

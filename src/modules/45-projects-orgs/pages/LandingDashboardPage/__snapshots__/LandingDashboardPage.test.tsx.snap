@@ -10,6 +10,7 @@ exports[`Landing Dashboard Page Render Welcome Page when Lading Page api is succ
       class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex"
     >
       <button
+        aria-label="common.goBack"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
         type="button"
       >
@@ -60,6 +61,7 @@ exports[`Landing Dashboard Page Render Welcome Page when Lading Page api is succ
         </h2>
       </div>
       <button
+        aria-label="projectLabel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
         type="button"
       >
@@ -109,6 +111,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 1
       </h2>
     </div>
     <button
+      aria-label="common.welcome"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
       type="button"
     >
@@ -914,6 +917,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 2
       class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex"
     >
       <button
+        aria-label="common.goBack"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
         type="button"
       >
@@ -964,6 +968,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 2
         </h2>
       </div>
       <button
+        aria-label="projectLabel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
         type="button"
       >

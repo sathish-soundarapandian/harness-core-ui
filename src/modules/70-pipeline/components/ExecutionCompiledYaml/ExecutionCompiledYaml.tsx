@@ -41,7 +41,8 @@ export function ExecutionCompiledYaml({ executionSummary, onClose }: ExecutionCo
     planExecutionId: executionSummary?.planExecutionId || '',
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: !executionSummary?.planExecutionId
   })
   const { module } = useParams<PipelineType<PipelinePathProps>>()
 

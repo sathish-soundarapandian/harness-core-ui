@@ -20,7 +20,6 @@ export const getUpdatedDeploymentConfig = ({ templateRef, deploymentConfig }: Pa
   produce(deploymentConfig, draft => {
     const stepTemplateRefs = deploymentConfig.execution?.stepTemplateRefs || /* istanbul ignore next */ []
     const updatedStepTemplateRefs = [templateRef, ...stepTemplateRefs]
-
     set(draft, 'execution.stepTemplateRefs', updatedStepTemplateRefs)
   })
 

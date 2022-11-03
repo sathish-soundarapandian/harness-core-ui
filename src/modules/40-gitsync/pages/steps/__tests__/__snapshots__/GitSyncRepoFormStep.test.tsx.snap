@@ -496,6 +496,7 @@ exports[`Test GitSyncRepoFormStep Should not allow saving form if folder name is
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-xlarge"
               >
                 <button
+                  aria-label="save"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                   type="submit"
                 >
@@ -506,6 +507,7 @@ exports[`Test GitSyncRepoFormStep Should not allow saving form if folder name is
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                   type="button"
                 >
@@ -1233,6 +1235,7 @@ exports[`Test GitSyncRepoFormStep Should not allow saving form if folder name is
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-xlarge"
               >
                 <button
+                  aria-label="save"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                   type="submit"
                 >
@@ -1243,6 +1246,7 @@ exports[`Test GitSyncRepoFormStep Should not allow saving form if folder name is
                   </span>
                 </button>
                 <button
+                  aria-label="cancel"
                   class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                   type="button"
                 >

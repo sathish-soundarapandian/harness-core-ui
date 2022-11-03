@@ -39,7 +39,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import templateCss from './OSTemplateWithGit.module.scss'
@@ -97,7 +97,10 @@ function OpenShiftTemplateWithGit({
         paramsPaths:
           typeof initialValues?.spec?.paramsPaths === 'string'
             ? initialValues?.spec?.paramsPaths
-            : initialValues?.spec?.paramsPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(initialValues?.spec?.paramsPaths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning
       }
     }

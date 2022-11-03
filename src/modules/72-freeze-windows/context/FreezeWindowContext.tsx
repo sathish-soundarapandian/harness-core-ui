@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import noop from 'lodash-es/noop'
+import { noop } from 'lodash-es'
 import { parse } from 'yaml'
 
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
@@ -19,6 +19,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetFreeze } from 'services/cd-ng'
 import { FreezeWindowLevels, WindowPathProps, FreezeNotificationRules } from '@freeze-windows/types'
+import { FreezeStatus, getFreezeStatus } from '@freeze-windows/utils/freezeWindowUtils'
 import { FreezeWindowContextActions, DrawerTypes } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
 
@@ -37,6 +38,7 @@ export interface FreezeWindowContextInterface {
   loadingFreezeObj: boolean
   isUpdatingFreeze: boolean
   refetchFreezeObj: () => void
+  isActiveFreeze: boolean
   freezeObjError?: any
 }
 
@@ -54,6 +56,7 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   freezeWindowLevel: FreezeWindowLevels.ACCOUNT,
   loadingFreezeObj: false,
   isUpdatingFreeze: false,
+  isActiveFreeze: false,
   refetchFreezeObj: noop
 })
 
@@ -71,8 +74,9 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   )
   const [drawerType, setDrawerType] = React.useState<DrawerTypes>()
   const { accountId, projectIdentifier, orgIdentifier, windowIdentifier } = useParams<WindowPathProps>()
-  const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
+  const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ACCOUNT)
   const [isUpdatingFreeze, setIsUpdatingFreeze] = React.useState<boolean>(false)
+  const [isActiveFreeze, setIsActiveFreeze] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     const _freezeWindowLevel = getFreezeWindowLevel({ accountId, projectIdentifier, orgIdentifier })
@@ -123,6 +127,10 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {
       const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
       updateFreeze({ ...freezeObj, oldFreezeObj: { ...freezeObj } })
+      setIsActiveFreeze(
+        getFreezeStatus(freezeObjData.data?.currentOrUpcomingWindow, freezeObjData.data?.status === 'Enabled') ===
+          FreezeStatus['ACTIVE']
+      )
       setIsUpdatingFreeze(false)
     }
   }, [loadingFreezeObj])
@@ -156,6 +164,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
         refetchFreezeObj,
         drawerType,
         setDrawerType,
+        isActiveFreeze,
         isReadOnly: !canEdit
       }}
     >

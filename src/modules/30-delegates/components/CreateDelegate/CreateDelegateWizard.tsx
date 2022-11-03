@@ -40,7 +40,7 @@ export const DelegateWizard: React.FC<DelegateWizardProps> = props => {
 export const CreateDelegateWizard: React.FC<CreateDelegateWizardProps> = props => {
   const { getString } = useStrings()
   const [showWizard, setShowWizard] = React.useState(false)
-  const [delType, setDelType] = React.useState(DelegateTypes.DOCKER)
+  const [delType, setDelType] = React.useState(DelegateTypes.KUBERNETES_CLUSTER)
   return (
     <div>
       {!showWizard && (

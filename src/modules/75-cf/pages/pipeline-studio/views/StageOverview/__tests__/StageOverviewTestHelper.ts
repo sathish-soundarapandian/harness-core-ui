@@ -39,6 +39,7 @@ export const getPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: false,
+    modules: [],
     templateTypes: {},
     templateServiceData: {},
     resolvedCustomDeploymentDetailsByRef: {}
@@ -101,6 +102,7 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: true,
+    modules: [],
     templateTypes: {},
     templateServiceData: {},
     resolvedCustomDeploymentDetailsByRef: {}

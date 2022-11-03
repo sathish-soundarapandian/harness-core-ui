@@ -32,7 +32,7 @@ import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage
 import ExecutionPipelineView from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionPipelineView'
 import ExecutionPolicyEvaluationsView from '@pipeline/pages/execution/ExecutionPolicyEvaluationsView/ExecutionPolicyEvaluationsView'
 import ExecutionSecurityView from '@pipeline/pages/execution/ExecutionSecurityView/ExecutionSecurityView'
-import BuildTests from '@pipeline/pages/execution/ExecutionTestView/BuildTests'
+import BuildTestsApp from '@pipeline/pages/execution/ExecutionTestView/BuildTestsApp'
 import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
@@ -623,7 +623,7 @@ export function PipelineRouteDestinations({
         pageName={PAGE_NAME.BuildTests}
       >
         <ExecutionLandingPage>
-          <BuildTests />
+          <BuildTestsApp />
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout
@@ -638,7 +638,7 @@ export function PipelineRouteDestinations({
         pageName={PAGE_NAME.BuildTests}
       >
         <ExecutionLandingPage>
-          <BuildTests />
+          <BuildTestsApp />
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout

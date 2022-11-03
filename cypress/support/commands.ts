@@ -81,6 +81,8 @@ declare global {
       login(username: string, pass: string): void
       visitPageAssertion(className?: string): void
       createDeploymentStage(): void
+      createKubernetesDeploymentStage(): void
+      selectRuntimeInputForInfrastructure(): void
       visitCreatePipeline(): void
       visitPipelinesList(): void
       visitExecutionsList(): void
@@ -173,6 +175,19 @@ Cypress.Commands.add('createDeploymentStage', () => {
 
   cy.fillName('testStage_Cypress')
   cy.clickSubmit()
+})
+Cypress.Commands.add('createKubernetesDeploymentStage', () => {
+  cy.get('[icon="plus"]').click()
+  cy.findByTestId('stage-Deployment').click()
+
+  cy.fillName('testStage_Cypress')
+  cy.contains('p', 'Kubernetes').should('be.visible').click({ force: true })
+  cy.clickSubmit()
+})
+Cypress.Commands.add('selectRuntimeInputForInfrastructure', () => {
+  cy.get('span[data-icon="fixed-input"]').eq(1).click()
+  cy.contains('span', 'Fixed value').should('be.visible')
+  cy.contains('span', 'Runtime input').should('be.visible').click()
 })
 
 Cypress.Commands.add('visitPipelinesList', () => {
@@ -338,6 +353,7 @@ Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName
   if (!isVerifyStep) {
     cy.contains('span', 'Add New Health Source').click()
   }
+  cy.wait(1000)
   cy.contains('span', 'Next').click()
   // Validate and fill Define HealthSource Ta
   cy.contains('span', 'Next').click()

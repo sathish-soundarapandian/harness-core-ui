@@ -48,6 +48,7 @@ exports[`StartupScriptSelection initial render 1`] = `
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <button
+          aria-label="common.addName"
           class="bp3-button Button--button StyledProps--font StyledProps--main addStartupScript Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           data-test-id="addStartupScript"
           id="add-startup-script"

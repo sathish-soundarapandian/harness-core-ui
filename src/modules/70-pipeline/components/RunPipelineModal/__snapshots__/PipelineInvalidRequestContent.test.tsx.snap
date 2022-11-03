@@ -43,6 +43,7 @@ exports[`<PipelineInvalidRequestContent /> tests snapshot test and element asser
       class="Layout--horizontal StyledProps--main actionButtons"
     >
       <button
+        aria-label="close"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--background-primary7 Button--with-current-color Button--variation Button--variation-primary"
         data-testid="deletion-pipeline"
         id="cancel-runpipeline"

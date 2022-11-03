@@ -45,6 +45,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { StringsMap } from 'stringTypes'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -228,7 +229,7 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
   )
 }
 
-const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, allowableTypes }) => {
+const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
@@ -248,6 +249,9 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
               disabled: readonly,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
           />
         </div>
       )}
@@ -257,7 +261,9 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
             template={template}
             fieldPath={'timeout'}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -282,6 +288,10 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
             allowableTypes={allowableTypes}
             disabledType
             readonly={readonly}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
           />
         </div>
       )}

@@ -57,6 +57,7 @@ interface UsageProps {
   cd?: {
     activeServices?: UsageProp
     activeServiceInstances?: UsageProp
+    serviceLicenses?: UsageProp
   }
 }
 
@@ -275,7 +276,8 @@ function useGetUsage(module: ModuleName): UsageReturn {
           usage: {
             cd: {
               activeServiceInstances: cdSIUsageData?.data?.activeServiceInstances,
-              activeServices: cdUsageData?.data?.activeServices
+              activeServices: cdUsageData?.data?.activeServices,
+              serviceLicenses: cdUsageData?.data?.serviceLicenses
             }
           },
           loadingUsage: loadingCDSIUsage || loadingCDUsage,

@@ -239,7 +239,6 @@ const ConnectorView: React.FC<ConnectorViewProps> = props => {
               <div className={css.yamlView} data-test="yamlBuilderContainer">
                 <YamlBuilder
                   {...yamlBuilderReadOnlyModeProps}
-                  showSnippetSection={false}
                   onEnableEditMode={() => state.setEnableEdit(true)}
                   isEditModeSupported={canEditConnector}
                   isHarnessManaged={isHarnessManaged}

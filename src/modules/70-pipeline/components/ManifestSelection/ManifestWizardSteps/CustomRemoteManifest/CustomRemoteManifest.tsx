@@ -37,7 +37,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
-import { filePathWidth } from '../ManifestUtils'
+import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface CustomRemoteManifestPropType {
@@ -91,11 +91,17 @@ function CustomRemoteManifest({
         valuesPaths:
           typeof valuesPaths === 'string'
             ? valuesPaths
-            : defaultTo(valuesPaths, []).map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+            : removeEmptyFieldsFromStringArray(defaultTo(valuesPaths, []))?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         paramsPaths:
           typeof paramsPaths === 'string'
             ? paramsPaths
-            : defaultTo(paramsPaths, []).map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : removeEmptyFieldsFromStringArray(defaultTo(paramsPaths, []))?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              }))
       }
     }
     return {

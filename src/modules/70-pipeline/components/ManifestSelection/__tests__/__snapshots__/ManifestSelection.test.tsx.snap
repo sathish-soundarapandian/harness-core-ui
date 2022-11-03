@@ -240,6 +240,7 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
               class="valuesList"
             >
               <button
+                aria-label="pipeline.manifestType.attachPath"
                 class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                 id="add-manifest"
                 type="button"
@@ -259,6 +260,7 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
+        aria-label="pipeline.manifestType.addManifestLabel"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
@@ -566,6 +568,7 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
               class="valuesList"
             >
               <button
+                aria-label="pipeline.manifestType.attachPath"
                 class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                 id="add-manifest"
                 type="button"
@@ -585,6 +588,7 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
+        aria-label="pipeline.manifestType.addManifestLabel"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
@@ -639,6 +643,7 @@ exports[`ManifestSelection tests renders Manifest Listview with connectors Data 
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
+        aria-label="pipeline.manifestType.addManifestLabel"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
@@ -693,6 +698,7 @@ exports[`ManifestSelection tests renders Manifest Listview with overrideSetIdent
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
+        aria-label="pipeline.manifestType.addManifestLabel"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
@@ -747,6 +753,7 @@ exports[`ManifestSelection tests renders Manifest Listview without crashing 1`] 
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
+        aria-label="pipeline.manifestType.addManifestLabel"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
@@ -978,6 +985,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -1145,6 +1153,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -1312,6 +1321,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -1479,6 +1489,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -1498,6 +1509,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <button
+          aria-label="pipeline.manifestType.addManifestLabel"
           class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           data-test-id="addManifest"
           id="add-manifest"
@@ -1730,6 +1742,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -1897,6 +1910,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -2064,6 +2078,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -2231,6 +2246,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                 class="valuesList"
               >
                 <button
+                  aria-label="pipeline.manifestType.attachPath"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addValuesYaml Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                   id="add-manifest"
                   type="button"
@@ -2250,6 +2266,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <button
+          aria-label="pipeline.manifestType.addManifestLabel"
           class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           data-test-id="addManifest"
           id="add-manifest"
@@ -2308,6 +2325,7 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <button
+          aria-label="pipeline.manifestType.addManifestLabel"
           class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           data-test-id="addManifest"
           id="add-manifest"

@@ -17,6 +17,7 @@ import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScri
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { CreatePRStepData } from './CreatePrStep'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -32,7 +33,7 @@ export interface CreatePrInputStepProps {
 }
 
 export default function CreatePRInputStep(props: CreatePrInputStepProps): React.ReactElement {
-  const { template, path, readonly, initialValues, allowableTypes } = props
+  const { template, path, readonly, initialValues, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
@@ -44,7 +45,9 @@ export default function CreatePRInputStep(props: CreatePrInputStepProps): React.
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -67,6 +70,10 @@ export default function CreatePRInputStep(props: CreatePrInputStepProps): React.
             defaultValueToReset=""
             disabled={readonly}
             allowedTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disableTypeSelection={readonly}
             skipRenderValueInExpressionLabel
             expressionRender={

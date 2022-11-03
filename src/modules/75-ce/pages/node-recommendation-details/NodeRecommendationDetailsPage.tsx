@@ -44,7 +44,7 @@ const NodeRecommendationDetailsPage = () => {
   const { getString } = useStrings()
   const { recommendation, accountId, recommendationName } = useParams<Params>()
 
-  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName], true)
+  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName])
 
   const [timeRange, setTimeRange] = useQueryParamsState<NodepoolTimeRangeValue>('timeRange', {
     value: NodepoolTimeRangeType.LAST_7,

@@ -31,6 +31,7 @@ export default function SLOActions(props: SLOActionsProps) {
   return (
     <Layout.Horizontal className={css.actions}>
       <Icon
+        className={css.actionIcons}
         padding={'small'}
         name="Edit"
         onClick={e => {
@@ -39,6 +40,7 @@ export default function SLOActions(props: SLOActionsProps) {
         }}
       />
       <Icon
+        className={css.actionIcons}
         padding={'small'}
         name="main-trash"
         onClick={e => {

@@ -279,6 +279,7 @@ exports[`smtp details create smtp details and test 1`] = `
                   </div>
                 </div>
                 <button
+                  aria-label="test"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   type="submit"
                 >
@@ -292,6 +293,7 @@ exports[`smtp details create smtp details and test 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main buttonPanel"
                 >
                   <button
+                    aria-label="previous"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-tertiary"
                     type="button"
                   >
@@ -321,6 +323,7 @@ exports[`smtp details create smtp details and test 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     type="button"
                   >
@@ -691,6 +694,7 @@ exports[`smtp details render smtp creation dialog 1`] = `
                   class="Layout--horizontal StyledProps--main buttonPanel"
                 >
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     type="submit"
                   >

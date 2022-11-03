@@ -9,7 +9,7 @@
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Button, Icon, Layout, Popover, Text, Container, TagsPopover, ButtonVariation } from '@harness/uicore'
-import defaultTo from 'lodash-es/defaultTo'
+import { defaultTo } from 'lodash-es'
 import { useParams, Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import ReactTimeago from 'react-timeago'
@@ -349,7 +349,11 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
       executionIdentifier,
       accountId,
       module,
-      source: source || 'deployments'
+      source: source || 'deployments',
+      connectorRef: data.connectorRef,
+      repoName: defaultTo(data.gitDetails?.repoName, data.gitDetails?.repoIdentifier),
+      branch: data.gitDetails?.branch,
+      storeType: data.storeType
     }),
     'aria-label': `Execution ${executionIdentifier}`
   })

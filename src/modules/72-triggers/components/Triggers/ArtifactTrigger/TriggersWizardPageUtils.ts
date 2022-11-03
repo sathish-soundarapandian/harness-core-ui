@@ -26,7 +26,8 @@ import type {
   GcrSpec,
   JenkinsRegistrySpec,
   TriggerEventDataCondition,
-  ArtifactTriggerConfig
+  ArtifactTriggerConfig,
+  CustomArtifactSpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -181,7 +182,13 @@ const checkValidSelectedArtifact = ({ formikValues }: { formikValues: { [key: st
 }
 
 const checkValidArtifactTriggerConfig = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean => {
-  return isIdentifierIllegal(formikValues?.identifier) ? false : checkValidSelectedArtifact({ formikValues })
+  let isLegal = false
+  if (formikValues.artifactType === 'CustomArtifact') {
+    isLegal = formikValues?.source?.spec?.spec?.script
+  } else {
+    isLegal = checkValidSelectedArtifact({ formikValues })
+  }
+  return isIdentifierIllegal(formikValues?.identifier) ? false : isLegal
 }
 
 const getArtifactTriggersPanels = ({
@@ -2008,6 +2015,7 @@ export const getTriggerArtifactInitialSpec = (
 ): ArtifactTriggerSpec | undefined => {
   const connectorRef = ''
   const tag = '<+trigger.artifact.build>'
+  const version = '<+trigger.artifact.build>'
   const eventConditions: TriggerEventDataCondition[] = []
   const imagePath = ''
 
@@ -2084,6 +2092,15 @@ export const getTriggerArtifactInitialSpec = (
         eventConditions,
         jobName: ''
       } as JenkinsRegistrySpec
+    }
+    case 'CustomArtifact': {
+      return {
+        artifactsArrayPath: '',
+        inputs: [],
+        script: '',
+        version,
+        versionPath: ''
+      } as CustomArtifactSpec
     }
   }
 }

@@ -7,7 +7,7 @@
 
 import React, { Dispatch, FormEvent, SetStateAction } from 'react'
 import cx from 'classnames'
-import { FormikForm, Layout, PageSpinner, Text } from '@harness/uicore'
+import { FormikForm, Layout, Text } from '@harness/uicore'
 import { get, isEmpty } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
@@ -43,12 +43,11 @@ export interface VisualViewProps {
   submitForm(): void
   hasInputSets: boolean
   setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[] | undefined>>
-  loading?: boolean
-  loadingMergeInputSetUpdate: boolean
   selectedStageData: StageSelectionData
   pipelineResponse: ResponsePMSPipelineResponseDTO | null
   invalidInputSetReferences: string[]
   loadingInputSets: boolean
+  isInputSetApplied: boolean
   onReconcile: (identifier: string) => void
   reRunInputSetYaml?: string
 }
@@ -71,12 +70,11 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     submitForm,
     hasInputSets,
     setSelectedInputSets,
-    loading,
-    loadingMergeInputSetUpdate,
     selectedStageData,
     pipelineResponse,
     invalidInputSetReferences,
     loadingInputSets,
+    isInputSetApplied,
     onReconcile,
     reRunInputSetYaml
   } = props
@@ -100,7 +98,11 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const showPipelineInputSetForm = (): boolean => {
-    return !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) && !loadingInputSets
+    return (
+      !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) &&
+      !loadingInputSets &&
+      isInputSetApplied
+    )
   }
 
   const showVoidPipelineInputSetForm = (): boolean => {
@@ -175,14 +177,12 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
             {showPipelineInputSetForm() ? (
               <PipelineInputSetFormWrapper
                 executionView={executionView}
-                loading={loading}
                 existingProvide={existingProvide}
                 currentPipeline={currentPipeline}
                 executionIdentifier={executionIdentifier}
                 hasRuntimeInputs={hasRuntimeInputs}
                 template={template}
                 resolvedPipeline={resolvedPipeline}
-                loadingMergeInputSetUpdate={loadingMergeInputSetUpdate}
                 selectedStageData={selectedStageData}
               />
             ) : null}
@@ -195,7 +195,6 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
 }
 
 export interface PipelineInputSetFormWrapperProps {
-  loading?: boolean
   executionView?: boolean
   existingProvide: ExistingProvide
   executionIdentifier?: string
@@ -205,13 +204,11 @@ export interface PipelineInputSetFormWrapperProps {
   hasRuntimeInputs?: boolean
   template: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
-  loadingMergeInputSetUpdate: boolean
   selectedStageData: StageSelectionData
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
   const {
-    loading,
     executionView,
     existingProvide,
     currentPipeline,
@@ -219,23 +216,9 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     template,
     executionIdentifier,
     resolvedPipeline,
-    loadingMergeInputSetUpdate,
     selectedStageData
   } = props
-  const { getString } = useStrings()
 
-  if (loading) {
-    return (
-      <PageSpinner
-        className={css.inputSetsUpdatingSpinner}
-        message={
-          loadingMergeInputSetUpdate
-            ? getString('pipeline.inputSets.applyingInputSets')
-            : getString('pipeline.inputSets.applyingInputSet')
-        }
-      />
-    )
-  }
   if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
     return (
       <>

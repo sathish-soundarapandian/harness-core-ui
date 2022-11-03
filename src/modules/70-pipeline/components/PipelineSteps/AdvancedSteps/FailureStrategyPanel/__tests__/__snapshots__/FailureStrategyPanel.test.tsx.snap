@@ -52,6 +52,7 @@ exports[`<FailureStrategyPanel /> tests adding a new strategy works 1`] = `
           class="bp3-popover-target"
         >
           <a
+            aria-label="pipeline.failureStrategies.tabHasErrors"
             class="bp3-button bp3-disabled bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
             data-testid="add-failure-strategy"
             disabled=""
@@ -831,6 +832,7 @@ exports[`<FailureStrategyPanel /> tests removing a strategy works 1`] = `
               />
             </label>
             <button
+              aria-label="Change"
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
               data-testid="thumbnail-select-change"
               type="button"

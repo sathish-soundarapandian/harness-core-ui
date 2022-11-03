@@ -231,6 +231,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
             class="bp3-flex-expander"
           />
           <button
+            aria-label="common.saveAsTemplate"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-medium Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
             type="button"
           >
@@ -682,6 +683,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                           class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
                         >
                           <button
+                            aria-label="pipeline.manifestType.addManifestLabel"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             data-test-id="addManifest"
                             id="add-manifest"
@@ -738,6 +740,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                         >
                           <section />
                           <button
+                            aria-label="pipeline.artifactsSelection.addPrimaryArtifact"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             id="add-artifact"
                             type="button"
@@ -768,6 +771,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                             </span>
                           </button>
                           <button
+                            aria-label="pipeline.artifactsSelection.addSidecar"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             id="add-artifact"
                             type="button"
@@ -828,6 +832,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                             class="customVariablesStage"
                           >
                             <button
+                              aria-label="common.addVariable"
                               class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                               type="button"
                             >
@@ -870,6 +875,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                   class="Layout--horizontal StyledProps--main navigationBtns"
                 >
                   <button
+                    aria-label="back"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                     type="button"
                   >
@@ -899,6 +905,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                     type="button"
                   >

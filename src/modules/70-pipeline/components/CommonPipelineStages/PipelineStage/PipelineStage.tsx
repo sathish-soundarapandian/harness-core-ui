@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { PipelineStage as CommonStage } from '@pipeline/components/PipelineStages/PipelineStage'
+import { DeployStageErrorProvider } from '@pipeline/context/StageErrorContext'
 import { PipelineStageMinimalMode } from './PipelineStageMinimalMode'
 import { PipelineStageSetupShellMode } from './PipelineStageSetupShellMode'
 
@@ -16,6 +17,10 @@ export class PipelineStage extends CommonStage {
     if (minimal) {
       return <PipelineStageMinimalMode {...stageProps} />
     }
-    return <PipelineStageSetupShellMode />
+    return (
+      <DeployStageErrorProvider>
+        <PipelineStageSetupShellMode />
+      </DeployStageErrorProvider>
+    )
   }
 }

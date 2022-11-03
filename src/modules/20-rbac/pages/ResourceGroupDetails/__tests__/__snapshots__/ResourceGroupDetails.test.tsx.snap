@@ -172,6 +172,7 @@ exports[`Resource Groups Page render data 1`] = `
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
         >
           <button
+            aria-label="save"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
             disabled=""
             tabindex="-1"
@@ -184,6 +185,7 @@ exports[`Resource Groups Page render data 1`] = `
             </span>
           </button>
           <button
+            aria-label="common.discard"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
             disabled=""
             tabindex="-1"
@@ -300,7 +302,7 @@ exports[`Resource Groups Page render data 1`] = `
                   <span
                     class="bp3-control-indicator"
                   />
-                  rbac.resourceGroup.all
+                  common.all
                 </label>
                 <label
                   class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--inline"
@@ -547,7 +549,7 @@ exports[`Resource Groups Page render data 1`] = `
                       style="display: flex; align-items: center;"
                     >
                       <span
-                        class="bp3-icon bp3-icon-lock StyledProps--main Text--icon StyledProps--padding-right-medium"
+                        class="bp3-icon bp3-icon-lock StyledProps--main iconColor StyledProps--padding-right-medium"
                         icon="lock"
                       >
                         <svg
@@ -585,7 +587,7 @@ exports[`Resource Groups Page render data 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        rbac.resourceGroup.all
+                        common.all
                       </label>
                     </div>
                     <div
@@ -645,7 +647,7 @@ exports[`Resource Groups Page render data 1`] = `
                       style="display: flex; align-items: center;"
                     >
                       <span
-                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-medium"
+                        class="bp3-icon StyledProps--main iconColor StyledProps--padding-right-medium"
                         data-icon="environment"
                       >
                         <svg
@@ -693,7 +695,7 @@ exports[`Resource Groups Page render data 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        rbac.resourceGroup.all
+                        common.all
                       </label>
                     </div>
                     <div

@@ -42,7 +42,6 @@ export default function PipelineSelect(props: PipelineSelectProps): React.ReactE
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      module,
       orgIdentifier,
       searchTerm: query,
       size: 10

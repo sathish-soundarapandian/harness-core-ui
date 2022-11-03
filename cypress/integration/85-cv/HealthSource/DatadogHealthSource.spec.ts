@@ -10,8 +10,10 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   connectorIdentifier,
   dataLogsIndexes,
@@ -69,6 +71,7 @@ describe('Configure Datadog health source', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
 
     cy.findByRole('button', { name: /Submit/i }).click()
@@ -77,7 +80,7 @@ describe('Configure Datadog health source', () => {
     // Triggering validations.
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.wait('@getMetrics')
+    cy.wait('@riskCategoryCall')
     cy.wait('@getActiveMetrics')
 
     // Check for form validations
@@ -210,6 +213,7 @@ describe('Configure Datadog health source', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
     cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
       'getDashboardDetails'
@@ -217,7 +221,7 @@ describe('Configure Datadog health source', () => {
 
     cy.findAllByRole('button', { name: /Next/i }).last().click()
 
-    cy.wait('@getMetrics')
+    cy.wait('@riskCategoryCall')
     cy.wait('@getActiveMetrics')
     cy.wait('@getDashboardDetails')
     cy.contains('h3', 'Query Specifications').should('be.visible')
@@ -327,6 +331,7 @@ describe('Datadog metric thresholds', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
     cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
       'getDashboardDetails'
@@ -373,6 +378,7 @@ describe('Datadog metric thresholds', () => {
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
     cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
       'getDashboardDetails'

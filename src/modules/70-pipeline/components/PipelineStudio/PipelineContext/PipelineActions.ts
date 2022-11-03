@@ -10,7 +10,6 @@ import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import type { YamlSnippetMetaData } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type * as Diagram from '@pipeline/components/Diagram'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type {
   EntityGitDetails,
@@ -92,7 +91,7 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
       isRollback: boolean
       isParallelNodeClicked: boolean
       onUpdate?: (stepOrGroup: StepOrStepGroupOrTemplateStepData | DependencyElement) => void
-      entity: Diagram.DefaultNodeModel
+      entity: any
       stepsMap: Map<string, StepState>
       hiddenAdvancedPanels?: AdvancedPanels[]
     }
@@ -145,11 +144,11 @@ export interface PipelineReducerState {
   isInitialized: boolean
   isBEPipelineUpdated: boolean
   isUpdated: boolean
+  modules: string[]
   snippets?: YamlSnippetMetaData[]
   selectionState: SelectionState
   templateError?: GetDataError<Failure | Error> | null
   remoteFetchError?: GetDataError<Failure | Error> | null
-  templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
@@ -162,6 +161,7 @@ export interface ActionResponse {
   error?: string
   schemaErrors?: boolean
   isUpdated?: boolean
+  modules?: string[]
   storeMetadata?: StoreMetadata
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
@@ -278,6 +278,7 @@ export const initialState: PipelineReducerState = {
   isBEPipelineUpdated: false,
   isDBInitialized: false,
   isUpdated: false,
+  modules: [],
   isInitialized: false,
   selectionState: {
     selectedStageId: undefined,

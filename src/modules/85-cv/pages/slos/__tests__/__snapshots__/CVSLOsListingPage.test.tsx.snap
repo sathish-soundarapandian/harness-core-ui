@@ -118,6 +118,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
       class="Layout--vertical StyledProps--main"
     >
       <button
+        aria-label="cv.slos.createSLO"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
         type="button"
       >
@@ -875,7 +876,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                   class="Layout--horizontal StyledProps--main actions"
                 >
                   <span
-                    class="bp3-icon StyledProps--main StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
                     data-icon="Edit"
                   >
                     <svg
@@ -900,7 +901,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     </svg>
                   </span>
                   <span
-                    class="bp3-icon StyledProps--main StyledProps--padding-small"
+                    class="bp3-icon StyledProps--main actionIcons StyledProps--padding-small"
                     data-icon="main-trash"
                   >
                     <svg
@@ -943,6 +944,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             class="Layout--horizontal StyledProps--main"
           >
             <button
+              aria-label="Prev"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
               disabled=""
               tabindex="-1"
@@ -986,6 +988,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               </span>
             </button>
             <button
+              aria-label="Next"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
               disabled=""
               tabindex="-1"

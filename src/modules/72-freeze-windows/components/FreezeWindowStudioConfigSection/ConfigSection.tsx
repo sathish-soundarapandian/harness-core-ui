@@ -43,7 +43,9 @@ const ConfigsSection = (
   _formikRef: unknown
 ) => {
   const formikRef = React.useRef()
-  const [editViews, setEditViews] = React.useState<boolean[]>(Array(entityConfigs?.length).fill(false))
+  const [editViews, setEditViews] = React.useState<boolean[]>(
+    Array(/* istanbul ignore next */ entityConfigs?.length).fill(false)
+  )
   const [initialValues, setInitialValues] = React.useState(
     getInitialValuesForConfigSection(entityConfigs, getString, resources)
   )
@@ -72,7 +74,7 @@ const ConfigsSection = (
 
   React.useEffect(() => {
     if (editViews.length === 0 && entityConfigs.length > 0) {
-      setEditViews(Array(entityConfigs?.length).fill(false))
+      setEditViews(Array(/* istanbul ignore next */ entityConfigs?.length).fill(false))
     }
   }, [entityConfigs.length])
 
@@ -93,8 +95,9 @@ const ConfigsSection = (
   const onAddRule = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const currentValues = formikRef.current?.values
+    const currentValues = /* istanbul ignore next */ formikRef.current?.values
     const addedConfig = getEmptyEntityConfig(fieldsVisibility)
+    /* istanbul ignore next */
     const updatedEntityConfigs = [...(entityConfigs || []), addedConfig]
     const initValuesForAddedConfig = getInitialValuesForConfigSection([addedConfig], getString, resources)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

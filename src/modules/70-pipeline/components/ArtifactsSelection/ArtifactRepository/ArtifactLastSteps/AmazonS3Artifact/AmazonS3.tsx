@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
+import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge, omit } from 'lodash-es'
@@ -64,13 +65,15 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     artifactIdentifiers,
     isReadonly = false,
     selectedArtifact,
-    isMultiArtifactSource
+    isMultiArtifactSource,
+    formClassName = ''
   } = props
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState({ region: undefined })
@@ -194,25 +197,30 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     return primarySchema
   }, [context, primarySchema, sidecarSchema])
 
-  const getInitialValues = (): AmazonS3InitialValuesType => {
+  const getInitialValues = React.useCallback((): AmazonS3InitialValuesType => {
     // Initia specValues
     const specValues = get(initialValues, 'spec', null)
+
     // if specValues is nil or selected type is not matching with initialValues.type then assume NEW
     if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
       return defaultArtifactInitialValues(defaultTo(selectedArtifact, 'AmazonS3'))
     }
+
     // Depending upon if filePath is present or not in specValues, decide typeType
-    merge(specValues, { tagType: specValues.filePath ? TagTypes.Value : TagTypes.Regex })
-    // If sidecar then merge identifier value to specValues
-    if (isIdentifierAllowed && initialValues?.identifier) {
-      merge(specValues, { identifier: initialValues?.identifier })
+    const artifactValues = {
+      ...specValues,
+      tagType: specValues.filePath ? TagTypes.Value : TagTypes.Regex
     }
-    return specValues
-  }
+
+    if (isIdentifierAllowed && initialValues?.identifier) {
+      merge(artifactValues, { identifier: initialValues?.identifier })
+    }
+    return artifactValues
+  }, [initialValues, selectedArtifact, isIdentifierAllowed])
 
   const submitFormData = (formData: AmazonS3InitialValuesType & { connectorId?: string }): void => {
     // Initial data
-    const artifactObj = {
+    let artifactObj = {
       spec: {
         connectorRef: formData.connectorId,
         bucketName: formData.bucketName,
@@ -223,13 +231,29 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     // Merge filePath or filePathRegex field value with initial data depending upon tagType selection
     const filePathData =
       formData?.tagType === TagTypes.Value ? { filePath: formData.filePath } : { filePathRegex: formData.filePathRegex }
-    merge(artifactObj.spec, filePathData)
-    // If sidecar artifact then merge identifier value with initial value
+
+    artifactObj = {
+      spec: {
+        ...artifactObj.spec,
+        ...filePathData
+      }
+    }
+
     if (isIdentifierAllowed) {
       merge(artifactObj, { identifier: formData?.identifier })
     }
     // Submit the final object
     handleSubmit(artifactObj)
+  }
+
+  const handleValidate = (formData: AmazonS3InitialValuesType & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorId: getConnectorIdValue(prevStepData)
+      })
+    }
   }
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
@@ -334,13 +358,16 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik<AmazonS3InitialValuesType>
         initialValues={getInitialValues()}
         formName="artifactoryArtifact"
         validationSchema={getValidationSchema()}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -351,7 +378,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       >
         {formik => (
           <FormikForm>
-            <div className={css.connectorForm}>
+            <div className={cx(css.connectorForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -485,20 +512,22 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 </div>
               )}
             </div>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isTemplateContext && (
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

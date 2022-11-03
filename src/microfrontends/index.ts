@@ -40,6 +40,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
+import type { TIUIAppCustomProps } from '@pipeline/pages/execution/ExecutionTestView/interfaces/TIUIApp.types'
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 
@@ -105,6 +106,7 @@ export {
   GitOpsCustomMicroFrontendProps,
   STOAppCustomProps,
   CCMUIAppCustomProps,
+  TIUIAppCustomProps,
   ChaosCustomMicroFrontendProps,
   FFCustomMicroFrontendProps
 }

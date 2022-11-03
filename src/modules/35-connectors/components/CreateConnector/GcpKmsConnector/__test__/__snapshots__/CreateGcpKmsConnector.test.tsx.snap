@@ -428,6 +428,7 @@ exports[`Create Secret Manager Wizard Create GcpKms Connector 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
                   type="button"
                 >
@@ -438,6 +439,7 @@ exports[`Create Secret Manager Wizard Create GcpKms Connector 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                   type="submit"
                 >

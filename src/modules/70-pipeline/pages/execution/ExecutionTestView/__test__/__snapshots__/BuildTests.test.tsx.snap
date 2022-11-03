@@ -7000,6 +7000,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                     />
                   </div>
                   <button
+                    aria-label="search"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow"
                     data-testid="search-btn"
                     type="button"
@@ -9762,6 +9763,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                         class="Layout--horizontal StyledProps--main"
                       >
                         <button
+                          aria-label="Prev"
                           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                           disabled=""
                           tabindex="-1"
@@ -9901,6 +9903,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                           </span>
                         </button>
                         <button
+                          aria-label="Next"
                           class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                           type="button"
                         >
@@ -12092,6 +12095,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -12231,6 +12235,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   type="button"
                 >
@@ -18576,6 +18581,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                     />
                   </div>
                   <button
+                    aria-label="search"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow"
                     data-testid="search-btn"
                     type="button"
@@ -21338,6 +21344,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                         class="Layout--horizontal StyledProps--main"
                       >
                         <button
+                          aria-label="Prev"
                           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                           disabled=""
                           tabindex="-1"
@@ -21477,6 +21484,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                           </span>
                         </button>
                         <button
+                          aria-label="Next"
                           class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                           type="button"
                         >
@@ -23668,6 +23676,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="Prev"
                   class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                   disabled=""
                   tabindex="-1"
@@ -23807,6 +23816,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                   </span>
                 </button>
                 <button
+                  aria-label="Next"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                   type="button"
                 >

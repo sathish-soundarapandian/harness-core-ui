@@ -33,9 +33,12 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
   } = useFreezeWindowContext()
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<WindowPathProps>()
   const { onSave, isSaveDisabled, isSaveInProgress } = useSaveFreeze()
-  const validate = useCallback((formData: any) => {
-    updateFreeze({ ...freezeObj, windows: [formData] })
-  }, [])
+  const validate = useCallback(
+    (formData: any) => {
+      updateFreeze({ ...freezeObj, windows: [formData] })
+    },
+    [freezeObj]
+  )
 
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>

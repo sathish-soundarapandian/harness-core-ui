@@ -445,6 +445,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -984,7 +985,6 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1337,7 +1337,6 @@ export interface ErrorMetadata {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   errorMessage?: string
 }
 
@@ -1414,6 +1413,7 @@ export interface ExecutionInfo {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -1491,6 +1491,7 @@ export interface ExecutionNode {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -1889,7 +1890,6 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2134,6 +2134,7 @@ export interface GraphLayoutNode {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -2969,6 +2970,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -3042,6 +3044,7 @@ export interface PipelineExecutionSummary {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -3312,6 +3315,7 @@ export interface RecentExecutionInfoDTO {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -4060,7 +4064,6 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4440,6 +4443,7 @@ export interface RetryStageInfo {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -5209,6 +5213,7 @@ export interface ExecutionSummaryInfo {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -9897,6 +9902,7 @@ export interface GetListOfExecutionsQueryParams {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'

@@ -12,7 +12,7 @@ import { useStrings } from 'framework/strings'
 
 export const CECODashboardPage: React.FC = () => {
   const { getString } = useStrings()
-  useDocumentTitle(getString('ce.co.breadCrumb.rules'), true)
+  useDocumentTitle(getString('ce.co.breadCrumb.rules'))
   return <COGatewayList />
 }
 

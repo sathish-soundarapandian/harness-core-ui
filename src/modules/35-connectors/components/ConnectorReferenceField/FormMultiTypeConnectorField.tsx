@@ -301,18 +301,21 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     }
   }
 
+  const onModalClose = () => {
+    setInlineSelection(prevState => {
+      return { ...prevState, inlineModalClosed: true }
+    })
+  }
+
   const { openConnectorModal } = useCreateConnectorModal({
     onSuccess: onConnectorCreateSuccess,
-    onClose: () => {
-      setInlineSelection(prevState => {
-        return { ...prevState, inlineModalClosed: true }
-      })
-    }
+    onClose: onModalClose
   })
 
   const { openConnectorMultiTypeModal } = useCreateConnectorMultiTypeModal({
     types: Array.isArray(type) ? type : [type],
-    onSuccess: onConnectorCreateSuccess
+    onSuccess: onConnectorCreateSuccess,
+    onClose: onModalClose
   })
 
   const placeHolderLocal = loading ? getString('loading') : placeholder

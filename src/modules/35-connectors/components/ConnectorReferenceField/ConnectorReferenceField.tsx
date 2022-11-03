@@ -459,7 +459,7 @@ export function getReferenceFieldProps({
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-    fetchRecords: (scope, done, search = '', page = 0, signal = undefined) => {
+    fetchRecords: (done, search, page, scope, signal = undefined) => {
       const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
@@ -475,10 +475,10 @@ export function getReferenceFieldProps({
               {
                 queryParams: {
                   accountIdentifier,
-                  searchTerm: search,
+                  searchTerm: search || '',
                   ...additionalParams,
                   ...gitFilterParams,
-                  pageIndex: page,
+                  pageIndex: page || 0,
                   pageSize: 10
                 },
                 body: merge(

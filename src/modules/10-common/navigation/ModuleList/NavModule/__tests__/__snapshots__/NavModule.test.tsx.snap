@@ -4,7 +4,7 @@ exports[`nav module test render 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main container cd StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
-    style="width: 306px;"
+    style="width: 316px;"
   >
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"

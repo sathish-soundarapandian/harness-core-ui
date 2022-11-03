@@ -32,6 +32,7 @@ exports[`CDTrialHomePage snapshot test should render properly 1`] = `
           cd.learnMore
         </a>
         <button
+          aria-label="cd.cdTrialHomePage.startTrial.startBtn.description"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"

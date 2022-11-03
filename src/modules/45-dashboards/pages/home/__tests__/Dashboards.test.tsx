@@ -12,6 +12,8 @@ import type { StringKeys } from 'framework/strings'
 import type { DashboardModel } from 'services/custom-dashboards'
 import { DashboardLayoutViews, DashboardType } from '@dashboards/types/DashboardTypes.types'
 import * as customDashboardServices from 'services/custom-dashboards'
+import { DashboardsContextProvider } from '@dashboards/pages/DashboardsContext'
+import { FolderType } from '@dashboards/constants/FolderType'
 import Dashboards, { DashboardsProps } from '../Dashboards'
 
 const defaultProps: DashboardsProps = {
@@ -19,6 +21,21 @@ const defaultProps: DashboardsProps = {
   deleteDashboard: jest.fn(),
   triggerRefresh: jest.fn(),
   view: DashboardLayoutViews.GRID
+}
+
+const mockFolderOne: customDashboardServices.FolderModel = {
+  id: '1',
+  name: 'testName',
+  title: 'testTitle',
+  type: FolderType.ACCOUNT,
+  child_count: 0,
+  created_at: '01/01/2022'
+}
+
+const mockGetFolderResponse: customDashboardServices.GetFoldersResponse = {
+  resource: [mockFolderOne],
+  items: 1,
+  pages: 1
 }
 
 const defaultTestDashboard: DashboardModel = {
@@ -32,17 +49,15 @@ const defaultTestDashboard: DashboardModel = {
   data_source: [],
   last_accessed_at: '',
   resourceIdentifier: '1',
-  folder: {
-    id: '',
-    title: '',
-    created_at: ''
-  }
+  folder: mockFolderOne
 }
 
 const renderComponent = (props: DashboardsProps): RenderResult => {
   return render(
     <TestWrapper>
-      <Dashboards {...props} />
+      <DashboardsContextProvider>
+        <Dashboards {...props} />
+      </DashboardsContextProvider>
     </TestWrapper>
   )
 }
@@ -65,7 +80,7 @@ describe('Dashboards', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockImplementation(() => ({ data: {} } as any))
     useGetFoldersMock.mockReturnValue({ data: mockEmptyGetFolderResponse, error: null, loading: false } as any)
   })
 
@@ -105,6 +120,10 @@ describe('Dashboards', () => {
   })
 
   test('it should show edit dashboard form when editDashboard callback triggered', async () => {
+    jest
+      .spyOn(customDashboardServices, 'useGetFolders')
+      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
+
     const testDashboard: DashboardModel = {
       ...defaultTestDashboard,
       type: DashboardType.ACCOUNT
@@ -130,6 +149,10 @@ describe('Dashboards', () => {
   })
 
   test('it should trigger delete callback when deleteDashboard triggered', () => {
+    jest
+      .spyOn(customDashboardServices, 'useGetFolders')
+      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
+
     const mockCallback = jest.fn()
     const testDashboard: DashboardModel = {
       ...defaultTestDashboard,
@@ -156,6 +179,9 @@ describe('Dashboards', () => {
   })
 
   test('it should trigger clone callback when cloneDashboard triggered', async () => {
+    jest
+      .spyOn(customDashboardServices, 'useGetFolders')
+      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
     const testDashboard: DashboardModel = {
       ...defaultTestDashboard,
       type: DashboardType.ACCOUNT

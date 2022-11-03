@@ -19,7 +19,6 @@ export function RightDrawer(): React.ReactElement {
 
   return (
     <Drawer
-      onClose={() => setDrawerType()}
       usePortal={true}
       autoFocus={true}
       canEscapeKeyClose={false}

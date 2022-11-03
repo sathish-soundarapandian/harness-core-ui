@@ -231,6 +231,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
               }
             }
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template?.connectorRef
+            }}
           />
         </div>
       )}

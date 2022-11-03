@@ -20,7 +20,6 @@ import {
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import {
   allowedManifestTypes,
   getManifestsHeaderTooltipId
@@ -51,7 +50,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
@@ -113,23 +112,22 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               />
             )}
           </Card>
-          {(isNewService || isServiceEntityPage) &&
-            NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2
-              <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
-                <div
-                  className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
-                >
-                  {getString('pipelineSteps.configFiles')}
-                </div>
-                <ConfigFilesSelection
-                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                  isPropagating={isPropagating}
-                  deploymentType={selectedDeploymentType}
-                  readonly={!!readonly}
-                />
-              </Card>
-            )}
+          {(isNewService || isServiceEntityPage) && ( //Config files are only available for creation or readonly mode for service V2
+            <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
+              <div
+                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.configFiles')}
+              </div>
+              <ConfigFilesSelection
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
         </>
       )}
 
@@ -139,17 +137,13 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
           <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
-          {isReadonlyServiceMode ? (
-            <VariableListReadOnlyView />
-          ) : (
-            <WorkflowVariables
-              tabName={DeployTabs.SERVICE}
-              formName={'addEditServiceCustomVariableForm'}
-              factory={factory as any}
-              isPropagating={isPropagating}
-              readonly={!!readonly}
-            />
-          )}
+          <WorkflowVariables
+            tabName={DeployTabs.SERVICE}
+            formName={'addEditServiceCustomVariableForm'}
+            factory={factory as any}
+            isPropagating={isPropagating}
+            readonly={!!readonly}
+          />
         </Card>
       </div>
     </div>

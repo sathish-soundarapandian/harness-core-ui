@@ -7,7 +7,7 @@
 
 /* eslint-disable react/display-name */
 import React, { FC, useCallback, useMemo } from 'react'
-import get from 'lodash/get'
+import { get } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'

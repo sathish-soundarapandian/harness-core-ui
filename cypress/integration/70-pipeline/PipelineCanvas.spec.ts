@@ -260,7 +260,6 @@ describe('Execution Stages', () => {
     })
     cy.wait(2000)
     cy.visitPageAssertion()
-    cy.wait('@inputSetsTemplateCall', { timeout: 30000 })
     cy.wait('@pipelineDetails', { timeout: 30000 })
     cy.wait(2000)
   }
@@ -725,7 +724,8 @@ describe('Add stage view with disabled licences', () => {
     cy.visit(pipelinesRoute, {
       timeout: 30000
     })
-    cy.contains('span', 'Create a Pipeline').click()
+    cy.visitPageAssertion(pageHeaderClassName)
+    cy.contains('span', 'Create a Pipeline').should('be.visible').click()
     cy.fillName('testPipeline_Cypress')
     cy.clickSubmit()
   })

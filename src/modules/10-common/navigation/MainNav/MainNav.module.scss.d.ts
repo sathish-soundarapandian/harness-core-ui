@@ -10,11 +10,18 @@ declare const styles: {
   readonly active: string
   readonly allModulesButton: string
   readonly allModulesOpen: string
+  readonly border: string
+  readonly chevron: string
+  readonly darkBackground: string
+  readonly disabled: string
   readonly hiddenText: string
   readonly hoverNavLink: string
   readonly hoverText: string
   readonly main: string
+  readonly modules: string
   readonly modulesContainer: string
+  readonly modulesContainerNavItem: string
+  readonly navBtn: string
   readonly navItem: string
   readonly navLink: string
   readonly navList: string

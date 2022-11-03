@@ -24,7 +24,7 @@ import { debounce, defaultTo, escape, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
 import { String, StringKeys, useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { ConnectorInfoDTO, NGVariable } from 'services/cd-ng'
@@ -81,7 +81,6 @@ export interface CustomVariableEditableProps extends CustomVariableEditableExtra
   stepViewType?: StepViewType
   readonly?: boolean
   allowableTypes: AllowedTypes
-  fromEnvironmentConfiguration?: boolean
 }
 
 export function CustomVariableEditable(props: CustomVariableEditableProps): React.ReactElement {
@@ -153,6 +152,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
       }
     }
   }, [searchIndex, openNestedPath, searchText])
+
   return (
     <Formik initialValues={initialValues} onSubmit={data => onUpdate?.(data)} validate={debouncedUpdate}>
       {({ values, setFieldValue }) => (
@@ -345,6 +345,11 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                                   )
                                 }}
                                 isReadonly={readonly}
+                                allowedValuesType={
+                                  variable.type === VariableType.Number
+                                    ? ALLOWED_VALUES_TYPE.NUMBER
+                                    : ALLOWED_VALUES_TYPE.TEXT
+                                }
                               />
                             </div>
                           )}

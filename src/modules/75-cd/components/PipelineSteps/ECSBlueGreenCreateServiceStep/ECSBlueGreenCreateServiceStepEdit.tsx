@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import produce from 'immer'
@@ -34,6 +34,7 @@ import type {
   ECSBlueGreenCreateServiceStepInitialValues,
   ECSBlueGreenCreateServiceCustomStepProps
 } from './ECSBlueGreenCreateServiceStep'
+import { shouldFetchFieldData } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ECSBlueGreenCreateServiceStep.module.scss'
 
@@ -66,6 +67,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const [listenerList, setListenerList] = useState<SelectOption[]>([])
   const [prodListenerRules, setProdListenerRules] = useState<SelectOption[]>([])
   const [prodListenerRulesLoading, setProdListenerRulesLoading] = useState<boolean>(false)
   const [stageListenerRules, setStageListenerRules] = useState<SelectOption[]>([])
@@ -80,7 +82,22 @@ const ECSBlueGreenCreateServiceStepEdit = (
   const awsConnectorRef = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.connectorRef
   const region = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.region
 
-  const { data: loadBalancers, loading: loadingLoadBalancers } = useElasticLoadBalancers({
+  const shouldFetchLoadBalancers =
+    shouldFetchFieldData([awsConnectorRef, region]) ||
+    shouldFetchFieldData([defaultTo(environmentRef, ''), defaultTo(infrastructureRef, '')])
+  const shouldFetchListeners =
+    shouldFetchFieldData([awsConnectorRef, region, initialValues.spec.loadBalancer]) ||
+    shouldFetchFieldData([
+      defaultTo(environmentRef, ''),
+      defaultTo(infrastructureRef, ''),
+      initialValues.spec.loadBalancer
+    ])
+
+  const {
+    data: loadBalancers,
+    loading: loadingLoadBalancers,
+    refetch: refetchLoadBalancers
+  } = useElasticLoadBalancers({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -89,7 +106,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
       region,
       envId: environmentRef,
       infraDefinitionId: infrastructureRef
-    }
+    },
+    lazy: !shouldFetchLoadBalancers
   })
   const loadBalancerOptions: SelectOption[] = React.useMemo(() => {
     return defaultTo(loadBalancers?.data, []).map(loadBalancer => ({
@@ -112,29 +130,66 @@ const ECSBlueGreenCreateServiceStepEdit = (
       awsConnectorRef,
       region,
       elasticLoadBalancer: initialValues.spec.loadBalancer
-    }
+    },
+    lazy: !shouldFetchListeners
   })
-  const listenerOptions: SelectOption[] = React.useMemo(() => {
+  React.useEffect(() => {
     const listenerData = defaultTo(listeners?.data, {})
-    return Object.keys(listenerData).map(listenerKey => ({
+    const listenerOptions = Object.keys(listenerData).map(listenerKey => ({
       value: listenerData[listenerKey],
       label: listenerKey
     }))
+    setListenerList(listenerOptions)
   }, [listeners?.data])
 
   React.useEffect(() => {
-    if (!isEmpty(initialValues.spec.loadBalancer) && !isEmpty(initialValues.spec.prodListener)) {
+    if (shouldFetchFieldData([initialValues.spec.loadBalancer, initialValues.spec.prodListener])) {
       fetchProdListenerRules(initialValues.spec.loadBalancer, initialValues.spec.prodListener)
     }
-    if (!isEmpty(initialValues.spec.loadBalancer) && !isEmpty(initialValues.spec.stageListener)) {
+    if (shouldFetchFieldData([initialValues.spec.loadBalancer, initialValues.spec.stageListener])) {
       fetchStageListenerRules(initialValues.spec.loadBalancer, initialValues.spec.stageListener)
     }
   }, [initialValues.spec.loadBalancer, initialValues.spec.prodListener, initialValues.spec.stageListener])
 
-  const fetchProdListenerRules = (selectedLoadBalancer: string, selectedListener: string) => {
+  const fetchLoadBalancers = () => {
+    if (!loadingLoadBalancers) {
+      if ((awsConnectorRef && region) || (environmentRef && infrastructureRef)) {
+        refetchLoadBalancers()
+      }
+    }
+  }
+
+  const fetchListeners = (selectedLoadBalancer: string) => {
+    if (!loadingListeners) {
+      if (
+        shouldFetchFieldData([awsConnectorRef, region, selectedLoadBalancer]) ||
+        shouldFetchFieldData([defaultTo(environmentRef, ''), defaultTo(infrastructureRef, ''), selectedLoadBalancer])
+      ) {
+        refetchListeners({
+          queryParams: {
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            envId: environmentRef,
+            infraDefinitionId: infrastructureRef,
+            awsConnectorRef,
+            region,
+            elasticLoadBalancer: selectedLoadBalancer
+          }
+        })
+      }
+    }
+  }
+
+  const fetchProdListenerRules = (selectedLoadBalancer: string, selectedProdListener: string) => {
     if (
-      (awsConnectorRef && region && selectedLoadBalancer && selectedListener) ||
-      (environmentRef && infrastructureRef)
+      shouldFetchFieldData([awsConnectorRef, region, selectedLoadBalancer, selectedProdListener]) ||
+      shouldFetchFieldData([
+        defaultTo(environmentRef, ''),
+        defaultTo(infrastructureRef, ''),
+        selectedLoadBalancer,
+        selectedProdListener
+      ])
     ) {
       setProdListenerRulesLoading(true)
       listenerRulesPromise({
@@ -147,10 +202,11 @@ const ECSBlueGreenCreateServiceStepEdit = (
           awsConnectorRef,
           region,
           elasticLoadBalancer: selectedLoadBalancer,
-          listenerArn: selectedListener
+          listenerArn: selectedProdListener
         }
       })
         .then((response: ResponseListString) => {
+          setProdListenerRulesLoading(false)
           const listenerRulesData = defaultTo(response?.data, [])
           const listenerRulesOptions = listenerRulesData.map(listenerRule => ({
             value: listenerRule,
@@ -159,16 +215,21 @@ const ECSBlueGreenCreateServiceStepEdit = (
           setProdListenerRules(listenerRulesOptions)
         })
         .catch(() => {
+          setProdListenerRulesLoading(false)
           setProdListenerRules([])
         })
-      setProdListenerRulesLoading(false)
     }
   }
 
-  const fetchStageListenerRules = (selectedLoadBalancer: string, selectedListener: string) => {
+  const fetchStageListenerRules = (selectedLoadBalancer: string, selectedStageListener: string) => {
     if (
-      (awsConnectorRef && region && selectedLoadBalancer && selectedListener) ||
-      (environmentRef && infrastructureRef)
+      shouldFetchFieldData([awsConnectorRef, region, selectedLoadBalancer, selectedStageListener]) ||
+      shouldFetchFieldData([
+        defaultTo(environmentRef, ''),
+        defaultTo(infrastructureRef, ''),
+        selectedLoadBalancer,
+        selectedStageListener
+      ])
     ) {
       setStageListenerRulesLoading(true)
       listenerRulesPromise({
@@ -181,10 +242,11 @@ const ECSBlueGreenCreateServiceStepEdit = (
           awsConnectorRef,
           region,
           elasticLoadBalancer: selectedLoadBalancer,
-          listenerArn: selectedListener
+          listenerArn: selectedStageListener
         }
       })
         .then((response: ResponseListString) => {
+          setStageListenerRulesLoading(false)
           const listenerRulesData = defaultTo(response?.data, [])
           const listenerRulesOptions = listenerRulesData.map(listenerRule => ({
             value: listenerRule,
@@ -193,9 +255,9 @@ const ECSBlueGreenCreateServiceStepEdit = (
           setStageListenerRules(listenerRulesOptions)
         })
         .catch(() => {
+          setStageListenerRulesLoading(false)
           setStageListenerRules([])
         })
-      setStageListenerRulesLoading(false)
     }
   }
 
@@ -203,33 +265,27 @@ const ECSBlueGreenCreateServiceStepEdit = (
     selectedLoadBalancer: string,
     formik: FormikProps<ECSBlueGreenCreateServiceStepInitialValues>
   ) => {
-    refetchListeners({
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
-        envId: environmentRef,
-        infraDefinitionId: infrastructureRef,
-        awsConnectorRef,
-        region,
-        elasticLoadBalancer: selectedLoadBalancer
+    const updatedValues = produce(formik.values, draft => {
+      draft.spec.loadBalancer = selectedLoadBalancer
+      if (getMultiTypeFromValue(formik.values.spec.prodListener) === MultiTypeInputType.FIXED) {
+        draft.spec.prodListener = ''
+      }
+      if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
+        draft.spec.prodListenerRuleArn = ''
+      }
+      if (getMultiTypeFromValue(formik.values.spec.stageListener) === MultiTypeInputType.FIXED) {
+        draft.spec.stageListener = ''
+      }
+      if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
+        draft.spec.stageListenerRuleArn = ''
       }
     })
-    formik.setFieldValue('spec.loadBalancer', selectedLoadBalancer)
-    if (getMultiTypeFromValue(formik.values.spec.prodListener) === MultiTypeInputType.FIXED) {
-      formik.setFieldValue('spec.prodListener', '')
+    formik.setValues(updatedValues)
+    if (getMultiTypeFromValue(selectedLoadBalancer) === MultiTypeInputType.RUNTIME) {
+      setListenerList([])
+      setProdListenerRules([])
+      setStageListenerRules([])
     }
-    if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
-      formik.setFieldValue('spec.prodListenerRuleArn', '')
-    }
-    if (getMultiTypeFromValue(formik.values.spec.stageListener) === MultiTypeInputType.FIXED) {
-      formik.setFieldValue('spec.stageListener', '')
-    }
-    if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
-      formik.setFieldValue('spec.stageListenerRuleArn', '')
-    }
-    setProdListenerRules([])
-    setStageListenerRules([])
   }
 
   return (
@@ -299,7 +355,9 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   multiTypeInputProps={{
                     selectProps: {
                       items: loadBalancerOptions,
-                      popoverClassName: css.dropdownMenu
+                      popoverClassName: css.dropdownMenu,
+                      allowCreatingNewItems: true,
+                      loadingItems: loadingLoadBalancers
                     },
                     onChange: selectedValue => {
                       const selectedValueString =
@@ -307,10 +365,12 @@ const ECSBlueGreenCreateServiceStepEdit = (
                           ? selectedValue
                           : ((selectedValue as SelectOption)?.value as string)
                       onLoadBalancerChange(selectedValueString, formik)
-                    }
+                    },
+                    onFocus: fetchLoadBalancers
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer')}
                   placeholder={loadingLoadBalancers ? getString('loading') : getString('select')}
+                  disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.spec.loadBalancer) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
@@ -336,19 +396,20 @@ const ECSBlueGreenCreateServiceStepEdit = (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   name="spec.prodListener"
-                  selectItems={listenerOptions}
+                  selectItems={listenerList}
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: listenerOptions,
-                      popoverClassName: css.dropdownMenu
+                      items: listenerList,
+                      popoverClassName: css.dropdownMenu,
+                      allowCreatingNewItems: true,
+                      loadingItems: loadingListeners
                     },
                     onChange: selectedValue => {
                       const selectedValueString =
                         typeof selectedValue === 'string'
                           ? selectedValue
                           : ((selectedValue as SelectOption).value as string)
-                      fetchProdListenerRules(formik.values.spec.loadBalancer, selectedValueString)
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.prodListener = selectedValueString
                         if (getMultiTypeFromValue(draft.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
@@ -356,15 +417,18 @@ const ECSBlueGreenCreateServiceStepEdit = (
                         }
                       })
                       formik.setValues(updatedValues)
+                    },
+                    onFocus: () => {
+                      fetchListeners(formik.values.spec.loadBalancer)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
                   placeholder={loadingListeners ? getString('loading') : getString('select')}
-                  disabled={defaultTo(loadingListeners, readonly)}
+                  disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.spec.prodListener) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
-                    options={listenerOptions}
+                    options={listenerList}
                     value={formik.values.spec.prodListener as string}
                     type="String"
                     variableName="spec.prodListener"
@@ -372,7 +436,6 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     showDefaultField={false}
                     showAdvanced={true}
                     onChange={value => {
-                      fetchProdListenerRules(formik.values.spec.loadBalancer, value)
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.prodListener = value
                         if (getMultiTypeFromValue(draft.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
@@ -393,12 +456,17 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   multiTypeInputProps={{
                     selectProps: {
                       items: prodListenerRules,
-                      popoverClassName: css.dropdownMenu
+                      popoverClassName: css.dropdownMenu,
+                      allowCreatingNewItems: true,
+                      loadingItems: prodListenerRulesLoading
+                    },
+                    onFocus: () => {
+                      fetchProdListenerRules(formik.values.spec.loadBalancer, formik.values.spec.prodListener)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
                   placeholder={prodListenerRulesLoading ? getString('loading') : getString('select')}
-                  disabled={defaultTo(prodListenerRulesLoading, readonly)}
+                  disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
@@ -424,19 +492,20 @@ const ECSBlueGreenCreateServiceStepEdit = (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   name="spec.stageListener"
-                  selectItems={listenerOptions}
+                  selectItems={listenerList}
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: listenerOptions,
-                      popoverClassName: css.dropdownMenu
+                      items: listenerList,
+                      popoverClassName: css.dropdownMenu,
+                      allowCreatingNewItems: true,
+                      loadingItems: loadingListeners
                     },
                     onChange: selectedValue => {
                       const selectedValueString =
                         typeof selectedValue === 'string'
                           ? selectedValue
                           : ((selectedValue as SelectOption).value as string)
-                      fetchStageListenerRules(formik.values.spec.loadBalancer, selectedValueString)
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.stageListener = selectedValueString
                         if (getMultiTypeFromValue(draft.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
@@ -444,15 +513,18 @@ const ECSBlueGreenCreateServiceStepEdit = (
                         }
                       })
                       formik.setValues(updatedValues)
+                    },
+                    onFocus: () => {
+                      fetchListeners(formik.values.spec.loadBalancer)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
                   placeholder={loadingListeners ? getString('loading') : getString('select')}
-                  disabled={defaultTo(loadingListeners, readonly)}
+                  disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.spec.stageListener) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
-                    options={listenerOptions}
+                    options={listenerList}
                     value={formik.values.spec.stageListener as string}
                     type="String"
                     variableName="spec.stageListener"
@@ -460,7 +532,6 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     showDefaultField={false}
                     showAdvanced={true}
                     onChange={value => {
-                      fetchProdListenerRules(formik.values.spec.loadBalancer, value)
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.stageListener = value
                         if (getMultiTypeFromValue(draft.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
@@ -481,12 +552,17 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   multiTypeInputProps={{
                     selectProps: {
                       items: stageListenerRules,
-                      popoverClassName: css.dropdownMenu
+                      popoverClassName: css.dropdownMenu,
+                      allowCreatingNewItems: true,
+                      loadingItems: stageListenerRulesLoading
+                    },
+                    onFocus: () => {
+                      fetchStageListenerRules(formik.values.spec.loadBalancer, formik.values.spec.stageListener)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
                   placeholder={stageListenerRulesLoading ? getString('loading') : getString('select')}
-                  disabled={defaultTo(stageListenerRulesLoading, readonly)}
+                  disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions

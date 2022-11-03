@@ -341,7 +341,7 @@ const Budgets: () => JSX.Element = () => {
 
   const HeaderComponent = <Page.Header title={getString('ce.budgets.listPage.title')} breadcrumbs={<NGBreadcrumbs />} />
 
-  useDocumentTitle(getString('ce.budgets.sideNavText'), true)
+  useDocumentTitle(getString('ce.budgets.sideNavText'))
 
   const openNewBudgetModal = () => {
     trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_BUDGET, { pageName: PAGE_NAMES.BUDGET_LANDING_PAGE, isEditMode: false })

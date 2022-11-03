@@ -901,6 +901,7 @@ exports[`AddCluster tests initial render 1`] = `
       class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
+        aria-label="Add"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -913,6 +914,7 @@ exports[`AddCluster tests initial render 1`] = `
         </span>
       </button>
       <button
+        aria-label="Cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -1841,6 +1843,7 @@ exports[`AddCluster tests select a cluster 1`] = `
       class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
+        aria-label="Add"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -1851,6 +1854,7 @@ exports[`AddCluster tests select a cluster 1`] = `
         </span>
       </button>
       <button
+        aria-label="Cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -2766,6 +2770,7 @@ exports[`AddCluster tests when no clusters 1`] = `
       class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
+        aria-label="Add"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -2778,6 +2783,7 @@ exports[`AddCluster tests when no clusters 1`] = `
         </span>
       </button>
       <button
+        aria-label="Cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >

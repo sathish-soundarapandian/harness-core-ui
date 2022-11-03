@@ -49,7 +49,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
     formikSetField,
     isTemplate,
     expressions,
-    metricPackResponse
+    riskProfileResponse
   } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -231,7 +231,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
                   riskCategory: metricValues?.riskCategory,
                   continuousVerification: !!metricValues.continuousVerification
                 }}
-                metricPackResponse={metricPackResponse}
+                riskProfileResponse={riskProfileResponse}
                 hideServiceIdentifier={true}
               />
             }

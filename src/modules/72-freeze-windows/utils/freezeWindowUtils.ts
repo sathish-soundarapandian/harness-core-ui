@@ -6,12 +6,12 @@
  */
 
 import moment from 'moment'
-import type { CurrentOrUpcomingActiveWindow, FreezeDetailedResponse, FreezeSummaryResponse } from 'services/cd-ng'
+import type { CurrentOrUpcomingWindow, FreezeDetailedResponse, FreezeSummaryResponse } from 'services/cd-ng'
 
-export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Annually'] as const
+export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Yearly'] as const
 export const DOES_NOT_REPEAT = 'Does not repeat'
 
-type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
+export type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
 
 export const scopeText: Record<Scope, string> = {
   account: 'Account',
@@ -26,14 +26,14 @@ export enum FreezeStatus {
 }
 
 export const getFreezeStatus = (
-  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow,
+  currentOrUpcomingWindow?: CurrentOrUpcomingWindow,
   isEnabled?: boolean
 ): FreezeStatus => {
-  if (!currentOrUpcomingActiveWindow) {
+  if (!currentOrUpcomingWindow) {
     return FreezeStatus['EXPIRED']
   } else if (
     isEnabled &&
-    moment().isBetween(moment(currentOrUpcomingActiveWindow.startTime), moment(currentOrUpcomingActiveWindow.endTime))
+    moment().isBetween(moment(currentOrUpcomingWindow.startTime), moment(currentOrUpcomingWindow.endTime))
   ) {
     return FreezeStatus['ACTIVE']
   }
@@ -43,7 +43,7 @@ export const getFreezeStatus = (
 
 export const getComputedFreezeStatusMap = (content: FreezeSummaryResponse[] = []): Record<string, FreezeStatus> => {
   return content.reduce((acc, item) => {
-    acc[item.identifier!] = getFreezeStatus(item.currentOrUpcomingActiveWindow, item.status === 'Enabled')
+    acc[item.identifier!] = getFreezeStatus(item.currentOrUpcomingWindow, item.status === 'Enabled')
     return acc
   }, {} as Record<string, FreezeStatus>)
 }

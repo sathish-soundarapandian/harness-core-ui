@@ -24,6 +24,7 @@ import List from '@common/components/List/List'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformInterfaces'
 import ConfigInputs from './InputSteps/ConfigSection'
 import TFRemoteSection from './InputSteps/TFRemoteSection'
@@ -34,7 +35,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   props: TerraformProps<T>
 ): React.ReactElement {
   const { getString } = useStrings()
-  const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange } = props
+  const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange, stepViewType } = props
   const { expressions } = useVariablesExpression()
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerraformData): void => {
@@ -58,6 +59,9 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             fieldPath={'spec.provisionerIdentifier'}
             template={inputSetData?.template}
           />
@@ -70,7 +74,9 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             disabled={readonly}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly

@@ -12,6 +12,7 @@ import { Color, Container, FormInput, AllowedTypes, Text } from '@harness/uicore
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { CommandUnitType, sourceTypeOptions } from '../CommandScriptsTypes'
 import css from './CommandEdit.module.scss'
 
@@ -19,10 +20,11 @@ interface CopyCommandEditProps {
   formik: FormikProps<CommandUnitType>
   allowableTypes: AllowedTypes
   readonly?: boolean
+  deploymentType?: string
 }
 
 export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement {
-  const { formik, readonly, allowableTypes } = props
+  const { formik, readonly, allowableTypes, deploymentType = '' } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -34,7 +36,7 @@ export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement
         radioGroup={{ inline: true }}
         items={sourceTypeOptions}
         label={getString('cd.steps.commands.sourceTypeLabel')}
-        disabled={readonly}
+        disabled={readonly || isWinRmDeploymentType(deploymentType)}
         onChange={(event: React.FormEvent<HTMLInputElement>) => {
           const currentValue = event.currentTarget.value
           formik.setFieldValue('spec.sourceType', currentValue)
@@ -54,7 +56,10 @@ export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement
           }
           name="spec.destinationPath"
           multiTextInputProps={{
-            multiTextInputProps: { expressions, allowableTypes },
+            multiTextInputProps: {
+              expressions,
+              allowableTypes
+            },
             disabled: readonly,
             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
           }}

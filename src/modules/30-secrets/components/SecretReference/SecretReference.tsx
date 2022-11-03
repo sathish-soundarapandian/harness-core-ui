@@ -65,15 +65,16 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps {
 const fetchRecords = (
   pageIndex: number,
   setPagedSecretData: (data: ResponsePageSecretResponseWrapper) => void,
-  scope: Scope,
   search: string | undefined,
   done: (records: EntityReferenceResponse<SecretRef>[]) => void,
   type: ListSecretsV2QueryParams['type'],
   accountIdentifier: string,
   projectIdentifier?: string,
+  scope?: Scope,
   orgIdentifier?: string,
   mock?: ResponsePageSecretResponseWrapper,
-  connectorTypeContext?: ConnectorInfoDTO['type']
+  connectorTypeContext?: ConnectorInfoDTO['type'],
+  allTabSelected?: boolean
 ): void => {
   const secretManagerTypes: ConnectorInfoDTO['type'][] = [
     'AwsKms',
@@ -92,11 +93,12 @@ const fetchRecords = (
       accountIdentifier,
       type,
       searchTerm: search?.trim(),
-      projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-      orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
+      projectIdentifier: scope === Scope.PROJECT || allTabSelected ? projectIdentifier : undefined,
+      orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG || allTabSelected ? orgIdentifier : undefined,
       source_category: sourceCategory,
       pageIndex: pageIndex,
-      pageSize: 10
+      pageSize: 10,
+      includeAllSecretsAccessibleAtScope: !scope && allTabSelected
     },
     mock
   })
@@ -109,7 +111,7 @@ const fetchRecords = (
           response.push({
             name: secret.secret.name || '',
             identifier: secret.secret.identifier || '',
-            record: { ...secret.secret, scope }
+            record: { ...secret.secret, scope: getScopeFromDTO(secret.secret) }
           })
         })
         done(response)
@@ -191,20 +193,21 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
           containerClassName: css.noDataCardContainerSecret,
           className: css.noDataCardContainerSecret
         }}
-        fetchRecords={(scope, done, search, page = 0) => {
+        fetchRecords={(done, search, page, scope, _signal, allTabSelected) => {
           const selectedType = type || (props.secretType?.value as SecretDTOV2['type'])
           fetchRecords(
-            page,
+            page || 0,
             setPagedSecretData,
-            scope,
             search,
             done,
             selectedType,
             accountIdentifier,
             projectIdentifier,
+            scope,
             orgIdentifier,
             mock,
-            connectorTypeContext
+            connectorTypeContext,
+            allTabSelected
           )
         }}
         projectIdentifier={projectIdentifier}
@@ -214,6 +217,7 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
         searchInlineComponent={
           !type ? <SelectTypeDropdown secretType={props.secretType} setSecretType={props.setSecretType} /> : undefined
         }
+        showAllTab
         input={!type ? type || (props.secretType?.value as SecretDTOV2['type']) : undefined}
         renderTabSubHeading
         pagination={{

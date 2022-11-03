@@ -152,6 +152,16 @@ declare module 'ccmui/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'ciui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'tiui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'sto/PipelineSecurityView' {
   import type { PipelineSecurityViewProps } from '@pipeline/interfaces/STOApp'
   const ChildApp: React.ComponentType<PipelineSecurityViewProps>

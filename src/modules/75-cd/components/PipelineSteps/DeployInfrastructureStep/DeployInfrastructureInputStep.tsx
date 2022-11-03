@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Container,
   getMultiTypeFromValue,
@@ -58,6 +58,10 @@ function DeployInfrastructureInputStepInternal({
 
   const shouldRenderInfrastructure =
     getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) !== MultiTypeInputType.RUNTIME
+
+  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.environment?.environmentRef)
+  )
 
   return (
     <>
@@ -129,6 +133,8 @@ function DeployInfrastructureInputStepInternal({
                   gitOpsEnabled={gitOpsEnabled}
                   stepViewType={stepViewType}
                   readonly={readonly}
+                  environmentRefType={environmentRefType}
+                  setEnvironmentRefType={setEnvironmentRefType}
                 />
               </Container>
             )}
@@ -215,6 +221,7 @@ function DeployInfrastructureInputStepInternal({
                     readonly={readonly}
                     deploymentType={deploymentType}
                     customDeploymentData={customDeploymentData}
+                    environmentRefType={environmentRefType}
                   />
                 </Container>
               )}

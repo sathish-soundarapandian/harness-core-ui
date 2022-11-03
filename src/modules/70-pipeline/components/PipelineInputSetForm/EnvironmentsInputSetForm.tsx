@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { get, isEmpty, isNil, pick, set, unset } from 'lodash-es'
+import { get, isEmpty, isNil, omit, pick, set, unset } from 'lodash-es'
 import cx from 'classnames'
 
 import { Color, Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
@@ -238,7 +238,7 @@ function MultiEnvironmentsInputSetForm({
           readonly={readonly}
           customStepProps={{
             gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-            pathSuffix: pathToEnvironments,
+            pathToEnvironments,
             // If this is passed, the environments list is fetched based on this query param
             envGroupIdentifier: isValueRuntimeInput(deploymentStageTemplate.environmentGroup?.envGroupRef as string)
               ? deploymentStageInputSet.environmentGroup.envGroupRef
@@ -249,6 +249,7 @@ function MultiEnvironmentsInputSetForm({
              * Because we need to repeat the same selection steps without the field*/
             deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll
           }}
+          onUpdate={data => formik.setFieldValue(`${path}.${pathToEnvironments}`, get(data, pathToEnvironments))}
         />
       )}
 
@@ -414,6 +415,14 @@ function MultiEnvironmentsInputSetForm({
                             isMultipleCluster: true,
                             deployToAllClusters: environmentInDeploymentStage?.deployToAll
                           }}
+                          onUpdate={data => {
+                            const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)
+
+                            formik.setFieldValue(`${path}.${pathToEnvironments}[${index}]`, {
+                              ...omit(environmentAtIndex, ['deployToAll', 'gitOpsClusters']),
+                              ...pick(data, ['deployToAll', 'gitOpsClusters'])
+                            })
+                          }}
                         />
                       )}
 
@@ -433,6 +442,14 @@ function MultiEnvironmentsInputSetForm({
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
                             deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll
+                          }}
+                          onUpdate={data => {
+                            const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)
+
+                            formik.setFieldValue(`${path}.${pathToEnvironments}[${index}]`, {
+                              ...omit(environmentAtIndex, ['deployToAll', 'infrastructureDefinitions']),
+                              ...pick(data, ['deployToAll', 'infrastructureDefinitions'])
+                            })
                           }}
                         />
                       )}

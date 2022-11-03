@@ -131,6 +131,7 @@ export function useRefetchCall(refetch: () => Promise<any>, loading: boolean, po
 export const FailedStatus: Partial<Record<ExecutionStatus, ExecutionStatus>> = {
   Failed: 'Failed',
   Aborted: 'Aborted',
+  AbortedByFreeze: 'AbortedByFreeze',
   Expired: 'Expired',
   IgnoreFailed: 'IgnoreFailed',
   Errored: 'Errored'
@@ -191,5 +192,7 @@ export function mapToExecutionStatus(status?: string): ExecutionStatus | undefin
       return 'ApprovalRejected'
     case 'SUCCESS':
       return 'Success'
+    case 'AbortedByFreeze':
+      return 'AbortedByFreeze'
   }
 }

@@ -74,6 +74,10 @@
 
 .placeholderContainer {
   background-color: var(--white) !important;
+
+  &:global(.bp3-disabled) {
+    background-color: var(--grey-100) !important;
+  }
 }
 
 .layoutHeight {
@@ -83,6 +87,10 @@
 
 .pointer {
   cursor: pointer;
+}
+
+:global(.bp3-disabled) .pointer {
+  cursor: not-allowed;
 }
 
 .selectBtn {

@@ -138,6 +138,7 @@ const LandingDashboardPage: React.FC = () => {
 const LandingDashboardPageWithCallout = () => {
   const isFeatureFlagEnabled = useFeatureFlag(FeatureFlag.JDK11_UPGRADE_BANNER)
   const [showBanner, setShowBanner] = useState(isFeatureFlagEnabled)
+  const { getString } = useStrings()
   return (
     <>
       {showBanner && (
@@ -156,6 +157,7 @@ const LandingDashboardPageWithCallout = () => {
             to make sure Delegates continue to use these certificates.
           </Text>
           <Button
+            aria-label={getString('close')}
             variation={ButtonVariation.ICON}
             size={ButtonSize.LARGE}
             icon="cross"

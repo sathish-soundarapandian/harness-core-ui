@@ -396,7 +396,7 @@ monitoringSources:
       uniqueName: '{{existingName}} already exists. Provide a unique name.'
       recordCount: Current query yields too many records. Please change query to yield one record.
   elk:
-    elkLogsQuery: ELK Logs Query
+    elkLogsQuery: ElasticSearch Logs Query
     identifyTimeStampnoRecordModalHeader: 'New TimeStamp Identifier'
     identifyTimeStampnoRecordInputLabel: 'Add TimeStamp Identifier'
     identifyTimeStamprecordsModalHeader: 'Select Path for TimeStamp'
@@ -640,6 +640,13 @@ healthSource:
   customizeHealthSource: Customize Health Source
   deleteHealthSourceWarning: Are you sure you want to delete Health Source
   deleteHealthSource: Delete Health Source
+  selectConnectionTypeInfo: Select the connection type to see your hosted entities directly in Harness
+  awsRegionLabel: Select AWS Region
+  awsWorkspaceLabel: Select Workspace Id
+  awsDataSourceName: Amazon Web services
+  awsWorkspaceIdValidation: Workspace Id is required
+  awsWorkspacePlaceholderText: Select a Workspace Id
+  dataSourceTypeValidation: Connection Type is required
   noDataPresentHealthSource: No data is present for the selected Health Source
   seriveEnvironmentNote: Service selected is {{service}} and Environment selected is {{environment}}
   table:
@@ -967,3 +974,6 @@ metricThresholds:
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
 codeErrors: Code Errors
 codeErrorsHeading: Review code errors related to your project
+codeErrorsAgents: '{{projectName}} Code Error Agents'
+codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
+codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'

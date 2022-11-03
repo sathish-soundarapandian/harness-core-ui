@@ -17,7 +17,8 @@ import {
   HarnessDocTooltip,
   MultiTypeInputType,
   MultiTypeInputValue,
-  FormikTooltipContext
+  FormikTooltipContext,
+  Layout
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { get, isNil } from 'lodash-es'
@@ -25,6 +26,7 @@ import { connect } from 'formik'
 
 import { errorCheck } from '@common/utils/formikHelpers'
 
+import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './MultiTypeCheckbox.module.scss'
 
 export interface MultiTypeCheckboxProps
@@ -79,6 +81,8 @@ export interface FormMultiTypeTextboxProps extends Omit<IFormGroupProps, 'label'
   setToFalseWhenEmpty?: boolean
   tooltipProps?: DataTooltipInterface
   defaultTrue?: boolean
+  enableConfigureOptions?: boolean
+  configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
 }
 
 export const FormMultiTypeCheckbox: React.FC<FormMultiTypeTextboxProps> = props => {
@@ -91,6 +95,8 @@ export const FormMultiTypeCheckbox: React.FC<FormMultiTypeTextboxProps> = props 
     setToFalseWhenEmpty = false,
     defaultTrue = false,
     className = '',
+    enableConfigureOptions = false,
+    configureOptionsProps,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -136,25 +142,42 @@ export const FormMultiTypeCheckbox: React.FC<FormMultiTypeTextboxProps> = props 
       intent={intent}
       disabled={disabled}
     >
-      <MultiTypeCheckbox
-        name={name}
-        textboxProps={{ name, label, disabled, ...textboxProps }}
-        value={value}
-        disabled={disabled}
-        {...restMultiProps}
-        onChange={(val, valueType, typeVal) => {
-          if (typeVal === MultiTypeInputType.EXPRESSION && isNil(val)) {
-            formik?.setFieldValue(name, '')
-          } else {
-            formik?.setFieldValue(name, val)
-          }
-          setType(typeVal)
-          onChange?.(val, valueType, type)
-        }}
-      />
-      {!labelToBePassed ? (
-        <HarnessDocTooltip className={css.tooltip} tooltipId={dataTooltipId} labelText={labelToBePassed} />
-      ) : null}
+      <Layout.Horizontal>
+        <MultiTypeCheckbox
+          name={name}
+          textboxProps={{ name, label, disabled, ...textboxProps }}
+          style={{ flexGrow: 1 }}
+          value={value}
+          disabled={disabled}
+          {...restMultiProps}
+          onChange={(val, valueType, typeVal) => {
+            if (typeVal === MultiTypeInputType.EXPRESSION && isNil(val)) {
+              formik?.setFieldValue(name, '')
+            } else {
+              formik?.setFieldValue(name, val)
+            }
+            setType(typeVal)
+            onChange?.(val, valueType, type)
+          }}
+        />
+        {!labelToBePassed ? (
+          <HarnessDocTooltip className={css.tooltip} tooltipId={dataTooltipId} labelText={labelToBePassed} />
+        ) : null}
+        {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={(value || '') as string}
+            type={'String'}
+            variableName={name}
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={val => formik?.setFieldValue(name, val)}
+            style={{ marginLeft: 'var(--spacing-medium)' }}
+            {...configureOptionsProps}
+            isReadonly={disabled}
+          />
+        )}
+      </Layout.Horizontal>
     </FormGroup>
   )
 }

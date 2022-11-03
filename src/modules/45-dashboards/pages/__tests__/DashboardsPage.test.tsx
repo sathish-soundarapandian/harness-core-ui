@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as customDashboardServices from 'services/custom-dashboards'
 import * as useLicenseStore from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { Editions } from '@common/constants/SubscriptionTypes'
@@ -25,6 +26,7 @@ describe('DashboardsPage', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.spyOn(customDashboardServices, 'useGetFolders').mockImplementation(() => ({ data: {} } as any))
   })
 
   test('it should display the banner when license edition is not enterprise', async () => {

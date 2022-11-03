@@ -142,6 +142,7 @@ exports[`UserDetails Test render data 1`] = `
     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main tabs StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
   >
     <button
+      aria-label="rbac.userDetails.groupMemberships"
       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main tabButton selectedTabs Button--with-current-color Button--without-shadow"
       type="button"
     >
@@ -152,6 +153,7 @@ exports[`UserDetails Test render data 1`] = `
       </span>
     </button>
     <button
+      aria-label="rbac.roleBindings"
       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main tabButton Button--with-current-color Button--without-shadow"
       type="button"
     >
@@ -280,6 +282,7 @@ exports[`UserDetails Test render data 1`] = `
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
                 <button
+                  aria-label="common.plusNumber"
                   class="bp3-button Button--button StyledProps--font StyledProps--main addToGroup Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="add-UserGroup"
                   type="button"
@@ -940,6 +943,7 @@ exports[`UserDetails Test render data 1`] = `
               class="Layout--horizontal StyledProps--main"
             >
               <button
+                aria-label="Prev"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
                 disabled=""
                 tabindex="-1"
@@ -983,6 +987,7 @@ exports[`UserDetails Test render data 1`] = `
                 </span>
               </button>
               <button
+                aria-label="Next"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                 disabled=""
                 tabindex="-1"

@@ -68,6 +68,7 @@ exports[`Menu render Should allow deleting 1`] = `
     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
   >
     <button
+      aria-label="confirm"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -78,6 +79,7 @@ exports[`Menu render Should allow deleting 1`] = `
       </span>
     </button>
     <button
+      aria-label="cancel"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -997,6 +999,7 @@ exports[`ServicesList render 1`] = `
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="Prev"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
             disabled=""
             tabindex="-1"
@@ -1040,6 +1043,7 @@ exports[`ServicesList render 1`] = `
             </span>
           </button>
           <button
+            aria-label="Next"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
             disabled=""
             tabindex="-1"

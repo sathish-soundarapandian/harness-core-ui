@@ -17,6 +17,7 @@ exports[`Create Step Review Script Delegate render data 1`] = `
         class="Layout--horizontal StyledProps--main StyledProps--padding-small"
       >
         <button
+          aria-label="delegates.downloadYAMLFile"
           class="bp3-button bp3-outlined Button--button StyledProps--font StyledProps--main downloadButton Button--with-current-color Button--withLeftIcon"
           id="stepReviewScriptDownloadYAMLButton"
           type="button"
@@ -51,6 +52,7 @@ exports[`Create Step Review Script Delegate render data 1`] = `
         class="Layout--horizontal StyledProps--main StyledProps--padding-small"
       >
         <button
+          aria-label="back"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
           id="stepReviewScriptBackButton"
           type="button"
@@ -81,6 +83,7 @@ exports[`Create Step Review Script Delegate render data 1`] = `
           </span>
         </button>
         <button
+          aria-label="continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
           id="stepReviewScriptContinueButton"
           type="submit"

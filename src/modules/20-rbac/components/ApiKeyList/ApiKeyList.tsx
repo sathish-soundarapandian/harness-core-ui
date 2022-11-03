@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash-es'
 import { Text, Container, ButtonVariation, Card, PageError } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { TokenDTO, useListAggregatedApiKeys } from 'services/cd-ng'

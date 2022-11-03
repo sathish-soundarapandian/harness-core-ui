@@ -45,7 +45,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                      data-testid="cr-field-undefined.applicationSettings.store.spec.connectorRef"
+                      data-testid="cr-field-stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.connectorRef"
                       disabled=""
                       style="width: 391px;"
                       tabindex="-1"
@@ -113,7 +113,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           >
             <label
               class="bp3-label"
-              for="undefined.applicationSettings.store.spec.repoName"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.repoName"
             >
               common.repositoryName
                
@@ -134,7 +134,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.applicationSettings.store.spec.repoName"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.repoName"
                     type="text"
                     value=""
                   />
@@ -172,7 +172,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           >
             <label
               class="bp3-label"
-              for="undefined.applicationSettings.store.spec.branch"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.branch"
             >
               pipelineSteps.deploy.inputSet.branch
                
@@ -193,7 +193,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.applicationSettings.store.spec.branch"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.branch"
                     type="text"
                     value=""
                   />
@@ -231,7 +231,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           >
             <label
               class="bp3-label"
-              for="undefined.applicationSettings.store.spec.paths[0]"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.paths"
             >
               pipeline.appServiceConfig.applicationSettings.filePath
                
@@ -252,7 +252,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.applicationSettings.store.spec.paths[0]"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.paths"
                     type="text"
                     value=""
                   />
@@ -333,7 +333,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                      data-testid="cr-field-undefined.connectionStrings.store.spec.connectorRef"
+                      data-testid="cr-field-stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.connectorRef"
                       disabled=""
                       style="width: 391px;"
                       tabindex="-1"
@@ -401,7 +401,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           >
             <label
               class="bp3-label"
-              for="undefined.connectionStrings.store.spec.repoName"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.repoName"
             >
               common.repositoryName
                
@@ -422,7 +422,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.connectionStrings.store.spec.repoName"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.repoName"
                     type="text"
                     value=""
                   />
@@ -460,7 +460,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           >
             <label
               class="bp3-label"
-              for="undefined.connectionStrings.store.spec.commitId"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.commitId"
             >
               pipelineSteps.commitIdValue
                
@@ -481,7 +481,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.connectionStrings.store.spec.commitId"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.commitId"
                     type="text"
                     value=""
                   />
@@ -519,7 +519,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           >
             <label
               class="bp3-label"
-              for="undefined.connectionStrings.store.spec.paths[0]"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.paths"
             >
               pipeline.appServiceConfig.connectionStrings.filePath
                
@@ -540,7 +540,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.connectionStrings.store.spec.paths[0]"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.paths"
                     type="text"
                     value=""
                   />
@@ -585,7 +585,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
     <div
       class="subheading"
     >
-      pipeline.startupCommand.name
+      pipeline.startup.command.name
     </div>
     <div>
       <div
@@ -621,7 +621,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                      data-testid="cr-field-undefined.startupCommand.store.spec.connectorRef"
+                      data-testid="cr-field-stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.connectorRef"
                       disabled=""
                       style="width: 391px;"
                       tabindex="-1"
@@ -689,7 +689,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <label
               class="bp3-label"
-              for="undefined.startupCommand.store.spec.repoName"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.repoName"
             >
               common.repositoryName
                
@@ -710,7 +710,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.startupCommand.store.spec.repoName"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.repoName"
                     type="text"
                     value=""
                   />
@@ -748,7 +748,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <label
               class="bp3-label"
-              for="undefined.startupCommand.store.spec.branch"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.branch"
             >
               pipelineSteps.deploy.inputSet.branch
                
@@ -769,7 +769,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.startupCommand.store.spec.branch"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.branch"
                     type="text"
                     value=""
                   />
@@ -807,9 +807,9 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <label
               class="bp3-label"
-              for="undefined.startupCommand.store.spec.paths[0]"
+              for="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.paths"
             >
-              pipeline.startupCommand.scriptFilePath
+              pipeline.startup.scriptFilePath
                
               <span
                 class="bp3-text-muted"
@@ -828,7 +828,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.startupCommand.store.spec.paths[0]"
+                    name="stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.paths"
                     type="text"
                     value=""
                   />

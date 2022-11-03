@@ -958,6 +958,7 @@ exports[`Test TerraformDestroy with inline var file and expand the varfiles sect
                           </button>
                         </div>
                         <button
+                          aria-label="plusAdd"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                           data-testid="add-spec.configuration.spec.targets"
                           style="padding: 0px;"
@@ -1138,6 +1139,7 @@ exports[`Test TerraformDestroy with inline var file and expand the varfiles sect
                           </div>
                         </div>
                         <button
+                          aria-label="plusAdd"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                           data-testid="add-spec.configuration.spec.environmentVariables"
                           style="padding: 0px;"

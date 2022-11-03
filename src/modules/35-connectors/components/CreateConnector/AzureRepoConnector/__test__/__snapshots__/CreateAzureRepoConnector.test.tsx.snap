@@ -832,6 +832,7 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step one 
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -1197,6 +1198,7 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step one 
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium StyledProps--margin-top-xxxlarge"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="awsBackButton"
                   type="button"
@@ -1227,6 +1229,7 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step one 
                   </span>
                 </button>
                 <button
+                  aria-label="saveAndContinue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                   data-testid="connectivitySaveAndContinue"
                   type="submit"
@@ -1682,6 +1685,7 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step two 
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="commonGitBackButton"
                   type="button"
@@ -2077,6 +2081,7 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step two 
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="azureRepoBackButton"
                   type="button"
@@ -2107,6 +2112,7 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step two 
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -2436,6 +2442,7 @@ exports[`Create AzureRepoconnector Wizard form for edit http and authtype userna
                         />
                       </div>
                       <button
+                        aria-label="Change"
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main CollapsableSelect--closeChangeBtn StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
                         data-testid="collapsable-select-change"
                         type="button"
@@ -2479,6 +2486,7 @@ exports[`Create AzureRepoconnector Wizard form for edit http and authtype userna
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium StyledProps--margin-top-xxxlarge"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="awsBackButton"
                   type="button"
@@ -2509,6 +2517,7 @@ exports[`Create AzureRepoconnector Wizard form for edit http and authtype userna
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                   data-testid="connectivitySaveAndContinue"
                   type="submit"
@@ -3061,6 +3070,7 @@ exports[`Create AzureRepoconnector Wizard form for edit http and authtype userna
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="azureRepoBackButton"
                   type="button"
@@ -3091,6 +3101,7 @@ exports[`Create AzureRepoconnector Wizard form for edit http and authtype userna
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >
@@ -3627,6 +3638,7 @@ exports[`Create AzureRepoconnector Wizard should render edit form for hosted 1`]
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
               >
                 <button
+                  aria-label="back"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                   data-name="azureRepoBackButton"
                   type="button"
@@ -3657,6 +3669,7 @@ exports[`Create AzureRepoconnector Wizard should render edit form for hosted 1`]
                   </span>
                 </button>
                 <button
+                  aria-label="continue"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                   type="submit"
                 >

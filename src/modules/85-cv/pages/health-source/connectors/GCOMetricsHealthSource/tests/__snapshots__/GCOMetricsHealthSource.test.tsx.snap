@@ -591,6 +591,7 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                             class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
                           >
                             <button
+                              aria-label="cv.monitoringSources.gcoLogs.fetchRecords"
                               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
                               type="button"
                             >

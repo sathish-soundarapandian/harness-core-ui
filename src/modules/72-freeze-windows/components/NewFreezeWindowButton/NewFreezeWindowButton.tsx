@@ -42,7 +42,7 @@ export const NewFreezeWindowButton: FC<NewFreezeWindowButtonProps> = ({ text }) 
     <RbacButton
       variation={ButtonVariation.PRIMARY}
       icon="plus"
-      text={text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
+      text={/* istanbul ignore next */ text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
       onClick={goToFreezeWindowStudio}
       permission={{
         permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,

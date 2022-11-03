@@ -43,8 +43,8 @@ export const allServicesObj = (getString: UseStringsReturn['getString']) => ({
 
 export const getEnvTypeMap = once((getString: UseStringsReturn['getString']) => {
   return {
-    [EnvironmentType.PROD]: getString('production'),
-    [EnvironmentType.NON_PROD]: getString('common.preProduction'),
+    [EnvironmentType.Production]: getString('production'),
+    [EnvironmentType.PreProduction]: getString('common.preProduction'),
     All: getString('common.allEnvironments')
   }
 })

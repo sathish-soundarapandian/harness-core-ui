@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import {
   Layout,
   Formik,
@@ -110,7 +110,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
       name: '',
       identifier: '',
       description: '',
-      delegateType: '',
+      delegateType: DelegateType.KUBERNETES,
       size: DelegateSize.LAPTOP,
       sesssionIdentifier: '',
       tokenName: '',

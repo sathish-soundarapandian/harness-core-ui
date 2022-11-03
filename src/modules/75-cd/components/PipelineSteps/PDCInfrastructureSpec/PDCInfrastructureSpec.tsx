@@ -20,7 +20,9 @@ import {
   ButtonVariation,
   Table,
   AllowedTypes,
-  Checkbox
+  Checkbox,
+  Text,
+  FontVariation
 } from '@harness/uicore'
 import type { ObjectSchema } from 'yup'
 import type { Column } from 'react-table'
@@ -441,6 +443,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     <Layout.Vertical spacing="medium">
       {formikInitialValues && (
         <>
+          <Text font={{ variation: FontVariation.FORM_TITLE }}>{getString('cd.steps.pdcStep.title')}</Text>
           <RadioGroup
             className={css.specifyHostsRadioGroup}
             selectedValue={isPreconfiguredHosts}
@@ -501,7 +504,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
               formikRef.current = formik as FormikProps<unknown> | null
               return (
                 <FormikForm>
-                  <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
+                  <Layout.Vertical className={css.formRow} spacing="none">
                     {isPreconfiguredHosts === PreconfiguredHosts.FALSE ? (
                       <FormMultiTypeTextAreaField
                         key="hosts"
@@ -514,10 +517,11 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         }}
                       />
                     ) : (
-                      <Layout.Vertical>
+                      <>
                         <FormMultiTypeConnectorField
                           error={get(formik, 'errors.connectorRef', undefined)}
                           name="connectorRef"
+                          className={css.connectorRef}
                           label={getString('connector')}
                           placeholder={getString('connectors.selectConnector')}
                           disabled={readonly}
@@ -537,44 +541,42 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                             setShowPreviewHostBtn(true)
                           }}
                         />
-                        <Layout.Vertical spacing="small">
-                          <RadioGroup
-                            className={css.specifyHostsRadioGroup}
-                            selectedValue={hostsScope}
-                            onChange={(e: any) => {
-                              setShowPreviewHostBtn(true)
-                              setHostsScope(e.target.value)
-                              if (e.target.value === HostScope.ALL) {
-                                formik.setFieldValue('attributeFilters', '')
-                                formik.setFieldValue('hostFilters', '')
-                              }
+                        <RadioGroup
+                          className={css.specifyFilterRadioGroup}
+                          selectedValue={hostsScope}
+                          onChange={(e: any) => {
+                            setShowPreviewHostBtn(true)
+                            setHostsScope(e.target.value)
+                            if (e.target.value === HostScope.ALL) {
+                              formik.setFieldValue('attributeFilters', '')
+                              formik.setFieldValue('hostFilters', '')
+                            }
+                          }}
+                        >
+                          <Radio value={HostScope.ALL} label={getString('cd.steps.pdcStep.includeAllHosts')} />
+                          <Radio value={HostScope.HOST_NAME} label={getString('cd.steps.pdcStep.filterHostName')} />
+                          <Radio
+                            value={HostScope.HOST_ATTRIBUTES}
+                            label={getString('cd.steps.pdcStep.filterHostAttributes')}
+                          />
+                        </RadioGroup>
+                        {hostsScope === HostScope.HOST_NAME ? (
+                          <FormMultiTypeTextAreaField
+                            key="hostFilters"
+                            name="hostFilters"
+                            label={getString('cd.steps.pdcStep.specificHosts')}
+                            placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
+                            className={`${css.hostsTextArea} ${css.inputWidth}`}
+                            tooltipProps={{
+                              dataTooltipId: 'pdcSpecificHosts'
                             }}
-                          >
-                            <Radio value={HostScope.ALL} label={getString('cd.steps.pdcStep.includeAllHosts')} />
-                            <Radio value={HostScope.HOST_NAME} label={getString('cd.steps.pdcStep.filterHostName')} />
-                            <Radio
-                              value={HostScope.HOST_ATTRIBUTES}
-                              label={getString('cd.steps.pdcStep.filterHostAttributes')}
-                            />
-                          </RadioGroup>
-                        </Layout.Vertical>
-                        <Layout.Vertical spacing="medium">
-                          {hostsScope === HostScope.HOST_NAME ? (
-                            <FormMultiTypeTextAreaField
-                              key="hostFilters"
-                              name="hostFilters"
-                              label={getString('cd.steps.pdcStep.specificHosts')}
-                              placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
-                              className={`${css.hostsTextArea} ${css.inputWidth}`}
-                              tooltipProps={{
-                                dataTooltipId: 'pdcSpecificHosts'
-                              }}
-                              multiTypeTextArea={{
-                                expressions,
-                                allowableTypes
-                              }}
-                            />
-                          ) : hostsScope === HostScope.HOST_ATTRIBUTES ? (
+                            multiTypeTextArea={{
+                              expressions,
+                              allowableTypes
+                            }}
+                          />
+                        ) : hostsScope === HostScope.HOST_ATTRIBUTES ? (
+                          <Layout.Vertical spacing="medium">
                             <FormMultiTypeTextAreaField
                               key="attributeFilters"
                               name="attributeFilters"
@@ -589,9 +591,9 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                                 allowableTypes
                               }}
                             />
-                          ) : null}
-                        </Layout.Vertical>
-                      </Layout.Vertical>
+                          </Layout.Vertical>
+                        ) : null}
+                      </>
                     )}
                     <div className={css.credRefWidth}>
                       <MultiTypeSecretInput
@@ -613,16 +615,16 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           setShowPreviewHostBtn(false)
                           getHosts()
                         }}
+                        className={css.previewHostsButton}
                         size={ButtonSize.SMALL}
                         variation={ButtonVariation.SECONDARY}
                         width={140}
-                        style={{ marginTop: 0 }}
                         disabled={isPreviewDisable(formik.values)}
                       >
                         {getString('cd.steps.pdcStep.previewHosts')}
                       </Button>
                     ) : (
-                      <Layout.Vertical>
+                      <Layout.Vertical margin={{ top: 'large' }}>
                         <Layout.Horizontal
                           flex={{ alignItems: 'center' }}
                           margin={{ bottom: 'small' }}
@@ -681,18 +683,16 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         ) : detailHosts.length > 0 ? (
                           <Table columns={columns} data={detailHosts} bpTableProps={{}} />
                         ) : (
-                          <Label className={'bp3-label'} style={{ margin: 'auto' }}>
+                          <Label className={'bp3-label'} style={{ margin: '0 auto 25px' }}>
                             {getString('cd.steps.pdcStep.noHosts')}
                           </Label>
                         )}
                       </Layout.Vertical>
                     )}
                   </Layout.Vertical>
-                  <Layout.Vertical spacing="medium">
-                    <hr />
-                  </Layout.Vertical>
                   <Layout.Vertical className={css.simultaneousDeployment}>
                     <FormInput.CheckBox
+                      style={{ margin: 0 }}
                       tooltipProps={{
                         dataTooltipId: 'pdcInfraAllowSimultaneousDeployments'
                       }}
@@ -892,7 +892,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       isRequired &&
       getMultiTypeFromValue((template?.hostFilter?.spec as HostNamesFilter)?.value) === MultiTypeInputType.RUNTIME
     ) {
-      errors.hostFilters = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
+      set(errors, 'hostFilter.spec.value', getString?.('cd.validation.specifyFilter'))
     }
     if (
       data.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
@@ -901,9 +901,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       getMultiTypeFromValue((template?.hostFilter?.spec as HostAttributesFilter)?.value as any) ===
         MultiTypeInputType.RUNTIME
     ) {
-      errors.attributeFilters = getString?.('common.validation.fieldIsRequired', {
-        name: getString('cd.attributeFilters')
-      })
+      set(errors, 'hostFilter.spec.value', getString?.('cd.validation.specifyFilter'))
     }
     return errors as any
   }

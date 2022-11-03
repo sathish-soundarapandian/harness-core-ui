@@ -79,7 +79,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetServiceDefinitionTypes: jest
     .fn()
-    .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() }))
+    .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 const testPath = routes.toDeployments({
@@ -103,9 +104,8 @@ describe('ExecutionListPage', () => {
       </TestWrapper>
     )
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
-    const noDeploymentText = await screen.findByText('pipeline.noDeploymentText')
-    expect(noDeploymentText).toBeInTheDocument()
-    expect(screen.getByText('noDeploymentText')).toBeInTheDocument()
+    const noRunsLabel = await screen.findByText('pipeline.noRunsText')
+    expect(noRunsLabel).toBeInTheDocument()
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cd' }) })
     )
@@ -118,9 +118,8 @@ describe('ExecutionListPage', () => {
       </TestWrapper>
     )
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
-    const noBuildsText = await screen.findByText('pipeline.noBuildsText')
-    expect(noBuildsText).toBeInTheDocument()
-    expect(screen.getByText('noBuildsText')).toBeInTheDocument()
+    const noRunsText = await screen.findByText('pipeline.noRunsText')
+    expect(noRunsText).toBeInTheDocument()
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'ci' }) })
     )
@@ -133,9 +132,8 @@ describe('ExecutionListPage', () => {
       </TestWrapper>
     )
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
-    const noScansText = await screen.findByText('sto.noScansText')
+    const noScansText = await screen.findByText('pipeline.noRunsText')
     expect(noScansText).toBeInTheDocument()
-    expect(screen.getByText('sto.noScansRunPipelineText')).toBeInTheDocument()
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'sto' }) })
     )

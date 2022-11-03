@@ -161,6 +161,7 @@ exports[`Switch Account render 1`] = `
               style="width: 30%;"
             >
               <button
+                aria-label="Harness"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
                 type="button"
               >
@@ -200,6 +201,7 @@ exports[`Switch Account render 1`] = `
               style="width: 20%;"
             >
               <button
+                aria-label="common.setAsDefault"
                 class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 data-testid="set-default-account-Harness"
                 type="button"
@@ -226,6 +228,7 @@ exports[`Switch Account render 1`] = `
               style="width: 30%;"
             >
               <button
+                aria-label="PROD_WhitelistIP"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
                 type="button"
               >
@@ -263,6 +266,7 @@ exports[`Switch Account render 1`] = `
               style="width: 20%;"
             >
               <button
+                aria-label="common.setAsDefault"
                 class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 data-testid="set-default-account-PROD_WhitelistIP"
                 type="button"
@@ -290,6 +294,7 @@ exports[`Switch Account render 1`] = `
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="Prev"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
           disabled=""
           tabindex="-1"
@@ -429,6 +434,7 @@ exports[`Switch Account render 1`] = `
           </span>
         </button>
         <button
+          aria-label="Next"
           class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
           type="button"
         >
@@ -532,6 +538,7 @@ exports[`Switch Account set as default 1`] = `
     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
   >
     <button
+      aria-label="continue"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -542,6 +549,7 @@ exports[`Switch Account set as default 1`] = `
       </span>
     </button>
     <button
+      aria-label="cancel"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
       type="button"
     >

@@ -12,6 +12,7 @@ declare const styles: {
   readonly label: string
   readonly selectFieldContainer: string
   readonly selectFieldWrapper: string
+  readonly trashButton: string
   readonly withoutSpacing: string
 }
 export default styles

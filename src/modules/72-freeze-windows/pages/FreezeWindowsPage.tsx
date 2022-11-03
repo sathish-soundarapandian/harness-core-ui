@@ -35,6 +35,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { NewFreezeWindowButton } from '@freeze-windows/components/NewFreezeWindowButton/NewFreezeWindowButton'
 import { useComputedFreezeStatusMap } from '@freeze-windows/hooks/useComputedFreezeStatusMap'
 import freezeWindowsIllustration from '@freeze-windows/images/freeze-windows-illustration.svg'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
@@ -46,7 +47,7 @@ function _FreezeWindowsPage(): React.ReactElement {
   const { replaceQueryParams, updateQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { searchTerm, page, size, sort, freezeStatus, startTime, endTime } = queryParams
-  const { selectedItems, clearSelectedItems } = useFreezeWindowListContext()
+  const { selectedItems, toggleAllSelect } = useFreezeWindowListContext()
 
   const resetFilter = () => replaceQueryParams({})
   useDocumentTitle([getString('common.freezeWindows')])
@@ -67,7 +68,7 @@ function _FreezeWindowsPage(): React.ReactElement {
     body: {
       freezeStatus,
       searchTerm,
-      sort,
+      sort: [sort.join(',')],
       startTime,
       endTime
     }
@@ -96,7 +97,7 @@ function _FreezeWindowsPage(): React.ReactElement {
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.deleteFailure')))
     }
-    clearSelectedItems()
+    toggleAllSelect(false)
     updateQueryParams({ page: DEFAULT_PAGE_INDEX }) // scenario where the page number is invalid with elements in the page being deleted
     refetch()
   }
@@ -112,7 +113,7 @@ function _FreezeWindowsPage(): React.ReactElement {
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.updateStatusFailure')))
     }
-    clearSelectedItems()
+    toggleAllSelect(false)
     refetch()
   }
 
@@ -126,6 +127,8 @@ function _FreezeWindowsPage(): React.ReactElement {
     <div className={css.main}>
       <FreezeWindowListHeader freezeListLoading={freezeListLoading} />
       <FreezeWindowListSubHeader />
+      <GlobalFreezeBanner />
+
       <Page.Body
         loading={freezeListLoading}
         error={error?.message}

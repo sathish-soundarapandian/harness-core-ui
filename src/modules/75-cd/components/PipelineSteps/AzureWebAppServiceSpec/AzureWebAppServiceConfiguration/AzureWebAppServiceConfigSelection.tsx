@@ -10,8 +10,7 @@ import React, { useMemo } from 'react'
 import { Layout, shouldShowError, useToaster } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, get } from 'lodash-es'
-import { useCache } from '@common/hooks/useCache'
+import { isEmpty, get } from 'lodash-es'
 import { useDeepCompareEffect } from '@common/hooks'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
@@ -22,17 +21,11 @@ import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import AzureWebAppListView from './AzureWebAppServiceConfigListView/AzureWebAppServiceListView'
-import {
-  AzureWebAppSelectionProps,
-  AzureWebAppSelectionTypes,
-  AzureWebAppsServiceDefinition,
-  ModalViewOption
-} from './AzureWebAppServiceConfig.types'
+import { AzureWebAppSelectionProps, AzureWebAppSelectionTypes, ModalViewOption } from './AzureWebAppServiceConfig.types'
 
 export default function ApplicationConfigSelection({
   isPropagating,
   deploymentType,
-  isReadonlyServiceMode,
   readonly,
   updateStage,
   showApplicationSettings,
@@ -60,9 +53,6 @@ export default function ApplicationConfigSelection({
   const [settingsConnectorsResponse, setSettingsConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-  const { getCache } = useCache([getServiceCacheId])
-  const serviceInfo = getCache<AzureWebAppsServiceDefinition>(getServiceCacheId)
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -87,9 +77,6 @@ export default function ApplicationConfigSelection({
   const applicationSettings = useMemo(() => {
     switch (selectionType) {
       case AzureWebAppSelectionTypes.PIPELINE:
-        if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-          return defaultTo(serviceInfo?.spec.applicationSettings, {})
-        }
         if (isPropagating) {
           return get(stage, 'stage.spec.serviceConfig.stageOverrides.applicationSettings', {})
         }
@@ -98,16 +85,14 @@ export default function ApplicationConfigSelection({
       default:
         return showApplicationSettings ? data : null
     }
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage, selectedOption, data, selectionType])
+  }, [isPropagating, stage, selectedOption, data, selectionType])
 
   const connectionStrings = useMemo(() => {
     switch (selectionType) {
       case AzureWebAppSelectionTypes.PIPELINE:
         /* istanbul ignore else */
         /* istanbul ignore next */
-        if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-          return defaultTo(serviceInfo?.spec?.connectionStrings, {})
-        }
+
         if (isPropagating) {
           return get(stage, 'stage.spec.serviceConfig.stageOverrides.connectionStrings', {})
         }
@@ -116,7 +101,7 @@ export default function ApplicationConfigSelection({
       default:
         return showConnectionStrings ? data : null
     }
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage, selectedOption, data, selectionType])
+  }, [isPropagating, stage, selectedOption, data, selectionType])
 
   useDeepCompareEffect(() => {
     refetchSettingsConnectors()

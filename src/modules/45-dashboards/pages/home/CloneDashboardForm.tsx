@@ -11,16 +11,22 @@ import { ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
 import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
 import type { IDashboardFormData } from '@dashboards/types/DashboardTypes.types'
 import { useStrings } from 'framework/strings'
-import { ClonedDashboardResponse, useCloneDashboard } from 'services/custom-dashboards'
+import { ClonedDashboardResponse, FolderModel, useCloneDashboard } from 'services/custom-dashboards'
 import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
 
 export interface CloneDashboardFormProps {
+  editableFolders: FolderModel[]
   hideModal: () => void
   reloadDashboards: () => void
   formData?: IDashboardFormData
 }
 
-const CloneDashboardForm: React.FC<CloneDashboardFormProps> = ({ hideModal, reloadDashboards, formData }) => {
+const CloneDashboardForm: React.FC<CloneDashboardFormProps> = ({
+  editableFolders,
+  hideModal,
+  reloadDashboards,
+  formData
+}) => {
   const { getString } = useStrings()
   const { accountId } = useParams<DashboardPathProps>()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
@@ -49,7 +55,7 @@ const CloneDashboardForm: React.FC<CloneDashboardFormProps> = ({ hideModal, relo
   return (
     <DashboardForm
       title={getString('dashboards.cloneDashboardModal.title')}
-      modalErrorHandler={modalErrorHandler}
+      editableFolders={editableFolders}
       setModalErrorHandler={setModalErrorHandler}
       formData={{
         folderId: formData?.resourceIdentifier || '',
@@ -58,6 +64,7 @@ const CloneDashboardForm: React.FC<CloneDashboardFormProps> = ({ hideModal, relo
       }}
       loading={loading}
       onComplete={onComplete}
+      mode="CLONE"
     />
   )
 }

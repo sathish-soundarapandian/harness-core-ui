@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToaster } from '@harness/uicore'
-import pick from 'lodash-es/pick'
+import { pick } from 'lodash-es'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'

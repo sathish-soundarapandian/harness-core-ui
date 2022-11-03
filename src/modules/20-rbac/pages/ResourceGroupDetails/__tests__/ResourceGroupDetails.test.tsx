@@ -88,7 +88,7 @@ describe('Resource Groups Page', () => {
     act(() => {
       fireEvent.click(connector!)
     })
-    expect(getAllByText('rbac.resourceGroup.all')[1]).toBeTruthy()
+    expect(getAllByText('common.all')[1]).toBeTruthy()
     await act(async () => {
       fireEvent.click(getByText(container, 'save'))
     })

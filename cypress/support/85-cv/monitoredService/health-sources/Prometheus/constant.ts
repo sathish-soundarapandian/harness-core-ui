@@ -262,8 +262,7 @@ export const monitoredService = {
                   identifier: 'prometheus_metric',
                   metricName: 'Prometheus Metric',
                   riskProfile: {
-                    category: 'Errors',
-                    metricType: 'ERROR',
+                    riskCategory: 'Infrastructure',
                     thresholdTypes: ['ACT_WHEN_HIGHER']
                   },
                   analysis: {
@@ -276,8 +275,7 @@ export const monitoredService = {
                       serviceInstanceMetricPath: null
                     },
                     riskProfile: {
-                      category: 'Errors',
-                      metricType: 'ERROR',
+                      riskCategory: 'Infrastructure',
                       thresholdTypes: ['ACT_WHEN_HIGHER']
                     }
                   },
@@ -323,6 +321,74 @@ export const monitoredService = {
                   query: 'classes {\n\n}',
                   groupName: 'Group 1',
                   serviceInstanceFieldName: null,
+                  prometheusMetric: null,
+                  serviceFilter: null,
+                  envFilter: null,
+                  additionalFilters: null,
+                  aggregation: null,
+                  isManualQuery: true
+                }
+              ]
+            }
+          }
+        ],
+        changeSources: []
+      },
+      dependencies: []
+    }
+  },
+  metaData: null,
+  correlationId: 'f3cdbd07-e92d-4162-854e-c6aac938d0c0'
+}
+
+export const awsPrometheusMonitoredService = {
+  status: 'SUCCESS',
+  data: {
+    createdAt: 1642157779711,
+    lastModifiedAt: 1643278935584,
+    monitoredService: {
+      orgIdentifier,
+      projectIdentifier,
+      identifier: 'service1_env1',
+      name: 'service1_env1',
+      type: 'Application',
+      description: '',
+      serviceRef: 'service1',
+      environmentRef: 'env1',
+      environmentRefList: null,
+      tags: {},
+      sources: {
+        healthSources: [
+          {
+            name: 'AwsPrometheusTest',
+            identifier: 'AwsPrometheusTest',
+            type: 'AwsPrometheus',
+            spec: {
+              region: 'region 1',
+              workspaceId: 'sjksm43455n-34x53c45vdssd-fgdfd232sdfad',
+              connectorRef: connectorIdentifier,
+              metricDefinitions: [
+                {
+                  identifier: 'prometheus_metric',
+                  metricName: 'Prometheus Metric',
+                  riskProfile: {},
+                  analysis: {
+                    liveMonitoring: {
+                      enabled: false
+                    },
+                    deploymentVerification: {
+                      enabled: false,
+                      serviceInstanceFieldName: '__name__',
+                      serviceInstanceMetricPath: null
+                    },
+                    riskProfile: {}
+                  },
+                  sli: {
+                    enabled: true
+                  },
+                  query: 'classes {\n\n}',
+                  groupName: 'Group 1',
+                  serviceInstanceFieldName: '__name__',
                   prometheusMetric: null,
                   serviceFilter: null,
                   envFilter: null,

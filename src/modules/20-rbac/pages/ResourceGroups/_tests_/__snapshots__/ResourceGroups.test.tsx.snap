@@ -12,6 +12,7 @@ exports[`Resource Groups Page render data 1`] = `
         class="Layout--horizontal StyledProps--main"
       >
         <button
+          aria-label="rbac.resourceGroup.newResourceGroup"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
           data-testid="addNewResourceGroup"
           type="button"
@@ -578,6 +579,7 @@ exports[`Resource Groups Page render data 1`] = `
           class="Layout--horizontal StyledProps--main"
         >
           <button
+            aria-label="Prev"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
             disabled=""
             tabindex="-1"
@@ -631,6 +633,7 @@ exports[`Resource Groups Page render data 1`] = `
             </span>
           </button>
           <button
+            aria-label="Next"
             class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
             type="button"
           >

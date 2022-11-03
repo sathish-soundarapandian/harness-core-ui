@@ -122,6 +122,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -157,7 +158,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -210,6 +211,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_3"
                   type="button"
@@ -241,6 +243,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_3"
                   type="button"
@@ -275,7 +278,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -328,6 +331,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_1"
                   type="button"
@@ -359,6 +363,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_1"
                   type="button"
@@ -446,6 +451,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_2"
                   type="button"
@@ -477,6 +483,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_2"
                   type="button"
@@ -639,6 +646,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -674,7 +682,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -727,6 +735,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_3"
                   type="button"
@@ -758,6 +767,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_3"
                   type="button"
@@ -792,7 +802,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -845,6 +855,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_1"
                   type="button"
@@ -876,6 +887,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_1"
                   type="button"
@@ -963,6 +975,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_2"
                   type="button"
@@ -994,6 +1007,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_2"
                   type="button"
@@ -1390,6 +1404,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main stickyBtnContainer StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
     >
       <button
+        aria-label="save"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -1402,6 +1417,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -1539,6 +1555,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -1701,6 +1718,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -1736,7 +1754,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -1789,6 +1807,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_3"
                   type="button"
@@ -1820,6 +1839,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_3"
                   type="button"
@@ -1854,7 +1874,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -1907,6 +1927,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_1"
                   type="button"
@@ -1938,6 +1959,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_1"
                   type="button"
@@ -2025,6 +2047,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                 class="Layout--horizontal StyledProps--main"
               >
                 <button
+                  aria-label="editService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="edit-service-svc_2"
                   type="button"
@@ -2056,6 +2079,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                   </span>
                 </button>
                 <button
+                  aria-label="common.deleteService"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                   data-testid="delete-service-svc_2"
                   type="button"

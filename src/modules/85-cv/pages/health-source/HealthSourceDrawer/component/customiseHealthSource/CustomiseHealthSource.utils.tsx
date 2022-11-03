@@ -102,6 +102,7 @@ export const LoadSourceByType = ({
         <DatadogLogsHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       )
     case HealthSourceTypes.Prometheus:
+    case HealthSourceTypes.AwsPrometheus:
       return (
         <PrometheusHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       )

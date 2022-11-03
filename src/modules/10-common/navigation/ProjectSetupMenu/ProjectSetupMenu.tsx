@@ -23,9 +23,10 @@ import NavExpandable from '../NavExpandable/NavExpandable'
 
 interface ProjectSetupMenuProps {
   module?: Module
+  defaultExpanded?: boolean
 }
 
-const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
+const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpanded }) => {
   const { getString } = useStrings()
   const {
     accountId,
@@ -36,11 +37,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   const {
     OPA_PIPELINE_GOVERNANCE,
     CVNG_TEMPLATE_MONITORED_SERVICE,
-    NG_FILE_STORE,
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
     CD_ONBOARDING_ENABLED,
-    NG_DEPLOYMENT_FREEZE
+    NG_DEPLOYMENT_FREEZE,
+    SRM_ET_EXPERIMENTAL
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -69,7 +70,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
     (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
   return (
-    <NavExpandable title={getString('common.projectSetup')} route={routes.toSetup(params)}>
+    <NavExpandable
+      title={getString('common.projectSetup')}
+      route={routes.toSetup(params)}
+      defaultExpanded={defaultExpanded}
+    >
       <Layout.Vertical spacing="small">
         <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectors(params)} />
         <SidebarLink label={getString('common.secrets')} to={routes.toSecrets(params)} />
@@ -105,15 +110,20 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
             to={routes.toFreezeWindows({ ...params, module: params.module || 'cd' })}
           />
         ) : null}
-        {isCIorCD && NG_FILE_STORE && (
-          <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />
-        )}
+        {isCIorCD && <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />}
         {enabledHostedBuildsForFreeUsers && !showGetStartedTabInMainMenu && module === 'ci' && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
         )}
 
         {CD_ONBOARDING_ENABLED && module === 'cd' && !showGetStartedTabInMainMenu && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
+        )}
+
+        {SRM_ET_EXPERIMENTAL && module === 'cv' && !showGetStartedTabInMainMenu && (
+          <SidebarLink
+            label={getString('common.codeErrorsAgents')}
+            to={routes.toCVCodeErrorsAgentsControl({ ...params })}
+          />
         )}
       </Layout.Vertical>
     </NavExpandable>

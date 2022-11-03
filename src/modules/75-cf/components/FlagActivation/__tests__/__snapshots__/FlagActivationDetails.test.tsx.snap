@@ -376,6 +376,7 @@ exports[`FlagActivationDetails it should render edit flag modal correctly 1`] = 
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
       >
         <button
+          aria-label="save"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-primary"
           type="submit"
         >
@@ -386,6 +387,7 @@ exports[`FlagActivationDetails it should render edit flag modal correctly 1`] = 
           </span>
         </button>
         <button
+          aria-label="cancel"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
           type="button"
         >

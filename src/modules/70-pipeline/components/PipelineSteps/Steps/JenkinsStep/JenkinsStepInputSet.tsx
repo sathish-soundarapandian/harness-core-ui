@@ -28,6 +28,8 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { MultiSelectWithSubmenuTypeInputField } from '@common/components/MultiSelectWithSubmenuTypeInput/MultiSelectWithSubmenuTypeInput'
 import type { jobParameterInterface, SubmenuSelectOption } from './types'
 import { resetForm } from './helper'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -39,7 +41,8 @@ export const jobParameterInputType: SelectOption[] = [
 ]
 
 function JenkinsStepInputSet(formContentProps: any): JSX.Element {
-  const { initialValues, allowableTypes, template, path, readonly, formik, inputSetData } = formContentProps
+  const { initialValues, allowableTypes, template, path, readonly, formik, inputSetData, stepViewType } =
+    formContentProps
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { getString } = useStrings()
   const lastOpenedJob = useRef<any>(null)
@@ -199,7 +202,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
           <div className={cx(css.formGroup, css.sm)}>
             <TimeoutFieldInputSetView
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly
@@ -227,6 +232,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
               allowableTypes,
               expressions
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             onChange={(value, _valueType, type) => {
               if (type === MultiTypeInputType.FIXED && !isEmpty(value)) {
                 setConnectorRef((value as any)?.record?.name)
@@ -240,7 +248,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
 
         {getMultiTypeFromValue(template?.spec?.jobName) === MultiTypeInputType.RUNTIME ? (
           <div className={cx(css.formGroup, css.lg)}>
-            <FormInput.SelectWithSubmenuTypeInput
+            <MultiSelectWithSubmenuTypeInputField
               label={'Job Name'}
               name={`${prefix}spec.jobName`}
               value={getJobDetailsValue()}
@@ -291,6 +299,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                     })
                   }
                 }
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
             />
           </div>

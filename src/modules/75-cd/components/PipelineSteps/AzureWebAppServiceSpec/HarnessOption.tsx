@@ -22,7 +22,7 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 
-import { get, set } from 'lodash-es'
+import { get, set, isArray } from 'lodash-es'
 import type { ConnectorConfigDTO, StartupCommandConfiguration, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -100,7 +100,7 @@ export function HarnessOption({
         store: {
           type: formData?.selectedStore as ConnectorTypes,
           spec: {
-            files: [formData?.file]
+            files: isArray(formData?.file) ? formData?.file : [formData?.file]
           }
         }
       }
@@ -117,7 +117,7 @@ export function HarnessOption({
         store: {
           type: formData?.selectedStore as ConnectorTypes,
           spec: {
-            secretFiles: [formData?.file]
+            secretFiles: isArray(formData?.file) ? formData?.file : [formData?.file]
           }
         }
       }
@@ -171,7 +171,7 @@ export function HarnessOption({
                     }}
                     items={[
                       {
-                        label: getString('pipeline.startupCommand.plainText'),
+                        label: getString('pipeline.startup.plainText'),
                         value: fileTypes.FILE_STORE
                       },
                       { label: getString('encrypted'), value: fileTypes.ENCRYPTED }

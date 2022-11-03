@@ -21,6 +21,6 @@ export type PipelineListPageQueryParams = Omit<
 > & { filters: PipelineFilterProperties }
 
 export interface SortBy {
-  sort: 'lastUpdatedAt' | 'name'
+  sort: 'lastUpdatedAt' | 'name' | 'executionSummaryInfo.lastExecutionTs'
   order: 'ASC' | 'DESC'
 }

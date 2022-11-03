@@ -23,7 +23,8 @@ import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ExecutionInfo, useLatestExecutionId, useRetryHistory } from 'services/pipeline-ng'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { TimeAgoPopover } from '@common/components'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
@@ -42,6 +43,7 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, executionIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
+  const { connectorRef, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const history = useHistory()
   const { clear, showPrimary } = useToaster()
 
@@ -66,7 +68,11 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
           executionIdentifier: latestExecutionId.data.latestExecutionId || '',
           accountId,
           module,
-          source
+          source,
+          connectorRef,
+          repoName,
+          branch,
+          storeType
         })
       )
     }
@@ -119,7 +125,11 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
           executionIdentifier: planExecutionId || '',
           accountId,
           module,
-          source
+          source,
+          connectorRef,
+          repoName,
+          branch,
+          storeType
         })
       )
     }

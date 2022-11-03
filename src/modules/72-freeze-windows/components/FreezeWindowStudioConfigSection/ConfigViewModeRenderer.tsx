@@ -34,9 +34,9 @@ export const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
   isReadOnly,
   index
 }) => {
-  const { name, entities } = config || {}
+  const { name, entities } = config || /* istanbul ignore next */ {}
   const entitiesMap: Record<FIELD_KEYS, EntityType> =
-    entities?.reduce((accum: any, item: EntityType) => {
+    /* istanbul ignore next */ entities?.reduce((accum: any, item: EntityType) => {
       if (item?.type) {
         accum[item.type] = item as EntityType
       }
@@ -64,7 +64,10 @@ export const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
         <ServicesAndEnvRenderer
           freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
           getString={getString}
-          envType={(entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] || EnvironmentType.All) as EnvironmentType}
+          envType={
+            /* istanbul ignore next */ (entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] ||
+              EnvironmentType.All) as EnvironmentType
+          }
         />
       </Layout.Vertical>
       <Layout.Horizontal>

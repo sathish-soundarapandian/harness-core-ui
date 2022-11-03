@@ -53,6 +53,7 @@ exports[`Cumulative Analytics tests render component 1`] = `
               class="bp3-popover-target"
             >
               <button
+                aria-label="projectsOrgs.landingDashboard.last30Days"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                 type="button"
               >
@@ -255,6 +256,7 @@ exports[`Cumulative Analytics tests render component in Dry run mode 1`] = `
               class="bp3-popover-target"
             >
               <button
+                aria-label="projectsOrgs.landingDashboard.last30Days"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                 type="button"
               >

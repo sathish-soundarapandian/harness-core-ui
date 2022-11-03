@@ -25,6 +25,7 @@ exports[`Connector Details Page Edit and save connector YAML 1`] = `
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <button
+              aria-label="saveChanges"
               class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-large Button--with-current-color Button--variation Button--variation-primary"
               disabled=""
               id="saveYAMLChanges"
@@ -38,6 +39,7 @@ exports[`Connector Details Page Edit and save connector YAML 1`] = `
               </span>
             </button>
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-large Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -567,6 +569,7 @@ exports[`Connector Details Page Edit and save connector via YAML for a git-sync 
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                 type="submit"
               >
@@ -577,6 +580,7 @@ exports[`Connector Details Page Edit and save connector via YAML for a git-sync 
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                 type="button"
               >
@@ -672,6 +676,7 @@ exports[`Connector Details Page Edit details test 1`] = `
           na
         </p>
         <button
+          aria-label="connectors.stepThreeName"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
           type="button"
         >
@@ -750,6 +755,7 @@ exports[`Connector Details Page Rendering connector details with DockerRegistry:
           </div>
         </div>
         <button
+          aria-label="editDetails"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           id="editDetailsBtn"
           type="button"
@@ -848,6 +854,7 @@ exports[`Connector Details Page Rendering connector details with DockerRegistry:
           na
         </p>
         <button
+          aria-label="connectors.stepThreeName"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
           type="button"
         >
@@ -926,6 +933,7 @@ exports[`Connector Details Page Rendering connector details with K8sCluster: K8s
           </div>
         </div>
         <button
+          aria-label="editDetails"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           id="editDetailsBtn"
           type="button"
@@ -1024,6 +1032,7 @@ exports[`Connector Details Page Rendering connector details with K8sCluster: K8s
           na
         </p>
         <button
+          aria-label="connectors.stepThreeName"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
           type="button"
         >
@@ -1102,6 +1111,7 @@ exports[`Connector Details Page Rendering connector details: view text 1`] = `
           </div>
         </div>
         <button
+          aria-label="editDetails"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
           id="editDetailsBtn"
           type="button"
@@ -1200,6 +1210,7 @@ exports[`Connector Details Page Rendering connector details: view text 1`] = `
           na
         </p>
         <button
+          aria-label="connectors.stepThreeName"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
           type="button"
         >

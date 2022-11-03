@@ -198,6 +198,7 @@ exports[`Custom stage shell view Setup shell view tests: Overview Tab 1`] = `
           class="bp3-flex-expander"
         />
         <button
+          aria-label="common.saveAsTemplate"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
           type="button"
         >
@@ -456,6 +457,7 @@ exports[`Custom stage shell view Setup shell view tests: Overview Tab 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main footer StyledProps--padding-medium"
             >
               <button
+                aria-label="next"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="button"
               >
@@ -691,6 +693,7 @@ exports[`Custom stage shell view readonly view should work: readonly view custom
           class="bp3-flex-expander"
         />
         <button
+          aria-label="common.saveAsTemplate"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
           type="button"
         >
@@ -950,6 +953,7 @@ exports[`Custom stage shell view readonly view should work: readonly view custom
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main footer StyledProps--padding-medium"
             >
               <button
+                aria-label="next"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="button"
               >

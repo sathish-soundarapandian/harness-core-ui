@@ -12,7 +12,6 @@ import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Chec
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
-import cx from 'classnames'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -94,8 +93,8 @@ export const FreezeTimeCell: CellType = ({ row }) => {
   const freezeWindow = data.windows?.[0] || ({} as FreezeWindow)
   const { startTime, duration, endTime, timeZone, recurrence } = freezeWindow
   return (
-    <Layout.Vertical spacing="small">
-      <Layout.Horizontal>
+    <Layout.Vertical>
+      <Layout.Horizontal margin={{ bottom: 'small' }}>
         <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
           {moment(startTime).format('lll')}
         </Text>
@@ -105,17 +104,20 @@ export const FreezeTimeCell: CellType = ({ row }) => {
         <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
           &nbsp;{duration || moment(endTime).format('lll')}
         </Text>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-          &nbsp;{timeZone}
-        </Text>
       </Layout.Horizontal>
 
-      {recurrence && (
-        <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
-          {recurrence?.type}
-          {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+      <Layout.Horizontal>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+          {timeZone}
         </Text>
-      )}
+
+        {recurrence && (
+          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+            &nbsp;| {recurrence?.type}
+            {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+          </Text>
+        )}
+      </Layout.Horizontal>
     </Layout.Vertical>
   )
 }
@@ -129,7 +131,8 @@ export const StatusCell: CellType = ({ row, column }) => {
     <Text
       font={{ variation: FontVariation.TINY_SEMI }}
       color={status === FreezeStatus.ACTIVE ? Color.PRIMARY_7 : Color.GREY_700}
-      className={cx(css.status, status === FreezeStatus.ACTIVE ? css.active : css.inactive)}
+      className={css.status}
+      data-state={status}
     >
       {status || getString('inactive')}
     </Text>

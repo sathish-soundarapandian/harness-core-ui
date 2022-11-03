@@ -301,6 +301,7 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                           class="FieldArray--text"
                                         />
                                         <button
+                                          aria-label="Add"
                                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
                                           data-id="btn-add"
                                           type="button"
@@ -1358,6 +1359,7 @@ exports[`Testing COGatewayAccess render yaml editor for k8s rule: k8s rule setup
         >
           <div />
           <button
+            aria-label="Validate YAML"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             disabled=""
             style="margin-top: 20px;"

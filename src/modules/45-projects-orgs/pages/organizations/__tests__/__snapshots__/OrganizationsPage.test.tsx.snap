@@ -83,6 +83,7 @@ exports[`Org Page List Create New Org 1`] = `
         class="Layout--horizontal StyledProps--main StyledProps--padding-small"
       >
         <button
+          aria-label="projectsOrgs.newOrganization"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
           type="button"
         >

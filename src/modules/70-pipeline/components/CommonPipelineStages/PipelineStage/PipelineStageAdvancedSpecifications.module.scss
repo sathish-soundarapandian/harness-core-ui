@@ -113,3 +113,18 @@
   display: grid;
   grid-template-columns: 1fr;
 }
+.pipelineHeader {
+  height: 62px;
+  width: 100% !important;
+  display: inline-block !important;
+}
+.divider {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: var(--spacing-4);
+}
+.inputSetFormRunPipeline {
+  padding-top: var(--spacing-xxlarge) !important;
+}
+.noPipelineInputSetForm {
+  padding-top: var(--spacing-medium);
+}
