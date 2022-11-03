@@ -19,6 +19,7 @@ import type {
   EcrSpec,
   GcrSpec,
   JenkinsRegistrySpec,
+  Nexus2RegistrySpec,
   NexusRegistrySpec
 } from 'services/pipeline-ng'
 
@@ -255,4 +256,5 @@ export type ArtifactTriggerSpec =
   | GcrSpec
   | JenkinsRegistrySpec
   | NexusRegistrySpec
+  | Nexus2RegistrySpec
   | CustomArtifactSpec

@@ -61,6 +61,7 @@ import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
+import { Nexus2Artifact } from './ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
@@ -346,6 +347,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
           </StepWizard>
         )
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
         return (
           <StepWizard title={stepWizardTitle}>
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
@@ -433,6 +435,8 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <ECRArtifact {...artifactLastStepProps()} />
       case 'Nexus3Registry':
         return <NexusArtifact {...artifactLastStepProps()} />
+      case 'Nexus2Registry':
+        return <Nexus2Artifact {...artifactLastStepProps()} />
       case 'ArtifactoryRegistry':
         return <Artifactory {...artifactLastStepProps()} />
       case 'AmazonS3':

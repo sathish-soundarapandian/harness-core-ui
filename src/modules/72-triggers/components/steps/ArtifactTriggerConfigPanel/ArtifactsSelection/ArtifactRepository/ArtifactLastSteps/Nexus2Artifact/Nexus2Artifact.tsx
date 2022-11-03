@@ -5,37 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { Formik, Layout, Button, StepProps, Text, ButtonVariation, FormInput, FormikForm } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
 
-import { ConnectorConfigDTO, DockerBuildDetailsDTO } from 'services/cd-ng'
+import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { Nexus2RegistrySpec } from 'services/pipeline-ng'
-import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
-import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
-import type { queryInterface } from '../NexusArtifact/NexusArtifact'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
 export function Nexus2Artifact({
-  context,
   handleSubmit,
-  expressions,
-  allowableTypes,
   prevStepData,
   initialValues,
-  previousStep,
-  artifactIdentifiers,
-  isMultiArtifactSource,
-  formClassName = ''
+  previousStep
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2RegistrySpec>): React.ReactElement {
   const { getString } = useStrings()
 
@@ -78,9 +66,7 @@ export function Nexus2Artifact({
       >
         {formik => (
           <FormikForm>
-            <div className={cx(css.artifactForm, formClassName)}>
-              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
-              {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
+            <div className={cx(css.artifactForm)}>
               <div className={css.imagePathContainer}>
                 <FormInput.Select
                   name="repositoryFormat"
@@ -93,10 +79,6 @@ export function Nexus2Artifact({
                   label={getString('repository')}
                   name="repository"
                   placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                  multiTextInputProps={{
-                    expressions,
-                    allowableTypes
-                  }}
                 />
               </div>
               {formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
