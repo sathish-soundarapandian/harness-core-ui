@@ -55,6 +55,9 @@ export const validateAddSLO = (formikProps: FormikProps<SLOV2Form>): boolean => 
   if (!serviceLevelObjectivesDetails?.length) {
     return false
   } else {
+    if (serviceLevelObjectivesDetails?.length < 2) {
+      return false
+    }
     for (let index = 0; index < defaultTo(serviceLevelObjectivesDetails?.length, 0); index++) {
       if (
         serviceLevelObjectivesDetails?.[index].weightagePercentage > 99 ||

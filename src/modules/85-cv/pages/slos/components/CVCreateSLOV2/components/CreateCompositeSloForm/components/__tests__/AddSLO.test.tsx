@@ -113,4 +113,47 @@ describe('Validate  AddSLO', () => {
       fireEvent.click(getByText('Update'))
     })
   })
+
+  test('should be able to delete SLOs', () => {
+    const { container, getByText, queryByText } = render(
+      <TestWrapper>
+        <Formik initialValues={{ serviceLevelObjectivesDetails }} onSubmit={jest.fn()}>
+          {() => <AddSLOs />}
+        </Formik>
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="main-trash"]')).toBeInTheDocument()
+    expect(getByText('hHJYxnUFTCypZdmYr0Q0tQ')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(container.querySelector('[data-icon="main-trash"]')!)
+    })
+    expect(document.querySelector('.bp3-dialog')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(document.querySelectorAll('.bp3-dialog button')[0]!)
+    })
+    expect(queryByText('hHJYxnUFTCypZdmYr0Q0tQ')).not.toBeInTheDocument()
+  })
+
+  test('should be able to reset SLOs weight', () => {
+    const init = {
+      serviceLevelObjectivesDetails: [
+        { ...serviceLevelObjectivesDetails[0], weightagePercentage: 70 },
+        { ...serviceLevelObjectivesDetails[1], weightagePercentage: 30 }
+      ]
+    }
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Formik initialValues={init} onSubmit={jest.fn()}>
+          {() => <AddSLOs />}
+        </Formik>
+      </TestWrapper>
+    )
+    expect(container.querySelector('input[value="70"]')).toBeInTheDocument()
+    expect(container.querySelector('input[value="30"]')).toBeInTheDocument()
+    expect(getByText('reset')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(getByText('reset'))
+    })
+    expect(container.querySelector('input[value="50"]')).toBeInTheDocument()
+  })
 })

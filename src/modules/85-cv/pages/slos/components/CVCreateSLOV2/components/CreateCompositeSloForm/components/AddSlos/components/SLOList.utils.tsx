@@ -148,3 +148,24 @@ export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos }: RenderC
     />
   )
 }
+
+export const resetSLOWeightage = (
+  selectedSlos: ServiceLevelObjectiveDetailsDTO[],
+  accountId: string,
+  orgIdentifier: string,
+  projectIdentifier: string
+): ServiceLevelObjectiveDetailsDTO[] => {
+  const selectedSlosLength = selectedSlos.length
+  const weight = Number(100 / selectedSlosLength).toFixed(1)
+  const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
+  const updatedSLOObjective = selectedSlos.map((item, index) => {
+    return {
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      serviceLevelObjectiveRef: item.serviceLevelObjectiveRef,
+      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
+    }
+  })
+  return updatedSLOObjective
+}
