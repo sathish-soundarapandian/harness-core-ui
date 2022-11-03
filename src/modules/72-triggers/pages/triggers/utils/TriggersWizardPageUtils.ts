@@ -8,7 +8,7 @@
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
 import { parse } from 'yaml'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -1099,7 +1099,7 @@ export const getPathString = (runtimeData: any, stageId: any) => {
   return `stages[${filteredStageIdx}].stage.spec.serviceConfig.serviceDefinition.spec`
 }
 
-const isRuntimeInput = (str: any): boolean => typeof str === 'string' && str?.includes('<+input>')
+const isRuntimeInput = (str: any): boolean => typeof str === 'string' && str?.includes(RUNTIME_INPUT_VALUE)
 const getRuntimeInputLabel = ({ str, getString }: { str: any; getString?: (key: StringKeys) => string }): string =>
   isRuntimeInput(str) ? getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput') : str
 
@@ -1307,15 +1307,17 @@ export const TriggerDefaultFieldList = {
 export const replaceTriggerDefaultBuild = ({
   build,
   chartVersion,
-  artifactPath
+  artifactPath,
+  version
 }: {
   build?: string
   chartVersion?: string
   artifactPath?: string
+  version?: string
 }): string => {
-  if (chartVersion === '<+input>') {
+  if (chartVersion === RUNTIME_INPUT_VALUE) {
     return TriggerDefaultFieldList.chartVersion
-  } else if (build === '<+input>' || artifactPath === '<+input>') {
+  } else if (build === RUNTIME_INPUT_VALUE || artifactPath === RUNTIME_INPUT_VALUE || version === RUNTIME_INPUT_VALUE) {
     return TriggerDefaultFieldList.build
   }
   return build || chartVersion || artifactPath || ''
@@ -1357,13 +1359,23 @@ const getManifestTableItem = ({
           getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
       )
     } else {
-      if (manifest.type === 'Jenkins') {
+      if (manifest.type === ENABLED_ARTIFACT_TYPES.Jenkins) {
         return (
           getRuntimeInputLabel({ str: manifest?.spec?.build, getString }) !==
           getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
         )
       }
-      if (manifest.type === 'AmazonS3') {
+      if (
+        manifest.type === ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry ||
+        manifest.type === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry ||
+        manifest.type === ENABLED_ARTIFACT_TYPES.CustomArtifact
+      ) {
+        return (
+          getRuntimeInputLabel({ str: manifest?.spec?.version, getString }) !==
+          getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
+        )
+      }
+      if (manifest.type === ENABLED_ARTIFACT_TYPES.AmazonS3) {
         return !manifest?.spec?.filePathRegex
       }
       if (isServerlessDeploymentTypeSelected) {
@@ -2301,7 +2313,7 @@ export const getArtifactManifestTriggerYaml = ({
   )
   const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
   const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
-  if (storeVal?.spec?.connectorRef === '<+input>') {
+  if (storeVal?.spec?.connectorRef === RUNTIME_INPUT_VALUE) {
     artifactSourceSpec = cloneDeep(
       parse(
         JSON.stringify({

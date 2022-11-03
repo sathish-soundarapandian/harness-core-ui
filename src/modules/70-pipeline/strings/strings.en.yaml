@@ -825,6 +825,8 @@ selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   artifactId: Artifact ID
+  customArtifactManualFill: Manually Enter an artifact version
+  customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
   groupIdPlaceholder: Enter Group ID
@@ -872,6 +874,9 @@ artifactsSelection:
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    script: Script is required
+    artifactsArrayPath: Artifact array path is required
+    versionPath: Version path is required
     noBuild: No build found with given details
     packageType: Package Type is required
     versionRegex: Version Regex is required

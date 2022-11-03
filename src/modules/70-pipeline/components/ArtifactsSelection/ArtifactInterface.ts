@@ -94,12 +94,13 @@ export interface VariableInterface {
 export interface CustomArtifactSource {
   type?: string
   identifier?: string
+  formType?: string
   spec?: {
-    version: string
-    delegateSelectors?: SelectOption | string[] | string
+    version?: string
+    delegateSelectors?: SelectOption[] | string[] | string
     inputs?: VariableInterface[]
     timeout?: string
-    scripts: {
+    scripts?: {
       fetchAllArtifacts?: {
         artifactsArrayPath?: string
         attributes?: VariableInterface[]
@@ -315,6 +316,8 @@ export interface ArtifactTagHelperText {
   repositoryFormat?: RepositoryFormatTypes
   artifactId?: string
   groupId?: string
+  artifactArrayPath?: string
+  versionPath?: string
   packageName?: string
 }
 export interface ArtifactImagePathTagViewProps {

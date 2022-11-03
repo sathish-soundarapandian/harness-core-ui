@@ -445,6 +445,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -984,7 +985,6 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1337,7 +1337,6 @@ export interface ErrorMetadata {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   errorMessage?: string
 }
 
@@ -1891,7 +1890,6 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4066,7 +4064,6 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
