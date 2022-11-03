@@ -10,6 +10,8 @@ import { useStrings } from 'framework/strings'
 import bgImageURL from './ff.svg'
 import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
+import { CFTrialTemplate } from './CFTrialTemplate'
+
 const CFTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
   const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
@@ -18,9 +20,6 @@ const CFTrialHomePage: React.FC = () => {
   const startBtnDescription = isFreeEnabled
     ? getString('common.startFreePlan', { module: 'FF' })
     : getString('cf.cfTrialHomePage.startTrial.startBtn.description')
-  import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-  import { FeatureFlag } from '@common/featureFlags'
-  import { CFTrialTemplate } from './CFTrialTemplate'
 
   const startTrialProps = {
     description: getString('cf.cfTrialHomePage.startTrial.description'),
