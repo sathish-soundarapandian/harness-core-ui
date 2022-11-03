@@ -47,6 +47,8 @@ import {
 } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { TriggerConfigDTO } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
   InfraProvisioningWizardProps,
@@ -93,6 +95,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { setShowGetStartedTabInMainMenu } = useSideNavContext()
   const { showError: showErrorToaster } = useToaster()
   const [buttonLabel, setButtonLabel] = useState<string>('')
+  const { trackEvent } = useTelemetry()
 
   const { CIE_HOSTED_VMS } = useFeatureFlags()
 
@@ -397,6 +400,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.ToDo)
         },
         onClickNext: () => {
+          try {
+            trackEvent(CIOnboardingActions.ConfigurePipelineClicked, {})
+          } catch (e) {
+            // ignore error
+          }
           const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
           if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
@@ -433,6 +441,15 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         onClickNext: () => {
           const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
           const { configuredOption, values, showValidationErrors } = configurePipelineRef.current || {}
+          if (configuredOption?.name) {
+            try {
+              trackEvent(CIOnboardingActions.CreatePipelineClicked, {
+                selectedStarterPipeline: StarterConfigIdToOptionMap[configuredOption.id]
+              })
+            } catch (e) {
+              // ignore error
+            }
+          }
           const { branch, yamlPath } = values || {}
           if (!configuredOption) {
             setShowError(true)
