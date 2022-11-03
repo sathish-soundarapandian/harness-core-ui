@@ -79,7 +79,6 @@ import DelegateSelectorStep from '@connectors/components/CreateConnector/commonS
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import {
@@ -118,7 +117,6 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { EXPORT_TF_PLAN_JSON_NG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -583,7 +581,7 @@ function TerraformPlanWidget(
                           disabled={readonly}
                         />
                       </div>
-                      {EXPORT_TF_PLAN_JSON_NG && (
+                      {
                         <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                           <FormMultiTypeCheckboxField
                             formik={formik as FormikProps<unknown>}
@@ -610,7 +608,7 @@ function TerraformPlanWidget(
                             />
                           )}
                         </div>
-                      )}
+                      }
                     </>
                   }
                 />

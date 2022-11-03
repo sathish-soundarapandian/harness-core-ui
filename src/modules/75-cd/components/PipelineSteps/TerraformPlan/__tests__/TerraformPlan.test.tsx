@@ -197,13 +197,9 @@ describe('Test TerraformPlan', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render edit view for FF EXPORT_TF_PLAN_JSON_NG enabled', () => {
+  test('should render edit view for FF EXPORT_TF_PLAN_JSON_NG`', () => {
     const { container } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: { EXPORT_TF_PLAN_JSON_NG: true }
-        }}
-      >
+      <TestWrapper>
         <TestStepWidget
           initialValues={{
             type: 'TerraformPlan',
