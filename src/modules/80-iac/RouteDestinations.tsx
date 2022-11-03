@@ -57,7 +57,7 @@ const RedirectToIacProject = (): React.ReactElement => {
       />
     )
   } else {
-    return <Redirect to={routes.toModuleHome({ accountId, module: 'iac' })} />
+    return <Redirect to={routes.toIacDashboard({ accountId })} />
   }
 }
 
