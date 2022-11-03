@@ -17,8 +17,8 @@ import ModuleInfoCards, { ModuleInfoCard, getInfoCardsProps } from '@common/comp
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { Experiences } from '@common/constants/Utils'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 export interface StartTrialModalContentProps {
   handleStartTrial?: () => void

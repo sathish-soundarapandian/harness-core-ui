@@ -91,8 +91,9 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
+  const FREE_PLAN_ENABLED = !isOnPrem
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
@@ -211,7 +212,8 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
 export const CFTrialTemplate: React.FC<CFTrialTemplateProps> = ({ cfTrialProps }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
+  const isFreeEnabled = !isOnPrem
   const refererURL = getSavedRefererURL()
 
   const startTrialRequestBody: StartTrialDTORequestBody = {

@@ -26,8 +26,8 @@ import routes from '@common/RouteDefinitions'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
-import css from './StartTrialTemplate.module.scss'
 import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
+import css from './StartTrialTemplate.module.scss'
 
 interface StartTrialTemplateProps {
   title: string

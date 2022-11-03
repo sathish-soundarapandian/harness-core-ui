@@ -264,6 +264,11 @@ export const NoSubscriptionDetailsCardInfo = ({ accountName }: { accountName?: s
   )
 }
 
+export const enum Hosting {
+  SaaS = 'SAAS',
+  OnPrem = 'ON_PREM'
+}
+
 export const CommunitySubscriptionDetailsCardInfo = ({ accountName }: { accountName?: string }): React.ReactElement => {
   const { getString } = useStrings()
   const serviceType = getString('authSettings.onprem')

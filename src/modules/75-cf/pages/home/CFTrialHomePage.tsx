@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useStrings } from 'framework/strings'
-
+import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 import { CFTrialTemplate } from './CFTrialTemplate'
 
 const CFTrialHomePage: React.FC = () => {
