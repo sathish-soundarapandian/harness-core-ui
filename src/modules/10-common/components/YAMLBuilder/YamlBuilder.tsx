@@ -721,13 +721,15 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
   return (
-    <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
-      <div className={css.editor}>
-        {defaultTo(renderCustomHeader, renderHeader)()}
-        {renderEditor()}
+    <Layout.Vertical>
+      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
+        <div className={css.editor}>
+          {defaultTo(renderCustomHeader, renderHeader)()}
+          {renderEditor()}
+        </div>
       </div>
       {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
-    </div>
+    </Layout.Vertical>
   )
 }
 
