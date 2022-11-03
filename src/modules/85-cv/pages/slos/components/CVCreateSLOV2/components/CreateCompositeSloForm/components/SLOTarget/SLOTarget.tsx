@@ -22,9 +22,12 @@ const SLOTarget = ({ formikProps }: SLOTargetProps): JSX.Element => {
   return (
     <>
       <Layout.Horizontal spacing="medium" margin={{ bottom: 'small' }}>
-        <LabelAndValue label="Period Type" value={formikProps.values.periodType || ''} />
+        <LabelAndValue
+          label={getString('cv.slos.sloTargetAndBudget.periodType')}
+          value={formikProps.values.periodType || ''}
+        />
         {formikProps.values.periodType === PeriodTypes.ROLLING && (
-          <LabelAndValue label={'Period Length'} value={formikProps.values.periodLength || ''} />
+          <LabelAndValue label={getString('cv.periodLength')} value={formikProps.values.periodLength || ''} />
         )}
         {formikProps.values.periodType === PeriodTypes.CALENDAR && <CalenderValuePreview data={formikProps.values} />}
       </Layout.Horizontal>

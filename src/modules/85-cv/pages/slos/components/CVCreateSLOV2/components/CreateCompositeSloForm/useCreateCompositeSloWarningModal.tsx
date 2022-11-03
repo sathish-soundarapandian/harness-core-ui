@@ -84,14 +84,7 @@ function useCreateCompositeSloWarningModal({
         canEscapeKeyClose={true}
         canOutsideClickClose={true}
         enforceFocus={false}
-        style={{
-          width: 600,
-          borderLeft: 0,
-          paddingBottom: 0,
-          paddingTop: 'large',
-          position: 'relative',
-          overflow: 'hidden'
-        }}
+        className={css.warningModal}
         onClose={closePeriodUpdateModal}
       >
         <Layout.Vertical>

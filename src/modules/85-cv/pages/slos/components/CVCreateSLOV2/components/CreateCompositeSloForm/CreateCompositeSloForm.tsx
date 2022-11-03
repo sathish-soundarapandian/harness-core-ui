@@ -8,12 +8,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Page, Button, ButtonVariation } from '@harness/uicore'
-import { isEmpty, isEqual } from 'lodash-es'
+import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
-import { isFormDataValid } from './CreateCompositeSloForm.utils'
+import { isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
@@ -44,32 +44,27 @@ export const CreateCompositeSloForm = ({
   const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)
   const compositeSloPayloadRef = useRef<SLOV2Form | null>()
   const periodTypesRef = useRef<SLOV2Form['periodType']>()
-  const prevStepData = useRef<SLOV2Form | null>()
+  const prevStepDataRef = useRef<SLOV2Form | null>()
 
   const [openSaveCancelModal, openPeriodUpdateModal] = useCreateCompositeSloWarningModal({
     handleRedirect,
     onChange: formikProps.setValues,
-    prevStepData
+    prevStepData: prevStepDataRef
   })
 
   useEffect(() => {
     compositeSloPayloadRef.current = formikProps.values
-    prevStepData.current = formikProps.values
+    prevStepDataRef.current = formikProps.values
   }, [])
 
   useEffect(() => {
-    if (
-      Boolean(formikProps.values.periodType) &&
-      Boolean(periodTypesRef?.current) &&
-      !isEmpty(formikProps.values.serviceLevelObjectivesDetails) &&
-      formikProps.values.periodType !== periodTypesRef?.current
-    ) {
+    if (shouldOpenPeriodUpdateModal(formikProps, periodTypesRef)) {
       openPeriodUpdateModal()
     }
   }, [openPeriodUpdateModal, formikProps.values.periodType])
 
   const onStepChange = (): void => {
-    prevStepData.current = formikProps.values
+    prevStepDataRef.current = formikProps.values
     periodTypesRef.current = formikProps.values.periodType
   }
 

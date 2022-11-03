@@ -7,11 +7,12 @@
 
 import React from 'react'
 import { Layout, Text, Color, SelectOption, MultiSelectOption } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { PeriodLengthTypes, PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import { CreateCompositeSLOSteps } from '../../CreateCompositeSloForm.types'
 
-export const LabelAndValue = ({ label, value }: { label: string; value: string }) => {
+export const LabelAndValue = ({ label, value }: { label: string; value: string }): JSX.Element => {
   return (
     <Layout.Horizontal spacing="medium">
       <Text font={{ weight: 'semi-bold' }} color={Color.GREY_1000}>
@@ -24,29 +25,31 @@ export const LabelAndValue = ({ label, value }: { label: string; value: string }
 
 export const CalenderValuePreview = ({ data }: { data: SLOV2Form }): JSX.Element => {
   let content = <></>
+  const { getString } = useStrings()
   if (data.periodLengthType === PeriodLengthTypes.MONTHLY) {
-    content = <LabelAndValue label={'Window ends'} value={data.dayOfMonth?.toString() || ''} />
+    content = <LabelAndValue label={getString('cv.widowEnds')} value={data.dayOfMonth?.toString() || ''} />
   }
   if (data.periodLengthType === PeriodLengthTypes.WEEKLY) {
-    content = <LabelAndValue label={'Window ends'} value={data.dayOfWeek?.toString() || ''} />
+    content = <LabelAndValue label={getString('cv.widowEnds')} value={data.dayOfWeek?.toString() || ''} />
   }
   return (
     <>
-      <LabelAndValue label={'Period Length'} value={data.periodLengthType || ''} />
+      <LabelAndValue label={getString('cv.periodLength')} value={data.periodLengthType || ''} />
       {content}
     </>
   )
 }
 
 export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data: SLOV2Form }): JSX.Element => {
+  const { getString } = useStrings()
   switch (id) {
     case CreateCompositeSLOSteps.Define_SLO_Identification:
       return (
         <Layout.Vertical spacing="medium">
-          <LabelAndValue label={'SLO Name'} value={data.name} />
-          {data.description && <LabelAndValue label={'Description'} value={data.description || ''} />}
+          <LabelAndValue label={getString('cv.slos.sloName')} value={data.name} />
+          {data.description && <LabelAndValue label={getString('description')} value={data.description || ''} />}
           <LabelAndValue
-            label={'User Journey'}
+            label={getString('cv.slos.userJourney')}
             value={(data.userJourneyRef as unknown as MultiSelectOption[])
               ?.map((userJourney: SelectOption) => userJourney.label || userJourney)
               .join(',')}
@@ -56,9 +59,9 @@ export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data:
     case CreateCompositeSLOSteps.Set_SLO_Time_Window:
       return (
         <Layout.Vertical spacing="medium">
-          <LabelAndValue label={'Period Type'} value={data.periodType || ''} />
+          <LabelAndValue label={getString('cv.slos.sloTargetAndBudget.periodType')} value={data.periodType || ''} />
           {data.periodType === PeriodTypes.ROLLING && (
-            <LabelAndValue label={'Period Length'} value={data.periodLength || ''} />
+            <LabelAndValue label={getString('cv.periodLength')} value={data.periodLength || ''} />
           )}
           {data.periodType === PeriodTypes.CALENDAR && <CalenderValuePreview data={data} />}
         </Layout.Vertical>
@@ -66,7 +69,10 @@ export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data:
     case CreateCompositeSLOSteps.Set_SLO_Target:
       return (
         <Layout.Vertical spacing="medium">
-          <LabelAndValue label={'SLO Target Percentage'} value={data.SLOTargetPercentage.toString() || ''} />
+          <LabelAndValue
+            label={`${getString('cv.SLOTarget')} ${getString('instanceFieldOptions.percentage')}`}
+            value={data.SLOTargetPercentage.toString() || ''}
+          />
         </Layout.Vertical>
       )
     case CreateCompositeSLOSteps.Add_SLOs:

@@ -94,9 +94,11 @@ export const AddSLOs = (): JSX.Element => {
     }
   ]
 
+  const showSLOTableAndMessage = Boolean(serviceLevelObjectivesDetails.length)
+
   return (
     <>
-      {Boolean(serviceLevelObjectivesDetails.length) && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
+      {showSLOTableAndMessage && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
       <Button
         data-testid={'addSlosButton'}
         variation={ButtonVariation.SECONDARY}
@@ -105,9 +107,7 @@ export const AddSLOs = (): JSX.Element => {
         onClick={showDrawer}
         margin={{ bottom: 'large', top: 'large' }}
       />
-      {Boolean(serviceLevelObjectivesDetails.length) && (
-        <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
-      )}
+      {showSLOTableAndMessage && <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />}
     </>
   )
 }

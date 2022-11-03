@@ -29,8 +29,7 @@ const Step = ({
   const selectedStepIndex = stepList.map(item => item.id).indexOf(selectedStepId || '')
   const [stepStatus, setStepStatus] = useState<StepStatusType>(StepStatus.INCONCLUSIVE)
   const isLastStep = selectedStepIndex === stepList.length - 1
-  const isCurrent = selectedStepIndex === index
-  const isPreviewVisible = selectedStepIndex > index && step.preview
+  const isCurrentStep = selectedStepIndex === index
 
   const onTitleClick = useCallback(
     (titleIndex: number): void => {
@@ -57,29 +56,35 @@ const Step = ({
     [isStepValid, runValidationOnMount, step.id, stepStatus]
   )
 
+  const isErrorMessageVisible = stepTitleStatus === StepStatus.ERROR
+  const isPreviewVisible = useMemo(
+    () => selectedStepIndex > index && step.preview && !isErrorMessageVisible,
+    [index, selectedStepIndex, step.preview, isErrorMessageVisible]
+  )
+
   return (
     <>
       <Layout.Vertical key={`${step.id}_vertical`} spacing="medium">
         <StepTitle
           step={step}
           index={index}
-          isCurrent={isCurrent}
+          isCurrent={isCurrentStep}
           stepStatus={stepTitleStatus}
           onClick={onTitleClick}
         />
-        {isPreviewVisible && stepTitleStatus !== StepStatus.ERROR && (
+        {isPreviewVisible && (
           <Container data-testid={`preview_${step.id}`} className={css.alignContainerRight}>
             <>{step.preview}</>
           </Container>
         )}
-        {(isCurrent || stepTitleStatus === StepStatus.ERROR) && (
+        {(isCurrentStep || isErrorMessageVisible) && (
           <Container className={css.alignContainerRight}>
-            {stepTitleStatus === StepStatus.ERROR && (
-              <Text margin={{ bottom: isCurrent ? 'large' : '' }} intent="danger">
+            {isErrorMessageVisible && (
+              <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
                 {getString('cv.CVStepper.StepError')}
               </Text>
             )}
-            {isCurrent && (
+            {isCurrentStep && (
               <>
                 <Card data-testid={`panel_${step.id}`} className={css.card}>
                   {step.panel}
