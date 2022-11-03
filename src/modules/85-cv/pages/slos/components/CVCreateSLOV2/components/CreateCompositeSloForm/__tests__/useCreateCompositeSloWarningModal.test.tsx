@@ -44,11 +44,30 @@ describe('useCreateCompositeSloWarningModal', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('validate onCancel calls onChange', async () => {
+  test('validate onCancel calls onChange with null', async () => {
     const onChangeMock = jest.fn()
     const { container } = render(
       <TestWrapper>
         <Wrapper onChange={onChangeMock} prevStepData={null} handleRedirect={jest.fn()} />
+      </TestWrapper>
+    )
+    expect(container.querySelector('button[title="openPeriodModal"]')).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(container.querySelector('button[title="openPeriodModal"]')!)
+    })
+    await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('cancel')).toBeInTheDocument())
+    act(() => {
+      userEvent.click(screen.getByText('cancel'))
+    })
+    expect(onChangeMock).toHaveBeenCalled()
+  })
+
+  test('validate onCancel calls onChange with undefined', async () => {
+    const onChangeMock = jest.fn()
+    const { container } = render(
+      <TestWrapper>
+        <Wrapper onChange={onChangeMock} prevStepData={undefined} handleRedirect={jest.fn()} />
       </TestWrapper>
     )
     expect(container.querySelector('button[title="openPeriodModal"]')).toBeInTheDocument()

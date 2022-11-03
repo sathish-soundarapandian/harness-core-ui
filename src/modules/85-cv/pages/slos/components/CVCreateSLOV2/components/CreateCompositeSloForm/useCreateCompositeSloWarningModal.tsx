@@ -113,6 +113,12 @@ function useCreateCompositeSloWarningModal({
             <Button
               text={getString('common.ok')}
               onClick={() => {
+                onChange(prevState => {
+                  return {
+                    ...prevState,
+                    serviceLevelObjectivesDetails: []
+                  }
+                })
                 closePeriodUpdateModal()
               }}
               intent="primary"
@@ -120,7 +126,7 @@ function useCreateCompositeSloWarningModal({
             <Button
               text={getString('cancel')}
               onClick={() => {
-                onChange({ ...prevStepData?.current } as SLOV2Form)
+                onChange({ ...prevStepData.current } as SLOV2Form)
                 closePeriodUpdateModal()
               }}
             />

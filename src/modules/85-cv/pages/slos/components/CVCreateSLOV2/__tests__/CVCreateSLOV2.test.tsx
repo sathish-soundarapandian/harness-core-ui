@@ -119,9 +119,6 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.type(sloName!, '* invalid')
-    await waitFor(() => expect(screen.getByText('cv.slos.validations.specialCharacters')).toBeInTheDocument())
-    userEvent.clear(sloName!)
     userEvent.type(sloName!, 'composite slo 1')
 
     // Cancel should open modal
