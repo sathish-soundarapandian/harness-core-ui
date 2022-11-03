@@ -67,7 +67,7 @@ const Step = ({
           stepStatus={stepTitleStatus}
           onClick={onTitleClick}
         />
-        {isPreviewVisible && (
+        {isPreviewVisible && stepTitleStatus !== StepStatus.ERROR && (
           <Container data-testid={`preview_${step.id}`} className={css.alignContainerRight}>
             <>{step.preview}</>
           </Container>

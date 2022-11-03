@@ -13,6 +13,7 @@ export const SLODetailsData = {
       projectIdentifier: 'project1',
       identifier: 'new_slov2',
       name: 'new slov2',
+      description: 'composite slo description',
       tags: {},
       userJourneyRefs: ['Second_Journey'],
       sloTarget: {

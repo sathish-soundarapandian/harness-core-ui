@@ -47,8 +47,10 @@ describe('SLOList', () => {
         />
       </TestWrapper>
     )
+    expect(getByText('SLO-3')).toBeInTheDocument()
     expect(getByText('SLO-4')).toBeInTheDocument()
-    expect(container).toMatchSnapshot()
+    expect(container.querySelectorAll('[type="checkbox"]')[0]).toBeChecked()
+    expect(container.querySelectorAll('[type="checkbox"]')[1]).toBeChecked()
   })
 
   test('should render SLOList with Calender filter', () => {
@@ -62,8 +64,10 @@ describe('SLOList', () => {
         />
       </TestWrapper>
     )
+    expect(getByText('SLO-3')).toBeInTheDocument()
     expect(getByText('SLO-4')).toBeInTheDocument()
-    expect(container).toMatchSnapshot()
+    expect(container.querySelectorAll('[type="checkbox"]')[0]).toBeChecked()
+    expect(container.querySelectorAll('[type="checkbox"]')[1]).toBeChecked()
   })
 
   test('should render SLOList with No filter', () => {
@@ -139,6 +143,41 @@ describe('SLOList error and loading', () => {
     expect(getByText('Retry')).toBeInTheDocument()
     act(() => {
       fireEvent.click(getByText('Retry'))
+    })
+  })
+
+  test('should render with multiple pages', () => {
+    const multiPageData = { ...mockSLODashboardWidgetsData }
+    const content = []
+    for (let index = 0; index < 20; index++) {
+      const slodta = {
+        sloIdentifier: `SLO${index}`,
+        name: `SLO${index}`
+      }
+      content.push(slodta)
+    }
+    multiPageData.data.totalPages = 2
+    multiPageData.data.totalItems = 20
+    multiPageData.data.content = content as any
+
+    jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
+      data: multiPageData,
+      loading: false,
+      error: false,
+      refetch: jest.fn()
+    } as any)
+
+    const { container } = render(
+      <TestWrapper>
+        <SLOList filter="Rolling" onAddSLO={jest.fn()} hideDrawer={jest.fn()} serviceLevelObjectivesDetails={[]} />
+      </TestWrapper>
+    )
+    expect(container.querySelectorAll('.Pagination--roundedButton')[1]).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(container.querySelectorAll('.Pagination--roundedButton')[1]!)
+    })
+    act(() => {
+      fireEvent.click(container.querySelectorAll('.Pagination--roundedButton')[0]!)
     })
   })
 })

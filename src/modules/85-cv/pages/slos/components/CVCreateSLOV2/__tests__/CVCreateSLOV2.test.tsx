@@ -119,6 +119,9 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
+    userEvent.type(sloName!, '* invalid')
+    await waitFor(() => expect(screen.getByText('cv.slos.validations.specialCharacters')).toBeInTheDocument())
+    userEvent.clear(sloName!)
     userEvent.type(sloName!, 'composite slo 1')
 
     // Cancel should open modal
@@ -135,7 +138,7 @@ describe('CVCreateSloV2', () => {
     fireEvent.click(await findByText(modal!, 'common.ok'))
   })
 
-  test('Validate values populate while editing Rolling type composiye SLO', async () => {
+  test('Validate values populate while editing Rolling type composite SLO', async () => {
     jest
       .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
       .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
@@ -437,6 +440,11 @@ describe('CVCreateSloV2', () => {
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
+    expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    })
+
     await act(() => {
       userEvent.click(screen.getByText('save'))
     })
@@ -465,6 +473,11 @@ describe('CVCreateSloV2', () => {
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
+    expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    })
+
     await act(() => {
       userEvent.click(screen.getByText('save'))
     })
@@ -492,6 +505,11 @@ describe('CVCreateSloV2', () => {
     await waitFor(() => expect(sloName).toBeInTheDocument())
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
+
+    expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    })
 
     await act(() => {
       userEvent.click(screen.getByText('save'))
