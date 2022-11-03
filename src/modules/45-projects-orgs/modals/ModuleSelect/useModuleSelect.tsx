@@ -125,6 +125,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
+  const FREE_PLAN_ENABLED = !isOnPrem
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
 

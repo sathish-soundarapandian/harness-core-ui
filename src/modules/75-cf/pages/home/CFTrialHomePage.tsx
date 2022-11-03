@@ -18,13 +18,9 @@ const CFTrialHomePage: React.FC = () => {
   const startBtnDescription = isFreeEnabled
     ? getString('common.startFreePlan', { module: 'FF' })
     : getString('cf.cfTrialHomePage.startTrial.startBtn.description')
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { CFTrialTemplate } from './CFTrialTemplate'
-
-const CFTrialHomePage: React.FC = () => {
-  const { getString } = useStrings()
-
+  import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+  import { FeatureFlag } from '@common/featureFlags'
+  import { CFTrialTemplate } from './CFTrialTemplate'
 
   const startTrialProps = {
     description: getString('cf.cfTrialHomePage.startTrial.description'),
@@ -33,7 +29,7 @@ const CFTrialHomePage: React.FC = () => {
       url: 'https://docs.harness.io/article/0a2u2ppp8s-getting-started-with-continuous-features'
     },
     startBtn: {
-      description: useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+      description: !isOnPrem
         ? getString('cf.cfTrialHomePage.startFreePlanBtn')
         : getString('cf.cfTrialHomePage.startTrial.startBtn.description')
     }

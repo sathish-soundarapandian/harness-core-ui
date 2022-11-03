@@ -25,9 +25,7 @@ import { Category, PlanActions, TrialActions } from '@common/constants/TrackingC
 import routes from '@common/RouteDefinitions'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
-import { useFeatureFlags, useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './StartTrialTemplate.module.scss'
 import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
@@ -66,7 +64,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const  FREE_PLAN_ENABLED  = !isOnPrem
+  const FREE_PLAN_ENABLED = !isOnPrem
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
