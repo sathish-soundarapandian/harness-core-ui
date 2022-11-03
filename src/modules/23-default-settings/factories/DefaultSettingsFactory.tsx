@@ -24,6 +24,7 @@ export interface SettingRendererProps {
   settingValue: SettingDTO | undefined
   categoryAllSettings: Map<SettingType, SettingDTO>
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  errorMessage: string
 }
 export interface SettingHandler {
   label: keyof StringsMap

@@ -6,8 +6,7 @@
  */
 
 import React, { FormEvent } from 'react'
-import { Checkbox, FormInput } from '@harness/uicore'
-import { Radio, RadioGroup } from '@blueprintjs/core'
+import { Checkbox, FormInput, FormError, Layout } from '@harness/uicore'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
@@ -73,32 +72,32 @@ export const DefaultSettingRadioBtnWithTrueAndFalse: React.FC<DefaultSettingRadi
   identifier
 }) => {
   const { getString } = useStrings()
-
   return (
-    // used blueprintjs radiogroup since uicore form input  is not getting updated with latest settingValue
     <>
-      <RadioGroup
+      <FormInput.RadioGroup
+        inline
+        radioGroup={{ inline: true }}
         name={identifier}
         disabled={settingValue && !settingValue.isSettingEditable}
-        inline={true}
         onChange={(e: FormEvent<HTMLInputElement>) => {
           onSettingSelectionChange(e.currentTarget.value)
         }}
-        selectedValue={settingValue?.value}
-      >
-        <Radio label={trueLabel ? getString(trueLabel) : getString('common.true')} value="true" />
-        <Radio label={falseLabel ? getString(falseLabel) : getString('common.false')} value="false" />
-      </RadioGroup>
+        items={[
+          { label: trueLabel ? getString(trueLabel) : getString('common.true'), value: 'true' },
+          { label: falseLabel ? getString(falseLabel) : getString('common.false'), value: 'false' }
+        ]}
+      />
     </>
   )
 }
 export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadioBtnWithTrueAndFalseProps> = ({
   onSettingSelectionChange,
   settingValue,
-  identifier
+  identifier,
+  errorMessage
 }) => {
   return (
-    <>
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }} className={css.settingCheckBoxContainer}>
       <Checkbox
         name={identifier}
         label=""
@@ -109,7 +108,8 @@ export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadi
         }}
         checked={settingValue?.value === 'true'}
       />
-    </>
+      {errorMessage ? <FormError name={identifier} errorMessage={errorMessage} /> : undefined}
+    </Layout.Vertical>
   )
 }
 export const DefaultSettingTextbox: React.FC<SettingRendererProps> = ({
