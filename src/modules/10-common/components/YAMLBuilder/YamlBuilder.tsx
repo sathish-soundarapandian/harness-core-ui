@@ -14,23 +14,12 @@ import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, IPosition, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
-import {
-  debounce,
-  isEmpty,
-  truncate,
-  throttle,
-  defaultTo,
-  attempt,
-  every,
-  isEqualWith,
-  isNil,
-  isUndefined
-} from 'lodash-es'
+import { debounce, isEmpty, throttle, defaultTo, attempt, every, isEqualWith, isNil, isUndefined } from 'lodash-es'
 import { Layout, Text, Collapse } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
-import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
+import { Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions } from 'yaml'
@@ -67,7 +56,6 @@ import {
   KEY_CODE_FOR_PERIOD,
   KEY_CODE_FOR_SPACE,
   KEY_CODE_FOR_CHAR_Z,
-  MAX_ERR_MSSG_LENGTH,
   CONTROL_EVENT_KEY_CODE,
   META_EVENT_KEY_CODE,
   SHIFT_EVENT_KEY_CODE,
@@ -549,25 +537,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
-  const getErrorSummary = (errorMap?: Map<number, string>): React.ReactElement => {
-    const errors: React.ReactElement[] = []
-    errorMap?.forEach((value, key) => {
-      const error = (
-        <li className={css.item} title={value} key={key}>
-          {getString('yamlBuilder.lineNumberLabel')}&nbsp;
-          {key + 1},&nbsp;
-          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
-        </li>
-      )
-      errors.push(error)
-    })
-    return (
-      <div className={css.errorSummary}>
-        <ol className={css.errorList}>{errors}</ol>
-      </div>
-    )
-  }
-
   const renderHeader = useCallback(
     (): JSX.Element => (
       <div className={cx(css.header)}>
@@ -579,21 +548,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
             </Container>
           ) : null}
-        </div>
-        <div className={cx(css.flexCenter, css.validationStatus)}>
-          {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
-            <Popover
-              interactionKind={PopoverInteractionKind.HOVER}
-              position={PopoverPosition.TOP}
-              content={getErrorSummary(yamlValidationErrors)}
-              popoverClassName={css.summaryPopover}
-            >
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-                <Icon name="main-issue-filled" size={14} className={css.validationIcon} />
-                <span className={css.invalidYaml}>{getString('invalidText')}</span>
-              </Layout.Horizontal>
-            </Popover>
-          )}
         </div>
       </div>
     ),
