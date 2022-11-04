@@ -12,6 +12,7 @@ declare const styles: {
   readonly allModulesOpen: string
   readonly border: string
   readonly chevron: string
+  readonly chevronUp: string
   readonly darkBackground: string
   readonly disabled: string
   readonly hiddenText: string

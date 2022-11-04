@@ -31,7 +31,7 @@ interface ChevronButtonProps {
 }
 
 const ChevronButton: React.FC<ChevronButtonProps> = (props: ChevronButtonProps) => {
-  const { disabled, type, handleClick } = props
+  const { disabled, type = ChevronButtonType.UP, handleClick } = props
 
   return (
     <Container
@@ -42,7 +42,7 @@ const ChevronButton: React.FC<ChevronButtonProps> = (props: ChevronButtonProps) 
       {disabled ? (
         <div className={css.disabled} />
       ) : (
-        <Icon name={type === 'DOWN' ? 'main-caret-down' : 'main-caret-up'} size={15} />
+        <Icon className={type === ChevronButtonType.UP ? css.chevronUp : undefined} name={'chevron-down'} size={24} />
       )}
     </Container>
   )
