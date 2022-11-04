@@ -1377,8 +1377,8 @@ const routes = {
     resourcePath
   }: RequireField<Pick<SCMProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/files${
-      gitRef ? '/' + gitRef : ''
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
+      gitRef ? '/files/' + gitRef : ''
     }${resourcePath ? '/~/' + resourcePath : ''}`
   },
   toSCMRepositoryCommits: ({ repoPath, commitRef }: Required<Pick<SCMProps, 'repoPath' | 'commitRef'>>) => {

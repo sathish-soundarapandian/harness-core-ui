@@ -69,7 +69,6 @@ export function SCMRouteDestinations(): React.ReactElement {
         })}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.SCMRepositoryCommits}
-        exact
       >
         <RepositoryCommits />
       </RouteWithLayout>
@@ -85,7 +84,6 @@ export function SCMRouteDestinations(): React.ReactElement {
         })}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.SCMRepositoryCommits}
-        exact
       >
         <RepositoryBranches />
       </RouteWithLayout>
@@ -109,11 +107,18 @@ export function SCMRouteDestinations(): React.ReactElement {
               scmPathProps.repoName
             ].join('/'),
             gitRef: scmPathProps.gitRef
+          }),
+          routes.toSCMRepository({
+            repoPath: [
+              scmPathProps.accountId,
+              scmPathProps.orgIdentifier,
+              scmPathProps.projectIdentifier,
+              scmPathProps.repoName
+            ].join('/')
           })
         ]}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.SCMRepositoryBranches}
-        exact
       >
         <Repository />
       </RouteWithLayout>

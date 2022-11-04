@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import React, { useMemo } from 'react'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
@@ -15,12 +15,14 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { scmPathProps } from '@common/utils/routeUtils'
 import css from './SideNav.module.scss'
 
 export default function SCMSideNav(): React.ReactElement {
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier, repoName, commitRef } = useParams<SCMPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, repoName } = useParams<SCMPathProps>()
   const history = useHistory()
+  const routeMatch = useRouteMatch()
   const { updateAppStore } = useAppStore()
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
     updateAppStore({ selectedProject: data })
@@ -29,8 +31,8 @@ export default function SCMSideNav(): React.ReactElement {
       routes.toSCMRepositoriesListing({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
     )
   }
-
-  console.log({ commitRef })
+  const isCommits = useMemo(() => routeMatch.path.includes(scmPathProps.commitRef), [routeMatch])
+  const isBranches = useMemo(() => routeMatch.path.includes(scmPathProps.branch), [routeMatch])
 
   return (
     <Layout.Vertical spacing="small">
@@ -59,6 +61,7 @@ export default function SCMSideNav(): React.ReactElement {
               to={routes.toSCMRepository({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
+              {...(isCommits || isBranches ? { activeClassName: '' } : {})}
             />
           )}
 

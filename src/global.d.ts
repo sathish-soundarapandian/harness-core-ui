@@ -192,6 +192,16 @@ declare module 'scm/RepositoryCommits' {
   export default ChildApp
 }
 
+declare module 'scm/RepositoryBranches' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'scm/RepositorySettings' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type Mutable<T> = {

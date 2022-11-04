@@ -21,20 +21,24 @@ import type { RemoteViewProps } from './SCMUtils'
 const RemoteSCMApp = lazy(() => import('scm/App'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoveRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
+const RemoteRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoveRepository = lazy(() => import('scm/Repository'))
+const RemoteRepository = lazy(() => import('scm/Repository'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoveRepositoryCommits = lazy(() => import('scm/RepositoryCommits'))
+const RemoteRepositoryCommits = lazy(() => import('scm/RepositoryCommits'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemoteRepositoryBranches = lazy(() => import('scm/RepositoryBranches'))
 
 const exportedRoutes = pick(routes, [
   'toSCM',
   'toSCMHome',
   'toSCMRepositoriesListing',
   'toSCMRepository',
-  'toSCMRepositoryCommits'
+  'toSCMRepositoryCommits',
+  'toSCMRepositoryBranches'
 ])
 
 const SCMRemoteComponentMounter: React.FC<{
@@ -70,17 +74,17 @@ const SCMRemoteComponentMounter: React.FC<{
 }
 
 export const RepositoriesListing: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoveRepositoriesListing {...props} />} />
+  <SCMRemoteComponentMounter component={<RemoteRepositoriesListing {...props} />} />
 )
 
 export const Repository: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoveRepository {...props} />} />
+  <SCMRemoteComponentMounter component={<RemoteRepository {...props} />} />
 )
 
 export const RepositoryCommits: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoveRepositoryCommits {...props} />} />
+  <SCMRemoteComponentMounter component={<RemoteRepositoryCommits {...props} />} />
 )
 
 export const RepositoryBranches: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<h1>Branches</h1>} />
+  <SCMRemoteComponentMounter component={<RemoteRepositoryBranches {...props} />} />
 )
