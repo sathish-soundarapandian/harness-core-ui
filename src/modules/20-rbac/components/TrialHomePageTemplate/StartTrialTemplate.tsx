@@ -25,8 +25,7 @@ import { Category, PlanActions, TrialActions } from '@common/constants/TrackingC
 import routes from '@common/RouteDefinitions'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
-import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
-import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
+import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import css from './StartTrialTemplate.module.scss'
 
 interface StartTrialTemplateProps {
@@ -59,12 +58,11 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { accountId } = useParams<{
     accountId: string
   }>()
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const FREE_PLAN_ENABLED = !isOnPrem
+  const FREE_PLAN_ENABLED = !isOnPrem()
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
@@ -114,7 +112,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
         onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
         disabled={loading}
       />
-      {!isOnPrem && (
+      {!isOnPrem() && (
         <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
           {getString('common.exploreAllPlans')}
         </Link>
@@ -130,8 +128,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
-  const isFreeEnabled = !isOnPrem
+  const isFreeEnabled = !isOnPrem()
 
   const startTrialRequestBody: StartTrialDTORequestBody = {
     moduleType: module.toUpperCase() as any,

@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { useStrings } from 'framework/strings'
-import { CFTrialTemplate } from './CFTrialTemplate'
 import { isOnPrem } from '@common/utils/utils'
+import { CFTrialTemplate } from './CFTrialTemplate'
 
 const CFTrialHomePage: React.FC = () => {
   const { getString } = useStrings()

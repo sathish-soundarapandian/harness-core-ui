@@ -18,17 +18,16 @@ import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes
 import { ResponseModuleLicenseDTO, useStartFreeLicense, useStartTrialLicense } from 'services/cd-ng'
 import useChaosTrialModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
+import { isOnPrem } from '@common/utils/utils'
 import bgImageURL from '../../images/chaos.svg'
-import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
 const ChaosTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = !isOnPrem
+  const isFreeEnabled = !isOnPrem()
   const module = 'chaos'
   const moduleType = 'CHAOS'
 
