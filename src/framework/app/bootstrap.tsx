@@ -20,13 +20,7 @@ const DefaultRouter: React.FC<React.PropsWithChildren<unknown>> = props => {
   return (
     <>
       {browserRouterEnabled ? (
-        <BrowserRouter
-          basename={`${
-            window.location.pathname.split('/ng').length > 1 ? window.location.pathname.split('/ng')[0] : ''
-          }/ng`}
-        >
-          {props.children}
-        </BrowserRouter>
+        <BrowserRouter basename={`${window.nameSpace}/ng`}>{props.children}</BrowserRouter>
       ) : (
         <HashRouter>{props.children}</HashRouter>
       )}

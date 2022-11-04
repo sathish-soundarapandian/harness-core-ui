@@ -35,6 +35,8 @@
       if (window.browserRouterEnabled === undefined) {
         window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       }
+      window.nameSpace =
+        window.location.pathname.split('/ng/').length > 1 ? window.location.pathname.split('/ng/')[0] : ''
       window.getApiBaseUrl = str => {
         if (window.browserRouterEnabled) {
           return `${window.apiUrl || ''}/${str}`
@@ -60,9 +62,7 @@
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
     <script>
-      window.NON_CDN_BASE_PATH = `${
-        window.location.pathname.split('/ng').length > 1 ? window.location.pathname.split('/ng')[0] : ''
-      }/ng/static/`
+      window.NON_CDN_BASE_PATH = `${window.nameSpace}/ng/static/`
       if (window.deploymentType === 'SAAS') {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')

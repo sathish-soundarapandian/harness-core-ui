@@ -11,6 +11,7 @@ declare global {
   interface Window {
     bugsnagClient: any // eslint-disable-line,
     browserRouterEnabled: any //eslint-disable-line
+    nameSpace: any //eslint-disable-line
   }
 }
 
