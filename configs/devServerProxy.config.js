@@ -16,8 +16,8 @@ module.exports = {
     pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}/ng/api`
   },
-  '/pipeline/api': {
-    pathRewrite: { '^/pipeline/api': '/api' },
+  '/public/pipeline/api': {
+    pathRewrite: { '^/public/pipeline/api': '/api' },
     target: targetLocalHost ? 'http://localhost:12001' : `${baseUrl}/pipeline`
   },
   '/notifications/api': {

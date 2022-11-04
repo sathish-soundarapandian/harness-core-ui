@@ -15,6 +15,8 @@ import SignupPage from '@common/pages/signup/SignupPage'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import RedirectPage from '@common/pages/redirect/Redirect'
 import { accountPathProps, executionPathProps, returnUrlParams } from '@common/utils/routeUtils'
+import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
+import ExecutionPipelineView from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionPipelineView'
 
 const RedirectToHome: React.FC = () => {
   const history = useHistory()
@@ -28,9 +30,6 @@ const RedirectToHome: React.FC = () => {
 }
 
 const RouteDestinationsWithoutAuth: React.FC = () => {
-  console.log(
-    routes.toPublicExecutionPipelineView({ ...accountPathProps, ...executionPathProps, module: ':module(ci)' })
-  )
   return (
     <Switch>
       <Route exact path="/">
@@ -43,7 +42,9 @@ const RouteDestinationsWithoutAuth: React.FC = () => {
           module: ':module(ci)'
         })}
       >
-        <div>hello public pipeline</div>
+        <ExecutionLandingPage>
+          <ExecutionPipelineView />
+        </ExecutionLandingPage>
       </Route>
       {__DEV__ ? (
         <Route path={routes.toLogin()}>
