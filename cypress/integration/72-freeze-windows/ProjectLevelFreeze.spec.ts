@@ -103,7 +103,7 @@ describe('Project Level Freeze', () => {
     cy.get('[data-testid="config-view-mode_1"]').should('have.length', 1)
 
     // Edit First Rule
-    cy.get('[data-testid="config-view-mode_0"] button span.bp3-icon-edit').click()
+    cy.get('[data-testid="config-view-mode_0"] button span[data-icon="Edit"]').click()
     cy.get('[data-testid="config-view-mode_0"]').should('have.length', 0)
     cy.get('[data-testid="config-edit-mode_0"]').should('have.length', 1)
 
@@ -217,7 +217,7 @@ describe('Project Level Freeze', () => {
     cy.get('[data-testid="config-view-mode_1"]').should('have.length', 1)
 
     // Delete Rule 2
-    cy.get('[data-testid="config-view-mode_1"] button span.bp3-icon-trash').click()
+    cy.get('[data-testid="config-view-mode_1"] button span[data-icon="main-trash"]').click()
     cy.get('button').contains('span', 'Save').parent().should('not.be.disabled')
     cy.get('button').contains('span', 'Discard').parent().should('not.be.disabled')
 
