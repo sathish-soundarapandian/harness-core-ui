@@ -383,6 +383,7 @@ exports[`module select test free plan btn  1`] = `
           common.purpose.cd.continuous
         </p>
         <button
+          aria-label="common.startFreePlan"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -1179,6 +1180,7 @@ exports[`module select test go to Module  btn  1`] = `
           common.purpose.cd.continuous
         </p>
         <button
+         aria-label="projectsOrgs.goToModuleBtn"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -1577,6 +1579,7 @@ exports[`module select test test on prem getting directly continue btn  1`] = `
           common.purpose.cd.continuous
         </p>
         <button
+          aria-label="projectsOrgs.goToModuleBtn"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >

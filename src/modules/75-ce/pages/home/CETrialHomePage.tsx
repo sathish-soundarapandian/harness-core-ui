@@ -18,21 +18,19 @@ import { useToaster } from '@common/components'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
+import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams } from '@common/hooks'
 import bgImage from './images/cehomebg.svg'
-import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 
 const CETrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = !isOnPrem
+  const isFreeEnabled = !isOnPrem()
   const module = 'ce'
   const moduleType = 'CE'
   const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)

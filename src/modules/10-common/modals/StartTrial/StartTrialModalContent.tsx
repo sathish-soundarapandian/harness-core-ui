@@ -17,8 +17,8 @@ import ModuleInfoCards, { ModuleInfoCard, getInfoCardsProps } from '@common/comp
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { Experiences } from '@common/constants/Utils'
-import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isOnPrem } from '@common/utils/utils'
 
 export interface StartTrialModalContentProps {
   handleStartTrial?: () => void
@@ -41,7 +41,6 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
   const initialSelectedInfoCard = moduleInfoCards ? moduleInfoCards[0] : undefined
   const [selectedInfoCard, setSelectedInfoCard] = useState<ModuleInfoCard | undefined>(initialSelectedInfoCard)
   const { licenseInformation } = useLicenseStore()
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const getModuleButton = (): React.ReactElement => {
     const handleOnClick = async (): Promise<void> => {
       if (!selectedInfoCard || selectedInfoCard?.isNgRoute) {
@@ -59,7 +58,7 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
       }
     }
 
-    const startTrialDescription = !isOnPrem ? 'common.startFreePlan' : 'common.startTrial'
+    const startTrialDescription = !isOnPrem() ? 'common.startFreePlan' : 'common.startTrial'
 
     const getButtonText = (): string | undefined => {
       if (source) {

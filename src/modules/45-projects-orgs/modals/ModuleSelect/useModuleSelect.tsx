@@ -186,7 +186,6 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName) &&
       !isOnPrem()
     ) {
-      console.log(FREE_PLAN_ENABLED, 'hi')
       if (FREE_PLAN_ENABLED) {
         return getString('common.startFreePlan')
       }
