@@ -846,28 +846,13 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
             )
           })
         } else {
-          const iconData = getIconDataBasedOnType(nodeData)
-
-          items.push({
-            id: nodeData.uuid as string,
-            name: nodeData.name || /* istanbul ignore next */ '',
-            identifier: nodeData.identifier as string,
-            icon: iconData.icon as IconName,
-            type: nodeData.stepType,
-            nodeType: nodeData.stepType,
-            status: nodeData?.status as ExecutionStatus,
-            data: {
-              ...iconData,
-              name: nodeData.name || /* istanbul ignore next */ '',
-              skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
-              when: nodeData.nodeRunInfo,
-              showInLabel: nodeData.stepType === NodeType.SERVICE || nodeData.stepType === NodeType.INFRASTRUCTURE,
-              identifier: nodeId,
-              status: nodeData.status as ExecutionStatus,
-              type: nodeData?.stepType,
-              data: nodeData
-            }
-          })
+          const exec = processNodeDataV1(
+            [nodeId] || /* istanbul ignore next */ [],
+            graph?.nodeMap,
+            graph?.nodeAdjacencyListMap,
+            items
+          )
+          items.push(...exec)
         }
       }
       nodeId = nodeAdjacencyListMap[nodeId].nextIds?.[0]
