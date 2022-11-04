@@ -171,6 +171,14 @@ export const scmPathProps: Required<SCMPathProps> = {
   commitId: ':commitId'
 }
 
+export function withPublic<T>(fn: (args: T) => string) {
+  return (params: T): string => {
+    const path = fn(params)
+
+    return `/open/${path.replace(/^\//, '')}`
+  }
+}
+
 export function withAccountId<T>(fn: (args: T) => string) {
   return (params: T & { accountId: string }): string => {
     const path = fn(params)

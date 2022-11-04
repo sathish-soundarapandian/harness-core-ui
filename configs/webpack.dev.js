@@ -66,7 +66,8 @@ const config = {
     filename: '[name].js',
     chunkFilename: '[name].[id].js',
     pathinfo: false,
-    assetModuleFilename: 'images/[hash:7][ext][query]'
+    assetModuleFilename: 'images/[hash:7][ext][query]',
+    publicPath: '/'
   },
   devServer: isCI
     ? undefined

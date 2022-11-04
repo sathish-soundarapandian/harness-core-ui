@@ -6,16 +6,23 @@
  */
 
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useRouteMatch } from 'react-router-dom'
 import { Icon, Layout, Heading, Text, Container } from '@wings-software/uicore'
+import routes from '@common/RouteDefinitions'
+import { accountPathProps, executionPathProps } from '@common/utils/routeUtils'
 
 export default function NotFoundPage(): JSX.Element {
+  const params = useRouteMatch({
+    path: routes.toPublicExecutionPipelineView({ ...accountPathProps, ...executionPathProps })
+  })
+
   return (
     <Container height="100%" flex={{ align: 'center-center' }}>
       <Layout.Vertical spacing="large" flex={{ align: 'center-center' }}>
         <Heading>404</Heading>
         <Text>Oops, we could not find this page.</Text>
         <Link to="/">Go to Home</Link>
+        <pre>{JSON.stringify(params, null, 4)}</pre>
         <Icon name="harness-logo-black" size={200} />
       </Layout.Vertical>
     </Container>

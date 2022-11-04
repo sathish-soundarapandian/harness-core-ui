@@ -34,6 +34,11 @@ export default async function render(): Promise<void> {
       }
     })
   }
+  const { pathname, hash } = window.location
+
+  if (pathname.endsWith('/public/') && !hash.startsWith('#/open')) {
+    window.location.href = `${pathname}#/open${hash.slice(1)}`
+  }
 
   ReactDOM.render(
     <HashRouter>
@@ -49,7 +54,7 @@ export default async function render(): Promise<void> {
         >
           <AppWithAuthentication strings={strings} />
         </Route>
-        <Route path="/">
+        <Route path={['/', '/open/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier']}>
           <AppWithoutAuthentication strings={strings} />
         </Route>
       </Switch>

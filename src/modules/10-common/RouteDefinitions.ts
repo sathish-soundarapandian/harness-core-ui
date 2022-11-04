@@ -6,7 +6,7 @@
  */
 
 import qs from 'qs'
-import { getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
+import { getScopeBasedRoute, withAccountId, withPublic } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
   ConnectorPathProps,
@@ -1035,6 +1035,28 @@ const routes = {
         return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
       }
     }
+  ),
+  toPublicExecutionPipelineView: withPublic(
+    withAccountId(
+      ({
+        accountId: _accountId,
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        executionIdentifier,
+        module,
+        source,
+        ...rest
+      }: PipelineType<ExecutionPathProps> & GitQueryParams) => {
+        const basePath = module || 'home'
+        const queryString = qs.stringify(rest, { skipNulls: true })
+        if (queryString.length > 0) {
+          return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline?${queryString}`
+        } else {
+          return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
+        }
+      }
+    )
   ),
   toExecutionInputsView: withAccountId(
     ({
