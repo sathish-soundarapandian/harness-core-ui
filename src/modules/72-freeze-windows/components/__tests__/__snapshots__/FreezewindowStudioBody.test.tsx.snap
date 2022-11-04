@@ -379,3 +379,45 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
   </div>
 </div>
 `;
+
+exports[`Freeze Window Studio Body Visual View it should render YAML View: YAML View Snapshot 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main canvasContainer"
+  >
+    <div
+      class="yamlBuilder"
+    >
+      <div />
+      <div
+        class="buttonsWrapper"
+      >
+        <span
+          class="Tag--main"
+        >
+          <span
+            class="bp3-tag"
+          >
+            <span
+              class="bp3-text-overflow-ellipsis bp3-fill"
+            >
+              common.readOnly
+            </span>
+          </span>
+        </span>
+        <button
+          aria-label="common.editYaml"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            common.editYaml
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
