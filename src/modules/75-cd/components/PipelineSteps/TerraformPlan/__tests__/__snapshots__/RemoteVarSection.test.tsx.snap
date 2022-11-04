@@ -196,7 +196,6 @@ exports[`Config section tests render with artifactory data 1`] = `
           </button>
         </div>
         <button
-          aria-label="plusAdd"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
           data-testid="add-stages[0].stage.spec.infrastructure.infrastructureDefinition.provisioner.steps[0].step.spec.configuration.varFiles[0].varFile.spec.store.spec.artifactPaths"
           type="button"
