@@ -40,9 +40,13 @@ export default function IacSideNav(): React.ReactElement {
           )
         }}
       />
+      {!projectIdentifier && (
+        <SidebarLink label={getString('overview')} to={routes.toIacMicroFrontend({ ...params })} />
+      )}
       {projectIdentifier && orgIdentifier ? (
         <>
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module: 'iac' })} />
+          <SidebarLink label={getString('iac.stacks')} to={routes.toIacStacks({ ...params })} />
           <ProjectSetupMenu module="iac" />
         </>
       ) : null}
