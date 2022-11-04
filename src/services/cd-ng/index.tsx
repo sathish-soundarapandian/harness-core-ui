@@ -464,7 +464,6 @@ export interface Account {
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   serviceGuardLimit?: number
-  smpAccount?: boolean
   subdomainUrl?: string
   techStacks?: TechStack[]
   trialSignupOptions?: TrialSignupOptions
@@ -3265,11 +3264,19 @@ export interface ElastigroupConfiguration {
   store: StoreConfigWrapper
 }
 
+export type ElastigroupCurrentRunningInstances = ElastigroupInstancesSpec & { [key: string]: any }
+
 export type ElastigroupDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   metadata?: string
   newService?: Capacity
   oldService?: Capacity
+}
+
+export type ElastigroupFixedInstances = ElastigroupInstancesSpec & {
+  desired?: number
+  max?: number
+  min?: number
 }
 
 export type ElastigroupInfrastructure = Infrastructure & {
@@ -3278,8 +3285,23 @@ export type ElastigroupInfrastructure = Infrastructure & {
   metadata?: string
 }
 
+export interface ElastigroupInstances {
+  spec?: ElastigroupInstancesSpec
+  type: 'Fixed' | 'CurrentRunning'
+}
+
+export interface ElastigroupInstancesSpec {
+  type?: 'Fixed' | 'CurrentRunning'
+}
+
 export type ElastigroupServiceSpec = ServiceSpec & {
   startupScript?: StartupScriptConfiguration
+}
+
+export type ElastigroupSetupStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  instances: ElastigroupInstances
+  name: string
 }
 
 export interface Element {
@@ -3443,6 +3465,7 @@ export interface EntityDetail {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -5690,6 +5713,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -5813,6 +5837,7 @@ export interface GitEntityFilterProperties {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -5969,6 +5994,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -6100,6 +6126,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -6339,6 +6366,7 @@ export interface GitSyncEntityDTO {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -6464,6 +6492,7 @@ export interface GitSyncEntityListDTO {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -6606,6 +6635,7 @@ export interface GitSyncErrorDTO {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -9541,6 +9571,7 @@ export interface ReferencedByDTO {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -10617,6 +10648,7 @@ export interface ResponseListEntityType {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -13572,6 +13604,7 @@ export interface StepData {
     | 'AzureCreateARMResource'
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
@@ -15214,6 +15247,7 @@ export interface ListActivitiesQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -15331,6 +15365,7 @@ export interface ListActivitiesQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -15552,6 +15587,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -15669,6 +15705,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -29778,6 +29815,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -29956,6 +29994,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -32980,6 +33019,7 @@ export interface GetReferencedByQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -35287,6 +35327,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -35472,6 +35513,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Wait'
       | 'ArtifactSource'
       | 'EcsBlueGreenCreateService'
+      | 'ElastigroupSetup'
       | 'EcsBlueGreenSwapTargetGroups'
       | 'EcsBlueGreenRollback'
       | 'ShellScriptProvision'
@@ -41131,6 +41173,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -41376,6 +41419,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
@@ -53739,6 +53783,7 @@ export interface GetYamlSchemaQueryParams {
     | 'Wait'
     | 'ArtifactSource'
     | 'EcsBlueGreenCreateService'
+    | 'ElastigroupSetup'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
