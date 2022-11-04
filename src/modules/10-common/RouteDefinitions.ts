@@ -1892,7 +1892,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iac/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
   ),
-  toIacDashboard: withAccountId(() => `/iac/dashboard`)
+  toIacStacks: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iac/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
+  )
 }
 
 export default routes

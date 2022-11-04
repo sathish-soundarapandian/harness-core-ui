@@ -57,7 +57,7 @@ const RedirectToIacProject = (): React.ReactElement => {
       />
     )
   } else {
-    return <Redirect to={routes.toIacDashboard({ accountId })} />
+    return <Redirect to={routes.toIacMicroFrontend({ accountId })} />
   }
 }
 
