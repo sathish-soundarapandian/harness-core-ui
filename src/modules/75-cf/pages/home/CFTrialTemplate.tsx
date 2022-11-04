@@ -19,13 +19,11 @@ import {
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Category, PlanActions, TrialActions } from '@common/constants/TrackingConstants'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { FeatureFlag } from '@common/featureFlags'
-import { getSavedRefererURL } from '@common/utils/utils'
+import { getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import { String, useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -91,9 +89,8 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const FREE_PLAN_ENABLED = !isOnPrem
+  const FREE_PLAN_ENABLED = !isOnPrem()
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
@@ -212,8 +209,7 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
 export const CFTrialTemplate: React.FC<CFTrialTemplateProps> = ({ cfTrialProps }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
-  const isFreeEnabled = !isOnPrem
+  const isFreeEnabled = !isOnPrem()
   const refererURL = getSavedRefererURL()
 
   const startTrialRequestBody: StartTrialDTORequestBody = {

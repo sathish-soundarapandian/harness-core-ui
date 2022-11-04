@@ -17,7 +17,7 @@ import { getModuleLink } from '@projects-orgs/components/ModuleListCard/ModuleLi
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getModuleDescriptionsForModuleSelectionDialog, getModuleFullLengthTitle } from '@projects-orgs/utils/utils'
-import { getModuleIcon, useGetCommunity } from '@common/utils/utils'
+import { getModuleIcon, useGetCommunity, isOnPrem } from '@common/utils/utils'
 import {
   Project,
   StartFreeLicenseQueryParams,
@@ -30,7 +30,6 @@ import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFact
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
-import { Hosting } from '@cd/pages/get-started-with-cd/DeployProvisioningWizard/Constants'
 import css from './useModuleSelect.module.scss'
 
 export interface UseModuleSelectModalProps {
@@ -124,8 +123,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
 const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
-  const FREE_PLAN_ENABLED = !isOnPrem
+  const FREE_PLAN_ENABLED = !isOnPrem()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
 
@@ -188,6 +186,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName) &&
       !isOnPrem()
     ) {
+      console.log(FREE_PLAN_ENABLED, 'hi')
       if (FREE_PLAN_ENABLED) {
         return getString('common.startFreePlan')
       }
