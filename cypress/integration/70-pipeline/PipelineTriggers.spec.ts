@@ -114,6 +114,9 @@ describe('Triggers for Pipeline', () => {
     cy.contains('span', 'triggerTag').should('be.visible')
     cy.contains('span', 'Continue').should('be.visible').click()
 
+    cy.intercept('GET', inputSetListAPI, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' })
+    cy.intercept('GET', servicesCallV2, servicesV2AccessResponse).as('servicesCallV2')
+
     // Schedule Tab
     cy.contains('span', 'Schedule').should('be.visible')
     cy.get("input[name='minutes']").should('be.visible').click()
@@ -122,8 +125,7 @@ describe('Triggers for Pipeline', () => {
     cy.contains('span', 'Continue').should('be.visible').click()
 
     // Pipleine Input
-    cy.intercept('GET', inputSetListAPI, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' })
-    cy.intercept('GET', servicesCallV2, servicesV2AccessResponse).as('servicesCallV2')
+
     cy.wait('@servicesCallV2').wait(1000)
     cy.contains('span', 'Select Input Set(s)').should('be.visible').click()
     cy.get('[class*="popover-content"]')
