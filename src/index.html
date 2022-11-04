@@ -33,7 +33,7 @@
     <script type="text/javascript">
       // window.browserRouterEnabled = 'BROWSER_ROUTER_ENABLED_PLACEHOLDER' === 'true'
       if (window.browserRouterEnabled === undefined) {
-        window.browserRouterEnabled = window.location.href.toString().includes('browserEnabled=true')
+        window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       }
       window.getApiBaseUrl = str => {
         if (window.browserRouterEnabled) {
