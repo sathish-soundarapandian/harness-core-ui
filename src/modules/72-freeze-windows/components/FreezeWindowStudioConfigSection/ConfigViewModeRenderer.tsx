@@ -71,8 +71,8 @@ export const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
         />
       </Layout.Vertical>
       <Layout.Horizontal>
-        <Button disabled={isReadOnly} icon="edit" minimal withoutCurrentColor onClick={setEditView} />
-        <Button disabled={isReadOnly} icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
+        <Button disabled={isReadOnly} icon="Edit" minimal withoutCurrentColor onClick={setEditView} />
+        <Button disabled={isReadOnly} icon="main-trash" minimal withoutCurrentColor onClick={deleteConfig} />
       </Layout.Horizontal>
     </Layout.Horizontal>
   )
