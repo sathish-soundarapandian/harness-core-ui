@@ -164,7 +164,8 @@ describe('Freeze Window Studio Config Section', () => {
     expect(await screen.findByText('Rule Number 2')).toBeInTheDocument()
 
     const secondRule = getByTestId('config-view-mode_1')
-    const deleteButton = secondRule.getElementsByClassName('bp3-icon-trash')[0]
+    const deleteButton = secondRule.querySelector('[data-icon="main-trash"]')
+    expect(deleteButton).toBeInTheDocument()
     userEvent.click(deleteButton as TargetElement)
   })
 
