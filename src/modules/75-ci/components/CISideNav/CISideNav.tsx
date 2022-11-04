@@ -76,7 +76,6 @@ export default function CISideNav(): React.ReactElement {
     accountIdentifier: accountId,
     projectIdentifier,
     orgIdentifier,
-    module,
     lazy: true,
     size: 1
   })

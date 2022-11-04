@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import CCMUsageInfo from '@auth-settings/pages/subscriptions/overview/CCMUsageInfo'
+import type { ModuleLicenseDTO } from 'services/cd-ng'
 import CIUsageInfo from './CIUsageInfo'
 import FFUsageInfo from './FFUsageInfo'
 import CDUsageInfo from './CDUsageInfo'
@@ -19,6 +20,7 @@ import css from '../SubscriptionsPage.module.scss'
 
 interface SubscriptionUsageProps {
   module: ModuleName
+  licenseData: ModuleLicenseDTO
 }
 
 const getModuleUsages = (props: SubscriptionUsageProps): React.ReactElement | undefined => {
@@ -30,7 +32,7 @@ const getModuleUsages = (props: SubscriptionUsageProps): React.ReactElement | un
     case ModuleName.CE:
       return <CCMUsageInfo />
     case ModuleName.CD:
-      return <CDUsageInfo />
+      return <CDUsageInfo {...props} />
     default:
       return undefined
   }

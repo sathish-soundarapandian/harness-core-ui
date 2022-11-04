@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react'
-import { Container, Layout, Card } from '@harness/uicore'
+import { Container, Layout, Card, Text } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import type { StepPropsInterface, StepStatusType } from './Step.types'
 import { StepTitle } from './components/StepTitle/StepTitle'
 import { StepNavButtons } from './components/StepNavButtons/StepNavButtons'
@@ -24,6 +25,7 @@ const Step = ({
   setSelectedStepId,
   runValidationOnMount
 }: StepPropsInterface): JSX.Element => {
+  const { getString } = useStrings()
   const selectedStepIndex = stepList.map(item => item.id).indexOf(selectedStepId || '')
   const [stepStatus, setStepStatus] = useState<StepStatusType>(StepStatus.INCONCLUSIVE)
   const isLastStep = selectedStepIndex === stepList.length - 1
@@ -65,17 +67,26 @@ const Step = ({
           stepStatus={stepTitleStatus}
           onClick={onTitleClick}
         />
-        {isPreviewVisible && (
+        {isPreviewVisible && stepTitleStatus !== StepStatus.ERROR && (
           <Container data-testid={`preview_${step.id}`} className={css.alignContainerRight}>
             <>{step.preview}</>
           </Container>
         )}
-        {isCurrent && (
+        {(isCurrent || stepTitleStatus === StepStatus.ERROR) && (
           <Container className={css.alignContainerRight}>
-            <Card data-testid={`panel_${step.id}`} className={css.card}>
-              {step.panel}
-            </Card>
-            <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
+            {stepTitleStatus === StepStatus.ERROR && (
+              <Text margin={{ bottom: isCurrent ? 'large' : '' }} intent="danger">
+                {getString('cv.CVStepper.StepError')}
+              </Text>
+            )}
+            {isCurrent && (
+              <>
+                <Card data-testid={`panel_${step.id}`} className={css.card}>
+                  {step.panel}
+                </Card>
+                <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
+              </>
+            )}
           </Container>
         )}
       </Layout.Vertical>

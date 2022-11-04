@@ -120,7 +120,6 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `run-pipeline.yaml`,
   entityType: 'Pipelines',
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -175,6 +174,7 @@ function RunPipelineFormBasic({
   const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
+  const [isInputSetApplied, setIsInputSetApplied] = useState(true)
 
   const [canEdit] = usePermission(
     {
@@ -257,7 +257,7 @@ function RunPipelineFormBasic({
     hasInputSets,
     loading: loadingInputSets,
     error: inputSetsError,
-    isInputSetApplied,
+    canApplyInputSet,
     refetch: getTemplateFromPipeline,
     hasRuntimeInputs,
     invalidInputSetReferences,
@@ -400,6 +400,10 @@ function RunPipelineFormBasic({
     }
     return executionStages
   }, [stageExecutionData?.data])
+
+  useDeepCompareEffect(() => {
+    setIsInputSetApplied(false)
+  }, [selectedInputSets])
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
@@ -616,11 +620,12 @@ function RunPipelineFormBasic({
     if (inputSet?.pipeline && formikRef.current) {
       formikRef.current.setValues(inputSet.pipeline)
 
-      if (isInputSetApplied) {
+      if (canApplyInputSet) {
         formikRef.current.validateForm(inputSet.pipeline)
       }
     }
-  }, [inputSet, isInputSetApplied])
+    setIsInputSetApplied(true)
+  }, [inputSet, canApplyInputSet])
 
   const updateExpressionValue = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target) {
@@ -815,12 +820,11 @@ function RunPipelineFormBasic({
                       setRunClicked={setRunClicked}
                       hasInputSets={hasInputSets}
                       setSelectedInputSets={setSelectedInputSets}
-                      loading={false}
-                      loadingMergeInputSetUpdate={false}
                       selectedStageData={selectedStageData}
                       pipelineResponse={pipelineResponse}
                       invalidInputSetReferences={invalidInputSetReferences}
                       loadingInputSets={loadingInputSets}
+                      isInputSetApplied={isInputSetApplied}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={inputSetYAML}
                     />
@@ -829,13 +833,12 @@ function RunPipelineFormBasic({
                       <Layout.Vertical className={css.content} padding="xlarge">
                         <YamlBuilderMemo
                           {...yamlBuilderReadOnlyModeProps}
-                          existingJSON={{ pipeline: omitBy(values, (_val, key) => key.startsWith('_')) }}
+                          existingJSON={{ pipeline: values }}
                           bind={setYamlHandler}
                           schema={{}}
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
-                          showSnippetSection={false}
                           isEditModeSupported={canEdit}
                         />
                       </Layout.Vertical>

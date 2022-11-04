@@ -402,7 +402,7 @@ export const artifactRepoTypes = [
 
 export const triggersListData = {
   Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'AWS Code Commit', 'Custom'],
-  Artifact: ['GCR', 'ECR', 'Docker Registry', 'Artifactory', 'Amazon S3', 'ACR'],
+  Artifact: ['GCR', 'ECR', 'Docker Registry', 'Artifactory', 'Amazon S3', 'ACR', 'Custom'],
   Manifest: ['Helm Chart'],
   Scheduled: ['Cron']
 }

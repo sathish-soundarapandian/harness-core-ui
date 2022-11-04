@@ -38,6 +38,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
   if (error) {
     showError(error.message)
   }
+  const gcpSmInEditMode = () => secretManagerType === 'GcpSecretManager' && editing
   React.useEffect(() => {
     if (regionData?.data && regionData?.data.length) {
       const regionValues = (regionData?.data || []).map(region => ({
@@ -59,6 +60,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
           <FormInput.RadioGroup
             name="valueType"
             radioGroup={{ inline: true }}
+            disabled={gcpSmInEditMode()}
             items={[
               { label: getString('secrets.secret.inlineSecret'), value: 'Inline', disabled: readonly },
               { label: getString('secrets.secret.referenceSecret'), value: 'Reference' }
@@ -80,6 +82,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
               name="value"
               label={getString('secrets.secret.labelSecretReference')}
               placeholder={getString('secrets.secret.placeholderSecretReference')}
+              disabled={gcpSmInEditMode()}
             />
           ) : null}
         </>
@@ -94,9 +97,18 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
           </>
         ) : (
           <>
-            <FormInput.CheckBox name="configureRegions" label={getString('secrets.secret.configureRegion')} />
+            <FormInput.CheckBox
+              name="configureRegions"
+              label={getString('secrets.secret.configureRegion')}
+              disabled={gcpSmInEditMode()}
+            />
             {formik?.values['configureRegions'] ? (
-              <FormInput.MultiSelect name="regions" label={getString('secrets.secret.region')} items={regions} />
+              <FormInput.MultiSelect
+                name="regions"
+                label={getString('secrets.secret.region')}
+                items={regions}
+                disabled={gcpSmInEditMode()}
+              />
             ) : null}
           </>
         ))}

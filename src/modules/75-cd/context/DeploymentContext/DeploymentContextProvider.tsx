@@ -24,7 +24,7 @@ export const FETCH_INSTANCE_SCRIPT_DEFAULT_TEXT = `#
 # environment variable and assign the script execution result with instance information
 #
 # Sample
-# INSTANCE_OUTPUT_PATH=$(echo ‘{“data”: [{“functionName”: “\${serviceVariable.functionName}“}]}’)
+# INSTANCE_OUTPUT_PATH=$(echo '{"data": [{"functionName": "\${serviceVariable.functionName}"}]}')
 #`
 export interface DrawerData {
   type: DrawerTypes

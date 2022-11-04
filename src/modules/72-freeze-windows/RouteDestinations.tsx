@@ -19,7 +19,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import FreezeWindowsPage from '@freeze-windows/pages/FreezeWindowsPage'
-import { FreezeStudioWrapper } from '@freeze-windows/components/FreezeStudioWrapper'
+import FreezeWindowStudioPage from '@freeze-windows/pages/FreezeWindowStudioPage'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.DEPLOYMENTFREEZE, {
   icon: 'nav-settings',
@@ -47,7 +47,7 @@ export default (
       })}
       exact
     >
-      <FreezeStudioWrapper />
+      <FreezeWindowStudioPage />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFreezeWindows({ ...orgPathProps })} exact>
       <FreezeWindowsPage />
@@ -62,7 +62,7 @@ export default (
       })}
       exact
     >
-      <FreezeStudioWrapper />
+      <FreezeWindowStudioPage />
     </RouteWithLayout>
   </>
 )
@@ -94,7 +94,7 @@ export const FreezeWindowRouteDestinations: React.FC<{
         })}
         exact
       >
-        <FreezeStudioWrapper />
+        <FreezeWindowStudioPage />
       </RouteWithLayout>
     </>
   )

@@ -10,14 +10,7 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
-import {
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  FormInput,
-  Label,
-  SelectOption,
-  useToaster
-} from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, Label, SelectOption, useToaster } from '@wings-software/uicore'
 import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
@@ -29,6 +22,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -36,7 +31,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { inputSetData, readonly, initialValues, path, allowableTypes, formik } = props
+  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType } = props
 
   const config = inputSetData?.template?.spec?.configuration
   const store = config?.configFiles?.store
@@ -121,6 +116,9 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             template={inputSetData?.template}
             fieldPath={'spec.configuration.workspace'}
           />
@@ -134,6 +132,9 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             multiTypeProps={{ allowableTypes, expressions }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             width={400}
             type={
               store?.type === Connectors.ARTIFACTORY
@@ -152,7 +153,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
 
       {getMultiTypeFromValue(config?.configFiles?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={getString('pipelineSteps.deploy.inputSet.branch')}
             name={`${path}.spec.configuration.configFiles.store.spec.branch`}
             placeholder={getString('pipeline.manifestType.branchPlaceholder')}
@@ -161,13 +162,18 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.configFiles.store.spec.branch'}
           />
         </div>
       )}
 
       {getMultiTypeFromValue(config?.configFiles?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={getString('pipeline.manifestType.commitId')}
             name={`${path}.spec.configuration.configFiles.store.spec.commitId`}
             placeholder={getString('pipeline.manifestType.commitPlaceholder')}
@@ -176,13 +182,18 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.configFiles.store.spec.commitId'}
           />
         </div>
       )}
 
       {getMultiTypeFromValue(config?.configFiles?.store?.spec?.folderPath) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={getString('common.git.folderPath')}
             name={`${path}.spec.configuration.configFiles.store.spec.folderPath`}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
@@ -191,13 +202,18 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.configFiles.store.spec.folderPath'}
           />
         </div>
       )}
 
       {reposRequired && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             label={getString('pipelineSteps.repoName')}
             name={`${path}.spec.configuration.configFiles.store.spec.repositoryName`}
             placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
@@ -212,6 +228,11 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.configFiles.store.spec.repositoryName'}
           />
         </div>
       )}
@@ -219,7 +240,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
       {store?.type === Connectors.ARTIFACTORY &&
         getMultiTypeFromValue(config?.configFiles?.store?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               label={getString('pipeline.artifactPathLabel')}
               name={`${path}.spec.configuration.configFiles.store.spec.artifactPaths`}
               placeholder={getString('pipeline.manifestType.pathPlaceholder')}
@@ -228,6 +249,11 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
                 expressions,
                 allowableTypes
               }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.configFiles.store.spec.folderPath'}
               onChange={value =>
                 formik?.setFieldValue(`${path}.spec.configuration.configFiles.store.spec.artifactPaths`, [value])
               }

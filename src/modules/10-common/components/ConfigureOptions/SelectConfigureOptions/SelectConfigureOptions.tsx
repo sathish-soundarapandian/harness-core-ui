@@ -37,7 +37,8 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
     showDefaultField,
     loading,
     error,
-    className
+    className,
+    style
   } = props
 
   const { getString } = useStrings()
@@ -95,6 +96,7 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
       getAllowedValuesCustomComponent={getAllowedValuesMultiSelectComponent}
       allowedValuesType={ALLOWED_VALUES_TYPE.MULTI_SELECT}
       className={className}
+      style={style}
     />
   )
 }

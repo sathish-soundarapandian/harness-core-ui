@@ -198,7 +198,6 @@ function PipelineYamlView(): React.ReactElement {
             entityType="Pipelines"
             isReadOnlyMode={isReadonly || !isYamlEditable}
             bind={setYamlHandler}
-            showSnippetSection={false}
             onExpressionTrigger={() => {
               return Promise.resolve(
                 expressionRef.current.map(item => ({ label: item, insertText: `${item}>`, kind: 1 }))

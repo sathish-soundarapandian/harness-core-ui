@@ -49,7 +49,6 @@ const KubernetesRuleYamlEditor: React.FC<KubernetesRuleYamlEditorProps> = props 
     <div className={css.yamlEditorContainer}>
       <YAMLBuilder
         schema={getK8sYamlSchema({ isEdit: isEditFlow })}
-        showSnippetSection={false}
         fileName={props.fileName || 'harness-ccm-autostopping-connector.yaml'}
         entityType="Service"
         bind={setYamlHandler}

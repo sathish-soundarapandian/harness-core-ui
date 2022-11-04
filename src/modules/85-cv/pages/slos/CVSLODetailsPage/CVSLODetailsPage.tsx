@@ -22,6 +22,7 @@ import HeaderToolbar from './views/HeaderToolbar'
 import DetailsPanel from './DetailsPanel/DetailsPanel'
 import TabToolbar from './DetailsPanel/views/TabToolbar'
 import { SLODetailsPageTabIds } from './CVSLODetailsPage.types'
+import CVCreateSLOV2 from '../components/CVCreateSLOV2/CVCreateSLOV2'
 import css from './CVSLODetailsPage.module.scss'
 
 const CVSLODetailsPage: React.FC = () => {
@@ -33,8 +34,11 @@ const CVSLODetailsPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
-  const { tab = SLODetailsPageTabIds.Details, monitoredServiceIdentifier } =
-    useQueryParams<{ tab?: SLODetailsPageTabIds; monitoredServiceIdentifier?: string }>()
+  const {
+    tab = SLODetailsPageTabIds.Details,
+    monitoredServiceIdentifier,
+    sloType
+  } = useQueryParams<{ tab?: SLODetailsPageTabIds; monitoredServiceIdentifier?: string; sloType?: string }>()
 
   const projectIdentifierRef = useRef<string>()
   useEffect(() => {
@@ -57,8 +61,15 @@ const CVSLODetailsPage: React.FC = () => {
       accountId,
       orgIdentifier,
       projectIdentifier
-    }
+    },
+    lazy: true
   })
+
+  useEffect(() => {
+    if (identifier && !sloType) {
+      refetch()
+    }
+  }, [identifier, refetch, sloType])
 
   const { mutate: resetErrorBudget, loading: resetErrorBudgetLoading } = useResetErrorBudget({
     identifier: '',
@@ -137,10 +148,10 @@ const CVSLODetailsPage: React.FC = () => {
                   error={getErrorMessage(error)}
                   retryOnError={() => refetch()}
                   noData={{
-                    when: () => !sloDashboardWidget
+                    when: () => !sloDashboardWidget && !sloType
                   }}
                 >
-                  <CVCreateSLO />
+                  {sloType ? <CVCreateSLOV2 isComposite /> : <CVCreateSLO />}
                 </Page.Body>
               )
             }

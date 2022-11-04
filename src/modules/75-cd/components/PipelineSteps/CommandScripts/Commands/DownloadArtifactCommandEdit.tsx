@@ -39,7 +39,10 @@ export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditPr
           }
           name="spec.destinationPath"
           multiTextInputProps={{
-            multiTextInputProps: { expressions, allowableTypes },
+            multiTextInputProps: {
+              expressions,
+              allowableTypes
+            },
             disabled: readonly,
             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
           }}

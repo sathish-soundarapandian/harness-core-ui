@@ -33,10 +33,7 @@ describe('Pipeline Execution History', () => {
 
   it('loads a pipeline with no executions', () => {
     cy.visitPageAssertion()
-    cy.findByText('There are no deployments in your project').should('exist')
-    cy.findByText('Your Pipeline does not have any executions yet. Click the button below to run a pipeline.').should(
-      'exist'
-    )
+    cy.findByText('No deployments in your project').should('exist')
     cy.findByText('Run a Pipeline').should('exist').click()
     cy.get('.RunPipelineForm-module_footer_BfhlT2').within(() => {
       cy.findByText('Run Pipeline').should('exist')

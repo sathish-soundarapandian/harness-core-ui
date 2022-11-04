@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { FC, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Color, FontVariation, Icon, Layout, Text } from '@harness/uicore'
@@ -10,7 +17,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { String } from 'framework/strings'
 import css from './GlobalFreezeBanner.module.scss'
 
-type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
+export type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
 
 export const scopeText: Record<Scope, string> = {
   account: 'Account',

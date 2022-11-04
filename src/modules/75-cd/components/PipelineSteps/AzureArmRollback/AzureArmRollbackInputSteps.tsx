@@ -14,13 +14,14 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { RollbackStackData, RollbackStackProps } from './AzureArmRollback.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export function AzureArmRollbackInputStepRef<T extends RollbackStackData = RollbackStackData>(
   props: RollbackStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes } = props
+  const { inputSetData, readonly, path, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -37,7 +38,9 @@ export function AzureArmRollbackInputStepRef<T extends RollbackStackData = Rollb
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly
@@ -59,6 +62,9 @@ export function AzureArmRollbackInputStepRef<T extends RollbackStackData = Rollb
               multiTextInputProps={{
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
             />
           </div>

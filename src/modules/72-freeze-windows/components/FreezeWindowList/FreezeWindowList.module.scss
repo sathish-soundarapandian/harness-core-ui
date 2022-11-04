@@ -20,7 +20,7 @@
   }
   &[data-state='EXPIRED'] {
     background-color: var(--grey-400);
-    color: var(--grey-0);
+    color: var(--grey-0) !important;
   }
 }
 
@@ -48,4 +48,12 @@
 
 .switch {
   margin-bottom: 0 !important;
+}
+
+.checkbox {
+  :global {
+    .bp3-checkbox .bp3-control-indicator {
+      margin-right: 0 !important;
+    }
+  }
 }

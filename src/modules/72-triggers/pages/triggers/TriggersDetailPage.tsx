@@ -500,7 +500,6 @@ export default function TriggersDetailPage(): JSX.Element {
                   <YAMLBuilder
                     {...yamlBuilderReadOnlyModeProps}
                     isReadOnlyMode={true}
-                    showSnippetSection={false}
                     schema={pipelineSchema?.data}
                     onEnableEditMode={goToEditWizard}
                     isEditModeSupported={!isPipelineInvalid}

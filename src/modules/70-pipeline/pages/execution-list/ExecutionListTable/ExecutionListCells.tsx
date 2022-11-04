@@ -156,7 +156,7 @@ export const ExecutionCell: CellType = ({ row }) => {
   const data = row.original
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
 
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
   const name =

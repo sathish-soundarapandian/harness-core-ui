@@ -30,7 +30,7 @@ freezeStudio:
 globalFreeze:
   disabled: Freeze disabled on all deployments for this <b>{{scope}}</b>
   disableFreezeTitle: Disable Freeze on all deployments for this {{scope}}
-  disableFreezeText: For any deployments frozen, you will have to manually go back and resume them.
+  disableFreezeText: For any deployments that were frozen, you will have to manually go back and resume them.
   disableFreezeSuccess: Freeze disabled on all deployments for this {{scope}}
   disableFreezeFailure: Failed to disable freeze
   enabled: Freeze enabled on all deployments for this <b>{{scope}}</b>

@@ -117,7 +117,7 @@ export default function L1Nav(): React.ReactElement {
             </Link>
           </li>
           {NEW_LEFT_NAVBAR_SETTINGS ? (
-            <li>
+            <li className={css.modulesContainerNavItem}>
               <ModulesContainer />
             </li>
           ) : (

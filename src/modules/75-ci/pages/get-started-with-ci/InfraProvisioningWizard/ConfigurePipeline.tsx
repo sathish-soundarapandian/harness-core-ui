@@ -341,7 +341,6 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
               isReadOnlyMode={true}
               isEditModeSupported={false}
               existingYaml={pipelineYAML}
-              showSnippetSection={false}
               width={'75%'}
               height={'calc(100vh - 330px)'}
               showCopyIcon={false}

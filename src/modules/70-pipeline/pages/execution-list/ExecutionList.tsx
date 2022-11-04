@@ -61,7 +61,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   } = queryParams
   const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
 
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
   const location = useLocation()
   // TODO: Temporary, remove once released
@@ -101,7 +101,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       branch,
       repoIdentifier,
       searchTerm,
-      ...(!isExecutionHistoryView ? { module } : {})
+      ...(!isExecutionHistoryView && module ? { module } : {})
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'

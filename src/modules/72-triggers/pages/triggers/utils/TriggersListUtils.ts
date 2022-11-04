@@ -167,6 +167,12 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: 
           iconName: ArtifactIconByType.AmazonS3 as IconName,
           disabled: isNewService
         },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact]),
+          value: ENABLED_ARTIFACT_TYPES.CustomArtifact,
+          iconName: ArtifactIconByType.CustomArtifact as IconName,
+          disabled: isNewService
+        },
         ...(isNewService
           ? [
               {

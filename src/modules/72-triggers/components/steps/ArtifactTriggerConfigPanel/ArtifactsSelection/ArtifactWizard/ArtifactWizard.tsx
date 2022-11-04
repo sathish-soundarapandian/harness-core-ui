@@ -29,6 +29,7 @@ interface ArtifactWizardProps {
   selectedArtifact: ArtifactTriggerConfig['type']
   newConnectorView: boolean
   iconsProps: IconProps | undefined
+  showConnectorStep: boolean
 }
 
 function ArtifactWizard({
@@ -39,7 +40,8 @@ function ArtifactWizard({
   newConnectorView,
   newConnectorSteps,
   lastSteps,
-  iconsProps
+  iconsProps,
+  showConnectorStep
 }: ArtifactWizardProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -68,13 +70,16 @@ function ArtifactWizard({
 
   return (
     <StepWizard className={css.existingDocker} subtitle={renderSubtitle()} onStepChange={onStepChange}>
-      <ArtifactConnector
-        name={getString('connectors.artifactRepository')}
-        stepName={labels.secondStepName}
-        handleViewChange={() => handleViewChange(true)}
-        initialValues={artifactInitialValue}
-        selectedArtifact={selectedArtifact}
-      />
+      {showConnectorStep ? (
+        <ArtifactConnector
+          name={getString('connectors.artifactRepository')}
+          stepName={labels.secondStepName}
+          handleViewChange={() => handleViewChange(true)}
+          initialValues={artifactInitialValue}
+          selectedArtifact={selectedArtifact}
+        />
+      ) : null}
+
       {newConnectorView ? newConnectorSteps : null}
       {lastSteps ? lastSteps : null}
     </StepWizard>

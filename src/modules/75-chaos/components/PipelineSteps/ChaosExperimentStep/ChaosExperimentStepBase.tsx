@@ -27,6 +27,7 @@ import type {
 } from '@chaos/interfaces/Chaos.types'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './ChaosExperimentStepFunctionConfigs'
 import type {
   ChaosExperimentStepProps,
@@ -104,16 +105,20 @@ export const ChaosExperimentStepBase = (
           <FormikForm className={css.chaosExperimentStep}>
             <Layout.Vertical spacing="medium" width="75%">
               {stepViewType !== StepViewType.Template && (
-                <FormInput.InputWithIdentifier
-                  inputLabel={getString('name')}
-                  isIdentifierEditable={isNewStep && !readonly}
+                <NameIdDescription
+                  formikProps={formik}
+                  identifierProps={{
+                    isIdentifierEditable: isNewStep && !readonly
+                  }}
                   inputGroupProps={{
                     placeholder: getString('pipeline.stepNamePlaceholder'),
                     disabled: readonly
                   }}
+                  descriptionProps={{
+                    placeholder: getString('chaos.pipelineStep.description')
+                  }}
                 />
               )}
-              <FormInput.TextArea label="Description" name="description" />
               <FormGroup>
                 <Label>{getString('chaos.selectChaosExperiment')}</Label>
                 <Button
@@ -123,7 +128,7 @@ export const ChaosExperimentStepBase = (
                   rightIcon="chevron-down"
                   iconProps={{ size: 12 }}
                 >
-                  {formik.values.spec.experimentRef ?? getString('chaos.selectChaosExperiment')}
+                  {formik.values.spec.experimentRef || getString('chaos.selectChaosExperiment')}
                 </Button>
                 <FormInput.Text
                   className={css.expectedResilienceScoreField}
@@ -138,7 +143,7 @@ export const ChaosExperimentStepBase = (
               ChildApp={ExperimentPreview}
               experimentID={formik.values.spec.experimentRef}
             />
-            <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="70%">
+            <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="75%">
               <Button
                 minimal
                 className={drawerCss.almostFullScreenCloseBtn}

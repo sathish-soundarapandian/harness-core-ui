@@ -5,7 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { formatCount, getPREnvNameFromURL } from '@common/utils/utils'
+import { MultiTypeInputType } from '@harness/uicore'
+import {
+  formatCount,
+  getPREnvNameFromURL,
+  isMultiTypeExpression,
+  isMultiTypeFixed,
+  isMultiTypeRuntime
+} from '@common/utils/utils'
 
 describe('Test common/utils.ts', () => {
   test('Test formatCount method', () => {
@@ -51,5 +58,23 @@ describe('Test common/utils.ts', () => {
       href: 'https://app.harness.io/auth/#/signin'
     }
     expect(getPREnvNameFromURL('https://app.harness.io/auth/#/signin')).toBe('')
+  })
+
+  describe('check multi type input type', () => {
+    test('if type is fixed', () => {
+      expect(isMultiTypeFixed(MultiTypeInputType.EXPRESSION)).toBeFalsy()
+      expect(isMultiTypeFixed(MultiTypeInputType.FIXED)).toBeTruthy()
+    })
+
+    test('if type is runtime', () => {
+      expect(isMultiTypeRuntime(MultiTypeInputType.EXPRESSION)).toBeFalsy()
+      expect(isMultiTypeRuntime(MultiTypeInputType.RUNTIME)).toBeTruthy()
+      expect(isMultiTypeRuntime(MultiTypeInputType.EXECUTION_TIME)).toBeTruthy()
+    })
+
+    test('if type is expression', () => {
+      expect(isMultiTypeExpression(MultiTypeInputType.RUNTIME)).toBeFalsy()
+      expect(isMultiTypeExpression(MultiTypeInputType.EXPRESSION)).toBeTruthy()
+    })
   })
 })

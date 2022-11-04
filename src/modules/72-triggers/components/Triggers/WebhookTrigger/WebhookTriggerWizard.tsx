@@ -289,7 +289,6 @@ export default function WebhookTriggerWizard(
     entityType: 'Triggers',
     width: 'calc(100vw - 350px)',
     height: 'calc(100vh - 280px)',
-    showSnippetSection: false,
     yamlSanityConfig: {
       removeEmptyString: false,
       removeEmptyObject: false,

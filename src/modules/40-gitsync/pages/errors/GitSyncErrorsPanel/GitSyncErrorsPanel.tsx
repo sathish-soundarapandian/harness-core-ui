@@ -245,7 +245,6 @@ export const GitSyncErrorsPanel: React.FC = () => {
           isReadOnlyMode
           isEditModeSupported={false}
           existingYaml={selectedFile?.content}
-          showSnippetSection={false}
           renderCustomHeader={renderCustomHeader}
         />
       </Drawer>

@@ -126,7 +126,7 @@ export function ExecutionListSubHeader(
                 case 'sto':
                   return 'pipeline.mySecurityTestsText'
                 default:
-                  return 'pipeline.myPipelineRunsText'
+                  return 'pipeline.myExecutionsText'
               }
             })()
           )}

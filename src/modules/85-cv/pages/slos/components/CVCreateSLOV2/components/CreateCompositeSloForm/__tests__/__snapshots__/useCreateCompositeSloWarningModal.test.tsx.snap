@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useCreateCompositeSloWarningModal validate with prevStepData as null values 1`] = `
+<div>
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    title="openChangeModal"
+    type="button"
+  />
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    title="openPeriodModal"
+    type="button"
+  />
+</div>
+`;
+
+exports[`useCreateCompositeSloWarningModal validate with prevStepData as undefined values 1`] = `
+<div>
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    title="openChangeModal"
+    type="button"
+  />
+  <button
+    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly"
+    title="openPeriodModal"
+    type="button"
+  />
+</div>
+`;

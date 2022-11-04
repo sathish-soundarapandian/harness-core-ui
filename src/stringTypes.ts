@@ -153,6 +153,7 @@ export interface StringsMap {
   'common.config': string
   'common.configDetails': string
   'common.configureModuleList': string
+  'common.configureNav': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
   'common.configureOptions.configureOptions': string
@@ -886,6 +887,7 @@ export interface StringsMap {
   'common.subscriptions.usage.header': string
   'common.subscriptions.usage.last30days': string
   'common.subscriptions.usage.monthlyUsers': string
+  'common.subscriptions.usage.serviceLicenses': string
   'common.subscriptions.usage.services': string
   'common.subscriptions.usage.srvcInst': string
   'common.subtotal': string
@@ -934,6 +936,7 @@ export interface StringsMap {
   'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
+  'common.unsavedChangesLong': string
   'common.updating': string
   'common.upgrade': string
   'common.useSSL': string
@@ -946,6 +949,7 @@ export interface StringsMap {
   'common.validation.connectorRef': string
   'common.validation.email.format': string
   'common.validation.email.required': string
+  'common.validation.email.someAreInvalid': string
   'common.validation.entityIdIsRequired': string
   'common.validation.environmentIsRequired': string
   'common.validation.fieldCanNotHaveWhitespace': string
@@ -2416,6 +2420,7 @@ export interface StringsMap {
   'connectors.gcpKms.keyNameRequired': string
   'connectors.gcpKms.keyRing': string
   'connectors.gcpKms.keyRingRequired': string
+  'connectors.gcpSecretManager.gcpCredentialsFile': string
   'connectors.gcpSecretManager.gcpSMSecretFile': string
   'connectors.gcpSecretManager.validation.credFileRequired': string
   'connectors.gcrConnectorDetails': string
@@ -2618,6 +2623,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.docker': string
   'connectors.testConnectionStep.validationText.gcp': string
   'connectors.testConnectionStep.validationText.gcpKms': string
+  'connectors.testConnectionStep.validationText.gcpSM': string
   'connectors.testConnectionStep.validationText.gcr': string
   'connectors.testConnectionStep.validationText.git': string
   'connectors.testConnectionStep.validationText.github': string
@@ -3090,6 +3096,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.azureArtifactRegistryTitle': string
   'pipeline.artifactsSelection.classifier': string
   'pipeline.artifactsSelection.classifierPlaceholder': string
+  'pipeline.artifactsSelection.customArtifactManualFill': string
+  'pipeline.artifactsSelection.customArtifactScriptFill': string
   'pipeline.artifactsSelection.delegateselectionPlaceholder': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string
@@ -3118,6 +3126,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.artifactId': string
   'pipeline.artifactsSelection.validation.artifactPath': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
+  'pipeline.artifactsSelection.validation.artifactsArrayPath': string
   'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.group': string
   'pipeline.artifactsSelection.validation.groupId': string
@@ -3130,9 +3139,11 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.repositoryPort': string
   'pipeline.artifactsSelection.validation.repositoryType': string
   'pipeline.artifactsSelection.validation.repositoryUrl': string
+  'pipeline.artifactsSelection.validation.script': string
   'pipeline.artifactsSelection.validation.sidecarId': string
   'pipeline.artifactsSelection.validation.tag': string
   'pipeline.artifactsSelection.validation.tagRegex': string
+  'pipeline.artifactsSelection.validation.versionPath': string
   'pipeline.artifactsSelection.validation.versionRegex': string
   'pipeline.artifactsSelection.versionDetails': string
   'pipeline.artifactsSelection.versionPath': string
@@ -3219,6 +3230,7 @@ export interface StringsMap {
   'pipeline.configFiles.addConfigFile': string
   'pipeline.configFiles.encryptedFiles': string
   'pipeline.configFiles.encryptedLocation': string
+  'pipeline.configFiles.error.duplicateIdError': string
   'pipeline.configFiles.error.file': string
   'pipeline.configFiles.error.fileSelection': string
   'pipeline.configFiles.error.fileType': string
@@ -3756,7 +3768,7 @@ export interface StringsMap {
   'pipeline.multiStageExecution': string
   'pipeline.myBuildsText': string
   'pipeline.myDeploymentsText': string
-  'pipeline.myPipelineRunsText': string
+  'pipeline.myExecutionsText': string
   'pipeline.mySecurityTestsText': string
   'pipeline.nativeHelm': string
   'pipeline.neverRan': string
@@ -3765,11 +3777,11 @@ export interface StringsMap {
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
-  'pipeline.noBuildsLabel': string
-  'pipeline.noBuildsText': string
-  'pipeline.noDeploymentText': string
-  'pipeline.noPipelineText': string
+  'pipeline.noPipelinesLabel': string
+  'pipeline.noPipelinesText': string
   'pipeline.noRegions': string
+  'pipeline.noRunsLabel': string
+  'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
   'pipeline.numOfServicesAndEnv': string
@@ -3885,7 +3897,6 @@ export interface StringsMap {
   'pipeline.runAllParallelstages': string
   'pipeline.runDisabledOnFreeze': string
   'pipeline.runFailedStages': string
-  'pipeline.runModalNoPipelineText': string
   'pipeline.runPipeline.ciCodebaseConfig': string
   'pipeline.runPipelineForm.disallowStageExecution': string
   'pipeline.runPipelineForm.notifyOnlyMe': string
@@ -4013,6 +4024,7 @@ export interface StringsMap {
   'pipeline.stepCommonFields.validation.invalidLimitMemory': string
   'pipeline.stepCommonFields.validation.mustBeANumber': string
   'pipeline.stepCommonFields.validation.notIn': string
+  'pipeline.stepConfigContent': string
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.ACR': string
   'pipeline.stepDescription.AzureSlotDeployment': string
@@ -6858,6 +6870,16 @@ export interface StringsMap {
   'ci.titleResources': string
   'ci.titleSettings': string
   'ci.welcome': string
+  'cv.CVStepper.StepError': string
+  'cv.CompositeSLO.AddSLO': string
+  'cv.CompositeSLO.AddSLOMessage': string
+  'cv.CompositeSLO.DefineSLO': string
+  'cv.CompositeSLO.ErrorBudgetPolicy': string
+  'cv.CompositeSLO.PeriodChangeWarning.message': string
+  'cv.CompositeSLO.PeriodChangeWarning.title': string
+  'cv.CompositeSLO.SetTarget': string
+  'cv.CompositeSLO.SetTimeWindow': string
+  'cv.CompositeSLO.Weightage': string
   'cv.Dependency.noData': string
   'cv.Dependency.serviceChanges': string
   'cv.Dependency.serviceList': string
@@ -7624,6 +7646,7 @@ export interface StringsMap {
   'cv.slos.contextualHelp.target.rollingWindowBased': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition2': string
+  'cv.slos.createCompositeSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
   'cv.slos.deleteSLO': string
@@ -7724,8 +7747,6 @@ export interface StringsMap {
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
   'sto.issues': string
-  'sto.noScansRunPipelineText': string
-  'sto.noScansText': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.scans': string
@@ -9570,19 +9591,11 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
-  noBuildsText: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
   noConnectorFound: string
   /**
    * @deprecated migrate this string to module level file
    */
   noData: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  noDeploymentText: string
   /**
    * @deprecated migrate this string to module level file
    */

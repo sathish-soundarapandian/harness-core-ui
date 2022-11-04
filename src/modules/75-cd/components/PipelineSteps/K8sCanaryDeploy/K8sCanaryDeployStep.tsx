@@ -39,6 +39,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -188,7 +189,13 @@ function K8CanaryDeployWidget(
   )
 }
 
-const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({ template, readonly, path, allowableTypes }) => {
+const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({
+  template,
+  readonly,
+  path,
+  allowableTypes,
+  stepViewType
+}) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -198,7 +205,9 @@ const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({ template, rea
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -231,6 +240,10 @@ const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({ template, rea
             label={getString('common.instanceLabel')}
             name={`${prefix}spec.instanceSelection`}
             allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disabledType
             readonly={readonly}
           />

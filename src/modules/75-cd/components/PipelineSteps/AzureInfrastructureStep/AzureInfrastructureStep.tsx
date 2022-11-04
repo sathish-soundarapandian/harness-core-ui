@@ -63,6 +63,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -95,7 +96,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
   path,
   onUpdate,
   allowableTypes,
-  allValues
+  allValues,
+  stepViewType
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -316,6 +318,9 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
             placeholder={getString('connectors.selectConnector')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             type={Connectors.AZURE}
             setRefValue
             onChange={
@@ -399,6 +404,9 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             fieldPath={'subscriptionId'}
             template={template}
           />
@@ -461,6 +469,9 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               },
               expressions,
               allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             fieldPath={'resourceGroup'}
             template={template}
@@ -525,6 +536,9 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             template={template}
             fieldPath={'cluster'}
           />
@@ -543,6 +557,9 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               allowableTypes,
               expressions
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
             template={template}
             fieldPath={'namespace'}
@@ -559,6 +576,9 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
             multiTextInputProps={{
               allowableTypes,
               expressions
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             label={getString('common.releaseName')}
             disabled={readonly}

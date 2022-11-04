@@ -230,7 +230,6 @@ export const CreateK8sDelegate = ({
                       isEditModeSupported={false}
                       hideErrorMesageOnReadOnlyMode={true}
                       existingYaml={visibleYaml}
-                      showSnippetSection={false}
                       height="462px"
                       theme="DARK"
                     />

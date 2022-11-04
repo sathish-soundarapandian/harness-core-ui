@@ -115,6 +115,7 @@ describe('Pipeline Template creation and assertion', () => {
 
     cy.get('input[name="service"]').click()
     cy.contains('p', 'testService1').should('be.visible').click()
+    cy.wait(1000)
 
     cy.contains('span', 'Environment').click()
     cy.get('input[name="environment.environmentRef"]').click()

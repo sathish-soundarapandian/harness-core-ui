@@ -183,7 +183,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isCI) {
+  if (isCI || isCIInPipeline) {
     tabList.push({
       id: TAB_ID_MAP.ARTIFACTS,
       title: (
@@ -246,7 +246,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isCI && isErrorTrackingEnabled) {
+  if ((isCI || isCIInPipeline) && isErrorTrackingEnabled) {
     tabList.push({
       id: TAB_ID_MAP.ERROR_TRACKING,
       title: (

@@ -33,6 +33,6 @@ noEnvironment:
 pipelineStep:
   experimentRefLabel: Experiment Reference
   expectedResiliencyScoreLabel: Expected Resiliency Score
-  description: Chaos Experiment Step Description Placeholder
+  description: Enter a description for the chaos step
 viewDetailedExecution: View Detailed Execution
 selectChaosExperiment: Select Chaos Experiment

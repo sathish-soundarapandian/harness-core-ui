@@ -116,9 +116,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
           {loading ? (
             <PageSpinner />
           ) : (
-            contentfulModuleMap && (
-              <ModuleCarousel key={activeModule} module={activeModule} data={contentfulModuleMap[activeModule]} />
-            )
+            <ModuleCarousel key={activeModule} module={activeModule} data={contentfulModuleMap?.[activeModule]} />
           )}
         </Container>
       </Layout.Horizontal>

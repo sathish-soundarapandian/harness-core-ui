@@ -94,7 +94,6 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
               isEditModeSupported={false}
               hideErrorMesageOnReadOnlyMode={true}
               existingYaml={generatedYaml}
-              showSnippetSection={false}
               width="568px"
               height="462px"
               theme="DARK"

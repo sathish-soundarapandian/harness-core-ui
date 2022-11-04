@@ -166,6 +166,7 @@ testConnectionStep:
     artifactory: Validating Artifactory Repository authentication and permissions
     nexus: Validating Nexus Repository authentication and permissions
     gcp: Validating Google Cloud Provider authentication and permissions
+    gcpSM: Validating Google Cloud Provider Secrets Manager authentication and permissions
     gcr: Validating Google Container Registry authentication and permissions
     aws: Validating the AWS Cloud Provider authentication and permissions
     appD: Validating AppDynamics authentication and permissions
@@ -943,5 +944,6 @@ customSM:
     template: Please select a template
 gcpSecretManager:
   gcpSMSecretFile: Google Secrets Manager Credentials File
+  gcpCredentialsFile: Credentials File
   validation:
     credFileRequired: Credentials File is required

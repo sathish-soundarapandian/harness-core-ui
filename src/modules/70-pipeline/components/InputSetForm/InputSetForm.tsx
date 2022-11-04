@@ -35,6 +35,7 @@ import {
 
 import { useToaster } from '@common/exports'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type {
   GitQueryParams,
   InputSetGitQueryParams,
@@ -465,15 +466,13 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     )
   }
 
+  if (loadingInputSet || loadingPipeline || loadingTemplate || loadingMerge) {
+    return <ContainerSpinner height={'100vh'} flex={{ align: 'center-center' }} />
+  }
+
   return (
     <InputSetFormWrapper
-      loading={
-        loadingInputSet ||
-        loadingPipeline ||
-        loadingTemplate ||
-        (!isGitSyncEnabled && (createInputSetLoading || updateInputSetLoading)) ||
-        loadingMerge
-      }
+      loading={!isGitSyncEnabled && (createInputSetLoading || updateInputSetLoading)}
       isEdit={isEdit}
       selectedView={selectedView}
       handleModeSwitch={handleModeSwitch}

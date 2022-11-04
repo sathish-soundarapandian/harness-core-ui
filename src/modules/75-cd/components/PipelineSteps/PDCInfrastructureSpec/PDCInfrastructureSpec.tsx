@@ -521,6 +521,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         <FormMultiTypeConnectorField
                           error={get(formik, 'errors.connectorRef', undefined)}
                           name="connectorRef"
+                          className={css.connectorRef}
                           label={getString('connector')}
                           placeholder={getString('connectors.selectConnector')}
                           disabled={readonly}
@@ -541,7 +542,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           }}
                         />
                         <RadioGroup
-                          className={css.specifyHostsRadioGroup}
+                          className={css.specifyFilterRadioGroup}
                           selectedValue={hostsScope}
                           onChange={(e: any) => {
                             setShowPreviewHostBtn(true)
@@ -614,6 +615,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           setShowPreviewHostBtn(false)
                           getHosts()
                         }}
+                        className={css.previewHostsButton}
                         size={ButtonSize.SMALL}
                         variation={ButtonVariation.SECONDARY}
                         width={140}
@@ -681,7 +683,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         ) : detailHosts.length > 0 ? (
                           <Table columns={columns} data={detailHosts} bpTableProps={{}} />
                         ) : (
-                          <Label className={'bp3-label'} style={{ margin: 'auto' }}>
+                          <Label className={'bp3-label'} style={{ margin: '0 auto 25px' }}>
                             {getString('cd.steps.pdcStep.noHosts')}
                           </Label>
                         )}

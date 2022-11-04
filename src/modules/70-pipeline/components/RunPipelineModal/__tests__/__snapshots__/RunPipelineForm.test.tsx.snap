@@ -80,49 +80,58 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                         class="valueRow"
                       >
                         <div
-                          class="bp3-form-group bp3-disabled variableInput"
-                          data-id="variables[0].value-0"
+                          class="StyledProps--font StyledProps--main variableInput"
                         >
-                          
                           <div
-                            class="bp3-form-content"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                           >
                             <div
-                              class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                              class="bp3-form-group bp3-disabled"
+                              data-id="variables[0].value-0"
+                              style="flex-grow: 1;"
                             >
+                              
                               <div
-                                class="bp3-input-group bp3-disabled MultiTypeInput--input"
+                                class="bp3-form-content"
                               >
-                                <input
-                                  autocomplete="off"
-                                  class="bp3-input"
-                                  disabled=""
-                                  name="variables[0].value"
-                                  type="text"
-                                  value="variablevalue"
-                                />
-                              </div>
-                              <button
-                                class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                                disabled=""
-                              >
-                                <span
-                                  class="bp3-icon StyledProps--main"
-                                  data-icon="fixed-input"
+                                <div
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                                 >
-                                  <svg
-                                    height="12"
-                                    viewBox="0 0 9 9"
-                                    width="12"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                  <div
+                                    class="bp3-input-group bp3-disabled MultiTypeInput--input"
                                   >
-                                    <path
-                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                      fill="currentColor"
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      disabled=""
+                                      name="variables[0].value"
+                                      type="text"
+                                      value="variablevalue"
                                     />
-                                  </svg>
-                                </span>
-                              </button>
+                                  </div>
+                                  <button
+                                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    disabled=""
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main"
+                                      data-icon="fixed-input"
+                                    >
+                                      <svg
+                                        height="12"
+                                        viewBox="0 0 9 9"
+                                        width="12"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                          fill="currentColor"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -598,54 +607,63 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                         class="valueRow"
                       >
                         <div
-                          class="bp3-form-group variableInput"
+                          class="StyledProps--font StyledProps--main variableInput"
                         >
-                          
                           <div
-                            class="bp3-form-content"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                           >
                             <div
-                              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                              class="bp3-form-group"
+                              style="flex-grow: 1;"
                             >
+                              
                               <div
-                                class="bp3-input-group MultiTypeInput--input"
+                                class="bp3-form-content"
                               >
-                                <input
-                                  autocomplete="off"
-                                  class="bp3-input"
-                                  name="variables[0].value"
-                                  type="text"
-                                  value="valuefrominputsetsmerge"
-                                />
-                              </div>
-                              <span
-                                class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
+                                <div
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                 >
-                                  <button
-                                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  <div
+                                    class="bp3-input-group MultiTypeInput--input"
+                                  >
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      name="variables[0].value"
+                                      type="text"
+                                      value="valuefrominputsetsmerge"
+                                    />
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
                                   >
                                     <span
-                                      class="bp3-icon StyledProps--main"
-                                      data-icon="fixed-input"
+                                      class="bp3-popover-target"
                                     >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 9 9"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
                                       >
-                                        <path
-                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                          fill="currentColor"
-                                        />
-                                      </svg>
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
+                                        >
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
                                     </span>
-                                  </button>
-                                </span>
-                              </span>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1125,54 +1143,63 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                         class="valueRow"
                       >
                         <div
-                          class="bp3-form-group variableInput"
+                          class="StyledProps--font StyledProps--main variableInput"
                         >
-                          
                           <div
-                            class="bp3-form-content"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                           >
                             <div
-                              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                              class="bp3-form-group"
+                              style="flex-grow: 1;"
                             >
+                              
                               <div
-                                class="bp3-input-group MultiTypeInput--input"
+                                class="bp3-form-content"
                               >
-                                <input
-                                  autocomplete="off"
-                                  class="bp3-input"
-                                  name="variables[0].value"
-                                  type="text"
-                                  value="valuefrominputsetsmerge"
-                                />
-                              </div>
-                              <span
-                                class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
+                                <div
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                 >
-                                  <button
-                                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  <div
+                                    class="bp3-input-group MultiTypeInput--input"
+                                  >
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      name="variables[0].value"
+                                      type="text"
+                                      value="valuefrominputsetsmerge"
+                                    />
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
                                   >
                                     <span
-                                      class="bp3-icon StyledProps--main"
-                                      data-icon="fixed-input"
+                                      class="bp3-popover-target"
                                     >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 9 9"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
                                       >
-                                        <path
-                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                          fill="currentColor"
-                                        />
-                                      </svg>
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
+                                        >
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
                                     </span>
-                                  </button>
-                                </span>
-                              </span>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1731,54 +1758,63 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                         class="valueRow"
                       >
                         <div
-                          class="bp3-form-group variableInput"
+                          class="StyledProps--font StyledProps--main variableInput"
                         >
-                          
                           <div
-                            class="bp3-form-content"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                           >
                             <div
-                              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                              class="bp3-form-group"
+                              style="flex-grow: 1;"
                             >
+                              
                               <div
-                                class="bp3-input-group MultiTypeInput--input"
+                                class="bp3-form-content"
                               >
-                                <input
-                                  autocomplete="off"
-                                  class="bp3-input"
-                                  name="variables[0].value"
-                                  type="text"
-                                  value="valuefrominputsetsmerge"
-                                />
-                              </div>
-                              <span
-                                class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
+                                <div
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                 >
-                                  <button
-                                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  <div
+                                    class="bp3-input-group MultiTypeInput--input"
+                                  >
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      name="variables[0].value"
+                                      type="text"
+                                      value="valuefrominputsetsmerge"
+                                    />
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
                                   >
                                     <span
-                                      class="bp3-icon StyledProps--main"
-                                      data-icon="fixed-input"
+                                      class="bp3-popover-target"
                                     >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 9 9"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
                                       >
-                                        <path
-                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                          fill="currentColor"
-                                        />
-                                      </svg>
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
+                                        >
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
                                     </span>
-                                  </button>
-                                </span>
-                              </span>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>

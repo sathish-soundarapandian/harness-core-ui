@@ -5,13 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { MultiTypeInputType } from '@harness/uicore'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import {
   clearRuntimeInput,
   getFeaturePropsForRunPipelineButton,
   mergeTemplateWithInputSetData,
-  getMergedVariables
+  getMergedVariables,
+  getAllowableTypesWithoutFixedValue,
+  getAllowableTypesWithoutExpression
 } from '../runPipelineUtils'
 import pipelineTemplate from './mockJson/pipelineTemplate.json'
 import pipelineInputSetPortion from './mockJson/pipelineInputSetPortion.json'
@@ -505,5 +508,29 @@ describe('getMergedVariables tests', () => {
       { name: 'var1', type: 'String', value: 'val1' },
       { name: 'var2', type: 'String', value: 'val2' }
     ])
+  })
+})
+
+describe('getAllowableTypesWithoutFixedValue tests', () => {
+  test('filters out fixed multi type input type', () => {
+    expect(
+      getAllowableTypesWithoutFixedValue([
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ])
+    ).toEqual([MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION])
+  })
+})
+
+describe('getAllowableTypesWithoutExpression tests', () => {
+  test('filters out expression multi type input type', () => {
+    expect(
+      getAllowableTypesWithoutExpression([
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ])
+    ).toEqual([MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME])
   })
 })

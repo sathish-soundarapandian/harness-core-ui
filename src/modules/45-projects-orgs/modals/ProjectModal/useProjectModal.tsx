@@ -98,10 +98,7 @@ export const useProjectModal = ({
             stepClassName={css.stepClass}
           >
             <StepAboutProject name={getString('projectsOrgs.aboutProject')} modules={projectData?.modules} />
-            <ProjectCollaboratorsStep
-              name={getString('projectsOrgs.invite')}
-              subTitle={getString('projectsOrgs.optional')}
-            />
+            <ProjectCollaboratorsStep name={getString('projectsOrgs.invite')} subTitle={getString('titleOptional')} />
           </StepWizard>
         ) : null}
 

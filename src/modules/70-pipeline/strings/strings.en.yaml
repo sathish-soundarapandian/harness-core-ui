@@ -13,7 +13,8 @@ enableVerificationTitle: Add Continuous Verification
 enableVerificationOptions: Enable Continuous Verification
 enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
 openInPipelineStudio: Open in Pipeline Studio
-closeStepConfig: Step Config
+closeStepConfig: Close step configuration?
+stepConfigContent: Changes to your step configuration will be lost if you do not apply your changes.
 stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
 clickHere: Click here
 stepDetails: Step details
@@ -39,11 +40,10 @@ pipelineTimeoutHelpText: Enter a timeout for the entire Pipeline. You can change
 stageExecutionSettings: Stage Execution Settings
 stageExecutionsHelperText: Allow selective stage(s) executions?
 sslVerify: SSL Verify
-noPipelineText: There are no pipelines in your project
-noDeploymentText: There are no deployments in your project
-runModalNoPipelineText: There are no pipelines in your project. Please create a new pipeline
-noBuildsText: There are no builds in your project
-noBuildsLabel: No builds
+noPipelinesLabel: No pipelines
+noPipelinesText: There are no pipelines in your project. Click the button below to create a pipeline.
+noRunsLabel: No {{moduleRunType}} in your project
+noRunsText: Your project does not have any {{moduleRunType}} yet. Click the button below to run a pipeline.
 parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
@@ -825,6 +825,8 @@ selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   artifactId: Artifact ID
+  customArtifactManualFill: Manually Enter an artifact version
+  customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
   groupIdPlaceholder: Enter Group ID
@@ -872,6 +874,9 @@ artifactsSelection:
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    script: Script is required
+    artifactsArrayPath: Artifact array path is required
+    versionPath: Version path is required
     noBuild: No build found with given details
     packageType: Package Type is required
     versionRegex: Version Regex is required
@@ -1000,7 +1005,7 @@ dependencyRequired: 'Connector is required to fetch buckets'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
-myPipelineRunsText: My Pipeline Runs
+myExecutionsText: My Executions
 noRegions: No regions found
 noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
@@ -1334,6 +1339,7 @@ configFiles:
     files: 'File(s) is required'
     file: 'This field is required'
     fileSelection: 'Select atleast one config file'
+    duplicateIdError: 'Failed to create Config File: There is already a Config File with identifier {{ configFileIdentifier }} present or soft deleted. Please provide a new unique identifier and save again.'
 OverviewEmptyStates:
   createPipelineHeaderMsg: Set up a Pipeline and run your first {{executionLabel}}!
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like {{pipelineOperation1}} and {{pipelineOperation2}} software.

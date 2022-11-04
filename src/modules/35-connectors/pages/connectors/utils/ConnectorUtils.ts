@@ -2347,6 +2347,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.azure')
     case Connectors.CUSTOM_SECRET_MANAGER:
       return getString('connectors.testConnectionStep.validationText.customSM')
+    case Connectors.GcpSecretManager:
+      return getString('connectors.testConnectionStep.validationText.gcpSM')
     default:
       return ''
   }

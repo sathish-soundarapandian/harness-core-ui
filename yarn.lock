@@ -14152,10 +14152,10 @@ react-transition-group@^2.9.0:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-react-virtuoso@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/react-virtuoso/-/react-virtuoso-2.5.0.tgz#1b883f3bbf8cb19ed77a01d3588ab2aca50e7354"
-  integrity sha512-AtdfkiQp1CaGAQIutVCIBnr6XAiLck22mBV6iztnpmvcCgpaAzxs4mUO/oUkLxSCZnahid5FzYRSpPKECadinA==
+react-virtuoso@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-virtuoso/-/react-virtuoso-3.1.2.tgz#8a95ca8bd29af70eeffa1219c41326c089985777"
+  integrity sha512-/YRzJrQUuDSNTfbtD6JRTDRFR7FunrlbXoiCyKz3AXp36gmqSwULHEoX6FqMYPYow2XJjATs5A5/P9iTTVSfhQ==
   dependencies:
     "@virtuoso.dev/react-urx" "^0.2.12"
     "@virtuoso.dev/urx" "^0.2.12"

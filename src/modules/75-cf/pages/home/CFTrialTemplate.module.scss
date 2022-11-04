@@ -26,7 +26,9 @@
   width: 25%;
 }
 
-article {
+.mainArticle {
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 3rem;
   width: 800px;
   padding: var(--spacing-xxxlarge);
   background-color: var(--grey-0);
@@ -35,14 +37,15 @@ article {
   display: grid;
 }
 
-.mainArticle {
-  grid-template-columns: 1fr 1px 1fr;
-  gap: 3rem;
-}
-
 .dontCodeArticle {
   grid-template-columns: 1fr 2fr;
   gap: 3rem;
+  width: 800px;
+  padding: var(--spacing-xxxlarge);
+  background-color: var(--grey-0);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: grid;
 }
 
 .forDevs {

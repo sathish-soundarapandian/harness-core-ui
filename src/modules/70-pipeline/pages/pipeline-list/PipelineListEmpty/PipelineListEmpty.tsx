@@ -11,6 +11,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { getModuleRunType } from '@pipeline/utils/runPipelineUtils'
 import CIPipelineIllustration from '../images/ci-pipeline-illustration.svg'
 import CDPipelineIllustration from '../images/cd-pipeline-illustration.svg'
 import CFPipelineIllustration from '../images/cf-pipeline-illustration.svg'
@@ -55,7 +56,7 @@ export function PipelineListEmpty({ hasFilter, resetFilter, createPipeline }: Pi
           <>
             <img src={module ? illustration[module] : CDPipelineIllustration} className={css.image} />
             <Text className={css.noPipelineText} margin={{ top: 'medium', bottom: 'small' }}>
-              {getString('pipeline.noPipelineText')}
+              {getString('pipeline.noRunsText', { moduleRunType: getModuleRunType(module) })}
             </Text>
             <Text className={css.aboutPipeline} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
               {getString('pipeline-list.aboutPipeline')}

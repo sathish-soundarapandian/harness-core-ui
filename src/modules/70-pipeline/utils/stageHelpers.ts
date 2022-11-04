@@ -187,6 +187,8 @@ export const getHelpeTextForTags = (
     artifactId?: string
     groupId?: string
     packageName?: string
+    artifactArrayPath?: string
+    versionPath?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -208,7 +210,9 @@ export const getHelpeTextForTags = (
     repositoryFormat,
     artifactId,
     groupId,
-    packageName
+    packageName,
+    artifactArrayPath,
+    versionPath
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -219,6 +223,18 @@ export const getHelpeTextForTags = (
     (!repositoryName || getMultiTypeFromValue(repositoryName) === MultiTypeInputType.RUNTIME)
   ) {
     invalidFields.push(getString('common.repositoryName'))
+  }
+  if (
+    artifactArrayPath !== undefined &&
+    (!artifactArrayPath || getMultiTypeFromValue(artifactArrayPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactsArrayPath'))
+  }
+  if (
+    versionPath !== undefined &&
+    (!versionPath || getMultiTypeFromValue(versionPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.versionPath'))
   }
   if (
     packageName !== undefined &&
@@ -383,7 +399,8 @@ export const getSelectedDeploymentType = (
 export const getDeploymentTypeWithSvcEnvFF = (
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
 ): ServiceDefinition['type'] => {
-  return get(stage, 'stage.spec.deploymentType', null)
+  const service = get(stage, 'stage.spec.service', null)
+  return service && get(stage, 'stage.spec.deploymentType', null)
 }
 
 export const getServiceDefinitionType = (

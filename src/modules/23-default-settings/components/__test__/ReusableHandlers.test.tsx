@@ -44,7 +44,8 @@ describe('Reusable Components', () => {
     identifier: 'abcd',
     onRestore: jest.fn(),
     onSettingSelectionChange: jest.fn(),
-    settingValue: settingValue
+    settingValue: settingValue,
+    errorMessage: ''
   }
 
   test('text box', () => {

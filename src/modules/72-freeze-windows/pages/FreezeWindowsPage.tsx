@@ -71,6 +71,11 @@ function _FreezeWindowsPage(): React.ReactElement {
       sort: [sort.join(',')],
       startTime,
       endTime
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
     }
   })
 

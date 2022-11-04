@@ -96,7 +96,6 @@ const Step2Script: React.FC<StepProps<DockerDelegateWizardData>> = props => {
       isEditModeSupported={false}
       hideErrorMesageOnReadOnlyMode={true}
       existingYaml={delegateDockerYaml as any}
-      showSnippetSection={false}
       width="568px"
       height="462px"
       theme="DARK"

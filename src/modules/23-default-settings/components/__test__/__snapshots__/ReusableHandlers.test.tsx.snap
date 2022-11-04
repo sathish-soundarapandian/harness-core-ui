@@ -2,67 +2,93 @@
 
 exports[`Reusable Components DefaultSettingCheckBoxWithTrueAndFalse 1`] = `
 <div>
-  <label
-    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main"
+  <div
+    class="Layout--vertical StyledProps--main settingCheckBoxContainer StyledProps--flex StyledProps--flex-alignItems-flex-start"
   >
-    <input
-      name="check"
-      type="checkbox"
-    />
-    <span
-      class="bp3-control-indicator"
-    />
-    
-  </label>
+    <label
+      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main"
+    >
+      <input
+        name="check"
+        type="checkbox"
+      />
+      <span
+        class="bp3-control-indicator"
+      />
+      
+    </label>
+  </div>
 </div>
 `;
 
 exports[`Reusable Components DefaultSettingCheckBoxWithTrueAndFalse with different labels 1`] = `
 <div>
-  <label
-    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main"
+  <div
+    class="Layout--vertical StyledProps--main settingCheckBoxContainer StyledProps--flex StyledProps--flex-alignItems-flex-start"
   >
-    <input
-      name="check"
-      type="checkbox"
-    />
-    <span
-      class="bp3-control-indicator"
-    />
-    
-  </label>
+    <label
+      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox defaultSettingRenderer StyledProps--main"
+    >
+      <input
+        name="check"
+        type="checkbox"
+      />
+      <span
+        class="bp3-control-indicator"
+      />
+      
+    </label>
+  </div>
 </div>
 `;
 
 exports[`Reusable Components DefaultSettingRadioBtnWithTrueAndFalse 1`] = `
 <div>
-  <div>
-    <label
-      class="bp3-control bp3-radio bp3-inline"
+  <div
+    class="bp3-form-group bp3-inline"
+  >
+    <div
+      class="bp3-form-content"
     >
-      <input
-        name="nbr"
-        type="radio"
-        value="true"
-      />
-      <span
-        class="bp3-control-indicator"
-      />
-      common.true
-    </label>
-    <label
-      class="bp3-control bp3-radio bp3-inline"
-    >
-      <input
-        name="nbr"
-        type="radio"
-        value="false"
-      />
-      <span
-        class="bp3-control-indicator"
-      />
-      common.false
-    </label>
+      <div
+        class="FormikForm--inlineRadioGroup StyledProps--main"
+      >
+        
+        <div
+          class="RadioButtonGroup--inline"
+        >
+          <label
+            class="RadioButton--radio StyledProps--main"
+          >
+            <input
+              class="RadioButton--input"
+              name="nbr"
+              type="radio"
+              value="true"
+            />
+            <span
+              class="RadioButton--radioIcon"
+            />
+            common.true
+          </label>
+          <label
+            class="RadioButton--radio StyledProps--main"
+          >
+            <input
+              checked=""
+              class="RadioButton--input"
+              name="nbr"
+              type="radio"
+              value="false"
+            />
+            <span
+              class="RadioButton--radioIcon"
+            />
+            common.false
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

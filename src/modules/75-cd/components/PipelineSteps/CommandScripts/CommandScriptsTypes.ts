@@ -78,6 +78,11 @@ export enum LocationType {
   INLINE = 'Inline'
 }
 
+export enum SourceType {
+  ARTIFACT = 'Artifact',
+  CONFIG = 'Config'
+}
+
 export const scriptInputType: SelectOption[] = [
   { label: 'String', value: 'String' },
   { label: 'Number', value: 'Number' }
@@ -96,8 +101,8 @@ export const commandTypeOptions: SelectOption[] = [
 ]
 
 export const sourceTypeOptions: RadioButtonProps[] = [
-  { label: 'Artifact', value: 'Artifact' },
-  { label: 'Config', value: 'Config' }
+  { label: SourceType.ARTIFACT, value: SourceType.ARTIFACT },
+  { label: SourceType.CONFIG, value: SourceType.CONFIG }
 ]
 
 export const scriptTypeOptions: SelectOption[] = [

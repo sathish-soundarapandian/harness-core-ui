@@ -904,6 +904,7 @@ export function StageInputSetFormInternal({
                   allValues: pick(deploymentStage, ['service']),
                   customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
+                onUpdate={data => formik?.setFieldValue(`${path}.service`, get(data, 'service'))}
               />
             )}
             {!isNil(deploymentStage?.deploymentType) && (
@@ -969,6 +970,7 @@ export function StageInputSetFormInternal({
                   allValues: pick(deploymentStage, ['services']),
                   customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
+                onUpdate={data => formik?.setFieldValue(`${path}.services`, get(data, 'services'))}
               />
             ) : null}
             {Array.isArray(deploymentStageTemplate.services.values) ? (

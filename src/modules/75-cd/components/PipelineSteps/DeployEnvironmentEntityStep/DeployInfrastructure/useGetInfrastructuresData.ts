@@ -32,6 +32,7 @@ export interface UseGetInfrastructuresDataProps {
   deploymentType: ServiceDefinition['type']
   deploymentTemplateIdentifier?: TemplateLinkConfig['templateRef']
   versionLabel?: TemplateLinkConfig['versionLabel']
+  lazyInfrastructure?: boolean
 }
 
 export interface UseGetInfrastructuresDataReturn {
@@ -54,7 +55,8 @@ export function useGetInfrastructuresData({
   infrastructureIdentifiers,
   deploymentType,
   deploymentTemplateIdentifier,
-  versionLabel
+  versionLabel,
+  lazyInfrastructure
 }: UseGetInfrastructuresDataProps): UseGetInfrastructuresDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
@@ -80,7 +82,8 @@ export function useGetInfrastructuresData({
         deploymentTemplateIdentifier,
         versionLabel
       })
-    }
+    },
+    lazy: lazyInfrastructure
   })
 
   const {

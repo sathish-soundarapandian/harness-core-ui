@@ -15,11 +15,10 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants
 import {
   MenuCell,
   LastModifiedCell,
-  FreezeNameCell,
-  FreezeTimeCell,
+  FreezeWindowCell,
+  ScheduleCell,
   StatusCell,
   RowSelectCell,
-  FreezeToggleCell,
   FreezeWindowListColumnActions
 } from './FreezeWindowListCells'
 import { ToggleAllSelection } from './ToggleAllSelection'
@@ -71,43 +70,34 @@ export function FreezeWindowListTable({
       {
         Header: <ToggleAllSelection data={content} />,
         id: 'rowSelectToggle',
-        width: '2.5%',
+        width: '2%',
         Cell: RowSelectCell,
         disableSortBy: true,
         onRowSelectToggle,
         selectedItems,
-        disabled,
-        freezeStatusMap
+        disabled
       },
       {
-        Header: '',
-        accessor: 'freezeToggle',
-        width: '3.5%',
-        Cell: FreezeToggleCell,
-        disableSortBy: true,
-        onToggleFreezeRow,
-        disabled,
-        freezeStatusMap
-      },
-      {
-        Header: 'Name',
+        Header: 'Freeze Window',
         accessor: 'name',
-        width: '25%',
-        Cell: FreezeNameCell,
+        width: '27%',
+        Cell: FreezeWindowCell,
         serverSortProps: getServerSortProps('name'),
-        getViewFreezeRowLink
+        getViewFreezeRowLink,
+        onToggleFreezeRow,
+        disabled
       },
       {
-        Header: 'Freeze Time',
-        accessor: 'freezeTime',
-        width: '34%',
-        Cell: FreezeTimeCell,
+        Header: 'Schedule',
+        accessor: 'schedule',
+        width: '35%',
+        Cell: ScheduleCell,
         disableSortBy: true
       },
       {
         Header: 'Status',
         accessor: 'status',
-        width: '15%',
+        width: '16%',
         Cell: StatusCell,
         disableSortBy: true,
         freezeStatusMap

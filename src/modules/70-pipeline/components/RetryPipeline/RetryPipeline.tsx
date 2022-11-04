@@ -317,7 +317,6 @@ function RetryPipeline({
   const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
     fileName: `retry-pipeline.yaml`,
     entityType: 'Pipelines',
-    showSnippetSection: false,
     yamlSanityConfig: {
       removeEmptyString: false,
       removeEmptyObject: false,
@@ -844,7 +843,6 @@ function RetryPipeline({
                     invocationMap={factory.getInvocationMap()}
                     height="55vh"
                     width="100%"
-                    showSnippetSection={false}
                     isEditModeSupported={canEdit}
                   />
                 </Layout.Vertical>

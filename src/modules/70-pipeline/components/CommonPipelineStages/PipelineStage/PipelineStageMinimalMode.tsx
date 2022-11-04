@@ -247,7 +247,7 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               <div className={css.noPipelineSection}>
                 <img src={CDPipelineIllustration} className={css.image} />
                 <Text className={css.noPipelineText} margin={{ top: 'medium', bottom: 'small' }}>
-                  {getString('pipeline.noPipelineText')}
+                  {getString('pipeline.noPipelinesText')}
                 </Text>
               </div>
             )}

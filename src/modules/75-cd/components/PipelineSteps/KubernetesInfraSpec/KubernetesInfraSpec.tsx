@@ -52,6 +52,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -258,7 +259,8 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
   template,
   readonly = false,
   path,
-  allowableTypes
+  allowableTypes,
+  stepViewType
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -288,7 +290,6 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             setRefValue
             className={css.connectorMargin}
             multiTypeProps={{ allowableTypes, expressions }}
-            enableConfigureOptions={false}
           />
         </div>
       )}
@@ -301,6 +302,9 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             multiTextInputProps={{
               allowableTypes,
               expressions
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
             template={template}
@@ -317,6 +321,9 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             multiTextInputProps={{
               allowableTypes,
               expressions
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
             template={template}

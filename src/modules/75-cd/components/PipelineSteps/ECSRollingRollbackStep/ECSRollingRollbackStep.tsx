@@ -68,6 +68,7 @@ export class ECSRollingRollbackStep extends PipelineStep<StepElementConfig> {
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
           inputSetData={inputSetData as InputSetData<StepElementConfig>}
+          stepViewType={stepViewType}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {

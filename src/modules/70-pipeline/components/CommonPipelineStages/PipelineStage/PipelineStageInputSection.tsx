@@ -118,6 +118,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(selectedInputSetsContext)
   const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
   const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
+  const pipelineInputsFromYaml = get(selectedStage?.stage as PipelineStageElementConfig, 'spec.pipelineInputs')
 
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
@@ -210,6 +211,12 @@ function PipelineInputSetFormBasic(): React.ReactElement {
     [updateStage]
   )
 
+  useEffect(() => {
+    if (!!inputSetYamlResponse?.data?.hasInputSets && !pipelineInputsFromYaml) {
+      setExistingProvide('existing')
+    } else setExistingProvide('provide')
+  }, [inputSetYamlResponse?.data?.hasInputSets])
+
   const hasInputSets = !!inputSetYamlResponse?.data?.hasInputSets
   const loadingInputSets = loadingTemplate || loadingInputSetsData || loadingMergedTemplateInputs
   const hasRuntimeInputs = !!inputSetYamlResponse?.data?.inputSetTemplateYaml
@@ -246,7 +253,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const updateInputTabFormValues = (newFormValues?: PipelineInfoConfig): void => {
     const updatedStage = produce(selectedStage?.stage as PipelineStageElementConfig, draft => {
       if (!hasInputSets || existingProvide === 'provide') {
-        set(draft, 'spec.pipelineInputs.pipeline', replaceDefaultValues(newFormValues))
+        set(draft, 'spec.pipelineInputs', replaceDefaultValues(newFormValues))
         delete draft?.spec?.inputSetReferences
       } else {
         set(draft, 'spec.inputSetReferences', defaultTo(selectedInputSetReferences, []))
@@ -321,7 +328,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       {} as StageSelectionData
     )
     const stageData = produce(selectedStage, (draft: StageElementWrapper<PipelineStageElementConfig>) => {
-      set(draft, 'stage.spec.pipelineInputs.pipeline', tempPipeline)
+      set(draft, 'stage.spec.pipelineInputs', tempPipeline)
     })
     debounceUpdateStage(stageData?.stage)
 
@@ -334,7 +341,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       try {
         getsMergedTemplateInputYamlPromise({
           body: {
-            oldTemplateInputs: stringify(defaultTo(selectedStage?.stage?.spec?.pipelineInputs?.pipeline, '')),
+            oldTemplateInputs: stringify(defaultTo(selectedStage?.stage?.spec?.pipelineInputs, '')),
             newTemplateInputs: stringify(inputSetTemplate.pipeline)
           },
           queryParams: {
@@ -389,14 +396,14 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       case 'existing': {
         stageData = produce(selectedStage, (draft: StageElementWrapper<PipelineStageElementConfig>) => {
           set(draft, 'stage.spec.inputSetReferences', selectedInputSetReferences)
-          tempPipelineInputs.current = draft?.stage?.spec?.pipelineInputs?.pipeline as PipelineInfoConfig
+          tempPipelineInputs.current = draft?.stage?.spec?.pipelineInputs as PipelineInfoConfig
           delete draft?.stage?.spec?.pipelineInputs
         })
         break
       }
       case 'provide': {
         stageData = produce(selectedStage, (draft: StageElementWrapper<PipelineStageElementConfig>) => {
-          set(draft, 'stage.spec.pipelineInputs.pipeline', defaultTo(tempPipelineInputs.current, inputTabFormValues))
+          set(draft, 'stage.spec.pipelineInputs', defaultTo(tempPipelineInputs.current, inputTabFormValues))
           delete draft?.stage?.spec?.inputSetReferences
         })
         break
