@@ -413,7 +413,8 @@ export const processNodeDataV1 = (
   nodeMap: ExecutionGraph['nodeMap'],
   nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap'],
   rootNodes: Array<PipelineGraphState>,
-  isNestedGroup = false
+  isNestedGroup = false,
+  processNextItem = true
 ): Array<PipelineGraphState> => {
   const items: Array<PipelineGraphState> = []
   children?.forEach(item => {
@@ -447,9 +448,11 @@ export const processNodeDataV1 = (
         processSingleItem({ id: item, items, nodeMap, nodeAdjacencyListMap, rootNodes })
       }
     }
-    const nextIds = nodeAdjacencyListMap?.[item].nextIds || /* istanbul ignore next */ []
-    const processedNodes = processNextNodes({ nodeMap, nodeAdjacencyListMap, nextIds, rootNodes })
-    items.push(...processedNodes)
+    if (processNextItem) {
+      const nextIds = nodeAdjacencyListMap?.[item].nextIds || /* istanbul ignore next */ []
+      const processedNodes = processNextNodes({ nodeMap, nodeAdjacencyListMap, nextIds, rootNodes })
+      items.push(...processedNodes)
+    }
   })
   return items
 }
@@ -850,7 +853,9 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
             [nodeId] || /* istanbul ignore next */ [],
             graph?.nodeMap,
             graph?.nodeAdjacencyListMap,
-            items
+            items,
+            false,
+            false
           )
           items.push(...exec)
         }
