@@ -74,6 +74,8 @@ export const yamlFileExtension = '.yaml'
 
 export const yamlPathRegex = /.*\.ya?ml$/
 
+export const carriageReturnRegex = /(?:\\[rn])+/g
+
 export const UNIQUE_ID_MAX_LENGTH = 64
 export function toVariableStr(str: string): string {
   return `<+${str}>`

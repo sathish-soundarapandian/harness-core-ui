@@ -158,11 +158,14 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   }
 
   useEffect(() => {
+    const currentAccount = userInfo?.data?.accounts?.find(account => account.uuid === accountId)
     // don't redirect on local because it goes into infinite loop
     // because there may be no current gen to go to
-    const currentAccount = userInfo?.data?.accounts?.find(account => account.uuid === accountId)
     if (!__DEV__ && currentAccount && !currentAccount.nextGenEnabled) {
       window.location.href = getRedirectionUrl(accountId, source)
+    }
+    if (currentAccount) {
+      localStorage.setItem('defaultExperience', currentAccount.defaultExperience || '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo?.data?.accounts])

@@ -10,7 +10,7 @@ freezeWindowsPage:
   deleteFailure: Failed to delete freeze window(s)
   updateStatusSuccess: Freeze Window(s) {{value}}
   updateStatusFailure: Failed to update Freeze Window(s)
-
+  dateRangeLabel: 'Updated: Last 7 days'
 freezeStudio:
   freezeConfiguration: Freeze Configuration
   freezeOverview: Freeze Overview

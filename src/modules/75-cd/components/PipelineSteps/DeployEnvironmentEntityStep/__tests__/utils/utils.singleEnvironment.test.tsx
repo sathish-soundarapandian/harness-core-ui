@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../types'
-import { processSingleEnvironmentInitialValues, processSingleEnvironmentFormValues } from '../utils'
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../../types'
+import { processSingleEnvironmentInitialValues, processSingleEnvironmentFormValues } from '../../utils'
 
 // eslint-disable-next-line jest/no-disabled-tests
 describe('process single environment initial values', () => {

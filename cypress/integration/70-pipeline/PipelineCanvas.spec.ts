@@ -419,7 +419,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     yamlValidations('stage1', 'region1')
   })
 
-  it.skip(`runtime values to region, stage in infrastructure tab`, () => {
+  it(`runtime values to region, stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
@@ -432,7 +432,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.wait(1000)
     cy.contains('span', 'Continue').click()
     cy.get('span[data-icon="fixed-input"]').eq(1).click()
-    cy.get('.MultiTypeInput--header svg[data-icon="cross"]').eq(0).click()
+    cy.get('.MultiTypeInput--learnMore svg[data-icon="cross"]').eq(0).click()
     cy.contains('div', 'Runtime input').click()
     cy.wait(1000)
     cy.get('[data-name="toggle-option-two"]').click({ force: true })

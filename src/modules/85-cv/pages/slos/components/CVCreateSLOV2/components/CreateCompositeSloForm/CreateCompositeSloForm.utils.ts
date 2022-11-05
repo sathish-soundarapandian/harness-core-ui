@@ -6,7 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { PeriodLengthTypes, PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
@@ -51,8 +51,23 @@ export const validateSetSLOTimeWindow = (formikProps: FormikProps<SLOV2Form>): b
 
 export const validateAddSLO = (formikProps: FormikProps<SLOV2Form>): boolean => {
   const { serviceLevelObjectivesDetails } = formikProps.values
+  let hasInvalidValue = false
   if (!serviceLevelObjectivesDetails?.length) {
     return false
+  } else {
+    if (serviceLevelObjectivesDetails?.length < 2) {
+      return false
+    }
+    for (let index = 0; index < defaultTo(serviceLevelObjectivesDetails?.length, 0); index++) {
+      if (
+        serviceLevelObjectivesDetails?.[index].weightagePercentage > 99 ||
+        serviceLevelObjectivesDetails?.[index].weightagePercentage < 1
+      ) {
+        hasInvalidValue = true
+        break
+      }
+    }
+    return !hasInvalidValue
   }
   return true
 }
@@ -88,4 +103,16 @@ export const isFormDataValid = (
     default:
       return false
   }
+}
+
+export const shouldOpenPeriodUpdateModal = (
+  formikProps: FormikProps<SLOV2Form>,
+  periodTypesRef: React.MutableRefObject<'Rolling' | 'Calender' | undefined>
+): boolean => {
+  return (
+    Boolean(formikProps.values.periodType) &&
+    Boolean(periodTypesRef?.current) &&
+    !isEmpty(formikProps.values.serviceLevelObjectivesDetails) &&
+    formikProps.values.periodType !== periodTypesRef?.current
+  )
 }

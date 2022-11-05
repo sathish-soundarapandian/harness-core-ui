@@ -8,8 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { ButtonSize, ButtonVariation, Container, ModalDialog, Page } from '@harness/uicore'
-import { useModalHook } from '@harness/use-modal'
+import { ButtonSize, ButtonVariation, Container, ModalDialog, Page, useToggleOpen } from '@harness/uicore'
 
 import { useGetInfrastructureList } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -35,6 +34,7 @@ export default function InfrastructureDefinition(): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<string>('')
+  const { isOpen: isModalOpen, close: hideModal, open: showModal } = useToggleOpen(false)
 
   const { data, loading, error, refetch } = useGetInfrastructureList({
     queryParams: {
@@ -51,32 +51,6 @@ export default function InfrastructureDefinition(): JSX.Element {
     hideModal()
   }
 
-  const [showModal, hideModal] = useModalHook(
-    () => (
-      <ModalDialog
-        isOpen
-        isCloseButtonShown
-        canEscapeKeyClose
-        canOutsideClickClose
-        enforceFocus={false}
-        onClose={onClose}
-        title={selectedInfrastructure ? getString('cd.infrastructure.edit') : getString('cd.infrastructure.createNew')}
-        width={1128}
-        height={840}
-        className={css.dialogStyles}
-      >
-        <InfrastructureModal
-          hideModal={onClose}
-          refetch={refetch}
-          environmentIdentifier={environmentIdentifier}
-          selectedInfrastructure={selectedInfrastructure}
-          getTemplate={getTemplate}
-        />
-      </ModalDialog>
-    ),
-    [refetch, selectedInfrastructure, setSelectedInfrastructure]
-  )
-
   useEffect(() => {
     if (selectedInfrastructure) {
       showModal()
@@ -84,35 +58,59 @@ export default function InfrastructureDefinition(): JSX.Element {
   }, [selectedInfrastructure, showModal])
 
   return (
-    <Container padding={{ left: 'medium', right: 'medium' }}>
-      {loading ? (
-        <ContainerSpinner />
-      ) : error ? (
-        <Page.Error>{getRBACErrorMessage(error)}</Page.Error>
-      ) : (
-        <>
-          <RbacButton
-            text={getString('pipelineSteps.deploy.infrastructure.infraDefinition')}
-            font={{ weight: 'bold' }}
-            icon="plus"
-            onClick={showModal}
-            size={ButtonSize.SMALL}
-            variation={ButtonVariation.LINK}
-            permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
-              permission: PermissionIdentifier.EDIT_ENVIRONMENT
-            }}
-          />
-          <InfrastructureList
-            list={data?.data?.content}
-            showModal={showModal}
+    <>
+      <Container padding={{ left: 'medium', right: 'medium' }}>
+        {loading ? (
+          <ContainerSpinner />
+        ) : error ? (
+          <Page.Error>{getRBACErrorMessage(error)}</Page.Error>
+        ) : (
+          <>
+            <RbacButton
+              text={getString('pipelineSteps.deploy.infrastructure.infraDefinition')}
+              font={{ weight: 'bold' }}
+              icon="plus"
+              onClick={showModal}
+              size={ButtonSize.SMALL}
+              variation={ButtonVariation.LINK}
+              permission={{
+                resource: {
+                  resourceType: ResourceType.ENVIRONMENT
+                },
+                permission: PermissionIdentifier.EDIT_ENVIRONMENT
+              }}
+            />
+            <InfrastructureList
+              list={data?.data?.content}
+              showModal={showModal}
+              refetch={refetch}
+              setSelectedInfrastructure={setSelectedInfrastructure}
+            />
+          </>
+        )}
+        <ModalDialog
+          isOpen={isModalOpen}
+          isCloseButtonShown
+          canEscapeKeyClose
+          canOutsideClickClose
+          enforceFocus={false}
+          onClose={onClose}
+          title={
+            selectedInfrastructure ? getString('cd.infrastructure.edit') : getString('cd.infrastructure.createNew')
+          }
+          width={1128}
+          height={840}
+          className={css.dialogStyles}
+        >
+          <InfrastructureModal
+            hideModal={onClose}
             refetch={refetch}
-            setSelectedInfrastructure={setSelectedInfrastructure}
+            environmentIdentifier={environmentIdentifier}
+            selectedInfrastructure={selectedInfrastructure}
+            getTemplate={getTemplate}
           />
-        </>
-      )}
-    </Container>
+        </ModalDialog>
+      </Container>
+    </>
   )
 }

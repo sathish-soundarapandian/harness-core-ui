@@ -48,6 +48,7 @@ export type ArtifactType =
   | 'Jenkins'
   | 'AmazonS3'
   | 'GoogleArtifactRegistry'
+  | 'GithubPackageRegistry'
 export interface OrganizationCreationType {
   type: ArtifactType
 }

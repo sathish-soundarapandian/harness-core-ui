@@ -808,6 +808,7 @@ template:
     errorWhileDeletingTemplate: Error occurred deleting Template
   createNewModal:
     versionPlaceholder: 'Ex: Version1'
+  templateIcon: Template Icon
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -1095,3 +1096,4 @@ freezeListActiveBannerText: There are {{count}} ongoing deployment freeze window
 freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
+platformServiceVersions: Platform Service Versions

@@ -21,7 +21,6 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { parse } from 'yaml'
 import { defaultTo, get, isEmpty, noop, set } from 'lodash-es'
 import { produce } from 'immer'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -42,7 +41,7 @@ import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useQueryParams } from '@common/hooks'
-import { stringify } from '@common/utils/YamlHelperMethods'
+import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -77,6 +76,7 @@ function TemplateStepWidget(
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
   const [formValues, setFormValues] = React.useState<TemplateStepNode>(initialValues)
   const [allValues, setAllValues] = React.useState<StepElementConfig>()
+  const [templateInputs, setTemplateInputs] = React.useState<StepElementConfig>()
 
   const {
     data: stepTemplateResponse,
@@ -93,7 +93,9 @@ function TemplateStepWidget(
   })
 
   React.useEffect(() => {
-    setAllValues(parse(defaultTo(stepTemplateResponse?.data?.yaml, ''))?.template.spec)
+    setAllValues(
+      parse<{ template: { spec: StepElementConfig } }>(defaultTo(stepTemplateResponse?.data?.yaml, ''))?.template.spec
+    )
   }, [stepTemplateResponse?.data?.yaml])
 
   const {
@@ -110,27 +112,28 @@ function TemplateStepWidget(
     }
   })
 
-  const templateInputs = React.useMemo(
-    () => parse(defaultTo(stepTemplateInputSetYaml?.data, '')),
-    [stepTemplateInputSetYaml?.data]
-  )
-
   const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
     const updateValues = produce(initialValues, draft => {
-      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
+      set(
+        draft,
+        'template.templateInputs',
+        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
+      )
     })
     setFormValues(updateValues)
     onUpdate?.(updateValues)
   }
 
-  React.useEffect(() => {
-    if (!isEmpty(templateInputs)) {
+  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StepElementConfig) => {
+    if (isEmpty(newTemplateInputs)) {
+      updateFormValues(newTemplateInputs)
+    } else {
       setLoadingMergedTemplateInputs(true)
       try {
         getsMergedTemplateInputYamlPromise({
           body: {
             oldTemplateInputs: stringify(defaultTo(initialValues.template?.templateInputs, '')),
-            newTemplateInputs: stringify(templateInputs)
+            newTemplateInputs: stringify(newTemplateInputs)
           },
           queryParams: {
             accountIdentifier: queryParams.accountId
@@ -138,23 +141,26 @@ function TemplateStepWidget(
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
             setLoadingMergedTemplateInputs(false)
-            updateFormValues(parse(defaultTo(response.data?.mergedTemplateInputs, '')))
+            updateFormValues(parse<StepElementConfig>(defaultTo(response.data?.mergedTemplateInputs, '')))
           } else {
             throw response
           }
         })
       } catch (error) {
         setLoadingMergedTemplateInputs(false)
-        updateFormValues(templateInputs)
+        updateFormValues(newTemplateInputs)
       }
-    } else if (!stepTemplateInputSetLoading) {
-      updateFormValues(undefined)
     }
-  }, [templateInputs])
+  }
 
   React.useEffect(() => {
     if (stepTemplateInputSetLoading) {
+      setTemplateInputs(undefined)
       setAllValues(undefined)
+    } else {
+      const newTemplateInputs = parse<StepElementConfig>(defaultTo(stepTemplateInputSetYaml?.data, ''))
+      setTemplateInputs(newTemplateInputs)
+      retainInputsAndUpdateFormValues(newTemplateInputs)
     }
   }, [stepTemplateInputSetLoading])
 

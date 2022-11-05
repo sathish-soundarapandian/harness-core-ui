@@ -15,6 +15,7 @@ import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDi
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
@@ -34,6 +35,7 @@ interface PipelineStageNodeProps {
   id: string
   isSelected: boolean
   icon: string
+  iconUrl?: string
   identifier: string
   name: JSX.Element | string
   defaultSelected: any
@@ -194,12 +196,16 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         {props?.data?.isInComplete && (
           <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {props.icon && (
-          <Icon
-            size={28}
-            name={props.icon as IconName}
-            {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-          />
+        {props.iconUrl ? (
+          <ImagePreview src={props.iconUrl} size={28} fallbackIcon={props.icon as IconName} />
+        ) : (
+          props.icon && (
+            <Icon
+              size={28}
+              name={props.icon as IconName}
+              {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+            />
+          )
         )}
         {secondaryIcon && (
           <Icon

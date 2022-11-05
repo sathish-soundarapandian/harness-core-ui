@@ -8,19 +8,8 @@
 import React, { useState, useEffect } from 'react'
 import type QueryString from 'qs'
 import { useParams } from 'react-router-dom'
-import type { Renderer, CellProps } from 'react-table'
-import {
-  Text,
-  TableV2,
-  Color,
-  Layout,
-  Page,
-  Checkbox,
-  Button,
-  Container,
-  ButtonVariation,
-  ExpandingSearchInput
-} from '@harness/uicore'
+import type { Row } from 'react-table'
+import { Text, TableV2, Page, Button, Container, ButtonVariation, ExpandingSearchInput } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   SLOTargetDTO,
@@ -30,7 +19,15 @@ import {
   SLOHealthListView
 } from 'services/cv'
 import { useStrings } from 'framework/strings'
-import css from './SLOList.module.scss'
+import {
+  getUpdatedSLOObjectives,
+  RenderCheckBoxes,
+  RenderMonitoredService,
+  RenderSLOName,
+  RenderTags,
+  RenderTarget,
+  RenderUserJourney
+} from './SLOList.utils'
 
 interface SLODashboardWidgetsParams {
   queryParams: GetSLOHealthListViewQueryParams
@@ -77,126 +74,9 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
   }, [dashboardWidgetsResponse?.data?.content])
 
   const addSLos = (): void => {
-    const selectedSlosLength = selectedSlos.length
-    const weight = Number(100 / selectedSlosLength).toFixed(1)
-    const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
-    const updatedSLOObjective = selectedSlos.map((item, index) => {
-      return {
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        serviceLevelObjectiveRef: item?.sloIdentifier,
-        weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
-      }
-    })
+    const updatedSLOObjective = getUpdatedSLOObjectives(selectedSlos, accountId, orgIdentifier, projectIdentifier)
     onAddSLO('serviceLevelObjectivesDetails', updatedSLOObjective)
     hideDrawer()
-  }
-
-  const RenderSLOName: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
-    const slo = row?.original
-    const { name = '', description = '' } = slo || {}
-
-    return (
-      <>
-        <Text color={Color.PRIMARY_7} title={name} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-          {name}
-        </Text>
-        <Text title={name} font={{ align: 'left', size: 'small' }}>
-          {description}
-        </Text>
-      </>
-    )
-  }
-
-  const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
-    const slo = row?.original
-    const { serviceName = '', environmentIdentifier = '' } = slo || {}
-
-    return (
-      <Layout.Vertical padding={{ left: 'small' }}>
-        <>
-          <Text
-            color={Color.PRIMARY_7}
-            className={css.titleInSloTable}
-            title={serviceName}
-            font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-          >
-            {serviceName}
-          </Text>
-        </>
-        <>
-          <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
-            {environmentIdentifier}
-          </Text>
-        </>
-      </Layout.Vertical>
-    )
-  }
-
-  const RenderUserJourney: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
-    const slo = row?.original
-    const { userJourneyName = '' } = slo || {}
-    return (
-      <Text
-        className={css.titleInSloTable}
-        title={userJourneyName}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-      >
-        {userJourneyName}
-      </Text>
-    )
-  }
-
-  const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
-    const slo = row?.original
-    const { tags = {} } = slo || {}
-    const tagsString = Object.keys(tags).join(' ')
-    return (
-      <Text
-        className={css.titleInSloTable}
-        title={tagsString}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-      >
-        {tagsString}
-      </Text>
-    )
-  }
-
-  const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
-    const slo = row.original
-    return (
-      <Text
-        className={css.titleInSloTable}
-        title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
-        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-      >
-        {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
-      </Text>
-    )
-  }
-
-  const onSelectCheckBox = (checked: boolean, slo: SLOHealthListView): void => {
-    const clonedSelectedSlos = [...selectedSlos]
-    if (checked) {
-      clonedSelectedSlos.push(slo)
-      setSelectedSlos(clonedSelectedSlos)
-    } else {
-      setSelectedSlos(clonedSelectedSlos.filter(item => item.name !== slo.name))
-    }
-  }
-
-  const RenderCheckBoxes: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
-    const sloData = row.original
-    const isChecked = Boolean([...selectedSlos].find(item => item.name === sloData.name))
-    return (
-      <Checkbox
-        checked={isChecked}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-          onSelectCheckBox(event.currentTarget.checked, sloData)
-        }}
-      />
-    )
   }
 
   return (
@@ -218,7 +98,9 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
                 Header: '',
                 id: 'selectSlo',
                 width: '50px',
-                Cell: RenderCheckBoxes
+                Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
+                  return <RenderCheckBoxes row={row} selectedSlos={selectedSlos} setSelectedSlos={setSelectedSlos} />
+                }
               },
               {
                 Header: getString('cv.slos.sloName').toUpperCase(),

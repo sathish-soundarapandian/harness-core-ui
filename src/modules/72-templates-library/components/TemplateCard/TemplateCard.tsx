@@ -24,6 +24,7 @@ import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/Tem
 import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { TemplateColor } from './TemplateColor/TemplateColor'
 import css from './TemplateCard.module.scss'
 
@@ -60,7 +61,8 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
     : (template as TemplateSummaryResponse)?.gitDetails?.branch ||
       (template as NGTemplateInfoConfigWithGitDetails)?.branch
 
-  const templateIcon = getIconForTemplate(getString, template)
+  const templateIconName = getIconForTemplate(getString, template)
+  const templateIconUrl = template.icon
 
   const gitSyncRepoName = (!loadingRepos && getRepoDetailsByIndentifier(repoIdentifier, gitSyncRepos)?.name) || ''
   const repoLabel = isTemplateRemote ? repoName : gitSyncRepoName
@@ -85,7 +87,16 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
         )}
         <Container margin={{ right: 'small' }}>
           <Layout.Horizontal spacing={'small'} margin={{ bottom: 'small' }} flex>
-            {!!templateIcon && <Icon name={templateIcon} size={24} />}
+            {templateIconUrl ? (
+              <ImagePreview
+                src={templateIconUrl}
+                size={24}
+                alt={getString('common.template.templateIcon')}
+                fallbackIcon={templateIconName}
+              />
+            ) : (
+              templateIconName && <Icon size={24} name={templateIconName} />
+            )}
             {(template as TemplateSummaryResponse).entityValidityDetails?.valid === false && (
               <Badge
                 text={'common.invalid'}

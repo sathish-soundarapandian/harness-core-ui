@@ -37,7 +37,7 @@ exports[`GoogleArtifactRegistrySource tests clicking on Region Name field should
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 500px;"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -253,6 +253,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-input-group MultiTypeInput--input"
@@ -321,7 +322,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 500px;"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -422,6 +423,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-input-group MultiTypeInput--input"
@@ -490,6 +492,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-input-group MultiTypeInput--input"
@@ -558,6 +561,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-input-group MultiTypeInput--input"
@@ -741,6 +745,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-input-group MultiTypeInput--input"
@@ -809,7 +814,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 500px;"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -910,6 +915,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-input-group MultiTypeInput--input"
@@ -978,6 +984,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-input-group MultiTypeInput--input"
@@ -1046,6 +1053,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                style="width: 391px;"
               >
                 <div
                   class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"

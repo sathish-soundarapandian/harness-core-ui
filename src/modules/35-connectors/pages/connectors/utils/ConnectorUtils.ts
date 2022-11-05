@@ -509,7 +509,8 @@ export const setupGitFormData = async (connectorInfo: ConnectorInfoDTO, accountI
           }
         : undefined,
 
-    password: await setSecretField(connectorInfo?.spec?.spec?.passwordRef, scopeQueryParams)
+    password: await setSecretField(connectorInfo?.spec?.spec?.passwordRef, scopeQueryParams),
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 
   return formData
@@ -1584,6 +1585,7 @@ export const buildGitPayload = (formData: FormData) => {
     type: Connectors.GIT,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       connectionType: formData.urlType,
       url: formData.url,
       type: formData.connectionType,

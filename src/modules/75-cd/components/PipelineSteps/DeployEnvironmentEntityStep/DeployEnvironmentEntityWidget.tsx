@@ -28,6 +28,9 @@ import {
 
 import { StringKeys, useStrings } from 'framework/strings'
 
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 
@@ -65,6 +68,7 @@ export default function DeployEnvironmentEntityWidget({
 }: DeployEnvironmentEntityWidgetProps): JSX.Element {
   const { getString } = useStrings()
   const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
+  const isEnvGroupFFEnabled = useFeatureFlag(FeatureFlag.ENV_GROUP)
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
 
@@ -270,7 +274,11 @@ export default function DeployEnvironmentEntityWidget({
           return (
             <FormikForm>
               {/* Gitops stage css to be removed once BE supports multi environments for gitops */}
-              <div className={cx(css.environmentEntityWidget, { [css.gitOpsStage]: gitOpsEnabled })}>
+              <div
+                className={cx(css.environmentEntityWidget, {
+                  [css.centerRadio]: gitOpsEnabled || !isEnvGroupFFEnabled
+                })}
+              >
                 <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
                   <Layout.Vertical flex={{ alignItems: 'center' }}>
                     <Toggle
@@ -279,7 +287,7 @@ export default function DeployEnvironmentEntityWidget({
                       label={toggleLabel}
                     />
                     {/* !gitOpsEnabled check is to be removed once BE supports multi environments for gitops */}
-                    {(isMultiEnvironment || isEnvironmentGroup) && !gitOpsEnabled && (
+                    {(isMultiEnvironment || isEnvironmentGroup) && isEnvGroupFFEnabled && !gitOpsEnabled && (
                       <RadioGroup
                         onChange={handleEnvironmentGroupToggle}
                         options={[

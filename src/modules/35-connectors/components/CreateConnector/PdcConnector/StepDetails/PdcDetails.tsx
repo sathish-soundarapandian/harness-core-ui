@@ -20,13 +20,14 @@ import {
   Radio
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
+import * as Yup from 'yup'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import UploadJSON from '../components/UploadJSON'
 
 import css from '../CreatePdcConnector.module.scss'
 
-enum SelectionType {
+export enum SelectionType {
   MANUAL = 'MANUAL',
   JSON = 'JSON'
 }
@@ -51,7 +52,6 @@ interface StepConfigureProps {
 const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsProps>> = props => {
   const { prevStepData, nextStep } = props
   const { getString } = useStrings()
-
   const [hostsJSON, setHostsJSON] = useState(prevStepData?.spec?.hosts || ([] as uploadHostItem[]))
   const [selectionType, setSelectionType] = useState<SelectionType>(
     get(prevStepData, 'spec.hosts', []).length > 0 ? SelectionType.JSON : SelectionType.MANUAL
@@ -59,20 +59,26 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
 
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     const data = { ...formData }
-    if (hostsJSON?.length > 0) {
-      data.hosts = hostsJSON
+
+    if (hostsJSON?.length <= 0) {
+      return
     }
+
+    data.hosts = hostsJSON
+
     nextStep?.({ ...prevStepData, ...data } as StepConfigureProps)
   }
 
   const initialFormValues = useMemo(() => {
     const hosts = prevStepData?.hosts || prevStepData?.spec?.hosts
+
     return {
       hosts:
         typeof hosts === 'string'
           ? hosts
           : (hosts?.map?.((host: any) => host.hostname).join('\n') as string | string[]),
-      hostsJson: JSON.stringify(hosts, undefined, 4)
+      hostsJson: JSON.stringify(hosts, undefined, 4),
+      selectionType: SelectionType.JSON
     }
   }, [])
 
@@ -86,7 +92,30 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
       <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'pdcHostDetails' }}>
         {getString('details')}
       </Text>
-      <Formik initialValues={initialFormValues} formName="pdcDetailsForm" onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialFormValues}
+        validationSchema={Yup.object().shape({
+          hosts: Yup.string().when('selectionType', {
+            is: type => type === SelectionType.MANUAL,
+            then: Yup.string().required(getString('connectors.pdc.validateHosts'))
+          }),
+          hostsJson: Yup.array().when('selectionType', {
+            is: type => type === SelectionType.JSON,
+            then: Yup.array()
+              .of(
+                Yup.object().shape({
+                  hostname: Yup.string(),
+                  hostAttributes: Yup.object().nullable()
+                })
+              )
+              .ensure()
+              .compact(host => !host?.hostname)
+              .required(getString('connectors.pdc.validateHostsJson'))
+          })
+        })}
+        formName="pdcDetailsForm"
+        onSubmit={handleSubmit}
+      >
         {formikProps => (
           <>
             <Container className={css.selectionWrapper}>
@@ -98,6 +127,7 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
                   value={SelectionType.MANUAL}
                   checked={selectionType === SelectionType.MANUAL}
                   onChange={e => {
+                    formikProps.setFieldValue('selectionType', e.currentTarget.value)
                     onSelectionTypeChange(e.currentTarget.value as SelectionType)
                   }}
                 />
@@ -107,6 +137,7 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
                   value={SelectionType.JSON}
                   checked={selectionType === SelectionType.JSON}
                   onChange={e => {
+                    formikProps.setFieldValue('selectionType', e.currentTarget.value)
                     onSelectionTypeChange(e.currentTarget.value as SelectionType)
                   }}
                 />
@@ -129,8 +160,8 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
               )}
               {selectionType === SelectionType.JSON && (
                 <UploadJSON
-                  setJsonValue={json => {
-                    setHostsJSON(json)
+                  setJsonValue={hosts => {
+                    setHostsJSON(hosts)
                   }}
                   formikProps={formikProps}
                   previousHosts={prevStepData?.spec?.hosts}

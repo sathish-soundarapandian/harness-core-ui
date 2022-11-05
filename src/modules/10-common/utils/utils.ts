@@ -164,3 +164,28 @@ export const getGaClientID = (): string => {
     return ''
   }
 }
+
+export const isWindowsOS = (): boolean => navigator?.appVersion?.indexOf('Win') != -1
+
+export const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onloadend = () => resolve((reader.result || '').toString())
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+
+export const getImageDimensions = (url: string): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement('img')
+
+    img.onload = () => {
+      const width = img.naturalWidth
+      const height = img.naturalHeight
+
+      resolve({ width, height })
+    }
+    img.onerror = reject
+    img.src = url
+  })
+}

@@ -32,18 +32,7 @@ jest.mock('services/cd-ng', () => ({
     .mockImplementation(() => ({ loading: false, data: getGlobalFreezeWithBannerDetailsMock, refetch: jest.fn() })),
   useGlobalFreeze: jest.fn().mockImplementation(() => ({ loading: false, data: null, refetch: jest.fn() })),
   useUpdateFreezeStatus: jest.fn().mockReturnValue({ data: null, loading: false }),
-  useDeleteManyFreezes: jest.fn().mockReturnValue({ data: null, loading: false }),
-  useGetOrganizationList: jest.fn().mockReturnValue({ data: null, loading: false }),
-  useGetProjectAggregateDTOList: jest.fn().mockReturnValue({ data: null, loading: false }),
-  useGetServiceDefinitionTypes: jest.fn(() => ({ loading: false, data: null, refetch: jest.fn() })),
-  useGetServiceListForProject: jest.fn(() => ({ loading: false, data: null, refetch: jest.fn() })),
-  useGetEnvironmentListForProject: jest.fn(() => ({ loading: false, data: null, refetch: jest.fn() })),
-  getListOfBranchesByGitConfigPromise: jest.fn().mockReturnValue({ loading: false, data: [], refetch: jest.fn() }),
-  useGetListOfBranchesWithStatus: jest.fn().mockReturnValue({ data: null, loading: false }),
-  useListGitSync: jest.fn().mockReturnValue({ data: null, loading: false }),
-  useGetSourceCodeManagers: jest.fn().mockReturnValue({ data: null, refetch: jest.fn() }),
-  useCreateFreeze: jest.fn().mockImplementation(() => ({})),
-  useUpdateFreeze: jest.fn().mockImplementation(() => ({}))
+  useDeleteManyFreezes: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 jest.useFakeTimers()

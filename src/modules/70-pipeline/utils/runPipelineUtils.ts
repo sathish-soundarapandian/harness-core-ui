@@ -301,49 +301,38 @@ export const getMergedVariables = (props: GetMergedVariablesProps): AllNGVariabl
     const variable = variablesMap[name]
     const type = defaultTo(variable?.type, 'String')
 
-    // if a variable with same name exists in input set variables
-    if (name in inputSetVariablesMap) {
-      // copy the variable data
-      const varFromInpuSet: AllNGVariables = { ...inputSetVariablesMap[name] }
-      const varFromAllVars: AllNGVariables = allVariablesMap[name]
-
-      // remove the variable from input set variables
-      delete inputSetVariablesMap[name]
-
-      // use new value if the type of varibale is same else use the current value
-      let value = varFromInpuSet.type === type ? varFromInpuSet.value : variable.value
-
-      // fallback to default value, if the flag is true, the value is empty and
-      // the variable has a default value defined in pipeline
-      if (shouldUseDefaultValues && !value && typeof varFromAllVars?.default !== 'undefined') {
-        value = varFromAllVars.default
-      }
-
-      value = defaultTo(value, '')
-
-      return {
-        name,
-        type,
-        value
-      } as AllNGVariables
-    }
-
-    // return the original variable
     if (variable) {
+      if (name in inputSetVariablesMap) {
+        // copy the variable data
+        const varFromInpuSet: AllNGVariables = { ...inputSetVariablesMap[name] }
+        const varFromAllVars: AllNGVariables = allVariablesMap[name]
+
+        // remove the variable from input set variables
+        delete inputSetVariablesMap[name]
+
+        // use new value if the type of varibale is same else use the current value
+        let value = varFromInpuSet.type === type ? varFromInpuSet.value : variable.value
+
+        // fallback to default value, if the flag is true, the value is empty and
+        // the variable has a default value defined in pipeline
+        if (shouldUseDefaultValues && !value && typeof varFromAllVars?.default !== 'undefined') {
+          value = varFromAllVars.default
+        }
+
+        value = defaultTo(value, '')
+
+        return {
+          name,
+          type,
+          value
+        } as AllNGVariables
+      }
       return variable
     }
-
-    return {
-      name,
-      type: 'String',
-      value: ''
-    } as AllNGVariables
+    return inputSetVariablesMap[name]
   })
 
-  const remainingVariables = Object.values(inputSetVariablesMap)
-
-  // append the remaining input set variables to existing variables
-  return finalVariables.concat(...remainingVariables)
+  return finalVariables
 }
 
 export const getRbacButtonModules = (module?: string): string[] => {

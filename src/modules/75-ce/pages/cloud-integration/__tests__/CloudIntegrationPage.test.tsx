@@ -268,3 +268,26 @@ describe('Test Cases for Cloud Accounts Tab', () => {
     await waitFor(() => expect(getByText(container, 'ce.cloudIntegration.noSearchResults')).toBeDefined())
   })
 })
+
+describe('Test Cases for K8s Quick Create', () => {
+  test('Should be able to open Quick Create Dialog', async () => {
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <Provider value={responseState as any}>
+          <CloudIntegrationPage />
+        </Provider>
+      </TestWrapper>
+    )
+
+    fireEvent.click(getByText(container, 'ce.cloudIntegration.newConnectorBtn'))
+
+    const newConnectorPopover = findPopoverContainer()!
+    fireEvent.click(newConnectorPopover.querySelectorAll('div[class*="bp3-card"]')[0]!)
+
+    await waitFor(() => expect(getByText(newConnectorPopover, 'ce.k8sQuickCreate.quickCreate')).toBeDefined())
+    fireEvent.click(newConnectorPopover.querySelectorAll('div[class*="bp3-card"]')[0]!)
+
+    const quickCreateDialog = findDialogContainer()!
+    await waitFor(() => expect(getAllByText(quickCreateDialog, 'overview')).toBeDefined())
+  })
+})

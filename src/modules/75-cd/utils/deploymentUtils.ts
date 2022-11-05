@@ -89,11 +89,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
   }
   if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.customDeployment',
-      icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
-      value: ServiceDeploymentType.CustomDeployment
-    })
-    baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.azureWebApp',
       icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
       value: ServiceDeploymentType.AzureWebApp

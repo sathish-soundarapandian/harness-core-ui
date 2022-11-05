@@ -202,6 +202,42 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="StyledProps--font StyledProps--main container StyledProps--margin-xlarge StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-white"
+    >
+      <div
+        class="Accordion--accordion"
+      >
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="serviceVersions-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="serviceVersions-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              common.platformServiceVersions
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

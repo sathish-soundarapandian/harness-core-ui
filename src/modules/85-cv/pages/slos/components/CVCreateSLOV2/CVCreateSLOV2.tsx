@@ -105,14 +105,6 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
         canOutsideClickClose={true}
         enforceFocus={false}
         className={css.warningModal}
-        style={{
-          width: 600,
-          borderLeft: 0,
-          paddingBottom: 0,
-          paddingTop: 'large',
-          position: 'relative',
-          overflow: 'hidden'
-        }}
         onClose={closeModal}
       >
         <Layout.Vertical>

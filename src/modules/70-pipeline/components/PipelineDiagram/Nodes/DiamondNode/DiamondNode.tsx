@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
@@ -139,14 +140,18 @@ export function DiamondNodeWidget(props: any): JSX.Element {
         {props?.data?.isInComplete && (
           <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {props.icon && (
-          <Icon
-            size={28}
-            className={css.primaryIcon}
-            inverse={isSelected}
-            name={props.icon}
-            color={isSelected ? Color.WHITE : Color.PRIMARY_7}
-          />
+        {props.iconUrl ? (
+          <ImagePreview src={props.iconUrl} size={28} className={css.iconImage} fallbackIcon={props.icon} />
+        ) : (
+          props.icon && (
+            <Icon
+              size={28}
+              className={css.primaryIcon}
+              inverse={isSelected}
+              name={props.icon}
+              color={isSelected ? Color.WHITE : Color.PRIMARY_7}
+            />
+          )
         )}
         {props?.tertiaryIcon && (
           <Icon

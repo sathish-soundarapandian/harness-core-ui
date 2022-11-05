@@ -251,7 +251,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
       id: TAB_ID_MAP.ERROR_TRACKING,
       title: (
         <NavLink
-          to={routes.toExecutionErrorTrackingView(params) + '/events' + location.search}
+          to={routes.toExecutionErrorTrackingView(params) + '/executionViewEvents' + location.search}
           className={css.tabLink}
           activeClassName={css.activeLink}
         >

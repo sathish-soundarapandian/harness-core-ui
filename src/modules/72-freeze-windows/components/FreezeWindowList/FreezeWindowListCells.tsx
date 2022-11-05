@@ -12,12 +12,11 @@ import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Chec
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
-import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
 import type { FreezeSummaryResponse, FreezeWindow, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
-import { FreezeStatus } from '@freeze-windows/utils/freezeWindowUtils'
+import { FreezeStatus, getReadableDateFromDateString } from '@freeze-windows/utils/freezeWindowUtils'
 import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListColumnActions {
@@ -111,14 +110,10 @@ export const ScheduleCell: CellType = ({ row }) => {
   return (
     <Layout.Vertical>
       <Layout.Horizontal margin={{ bottom: 'small' }}>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-          {moment(startTime).format('lll')}
-        </Text>
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
-          &nbsp;{duration ? 'for' : 'to'}
-        </Text>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-          &nbsp;{duration || moment(endTime).format('lll')}
+          <b>{getReadableDateFromDateString(startTime)}</b>
+          {duration ? ' for ' : ' to '}
+          <b>{duration || getReadableDateFromDateString(endTime)}</b>
         </Text>
       </Layout.Horizontal>
 
@@ -130,7 +125,8 @@ export const ScheduleCell: CellType = ({ row }) => {
         {recurrence && (
           <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
             &nbsp;| {recurrence?.type}
-            {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+            {freezeWindow?.recurrence?.spec?.until &&
+              ` until ${getReadableDateFromDateString(freezeWindow?.recurrence?.spec?.until)}`}
           </Text>
         )}
       </Layout.Horizontal>

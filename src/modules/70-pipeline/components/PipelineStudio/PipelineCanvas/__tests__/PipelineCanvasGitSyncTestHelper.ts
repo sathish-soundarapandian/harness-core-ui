@@ -239,6 +239,7 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelection: (_selectedState: PipelineSelectionState) => undefined,
   getStagePathFromPipeline: () => '',
   setTemplateTypes: () => undefined,
+  setTemplateIcons: () => undefined,
   setTemplateServiceData: () => undefined,
   setIntermittentLoading: () => undefined
 }

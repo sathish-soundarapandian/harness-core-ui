@@ -132,7 +132,7 @@ const EnableCostVisibilityStep: React.FC<Props & StepProps<ConnectorInfoDTO>> = 
       const res = await createConnector({
         connector: {
           ...connector,
-          name: `${connector.name}-Cost-access`,
+          name: connector.name,
           identifier: `${connector.identifier}Costaccess`,
           spec: {
             ...connector.spec,

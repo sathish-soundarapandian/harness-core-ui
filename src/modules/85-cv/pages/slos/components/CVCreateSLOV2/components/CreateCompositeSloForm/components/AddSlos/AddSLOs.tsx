@@ -9,17 +9,32 @@ import React, { useState, useEffect } from 'react'
 import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import type { Column, Renderer, CellProps } from 'react-table'
-import { Button, ButtonVariation, Text, TextInput, TableV2, Intent, Page } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Color,
+  Icon,
+  Text,
+  TextInput,
+  TableV2,
+  Intent,
+  Page,
+  useConfirmationDialog
+} from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
-import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ServiceLevelObjectiveDetailsDTO } from 'services/cv'
 import { getDistribution } from './AddSLOs.utils'
 import { SLOList } from './components/SLOList'
+import { resetSLOWeightage } from './components/SLOList.utils'
 
 export const AddSLOs = (): JSX.Element => {
   const formikProps = useFormikContext<SLOV2Form>()
   const { getString } = useStrings()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { showDrawer, hideDrawer } = useDrawer({
     createHeader: () => <Page.Header title={getString('cv.CompositeSLO.AddSLO')} />,
     createDrawerContent: () => {
@@ -79,24 +94,82 @@ export const AddSLOs = (): JSX.Element => {
     return <Text>{row.original.serviceLevelObjectiveRef}</Text>
   }
 
+  const RenderDelete: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
+    const { serviceLevelObjectiveRef } = row.original
+    const { openDialog } = useConfirmationDialog({
+      titleText: getString('common.delete', { name: serviceLevelObjectiveRef }),
+      contentText: (
+        <Text color={Color.GREY_800}>{getString('cv.slos.confirmDeleteSLO', { name: serviceLevelObjectiveRef })}</Text>
+      ),
+      confirmButtonText: getString('delete'),
+      cancelButtonText: getString('cancel'),
+      intent: Intent.DANGER,
+      buttonIntent: Intent.DANGER,
+      onCloseDialog: (isConfirmed: boolean) => {
+        if (isConfirmed) {
+          const filterServiceLevelObjective = formikProps?.values?.serviceLevelObjectivesDetails?.filter(
+            item => item.serviceLevelObjectiveRef !== serviceLevelObjectiveRef
+          )
+          formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, filterServiceLevelObjective)
+        }
+      }
+    })
+
+    return (
+      <Icon
+        style={{ cursor: 'pointer' }}
+        padding={'small'}
+        name="main-trash"
+        onClick={e => {
+          e.stopPropagation()
+          openDialog()
+        }}
+      />
+    )
+  }
+
   const columns: Column<ServiceLevelObjectiveDetailsDTO>[] = [
     {
       accessor: 'serviceLevelObjectiveRef',
       Header: getString('name'),
-      Cell: RenderName,
-      disableSortBy: true
+      Cell: RenderName
     },
     {
       accessor: 'weightagePercentage',
-      Header: getString('cv.CompositeSLO.Weightage'),
-      Cell: RenderWeightInput,
+      Header: (
+        <>
+          <Text>{getString('cv.CompositeSLO.Weightage')}</Text>
+          <Text
+            color={Color.PRIMARY_7}
+            onClick={e => {
+              e.stopPropagation()
+              const updatedSLOList = resetSLOWeightage(
+                formikProps?.values?.serviceLevelObjectivesDetails as ServiceLevelObjectiveDetailsDTO[],
+                accountId,
+                orgIdentifier,
+                projectIdentifier
+              )
+              formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLOList)
+            }}
+          >
+            {getString('reset')}
+          </Text>
+        </>
+      ),
+      Cell: RenderWeightInput
+    },
+    {
+      id: 'deletSLO',
+      Cell: RenderDelete,
       disableSortBy: true
     }
   ]
 
+  const showSLOTableAndMessage = Boolean(serviceLevelObjectivesDetails.length)
+
   return (
     <>
-      {Boolean(serviceLevelObjectivesDetails.length) && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
+      {showSLOTableAndMessage && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
       <Button
         data-testid={'addSlosButton'}
         variation={ButtonVariation.SECONDARY}
@@ -105,9 +178,7 @@ export const AddSLOs = (): JSX.Element => {
         onClick={showDrawer}
         margin={{ bottom: 'large', top: 'large' }}
       />
-      {Boolean(serviceLevelObjectivesDetails.length) && (
-        <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
-      )}
+      {showSLOTableAndMessage && <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />}
     </>
   )
 }

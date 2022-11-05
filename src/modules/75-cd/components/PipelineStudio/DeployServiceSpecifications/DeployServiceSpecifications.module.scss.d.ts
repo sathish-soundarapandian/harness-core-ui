@@ -17,12 +17,15 @@ declare const styles: {
   readonly comingSoonLayout: string
   readonly currentGenSupported: string
   readonly cursorPointer: string
+  readonly doubleChevron: string
   readonly gitOpsCheck: string
   readonly learnMore: string
   readonly left: string
   readonly newText: string
   readonly paddingNone: string
+  readonly recentDeploymentTemplates: string
   readonly templateBar: string
+  readonly thumbnailContainer: string
   readonly tooltipContainer: string
   readonly tooltipIcon: string
 }

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import YAML from 'yaml'
 import {
   Accordion,
@@ -367,6 +367,13 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     }
   }
 
+  const customDeploymentStepKey = useMemo(() => {
+    const { templateRef, versionLabel } = initialInfrastructureDefinitionValues?.customDeploymentRef ?? {}
+
+    if (!templateRef || !versionLabel) return undefined
+    return `${templateRef}-${versionLabel}`
+  }, [initialInfrastructureDefinitionValues?.customDeploymentRef])
+
   const getClusterConfigurationStep = (type: string): React.ReactElement => {
     if (!stage?.stage) {
       return <div>Undefined deployment type</div>
@@ -651,7 +658,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         return (
           <StepWidget<CustomDeploymentInfrastructureSpec>
             factory={factory}
-            key={stage.stage.identifier}
+            key={customDeploymentStepKey}
             readonly={isReadonly}
             initialValues={initialInfrastructureDefinitionValues as CustomDeploymentInfrastructureSpec}
             type={StepType.CustomDeployment}

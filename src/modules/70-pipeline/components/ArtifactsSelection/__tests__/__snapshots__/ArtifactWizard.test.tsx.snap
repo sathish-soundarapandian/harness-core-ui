@@ -102,7 +102,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          details
+          Step 3-2
         </p>
       </div>
       <div
@@ -117,7 +117,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.selectConnectivityMode
+          details
         </p>
       </div>
       <div
@@ -127,6 +127,21 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
           class="StepWizard--number"
         >
           iv
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          connectors.selectConnectivityMode
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep StepWizard--nestedStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          v
         </span>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -486,7 +501,7 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          details
+          Step 3-2
         </p>
       </div>
       <div
@@ -501,7 +516,7 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.selectConnectivityMode
+          details
         </p>
       </div>
       <div
@@ -511,6 +526,21 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
           class="StepWizard--number"
         >
           iv
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          connectors.selectConnectivityMode
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep StepWizard--nestedStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          v
         </span>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -924,7 +954,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          details
+          Step 3-2
         </p>
       </div>
       <div
@@ -939,7 +969,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
           style="--text-line-clamp: 2; width: 200px;"
         >
-          connectors.selectConnectivityMode
+          details
         </p>
       </div>
       <div
@@ -949,6 +979,21 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="StepWizard--number"
         >
           iv
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          connectors.selectConnectivityMode
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep StepWizard--nestedStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          v
         </span>
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"

@@ -7,9 +7,15 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly allConnectorsState: string
+  readonly backButton: string
   readonly container: string
+  readonly k8SCard: string
+  readonly k8SCardCtn: string
+  readonly k8SCardLabelCtn: string
   readonly newConnectorPopover: string
   readonly popover: string
+  readonly recommended: string
   readonly search: string
   readonly spinner: string
   readonly tabs: string

@@ -106,7 +106,7 @@ export function MatrixNode(props: any): JSX.Element {
   const maxParallelism = props?.data?.maxParallelism
   const { errorMap } = useValidationErrors()
   const {
-    state: { templateTypes },
+    state: { templateTypes, templateIcons },
     getStagePathFromPipeline
   } = usePipelineContext()
 
@@ -141,6 +141,7 @@ export function MatrixNode(props: any): JSX.Element {
         getPipelineGraphData({
           data: props.data?.children,
           templateTypes: templateTypes,
+          templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
           graphDataType: PipelineGraphType.STAGE_GRAPH,
@@ -151,7 +152,7 @@ export function MatrixNode(props: any): JSX.Element {
       setState([])
       setNodeCollapsed(true)
     }
-  }, [treeRectangle, props.data, templateTypes])
+  }, [treeRectangle, props.data, templateTypes, templateIcons])
 
   React.useLayoutEffect(() => {
     if (state?.length) {

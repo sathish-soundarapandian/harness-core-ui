@@ -7,7 +7,6 @@
 
 import { gitSyncEnabledCall, pipelinesRoute, featureFlagsCall } from '../../support/70-pipeline/constants'
 import {
-  deploymentTemplatesListCall,
   useTemplateCall,
   selectedDeploymentTemplateDetailsCall,
   deploymentTemplateInputsCall,
@@ -21,7 +20,8 @@ import {
   useTemplateResponse,
   afterUseTemplateServiceV2Response,
   failureResponse,
-  serviceYamlDataResponse
+  serviceYamlDataResponse,
+  recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
 describe('Pipeline Template creation and assertion', () => {
@@ -58,7 +58,9 @@ describe('Pipeline Template creation and assertion', () => {
     })
   })
   it('Pipeline With Deployment Template', () => {
-    cy.intercept('POST', deploymentTemplatesListCall, { fixture: '/ng/api/deploymentTemplateList' }).as('templateList')
+    cy.intercept('POST', recentDeploymentTemplatesUrl, {
+      fixture: '/ng/api/deploymentTemplate/recentDeploymentTemplates'
+    }).as('recentDeploymentTemplates')
     cy.intercept('POST', selectedDeploymentTemplateDetailsCall, deploymentTemplateDetailsResponse).as('templateDetails')
     cy.intercept('GET', deploymentTemplateInputsCall, deploymentTemplateInputsResponse).as('templateInputs')
     cy.intercept('GET', useTemplateCall, useTemplateResponse).as('useTemplate')
@@ -83,26 +85,26 @@ describe('Pipeline Template creation and assertion', () => {
       cy.get('span[data-icon="cd-main"]').click()
     })
     cy.fillField('name', 'testStage_Cypress')
-    cy.contains('p', 'Deployment Template').click()
-    cy.wait('@templateList')
-    cy.contains('p', 'dep temp test').click()
-    cy.wait(500)
-    cy.contains('p', 'DEPLOYMENT').should('be.visible')
-    cy.contains('p', 'Id: dep_temp_test').should('be.visible')
+    cy.wait('@recentDeploymentTemplates')
+
+    // selecting the recent deployment template
+    cy.get('input[value="dep_temp_test"]').click({ force: true })
+
+    // assertions for elements inside the template select right drawer
+    cy.get('[data-template-id="dep_temp_test"]').should('be.visible')
     cy.contains('p', 'dep temp test').should('be.visible')
     cy.contains('p', 'dep temp test (1)').should('be.visible')
-    cy.get('[data-testid="dep_temp_test"]').should('be.visible')
     cy.contains('p', 'Type').should('be.visible')
     cy.contains('p', 'Tags').should('be.visible')
     cy.contains('p', 'Description').should('be.visible')
     cy.contains('p', 'Version Label').should('be.visible')
-
     cy.contains('p', 'stringRuntime').should('be.visible')
     cy.contains('p', 'secretRuntime').should('be.visible')
     cy.contains('p', 'numberRuntime').should('be.visible')
     cy.contains('p', 'connectorRuntime').should('be.visible')
 
     cy.contains('span', 'Use Template').click()
+
     cy.contains('p', 'Using Template: dep temp test (1)').should('be.visible')
 
     cy.contains('span', 'Set Up Stage').click()

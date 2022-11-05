@@ -388,6 +388,52 @@
       },
       {
         "connector": {
+          "name": "elastic-search-api",
+          "identifier": "elasticSearchApi",
+          "description": "",
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
+          "tags": {},
+          "type": "ElasticSearch",
+          "spec": {
+            "credential": {
+              "type": "ManualConfig",
+              "spec": {
+                "secretKeyRef": "account.elasticSearchApi"
+              }
+            },
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1622562142082,
+        "lastModifiedAt": 1622562142082,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1622573508245,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1622573508245
+        },
+        "activityDetails": {
+          "lastActivityTime": 1622562142089
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
           "name": "prometheus-sale",
           "identifier": "prometheussale",
           "description": null,

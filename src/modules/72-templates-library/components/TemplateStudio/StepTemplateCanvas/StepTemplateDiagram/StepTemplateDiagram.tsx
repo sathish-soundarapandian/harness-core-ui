@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useMemo } from 'react'
 import { Button, Container, Layout, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -29,7 +29,6 @@ import css from './StepTemplateDiagram.module.scss'
 
 export const StepTemplateDiagram = (): JSX.Element => {
   const { getString } = useStrings()
-  const [stepData, setStepData] = React.useState<StepData>()
   const {
     state: { template, gitDetails },
     updateTemplate
@@ -96,12 +95,15 @@ export const StepTemplateDiagram = (): JSX.Element => {
     }
   }, [template.name, gitDetails])
 
-  React.useEffect(() => {
-    const stepType = (template.spec as StepElementConfig)?.type
-    if (stepType) {
-      setStepData({ name: factory.getStepName(stepType) || '', type: stepType })
+  const stepType = (template?.spec as StepElementConfig)?.type
+  const stepData = useMemo(() => {
+    if (!stepType) return
+    return {
+      name: factory.getStepName(stepType) || '',
+      type: stepType,
+      iconUrl: template?.icon
     }
-  }, [(template.spec as StepElementConfig)?.type])
+  }, [stepType, template?.icon])
 
   return (
     <Container

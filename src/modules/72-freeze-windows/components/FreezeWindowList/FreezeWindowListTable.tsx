@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { Column } from 'react-table'
-import { TableV2 } from '@harness/uicore'
+import { Color, TableV2, Text } from '@harness/uicore'
 import type { SortBy } from '@freeze-windows/types'
 import type { FreezeSummaryResponse, PageFreezeSummaryResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -95,7 +95,11 @@ export function FreezeWindowListTable({
         disableSortBy: true
       },
       {
-        Header: 'Status',
+        Header: (
+          <Text tooltipProps={{ dataTooltipId: 'freezeStatusColumnTitle' }} color={Color.GREY_800}>
+            Status
+          </Text>
+        ),
         accessor: 'status',
         width: '16%',
         Cell: StatusCell,

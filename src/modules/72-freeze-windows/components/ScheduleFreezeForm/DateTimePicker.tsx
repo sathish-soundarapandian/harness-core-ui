@@ -63,7 +63,7 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
       {...rest}
     >
       <DateInput
-        value={formValue ? moment(formValue).valueOf().toString() : ''}
+        value={formValue ? moment(formValue, DATE_PARSE_FORMAT).valueOf().toString() : ''}
         onChange={value => {
           formik?.setFieldValue(
             name,

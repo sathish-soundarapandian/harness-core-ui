@@ -1270,6 +1270,7 @@ export interface NGTemplateConfig {
 
 export interface NGTemplateInfoConfig {
   description?: string
+  icon?: string
   identifier: string
   name: string
   orgIdentifier?: string
@@ -2146,6 +2147,7 @@ export interface TemplateResponse {
   description?: string
   entityValidityDetails?: EntityValidityDetails
   gitDetails?: EntityGitDetails
+  icon?: string
   identifier: string
   lastUpdatedAt?: number
   name: string
@@ -2192,6 +2194,7 @@ export interface TemplateSummaryResponse {
   description?: string
   entityValidityDetails?: EntityValidityDetails
   gitDetails?: EntityGitDetails
+  icon?: string
   identifier?: string
   lastUpdatedAt?: number
   name?: string

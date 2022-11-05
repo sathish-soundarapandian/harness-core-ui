@@ -43,7 +43,7 @@ export function FreezeWindowListSubHeader(): ReactElement {
         />
         <DateRangePickerButton
           className={css.dateRange}
-          initialButtonText={getString('common.last7days')}
+          initialButtonText={getString('freezeWindows.freezeWindowsPage.dateRangeLabel')}
           dateRangePickerProps={{ defaultValue: defaultDateRangeValue }}
           onChange={([selectedStartTime, selectedEndTime]) => {
             updateQueryParams({

@@ -7,6 +7,7 @@
 
 import moment from 'moment'
 import type { CurrentOrUpcomingWindow, FreezeDetailedResponse, FreezeSummaryResponse } from 'services/cd-ng'
+export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'
 
 export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Yearly'] as const
 export const DOES_NOT_REPEAT = 'Does not repeat'
@@ -47,3 +48,8 @@ export const getComputedFreezeStatusMap = (content: FreezeSummaryResponse[] = []
     return acc
   }, {} as Record<string, FreezeStatus>)
 }
+
+export const getReadableDateFromDateString = (dateTime?: string): string =>
+  dateTime ? moment(dateTime, DATE_PARSE_FORMAT).format('lll') : 'NA'
+
+export const getMomentFormat = (dateTime?: string) => (dateTime ? moment(dateTime, DATE_PARSE_FORMAT) : moment())

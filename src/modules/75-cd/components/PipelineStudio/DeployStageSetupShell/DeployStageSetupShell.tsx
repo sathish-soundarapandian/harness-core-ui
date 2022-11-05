@@ -80,6 +80,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       gitDetails,
       storeMetadata,
       templateTypes,
+      templateIcons,
       templateServiceData
     },
     contextType,
@@ -492,6 +493,7 @@ export default function DeployStageSetupShell(): JSX.Element {
               originalStage={originalStage}
               ref={executionRef}
               templateTypes={templateTypes}
+              templateIcons={templateIcons}
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               stage={selectedStage!}
               updateStage={stageData => {

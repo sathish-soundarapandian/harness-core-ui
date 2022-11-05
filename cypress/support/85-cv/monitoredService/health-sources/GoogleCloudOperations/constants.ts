@@ -152,8 +152,53 @@ export const sampleDataResponse = {
   ]
 }
 
+export const logIndexAPI =
+  'cv/api/elk/indices?routingId=accountId&projectIdentifier=project1&orgIdentifier=default&accountId=accountId&connectorIdentifier=elasticSearchApi&tracingId=*'
+
+export const logApiData = {
+  status: 'SUCCESS',
+  data: [
+    'filebeat-6.8.8-2022.09.28',
+    'filebeat-6.8.8-2022.10.12',
+    'filebeat-6.8.8-2022.10.14',
+    'integration-test',
+    '.kibana',
+    'integration-test1',
+    'filebeat-6.8.8-2022.08.28',
+    'filebeat-6.8.8-2022.10.06',
+    'filebeat-6.8.8-2022.09.14'
+  ],
+  correlationId: '5fe0d823-a25f-4fa4-9101-3076a6048f97'
+}
+
+export const timeStampApi = '/cv/api/health/time-format?routingId=accountId'
+export const timeStampData = {
+  status: 'SUCCESS',
+  data: [
+    'MMM dd HH:mm:ss',
+    'yy-MM-dd HH:mm:ss',
+    'yy/MM/dd HH:mm:ss',
+    'yyMMdd HH:mm:ss',
+    'yyyyMMdd HH:mm:ss.SSS',
+    'HH:mm:ss',
+    'HH:mm:ss.SSS',
+    'HH:mm:ss,SSS',
+    'dd/MMM HH:mm:ss,SSS',
+    'dd/MMM/yyyy:HH:mm:ss',
+    'dd-MMM-yyyy HH:mm:ss',
+    'dd-MMM-yyyy HH:mm:ss.SSS',
+    'dd MMM yyyy HH:mm:ss',
+    'dd MMM yyyy HH:mm:ss*SSS',
+    'MMdd_HH:mm:ss'
+  ],
+  correlationId: '096e7004-8dc7-4ea3-9ace-a8986ab4eafb'
+}
+
 export const logSampleDataAPI =
   '/cv/api/stackdriver-log/sample-data?routingId=accountId&accountId=accountId&projectIdentifier=project1&orgIdentifier=default&tracingId=*&connectorIdentifier=gcpqatarget'
+
+export const elkSampleDataAPI =
+  '/cv/api/elk/sample-data?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&connectorIdentifier=elasticSearchApi&tracingId=*&index=integration-test'
 
 export const logSampleDataResponse = {
   status: 'SUCCESS',
@@ -1231,6 +1276,26 @@ export const monitoredService = {
                   metricTags: ['test'],
                   serviceInstanceField: null,
                   isManualQuery: true
+                }
+              ]
+            }
+          },
+          {
+            name: 'es1',
+            identifier: 'es1',
+            type: 'ElasticSearch',
+            spec: {
+              connectorRef: 'elastic-search-api',
+              feature: 'ElasticSearch Logs',
+              queries: [
+                {
+                  name: 'ElasticSearch Logs Query',
+                  query: '*',
+                  index: 'integration-test',
+                  serviceInstanceIdentifier: 'logName',
+                  timeStampIdentifier: 'timestamp',
+                  timeStampFormat: 'MMM dd HH:mm:ss',
+                  messageIdentifier: 'cluster_name'
                 }
               ]
             }

@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Container, Layout, TableV2, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, TableV2, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
@@ -22,6 +22,8 @@ import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import GitDetailsColumn from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
 import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { getIconForTemplate } from '../../TemplatesPageUtils'
 import css from './TemplatesListView.module.scss'
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -167,6 +169,28 @@ export const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ r
   )
 }
 
+export const RenderIcon: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+  const { getString } = useStrings()
+  const template = row.original
+  const templateIconName = getIconForTemplate(getString, template)
+  const templateIconUrl = template.icon
+
+  return (
+    <Layout.Horizontal padding={{ right: 'medium' }}>
+      {templateIconUrl ? (
+        <ImagePreview
+          src={templateIconUrl}
+          size={24}
+          alt={getString('common.template.templateIcon')}
+          fallbackIcon={templateIconName}
+        />
+      ) : (
+        templateIconName && <Icon size={24} name={templateIconName} />
+      )}
+    </Layout.Horizontal>
+  )
+}
+
 export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
   const { getString } = useStrings()
   const { data, selectedTemplate, gotoPage, onPreview, onOpenEdit, onOpenSettings, onDelete, onSelect } = props
@@ -182,14 +206,14 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
   const getTemplateNameWidth = React.useCallback(() => {
     if (isGitView) {
       if (hideMenu) {
-        return '35%'
+        return '30%'
       }
-      return '30%'
+      return '25%'
     } else {
       if (hideMenu) {
-        return '45%'
+        return '40%'
       }
-      return '40%'
+      return '35%'
     }
   }, [isGitView, hideMenu])
 
@@ -200,6 +224,12 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         accessor: 'templateEntityType',
         width: isGitView ? '15%' : '20%',
         Cell: RenderColumnType
+      },
+      {
+        accessor: 'icon',
+        width: '5%',
+        Cell: RenderIcon,
+        disableSortBy: true
       },
       {
         Header: 'Template',
@@ -248,7 +278,7 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
   }
 
   if (!isGitView) {
-    columns.splice(3, 1)
+    columns.splice(4, 1)
   }
 
   return (

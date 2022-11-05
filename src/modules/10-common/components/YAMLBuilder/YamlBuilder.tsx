@@ -61,6 +61,8 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { isWindowsOS } from '@common/utils/utils'
+import { carriageReturnRegex } from '@common/utils/StringUtils'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -174,7 +176,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const sanitizedJSONObj = jsonObj ? sanitize(jsonObj, yamlSanityConfig) : null
     if (sanitizedJSONObj && Object.keys(sanitizedJSONObj).length > 0) {
       const yamlEqOfJSON = yamlStringify(sanitizedJSONObj)
-      const sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
+      let sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
+
+      if (isWindowsOS()) {
+        sanitizedYAML = sanitizedYAML.replace(carriageReturnRegex, '\n')
+      }
+
       setCurrentYaml(sanitizedYAML)
       yamlRef.current = sanitizedYAML
       verifyYAML({
@@ -237,7 +244,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   /* #region Handle various interactions with the editor */
 
   const onYamlChange = useCallback(
-    debounce((updatedYaml: string): void => {
+    debounce((editedYaml: string): void => {
+      const updatedYaml = isWindowsOS() ? editedYaml.replace(carriageReturnRegex, '\n') : editedYaml
       setCurrentYaml(updatedYaml)
       yamlRef.current = updatedYaml
       verifyYAML({

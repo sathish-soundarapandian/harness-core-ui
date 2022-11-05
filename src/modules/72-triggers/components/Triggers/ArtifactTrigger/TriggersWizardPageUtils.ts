@@ -27,7 +27,9 @@ import type {
   JenkinsRegistrySpec,
   TriggerEventDataCondition,
   ArtifactTriggerConfig,
-  CustomArtifactSpec
+  CustomArtifactSpec,
+  GithubPackagesSpec,
+  GarSpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -2090,7 +2092,8 @@ export const getTriggerArtifactInitialSpec = (
         artifactPath: '',
         connectorRef,
         eventConditions,
-        jobName: ''
+        jobName: '',
+        version
       } as JenkinsRegistrySpec
     }
     case 'CustomArtifact': {
@@ -2101,6 +2104,27 @@ export const getTriggerArtifactInitialSpec = (
         version,
         versionPath: ''
       } as CustomArtifactSpec
+    }
+    case 'GithubPackageRegistry': {
+      return {
+        packageName: '',
+        connectorRef,
+        eventConditions,
+        packageType: 'container',
+        org: '',
+        version
+      } as GithubPackagesSpec
+    }
+    case 'GoogleArtifactRegistry': {
+      return {
+        pkg: '',
+        connectorRef,
+        eventConditions,
+        project: '',
+        region: '',
+        repositoryName: '',
+        version
+      } as GarSpec
     }
   }
 }

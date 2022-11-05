@@ -95,7 +95,8 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       selectionState: { selectedStageId = '', selectedStepId, selectedSectionId },
       gitDetails,
       storeMetadata,
-      templateTypes
+      templateTypes,
+      templateIcons
     },
     contextType,
     getStageFromPipeline,
@@ -349,6 +350,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                 originalStage={originalStage}
                 ref={executionRef}
                 templateTypes={templateTypes}
+                templateIcons={templateIcons}
                 updateStage={newStageData => {
                   const newData = produce(newStageData, draft => {
                     // cleanup rollbackSteps (note: rollbackSteps does not exist on CI stage at all)
