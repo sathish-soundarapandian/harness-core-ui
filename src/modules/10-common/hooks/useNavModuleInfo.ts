@@ -116,7 +116,8 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'sto-color-filled',
     label: 'common.stoText',
     getHomePageUrl: (accountId: string) => routes.toIac({ accountId }),
-    featureFlagName: FeatureFlag.CDNG_ENABLED // TODO - UPDATE WITH IAC FF
+    featureFlagName: FeatureFlag.CDNG_ENABLED, // TODO - UPDATE WITH IAC FF
+    color: '--sto-border'
   }
 }
 
