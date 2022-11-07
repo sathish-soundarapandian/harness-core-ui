@@ -97,12 +97,13 @@ function PipelineYamlView(): React.ReactElement {
       if (yamlHandler && !isDrawerOpened) {
         Interval = window.setInterval(() => {
           try {
-            const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())?.pipeline
+            const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
             if (
               (!isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
                 entityValidityDetails?.valid === false) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
+              // @ts-ignore
               updatePipeline(pipelineFromYaml).then(() => {
                 if (entityValidityDetails?.valid === false) {
                   updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
