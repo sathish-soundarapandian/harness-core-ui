@@ -7,7 +7,7 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { AllowedTypes, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import { AllowedTypes, Container, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import produce from 'immer'
 import { debounce, defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -178,11 +178,7 @@ export default function DeployServiceEntitySpecifications({
 
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
     return {
-      ...pick(stage?.stage?.spec, ['service', 'services']),
-      ...(scope !== Scope.PROJECT &&
-        isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
-          service: { serviceRef: RUNTIME_INPUT_VALUE }
-        })
+      ...pick(stage?.stage?.spec, ['service', 'services'])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
