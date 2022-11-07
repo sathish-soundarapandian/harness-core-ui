@@ -133,7 +133,7 @@ function ArtifactWizard({
     }
   }
 
-  const connectorDetailsStep = (): JSX.Element => {
+  const connectorAccountDetailsStep = (): JSX.Element => {
     switch (selectedArtifact) {
       case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
         return (
@@ -214,7 +214,7 @@ function ArtifactWizard({
       {newConnectorView && selectedArtifact ? (
         <StepWizard title={getString('connectors.createNewConnector')}>
           <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...newConnectorProps.connector} />
-          {connectorDetailsStep()}
+          {selectedArtifact === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry ? connectorAccountDetailsStep() : null}
           {connectorAuthStep()}
           {hasConnectivityModeStep() ? (
             <ConnectivityModeStep
