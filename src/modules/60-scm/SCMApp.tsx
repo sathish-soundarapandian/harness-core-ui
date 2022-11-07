@@ -27,6 +27,9 @@ const RemoteRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
 const RemoteRepository = lazy(() => import('scm/Repository'))
 
 // eslint-disable-next-line import/no-unresolved
+const RemoteRepositoryFileEdit = lazy(() => import('scm/RepositoryFileEdit'))
+
+// eslint-disable-next-line import/no-unresolved
 const RemoteRepositoryCommits = lazy(() => import('scm/RepositoryCommits'))
 
 // eslint-disable-next-line import/no-unresolved
@@ -37,6 +40,7 @@ const exportedRoutes = pick(routes, [
   'toSCMHome',
   'toSCMRepositoriesListing',
   'toSCMRepository',
+  'toSCMRepositoryFileEdit',
   'toSCMRepositoryCommits',
   'toSCMRepositoryBranches'
 ])
@@ -79,6 +83,10 @@ export const RepositoriesListing: React.FC<RemoteViewProps> = props => (
 
 export const Repository: React.FC<RemoteViewProps> = props => (
   <SCMRemoteComponentMounter component={<RemoteRepository {...props} />} />
+)
+
+export const RepositoryFileEdit: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<RemoteRepositoryFileEdit {...props} />} />
 )
 
 export const RepositoryCommits: React.FC<RemoteViewProps> = props => (

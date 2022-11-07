@@ -187,6 +187,11 @@ declare module 'scm/Repository' {
   export default ChildApp
 }
 
+declare module 'scm/RepositoryFileEdit' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'scm/RepositoryCommits' {
   const ChildApp: ChildAppComponent
   export default ChildApp

@@ -263,6 +263,7 @@ if (!enableSCM) {
     'scm/App',
     'scm/RepositoriesListing',
     'scm/Repository',
+    'scm/RepositoryFileEdit',
     'scm/RepositoryCommits',
     'scm/RepositoryBranches',
     'scm/RepositorySettings'

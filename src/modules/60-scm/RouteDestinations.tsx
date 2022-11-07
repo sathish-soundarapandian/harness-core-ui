@@ -14,7 +14,7 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { SCMPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@scm/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { Repository, RepositoriesListing, RepositoryCommits, RepositoryBranches } from './SCMApp'
+import { Repository, RepositoriesListing, RepositoryCommits, RepositoryBranches, RepositoryFileEdit } from './SCMApp'
 import SCMHomePage from './pages/home/SCMHomePage'
 
 export const sidebarProps: SidebarContext = {
@@ -83,9 +83,25 @@ export function SCMRouteDestinations(): React.ReactElement {
           branch: scmPathProps.branch
         })}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.SCMRepositoryCommits}
+        pageName={PAGE_NAME.SCMRepositoryBranches}
       >
         <RepositoryBranches />
+      </RouteWithLayout>
+      <RouteWithLayout
+        path={routes.toSCMRepositoryFileEdit({
+          repoPath: [
+            scmPathProps.accountId,
+            scmPathProps.orgIdentifier,
+            scmPathProps.projectIdentifier,
+            scmPathProps.repoName
+          ].join('/'),
+          gitRef: scmPathProps.gitRef,
+          resourcePath: scmPathProps.resourcePath
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.SCMRepositoryFileEdit}
+      >
+        <RepositoryFileEdit />
       </RouteWithLayout>
       <RouteWithLayout
         path={[
@@ -118,7 +134,7 @@ export function SCMRouteDestinations(): React.ReactElement {
           })
         ]}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.SCMRepositoryBranches}
+        pageName={PAGE_NAME.SCMRepository}
       >
         <Repository />
       </RouteWithLayout>

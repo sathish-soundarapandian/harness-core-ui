@@ -1381,6 +1381,16 @@ const routes = {
       gitRef ? '/files/' + gitRef : ''
     }${resourcePath ? '/~/' + resourcePath : ''}`
   },
+  toSCMRepositoryFileEdit: ({
+    repoPath,
+    gitRef,
+    resourcePath
+  }: RequireField<Pick<SCMProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/edit/${gitRef}/~/${
+      resourcePath || ''
+    }`
+  },
   toSCMRepositoryCommits: ({ repoPath, commitRef }: Required<Pick<SCMProps, 'repoPath' | 'commitRef'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${

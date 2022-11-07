@@ -127,6 +127,7 @@ export enum PAGE_NAME {
   SCMHomePage = 'SCMHomePage',
   SCMRepositoriesListing = 'SCMRepositoriesListing',
   SCMRepository = 'SCMRepository',
+  SCMRepositoryFileEdit = 'SCMRepositoryFileEdit',
   SCMRepositoryCommits = 'SCMRepositoryCommits',
   SCMRepositoryBranches = 'SCMRepositoryBranches',
   ExecutionList = 'ExecutionList',
