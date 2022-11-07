@@ -17,8 +17,8 @@ import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
-import bgImageURL from './images/ci.svg'
 import { isOnPrem } from '@common/utils/utils'
+import bgImageURL from './images/ci.svg'
 import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {

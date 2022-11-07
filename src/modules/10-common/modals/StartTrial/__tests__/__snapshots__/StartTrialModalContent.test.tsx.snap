@@ -1134,7 +1134,7 @@ exports[`StartTrialModalContent Rendering test that adding a source query param 
       common.purpose.ce.description
     </span>
     <button
-       aria-label="continue"
+      aria-label="continue"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       style="width: 270px; height: 2.5px;"
       type="button"

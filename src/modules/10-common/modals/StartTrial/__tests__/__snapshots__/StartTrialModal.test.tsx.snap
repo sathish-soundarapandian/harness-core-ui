@@ -61,6 +61,7 @@ exports[`open and close Start Trial Modal Rendering should open and close the st
       common.purpose.ce.description
     </span>
     <button
+      aria-label="common.startFreePlan"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       style="width: 270px; height: 2.5px;"
       type="button"
