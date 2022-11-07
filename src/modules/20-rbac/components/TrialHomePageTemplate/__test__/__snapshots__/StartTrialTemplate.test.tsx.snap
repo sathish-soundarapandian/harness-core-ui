@@ -32,7 +32,6 @@ exports[`StartTrialTemplate snapshot test should call prop onClick when there is
           learn more description
         </a>
         <button
-          aria-label="Continue"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -43,6 +42,11 @@ exports[`StartTrialTemplate snapshot test should call prop onClick when there is
             Continue
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -58,7 +62,7 @@ exports[`StartTrialTemplate snapshot test should call start trial api when click
     <div
       data-testid="location"
     >
-      /account/undefined/ci/home?modal=TRIAL&&experience=TRIAL
+      /account/undefined/ci/home?modal=FREE&&experience=FREE
     </div>
   </div>
 </div>
@@ -96,7 +100,6 @@ exports[`StartTrialTemplate snapshot test should call the start button click han
           learn more description
         </a>
         <button
-          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -107,6 +110,11 @@ exports[`StartTrialTemplate snapshot test should call the start button click han
             Start A Trial
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -145,7 +153,6 @@ exports[`StartTrialTemplate snapshot test should display error msg when api call
           learn more description
         </a>
         <button
-          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -194,7 +201,6 @@ exports[`StartTrialTemplate snapshot test should open the modal when a button is
           learn more description
         </a>
         <button
-          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -205,6 +211,11 @@ exports[`StartTrialTemplate snapshot test should open the modal when a button is
             Start A Trial
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>
@@ -243,7 +254,6 @@ exports[`StartTrialTemplate snapshot test should render start a trial by default
           learn more description
         </a>
         <button
-          aria-label="Start A Trial"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -254,6 +264,11 @@ exports[`StartTrialTemplate snapshot test should render start a trial by default
             Start A Trial
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>

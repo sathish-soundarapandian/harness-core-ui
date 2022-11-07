@@ -8,16 +8,15 @@
 import React from 'react'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStrings } from 'framework/strings'
+import { isOnPrem } from '@common/utils/utils'
 import bgImageURL from './images/cd.svg'
-import { Hosting } from '../get-started-with-cd/DeployProvisioningWizard/Constants'
 
 const CDTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
   const module = 'cd'
   const moduleType = 'CD'
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
-  const isFreeEnabled = !isOnPrem
-
+  const isFreeEnabled = !isOnPrem()
+  console.log(isFreeEnabled, 'hello')
   const startBtnDescription = isFreeEnabled
     ? getString('common.startFreePlan', { module: moduleType })
     : getString('cd.cdTrialHomePage.startTrial.startBtn.description')

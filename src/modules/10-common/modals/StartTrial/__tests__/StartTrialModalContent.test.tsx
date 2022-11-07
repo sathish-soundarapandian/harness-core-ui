@@ -33,6 +33,7 @@ useUpdateAccountDefaultExperienceNGMock.mockImplementation(() => {
 describe('StartTrialModalContent', () => {
   describe('Rendering', () => {
     test('that the content renders', () => {
+      window.deploymentType = 'SAAS'
       const props = {
         handleStartTrial: jest.fn(),
         module: 'ce' as Module
@@ -48,6 +49,7 @@ describe('StartTrialModalContent', () => {
     })
 
     test('test that the warning container renders', async () => {
+      window.deploymentType = 'SAAS'
       const props = {
         handleStartTrial: jest.fn(),
         module: 'ce' as Module
@@ -64,6 +66,7 @@ describe('StartTrialModalContent', () => {
     })
 
     test('test that adding a source query param updates the button text', async () => {
+      window.deploymentType = 'SAAS'
       const startTrialMock = jest.fn()
 
       const props = {
@@ -85,6 +88,7 @@ describe('StartTrialModalContent', () => {
     })
 
     test('Trial Modal with one license', () => {
+      window.deploymentType = 'SAAS'
       useLicenseStoreMock.mockImplementation(() => {
         return {
           licenseInformation: { CE: { edition: Editions.FREE } }
@@ -108,6 +112,7 @@ describe('StartTrialModalContent', () => {
     })
 
     test('Trial Modal with no licenses ', async () => {
+      window.deploymentType = 'SAAS'
       useLicenseStoreMock.mockImplementation(() => {
         return {
           licenseInformation: {}

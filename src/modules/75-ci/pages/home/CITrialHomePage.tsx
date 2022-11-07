@@ -18,9 +18,8 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
 import bgImageURL from './images/ci.svg'
-
+import { isOnPrem } from '@common/utils/utils'
 import css from './CITrialHomePage.module.scss'
-import { Hosting } from '../get-started-with-ci/InfraProvisioningWizard/Constants'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
@@ -29,7 +28,6 @@ const CITrialHomePage: React.FC = () => {
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const [loading, setLoading] = useState<boolean>(false)
   const { status: currentCIStatus } = licenseInformation['CI'] || {}
-  const isOnPrem = (): boolean => window.deploymentType === Hosting.OnPrem
   useEffect(() => {
     setLoading(true)
     try {
@@ -61,7 +59,7 @@ const CITrialHomePage: React.FC = () => {
 
   useTelemetry({ pageName: PageNames.CIStartTrial })
 
-  const startBtnDescription = !isOnPrem
+  const startBtnDescription = !isOnPrem()
     ? getString('common.startFreePlan', { module: 'CI' })
     : getString('ci.ciTrialHomePage.startTrial.startBtn.description')
 
