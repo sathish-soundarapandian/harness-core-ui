@@ -54,7 +54,8 @@ export interface StepDetails {
 export enum CredTypeValues {
   ManualConfig = 'ManualConfig',
   AssumeIAMRole = 'AssumeIAMRole',
-  AssumeRoleSTS = 'AssumeSTSRole'
+  AssumeRoleSTS = 'AssumeSTSRole',
+  PermanentTokenConfig = 'PermanentTokenConfig'
 }
 
 export enum HashiCorpVaultAccessTypes {

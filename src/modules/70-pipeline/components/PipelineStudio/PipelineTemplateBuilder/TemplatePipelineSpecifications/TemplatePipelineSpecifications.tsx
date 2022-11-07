@@ -52,8 +52,9 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const pipelineScope = getScopeFromDTO(pipeline)
-  const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>(pipeline)
+  const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>()
   const [allValues, setAllValues] = React.useState<PipelineInfoConfig>()
+  const [templateInputs, setTemplateInputs] = React.useState<PipelineInfoConfig | undefined>()
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const formRefDom = React.useRef<HTMLElement | undefined>()
@@ -104,14 +105,13 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   })
 
-  const templateInputs: PipelineInfoConfig = React.useMemo(
-    () => parse(defaultTo(templateInputSetYaml?.data, '')),
-    [templateInputSetYaml?.data]
-  )
-
   const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     const updatedPipeline = produce(pipeline, draft => {
-      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
+      set(
+        draft,
+        'template.templateInputs',
+        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
+      )
     })
     setFormValues(updatedPipeline)
     updatePipeline(updatedPipeline)
@@ -123,14 +123,16 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   }, [formValues])
 
-  React.useEffect(() => {
-    if (!isEmpty(templateInputs)) {
+  const retainInputsAndUpdateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
+    if (isEmpty(newTemplateInputs)) {
+      updateFormValues(newTemplateInputs)
+    } else {
       setLoadingMergedTemplateInputs(true)
       try {
         getsMergedTemplateInputYamlPromise({
           body: {
             oldTemplateInputs: stringify(defaultTo(pipeline?.template?.templateInputs, '')),
-            newTemplateInputs: stringify(templateInputs)
+            newTemplateInputs: stringify(newTemplateInputs)
           },
           queryParams: {
             accountIdentifier: queryParams.accountId
@@ -138,25 +140,28 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
             setLoadingMergedTemplateInputs(false)
-            updateFormValues(parse(defaultTo(response.data?.mergedTemplateInputs, '')))
+            updateFormValues(parse<PipelineInfoConfig>(defaultTo(response.data?.mergedTemplateInputs, '')))
           } else {
             throw response
           }
         })
       } catch (error) {
         setLoadingMergedTemplateInputs(false)
-        updateFormValues(templateInputs)
+        updateFormValues(newTemplateInputs)
       }
-    } else if (!templateInputSetLoading) {
-      updateFormValues(undefined)
     }
-  }, [templateInputs])
+  }
 
   React.useEffect(() => {
     if (templateInputSetLoading) {
+      setTemplateInputs(undefined)
       setFormikErrors({})
       setAllValues(undefined)
       setFormValues(undefined)
+    } else {
+      const newTemplateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, ''))
+      setTemplateInputs(newTemplateInputs)
+      retainInputsAndUpdateFormValues(newTemplateInputs)
     }
   }, [templateInputSetLoading])
 

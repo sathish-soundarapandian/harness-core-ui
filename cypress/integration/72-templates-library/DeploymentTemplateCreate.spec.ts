@@ -176,7 +176,7 @@ describe('Deployment Template creation and assertion', () => {
       cy.contains('span', 'test1111').should('be.visible')
       cy.contains('span', 'description').should('be.visible')
       cy.contains('span', 'fetchInstancesScript').should('be.visible')
-      cy.contains('span', 'Fetch instances Script').should('be.visible')
+      cy.contains('span', '$INSTANCE_OUTPUT_PATH file path').should('be.visible')
       cy.contains('span', 'instanceAttributes').should('be.visible')
       cy.contains('span', 'jsonPath').should('be.visible')
       cy.contains('span', 'jsonPath1').should('be.visible')

@@ -70,6 +70,8 @@ import type {
 } from './ArtifactInterface'
 import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
+import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
+import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
 
 interface ArtifactsSelectionProps {
@@ -414,6 +416,10 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <Artifactory {...artifactLastStepProps()} />
       case 'AmazonS3':
         return <AmazonS3 {...artifactLastStepProps()} />
+      case 'GithubPackageRegistry':
+        return <GithubPackageRegistry {...artifactLastStepProps()} />
+      case 'GoogleArtifactRegistry':
+        return <GoogleArtifactRegistry {...artifactLastStepProps()} />
       case 'Acr':
         return <ACRArtifact {...artifactLastStepProps()} />
       case 'CustomArtifact':

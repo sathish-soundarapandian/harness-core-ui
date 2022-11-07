@@ -1,0 +1,408 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Service versions open accordion 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main container StyledProps--margin-xlarge StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-white"
+  >
+    <div
+      class="Accordion--accordion"
+    >
+      <div
+        class="Accordion--panel"
+        data-open="true"
+        data-testid="serviceVersions-panel"
+      >
+        <div
+          class="Accordion--summary"
+          data-testid="serviceVersions-summary"
+        >
+          <div
+            class="Accordion--label"
+          >
+            common.platformServiceVersions
+          </div>
+          <div
+            class="Accordion--chevron"
+          />
+        </div>
+        <div
+          class="bp3-collapse Accordion--collapse"
+          style="height: 0px;"
+        >
+          <div
+            aria-hidden="false"
+            class="bp3-collapse-body"
+            style="transform: translateY(0);"
+          >
+            <div
+              class="Accordion--details"
+              data-testid="serviceVersions-details"
+            >
+              <div
+                class="TableV2--table"
+              >
+                <div
+                  class="TableV2--header"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cell"
+                    colspan="1"
+                    role="columnheader"
+                    style="width: 30%;"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                    >
+                      Service
+                    </p>
+                  </div>
+                  <div
+                    class="TableV2--cell"
+                    colspan="1"
+                    role="columnheader"
+                    style="width: 30%;"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                    >
+                      Version
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--body"
+                >
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Access Control
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        1.0.0
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Auth UI
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Cloud Cost Management
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        2.0.0
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Feature Flags
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Continuous Integration
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Continuous Verification
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Light Wing
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Custom Dashboards
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Manager
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NextGen UI
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Notifications
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        PMS
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Resource Group
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Template Service
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        NA
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

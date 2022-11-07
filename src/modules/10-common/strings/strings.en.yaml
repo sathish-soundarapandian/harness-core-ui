@@ -443,6 +443,7 @@ blank: ''
 totalLines: 'Total lines'
 newLines: 'New lines'
 unsavedChanges: You may have unsaved changes
+unsavedChangesLong: You have unsaved changes that will be lost. Are you sure you want to leave this page?
 readonlyPermissions: You have read-only permissions
 viewAndExecutePermissions: You have View and Execute permission only
 newVersion: There is a new version of this branch
@@ -807,6 +808,7 @@ template:
     errorWhileDeletingTemplate: Error occurred deleting Template
   createNewModal:
     versionPlaceholder: 'Ex: Version1'
+  templateIcon: Template Icon
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -1089,8 +1091,10 @@ allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time
 configDetails: 'Configuration Details'
-freezeActiveBannerText: All deployments have been disabled on the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeActiveBannerText: Freeze enabled on all deployments for this <b>{{scope}}</b> from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
 freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
+pipelineExecution: Pipeline Executions
+platformServiceVersions: Platform Service Versions

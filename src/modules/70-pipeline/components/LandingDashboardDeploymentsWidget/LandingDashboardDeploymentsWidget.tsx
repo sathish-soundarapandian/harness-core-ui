@@ -492,7 +492,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const summaryCardsData: SummaryCardData[] = useMemo(() => {
     return [
       {
-        title: getString('pipeline.dashboards.pipelineExecution'),
+        title: getString('common.pipelineExecution'),
         count: getFormattedNumber(response?.deploymentsStatsSummary?.countAndChangeRate?.count),
         trend:
           getFormattedNumber(

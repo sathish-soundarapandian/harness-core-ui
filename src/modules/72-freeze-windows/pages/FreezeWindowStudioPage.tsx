@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { matchPath, useHistory } from 'react-router-dom'
 import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import { NavigationCheck } from '@common/components'
 import routes from '@common/RouteDefinitions'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { Error } from 'services/cd-ng'
-import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
+import { FreezeWindowContext, FreezeWindowProvider } from '@freeze-windows/context/FreezeWindowContext'
 import { isValidYaml, getContentAndTitleStringKeys, PATH_PARAMS } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import { useFreezeStudioData } from '@freeze-windows/hooks/useFreezeStudioData'
 import { RightBar } from '@freeze-windows/components/RightBar/RightBar'
@@ -20,7 +20,7 @@ import { FreezeWindowStudioHeader } from '@freeze-windows/components/FreezeWindo
 import { FreezeWindowStudioSubHeader } from '@freeze-windows/components/FreezeWindowStudioSubHeader/FreezeWindowStudioSubHeader'
 import { FreezeWindowStudioBody } from '@freeze-windows/components/FreezeWindowStudioBody/FreezeWindowStudioBody'
 
-export const FreezeWindowStudioPage = () => {
+const _FreezeWindowStudioPage = (): React.ReactElement => {
   const {
     view,
     setView,
@@ -101,5 +101,13 @@ export const FreezeWindowStudioPage = () => {
         <RightBar />
       </Page.Body>
     </>
+  )
+}
+
+export default function FreezeWindowStudioPage(): ReactElement {
+  return (
+    <FreezeWindowProvider>
+      <_FreezeWindowStudioPage />
+    </FreezeWindowProvider>
   )
 }

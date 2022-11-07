@@ -263,7 +263,10 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
               items={users}
               tagInputProps={{
                 values: users,
-                placeholder: getString('rbac.roleAssignment.userPlaceHolder')
+                placeholder:
+                  scope == Scope.ACCOUNT
+                    ? getString('rbac.roleAssignment.addUsersPlaceHolder')
+                    : getString('rbac.roleAssignment.searchOrAddUsersPlaceHolder')
               }}
               multiSelectProps={{
                 allowCreatingNewItems: true,

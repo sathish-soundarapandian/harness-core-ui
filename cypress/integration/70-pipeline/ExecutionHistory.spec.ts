@@ -233,7 +233,7 @@ describe('Pipeline Execution History', () => {
     })
       .first()
       .click()
-    cy.findByText('Compare Executions').click()
+    cy.findByText('Compare Pipeline Executions').click()
     cy.findByRole('button', {
       name: /compare/i
     }).should('be.disabled')

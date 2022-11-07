@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import {
   Accordion,
   Button,
@@ -51,13 +51,18 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import type { StringNGVariable, TemplateLinkConfig } from 'services/cd-ng'
 import type { StageElementConfig } from 'services/pipeline-ng'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
-import { createTemplate, getScopeBasedTemplateRef, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import {
+  createTemplate,
+  getTemplateNameWithLabel,
+  getTemplateRefVersionLabelObject
+} from '@pipeline/utils/templateUtils'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { errorCheck } from '@common/utils/formikHelpers'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
@@ -132,6 +137,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const [linkedDeploymentTemplateConfig, setLinkedDeploymentTemplateConfig] = useState<TemplateLinkConfig | undefined>(
     getLinkedDeploymentTemplateConfig()
   )
+  const selectedDeploymentTemplateRef = useRef<TemplateSummaryResponse | undefined>()
+  const fromTemplateSelectorRef = useRef(false)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
@@ -146,22 +153,38 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 
   const { getTemplate } = useTemplateSelector()
 
-  const handleAddOrUpdateTemplate = React.useCallback(() => {
-    getDeploymentTemplate().catch(_ => {
-      // user cancelled template selection - we keep the existing template
-    })
-  }, [])
+  const handleAddOrUpdateTemplate = async (): Promise<void> => {
+    try {
+      const { template: deploymentTemplate } = await getTemplate({
+        templateType: TemplateType.CustomDeployment,
+        allowedUsages: [TemplateUsage.USE]
+      })
 
-  const getDeploymentTemplate = async () => {
-    const { template: deploymentTemplate } = await getTemplate({
-      templateType: TemplateType.CustomDeployment,
-      allowedUsages: [TemplateUsage.USE]
-    })
-    const templateLinkConfigDetails = {
-      templateRef: getScopeBasedTemplateRef(deploymentTemplate),
-      versionLabel: deploymentTemplate.versionLabel
+      setLinkedDeploymentTemplateConfig(getTemplateRefVersionLabelObject(deploymentTemplate))
+    } catch (_) {
+      // user cancelled template selection - we keep the existing template
     }
-    setLinkedDeploymentTemplateConfig(templateLinkConfigDetails)
+  }
+
+  const getDeploymentTemplate = async (): Promise<void> => {
+    if (fromTemplateSelectorRef.current && selectedDeploymentTemplateRef.current) {
+      return setLinkedDeploymentTemplateConfig(getTemplateRefVersionLabelObject(selectedDeploymentTemplateRef.current))
+    }
+
+    try {
+      const { template: deploymentTemplate } = await getTemplate({
+        selectedTemplate: selectedDeploymentTemplateRef.current,
+        templateType: TemplateType.CustomDeployment,
+        allowedUsages: [TemplateUsage.USE],
+        showChangeTemplateDialog: false,
+        hideTemplatesView: true,
+        disableUseTemplateIfUnchanged: false
+      })
+
+      setLinkedDeploymentTemplateConfig(getTemplateRefVersionLabelObject(deploymentTemplate))
+    } catch (_) {
+      // user cancelled template selection
+    }
   }
 
   React.useEffect(() => {
@@ -190,19 +213,6 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [linkedDeploymentTemplateConfig, context, selectedDeploymentType])
-
-  React.useEffect(() => {
-    if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment && isEmpty(linkedDeploymentTemplateConfig)) {
-      getDeploymentTemplate().catch(_ => {
-        // user cancelled template selection
-        setSelectedDeploymentType(undefined)
-        formikRef.current?.setFieldValue('deploymentType', undefined)
-      })
-    }
-    if (selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
-      setLinkedDeploymentTemplateConfig(undefined)
-    }
-  }, [selectedDeploymentType, linkedDeploymentTemplateConfig])
 
   React.useEffect(() => {
     /* istanbul ignore else */
@@ -265,18 +275,33 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     }
   })
 
-  const handleDeploymentTypeChange = useCallback((deploymentType: ServiceDeploymentType): void => {
-    if (deploymentType !== selectedDeploymentType) {
-      formikRef.current?.setFieldValue('deploymentType', deploymentType)
-      if (hasStageData(data?.stage)) {
-        openStageDataDeleteWarningDialog()
-      } else {
-        setSelectedDeploymentType(deploymentType)
-        updateDeploymentType && updateDeploymentType(deploymentType)
+  const handleDeploymentTypeChange = (deploymentType: ServiceDeploymentType): void => {
+    if (deploymentType === selectedDeploymentType) return
+
+    formikRef.current?.setFieldValue('deploymentType', deploymentType)
+
+    if (hasStageData(data?.stage)) {
+      openStageDataDeleteWarningDialog()
+    } else {
+      setSelectedDeploymentType(deploymentType)
+      updateDeploymentType && updateDeploymentType(deploymentType)
+
+      if (deploymentType !== ServiceDeploymentType.CustomDeployment) {
+        setLinkedDeploymentTemplateConfig(undefined)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
+
+  const onDeploymentTemplateSelect = (
+    deploymentTemplate: TemplateSummaryResponse,
+    fromTemplateSelector: boolean
+  ): void => {
+    selectedDeploymentTemplateRef.current = deploymentTemplate
+    fromTemplateSelectorRef.current = fromTemplateSelector
+
+    handleDeploymentTypeChange(ServiceDeploymentType.CustomDeployment)
+    getDeploymentTemplate()
+  }
 
   const shouldRenderDeploymentType = (): boolean => {
     if (context) {
@@ -411,7 +436,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           isReadonly={isReadonly}
                           handleDeploymentTypeChange={handleDeploymentTypeChange}
                           shouldShowGitops={false}
-                          customDeploymentData={linkedDeploymentTemplateConfig}
+                          templateLinkConfig={linkedDeploymentTemplateConfig}
+                          onDeploymentTemplateSelect={onDeploymentTemplateSelect}
                           addOrUpdateTemplate={handleAddOrUpdateTemplate}
                           templateBarOverrideClassName={cx(
                             { [css.templateBarOverride]: !context },

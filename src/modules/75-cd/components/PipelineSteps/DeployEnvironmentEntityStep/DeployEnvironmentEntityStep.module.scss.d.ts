@@ -7,8 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly centerRadio: string
   readonly environmentEntityWidget: string
-  readonly gitOpsStage: string
   readonly inputSetSpinner: string
   readonly inputWidth: string
   readonly radioGroup: string

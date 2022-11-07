@@ -53,6 +53,7 @@ interface RowData extends NotificationSettingConfigDTO {
   slackWebhookUrl?: string
   pagerDutyKey?: string
   microsoftTeamsWebhookUrl?: string
+  sendEmailToAllUsers?: boolean
 }
 export interface NotificationOption {
   label: string
@@ -135,10 +136,16 @@ const ChannelRow: React.FC<ChannelRow> = ({
   const handleSubmit = async (values: RowData): Promise<void> => {
     const recipient = getFieldDetails(values.type).name
     if (isCreate) {
-      userGroup.notificationConfigs?.push({
+      const notification = {
         type: values.type,
         [recipient]: values[recipient]
-      })
+      }
+
+      if (values.type === 'EMAIL') {
+        notification.sendEmailToAllUsers = values?.sendEmailToAllUsers || true
+      }
+
+      userGroup.notificationConfigs?.push(notification)
     }
     if (edit) {
       userGroup.notificationConfigs = userGroup.notificationConfigs?.map(val => {
@@ -202,10 +209,14 @@ const ChannelRow: React.FC<ChannelRow> = ({
     )
   }
 
+  const getIntialValues = () => {
+    return { sendEmailToAllUsers: true, ...data }
+  }
+
   return (
     <>
       <Formik<RowData>
-        initialValues={{ ...data }}
+        initialValues={getIntialValues()}
         validationSchema={Yup.object().shape({
           type: Yup.string().required(),
           groupEmail: Yup.string().when(['type'], {
@@ -241,31 +252,61 @@ const ChannelRow: React.FC<ChannelRow> = ({
             <Form>
               <Layout.Horizontal spacing="small" className={cx(css.card, { [css.centerAlign]: !enableEdit })}>
                 {enableEdit && !inherited ? (
-                  <>
-                    <Container width="35%">
-                      <FormInput.Select
-                        name="type"
-                        placeholder={getString('common.selectAChannel')}
-                        items={edit ? options : notificationItems}
-                        disabled={edit}
-                      />
-                    </Container>
-                    <Container width="40%">{renderInputField(formikProps.values.type)}</Container>
-                  </>
-                ) : (
-                  <>
-                    <Container width="35%">
+                  <Container width="75%">
+                    <Container width="100%">
                       <Layout.Horizontal spacing="small">
-                        <Icon name={getNotificationByConfig(data).icon} />
-                        <Text>{getNotificationByConfig(data).label}</Text>
+                        <Container width="45%">
+                          <FormInput.Select
+                            name="type"
+                            placeholder={getString('common.selectAChannel')}
+                            items={edit ? options : notificationItems}
+                            disabled={edit}
+                          />
+                        </Container>
+                        <Container width="55%">{renderInputField(formikProps.values.type)}</Container>
                       </Layout.Horizontal>
                     </Container>
-                    <Container width="40%">
-                      <Text lineClamp={1} className={css.overflow}>
-                        {getNotificationByConfig(data).value}
-                      </Text>
+
+                    <div className={css.sendEmailToAllUsersContainer}>
+                      {formikProps.values.type === 'EMAIL' && (
+                        <FormInput.CheckBox
+                          name="sendEmailToAllUsers"
+                          label="Send email to all users part of the user group"
+                        />
+                      )}
+                    </div>
+                  </Container>
+                ) : (
+                  <Container
+                    width="75%"
+                    className={cx(formikProps.values.type !== 'EMAIL' ? css.infoCard : css.emailInfoCard)}
+                  >
+                    <Container width="100%">
+                      <Layout.Horizontal spacing="small">
+                        <Container width="35%">
+                          <Layout.Horizontal spacing="small">
+                            <Icon name={getNotificationByConfig(data).icon} />
+                            <Text>{getNotificationByConfig(data).label}</Text>
+                          </Layout.Horizontal>
+                        </Container>
+                        <Container width="40%">
+                          <Text lineClamp={1} className={css.overflow}>
+                            {getNotificationByConfig(data).value}
+                          </Text>
+                        </Container>
+                      </Layout.Horizontal>
+
+                      <div className={css.sendEmailToAllUsersContainer}>
+                        {formikProps.values.type === 'EMAIL' && (
+                          <FormInput.CheckBox
+                            name="sendEmailToAllUsers"
+                            label="Send email to all users part of the user group"
+                            disabled
+                          />
+                        )}
+                      </div>
                     </Container>
-                  </>
+                  </Container>
                 )}
                 <Container width="25%">
                   <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} spacing="xsmall">

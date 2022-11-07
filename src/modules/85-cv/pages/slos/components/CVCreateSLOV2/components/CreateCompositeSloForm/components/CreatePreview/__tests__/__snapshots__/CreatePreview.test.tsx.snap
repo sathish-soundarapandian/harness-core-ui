@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreatePreview should render CalenderValuePreview with empty value 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+    >
+      cv.periodLength
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+    >
+      
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CreatePreview should render CalenderValuePreview with init value 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+    >
+      cv.periodLength
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+    >
+      
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CreatePreview should render CreatePreview with empty value 1`] = `<div />`;
+
+exports[`CreatePreview should render CreatePreview with init value 1`] = `<div />`;
+
+exports[`CreatePreview should render LabelAndValue with empty values 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+    >
+      
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+    >
+      
+    </p>
+  </div>
+</div>
+`;

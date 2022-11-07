@@ -80,6 +80,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       gitDetails,
       storeMetadata,
       templateTypes,
+      templateIcons,
       templateServiceData
     },
     contextType,
@@ -191,6 +192,9 @@ export default function DeployStageSetupShell(): JSX.Element {
   }
 
   const selectedDeploymentType = serviceDefinitionType()
+  const isServiceDefinitionPresent = isNewService
+    ? (get(selectedStage, 'stage.spec.service') || get(selectedStage, 'stage.spec.services')) && serviceDefinitionType()
+    : selectedDeploymentType
 
   const getStrategyType = (): GetExecutionStrategyYamlQueryParams['strategyType'] => {
     if (isNewService && gitOpsEnabled) {
@@ -311,7 +315,7 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   React.useEffect(() => {
     // if serviceDefinition not selected, redirect to SERVICE - preventing strategies drawer to be opened
-    if (!selectedDeploymentType) {
+    if (!isServiceDefinitionPresent) {
       setSelectedTabId(DeployTabs.SERVICE)
       return
     }
@@ -354,7 +358,7 @@ export default function DeployStageSetupShell(): JSX.Element {
   }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType])
 
   React.useEffect(() => {
-    if (!selectedDeploymentType) {
+    if (!isServiceDefinitionPresent) {
       setSelectedTabId(DeployTabs.SERVICE)
       return
     }
@@ -492,6 +496,7 @@ export default function DeployStageSetupShell(): JSX.Element {
               originalStage={originalStage}
               ref={executionRef}
               templateTypes={templateTypes}
+              templateIcons={templateIcons}
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               stage={selectedStage!}
               updateStage={stageData => {

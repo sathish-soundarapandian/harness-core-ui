@@ -11,6 +11,7 @@ import { render, fireEvent, queryByAttribute } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, fillAtForm, clickSubmit } from '@common/utils/JestFormHelper'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 
 import CreateGitConnector from '../CreateGitConnector'
 import { mockResponse, mockSecret, usernamePassword, backButtonMock } from './gitMocks'
@@ -28,6 +29,7 @@ const commonProps = {
 const updateConnector = jest.fn()
 const createConnector = jest.fn()
 jest.mock('services/portal', () => ({
+  useGetDelegateFromId: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetDelegateTags: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetDelegatesStatus: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
@@ -103,7 +105,13 @@ describe('Create Git connector Wizard', () => {
   test('should be able to edit form for http and authtype username', async () => {
     const { container } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <CreateGitConnector {...commonProps} isEditMode={true} connectorInfo={usernamePassword} mock={mockResponse} />
+        <CreateGitConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={usernamePassword}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
       </TestWrapper>
     )
 
@@ -117,6 +125,9 @@ describe('Create Git connector Wizard', () => {
     // step 2
     expect(container).toMatchSnapshot()
     //updating connector
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })

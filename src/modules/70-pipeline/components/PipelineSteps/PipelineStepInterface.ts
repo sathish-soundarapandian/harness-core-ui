@@ -14,6 +14,7 @@ export enum StepType {
   SHELLSCRIPT = 'ShellScript',
   GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
   Command = 'Command',
+  Email = 'Email',
   CustomApproval = 'CustomApproval',
   Barrier = 'Barrier',
   Queue = 'Queue',
@@ -120,7 +121,8 @@ export enum StepType {
   Wait = 'Wait',
   ShellScriptProvision = 'ShellScriptProvision',
   ChaosExperiment = 'Chaos',
-  Elastigroup = 'Elastigroup'
+  Elastigroup = 'Elastigroup',
+  ElastigroupService = 'ElastigroupService'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

@@ -12,12 +12,11 @@ import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Chec
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
-import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
 import type { FreezeSummaryResponse, FreezeWindow, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
-import { FreezeStatus } from '@freeze-windows/utils/freezeWindowUtils'
+import { FreezeStatus, getReadableDateFromDateString } from '@freeze-windows/utils/freezeWindowUtils'
 import css from './FreezeWindowList.module.scss'
 
 export interface FreezeWindowListColumnActions {
@@ -40,81 +39,94 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
 
 type CellType = Renderer<CellTypeWithActions<FreezeSummaryResponse>>
 
-export const FreezeNameCell: CellType = ({ row, column }) => {
+export const FreezeWindowCell: CellType = ({ row, column }) => {
   const data = row.original
   const { getString } = useStrings()
 
   return (
-    <Layout.Vertical>
-      <Layout.Horizontal
-        spacing="small"
-        flex={{ alignItems: 'center', justifyContent: 'start' }}
-        margin={{ bottom: 'small' }}
-      >
-        <Link to={column.getViewFreezeRowLink(data)}>
-          <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
-            {data.name}
-          </Text>
-        </Link>
+    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+      <div onClick={killEvent}>
+        <Switch
+          disabled={column.disabled}
+          aria-label="Toggle freeze"
+          onChange={event =>
+            column.onToggleFreezeRow({
+              freezeWindowId: data.identifier!,
+              status: event.currentTarget.checked ? 'Enabled' : 'Disabled'
+            })
+          }
+          className={css.switch}
+          checked={data.status === 'Enabled'}
+        />
+      </div>
 
-        {data.description && (
-          <Popover className={Classes.DARK} position={Position.TOP} interactionKind={PopoverInteractionKind.HOVER}>
-            <Icon name="description" width={16} height={20} />
-            <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
-              <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
-                Description
-              </Text>
-              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
-                {data.description}
-              </Text>
-            </Layout.Vertical>
-          </Popover>
-        )}
+      <Layout.Vertical>
+        <Layout.Horizontal
+          spacing="small"
+          flex={{ alignItems: 'center', justifyContent: 'start' }}
+          margin={{ bottom: 'small' }}
+        >
+          <Link to={column.getViewFreezeRowLink(data)}>
+            <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
+              {data.name}
+            </Text>
+          </Link>
 
-        {data.tags && Object.keys(data.tags || {}).length ? (
-          <TagsPopover
-            tags={data.tags}
-            iconProps={{ size: 14, color: Color.GREY_600 }}
-            popoverProps={{ className: Classes.DARK }}
-            className={css.tags}
-          />
-        ) : null}
-      </Layout.Horizontal>
+          {data.description && (
+            <Popover className={Classes.DARK} position={Position.TOP} interactionKind={PopoverInteractionKind.HOVER}>
+              <Icon name="description" width={16} height={20} />
+              <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
+                <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
+                  Description
+                </Text>
+                <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                  {data.description}
+                </Text>
+              </Layout.Vertical>
+            </Popover>
+          )}
 
-      <Text color={Color.GREY_600} font="small" lineClamp={1}>
-        {getString('idLabel', { id: data.identifier })}
-      </Text>
-    </Layout.Vertical>
+          {data.tags && Object.keys(data.tags || {}).length ? (
+            <TagsPopover
+              tags={data.tags}
+              iconProps={{ size: 14, color: Color.GREY_600 }}
+              popoverProps={{ className: Classes.DARK }}
+              className={css.tags}
+            />
+          ) : null}
+        </Layout.Horizontal>
+        <Text color={Color.GREY_600} font="small" lineClamp={1}>
+          {getString('idLabel', { id: data.identifier })}
+        </Text>
+      </Layout.Vertical>
+    </Layout.Horizontal>
   )
 }
 
-export const FreezeTimeCell: CellType = ({ row }) => {
+export const ScheduleCell: CellType = ({ row }) => {
   const data = row.original
   const freezeWindow = data.windows?.[0] || ({} as FreezeWindow)
   const { startTime, duration, endTime, timeZone, recurrence } = freezeWindow
   return (
     <Layout.Vertical>
       <Layout.Horizontal margin={{ bottom: 'small' }}>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-          {moment(startTime).format('lll')}
-        </Text>
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
-          &nbsp;{duration ? 'for' : 'to'}
-        </Text>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-          &nbsp;{duration || moment(endTime).format('lll')}
+          <b>{getReadableDateFromDateString(startTime)}</b>
+          {duration ? ' for ' : ' to '}
+          <b>{duration || getReadableDateFromDateString(endTime)}</b>
         </Text>
       </Layout.Horizontal>
 
       <Layout.Horizontal>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
           {timeZone}
         </Text>
 
         {recurrence && (
-          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
             &nbsp;| {recurrence?.type}
-            {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
+            {freezeWindow?.recurrence?.spec?.until &&
+              ` until ${getReadableDateFromDateString(freezeWindow?.recurrence?.spec?.until)}`}
           </Text>
         )}
       </Layout.Horizontal>
@@ -184,33 +196,13 @@ export const RowSelectCell: CellType = ({ row, column }) => {
   return (
     <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
+        aria-label="Select row"
         disabled={column.disabled}
         large
         checked={column.selectedItems.includes(data.identifier!)}
         onChange={event => {
           column.onRowSelectToggle({ freezeWindowId: data.identifier!, checked: event.currentTarget.checked })
         }}
-      />
-    </div>
-  )
-}
-
-export const FreezeToggleCell: CellType = ({ row, column }) => {
-  const data = row.original
-
-  return (
-    <div onClick={killEvent}>
-      <Switch
-        disabled={column.disabled}
-        aria-label="Toggle freeze"
-        onChange={event =>
-          column.onToggleFreezeRow({
-            freezeWindowId: data.identifier!,
-            status: event.currentTarget.checked ? 'Enabled' : 'Disabled'
-          })
-        }
-        className={css.switch}
-        checked={data.status === 'Enabled'}
       />
     </div>
   )

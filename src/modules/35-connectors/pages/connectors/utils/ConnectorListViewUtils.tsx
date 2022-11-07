@@ -158,9 +158,12 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       )
     case Connectors.SPOT:
       return getConnectorDisplaySummaryLabel(
-        'common.accountId',
+        'connectors.spotAccountId',
         textRenderer(
-          defaultTo(connector?.spec?.credential?.spec?.accountId, connector?.spec?.credential?.spec?.accountIdRef)
+          defaultTo(
+            connector?.spec?.credential?.spec?.spotAccountId,
+            connector?.spec?.credential?.spec?.spotAccountIdRef
+          )
         )
       )
     default:

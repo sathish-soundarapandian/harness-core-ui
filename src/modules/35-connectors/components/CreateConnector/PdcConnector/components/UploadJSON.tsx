@@ -12,7 +12,7 @@ import { Button, ButtonVariation, FormInput } from '@wings-software/uicore'
 import { debounce } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import type { uploadHostItem } from '../StepDetails/PdcDetails'
+import type { SelectionType, uploadHostItem } from '../StepDetails/PdcDetails'
 
 import css from './UploadJSON.module.scss'
 
@@ -21,6 +21,7 @@ interface UploadJSONInterface {
   formikProps?: FormikProps<{
     hostsJson: string
     hosts: string | string[]
+    selectionType: SelectionType
   }>
   previousHosts?: uploadHostItem[] | string
 }

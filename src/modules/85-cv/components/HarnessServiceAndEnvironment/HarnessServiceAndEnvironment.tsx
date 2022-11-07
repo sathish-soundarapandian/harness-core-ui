@@ -131,17 +131,11 @@ export function HarnessServiceAsFormField(props: {
     <FormInput.CustomRender
       {...customRenderProps}
       tooltipProps={{ dataTooltipId: 'serviceSelectOrCreate' }}
-      key={`${
-        Array.isArray(serviceProps.item)
-          ? (serviceProps.item?.[0]?.value as string)
-          : typeof serviceProps.item === 'string'
-          ? serviceProps.item
-          : (serviceProps.item?.value as string)
-      }`}
       render={formikProps =>
         isMultiSelectField ? (
           <ServiceMultiSelectOrCreate
             {...(serviceProps as ServiceMultiSelectOrCreateProps)}
+            customLoading={customLoading}
             onSelect={selectedOption => {
               formikProps.setFieldValue(customRenderProps.name, selectedOption)
               ;(serviceProps as ServiceMultiSelectOrCreateProps).onSelect?.(selectedOption)

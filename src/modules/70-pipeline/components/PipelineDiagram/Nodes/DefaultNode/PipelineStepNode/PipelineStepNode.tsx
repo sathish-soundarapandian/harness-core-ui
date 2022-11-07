@@ -16,6 +16,7 @@ import stepsfactory from '@pipeline/components/PipelineSteps/PipelineStepFactory
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { useStrings } from 'framework/strings'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
@@ -63,6 +64,8 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   }
 
   const stepIcon = defaultTo(defaultTo(stepData?.icon, props?.icon), props?.data?.step?.icon)
+  const stepIconUrl = props.iconUrl
+
   const onDropEvent = (event: React.DragEvent) => {
     event.stopPropagation()
 
@@ -191,14 +194,18 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         {props?.data?.isInComplete && (
           <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {stepIcon && (
-          <>
-            <Icon
-              size={stepIconSize || 28}
-              {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-              name={defaultTo(stepIcon, 'cross') as IconName}
-            />
-          </>
+        {stepIconUrl ? (
+          <ImagePreview size={28} src={stepIconUrl} fallbackIcon={defaultTo(stepIcon, 'cross') as IconName} />
+        ) : (
+          stepIcon && (
+            <>
+              <Icon
+                size={stepIconSize || 28}
+                {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+                name={defaultTo(stepIcon, 'cross') as IconName}
+              />
+            </>
+          )
         )}
         {secondaryIcon && (
           <Icon

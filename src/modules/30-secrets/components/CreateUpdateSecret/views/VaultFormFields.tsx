@@ -52,7 +52,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
     if (secretManagerType === 'GcpSecretManager') {
       refetch()
     }
-  }, [])
+  }, [secretManagerType])
   return (
     <>
       {type === 'SecretText' ? (

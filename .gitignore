@@ -5,7 +5,7 @@ reports
 cypress-coverage
 merged-coverage
 .DS_Store
-dist*
+dist/*
 tsconfig.tmp
 .idea
 yarn-error.log

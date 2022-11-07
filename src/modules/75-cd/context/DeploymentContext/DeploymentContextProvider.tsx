@@ -17,15 +17,14 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 
 export const FETCH_INSTANCE_SCRIPT_DEFAULT_TEXT = `#
-# Fetch instances Script is used to query the Target infrastructure and provide the instance information in
-# environment variable $INSTANCE_OUTPUT_PATH . Instance information enables tracking in Service Dashboard
+# Script is expected to query Infrastructure and dump json
+# in $INSTANCE_OUTPUT_PATH file path
 #
-# It is expected to initialize \${INSTANCE_OUTPUT_PATH}
-# environment variable and assign the script execution result with instance information
+# Harness is expected to initialize \${INSTANCE_OUTPUT_PATH}
+# environment variable - a random unique file path on delegate,
+# so script execution can save the result.
 #
-# Sample
-# INSTANCE_OUTPUT_PATH=$(echo '{"data": [{"functionName": "\${serviceVariable.functionName}"}]}')
-#`
+`
 export interface DrawerData {
   type: DrawerTypes
   data?: {

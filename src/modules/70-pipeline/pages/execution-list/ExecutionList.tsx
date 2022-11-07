@@ -26,6 +26,7 @@ import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -126,11 +127,11 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const showSpinner = initLoading || (loading && !isPolling)
   const showSubHeader = hasExecutions || isAnyFilterApplied
-
+  const { globalFreezes } = useGlobalFreezeBanner()
   return (
     <>
       {showSubHeader && <ExecutionListSubHeader {...rest} />}
-      <GlobalFreezeBanner />
+      <GlobalFreezeBanner globalFreezes={globalFreezes} />
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
           <Container className={css.healthAndExecutions} data-testid="health-and-executions">

@@ -47,6 +47,7 @@ export const InfraProvisioningBase = (
       pipelineView,
       selectionState: { selectedStageId = '' },
       templateTypes,
+      templateIcons,
       pipeline,
       gitDetails,
       storeMetadata
@@ -242,6 +243,7 @@ export const InfraProvisioningBase = (
                         hasRollback={true}
                         hasDependencies={false}
                         templateTypes={templateTypes}
+                        templateIcons={templateIcons}
                         stage={formik.values.provisioner as any}
                         originalStage={formik.values.originalProvisioner as any}
                         ref={executionRef}

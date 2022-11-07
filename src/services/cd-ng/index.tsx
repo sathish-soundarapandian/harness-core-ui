@@ -49,6 +49,10 @@ export type AMIArtifactConfig = ArtifactConfig & {
   versionRegex?: string
 }
 
+export type AMIArtifactSummary = ArtifactSummary & {
+  version?: string
+}
+
 export interface AMIFilter {
   name?: string
   value?: string
@@ -57,6 +61,10 @@ export interface AMIFilter {
 export interface AMITag {
   name?: string
   value?: string
+}
+
+export interface AMITagObject {
+  tagName?: string
 }
 
 export type AbortFailureActionConfig = FailureStrategyActionConfig & {
@@ -1813,6 +1821,15 @@ export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {}
 
 export type CVModuleLicenseDTO = ModuleLicenseDTO & {}
 
+export interface Capacity {
+  spec?: CapacitySpec
+  type: string
+}
+
+export interface CapacitySpec {
+  type?: string
+}
+
 export interface CardDTO {
   addressCity?: string
   addressCountry?: string
@@ -2389,6 +2406,10 @@ export interface ContextElement {
 export type CopyCommandUnitSpec = CommandUnitBaseSpec & {
   destinationPath: string
   sourceType: 'Artifact' | 'Config'
+}
+
+export type CountCapacitySpec = CapacitySpec & {
+  count?: number
 }
 
 export type CountInstanceSelection = InstanceSelectionBase & {
@@ -3244,6 +3265,13 @@ export interface ElastigroupConfiguration {
   store: StoreConfigWrapper
 }
 
+export type ElastigroupDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  metadata?: string
+  newService?: Capacity
+  oldService?: Capacity
+}
+
 export type ElastigroupInfrastructure = Infrastructure & {
   configuration: ElastigroupConfiguration
   connectorRef: string
@@ -3422,6 +3450,7 @@ export interface EntityDetail {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4411,12 +4440,6 @@ export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   delegateSelectors?: string[]
   url: string
-}
-
-export interface ExcludeConfig {
-  exclude?: {
-    [key: string]: string
-  }
 }
 
 export type ExecutableElementsFilter = Filter & {
@@ -5674,6 +5697,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5796,6 +5820,7 @@ export interface GitEntityFilterProperties {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5951,6 +5976,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6081,6 +6107,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6319,6 +6346,7 @@ export interface GitSyncEntityDTO {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6443,6 +6471,7 @@ export interface GitSyncEntityListDTO {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6584,6 +6613,7 @@ export interface GitSyncErrorDTO {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8092,11 +8122,6 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
-export type MatrixConfig = MatrixConfigInterface & {
-  exclude?: ParameterFieldListExcludeConfig
-  maxConcurrency?: number
-}
-
 export interface MatrixConfigInterface {
   [key: string]: any
 }
@@ -9098,18 +9123,6 @@ export interface ParameterFieldBoolean {
   value?: boolean
 }
 
-export interface ParameterFieldListExcludeConfig {
-  defaultValue?: ExcludeConfig[]
-  executionInput?: boolean
-  expression?: boolean
-  expressionValue?: string
-  inputSetValidator?: InputSetValidator
-  jsonResponseField?: boolean
-  responseField?: string
-  typeString?: boolean
-  value?: ExcludeConfig[]
-}
-
 export interface ParameterFieldMapStringString {
   defaultValue?: {
     [key: string]: string
@@ -9206,6 +9219,10 @@ export type PdcInstanceInfoDTO = InstanceInfoDTO & {
 
 export interface PendingUpdateDetailDTO {
   expiresAt?: number
+}
+
+export type PercentageCapacitySpec = CapacitySpec & {
+  percentage?: number
 }
 
 export type PercentageInstanceSelection = InstanceSelectionBase & {
@@ -9531,6 +9548,7 @@ export interface ReferencedByDTO {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
 }
 
 export interface RefreshResponse {
@@ -10397,6 +10415,13 @@ export interface ResponseLicensesWithSummaryDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListAMITagObject {
+  correlationId?: string
+  data?: AMITagObject[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListAccountSettings {
   correlationId?: string
   data?: AccountSettings[]
@@ -10599,6 +10624,7 @@ export interface ResponseListEntityType {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11776,6 +11802,13 @@ export interface ResponseServiceDetailsInfoDTO {
 export interface ResponseServiceHeaderInfo {
   correlationId?: string
   data?: ServiceHeaderInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseServiceInputsMergedResponseDto {
+  correlationId?: string
+  data?: ServiceInputsMergedResponseDto
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12997,6 +13030,11 @@ export interface ServiceHeaderInfo {
   name?: string
 }
 
+export interface ServiceInputsMergedResponseDto {
+  mergedServiceInputsYaml?: string
+  serviceYaml?: string
+}
+
 export interface ServiceInstanceUsageDTO {
   accountIdentifier?: string
   activeServiceInstances?: UsageDataDTO
@@ -13538,6 +13576,7 @@ export interface StepData {
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'GitOpsUpdateReleaseRepo'
+    | 'ElastigroupDeploy'
 }
 
 export interface StepElementConfig {
@@ -14582,11 +14621,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
-export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
+export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -15182,6 +15221,7 @@ export interface ListActivitiesQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15298,6 +15338,7 @@ export interface ListActivitiesQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -15518,6 +15559,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15634,6 +15676,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -17460,6 +17503,99 @@ export const getACRRepositoriesForServicePromise = (
     signal
   )
 
+export interface ListTagsForAMIArtifactQueryParams {
+  connectorRef?: string
+  region?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  fqnPath?: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type ListTagsForAMIArtifactProps = Omit<
+  MutateProps<
+    ResponseListAMITagObject,
+    Failure | Error,
+    ListTagsForAMIArtifactQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List Tags for AMI Artifacts
+ */
+export const ListTagsForAMIArtifact = (props: ListTagsForAMIArtifactProps) => (
+  <Mutate<
+    ResponseListAMITagObject,
+    Failure | Error,
+    ListTagsForAMIArtifactQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/ami/tags`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListTagsForAMIArtifactProps = Omit<
+  UseMutateProps<
+    ResponseListAMITagObject,
+    Failure | Error,
+    ListTagsForAMIArtifactQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List Tags for AMI Artifacts
+ */
+export const useListTagsForAMIArtifact = (props: UseListTagsForAMIArtifactProps) =>
+  useMutate<
+    ResponseListAMITagObject,
+    Failure | Error,
+    ListTagsForAMIArtifactQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/ami/tags`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * List Tags for AMI Artifacts
+ */
+export const listTagsForAMIArtifactPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListAMITagObject,
+    Failure | Error,
+    ListTagsForAMIArtifactQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListAMITagObject,
+    Failure | Error,
+    ListTagsForAMIArtifactQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/ami/tags`, props, signal)
+
 export interface GetArtifactsBuildsDetailsForArtifactoryQueryParams {
   connectorRef: string
   repositoryName: string
@@ -17633,7 +17769,7 @@ export type GetBuildDetailsForArtifactoryArtifactWithYamlProps = Omit<
     ResponseArtifactoryResponseDTO,
     Failure | Error,
     GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -17649,7 +17785,7 @@ export const GetBuildDetailsForArtifactoryArtifactWithYaml = (
     ResponseArtifactoryResponseDTO,
     Failure | Error,
     GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -17664,7 +17800,7 @@ export type UseGetBuildDetailsForArtifactoryArtifactWithYamlProps = Omit<
     ResponseArtifactoryResponseDTO,
     Failure | Error,
     GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -17680,7 +17816,7 @@ export const useGetBuildDetailsForArtifactoryArtifactWithYaml = (
     ResponseArtifactoryResponseDTO,
     Failure | Error,
     GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/artifactory/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -17692,7 +17828,7 @@ export const getBuildDetailsForArtifactoryArtifactWithYamlPromise = (
     ResponseArtifactoryResponseDTO,
     Failure | Error,
     GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -17701,7 +17837,7 @@ export const getBuildDetailsForArtifactoryArtifactWithYamlPromise = (
     ResponseArtifactoryResponseDTO,
     Failure | Error,
     GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/artifactory/getBuildDetailsV2`, props, signal)
 
@@ -18195,7 +18331,7 @@ export type ListFeedsForAzureArtifactsWithServiceV2Props = Omit<
     ResponseListAzureArtifactsFeed,
     Failure | Error,
     ListFeedsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18209,7 +18345,7 @@ export const ListFeedsForAzureArtifactsWithServiceV2 = (props: ListFeedsForAzure
     ResponseListAzureArtifactsFeed,
     Failure | Error,
     ListFeedsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -18224,7 +18360,7 @@ export type UseListFeedsForAzureArtifactsWithServiceV2Props = Omit<
     ResponseListAzureArtifactsFeed,
     Failure | Error,
     ListFeedsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18238,7 +18374,7 @@ export const useListFeedsForAzureArtifactsWithServiceV2 = (props: UseListFeedsFo
     ResponseListAzureArtifactsFeed,
     Failure | Error,
     ListFeedsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/azureartifacts/v2/feeds`, { base: getConfig('ng/api'), ...props })
 
@@ -18250,7 +18386,7 @@ export const listFeedsForAzureArtifactsWithServiceV2Promise = (
     ResponseListAzureArtifactsFeed,
     Failure | Error,
     ListFeedsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -18259,7 +18395,7 @@ export const listFeedsForAzureArtifactsWithServiceV2Promise = (
     ResponseListAzureArtifactsFeed,
     Failure | Error,
     ListFeedsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/azureartifacts/v2/feeds`, props, signal)
 
@@ -18290,7 +18426,7 @@ export type ListPackagesForAzureArtifactsWithServiceV2Props = Omit<
     ResponseListAzureArtifactsPackage,
     Failure | Error,
     ListPackagesForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18304,7 +18440,7 @@ export const ListPackagesForAzureArtifactsWithServiceV2 = (props: ListPackagesFo
     ResponseListAzureArtifactsPackage,
     Failure | Error,
     ListPackagesForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -18319,7 +18455,7 @@ export type UseListPackagesForAzureArtifactsWithServiceV2Props = Omit<
     ResponseListAzureArtifactsPackage,
     Failure | Error,
     ListPackagesForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18335,7 +18471,7 @@ export const useListPackagesForAzureArtifactsWithServiceV2 = (
     ResponseListAzureArtifactsPackage,
     Failure | Error,
     ListPackagesForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/azureartifacts/v2/packages`, { base: getConfig('ng/api'), ...props })
 
@@ -18347,7 +18483,7 @@ export const listPackagesForAzureArtifactsWithServiceV2Promise = (
     ResponseListAzureArtifactsPackage,
     Failure | Error,
     ListPackagesForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -18356,7 +18492,7 @@ export const listPackagesForAzureArtifactsWithServiceV2Promise = (
     ResponseListAzureArtifactsPackage,
     Failure | Error,
     ListPackagesForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/azureartifacts/v2/packages`, props, signal)
 
@@ -18384,7 +18520,7 @@ export type ListProjectsForAzureArtifactsWithServiceV2Props = Omit<
     ResponseListAzureDevopsProject,
     Failure | Error,
     ListProjectsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18398,7 +18534,7 @@ export const ListProjectsForAzureArtifactsWithServiceV2 = (props: ListProjectsFo
     ResponseListAzureDevopsProject,
     Failure | Error,
     ListProjectsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -18413,7 +18549,7 @@ export type UseListProjectsForAzureArtifactsWithServiceV2Props = Omit<
     ResponseListAzureDevopsProject,
     Failure | Error,
     ListProjectsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18429,7 +18565,7 @@ export const useListProjectsForAzureArtifactsWithServiceV2 = (
     ResponseListAzureDevopsProject,
     Failure | Error,
     ListProjectsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/azureartifacts/v2/projects`, { base: getConfig('ng/api'), ...props })
 
@@ -18441,7 +18577,7 @@ export const listProjectsForAzureArtifactsWithServiceV2Promise = (
     ResponseListAzureDevopsProject,
     Failure | Error,
     ListProjectsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -18450,7 +18586,7 @@ export const listProjectsForAzureArtifactsWithServiceV2Promise = (
     ResponseListAzureDevopsProject,
     Failure | Error,
     ListProjectsForAzureArtifactsWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/azureartifacts/v2/projects`, props, signal)
 
@@ -18484,7 +18620,7 @@ export type GetVersionFromPackageWithServiceV2Props = Omit<
     ResponseBuildDetails,
     Failure | Error,
     GetVersionFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18498,7 +18634,7 @@ export const GetVersionFromPackageWithServiceV2 = (props: GetVersionFromPackageW
     ResponseBuildDetails,
     Failure | Error,
     GetVersionFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -18513,7 +18649,7 @@ export type UseGetVersionFromPackageWithServiceV2Props = Omit<
     ResponseBuildDetails,
     Failure | Error,
     GetVersionFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18527,7 +18663,7 @@ export const useGetVersionFromPackageWithServiceV2 = (props: UseGetVersionFromPa
     ResponseBuildDetails,
     Failure | Error,
     GetVersionFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/azureartifacts/v2/version`, { base: getConfig('ng/api'), ...props })
 
@@ -18539,7 +18675,7 @@ export const getVersionFromPackageWithServiceV2Promise = (
     ResponseBuildDetails,
     Failure | Error,
     GetVersionFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -18548,7 +18684,7 @@ export const getVersionFromPackageWithServiceV2Promise = (
     ResponseBuildDetails,
     Failure | Error,
     GetVersionFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/azureartifacts/v2/version`, props, signal)
 
@@ -18581,7 +18717,7 @@ export type ListVersionsFromPackageWithServiceV2Props = Omit<
     ResponseListBuildDetails,
     Failure | Error,
     ListVersionsFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18595,7 +18731,7 @@ export const ListVersionsFromPackageWithServiceV2 = (props: ListVersionsFromPack
     ResponseListBuildDetails,
     Failure | Error,
     ListVersionsFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -18610,7 +18746,7 @@ export type UseListVersionsFromPackageWithServiceV2Props = Omit<
     ResponseListBuildDetails,
     Failure | Error,
     ListVersionsFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18624,7 +18760,7 @@ export const useListVersionsFromPackageWithServiceV2 = (props: UseListVersionsFr
     ResponseListBuildDetails,
     Failure | Error,
     ListVersionsFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/azureartifacts/v2/versions`, { base: getConfig('ng/api'), ...props })
 
@@ -18636,7 +18772,7 @@ export const listVersionsFromPackageWithServiceV2Promise = (
     ResponseListBuildDetails,
     Failure | Error,
     ListVersionsFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -18645,7 +18781,7 @@ export const listVersionsFromPackageWithServiceV2Promise = (
     ResponseListBuildDetails,
     Failure | Error,
     ListVersionsFromPackageWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/azureartifacts/v2/versions`, props, signal)
 
@@ -18941,7 +19077,7 @@ export type GetBuildDetailsForDockerWithYamlProps = Omit<
     ResponseDockerResponseDTO,
     Failure | Error,
     GetBuildDetailsForDockerWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18955,7 +19091,7 @@ export const GetBuildDetailsForDockerWithYaml = (props: GetBuildDetailsForDocker
     ResponseDockerResponseDTO,
     Failure | Error,
     GetBuildDetailsForDockerWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -18970,7 +19106,7 @@ export type UseGetBuildDetailsForDockerWithYamlProps = Omit<
     ResponseDockerResponseDTO,
     Failure | Error,
     GetBuildDetailsForDockerWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -18984,7 +19120,7 @@ export const useGetBuildDetailsForDockerWithYaml = (props: UseGetBuildDetailsFor
     ResponseDockerResponseDTO,
     Failure | Error,
     GetBuildDetailsForDockerWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/docker/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -18996,7 +19132,7 @@ export const getBuildDetailsForDockerWithYamlPromise = (
     ResponseDockerResponseDTO,
     Failure | Error,
     GetBuildDetailsForDockerWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -19005,7 +19141,7 @@ export const getBuildDetailsForDockerWithYamlPromise = (
     ResponseDockerResponseDTO,
     Failure | Error,
     GetBuildDetailsForDockerWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/docker/getBuildDetailsV2`, props, signal)
 
@@ -20515,7 +20651,7 @@ export type GetLastSuccessfulVersionWithServiceV2Props = Omit<
     ResponseBuildDetails,
     Failure | Error,
     GetLastSuccessfulVersionWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20529,7 +20665,7 @@ export const GetLastSuccessfulVersionWithServiceV2 = (props: GetLastSuccessfulVe
     ResponseBuildDetails,
     Failure | Error,
     GetLastSuccessfulVersionWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -20544,7 +20680,7 @@ export type UseGetLastSuccessfulVersionWithServiceV2Props = Omit<
     ResponseBuildDetails,
     Failure | Error,
     GetLastSuccessfulVersionWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20558,7 +20694,7 @@ export const useGetLastSuccessfulVersionWithServiceV2 = (props: UseGetLastSucces
     ResponseBuildDetails,
     Failure | Error,
     GetLastSuccessfulVersionWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/githubpackages/v2/lastSuccessfulVersion`, { base: getConfig('ng/api'), ...props })
 
@@ -20570,7 +20706,7 @@ export const getLastSuccessfulVersionWithServiceV2Promise = (
     ResponseBuildDetails,
     Failure | Error,
     GetLastSuccessfulVersionWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -20579,7 +20715,7 @@ export const getLastSuccessfulVersionWithServiceV2Promise = (
     ResponseBuildDetails,
     Failure | Error,
     GetLastSuccessfulVersionWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/githubpackages/v2/lastSuccessfulVersion`, props, signal)
 
@@ -20609,7 +20745,7 @@ export type GetPackagesFromGithubWithServiceV2Props = Omit<
     ResponseGithubPackagesResponseDTO,
     Failure | Error,
     GetPackagesFromGithubWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20623,7 +20759,7 @@ export const GetPackagesFromGithubWithServiceV2 = (props: GetPackagesFromGithubW
     ResponseGithubPackagesResponseDTO,
     Failure | Error,
     GetPackagesFromGithubWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -20638,7 +20774,7 @@ export type UseGetPackagesFromGithubWithServiceV2Props = Omit<
     ResponseGithubPackagesResponseDTO,
     Failure | Error,
     GetPackagesFromGithubWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20652,7 +20788,7 @@ export const useGetPackagesFromGithubWithServiceV2 = (props: UseGetPackagesFromG
     ResponseGithubPackagesResponseDTO,
     Failure | Error,
     GetPackagesFromGithubWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/githubpackages/v2/packages`, { base: getConfig('ng/api'), ...props })
 
@@ -20664,7 +20800,7 @@ export const getPackagesFromGithubWithServiceV2Promise = (
     ResponseGithubPackagesResponseDTO,
     Failure | Error,
     GetPackagesFromGithubWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -20673,7 +20809,7 @@ export const getPackagesFromGithubWithServiceV2Promise = (
     ResponseGithubPackagesResponseDTO,
     Failure | Error,
     GetPackagesFromGithubWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/githubpackages/v2/packages`, props, signal)
 
@@ -20705,7 +20841,7 @@ export type GetVersionsFromPackagesWithServiceV2Props = Omit<
     ResponseListBuildDetails,
     Failure | Error,
     GetVersionsFromPackagesWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20719,7 +20855,7 @@ export const GetVersionsFromPackagesWithServiceV2 = (props: GetVersionsFromPacka
     ResponseListBuildDetails,
     Failure | Error,
     GetVersionsFromPackagesWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -20734,7 +20870,7 @@ export type UseGetVersionsFromPackagesWithServiceV2Props = Omit<
     ResponseListBuildDetails,
     Failure | Error,
     GetVersionsFromPackagesWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -20748,7 +20884,7 @@ export const useGetVersionsFromPackagesWithServiceV2 = (props: UseGetVersionsFro
     ResponseListBuildDetails,
     Failure | Error,
     GetVersionsFromPackagesWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/githubpackages/v2/versions`, { base: getConfig('ng/api'), ...props })
 
@@ -20760,7 +20896,7 @@ export const getVersionsFromPackagesWithServiceV2Promise = (
     ResponseListBuildDetails,
     Failure | Error,
     GetVersionsFromPackagesWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -20769,7 +20905,7 @@ export const getVersionsFromPackagesWithServiceV2Promise = (
     ResponseListBuildDetails,
     Failure | Error,
     GetVersionsFromPackagesWithServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/githubpackages/v2/versions`, props, signal)
 
@@ -21183,7 +21319,7 @@ export type GetArtifactPathForJenkinsServiceV2Props = Omit<
     ResponseListString,
     Failure | Error,
     GetArtifactPathForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21197,7 +21333,7 @@ export const GetArtifactPathForJenkinsServiceV2 = (props: GetArtifactPathForJenk
     ResponseListString,
     Failure | Error,
     GetArtifactPathForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -21212,7 +21348,7 @@ export type UseGetArtifactPathForJenkinsServiceV2Props = Omit<
     ResponseListString,
     Failure | Error,
     GetArtifactPathForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21226,7 +21362,7 @@ export const useGetArtifactPathForJenkinsServiceV2 = (props: UseGetArtifactPathF
     ResponseListString,
     Failure | Error,
     GetArtifactPathForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/jenkins/v2/jobArtifactPaths`, { base: getConfig('ng/api'), ...props })
 
@@ -21238,7 +21374,7 @@ export const getArtifactPathForJenkinsServiceV2Promise = (
     ResponseListString,
     Failure | Error,
     GetArtifactPathForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -21247,7 +21383,7 @@ export const getArtifactPathForJenkinsServiceV2Promise = (
     ResponseListString,
     Failure | Error,
     GetArtifactPathForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/jobArtifactPaths`, props, signal)
 
@@ -21277,7 +21413,7 @@ export type GetBuildsForJenkinsServiceV2Props = Omit<
     ResponseListBuildDetails,
     Failure | Error,
     GetBuildsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21291,7 +21427,7 @@ export const GetBuildsForJenkinsServiceV2 = (props: GetBuildsForJenkinsServiceV2
     ResponseListBuildDetails,
     Failure | Error,
     GetBuildsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -21306,7 +21442,7 @@ export type UseGetBuildsForJenkinsServiceV2Props = Omit<
     ResponseListBuildDetails,
     Failure | Error,
     GetBuildsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21320,7 +21456,7 @@ export const useGetBuildsForJenkinsServiceV2 = (props: UseGetBuildsForJenkinsSer
     ResponseListBuildDetails,
     Failure | Error,
     GetBuildsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/jenkins/v2/jobBuilds`, { base: getConfig('ng/api'), ...props })
 
@@ -21332,7 +21468,7 @@ export const getBuildsForJenkinsServiceV2Promise = (
     ResponseListBuildDetails,
     Failure | Error,
     GetBuildsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -21341,7 +21477,7 @@ export const getBuildsForJenkinsServiceV2Promise = (
     ResponseListBuildDetails,
     Failure | Error,
     GetBuildsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/jobBuilds`, props, signal)
 
@@ -21370,7 +21506,7 @@ export type GetJobParametersForJenkinsServiceV2Props = Omit<
     ResponseListJobParameter,
     Failure | Error,
     GetJobParametersForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21384,7 +21520,7 @@ export const GetJobParametersForJenkinsServiceV2 = (props: GetJobParametersForJe
     ResponseListJobParameter,
     Failure | Error,
     GetJobParametersForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -21399,7 +21535,7 @@ export type UseGetJobParametersForJenkinsServiceV2Props = Omit<
     ResponseListJobParameter,
     Failure | Error,
     GetJobParametersForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21413,7 +21549,7 @@ export const useGetJobParametersForJenkinsServiceV2 = (props: UseGetJobParameter
     ResponseListJobParameter,
     Failure | Error,
     GetJobParametersForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/jenkins/v2/jobDetails`, { base: getConfig('ng/api'), ...props })
 
@@ -21425,7 +21561,7 @@ export const getJobParametersForJenkinsServiceV2Promise = (
     ResponseListJobParameter,
     Failure | Error,
     GetJobParametersForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -21434,7 +21570,7 @@ export const getJobParametersForJenkinsServiceV2Promise = (
     ResponseListJobParameter,
     Failure | Error,
     GetJobParametersForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/jobDetails`, props, signal)
 
@@ -21463,7 +21599,7 @@ export type GetJobDetailsForJenkinsServiceV2Props = Omit<
     ResponseJenkinsJobDetailsDTO,
     Failure | Error,
     GetJobDetailsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21477,7 +21613,7 @@ export const GetJobDetailsForJenkinsServiceV2 = (props: GetJobDetailsForJenkinsS
     ResponseJenkinsJobDetailsDTO,
     Failure | Error,
     GetJobDetailsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -21492,7 +21628,7 @@ export type UseGetJobDetailsForJenkinsServiceV2Props = Omit<
     ResponseJenkinsJobDetailsDTO,
     Failure | Error,
     GetJobDetailsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21506,7 +21642,7 @@ export const useGetJobDetailsForJenkinsServiceV2 = (props: UseGetJobDetailsForJe
     ResponseJenkinsJobDetailsDTO,
     Failure | Error,
     GetJobDetailsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/jenkins/v2/jobs`, { base: getConfig('ng/api'), ...props })
 
@@ -21518,7 +21654,7 @@ export const getJobDetailsForJenkinsServiceV2Promise = (
     ResponseJenkinsJobDetailsDTO,
     Failure | Error,
     GetJobDetailsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -21527,7 +21663,7 @@ export const getJobDetailsForJenkinsServiceV2Promise = (
     ResponseJenkinsJobDetailsDTO,
     Failure | Error,
     GetJobDetailsForJenkinsServiceV2QueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/jenkins/v2/jobs`, props, signal)
 
@@ -21642,7 +21778,7 @@ export type GetBuildDetailsForNexusArtifactWithYamlProps = Omit<
     ResponseNexusResponseDTO,
     Failure | Error,
     GetBuildDetailsForNexusArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21656,7 +21792,7 @@ export const GetBuildDetailsForNexusArtifactWithYaml = (props: GetBuildDetailsFo
     ResponseNexusResponseDTO,
     Failure | Error,
     GetBuildDetailsForNexusArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -21671,7 +21807,7 @@ export type UseGetBuildDetailsForNexusArtifactWithYamlProps = Omit<
     ResponseNexusResponseDTO,
     Failure | Error,
     GetBuildDetailsForNexusArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21685,7 +21821,7 @@ export const useGetBuildDetailsForNexusArtifactWithYaml = (props: UseGetBuildDet
     ResponseNexusResponseDTO,
     Failure | Error,
     GetBuildDetailsForNexusArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/nexus/getBuildDetailsV2`, { base: getConfig('ng/api'), ...props })
 
@@ -21697,7 +21833,7 @@ export const getBuildDetailsForNexusArtifactWithYamlPromise = (
     ResponseNexusResponseDTO,
     Failure | Error,
     GetBuildDetailsForNexusArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -21706,7 +21842,7 @@ export const getBuildDetailsForNexusArtifactWithYamlPromise = (
     ResponseNexusResponseDTO,
     Failure | Error,
     GetBuildDetailsForNexusArtifactWithYamlQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/nexus/getBuildDetailsV2`, props, signal)
 
@@ -21820,7 +21956,7 @@ export type GetRepositoriesProps = Omit<
     ResponseListNexusRepositories,
     Failure | Error,
     GetRepositoriesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21834,7 +21970,7 @@ export const GetRepositories = (props: GetRepositoriesProps) => (
     ResponseListNexusRepositories,
     Failure | Error,
     GetRepositoriesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >
     verb="POST"
@@ -21849,7 +21985,7 @@ export type UseGetRepositoriesProps = Omit<
     ResponseListNexusRepositories,
     Failure | Error,
     GetRepositoriesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -21863,7 +21999,7 @@ export const useGetRepositories = (props: UseGetRepositoriesProps) =>
     ResponseListNexusRepositories,
     Failure | Error,
     GetRepositoriesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/artifacts/nexus/getRepositories`, { base: getConfig('ng/api'), ...props })
 
@@ -21875,7 +22011,7 @@ export const getRepositoriesPromise = (
     ResponseListNexusRepositories,
     Failure | Error,
     GetRepositoriesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -21884,7 +22020,7 @@ export const getRepositoriesPromise = (
     ResponseListNexusRepositories,
     Failure | Error,
     GetRepositoriesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/nexus/getRepositories`, props, signal)
 
@@ -29649,6 +29785,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -29826,6 +29963,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   searchTerm?: string
 }
 
@@ -32849,6 +32987,7 @@ export interface GetReferencedByQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   searchTerm?: string
 }
 
@@ -33229,7 +33368,7 @@ export type CreateFreezeProps = Omit<
     ResponseFreezeResponse,
     Failure | Error,
     CreateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33239,13 +33378,7 @@ export type CreateFreezeProps = Omit<
  * Creates a Freeze
  */
 export const CreateFreeze = (props: CreateFreezeProps) => (
-  <Mutate<
-    ResponseFreezeResponse,
-    Failure | Error,
-    CreateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
-    void
-  >
+  <Mutate<ResponseFreezeResponse, Failure | Error, CreateFreezeQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>
     verb="POST"
     path={`/freeze`}
     base={getConfig('ng/api')}
@@ -33258,7 +33391,7 @@ export type UseCreateFreezeProps = Omit<
     ResponseFreezeResponse,
     Failure | Error,
     CreateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33272,7 +33405,7 @@ export const useCreateFreeze = (props: UseCreateFreezeProps) =>
     ResponseFreezeResponse,
     Failure | Error,
     CreateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/freeze`, { base: getConfig('ng/api'), ...props })
 
@@ -33284,7 +33417,7 @@ export const createFreezePromise = (
     ResponseFreezeResponse,
     Failure | Error,
     CreateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33293,7 +33426,7 @@ export const createFreezePromise = (
     ResponseFreezeResponse,
     Failure | Error,
     CreateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze`, props, signal)
 
@@ -33308,7 +33441,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33322,7 +33455,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -33337,7 +33470,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33351,7 +33484,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -33363,7 +33496,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33372,7 +33505,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -33689,7 +33822,7 @@ export type GlobalFreezeProps = Omit<
     ResponseFreezeResponse,
     Failure | Error,
     GlobalFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33699,13 +33832,7 @@ export type GlobalFreezeProps = Omit<
  * Manage Global Freeze
  */
 export const GlobalFreeze = (props: GlobalFreezeProps) => (
-  <Mutate<
-    ResponseFreezeResponse,
-    Failure | Error,
-    GlobalFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
-    void
-  >
+  <Mutate<ResponseFreezeResponse, Failure | Error, GlobalFreezeQueryParams, ListTagsForAMIArtifactBodyRequestBody, void>
     verb="POST"
     path={`/freeze/manageGlobalFreeze`}
     base={getConfig('ng/api')}
@@ -33718,7 +33845,7 @@ export type UseGlobalFreezeProps = Omit<
     ResponseFreezeResponse,
     Failure | Error,
     GlobalFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33732,7 +33859,7 @@ export const useGlobalFreeze = (props: UseGlobalFreezeProps) =>
     ResponseFreezeResponse,
     Failure | Error,
     GlobalFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', `/freeze/manageGlobalFreeze`, { base: getConfig('ng/api'), ...props })
 
@@ -33744,7 +33871,7 @@ export const globalFreezePromise = (
     ResponseFreezeResponse,
     Failure | Error,
     GlobalFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33753,7 +33880,7 @@ export const globalFreezePromise = (
     ResponseFreezeResponse,
     Failure | Error,
     GlobalFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/manageGlobalFreeze`, props, signal)
 
@@ -33884,7 +34011,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33898,7 +34025,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -33913,7 +34040,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33927,7 +34054,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -33939,7 +34066,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33948,7 +34075,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -34080,7 +34207,7 @@ export type UpdateFreezeProps = Omit<
     ResponseFreezeResponse,
     Failure | Error,
     UpdateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     UpdateFreezePathParams
   >,
   'path' | 'verb'
@@ -34095,7 +34222,7 @@ export const UpdateFreeze = ({ freezeIdentifier, ...props }: UpdateFreezeProps) 
     ResponseFreezeResponse,
     Failure | Error,
     UpdateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     UpdateFreezePathParams
   >
     verb="PUT"
@@ -34110,7 +34237,7 @@ export type UseUpdateFreezeProps = Omit<
     ResponseFreezeResponse,
     Failure | Error,
     UpdateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     UpdateFreezePathParams
   >,
   'path' | 'verb'
@@ -34125,7 +34252,7 @@ export const useUpdateFreeze = ({ freezeIdentifier, ...props }: UseUpdateFreezeP
     ResponseFreezeResponse,
     Failure | Error,
     UpdateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     UpdateFreezePathParams
   >('PUT', (paramsInPath: UpdateFreezePathParams) => `/freeze/${paramsInPath.freezeIdentifier}`, {
     base: getConfig('ng/api'),
@@ -34144,7 +34271,7 @@ export const updateFreezePromise = (
     ResponseFreezeResponse,
     Failure | Error,
     UpdateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     UpdateFreezePathParams
   > & { freezeIdentifier: string },
   signal?: RequestInit['signal']
@@ -34153,7 +34280,7 @@ export const updateFreezePromise = (
     ResponseFreezeResponse,
     Failure | Error,
     UpdateFreezeQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     UpdateFreezePathParams
   >('PUT', getConfig('ng/api'), `/freeze/${freezeIdentifier}`, props, signal)
 
@@ -35167,6 +35294,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -35351,6 +35479,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'GitOpsUpdateReleaseRepo'
       | 'EcsRunTask'
       | 'Chaos'
+      | 'ElastigroupDeploy'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41009,6 +41138,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   yamlGroup?: string
 }
 
@@ -41253,6 +41383,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -45874,10 +46005,10 @@ export interface MergeServiceInputsPathParams {
 
 export type MergeServiceInputsProps = Omit<
   MutateProps<
-    ResponseString,
+    ResponseServiceInputsMergedResponseDto,
     Failure | Error,
     MergeServiceInputsQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     MergeServiceInputsPathParams
   >,
   'path' | 'verb'
@@ -45889,10 +46020,10 @@ export type MergeServiceInputsProps = Omit<
  */
 export const MergeServiceInputs = ({ serviceIdentifier, ...props }: MergeServiceInputsProps) => (
   <Mutate<
-    ResponseString,
+    ResponseServiceInputsMergedResponseDto,
     Failure | Error,
     MergeServiceInputsQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     MergeServiceInputsPathParams
   >
     verb="POST"
@@ -45904,10 +46035,10 @@ export const MergeServiceInputs = ({ serviceIdentifier, ...props }: MergeService
 
 export type UseMergeServiceInputsProps = Omit<
   UseMutateProps<
-    ResponseString,
+    ResponseServiceInputsMergedResponseDto,
     Failure | Error,
     MergeServiceInputsQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     MergeServiceInputsPathParams
   >,
   'path' | 'verb'
@@ -45919,10 +46050,10 @@ export type UseMergeServiceInputsProps = Omit<
  */
 export const useMergeServiceInputs = ({ serviceIdentifier, ...props }: UseMergeServiceInputsProps) =>
   useMutate<
-    ResponseString,
+    ResponseServiceInputsMergedResponseDto,
     Failure | Error,
     MergeServiceInputsQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     MergeServiceInputsPathParams
   >(
     'POST',
@@ -45938,19 +46069,19 @@ export const mergeServiceInputsPromise = (
     serviceIdentifier,
     ...props
   }: MutateUsingFetchProps<
-    ResponseString,
+    ResponseServiceInputsMergedResponseDto,
     Failure | Error,
     MergeServiceInputsQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     MergeServiceInputsPathParams
   > & { serviceIdentifier: string },
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<
-    ResponseString,
+    ResponseServiceInputsMergedResponseDto,
     Failure | Error,
     MergeServiceInputsQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    ListTagsForAMIArtifactBodyRequestBody,
     MergeServiceInputsPathParams
   >('POST', getConfig('ng/api'), `/servicesV2/mergeServiceInputs/${serviceIdentifier}`, props, signal)
 
@@ -53615,6 +53746,7 @@ export interface GetYamlSchemaQueryParams {
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
     | 'Chaos'
+    | 'ElastigroupDeploy'
   subtype?:
     | 'K8sCluster'
     | 'Git'

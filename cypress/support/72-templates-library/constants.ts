@@ -14,6 +14,8 @@ export const templateUsedForPipeline = 'testPipelineTemplate'
 //Endpoints
 export const deploymentTemplatesListCall =
   '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
+export const recentDeploymentTemplatesUrl =
+  '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&templateListType=Stable&page=0&sort=lastUpdatedAt%2CDESC&size=5&includeAllTemplatesAvailableAtScope=true'
 export const useTemplateCall =
   '/template/api/templates/dep_temp_test?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&versionLabel=1&getDefaultFromOtherRepo=true'
 export const afterUseTemplateListCall =

@@ -63,6 +63,7 @@ import templateFactory from '@templates-library/components/Templates/TemplatesFa
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -164,7 +165,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
-  const templateIcon = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
+  const templateIconName = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
+  const templateIconUrl = React.useMemo(() => selectedTemplate?.icon, [selectedTemplate?.icon])
   const templateType = React.useMemo(() => getTypeForTemplate(getString, selectedTemplate), [selectedTemplate])
 
   const templateYamlErrorResponseMessages = (templateYamlError?.data as Error)?.responseMessages ?? []
@@ -401,7 +403,16 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                     spacing={'small'}
                                     flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
                                   >
-                                    {templateIcon && <Icon name={templateIcon} size={20} />}
+                                    {templateIconUrl ? (
+                                      <ImagePreview
+                                        src={templateIconUrl}
+                                        size={20}
+                                        alt={getString('common.template.templateIcon')}
+                                        fallbackIcon={templateIconName}
+                                      />
+                                    ) : (
+                                      templateIconName && <Icon size={20} name={templateIconName} />
+                                    )}
                                     {templateType && <Text color={Color.GREY_900}>{templateType}</Text>}
                                   </Layout.Horizontal>
                                 </Container>

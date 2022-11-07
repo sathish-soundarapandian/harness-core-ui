@@ -79,8 +79,8 @@ export enum RepositoryFormatTypes {
 export const nexus2RepositoryFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NPM', value: RepositoryFormatTypes.NPM },
-  { label: 'NuGet', value: RepositoryFormatTypes.NuGet },
-  { label: 'Raw', value: RepositoryFormatTypes.Raw }
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+  // { label: 'Raw', value: RepositoryFormatTypes.Raw }
 ]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
@@ -399,8 +399,7 @@ export const getSelectedDeploymentType = (
 export const getDeploymentTypeWithSvcEnvFF = (
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
 ): ServiceDefinition['type'] => {
-  const service = get(stage, 'stage.spec.service', null)
-  return service && get(stage, 'stage.spec.deploymentType', null)
+  return get(stage, 'stage.spec.deploymentType', null)
 }
 
 export const getServiceDefinitionType = (
@@ -624,7 +623,7 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
     case ServiceDeploymentType.CustomDeployment:
       return StepType.CustomDeploymentServiceSpec
     case ServiceDeploymentType.Elastigroup:
-      return StepType.Elastigroup
+      return StepType.ElastigroupService
     default:
       return StepType.K8sServiceSpec
   }

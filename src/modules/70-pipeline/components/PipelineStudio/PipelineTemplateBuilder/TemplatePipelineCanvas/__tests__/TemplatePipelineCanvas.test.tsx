@@ -115,7 +115,8 @@ jest.mock('@pipeline/utils/templateUtils', () => ({
   getTemplateTypesByRef: () =>
     Promise.resolve({
       templateTypes: { Test_Stage_Template: 'Deployment' },
-      templateServiceData: { Test_Template_Stage_Type: 'Kubernetes' }
+      templateServiceData: { Test_Template_Stage_Type: 'Kubernetes' },
+      templateIcons: {}
     })
 }))
 

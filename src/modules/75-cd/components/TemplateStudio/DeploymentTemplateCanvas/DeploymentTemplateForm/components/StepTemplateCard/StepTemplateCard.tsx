@@ -13,6 +13,8 @@ import cx from 'classnames'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { useStrings } from 'framework/strings'
 import css from './StepTemplateCard.module.scss'
 
 interface StepTemplateCardProps {
@@ -27,9 +29,10 @@ interface StepTemplateCardProps {
 }
 
 export function StepTemplateCard(props: StepTemplateCardProps): React.ReactElement | null {
+  const { getString } = useStrings()
   const { stepsFactory, isReadOnly } = useDeploymentContext()
   const { onSelect, onDelete, templateDetails, className } = props
-  const { childType: templateType } = templateDetails || {}
+  const { childType: templateType, icon: iconUrl } = templateDetails || {}
   const step = stepsFactory.getStep(templateType)
 
   const handleCardClick = (): void => {
@@ -62,16 +65,23 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
             withoutCurrentColor={true}
           />
         )}
-        {
+        {iconUrl ? (
+          <ImagePreview
+            src={iconUrl}
+            size={25}
+            alt={getString('common.template.templateIcon')}
+            fallbackIcon={step?.getIconName?.()}
+          />
+        ) : (
           /* istanbul ignore next */
-          !isNil(step) ? (
+          !isNil(step) && (
             <Icon
               name={step.getIconName?.()}
               size={defaultTo(step.getIconSize?.(), 25)}
               color={step.getIconColor?.()}
             />
-          ) : null
-        }
+          )
+        )}
       </Card>
       <div className={css.stepTemplateCardText}>
         <Text width={100} font={{ size: 'small', align: 'center' }} lineClamp={3} color={Color.GREY_600}>

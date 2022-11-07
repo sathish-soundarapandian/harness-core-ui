@@ -569,6 +569,7 @@ export interface StringsMap {
   'common.performAction': string
   'common.pipeline': string
   'common.pipelineDetails': string
+  'common.pipelineExecution': string
   'common.plans.currentPlan': string
   'common.plans.faq': string
   'common.plans.featureComparison': string
@@ -576,6 +577,7 @@ export interface StringsMap {
   'common.plans.manageSubscription': string
   'common.plans.subscription': string
   'common.plans.title': string
+  'common.platformServiceVersions': string
   'common.plusAddName': string
   'common.plusNewName': string
   'common.plusNumber': string
@@ -914,6 +916,7 @@ export interface StringsMap {
   'common.template.saveAsNewTemplateHeading': string
   'common.template.saveTemplate.errorWhileSaving': string
   'common.template.saveTemplate.publishTemplate': string
+  'common.template.templateIcon': string
   'common.template.updateTemplate.errorWhileUpdating': string
   'common.template.updateTemplate.templateUpdated': string
   'common.templateServiceLabel': string
@@ -936,6 +939,7 @@ export interface StringsMap {
   'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
+  'common.unsavedChangesLong': string
   'common.updating': string
   'common.upgrade': string
   'common.useSSL': string
@@ -1172,10 +1176,11 @@ export interface StringsMap {
   'rbac.resourceScope.selectOrg': string
   'rbac.resourceScope.selectOrgsandProjects': string
   'rbac.resourceSelectorErrorMessage': string
+  'rbac.roleAssignment.addUsersPlaceHolder': string
   'rbac.roleAssignment.assignmentValidation': string
   'rbac.roleAssignment.deleteFailure': string
   'rbac.roleAssignment.deleteSuccess': string
-  'rbac.roleAssignment.userPlaceHolder': string
+  'rbac.roleAssignment.searchOrAddUsersPlaceHolder': string
   'rbac.roleBinding': string
   'rbac.roleBindings': string
   'rbac.roleCard.confirmDelete': string
@@ -2554,6 +2559,8 @@ export interface StringsMap {
   'connectors.pdc.selectLabel': string
   'connectors.pdc.testConnection.step1': string
   'connectors.pdc.uploadJson': string
+  'connectors.pdc.validateHosts': string
+  'connectors.pdc.validateHostsJson': string
   'connectors.placeholder.harnessImageConnectorRef': string
   'connectors.policyEvaluations.failedToSave': string
   'connectors.policyEvaluations.warning': string
@@ -2579,6 +2586,7 @@ export interface StringsMap {
   'connectors.splunk.connectorDetailsHeader': string
   'connectors.splunkConnectorDetails': string
   'connectors.splunkLabel': string
+  'connectors.spotAccountId': string
   'connectors.stackdriverLogsLabel': string
   'connectors.stackdriverMetricsLabel': string
   'connectors.stepFourName': string
@@ -3078,6 +3086,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
   'pipeline.artifactTriggerConfigPanel.selectAnArtifact': string
   'pipeline.artifactTriggerConfigPanel.tagArtifactPathBuild': string
+  'pipeline.artifactsSelection.AmazonMachineImageTitle': string
   'pipeline.artifactsSelection.addArtifactSource': string
   'pipeline.artifactsSelection.addPrimaryArtifact': string
   'pipeline.artifactsSelection.addSidecar': string
@@ -3131,6 +3140,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.groupId': string
   'pipeline.artifactsSelection.validation.imagePath': string
   'pipeline.artifactsSelection.validation.noBuild': string
+  'pipeline.artifactsSelection.validation.noVersion': string
   'pipeline.artifactsSelection.validation.packageName': string
   'pipeline.artifactsSelection.validation.packageType': string
   'pipeline.artifactsSelection.validation.region': string
@@ -3306,7 +3316,6 @@ export interface StringsMap {
   'pipeline.dashboards.noTargetBaselines': string
   'pipeline.dashboards.noWorkloads': string
   'pipeline.dashboards.pendingDeployments': string
-  'pipeline.dashboards.pipelineExecution': string
   'pipeline.dashboards.pipelineHealth': string
   'pipeline.dashboards.successRate': string
   'pipeline.dashboards.successfulBuilds': string
@@ -4041,6 +4050,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSRollingDeploy': string
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
+  'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
@@ -4178,7 +4188,10 @@ export interface StringsMap {
   'pipeline.uniqueName': string
   'pipeline.unsupportedImagesWarning': string
   'pipeline.utilitiesStep.assertion': string
+  'pipeline.utilitiesStep.cc': string
   'pipeline.utilitiesStep.requestBody': string
+  'pipeline.utilitiesStep.subject': string
+  'pipeline.utilitiesStep.to': string
   'pipeline.utilitiesStep.url': string
   'pipeline.variable.typePlaceholder': string
   'pipeline.variable.variableNamePlaceholder': string
@@ -4266,6 +4279,7 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.confirmDeleteText': string
   'freezeWindows.freezeWindowsPage.confirmDeleteTitle': string
   'freezeWindows.freezeWindowsPage.createFreezeWindow': string
+  'freezeWindows.freezeWindowsPage.dateRangeLabel': string
   'freezeWindows.freezeWindowsPage.deleteFailure': string
   'freezeWindows.freezeWindowsPage.deleteSuccess': string
   'freezeWindows.freezeWindowsPage.editFreezeWindow': string
@@ -4296,9 +4310,14 @@ export interface StringsMap {
   'templatesLibrary.copyToNewPipeline': string
   'templatesLibrary.createNewModal.editHeading': string
   'templatesLibrary.createNewModal.heading': string
+  'templatesLibrary.createNewModal.iconDimensionsError': string
+  'templatesLibrary.createNewModal.iconSizeError': string
+  'templatesLibrary.createNewModal.iconTypeError': string
   'templatesLibrary.createNewModal.identifierPlaceholder': string
   'templatesLibrary.createNewModal.label': string
   'templatesLibrary.createNewModal.lastPublishedVersion': string
+  'templatesLibrary.createNewModal.logo': string
+  'templatesLibrary.createNewModal.logoHelpText': string
   'templatesLibrary.createNewModal.nameError': string
   'templatesLibrary.createNewModal.namePlaceholder': string
   'templatesLibrary.created': string
@@ -4619,6 +4638,7 @@ export interface StringsMap {
   'cd.deletedGitOpsServerSuccessfully': string
   'cd.deletedSuccessfully': string
   'cd.deploymentSteps': string
+  'cd.deploymentTemplates': string
   'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
@@ -4714,6 +4734,7 @@ export interface StringsMap {
   'cd.learnMoreAboutHarnessAdapter': string
   'cd.learnMoreDelegate': string
   'cd.loadingDelegate': string
+  'cd.logoOfName': string
   'cd.manifestId': string
   'cd.manifestPathsCannotBeEmpty': string
   'cd.miniKube': string
@@ -4986,6 +5007,8 @@ export interface StringsMap {
   'cd.steps.elastigroup.elastigroupConfigReq': string
   'cd.steps.elastigroup.elastigroupTitle': string
   'cd.steps.elastigroup.infraDetailHeader': string
+  'cd.steps.emailStep.ccOptionalLabel': string
+  'cd.steps.emailStep.timeout1DayMinimum': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.filterHostAttributes': string
@@ -5761,6 +5784,36 @@ export interface StringsMap {
   'ce.enforcementMessage.usageInfo': string
   'ce.gridColumnSelector': string
   'ce.homepage.slogan': string
+  'ce.k8sQuickCreate.advanced': string
+  'ce.k8sQuickCreate.applyYaml.continue': string
+  'ce.k8sQuickCreate.applyYaml.desc': string
+  'ce.k8sQuickCreate.applyYaml.eksClusterInfo': string
+  'ce.k8sQuickCreate.applyYaml.header': string
+  'ce.k8sQuickCreate.applyYaml.step1': string
+  'ce.k8sQuickCreate.applyYaml.step2': string
+  'ce.k8sQuickCreate.applyYaml.stepsToApply': string
+  'ce.k8sQuickCreate.createAndTest': string
+  'ce.k8sQuickCreate.downloadAndApplyYaml': string
+  'ce.k8sQuickCreate.overview.nameInfo': string
+  'ce.k8sQuickCreate.quickCreate': string
+  'ce.k8sQuickCreate.testConnection.connectorSuccessful': string
+  'ce.k8sQuickCreate.testConnection.createdSuccessfully': string
+  'ce.k8sQuickCreate.testConnection.delegateError.error': string
+  'ce.k8sQuickCreate.testConnection.delegateError.info1': string
+  'ce.k8sQuickCreate.testConnection.delegateError.info2': string
+  'ce.k8sQuickCreate.testConnection.delegateError.troubleshoot1': string
+  'ce.k8sQuickCreate.testConnection.delegateError.troubleshoot2': string
+  'ce.k8sQuickCreate.testConnection.delegateError.troubleshoot3': string
+  'ce.k8sQuickCreate.testConnection.installedSuccessfully': string
+  'ce.k8sQuickCreate.testConnection.retest': string
+  'ce.k8sQuickCreate.testConnection.step0': string
+  'ce.k8sQuickCreate.testConnection.step1': string
+  'ce.k8sQuickCreate.testConnection.step1Desc': string
+  'ce.k8sQuickCreate.testConnection.step2': string
+  'ce.k8sQuickCreate.testConnection.step3': string
+  'ce.k8sQuickCreate.testConnection.verified': string
+  'ce.k8sQuickCreate.time.10mins': string
+  'ce.k8sQuickCreate.time.5mins': string
   'ce.learnMore': string
   'ce.noSavingsDataMessage': string
   'ce.nodeRecommendation.addPreferredInstanceFamilies': string
@@ -6869,6 +6922,16 @@ export interface StringsMap {
   'ci.titleResources': string
   'ci.titleSettings': string
   'ci.welcome': string
+  'cv.CVStepper.StepError': string
+  'cv.CompositeSLO.AddSLO': string
+  'cv.CompositeSLO.AddSLOMessage': string
+  'cv.CompositeSLO.DefineSLO': string
+  'cv.CompositeSLO.ErrorBudgetPolicy': string
+  'cv.CompositeSLO.PeriodChangeWarning.message': string
+  'cv.CompositeSLO.PeriodChangeWarning.title': string
+  'cv.CompositeSLO.SetTarget': string
+  'cv.CompositeSLO.SetTimeWindow': string
+  'cv.CompositeSLO.Weightage': string
   'cv.Dependency.noData': string
   'cv.Dependency.serviceChanges': string
   'cv.Dependency.serviceList': string
@@ -7635,6 +7698,7 @@ export interface StringsMap {
   'cv.slos.contextualHelp.target.rollingWindowBased': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition2': string
+  'cv.slos.createCompositeSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
   'cv.slos.deleteSLO': string

@@ -23,7 +23,7 @@ const ErrorTracking: React.FC<MetricsAndLogsProps> = props => {
   const { startTime, endTime } = props
 
   const componentLocation = {
-    pathname: '/events'
+    pathname: '/monitoredServiceEvents'
   }
 
   return (

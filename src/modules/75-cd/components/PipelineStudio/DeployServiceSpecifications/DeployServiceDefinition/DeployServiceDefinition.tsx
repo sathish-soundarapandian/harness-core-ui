@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
-import { debounce, defaultTo, get, set, unset } from 'lodash-es'
+import { debounce, defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 import type { ServiceDefinition, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
@@ -31,6 +31,7 @@ import { useServiceContext } from '@cd/context/ServiceContext'
 import type { ServicePipelineConfig } from '@cd/components/Services/utils/ServiceUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
 import css from './DeployServiceDefinition.module.scss'
@@ -90,6 +91,9 @@ function DeployServiceDefinition(): React.ReactElement {
   useDeepCompareEffect(() => {
     setCustomDeploymentData(customDeploymentDataFromYaml)
   }, [customDeploymentDataFromYaml])
+
+  const selectedDeploymentTemplateRef = useRef<TemplateSummaryResponse | undefined>()
+  const fromTemplateSelectorRef = useRef(false)
 
   const disabledState = isServiceEntityModalView ? true : isReadonly
 
@@ -183,22 +187,22 @@ function DeployServiceDefinition(): React.ReactElement {
   }
 
   const onCustomDeploymentSelection = async (): Promise<void> => {
+    if (fromTemplateSelectorRef.current && selectedDeploymentTemplateRef.current) {
+      return setCustomDeploymentData(getTemplateRefVersionLabelObject(selectedDeploymentTemplateRef.current))
+    }
+
     try {
       const { template } = await getTemplate({
+        selectedTemplate: selectedDeploymentTemplateRef.current,
         templateType: TemplateType.CustomDeployment,
-        allowedUsages: [TemplateUsage.USE]
+        allowedUsages: [TemplateUsage.USE],
+        showChangeTemplateDialog: false,
+        hideTemplatesView: true,
+        disableUseTemplateIfUnchanged: false
       })
       setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
     } catch (_) {
-      // Reset deployment data.. User cancelled template selection
-      setCustomDeploymentData(undefined)
-      setSelectedDeploymentType(undefined)
-      const stageData = produce(stage, draft => {
-        if (draft) {
-          unset(draft, 'stage.spec.serviceConfig.serviceDefinition.type')
-        }
-      })
-      updateStage(stageData?.stage as StageElementConfig)
+      // don't do anything if user closes the drawer
     }
   }
 
@@ -215,32 +219,44 @@ function DeployServiceDefinition(): React.ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customDeploymentData])
 
-  const handleDeploymentTypeChange = useCallback(
-    (deploymentType: ServiceDeploymentType): void => {
-      if (deploymentType !== selectedDeploymentType) {
-        const stageData = produce(stage, draft => {
-          const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
-          serviceDefinition.type = deploymentType
-        })
-        if (doesStageContainOtherData(stageData?.stage)) {
-          setCurrStageData(stageData?.stage)
-          openServiceDataDeleteWarningDialog()
+  const handleDeploymentTypeChange = (deploymentType: ServiceDeploymentType): void => {
+    if (deploymentType !== selectedDeploymentType) {
+      const stageData = produce(stage, draft => {
+        const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
+        serviceDefinition.type = deploymentType
+      })
+      if (doesStageContainOtherData(stageData?.stage)) {
+        setCurrStageData(stageData?.stage)
+        openServiceDataDeleteWarningDialog()
+      } else {
+        setSelectedDeploymentType(deploymentType)
+        setCustomDeploymentData(undefined)
+        if (gitOpsEnabled) {
+          updateDeploymentTypeWithGitops(deploymentType)
         } else {
-          setSelectedDeploymentType(deploymentType)
-          setCustomDeploymentData(undefined)
-          if (gitOpsEnabled) {
-            updateDeploymentTypeWithGitops(deploymentType)
-          } else {
-            updateStage(stageData?.stage as StageElementConfig)
-            if (deploymentType === ServiceDeploymentType.CustomDeployment) {
-              onCustomDeploymentSelection()
-            }
+          updateStage(stageData?.stage as StageElementConfig)
+          if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+            onCustomDeploymentSelection()
           }
         }
       }
-    },
-    [stage, updateStage]
-  )
+    }
+  }
+
+  const onDeploymentTemplateSelect = (
+    deploymentTemplate: TemplateSummaryResponse,
+    fromTemplateSelector: boolean
+  ): void => {
+    selectedDeploymentTemplateRef.current = deploymentTemplate
+    fromTemplateSelectorRef.current = fromTemplateSelector
+
+    if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
+      onCustomDeploymentSelection()
+    } else {
+      handleDeploymentTypeChange(ServiceDeploymentType.CustomDeployment)
+    }
+  }
+
   return (
     <div className={cx(css.contentSection, isServiceEntityModalView ? css.editServiceModal : css.nonModalView)}>
       <div className={css.tabHeading} id="serviceDefinition">
@@ -252,9 +268,10 @@ function DeployServiceDefinition(): React.ReactElement {
         gitOpsEnabled={gitOpsEnabled}
         isReadonly={disabledState}
         handleDeploymentTypeChange={handleDeploymentTypeChange}
+        onDeploymentTemplateSelect={onDeploymentTemplateSelect}
         shouldShowGitops={true}
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
-        customDeploymentData={customDeploymentData}
+        templateLinkConfig={customDeploymentData}
         addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
       />
       <Layout.Horizontal>

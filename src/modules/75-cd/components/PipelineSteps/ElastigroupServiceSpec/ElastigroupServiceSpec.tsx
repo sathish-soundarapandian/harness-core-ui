@@ -41,7 +41,7 @@ const ArtifactsPrimaryRegex = /^.+artifacts\.primary\.sources\.spec\.connectorRe
 const elastigroupAllowedArtifactTypes: Array<ArtifactType> = allowedArtifactTypes.Elastigroup
 
 export class ElastigroupServiceSpec extends Step<ServiceSpec> {
-  protected type = StepType.Elastigroup
+  protected type = StepType.ElastigroupService
   protected defaultValues: ServiceSpec = {}
 
   protected stepIcon: IconName = 'service-elastigroup'

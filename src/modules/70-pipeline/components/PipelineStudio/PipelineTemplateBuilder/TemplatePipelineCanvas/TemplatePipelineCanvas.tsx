@@ -34,8 +34,9 @@ import css from './TemplatePipelineCanvas.module.scss'
 
 export function TemplatePipelineCanvas(): React.ReactElement {
   const {
-    state: { pipeline, templateTypes, templateServiceData, gitDetails, storeMetadata },
+    state: { pipeline, templateTypes, templateIcons, templateServiceData, gitDetails, storeMetadata },
     setTemplateTypes,
+    setTemplateIcons,
     setTemplateServiceData
   } = usePipelineContext()
   const canvasRef = React.useRef<HTMLDivElement | null>(null)
@@ -58,12 +59,13 @@ export function TemplatePipelineCanvas(): React.ReactElement {
     return getPipelineGraphData({
       data: resolvedPipeline?.stages as StageElementWrapperConfig[],
       templateTypes: templateTypes,
+      templateIcons,
       serviceDependencies: undefined,
       errorMap: errorMap,
       parentPath: `pipeline.stages`
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resolvedPipeline?.stages, JSON.stringify(templateTypes), errorMap])
+  }, [resolvedPipeline?.stages, JSON.stringify(templateTypes), JSON.stringify(templateIcons), errorMap])
 
   const {
     data: pipelineTemplateResponse,
@@ -96,6 +98,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       supportingTemplatesGitx
     ).then(resp => {
       setTemplateTypes(merge(templateTypes, resp.templateTypes))
+      setTemplateIcons({ ...merge(templateIcons, resp.templateIcons) })
       setTemplateServiceData(merge(templateServiceData, resp.templateServiceData))
     })
   }, [JSON.stringify(resolvedPipeline)])

@@ -84,6 +84,9 @@ utilitiesStep:
   url: Enter the URL
   requestBody: Enter the message body
   assertion: Enter Assertion
+  to: Enter recipient email
+  subject: Enter the email subject
+  cc: Cc
 terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
@@ -523,7 +526,7 @@ execution:
     abortStage: Abort Stage
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
-    compareExecutions: Compare Executions
+    compareExecutions: Compare Pipeline Executions
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -669,7 +672,6 @@ dashboards:
   successfulBuilds: Successful Builds
   pipelineHealth: Pipeline health
   totalExecutions: Total Executions
-  pipelineExecution: Pipeline Executions
   executionsLabel: '# of Executions'
   successRate: Success Rate
   meanDuration: Mean Duration
@@ -868,6 +870,7 @@ artifactsSelection:
   googleArtifactRegistryTitle: Google Artifact Registry
   githubPackageRegistryTitle: Github Package Registry
   azureArtifactRegistryTitle: Azure Artifact Registry
+  AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
     sidecarId: Sidecar Name
     sidecarIdPlaceholder: Enter Artifact Name
@@ -878,6 +881,7 @@ artifactsSelection:
     artifactsArrayPath: Artifact array path is required
     versionPath: Version path is required
     noBuild: No build found with given details
+    noVersion: No version found with given details
     packageType: Package Type is required
     versionRegex: Version Regex is required
     packageName: Package Name is required
@@ -1016,6 +1020,7 @@ stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
   ShellScriptProvision: The Shell Script Provisioner supports custom provisioners or your existing shell script implementations.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
+  Email: Send email messages to Harness users as part of the pipeline execution.
   Wait: Suspend/Wait the execution for the given amount of time.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
   Queue: Queue pipeline executions to prevent multiple stages or pipelines from requesting the same deployment resources simultaneously.

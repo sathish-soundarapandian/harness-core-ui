@@ -34,7 +34,7 @@ describe('LandingDashboardDeploymentsWidget tests', () => {
     // const pendingManualInterventionsBadge = getByText('1 Pending Manual Interventions')
     // expect(pendingManualInterventionsBadge).toBeInTheDocument()
 
-    const deploymentStatsSummaryCard = getByText('pipeline.dashboards.pipelineExecution')
+    const deploymentStatsSummaryCard = getByText('common.pipelineExecution')
     expect(deploymentStatsSummaryCard).toBeInTheDocument()
     const failureRateSummaryCard = getByText('common.failureRate')
     expect(failureRateSummaryCard).toBeInTheDocument()

@@ -6,6 +6,7 @@
  */
 
 import { ACRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ACRArtifactSource/ACRArtifactSource'
+import { AmazonMachineImageSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/AmazonMachineImageSource/AmazonMachineImageSource'
 import { AmazonS3ArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/AmazonS3ArtifactSource/AmazonS3ArtifactSource'
 import { ArtifactoryArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ArtifactoryArtifactSource/ArtifactoryArtifactSource'
 import { CustomArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/CustomArtifactSource/CustomArtifactSource'
@@ -54,5 +55,6 @@ artifactSourceBaseFactory.registerArtifactSource(new AmazonS3ArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new JenkinsArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new GoogleArtifactRegistrySource())
 artifactSourceBaseFactory.registerArtifactSource(new GithubPackageRegistrySource())
+artifactSourceBaseFactory.registerArtifactSource(new AmazonMachineImageSource())
 
 export default artifactSourceBaseFactory

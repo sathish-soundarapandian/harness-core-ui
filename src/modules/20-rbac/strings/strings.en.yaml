@@ -99,7 +99,8 @@ userGroupForm:
   editSuccess: User Group '{{name}}' edited successfully
   addMemberSuccess: Members added successfully
 roleAssignment:
-  userPlaceHolder: Search existing users or add new users
+  searchOrAddUsersPlaceHolder: Search existing users or add new users
+  addUsersPlaceHolder: Add new users
   assignmentValidation: You are trying to invite a user without any roles. Please click on add to start assigning roles.
   deleteSuccess: Role Assignment deleted successfully
   deleteFailure: This Role Assignment could not be deleted

@@ -10,13 +10,8 @@ import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  ServiceDefinition,
-  ServiceYaml,
-  useGetServiceAccessList,
-  useGetServicesYamlAndRuntimeInputs
-} from 'services/cd-ng'
-import { useMutateAsGet } from '@common/hooks'
+import type { ServiceDefinition, ServiceYaml } from 'services/cd-ng'
+import { useGetServiceAccessListQuery, useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
@@ -40,6 +35,8 @@ export interface UseGetServicesDataReturn {
   refetchListData(): void
   prependServiceToServiceList(newServiceInfo: ServiceYaml): void
 }
+// react-query staleTime
+const STALE_TIME = 60 * 1000 * 15
 
 export function useGetServicesData(props: UseGetServicesDataProps): UseGetServicesDataReturn {
   const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel } = props
@@ -52,34 +49,44 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
   const {
     data: servicesListResponse,
     error,
-    loading: loadingServicesList,
+    isLoading: loadingServicesList,
     refetch: refetchListData
-  } = useGetServiceAccessList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      type: deploymentType as ServiceDefinition['type'],
-      gitOpsEnabled,
-      deploymentTemplateIdentifier,
-      versionLabel
+  } = useGetServiceAccessListQuery(
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        type: deploymentType as ServiceDefinition['type'],
+        gitOpsEnabled,
+        deploymentTemplateIdentifier,
+        versionLabel
+      }
+    },
+    {
+      staleTime: STALE_TIME
     }
-  })
+  )
 
   const {
     data: servicesDataResponse,
-    initLoading: loadingServicesData,
-    loading: updatingData,
+    isInitialLoading: loadingServicesData,
+    isFetching: updatingData,
     refetch: refetchServicesData
-  } = useMutateAsGet(useGetServicesYamlAndRuntimeInputs, {
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
+  } = useGetServicesYamlAndRuntimeInputsQuery(
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      body: { serviceIdentifiers }
     },
-    body: { serviceIdentifiers },
-    lazy: serviceIdentifiers.length === 0
-  })
+    {
+      enabled: serviceIdentifiers.length > 0,
+      staleTime: STALE_TIME
+    }
+  )
 
   const loading = loadingServicesList || loadingServicesData
 
@@ -134,7 +141,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     /* istanbul ignore else */
     if (error?.message) {
       if (shouldShowError(error)) {
-        showError(getRBACErrorMessage(error))
+        showError(getRBACErrorMessage(error as any))
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
