@@ -32,7 +32,6 @@ exports[`CITrialHomePage snapshot test should call button event when click 1`] =
           ci.learnMore
         </a>
         <button
-          aria-label="ci.ciTrialHomePage.startTrial.startBtn.description"
           class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           disabled=""
           style="width: 300px; height: 45px;"
@@ -124,7 +123,6 @@ exports[`CITrialHomePage snapshot test should render properly 1`] = `
           ci.learnMore
         </a>
         <button
-          aria-label="ci.ciTrialHomePage.startTrial.startBtn.description"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -132,9 +130,14 @@ exports[`CITrialHomePage snapshot test should render properly 1`] = `
           <span
             class="bp3-button-text"
           >
-            ci.ciTrialHomePage.startTrial.startBtn.description
+            common.startFreePlan
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>

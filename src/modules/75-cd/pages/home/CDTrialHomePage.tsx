@@ -16,7 +16,6 @@ const CDTrialHomePage: React.FC = () => {
   const module = 'cd'
   const moduleType = 'CD'
   const isFreeEnabled = !isOnPrem()
-  console.log(isFreeEnabled, 'hello')
   const startBtnDescription = isFreeEnabled
     ? getString('common.startFreePlan', { module: moduleType })
     : getString('cd.cdTrialHomePage.startTrial.startBtn.description')
