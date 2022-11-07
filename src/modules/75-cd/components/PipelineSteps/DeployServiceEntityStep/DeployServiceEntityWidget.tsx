@@ -449,40 +449,23 @@ export default function DeployServiceEntityWidget({
                 >
                   <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                     {isMultiSvc ? (
-                      <div className={css.inputFieldLayout}>
-                        <FormMultiTypeMultiSelectDropDown
-                          tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                          label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
-                          name="services"
-                          disabled={readonly || (isFixed && loading)}
-                          dropdownProps={{
-                            items: selectOptions,
-                            placeholder: placeHolderForServices,
-                            disabled: loading || readonly
-                          }}
-                          multiTypeProps={{
-                            width: 300,
-                            expressions,
-                            allowableTypes
-                          }}
-                          enableConfigureOptions
-                        />
-                        {getMultiTypeFromValue(formik?.values.services) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            className={css.configureOptions}
-                            style={{ alignSelf: 'center' }}
-                            value={formik?.values.services as string}
-                            type="String"
-                            variableName="skipResourceVersioning"
-                            showRequiredField={false}
-                            showDefaultField={true}
-                            showAdvanced={true}
-                            onChange={value => {
-                              formik.setFieldValue('services', value)
-                            }}
-                          />
-                        )}
-                      </div>
+                      <FormMultiTypeMultiSelectDropDown
+                        tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
+                        name="services"
+                        disabled={readonly || (isFixed && loading)}
+                        dropdownProps={{
+                          items: selectOptions,
+                          placeholder: placeHolderForServices,
+                          disabled: loading || readonly
+                        }}
+                        multiTypeProps={{
+                          width: 300,
+                          expressions,
+                          allowableTypes
+                        }}
+                        enableConfigureOptions
+                      />
                     ) : (
                       <div className={css.inputFieldLayout}>
                         <FormInput.MultiTypeInput
@@ -508,7 +491,7 @@ export default function DeployServiceEntityWidget({
                             style={{ alignSelf: 'center' }}
                             value={defaultTo(formik?.values.service, '')}
                             type="String"
-                            variableName="skipResourceVersioning"
+                            variableName="service"
                             showRequiredField={false}
                             showDefaultField={true}
                             showAdvanced={true}
