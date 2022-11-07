@@ -86,8 +86,6 @@ const versionAPIs = [
   }
 ]
 
-const BASE_URL = window.location.pathname.replace(/ng\/static\/versions\.html$/, '')
-
 interface ServiceData {
   label?: string
   version?: string
@@ -107,7 +105,7 @@ const ServiceVersions = () => {
       setLoading(true)
       for (const row of versionAPIs) {
         try {
-          const res = await fetch(row.url.startsWith('http') ? window.location.origin + row.url : BASE_URL + row.url)
+          const res = await fetch(row.url.startsWith('http') ? row.url : window.location.origin + '/' + row.url)
           const response = await res.json()
 
           let serviceRow: ServiceData = {
