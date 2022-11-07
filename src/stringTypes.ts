@@ -3373,6 +3373,7 @@ export interface StringsMap {
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
   'pipeline.execution.elapsedTime': string
+  'pipeline.execution.emptyStepGroup': string
   'pipeline.execution.ignoreFailedWarningText': string
   'pipeline.execution.iotab.noInputText': string
   'pipeline.execution.iotab.noOutputText': string

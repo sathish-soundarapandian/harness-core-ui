@@ -503,6 +503,7 @@ execution:
   timePrefix: 'Execution Time: '
   compareAction: Compare
   compareExecutionsTitle: Select executions to compare the compiled YAML
+  emptyStepGroup: Step Group is empty
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
