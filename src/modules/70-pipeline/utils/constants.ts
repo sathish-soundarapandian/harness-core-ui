@@ -47,6 +47,7 @@ export const connectorTypes: { [key: string]: ConnectorInfoDTO['type'] } = {
 export const stageTypeToIconMap: Record<string, IconName> = {
   Deployment: 'cd-main',
   CI: 'ci-main',
+  ci: 'ci-main',
   SecurityTests: 'sto-color-filled',
   Pipeline: 'pipeline',
   Custom: 'custom-stage-icon',

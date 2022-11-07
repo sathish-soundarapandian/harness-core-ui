@@ -34,7 +34,7 @@ import type { TemplateServiceDataType } from './templateUtils'
 
 export enum StageType {
   DEPLOY = 'Deployment',
-  BUILD = 'CI',
+  BUILD = 'ci',
   FEATURE = 'FeatureFlag',
   PIPELINE = 'Pipeline',
   APPROVAL = 'Approval',
