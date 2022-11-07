@@ -1455,8 +1455,8 @@ export function StageInputSetFormInternal({
                     multiTypeInputProps={{
                       selectItems: [
                         { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-                        { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
-                        { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+                        { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS }
+                        // { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
                       ],
                       multiTypeInputProps: {
                         allowableTypes: [MultiTypeInputType.FIXED]
@@ -1486,7 +1486,7 @@ export function StageInputSetFormInternal({
                         font={{ variation: FontVariation.FORM_LABEL }}
                         margin={{ bottom: 'xsmall' }}
                       >
-                        {getString(osLabel)}
+                        {getString(archLabel)}
                       </Text>
                     }
                     name={`${namePath}platform.arch`}
