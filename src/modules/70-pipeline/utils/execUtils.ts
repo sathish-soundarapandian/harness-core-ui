@@ -413,7 +413,8 @@ export const processNodeDataV1 = (
   nodeMap: ExecutionGraph['nodeMap'],
   nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap'],
   rootNodes: Array<PipelineGraphState>,
-  isNestedGroup = false
+  isNestedGroup = false,
+  processNextItem = true
 ): Array<PipelineGraphState> => {
   const items: Array<PipelineGraphState> = []
   children?.forEach(item => {
@@ -447,9 +448,11 @@ export const processNodeDataV1 = (
         processSingleItem({ id: item, items, nodeMap, nodeAdjacencyListMap, rootNodes })
       }
     }
-    const nextIds = nodeAdjacencyListMap?.[item].nextIds || /* istanbul ignore next */ []
-    const processedNodes = processNextNodes({ nodeMap, nodeAdjacencyListMap, nextIds, rootNodes })
-    items.push(...processedNodes)
+    if (processNextItem) {
+      const nextIds = nodeAdjacencyListMap?.[item].nextIds || /* istanbul ignore next */ []
+      const processedNodes = processNextNodes({ nodeMap, nodeAdjacencyListMap, nextIds, rootNodes })
+      items.push(...processedNodes)
+    }
   })
   return items
 }
@@ -846,28 +849,15 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
             )
           })
         } else {
-          const iconData = getIconDataBasedOnType(nodeData)
-
-          items.push({
-            id: nodeData.uuid as string,
-            name: nodeData.name || /* istanbul ignore next */ '',
-            identifier: nodeData.identifier as string,
-            icon: iconData.icon as IconName,
-            type: nodeData.stepType,
-            nodeType: nodeData.stepType,
-            status: nodeData?.status as ExecutionStatus,
-            data: {
-              ...iconData,
-              name: nodeData.name || /* istanbul ignore next */ '',
-              skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
-              when: nodeData.nodeRunInfo,
-              showInLabel: nodeData.stepType === NodeType.SERVICE || nodeData.stepType === NodeType.INFRASTRUCTURE,
-              identifier: nodeId,
-              status: nodeData.status as ExecutionStatus,
-              type: nodeData?.stepType,
-              data: nodeData
-            }
-          })
+          const exec = processNodeDataV1(
+            [nodeId] || /* istanbul ignore next */ [],
+            graph?.nodeMap,
+            graph?.nodeAdjacencyListMap,
+            items,
+            false,
+            false
+          )
+          items.push(...exec)
         }
       }
       nodeId = nodeAdjacencyListMap[nodeId].nextIds?.[0]
