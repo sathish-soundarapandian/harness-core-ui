@@ -12,6 +12,7 @@ import { useFormikContext } from 'formik'
 import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
+import { useDeepCompareEffect } from '@common/hooks'
 
 import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
@@ -59,6 +60,10 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const arifactsSpecPath = `serviceInputs.${serviceIdentifier}.serviceDefinition.spec`
 
   const type = service.serviceDefinition?.type as ServiceDeploymentType
+
+  useDeepCompareEffect(() => {
+    setTemplate(serviceInputs?.serviceDefinition?.spec)
+  }, [serviceInputs?.serviceDefinition?.spec])
 
   function toggle(): void {
     setShowInputs(s => !s)

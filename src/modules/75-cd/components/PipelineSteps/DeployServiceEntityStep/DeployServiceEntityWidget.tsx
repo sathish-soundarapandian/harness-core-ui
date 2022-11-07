@@ -26,7 +26,15 @@ import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { IDialogProps, Intent } from '@blueprintjs/core'
 import produce from 'immer'
-import type { ServiceDefinition, ServiceYaml, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
+import { useParams } from 'react-router-dom'
+import {
+  JsonNode,
+  mergeServiceInputsPromise,
+  ServiceDefinition,
+  ServiceYaml,
+  ServiceYamlV2,
+  TemplateLinkConfig
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -42,6 +50,9 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { sanitize } from '@common/utils/JSONUtils'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -120,6 +131,7 @@ export default function DeployServiceEntityWidget({
   stageIdentifier
 }: DeployServiceEntityWidgetProps): React.ReactElement {
   const { getString } = useStrings()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
 
   const { expressions } = useVariablesExpression()
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<FormState>()
@@ -152,15 +164,15 @@ export default function DeployServiceEntityWidget({
   const [serviceInputType, setServiceInputType] = React.useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues?.service?.serviceRef)
   )
+
   const {
     servicesData,
     servicesList,
     loadingServicesData,
     loadingServicesList,
     updatingData,
-    refetchServicesData,
-    refetchListData,
-    prependServiceToServiceList
+    prependServiceToServiceList,
+    updateServiceInputsData
   } = useGetServicesData({
     gitOpsEnabled,
     serviceIdentifiers: allServices,
@@ -254,9 +266,36 @@ export default function DeployServiceEntityWidget({
     }
   }
 
-  function onServiceEntityUpdate(): void {
-    refetchServicesData()
-    refetchListData()
+  async function onServiceEntityUpdate(updatedService: ServiceYaml): Promise<void> {
+    if (formikRef.current) {
+      const { values, setValues } = formikRef.current
+      const body = {
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        },
+        serviceIdentifier: updatedService.identifier,
+        pathParams: { serviceIdentifier: updatedService.identifier },
+        body: yamlStringify(
+          sanitize(
+            { serviceInputs: { ...get(values, `serviceInputs.${updatedService.identifier}`) } },
+            { removeEmptyObject: false, removeEmptyString: false }
+          )
+        )
+      }
+      const response = await mergeServiceInputsPromise(body)
+      const mergedServiceInputsResponse = response?.data
+      setValues({
+        ...values,
+        serviceInputs: {
+          [updatedService.identifier]: yamlParse<JsonNode>(
+            defaultTo(mergedServiceInputsResponse?.mergedServiceInputsYaml, '')
+          )?.serviceInputs
+        }
+      })
+      updateServiceInputsData(updatedService.identifier, mergedServiceInputsResponse)
+    }
   }
 
   function updateValuesInFomikAndPropogate(values: FormState): void {

@@ -6,12 +6,15 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
+import produce from 'immer'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import {
+  JsonNode,
   ServiceDefinition,
+  ServiceInputsMergedResponseDto,
   ServiceYaml,
   useGetServiceAccessList,
   useGetServicesYamlAndRuntimeInputs
@@ -39,6 +42,7 @@ export interface UseGetServicesDataReturn {
   refetchServicesData(): void
   refetchListData(): void
   prependServiceToServiceList(newServiceInfo: ServiceYaml): void
+  updateServiceInputsData(serviceId: string, mergedInputResponse?: ServiceInputsMergedResponseDto): void
 }
 
 export function useGetServicesData(props: UseGetServicesDataProps): UseGetServicesDataReturn {
@@ -87,6 +91,28 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     setServicesList(data => [newServiceInfo, ...(data || [])])
   }, [])
 
+  const updateServiceInputsData = useCallback(
+    (serviceId: string, mergedServiceInputsDto: ServiceInputsMergedResponseDto) => {
+      if (!isEmpty(mergedServiceInputsDto)) {
+        const service = yamlParse<Pick<ServiceData, 'service'>>(
+          defaultTo(mergedServiceInputsDto.serviceYaml, '')
+        )?.service
+        const serviceInputs = yamlParse<JsonNode>(
+          defaultTo(mergedServiceInputsDto.mergedServiceInputsYaml, '')
+        ).serviceInputs
+
+        service.yaml = defaultTo(mergedServiceInputsDto.serviceYaml, '')
+        const updatedData = produce(servicesData, draft => {
+          const serviceIndex = draft.findIndex(svc => svc.service.identifier === serviceId)
+          set(draft[serviceIndex], 'serviceInputs', serviceInputs)
+          set(draft[serviceIndex], 'service', service)
+        })
+        setServicesData(updatedData)
+      }
+    },
+    [servicesData]
+  )
+
   useEffect(() => {
     if (!loading) {
       let _servicesList: ServiceYaml[] = []
@@ -124,7 +150,6 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
           return { service, serviceInputs }
         })
       }
-
       setServicesList(_servicesList)
       setServicesData(_servicesData)
     }
@@ -148,6 +173,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     loadingServicesList,
     refetchServicesData,
     refetchListData,
-    prependServiceToServiceList
+    prependServiceToServiceList,
+    updateServiceInputsData
   }
 }

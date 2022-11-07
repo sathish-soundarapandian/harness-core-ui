@@ -28,6 +28,7 @@ jest.mock('services/cd-ng', () => ({
     loading: false
   })),
   useGetServicesYamlAndRuntimeInputs: jest.fn().mockReturnValue({ mutate: jest.fn(() => ({ data: metadata })) }),
+  mergeServiceInputsPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   useCreateServiceV2: jest.fn().mockReturnValue({
     mutate: jest
       .fn()
