@@ -1,43 +1,29 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode } from 'react'
-import { Heading, Layout, Text, Container, Button, useToaster, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { Button, ButtonVariation, Heading, Layout, Text, useToaster } from '@harness/uicore'
+import React, { FC, ReactNode } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import {
-  ResponseModuleLicenseDTO,
-  StartFreeLicenseQueryParams,
-  StartTrialDTORequestBody,
-  useStartFreeLicense,
-  useStartTrialLicense
-} from 'services/cd-ng'
-import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
-import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
-import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { Category, PlanActions, TrialActions } from '@common/constants/TrackingConstants'
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import routes from '@common/RouteDefinitions'
+import type { ResponseModuleLicenseDTO } from 'services/cd-ng'
+import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { FeatureFlag } from '@common/featureFlags'
-import { getSavedRefererURL } from '@common/utils/utils'
 import { String, useStrings } from 'framework/strings'
+import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
+import { ModuleLicenseType, Editions } from '@common/constants/SubscriptionTypes'
+import { PlanActions, TrialActions, Category } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import routes from '@common/RouteDefinitions'
 import RbacButton from '@rbac/components/Button/Button'
+import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
+import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
-import bgImageURL from './ff.svg'
-import css from './CFTrialTemplate.module.scss'
-
-interface CFTrialTemplateProps {
-  isTrialInProgress?: boolean
-  cfTrialProps: Omit<CFTrialProps, 'startTrial' | 'module' | 'loading'>
-}
+import css from './CFTrialPage.module.scss'
 
 interface CFTrialProps {
   description: string
@@ -52,10 +38,6 @@ interface CFTrialProps {
   shouldShowStartTrialModal?: boolean
   startTrial: () => Promise<ResponseModuleLicenseDTO>
   loading: boolean
-}
-
-export enum Views {
-  PENDING = 'PENDING'
 }
 
 export interface CardSectionProps {
@@ -78,14 +60,10 @@ const CardSection: FC<CardSectionProps> = ({ title, listItems }) => (
   </section>
 )
 
-const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
+const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
   const module = 'cf' as Module
   const { startBtn, shouldShowStartTrialModal, startTrial, loading } = cfTrialProps
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<{
-    accountId: string
-    orgIdentifier: string
-    projectIdentifier: string
-  }>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const history = useHistory()
   const { trackEvent } = useTelemetry()
   const { showError } = useToaster()
@@ -101,7 +79,7 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
     onSuccess: () => {
       history.push({
         pathname: routes.toUsers({ accountId, orgIdentifier, projectIdentifier, module }),
-        search: `view=${Views.PENDING}`
+        search: `view=PENDING`
       })
     }
   })
@@ -119,20 +97,14 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
 
       history.push({
         pathname: routes.toModuleHome({ accountId, module }),
-        search: `?modal=${modal}&&experience=${experience}`
+        search: `modal=${modal}&experience=${experience}`
       })
     } catch (error: any) {
       showError(error.data?.message)
     }
   }
 
-  function handleStartButtonClick(): void {
-    if (shouldShowStartTrialModal) {
-      showModal()
-    } else {
-      handleStartTrial()
-    }
-  }
+  const handleStartButtonClick = shouldShowStartTrialModal ? showModal : handleStartTrial
 
   return (
     <Layout.Vertical className={css.content} spacing="xlarge">
@@ -145,7 +117,7 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
             getString('cf.cfTrialHomePage.forDevelopers.createFlag'),
             getString('cf.cfTrialHomePage.forDevelopers.shipCode'),
             <String
-              key={getString('cf.cfTrialHomePage.forDevelopers.realTime')}
+              key="cf.cfTrialHomePage.forDevelopers.realTime"
               stringID="cf.cfTrialHomePage.forDevelopers.realTime"
               useRichText
             />
@@ -179,80 +151,32 @@ const CFTrial: React.FC<CFTrialProps> = cfTrialProps => {
       {/* Don't Code Panel */}
       <article className={css.dontCodeArticle}>
         <section className={css.dontCode}>
-          <Text color={Color.GREY_900} font={{ variation: FontVariation.H4 }}>
+          <Heading level="4" color={Color.GREY_900} font={{ variation: FontVariation.H4 }}>
             {getString('cf.cfTrialHomePage.dontCode.title')}
-          </Text>
+          </Heading>
           <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
             {getString('cf.cfTrialHomePage.dontCode.description')}
           </Text>
         </section>
-        <section className={css.inviteDeveloper}>
-          <RbacButton
-            variation={ButtonVariation.SECONDARY}
-            height={50}
-            width={180}
-            text={getString('cf.cfTrialHomePage.dontCode.inviteDeveloper')}
-            disabled={loading}
-            data-testid="invite-developer-btn"
-            onClick={() => openRoleAssignmentModal()}
-            permission={{
-              resource: {
-                resourceType: ResourceType.USER
-              },
-              permission: PermissionIdentifier.INVITE_USER
-            }}
-          />
-        </section>
+        <RbacButton
+          className={css.inviteDeveloper}
+          variation={ButtonVariation.SECONDARY}
+          height={50}
+          width={180}
+          text={getString('cf.cfTrialHomePage.dontCode.inviteDeveloper')}
+          disabled={loading}
+          data-testid="invite-developer-btn"
+          onClick={() => openRoleAssignmentModal()}
+          permission={{
+            resource: {
+              resourceType: ResourceType.USER
+            },
+            permission: PermissionIdentifier.INVITE_USER
+          }}
+        />
       </article>
     </Layout.Vertical>
   )
 }
 
-export const CFTrialTemplate: React.FC<CFTrialTemplateProps> = ({ cfTrialProps }) => {
-  const { accountId } = useParams<AccountPathProps>()
-  const { getString } = useStrings()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
-  const refererURL = getSavedRefererURL()
-
-  const startTrialRequestBody: StartTrialDTORequestBody = {
-    moduleType: 'CF',
-    edition: Editions.ENTERPRISE
-  }
-
-  const { mutate: startTrial, loading: startingTrial } = useStartTrialLicense({
-    queryParams: {
-      accountIdentifier: accountId,
-      ...(refererURL ? { referer: refererURL } : {})
-    }
-  })
-
-  const moduleType = 'CF' as StartFreeLicenseQueryParams['moduleType']
-
-  const { mutate: startFreePlan, loading: startingFree } = useStartFreeLicense({
-    queryParams: {
-      accountIdentifier: accountId,
-      moduleType
-    },
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json'
-      }
-    }
-  })
-
-  function handleStartTrial(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? startFreePlan() : startTrial(startTrialRequestBody)
-  }
-
-  return (
-    <Container className={css.body} style={{ background: `transparent url(${bgImageURL}) no-repeat` }}>
-      <Layout.Vertical spacing="medium">
-        <Heading className={css.heading} font={{ variation: FontVariation.H1 }} color={Color.BLACK_100}>
-          {getString('cf.cfTrialHomePage.featureFlagsDescription')}
-        </Heading>
-
-        <CFTrial {...cfTrialProps} startTrial={handleStartTrial} loading={startingTrial || startingFree} />
-      </Layout.Vertical>
-    </Container>
-  )
-}
+export default CFTrialPanel
