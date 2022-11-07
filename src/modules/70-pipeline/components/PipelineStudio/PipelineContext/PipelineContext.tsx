@@ -136,7 +136,8 @@ export const getPipelineByIdentifier = (
       }
 
       return {
-        ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
+        // ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
+        ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails }),
         gitDetails: obj.data.gitDetails ?? {},
         entityValidityDetails: obj.data.entityValidityDetails ?? {},
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},

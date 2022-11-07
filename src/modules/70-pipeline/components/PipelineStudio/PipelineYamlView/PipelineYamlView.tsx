@@ -144,10 +144,11 @@ function PipelineYamlView(): React.ReactElement {
     setYamlAlwaysEditMode(String(isAlwaysEditMode))
   }
 
-  // const yamlOrJsonProp =
-  //   entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
-  //     ? { existingYaml: entityValidityDetails?.invalidYaml }
-  //     : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+  const yamlOrJsonProp =
+    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
+      ? { existingYaml: entityValidityDetails?.invalidYaml }
+      : // : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+        { existingJSON: pipeline }
 
   React.useEffect(() => {
     !isYamlEditable && updatePipelineView({ ...pipelineView, isYamlEditable: userPreferenceEditMode })
@@ -211,8 +212,8 @@ function PipelineYamlView(): React.ReactElement {
             onEnableEditMode={onEnableEditMode}
             isEditModeSupported={!isReadonly}
             openDialogProp={openDialog}
-            // existingJSON={{}}
             showErrorPanel={true}
+            {...yamlOrJsonProp}
           />
         )}
       </>
