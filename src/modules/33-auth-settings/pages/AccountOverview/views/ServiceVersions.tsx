@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -19,7 +20,7 @@ const versionAPIs = [
     id: 'access_control'
   },
   {
-    url: window.location.origin + '/auth/version.json',
+    url: 'auth/version.json',
     label: 'Auth UI',
     id: 'ng_auth_ui'
   },
@@ -85,7 +86,7 @@ const versionAPIs = [
   }
 ]
 
-const BASE_URL = window.location.pathname.replace(/ng\/static\/versions\.html$/, '')
+const BASE_URL = window.location.pathname.replace(/\/ng\/?/, '/')
 
 interface ServiceData {
   label?: string
@@ -98,48 +99,44 @@ const ServiceVersions = () => {
   const { getString } = useStrings()
   const { showError } = useToaster()
 
-  const fetchServices = () => {
+  const fetchServices = async () => {
     const servicesLength = Object.keys(data).length
     if (servicesLength <= 0) {
-      const promiseArr = versionAPIs.map(row => fetch(row.url.startsWith('http') ? row.url : BASE_URL + row.url))
+      const labelVersionsArr: ServiceData[] = []
 
       setLoading(true)
-      Promise.all(promiseArr)
-        .then(async responses => {
-          setLoading(false)
-          const labelVersionsArr: ServiceData[] = []
-          await responses.map(async (res, index) => {
-            const row = versionAPIs[index]
-            let serviceRow: ServiceData = {
-              label: row.label
-            }
-            if (res.status === 200) {
-              const response = await res.json()
+      for (const row of versionAPIs) {
+        try {
+          const res = await fetch(row.url.startsWith('http') ? row.url : BASE_URL + row.url)
+          const response = await res.json()
 
-              if (response.version) {
-                // for NGUI
-                serviceRow['version'] = response.version
-              } else if (response.versionInfo) {
-                // for CF
-                serviceRow['version'] = response.versionInfo
-              } else if (response.resource && response.resource.versionInfo) {
-                serviceRow['version'] = response.resource.versionInfo.version
-              }
-            } else {
-              serviceRow = {
-                label: row.label,
-                version: 'NA'
-              }
+          let serviceRow: ServiceData = {
+            label: row.label
+          }
+          if (res.status === 200) {
+            if (response.version) {
+              // for NGUI
+              serviceRow['version'] = response.version
+            } else if (response.versionInfo) {
+              // for CF
+              serviceRow['version'] = response.versionInfo
+            } else if (response.resource && response.resource.versionInfo) {
+              serviceRow['version'] = response.resource.versionInfo.version
             }
-            labelVersionsArr.push(serviceRow)
-            if (index === promiseArr.length - 1) {
-              setData(labelVersionsArr)
+          } else {
+            serviceRow = {
+              label: row.label,
+              version: 'NA'
             }
-          })
-        })
-        .catch(() => {
-          showError('Error fetching Service Versions')
-        })
+          }
+          labelVersionsArr.push(serviceRow)
+        } catch (e) {
+          setLoading(false)
+          showError(`Error fetching ${row.label} version`)
+        }
+      }
+      setData(labelVersionsArr)
+      setLoading(false)
     }
   }
 
