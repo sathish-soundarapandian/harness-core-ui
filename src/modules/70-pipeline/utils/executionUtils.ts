@@ -559,7 +559,8 @@ const processNodeData = (
   children: string[],
   nodeMap: ExecutionGraph['nodeMap'],
   nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap'],
-  rootNodes: Array<ExecutionPipelineNode<ExecutionNode>>
+  rootNodes: Array<ExecutionPipelineNode<ExecutionNode>>,
+  processNextItem = true
 ): Array<ExecutionPipelineNode<ExecutionNode>> => {
   const items: Array<ExecutionPipelineNode<ExecutionNode>> = []
   children?.forEach(item => {
@@ -627,68 +628,74 @@ const processNodeData = (
         })
       }
     }
-    const nextIds = nodeAdjacencyListMap?.[item].nextIds || /* istanbul ignore next */ []
-    nextIds.forEach(id => {
-      const nodeDataNext = nodeMap?.[id] as ExecutionNode
-      const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-      const nodeNextStrategyType =
-        nodeDataNext?.stepType === NodeType.STRATEGY
-          ? ((nodeDataNext?.stepParameters?.strategyType || 'MATRIX') as string)
-          : (nodeDataNext?.stepType as string)
-      if (nodeNextStrategyType === NodeType.FORK) {
-        items.push({
-          parallel: processNodeData(
-            nodeAdjacencyListMap?.[id].children || /* istanbul ignore next */ [],
-            nodeMap,
-            nodeAdjacencyListMap,
-            rootNodes
-          )
-        })
-      } else if (
-        nodeNextStrategyType === NodeType.STEP_GROUP ||
-        isNodeTypeMatrixOrFor(nodeNextStrategyType) ||
-        (isRollbackNext && nodeDataNext)
-      ) {
-        items.push({
-          group: {
-            name: nodeDataNext.name || /* istanbul ignore next */ '',
-            identifier: id,
-            data: nodeDataNext,
-            containerCss: {
-              ...(isRollbackNext ? RollbackContainerCss : {})
-            },
-            skipCondition: nodeDataNext.skipInfo?.evaluatedCondition ? nodeDataNext.skipInfo.skipCondition : undefined,
-            when: nodeDataNext.nodeRunInfo,
-            status: nodeDataNext.status as ExecutionStatus,
-            isOpen: true,
-            ...getIconDataBasedOnType(nodeDataNext),
-            items: processNodeData(
+    if (processNextItem) {
+      const nextIds = nodeAdjacencyListMap?.[item].nextIds || /* istanbul ignore next */ []
+      nextIds.forEach(id => {
+        const nodeDataNext = nodeMap?.[id] as ExecutionNode
+        const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
+        const nodeNextStrategyType =
+          nodeDataNext?.stepType === NodeType.STRATEGY
+            ? ((nodeDataNext?.stepParameters?.strategyType || 'MATRIX') as string)
+            : (nodeDataNext?.stepType as string)
+        if (nodeNextStrategyType === NodeType.FORK) {
+          items.push({
+            parallel: processNodeData(
               nodeAdjacencyListMap?.[id].children || /* istanbul ignore next */ [],
               nodeMap,
               nodeAdjacencyListMap,
               rootNodes
             )
-          }
-        })
-      } else {
-        items.push({
-          item: {
-            name: nodeDataNext?.name || /* istanbul ignore next */ '',
-            ...getIconDataBasedOnType(nodeDataNext),
-            identifier: id,
-            skipCondition: nodeDataNext?.skipInfo?.evaluatedCondition ? nodeDataNext.skipInfo.skipCondition : undefined,
-            when: nodeDataNext?.nodeRunInfo,
-            status: nodeDataNext?.status as ExecutionStatus,
-            type: getExecutionPipelineNodeType(nodeNextStrategyType),
-            data: nodeDataNext
-          }
-        })
-      }
-      const nextLevels = nodeAdjacencyListMap?.[id].nextIds
-      if (nextLevels) {
-        items.push(...processNodeData(nextLevels, nodeMap, nodeAdjacencyListMap, rootNodes))
-      }
-    })
+          })
+        } else if (
+          nodeNextStrategyType === NodeType.STEP_GROUP ||
+          isNodeTypeMatrixOrFor(nodeNextStrategyType) ||
+          (isRollbackNext && nodeDataNext)
+        ) {
+          items.push({
+            group: {
+              name: nodeDataNext.name || /* istanbul ignore next */ '',
+              identifier: id,
+              data: nodeDataNext,
+              containerCss: {
+                ...(isRollbackNext ? RollbackContainerCss : {})
+              },
+              skipCondition: nodeDataNext.skipInfo?.evaluatedCondition
+                ? nodeDataNext.skipInfo.skipCondition
+                : undefined,
+              when: nodeDataNext.nodeRunInfo,
+              status: nodeDataNext.status as ExecutionStatus,
+              isOpen: true,
+              ...getIconDataBasedOnType(nodeDataNext),
+              items: processNodeData(
+                nodeAdjacencyListMap?.[id].children || /* istanbul ignore next */ [],
+                nodeMap,
+                nodeAdjacencyListMap,
+                rootNodes
+              )
+            }
+          })
+        } else {
+          items.push({
+            item: {
+              name: nodeDataNext?.name || /* istanbul ignore next */ '',
+              ...getIconDataBasedOnType(nodeDataNext),
+              identifier: id,
+              skipCondition: nodeDataNext?.skipInfo?.evaluatedCondition
+                ? nodeDataNext.skipInfo.skipCondition
+                : undefined,
+              when: nodeDataNext?.nodeRunInfo,
+              status: nodeDataNext?.status as ExecutionStatus,
+              type: getExecutionPipelineNodeType(nodeNextStrategyType),
+              data: nodeDataNext
+            }
+          })
+        }
+        const nextLevels = nodeAdjacencyListMap?.[id].nextIds
+        if (nextLevels) {
+          items.push(...processNodeData(nextLevels, nodeMap, nodeAdjacencyListMap, rootNodes))
+        }
+      })
+    }
   })
   return items
 }
@@ -768,19 +775,15 @@ export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPip
             )
           })
         } else {
-          items.push({
-            item: {
-              name: nodeData.name || /* istanbul ignore next */ '',
-              skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
-              when: nodeData.nodeRunInfo,
-              ...getIconDataBasedOnType(nodeData),
-              showInLabel: nodeData.stepType === NodeType.SERVICE || nodeData.stepType === NodeType.INFRASTRUCTURE,
-              identifier: nodeId,
-              status: nodeData.status as ExecutionStatus,
-              type: getExecutionPipelineNodeType(nodeData?.stepType),
-              data: nodeData
-            }
-          })
+          items.push(
+            ...processNodeData(
+              [nodeId] || /* istanbul ignore next */ [],
+              graph?.nodeMap,
+              graph?.nodeAdjacencyListMap,
+              items,
+              false
+            )
+          )
         }
       }
       nodeId = nodeAdjacencyListMap[nodeId].nextIds?.[0]
