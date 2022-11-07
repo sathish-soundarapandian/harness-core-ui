@@ -116,7 +116,7 @@ const SelectGitProviderRef = (
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(TestStatus.NOT_INITIATED)
   const formikRef = useRef<FormikContextType<SelectGitProviderInterface>>()
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
   const [connector, setConnector] = useState<ConnectorInfoDTO>()
   const [secret, setSecret] = useState<SecretDTOV2>()
@@ -142,9 +142,11 @@ const SelectGitProviderRef = (
           createConnector(
             set(
               getOAuthConnectorPayload({
-                tokenRef: ACCOUNT_SCOPE_PREFIX.concat(tokenRef),
-                refreshTokenRef: refreshTokenRef ? ACCOUNT_SCOPE_PREFIX.concat(refreshTokenRef) : '',
-                gitProviderType: gitProvider.type as ConnectorInfoDTO['type']
+                tokenRef: tokenRef,
+                refreshTokenRef: refreshTokenRef ? refreshTokenRef : '',
+                gitProviderType: gitProvider.type as ConnectorInfoDTO['type'],
+                orgIdentifier,
+                projectIdentifier
               }),
               'connector.spec.url',
               getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type'])
@@ -389,14 +391,10 @@ const SelectGitProviderRef = (
           updatedConnectorPayload = set(
             updatedConnectorPayload,
             'spec.authentication.spec.spec.tokenRef',
-            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+            `${secretId}`
           )
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
-          updatedConnectorPayload = set(
-            updatedConnectorPayload,
-            'spec.apiAccess.spec.tokenRef',
-            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
-          )
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.spec.tokenRef', `${secretId}`)
           return updatedConnectorPayload
         case Connectors.BITBUCKET:
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernamePassword')
@@ -932,7 +930,7 @@ const SelectGitProviderRef = (
                               if (gitProvider?.type) {
                                 try {
                                   const { headers } = getRequestOptions()
-                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}`
+                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}&orgId=${orgIdentifier}&projectId=${projectIdentifier}`
                                   const response = await fetch(oauthRedirectEndpoint, {
                                     headers
                                   })
