@@ -5,8 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, Container, PageSpinner, Text } from '@harness/uicore'
-import React from 'react'
+import { Container, PageSpinner } from '@wings-software/uicore'
+import React, { useState } from 'react'
+
+import { Color, Text } from '@harness/uicore'
+
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -26,8 +29,8 @@ import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
-import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { useStrings } from 'framework/strings'
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -37,18 +40,24 @@ import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSu
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import { ExecutionListCards } from './ExecutionListCards/ExecutionListCards'
 import css from './ExecutionList.module.scss'
-
 export interface ExecutionListProps {
   onRunPipeline(): void
+  repoName?: string
   showHealthAndExecution?: boolean
   isPipelineInvalid?: boolean
+  showBranchFilter?: boolean
 }
 
 function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const { showHealthAndExecution, ...rest } = props
+  const { getString } = useStrings()
+  const defaultBranchSelect: string = getString('common.gitSync.allBranches')
+
+  const [selectedBranch, setSelectedBranch] = useState<string>(defaultBranchSelect)
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
-  const { isAnyFilterApplied, isSavedFilterApplied, queryParams } = useExecutionListFilterContext()
+  const { isSavedFilterApplied, queryParams, isAnyFilterApplied } = useExecutionListFilterContext()
+
   const {
     page,
     size,
@@ -61,6 +70,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     searchTerm,
     pipelineIdentifier: pipelineIdentifierFromQueryParam
   } = queryParams
+
   const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
 
   const { module } = useModuleInfo()
@@ -100,7 +110,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
-      branch,
+      ...(selectedBranch !== defaultBranchSelect ? { branch: selectedBranch } : {}),
       repoIdentifier,
       searchTerm,
       ...(!isExecutionHistoryView && module ? { module } : {})
@@ -121,24 +131,37 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     startPolling: page === DEFAULT_PAGE_INDEX && !loading,
     pollingInterval: 20_000
   })
-  const { getString } = useStrings()
+
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity
   const executionList = data?.data
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
+  const showSubHeader = hasExecutions || isAnyFilterApplied || selectedBranch !== defaultBranchSelect
+
   const showSpinner = initLoading || (loading && !isPolling)
-  const showSubHeader = hasExecutions || isAnyFilterApplied
+
   const { globalFreezes } = useGlobalFreezeBanner()
   return (
     <>
-      {showSubHeader && <ExecutionListSubHeader {...rest} />}
       <GlobalFreezeBanner globalFreezes={globalFreezes} />
+
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
           <Container className={css.healthAndExecutions} data-testid="health-and-executions">
             <PipelineSummaryCards />
             <PipelineBuildExecutionsChart />
           </Container>
+        )}
+
+        {showSubHeader && (
+          <ExecutionListSubHeader
+            onBranchChange={(value: string | undefined) => {
+              setSelectedBranch(value as string)
+            }}
+            selectedBranch={selectedBranch}
+            borderless
+            {...rest}
+          />
         )}
 
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />

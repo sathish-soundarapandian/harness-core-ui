@@ -332,6 +332,7 @@ gitSync:
   harnessFolderLabel: Harness Folder
   commitDetailsLabel: Commit Details
   allRepositories: All Repositories
+  allBranches: All Branches
   defaultBranches: Default Branches
   repoDetails: Repo Details
   gitRepositoryDetails: Git Repository Details

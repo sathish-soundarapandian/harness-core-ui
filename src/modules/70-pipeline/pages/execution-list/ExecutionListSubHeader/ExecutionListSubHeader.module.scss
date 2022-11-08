@@ -67,3 +67,32 @@
     }
   }
 }
+
+.branchSelector {
+  margin: 0;
+  max-width: 130px;
+  font-size: var(--font-size-small) !important;
+  border: 1px solid var(--grey-200);
+  border-radius: 4px;
+  background-color: var(--primary-bg) !important;
+
+  @media only screen and (max-width: 1440px) {
+    max-width: 100px;
+  }
+
+  input {
+    color: var(--grey-600) !important;
+    font-size: var(--font-size-small) !important;
+    font-weight: 530 !important;
+
+    &:disabled {
+      background: none !important;
+    }
+  }
+
+  &.transparent {
+    input {
+      background: transparent;
+    }
+  }
+}
