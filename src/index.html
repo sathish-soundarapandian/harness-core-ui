@@ -31,9 +31,7 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
-      if (window.browserRouterEnabled === undefined) {
-        window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
-      }
+      window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       window.getApiBaseUrl = str => {
         if (window.browserRouterEnabled) {
           return `${window.apiUrl || ''}/${str}`
