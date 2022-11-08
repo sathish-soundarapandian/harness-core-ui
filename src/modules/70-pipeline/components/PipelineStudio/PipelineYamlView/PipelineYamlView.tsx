@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, isEqual, omit } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Checkbox, Tag, Text, useConfirmationDialog } from '@wings-software/uicore'
 import { Intent } from '@blueprintjs/core'
