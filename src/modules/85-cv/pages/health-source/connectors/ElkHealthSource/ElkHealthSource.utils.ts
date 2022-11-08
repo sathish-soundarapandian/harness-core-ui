@@ -14,6 +14,8 @@ import type {
 } from './components/MapQueriesToHarnessService/ElkQueryBuilder.types'
 import type { ElkHealthSourceInfo } from './ElkHealthSource.types'
 import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
+import { MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): ElkHealthSourcePayload {
   const ElkHealthSourcePayload: ElkHealthSourcePayload = {
@@ -86,4 +88,19 @@ export const getMappedServicesAndEnvs = (data: any): Map<string, MapElkQueryToSe
   } else {
     return new Map<string, MapElkQueryToService>()
   }
+}
+
+export const setLogIndexes = (
+  logIndexes: string,
+  tierOptions: SelectOption[],
+  multiType?: MultiTypeInputType
+): SelectOption | string | undefined => {
+  if (multiType && isMultiTypeRuntime(multiType)) {
+    return logIndexes
+  }
+  if (multiType === MultiTypeInputType.EXPRESSION) {
+    return logIndexes
+  }
+  const value = !logIndexes ? undefined : tierOptions.find((item: SelectOption) => item.label === logIndexes)
+  return multiType ? value : value || { label: '', value: '' }
 }

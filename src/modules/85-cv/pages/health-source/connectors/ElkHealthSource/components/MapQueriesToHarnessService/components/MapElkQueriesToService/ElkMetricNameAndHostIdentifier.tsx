@@ -4,8 +4,8 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useCallback, useMemo } from 'react'
-import { Container, FormInput, MultiTypeInputType } from '@harness/uicore'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Container, FormInput, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -15,7 +15,9 @@ import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithD
 import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/constants'
 
 import type { MapElkQueriesToServiceProps } from './MapElkQueriesToService.types'
+import MultiTextOrSelectInput from './components/MapQueriesToHarnessServiceLayout/logIndexes'
 import css from './ElkMetricNameAndHostIdentifier.module.scss'
+//import LogIndexes from './components/MapQueriesToHarnessServiceLayout/logIndexes'
 
 export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProps): JSX.Element {
   const {
@@ -31,12 +33,17 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
     expressions,
     connectorIdentifier,
     formikProps,
+    timeStampFormat,
     logIndexes
   } = props
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const [logIdxMultitype, setLogIdxMultitype] = useState(() => getMultiTypeFromValue(logIndexes))
+  const [timeStampMultitype, setTimeStampIdxMultitype] = useState(() => getMultiTypeFromValue(timeStampFormat))
   const isAddingIdentifiersDisabled = !isQueryExecuted || loading
+
+  console.log('fffffffffffffff', formikProps)
 
   const { data: elkIndices, loading: indicesLoading } = useGetELKIndices({
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: '' }
@@ -74,7 +81,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         name={MapElkToServiceFieldNames.METRIC_NAME}
       />
 
-      <FormInput.Select
+      {/* <FormInput.Select
         label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
         name={MapElkToServiceFieldNames.LOG_INDEXES}
         selectProps={{ allowCreatingNewItems: true }}
@@ -83,6 +90,27 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         items={getIndexItems}
         onChange={handleSelectChange}
         value={logIndexes ? { label: logIndexes, value: logIndexes } : undefined}
+      /> */}
+
+      <MultiTextOrSelectInput
+        allowedTypes={
+          isConnectorRuntimeOrExpression
+            ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+            : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+        }
+        label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
+        applicationOptions={getIndexItems}
+        applicationLoading={indicesLoading}
+        applicationError={formikProps.errors.logIndexes ? formikProps?.errors?.logIndexes : ''}
+        connectorIdentifier={connectorIdentifier}
+        formikAppDynamicsValue={logIndexes}
+        appdMultiType={logIdxMultitype}
+        setAppdMultiType={setLogIdxMultitype}
+        isTemplate={isTemplate}
+        expressions={expressions}
+        name={MapElkToServiceFieldNames.LOG_INDEXES}
+        placeholder={indicesLoading ? getString('loading') : getString('cv.monitoringSources.elk.selectLogIndex')}
+        setFieldValue={formikProps.setFieldValue}
       />
 
       <InputWithDynamicModalForJsonMultiType
@@ -127,11 +155,31 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         recordsModalHeader={getString('cv.monitoringSources.elk.identifyTimeStamprecordsModalHeader')}
       />
 
-      <FormInput.Select
+      {/* <FormInput.Select
         label={getString('cv.monitoringSources.elk.timeStampFormatInputLabel')}
         name={MapElkToServiceFieldNames.TIMESTAMP_FORMAT}
         placeholder={getString('cv.monitoringSources.elk.selectTimeStampFormat')}
         items={getTimeFormatItems}
+      /> */}
+      <MultiTextOrSelectInput
+        setFieldValue={formikProps.setFieldValue}
+        allowedTypes={
+          isConnectorRuntimeOrExpression
+            ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+            : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+        }
+        label={getString('cv.monitoringSources.elk.timeStampFormatInputLabel')}
+        options={getTimeFormatItems}
+        applicationError={formikProps.errors.timeStampFormat ? formikProps?.errors?.timeStampFormat : ''}
+        applicationLoading={false}
+        connectorIdentifier={connectorIdentifier}
+        formikAppDynamicsValue={timeStampFormat}
+        appdMultiType={timeStampMultitype}
+        setAppdMultiType={setTimeStampIdxMultitype}
+        isTemplate={isTemplate}
+        expressions={expressions}
+        name={MapElkToServiceFieldNames.TIMESTAMP_FORMAT}
+        placeholder={getString('cv.monitoringSources.elk.selectTimeStampFormat')}
       />
 
       <InputWithDynamicModalForJsonMultiType

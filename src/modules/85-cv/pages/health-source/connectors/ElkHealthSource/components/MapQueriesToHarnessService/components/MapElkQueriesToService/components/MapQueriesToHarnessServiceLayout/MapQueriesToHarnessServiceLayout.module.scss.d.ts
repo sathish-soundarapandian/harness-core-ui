@@ -9,6 +9,7 @@
 declare const styles: {
   readonly accordian: string
   readonly content: string
+  readonly errorClass: string
   readonly queryViewContainer: string
   readonly validationContainer: string
 }

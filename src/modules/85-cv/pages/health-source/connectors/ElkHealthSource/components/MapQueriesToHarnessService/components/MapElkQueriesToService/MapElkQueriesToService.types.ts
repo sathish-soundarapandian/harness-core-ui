@@ -22,4 +22,5 @@ export interface MapElkQueriesToServiceProps {
   messageIdentifier: string
   formikProps: FormikProps<any>
   logIndexes?: string
+  timeStampFormat?: string
 }

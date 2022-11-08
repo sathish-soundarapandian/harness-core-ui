@@ -26,7 +26,7 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
   const { getString } = useStrings()
   const { showError } = useToaster()
   const values = formikProps?.values
-  const { serviceInstance, identifyTimestamp, messageIdentifier, logIndexes } = values || {}
+  const { serviceInstance, identifyTimestamp, messageIdentifier, logIndexes, timeStampFormat } = values || {}
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const queryParams = useMemo(
     () => ({
@@ -100,6 +100,7 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
                 <ElkMetricNameAndHostIdentifier
                   serviceInstance={serviceInstance}
                   logIndexes={logIndexes}
+                  timeStampFormat={timeStampFormat}
                   identifyTimestamp={identifyTimestamp}
                   messageIdentifier={messageIdentifier}
                   sampleRecord={elkSampleData?.[0] || null}
