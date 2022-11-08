@@ -53,7 +53,7 @@ export default function RouteDestinations(): React.ReactElement {
     SECURITY,
     CHAOS_ENABLED,
     NG_SETTINGS,
-    SCM_ENABLED
+    SCM_ENABLED = localStorage.SCM_ENABLED
   } = useFeatureFlags()
 
   return (

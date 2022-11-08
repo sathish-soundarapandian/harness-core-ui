@@ -33,7 +33,7 @@ const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableCIUI = process.env.ENABLE_CI_UI === 'true'
 const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
-const enableSCM = process.env.ENABLE_SCM === 'true'
+const enableSCM = true //process.env.ENABLE_SCM === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 
 console.log('Common build flags')
