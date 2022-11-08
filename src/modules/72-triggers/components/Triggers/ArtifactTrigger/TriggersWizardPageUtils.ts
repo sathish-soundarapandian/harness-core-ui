@@ -29,7 +29,8 @@ import type {
   ArtifactTriggerConfig,
   CustomArtifactSpec,
   GithubPackagesSpec,
-  GarSpec
+  GarSpec,
+  AMIRegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -2126,6 +2127,16 @@ export const getTriggerArtifactInitialSpec = (
         repositoryName: '',
         version
       } as GarSpec
+    }
+    case 'AmazonMachineImage': {
+      return {
+        eventConditions,
+        connectorRef,
+        filters: [],
+        tags: [],
+        region: '',
+        version
+      } as AMIRegistrySpec
     }
   }
 }

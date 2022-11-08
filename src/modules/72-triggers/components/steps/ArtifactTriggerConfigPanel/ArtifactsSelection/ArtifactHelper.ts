@@ -60,7 +60,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Jenkins: 'service-jenkins',
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
-  GithubPackageRegistry: 'service-github-package'
+  GithubPackageRegistry: 'service-github-package',
+  AmazonMachineImage: 'service-ami'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -74,7 +75,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   Jenkins: 'connectors.jenkins.jenkins',
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
-  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle'
+  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
+  AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -88,7 +90,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
-  GithubPackageRegistry: 'GithubPackageRegistry'
+  GithubPackageRegistry: 'GithubPackageRegistry',
+  AmazonMachineImage: 'AmazonMachineImage'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -101,7 +104,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Jenkins: Connectors.JENKINS,
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
-  GithubPackageRegistry: Connectors.GITHUB
+  GithubPackageRegistry: Connectors.GITHUB,
+  AmazonMachineImage: Connectors.AWS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -114,7 +118,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
-  GithubPackageRegistry: 'Github'
+  GithubPackageRegistry: 'Github',
+  AmazonMachineImage: 'AWS'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {

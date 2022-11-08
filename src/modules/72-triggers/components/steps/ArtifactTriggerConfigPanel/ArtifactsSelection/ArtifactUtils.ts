@@ -335,6 +335,14 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tagRegex: RUNTIME_INPUT_VALUE,
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl
       }
+    case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
+      return {
+        identifier: '',
+        filters: [],
+        tags: [],
+        region: '',
+        version: RUNTIME_INPUT_VALUE
+      }
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
       return {
         identifier: '',

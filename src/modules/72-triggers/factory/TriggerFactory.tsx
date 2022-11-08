@@ -29,6 +29,7 @@ import { Cron } from '@triggers/components/Triggers/ScheduledTrigger/Cron/Cron'
 import { HelmChart } from '@triggers/components/Triggers/ManifestTrigger/HelmChart/HelmChart'
 import { GithubPackageRegistry } from '@triggers/components/Triggers/ArtifactTrigger/GithubPackageRegistry/GithubPackageRegistry'
 import { GoogleArtifactRegistry } from '@triggers/components/Triggers/ArtifactTrigger/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { AmazonMachineImage } from '@triggers/components/Triggers/ArtifactTrigger/AmazonMachineImage/AmazonMachineImage'
 import { AbstractTriggerFactory } from './AbstractTriggerFactory'
 
 class Factory extends AbstractTriggerFactory {
@@ -52,6 +53,7 @@ TriggerFactory.registerTrigger(new Cron())
 TriggerFactory.registerTrigger(new Acr())
 TriggerFactory.registerTrigger(new AmazonS3())
 TriggerFactory.registerTrigger(new ArtifactoryRegistry())
+TriggerFactory.registerTrigger(new AmazonMachineImage())
 TriggerFactory.registerTrigger(new DockerRegistry())
 TriggerFactory.registerTrigger(new Ecr())
 TriggerFactory.registerTrigger(new Gcr())

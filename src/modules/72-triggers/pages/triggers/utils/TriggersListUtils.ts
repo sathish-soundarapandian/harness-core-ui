@@ -180,6 +180,12 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: 
           iconName: ArtifactIconByType.GithubPackageRegistry as IconName,
           disabled: isNewService
         },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage]),
+          value: ENABLED_ARTIFACT_TYPES.AmazonMachineImage,
+          iconName: ArtifactIconByType.AmazonMachineImage as IconName,
+          disabled: isNewService
+        },
         ...(isNewService
           ? [
               {

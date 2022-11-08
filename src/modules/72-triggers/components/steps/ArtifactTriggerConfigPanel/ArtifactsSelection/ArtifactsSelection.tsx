@@ -75,6 +75,7 @@ import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArt
 import { showConnectorStep } from './ArtifactUtils'
 import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { AmazonMachineImage } from './ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
 
 interface ArtifactsSelectionProps {
@@ -393,6 +394,18 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
             />
           </StepWizard>
         )
+      case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
+            <StepAWSAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildAWSPayload} {...delegateStepProps} />
+            <ConnectorTestConnection
+              type={ArtifactToConnectorMap[selectedArtifactType]}
+              {...ConnectorTestConnectionProps}
+            />
+          </StepWizard>
+        )
       case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
         return (
           <StepWizard title={stepWizardTitle}>
@@ -437,6 +450,8 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <Artifactory {...artifactLastStepProps()} />
       case 'AmazonS3':
         return <AmazonS3 {...artifactLastStepProps()} />
+      case 'AmazonMachineImage':
+        return <AmazonMachineImage {...artifactLastStepProps()} />
       case 'GithubPackageRegistry':
         return <GithubPackageRegistry {...artifactLastStepProps()} />
       case 'GoogleArtifactRegistry':
