@@ -403,7 +403,10 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     if (isInitialized) {
-      if (pipeline?.identifier === DefaultNewPipelineId) {
+      // if (pipeline?.identifier === DefaultNewPipelineId) {
+      //   showModal()
+      // }
+      if (pipeline?.name === '') {
         showModal()
       }
       // if (isBEPipelineUpdated && !discardBEUpdateDialog) {
