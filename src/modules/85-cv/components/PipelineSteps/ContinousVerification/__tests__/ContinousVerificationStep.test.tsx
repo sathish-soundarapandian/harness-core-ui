@@ -229,6 +229,65 @@ describe('Test ContinousVerificationStep Step', () => {
     })
   })
 
+  test('Verify when Monitored service and HealthSource is present for a given service and environment and selected type is Auto', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={verifyStepInitialValues}
+        type={StepType.Verify}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    // entering the step name
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'CV Step' } })
+
+    // Verify if correct monitoring service is present.
+    await waitFor(() => {
+      expect(getByText('connectors.cdng.monitoredService.label')).toBeTruthy()
+      const monitoredService = container.querySelector('input[name="spec.monitoredServiceRef"]') as HTMLInputElement
+      expect(monitoredService).toBeTruthy()
+      expect(monitoredService.value).toBe(mockedMonitoredServiceAndHealthSources.data.monitoredService.name)
+    })
+
+    // Verify if correct health source is present.
+    await waitFor(() => {
+      expect(getByText('connectors.cdng.healthSources.label')).toBeTruthy()
+      for (const healthSource of mockedMonitoredServiceAndHealthSources.data.monitoredService.sources.healthSources) {
+        expect(getByText(healthSource.name)).toBeTruthy()
+      }
+    })
+
+    //verify if the continous verification type is getting selected correctly.
+    const verificationTypeDropdown = container.querySelector('input[name="spec.type"]') as HTMLInputElement
+    const selectCaret = container
+      .querySelector(`[name="spec.type"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+    await waitFor(() => {
+      fireEvent.click(selectCaret!)
+    })
+    const typeToSelect = await findByText(container, 'Auto')
+    act(() => {
+      fireEvent.click(typeToSelect)
+    })
+    expect(verificationTypeDropdown.value).toBe('Auto')
+
+    // verify if the correct fields are present for the selected verification type of rolling update
+    await waitFor(() => {
+      const sensitivityDropdown = container.querySelector('input[name="spec.spec.sensitivity"]') as HTMLInputElement
+      const durationDropdown = container.querySelector('input[name="spec.spec.duration"]') as HTMLInputElement
+      const deploymentTagField = container.querySelector('input[name="spec.spec.deploymentTag"]') as HTMLInputElement
+
+      expect(sensitivityDropdown).toBeTruthy()
+      expect(durationDropdown).toBeTruthy()
+      expect(deploymentTagField).toBeTruthy()
+    })
+  })
+
   test('Verify when Monitored service and HealthSource is present for a given service and environment and selected type is Load Test.', async () => {
     const onUpdate = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
