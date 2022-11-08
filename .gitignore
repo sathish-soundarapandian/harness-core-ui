@@ -17,6 +17,7 @@ junit.xml
 cypress/videos/
 src/microfrontends/types
 src/microfrontends/declarations
+src/microfrontends/dist
 certificates
 .npmrc
 .vscode/launch.json
