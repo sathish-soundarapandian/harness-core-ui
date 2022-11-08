@@ -27,7 +27,15 @@ import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { IDialogProps, Intent } from '@blueprintjs/core'
 import produce from 'immer'
-import type { ServiceDefinition, ServiceYaml, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
+import { useParams } from 'react-router-dom'
+import {
+  JsonNode,
+  mergeServiceInputsPromise,
+  ServiceDefinition,
+  ServiceYaml,
+  ServiceYamlV2,
+  TemplateLinkConfig
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -43,6 +51,10 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { sanitize } from '@common/utils/JSONUtils'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { queryClient } from 'services/queryClient'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -145,6 +157,7 @@ export default function DeployServiceEntityWidget({
     getStageFromPipeline
   } = usePipelineContext()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { templateRef: deploymentTemplateIdentifier, versionLabel } =
     (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
   const shouldAddCustomDeploymentData =
@@ -159,9 +172,8 @@ export default function DeployServiceEntityWidget({
     loadingServicesData,
     loadingServicesList,
     updatingData,
-    refetchServicesData,
-    refetchListData,
-    prependServiceToServiceList
+    prependServiceToServiceList,
+    updateServiceInputsData
   } = useGetServicesData({
     gitOpsEnabled,
     serviceIdentifiers: allServices,
@@ -285,9 +297,37 @@ export default function DeployServiceEntityWidget({
     }
   }
 
-  function onServiceEntityUpdate(): void {
-    refetchServicesData()
-    refetchListData()
+  async function onServiceEntityUpdate(updatedService: ServiceYaml): Promise<void> {
+    if (formikRef.current) {
+      queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
+      const { values, setValues } = formikRef.current
+      const body = {
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        },
+        serviceIdentifier: updatedService.identifier,
+        pathParams: { serviceIdentifier: updatedService.identifier },
+        body: yamlStringify(
+          sanitize(
+            { serviceInputs: { ...get(values, `serviceInputs.${updatedService.identifier}`) } },
+            { removeEmptyObject: false, removeEmptyString: false }
+          )
+        )
+      }
+      const response = await mergeServiceInputsPromise(body)
+      const mergedServiceInputsResponse = response?.data
+      setValues({
+        ...values,
+        serviceInputs: {
+          [updatedService.identifier]: yamlParse<JsonNode>(
+            defaultTo(mergedServiceInputsResponse?.mergedServiceInputsYaml, '')
+          )?.serviceInputs
+        }
+      })
+      updateServiceInputsData(updatedService.identifier, mergedServiceInputsResponse)
+    }
   }
 
   function updateValuesInFomikAndPropogate(values: FormState): void {
@@ -441,41 +481,24 @@ export default function DeployServiceEntityWidget({
                 >
                   <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                     {isMultiSvc ? (
-                      <div className={css.inputFieldLayout}>
-                        <FormMultiTypeMultiSelectDropDown
-                          tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                          label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
-                          name="services"
-                          disabled={readonly || (isFixed && loading)}
-                          onChange={handleMultiSelectChange}
-                          dropdownProps={{
-                            items: selectOptions,
-                            placeholder: placeHolderForServices,
-                            disabled: loading || readonly
-                          }}
-                          multiTypeProps={{
-                            width: 300,
-                            expressions,
-                            allowableTypes
-                          }}
-                          enableConfigureOptions
-                        />
-                        {getMultiTypeFromValue(formik?.values.services) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            className={css.configureOptions}
-                            style={{ alignSelf: 'center' }}
-                            value={formik?.values.services as string}
-                            type="String"
-                            variableName="skipResourceVersioning"
-                            showRequiredField={false}
-                            showDefaultField={true}
-                            showAdvanced={true}
-                            onChange={value => {
-                              formik.setFieldValue('services', value)
-                            }}
-                          />
-                        )}
-                      </div>
+                      <FormMultiTypeMultiSelectDropDown
+                        tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
+                        name="services"
+                        disabled={readonly || (isFixed && loading)}
+                        onChange={handleMultiSelectChange}
+                        dropdownProps={{
+                          items: selectOptions,
+                          placeholder: placeHolderForServices,
+                          disabled: loading || readonly
+                        }}
+                        multiTypeProps={{
+                          width: 300,
+                          expressions,
+                          allowableTypes
+                        }}
+                        enableConfigureOptions
+                      />
                     ) : (
                       <div className={css.inputFieldLayout}>
                         <FormInput.MultiTypeInput
@@ -502,7 +525,7 @@ export default function DeployServiceEntityWidget({
                             style={{ alignSelf: 'center' }}
                             value={defaultTo(formik?.values.service, '')}
                             type="String"
-                            variableName="skipResourceVersioning"
+                            variableName="service"
                             showRequiredField={false}
                             showDefaultField={true}
                             showAdvanced={true}
