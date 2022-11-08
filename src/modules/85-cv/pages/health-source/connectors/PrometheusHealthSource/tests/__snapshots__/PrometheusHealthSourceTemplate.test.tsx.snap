@@ -518,24 +518,29 @@ exports[`Unit tests for PrometheusHealthSource Load in editmode for template wit
                               class="bp3-form-content"
                             >
                               <div
-                                class="bp3-form-group bp3-disabled runtimeDisabled"
-                                data-id="query-3"
+                                class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                               >
-                                
                                 <div
-                                  class="bp3-form-content"
+                                  class="bp3-form-group bp3-disabled runtimeDisabled"
+                                  data-id="query-3"
+                                  style="flex-grow: 1;"
                                 >
+                                  
                                   <div
-                                    class="bp3-input-group bp3-disabled"
+                                    class="bp3-form-content"
                                   >
-                                    <input
-                                      autocomplete="off"
-                                      class="bp3-input"
-                                      disabled=""
-                                      name="query"
-                                      type="text"
-                                      value="<+input>"
-                                    />
+                                    <div
+                                      class="bp3-input-group bp3-disabled"
+                                    >
+                                      <input
+                                        autocomplete="off"
+                                        class="bp3-input"
+                                        disabled=""
+                                        name="query"
+                                        type="text"
+                                        value="<+input>"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1197,23 +1202,28 @@ exports[`Unit tests for PrometheusHealthSource load in edit case with fixed valu
                         class="bp3-form-content"
                       >
                         <div
-                          class="bp3-form-group bp3-disabled runtimeDisabled"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                         >
-                          
                           <div
-                            class="bp3-form-content"
+                            class="bp3-form-group bp3-disabled runtimeDisabled"
+                            style="flex-grow: 1;"
                           >
+                            
                             <div
-                              class="bp3-input-group bp3-disabled"
+                              class="bp3-form-content"
                             >
-                              <input
-                                autocomplete="off"
-                                class="bp3-input"
-                                disabled=""
-                                name="query"
-                                type="text"
-                                value="<+input>"
-                              />
+                              <div
+                                class="bp3-input-group bp3-disabled"
+                              >
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  disabled=""
+                                  name="query"
+                                  type="text"
+                                  value="<+input>"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1944,24 +1954,29 @@ exports[`Unit tests for PrometheusHealthSource should render in create mode 1`] 
                         class="bp3-form-content"
                       >
                         <div
-                          class="bp3-form-group bp3-disabled runtimeDisabled"
-                          data-id="query-3"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                         >
-                          
                           <div
-                            class="bp3-form-content"
+                            class="bp3-form-group bp3-disabled runtimeDisabled"
+                            data-id="query-3"
+                            style="flex-grow: 1;"
                           >
+                            
                             <div
-                              class="bp3-input-group bp3-disabled"
+                              class="bp3-form-content"
                             >
-                              <input
-                                autocomplete="off"
-                                class="bp3-input"
-                                disabled=""
-                                name="query"
-                                type="text"
-                                value="<+input>"
-                              />
+                              <div
+                                class="bp3-input-group bp3-disabled"
+                              >
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  disabled=""
+                                  name="query"
+                                  type="text"
+                                  value="<+input>"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>

@@ -30,6 +30,7 @@ import { JenkinsArtifact } from '@pipeline/components/ArtifactsSelection/Artifac
 import { GoogleArtifactRegistry } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import { GithubPackageRegistry } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import { DockerRegistryArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
+import { AmazonMachineImage } from '../ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
 
 export type ArtifactLastStepProps = ImagePathProps<
   ImagePathTypes &
@@ -72,6 +73,8 @@ export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastSteps
       return <GoogleArtifactRegistry {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
       return <GithubPackageRegistry {...artifactLastStepProps} />
+    case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
+      return <AmazonMachineImage {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
     default:
       return <DockerRegistryArtifact {...artifactLastStepProps} />

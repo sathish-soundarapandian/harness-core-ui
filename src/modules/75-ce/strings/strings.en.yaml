@@ -1345,3 +1345,39 @@ cloudIntegration:
 serviceDetails:
   title: '{{ $.common.serviceDetails }}'
   launchType: Launch Type
+k8sQuickCreate:
+  quickCreate: Quick Create
+  advanced: '{{ $.advancedTitle }}'
+  createAndTest: Create and Test Connection
+  time:
+    5mins: ~5 min
+    10mins: ~10 min
+  downloadAndApplyYaml: Download and Apply YAML
+  overview:
+    nameInfo: Please note, this is the name with which the Kubernetes Cluster will be identified in Harness Cloud Cost Management.<br> Also you need to have <b>Cluster Admin Role</b> to the Cluster you would like to add
+  applyYaml:
+    header: To provide your cluster with permissions apply the following YAML.
+    desc: 'Applying the YAML file will:'
+    stepsToApply: 'Step to Apply the YAML:'
+    step1: 1. Create a <a target="_blank" href="https://docs.harness.io/article/h9tkwmkrm7-delegate-installation#harness-delegate-overview">Harness Delegate</a>
+    step2: 2. Assigns the Cluster admin role to the Delegate
+    continue: Once applied, clicking on “Continue >” will create a <a target="_blank" href="https://docs.harness.io/article/1gaud2efd4-add-a-kubernetes-cluster-connector">Kubernetes Connector</a>
+    eksClusterInfo: For EKS Clusters, ensure that the Metrics server is installed on your Kubernetes cluster where your Harness Kubernetes Delegate will be installed
+  testConnection:
+    connectorSuccessful: Connector Created Successfully.
+    step0: Creating Delegate
+    step1: Listening for a heartbeat from the Delegate
+    step1Desc: This might take a few seconds....
+    step2: Creating Connectors
+    step3: Verifying Permissions
+    installedSuccessfully: ': Installed Successfully'
+    createdSuccessfully: ': Created Successfully'
+    verified: ': Verified'
+    delegateError:
+      error: Unable to recieve heartbeat from the Delegate
+      info1: '{{ $.common.errorHandler.issueCouldBe }}'
+      info2: Delegate is not created or connected
+      troubleshoot1: 'Try these troubleshooting steps:'
+      troubleshoot2: Troubleshoot Delegate creation
+      troubleshoot3: Retry Test connection once the steps are completed.
+    retest: Retest Connection

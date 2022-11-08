@@ -130,8 +130,6 @@ referencedBy: Referenced by
 activityHistoryLabel: Activity History
 connectionMode: Connection Mode
 credType: Credential Type
-noDeploymentText: Your Pipeline does not have any executions yet. Click the button below to run a pipeline.
-noBuildsText: Your project does not have any builds yet. Click the button below to run a pipeline.
 newConnector: 'New Connector'
 thisConnectorIsSavedAs: 'Selected Connector'
 errorTitle: Something went wrong...
@@ -679,11 +677,11 @@ delegate:
     prerequisites: 'Kubernetes Prerequisites'
     prerequisites_info1: 'You have access to your Kubernetes cluster and install Harness Delegates as YAML or Helm Chart'
     prerequisites_info2: 'If you are using Harness SaaS, your machine must be able to connect to the Harness SaaS URL: '
-    prerequisites_info3: 'Your Kubernetes cluster has unallocated resources required to run the Harness Delegate workload'
     prerequisites_worload: '{{label}} - {{ram}} GB memory, {{cpu}} CPU'
     permissions_title: 'You need the following Kubernetes permissions to install the Delegate:'
     permissions_info1: 'Permission to create namespace (for the Harness Delegate namespace)'
     permissions_info2: 'Permission to create StatefulSets (for the Harness Delegate Pod to be created)'
+    permissions_info3: 'Permission to create deployments (for the Harness Delegate Pod to be created)'
     url: 'https:app.harness.io:443/'
   stepOneWizard: 'Create Delegate'
   reviewScript:

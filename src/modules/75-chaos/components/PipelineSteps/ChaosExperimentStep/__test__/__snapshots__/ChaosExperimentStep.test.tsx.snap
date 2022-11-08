@@ -15,139 +15,139 @@ exports[`ChaosExperiment Step Edit View edit mode works 1`] = `
           style="width: 75%;"
         >
           <div
-            class="InputWithIdentifier--txtNameContainer TextInput--main"
+            class="StyledProps--font StyledProps--main main"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+              class="InputWithIdentifier--txtNameContainer TextInput--main"
             >
               <div
-                class="Text--withDocsTooltip"
-                data-tooltip-id="universalInputNameWithId"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
               >
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="universalInputNameWithId"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    Id
+                  </p>
+                </div>
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  Id
+                  :
                 </p>
-              </div>
-              <p
-                class="StyledProps--font StyledProps--main"
-              >
-                :
-              </p>
-              <span
-                class="bp3-popover-wrapper"
-              >
                 <span
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper"
+                >
+                  <span
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-editable-text InputWithIdentifier--idValue"
+                      tabindex="0"
+                    >
+                      <span
+                        class="bp3-editable-text-content"
+                        style="height: 1px; line-height: 1px; min-width: 0;"
+                      >
+                        step1
+                      </span>
+                    </div>
+                  </span>
+                </span>
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="Edit"
+                  style="vertical-align: middle; cursor: pointer;"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 16 16"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <div
+                class="bp3-form-group"
+                data-id="name-0"
+              >
+                <label
+                  class="bp3-label"
+                  for="name"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="ChaosExperimentStep_name"
+                  >
+                    name
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
                 >
                   <div
-                    class="bp3-editable-text InputWithIdentifier--idValue"
-                    tabindex="0"
+                    class="bp3-input-group"
                   >
-                    <span
-                      class="bp3-editable-text-content"
-                      style="height: 1px; line-height: 1px; min-width: 0;"
-                    >
-                      step1
-                    </span>
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="name"
+                      placeholder="pipeline.stepNamePlaceholder"
+                      type="text"
+                      value="step1"
+                    />
                   </div>
-                </span>
-              </span>
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="Edit"
-                style="vertical-align: middle; cursor: pointer;"
-              >
-                <svg
-                  height="12"
-                  viewBox="0 0 16 16"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                  <path
-                    clip-rule="evenodd"
-                    d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    opacity="0.3"
-                  />
-                </svg>
-              </span>
-            </div>
-            <div
-              class="bp3-form-group"
-              data-id="name-0"
-            >
-              <label
-                class="bp3-label"
-                for="name"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="ChaosExperimentStep_name"
-                >
-                  name
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="name"
-                    placeholder="pipeline.stepNamePlaceholder"
-                    type="text"
-                    value="step1"
-                  />
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="description-1"
-          >
-            <label
-              class="bp3-label"
-              for="description"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="ChaosExperimentStep_description"
-              >
-                Description
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              class="StyledProps--font StyledProps--main"
+              style="margin-bottom: 0px;"
             >
-              <textarea
-                autocomplete="off"
-                class="bp3-input bp3-fill"
-                maxlength="1024"
-                name="description"
+              <label
+                class="Label--main bp3-label descriptionLabel"
               >
-                desc
-              </textarea>
+                optionalField
+              </label>
+              <div
+                class="bp3-form-group"
+                data-id="description-1"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <textarea
+                    autocomplete="off"
+                    class="bp3-input bp3-fill"
+                    maxlength="1024"
+                    name="description"
+                    placeholder="chaos.pipelineStep.description"
+                  >
+                    desc
+                  </textarea>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -290,140 +290,150 @@ exports[`ChaosExperiment Step Edit View should render properly 1`] = `
           style="width: 75%;"
         >
           <div
-            class="InputWithIdentifier--txtNameContainer TextInput--main"
+            class="StyledProps--font StyledProps--main main"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+              class="InputWithIdentifier--txtNameContainer TextInput--main"
             >
               <div
-                class="Text--withDocsTooltip"
-                data-tooltip-id="universalInputNameWithId"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
               >
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="universalInputNameWithId"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    Id
+                  </p>
+                </div>
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  Id
+                  :
                 </p>
-              </div>
-              <p
-                class="StyledProps--font StyledProps--main"
-              >
-                :
-              </p>
-              <span
-                class="bp3-popover-wrapper"
-              >
                 <span
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper"
+                >
+                  <span
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-editable-text bp3-editable-text-placeholder InputWithIdentifier--idValue"
+                      tabindex="0"
+                    >
+                      <span
+                        class="bp3-editable-text-content"
+                        style="height: 1px; line-height: 1px; min-width: 0;"
+                      />
+                    </div>
+                  </span>
+                </span>
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="Edit"
+                  style="vertical-align: middle; cursor: pointer;"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 16 16"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <div
+                class="bp3-form-group"
+                data-id="name-0"
+              >
+                <label
+                  class="bp3-label"
+                  for="name"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="ChaosExperimentStep_name"
+                  >
+                    name
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
                 >
                   <div
-                    class="bp3-editable-text bp3-editable-text-placeholder InputWithIdentifier--idValue"
-                    tabindex="0"
+                    class="bp3-input-group"
                   >
-                    <span
-                      class="bp3-editable-text-content"
-                      style="height: 1px; line-height: 1px; min-width: 0;"
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="name"
+                      placeholder="pipeline.stepNamePlaceholder"
+                      type="text"
+                      value=""
                     />
                   </div>
-                </span>
-              </span>
-              <span
-                class="bp3-icon StyledProps--main"
-                data-icon="Edit"
-                style="vertical-align: middle; cursor: pointer;"
-              >
-                <svg
-                  height="12"
-                  viewBox="0 0 16 16"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                  <path
-                    clip-rule="evenodd"
-                    d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    opacity="0.3"
-                  />
-                </svg>
-              </span>
-            </div>
-            <div
-              class="bp3-form-group"
-              data-id="name-0"
-            >
-              <label
-                class="bp3-label"
-                for="name"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="ChaosExperimentStep_name"
-                >
-                  name
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="name"
-                    placeholder="pipeline.stepNamePlaceholder"
-                    type="text"
-                    value=""
-                  />
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="description-1"
-          >
-            <label
-              class="bp3-label"
-              for="description"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="ChaosExperimentStep_description"
-              >
-                Description
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              class="StyledProps--font StyledProps--main"
             >
-              <textarea
-                autocomplete="off"
-                class="bp3-input bp3-fill"
-                maxlength="1024"
-                name="description"
-              />
+              <label
+                class="Label--main bp3-label descriptionLabel"
+              >
+                optionalField
+                <span
+                  class="bp3-icon StyledProps--main editOpen"
+                  data-icon="Edit"
+                  data-name="edit"
+                  data-testid="description-edit"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 16 16"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
+                </span>
+              </label>
             </div>
           </div>
           <div
             class="bp3-form-group"
-            data-id="spec.expectedResilienceScore-2"
+            data-id="spec.expectedResilienceScore-1"
           >
             <div
               class="bp3-form-content"
@@ -438,6 +448,11 @@ exports[`ChaosExperiment Step Edit View should render properly 1`] = `
                 id="chaosExperimentReferenceField"
                 type="button"
               >
+                <span
+                  class="bp3-button-text"
+                >
+                  chaos.selectChaosExperiment
+                </span>
                 <span
                   class="bp3-icon bp3-icon-chevron-down StyledProps--main"
                   icon="chevron-down"
@@ -460,7 +475,7 @@ exports[`ChaosExperiment Step Edit View should render properly 1`] = `
               </button>
               <div
                 class="bp3-form-group expectedResilienceScoreField"
-                data-id="spec.expectedResilienceScore-3"
+                data-id="spec.expectedResilienceScore-2"
               >
                 <label
                   class="bp3-label"

@@ -1,5 +1,12 @@
 import type { SelectOption } from '@harness/uicore'
-import type { CloudWatchMetricDefinition, CloudWatchMetricsHealthSourceSpec, ResponseMap } from 'services/cv'
+import type {
+  CloudWatchMetricDefinition,
+  CloudWatchMetricsHealthSourceSpec,
+  ResponseMap,
+  TimeSeriesMetricPackDTO
+} from 'services/cv'
+import type { GroupedCreatedMetrics } from '../../common/CustomMetricV2/CustomMetric.types'
+import type { AvailableThresholdTypes, MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export type FormikRiskProfileType = {
@@ -21,6 +28,8 @@ export interface CloudWatchFormType {
   region: string
   customMetrics: CloudWatchFormCustomMetricType[]
   selectedCustomMetricIndex: number
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface HealthSourceListData {
@@ -43,6 +52,7 @@ export interface CloudWatchSetupSource {
 export interface CreatePayloadUtilParams {
   setupSourceData: CloudWatchSetupSource
   formikValues: CloudWatchFormType
+  isMetricThresholdEnabled?: boolean
 }
 
 export interface CloudWatchProps {
@@ -76,4 +86,15 @@ export interface IsMultiRecordDataErrorParameters {
   isDataPressent: boolean
   isMultipleSampleData: boolean
   isUpdatedExpression: boolean
+}
+
+export interface MetricThresholdCommonProps {
+  formikValues: CloudWatchFormType
+  groupedCreatedMetrics: GroupedCreatedMetrics
+}
+
+export interface MetricThresholdsForFormParams {
+  metricThresholds?: TimeSeriesMetricPackDTO[]
+  thresholdType?: AvailableThresholdTypes
+  isMetricThresholdEnabled?: boolean
 }

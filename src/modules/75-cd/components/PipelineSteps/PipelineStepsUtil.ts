@@ -7,8 +7,7 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
 import * as Yup from 'yup'
-import isEmpty from 'lodash/isEmpty'
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import {

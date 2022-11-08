@@ -25,7 +25,12 @@ function ArtifactListView({
   addNewArtifact
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
-
+  let isArtifactSelected = false
+  if (primaryArtifact?.type === 'CustomArtifact') {
+    isArtifactSelected = primaryArtifact?.spec?.script
+  } else {
+    isArtifactSelected = !isEmpty(primaryArtifact?.spec?.connectorRef)
+  }
   return (
     <Layout.Vertical
       style={{ flexShrink: 'initial', width: '100%' }}
@@ -33,7 +38,7 @@ function ArtifactListView({
       spacing="medium"
     >
       <div>
-        {isEmpty(primaryArtifact?.spec?.connectorRef) ? (
+        {!isArtifactSelected ? (
           <>
             <Label
               style={{

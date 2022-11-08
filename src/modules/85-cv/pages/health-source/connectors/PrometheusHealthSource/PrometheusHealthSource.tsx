@@ -309,6 +309,9 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                             connectorIdentifier={connectorIdentifier}
                             labelNamesResponse={labelNamesResponse}
                             metricNamesResponse={metricNamesResponse}
+                            dataSourceType={dataSourceType}
+                            region={region}
+                            workspaceId={workspaceId}
                             aggregatorValue={formikProps.values?.aggregator}
                             onUpdateFilter={(fieldName, updatedItem) => {
                               formikProps.setFieldValue(

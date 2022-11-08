@@ -8,6 +8,16 @@
 import React from 'react'
 import { render, fireEvent, within } from '@testing-library/react'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
+import type { ExecutionPathProps, GitQueryParams, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
+import {
+  accountPathProps,
+  executionPathProps,
+  modulePathProps,
+  orgPathProps,
+  pipelinePathProps,
+  projectPathProps
+} from '@common/utils/routeUtils'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
 import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
@@ -57,7 +67,12 @@ const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
   selectedStepId: '',
   loading: false,
   isDataLoadedForSelectedStage: true,
-  queryParams: {},
+  queryParams: {
+    connectorRef: 'testConnector',
+    repoName: 'testRepo',
+    branch: 'testBranch',
+    storeType: 'REMOTE'
+  },
   logsToken: 'token',
   setLogsToken: jest.fn(),
   addNewNodeToMap: jest.fn(),
@@ -72,6 +87,32 @@ fetchMock.mockResolvedValue({
   json: () => new Promise(resolve => resolve({})),
   headers: { get: () => 'application/json' }
 })
+
+const PATH = routes.toExecutionPipelineView({
+  ...accountPathProps,
+  ...modulePathProps,
+  ...orgPathProps,
+  ...projectPathProps,
+  ...pipelinePathProps,
+  ...executionPathProps
+})
+
+const PATH_PARAMS: ExecutionPathProps & ModulePathParams = {
+  accountId: 'testAccount',
+  orgIdentifier: 'testOrg',
+  projectIdentifier: 'testProject',
+  pipelineIdentifier: 'testPipeline',
+  executionIdentifier: 'testExec',
+  module: 'cd',
+  source: 'executions'
+}
+
+const QUERY_PARAMS: GitQueryParams = {
+  connectorRef: 'testConnector',
+  repoName: 'testRepo',
+  branch: 'testBranch',
+  storeType: 'REMOTE'
+}
 
 describe('<ExecutionGraphView /> tests', () => {
   const dateToString = jest.spyOn(Date.prototype, 'toLocaleString')
@@ -122,13 +163,22 @@ describe('<ExecutionGraphView /> tests', () => {
 
   test('stage selection works', async () => {
     const { getByTestId } = render(
-      <TestWrapper>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS as unknown as any} queryParams={QUERY_PARAMS as unknown as any}>
         <ExecutionContext.Provider value={contextValue()}>
           <ExecutionGraphView />
           <CurrentLocation />
         </ExecutionContext.Provider>
       </TestWrapper>
     )
+
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE
+      </div>
+    `)
+
     const stage = (await document.querySelector('.nodeNameText.stageName')) as HTMLElement
     fireEvent.click(within(stage).getByText('Google1'))
 
@@ -136,7 +186,7 @@ describe('<ExecutionGraphView /> tests', () => {
       <div
         data-testid="location"
       >
-        /?stage=google_1
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE&stage=google_1
       </div>
     `)
   })
@@ -165,13 +215,21 @@ describe('<ExecutionGraphView /> tests', () => {
 
   test('step selection works', async () => {
     const { findByText, getByTestId } = render(
-      <TestWrapper>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS as unknown as any} queryParams={QUERY_PARAMS as unknown as any}>
         <ExecutionContext.Provider value={contextValue()}>
           <ExecutionGraphView />
           <CurrentLocation />
         </ExecutionContext.Provider>
       </TestWrapper>
     )
+
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE
+      </div>
+    `)
 
     const step = await findByText('Rollout Deployment')
 
@@ -181,7 +239,7 @@ describe('<ExecutionGraphView /> tests', () => {
       <div
         data-testid="location"
       >
-        /?stage=google_1&step=K8sRollingUuid
+        /account/testAccount/cd/orgs/testOrg/projects/testProject/pipelines/testPipeline/executions/testExec/pipeline?connectorRef=testConnector&repoName=testRepo&branch=testBranch&storeType=REMOTE&stage=google_1&step=K8sRollingUuid
       </div>
     `)
   })

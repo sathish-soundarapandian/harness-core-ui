@@ -80,8 +80,11 @@ import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastruc
 import { UpdateReleaseRepo } from '../UpdateReleaseRepo/UpdateReleaseRepo'
 import { ShellScriptProvisionStep } from './ShellScriptProvision/ShellScriptProvisionStep'
 import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/ElastigroupInfraSpec'
+import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
+import { EmailStep } from './EmailStep/EmailStep'
 
 factory.registerStep(new CommandScriptsStep())
+factory.registerStep(new EmailStep())
 factory.registerStep(new HttpStep())
 factory.registerStep(new K8RolloutDeployStep())
 factory.registerStep(new K8sRollingRollbackStep())
@@ -154,3 +157,4 @@ factory.registerStep(new CustomDeploymentServiceSpec())
 factory.registerStep(new CustomDeploymentInfrastructureSpec())
 factory.registerStep(new ShellScriptProvisionStep())
 factory.registerStep(new ElastigroupInfrastructureSpec())
+factory.registerStep(new ElastigroupServiceSpec())

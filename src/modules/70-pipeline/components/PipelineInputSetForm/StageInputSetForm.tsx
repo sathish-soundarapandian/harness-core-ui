@@ -766,7 +766,7 @@ export function StageInputSetFormInternal({
             })
           ) : (
             <Container className={stepCss.bottomMargin3}>
-              <FormConnectorReferenceField
+              <FormMultiTypeConnectorField
                 width={getConnectorRefWidth(viewType)}
                 name={`${namePath}infrastructure.spec.spec.harnessImageConnectorRef`}
                 label={
@@ -778,6 +778,9 @@ export function StageInputSetFormInternal({
                 orgIdentifier={orgIdentifier}
                 gitScope={gitScope}
                 disabled={readonly}
+                multiTypeProps={{
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                }}
                 type={Connectors.DOCKER}
               />
             </Container>
@@ -904,6 +907,7 @@ export function StageInputSetFormInternal({
                   allValues: pick(deploymentStage, ['service']),
                   customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
+                onUpdate={data => formik?.setFieldValue(`${path}.service`, get(data, 'service'))}
               />
             )}
             {!isNil(deploymentStage?.deploymentType) && (
@@ -969,6 +973,7 @@ export function StageInputSetFormInternal({
                   allValues: pick(deploymentStage, ['services']),
                   customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
+                onUpdate={data => formik?.setFieldValue(`${path}.services`, get(data, 'services'))}
               />
             ) : null}
             {Array.isArray(deploymentStageTemplate.services.values) ? (

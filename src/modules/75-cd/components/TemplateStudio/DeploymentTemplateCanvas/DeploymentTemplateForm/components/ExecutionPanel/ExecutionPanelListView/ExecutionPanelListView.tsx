@@ -15,7 +15,8 @@ import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/
 import {
   RenderColumnScope,
   RenderColumnTemplate,
-  RenderColumnType
+  RenderColumnType,
+  RenderIcon
 } from '@templates-library/pages/TemplatesPage/views/TemplatesListView/TemplatesListView'
 import { DTListCardContextMenu } from '../DTListCardContextMenu/DTListCardContextMenu'
 import css from './ExecutionPanelListView.module.scss'
@@ -47,9 +48,9 @@ const ExecutionPanelListView: React.FC<TemplatesViewProps> = (props): JSX.Elemen
   const getTemplateNameWidth = React.useCallback(() => {
     /* istanbul ignore next */
     if (hideMenu) {
-      return '65%'
+      return '55%'
     }
-    return '60%'
+    return '50%'
   }, [hideMenu])
 
   const columns: CustomColumn<TemplateSummaryResponse>[] = React.useMemo(
@@ -59,6 +60,12 @@ const ExecutionPanelListView: React.FC<TemplatesViewProps> = (props): JSX.Elemen
         accessor: 'templateEntityType',
         width: '20%',
         Cell: RenderColumnType
+      },
+      {
+        accessor: 'icon',
+        width: '10%',
+        Cell: RenderIcon,
+        disableSortBy: true
       },
       {
         Header: 'Template',

@@ -33,12 +33,11 @@ export default function DeployStageSpecifications(props: React.PropsWithChildren
 
       const newStage = produce(defaultTo(stage?.stage, {} as DeploymentStageElementConfig), draft => {
         Object.assign(draft, values)
-        delete (draft as EditStageFormikType).gitOpsEnabled
 
         if (draft.spec) {
-          draft.spec.gitOpsEnabled = (values as EditStageFormikType).gitOpsEnabled
-
           if (gitopsEnableNow) {
+            draft.spec.gitOpsEnabled = (values as EditStageFormikType).gitOpsEnabled
+            delete (draft as EditStageFormikType).gitOpsEnabled
             delete draft.spec.service
             delete draft.spec.services
           }

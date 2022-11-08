@@ -44,11 +44,12 @@ import {
   getFeatureOption,
   getInitialValues,
   validate,
-  validateDuplicateIdentifier,
   getConnectorTypeName,
   getConnectorPlaceholderText,
   canShowDataSelector,
-  canShowDataInfoSelector
+  canShowDataInfoSelector,
+  formValidation,
+  getIsConnectorDisabled
 } from './DefineHealthSource.utils'
 import PrometheusDataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
 import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
@@ -115,24 +116,26 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const connectorData = useCallback(
     formik => {
+      const { connectorRef, sourceType, dataSourceType } = formik?.values || {}
+
       return isTemplate ? (
         <FormMultiTypeConnectorField
           enableConfigureOptions={false}
           name={ConnectorRefFieldName}
-          disabled={!formik?.values?.sourceType}
+          disabled={!sourceType}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
               {getString('connectors.selectConnector')}
             </Text>
           }
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: healthSourceTypeMapping(formik?.values?.sourceType)
+            sourceType: healthSourceTypeMapping(sourceType)
           })}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={400}
-          type={healthSourceTypeMapping(formik?.values?.sourceType)}
+          type={healthSourceTypeMapping(sourceType)}
           multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
           onChange={(value: any) => {
             const connectorValue =
@@ -146,7 +149,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         <FormConnectorReferenceField
           width={400}
           formik={formik}
-          type={healthSourceTypeMappingForReferenceField(formik?.values?.sourceType, formik?.values?.dataSourceType)}
+          type={healthSourceTypeMappingForReferenceField(sourceType, dataSourceType)}
           name={ConnectorRefFieldName}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
@@ -157,9 +160,15 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: getConnectorPlaceholderText(formik?.values?.sourceType, formik?.values?.dataSourceType)
+            sourceType: getConnectorPlaceholderText(sourceType, dataSourceType)
           })}
-          disabled={isEdit ? !!formik?.values?.connectorRef && isEdit : !formik?.values?.sourceType}
+          disabled={getIsConnectorDisabled({
+            isEdit,
+            connectorRef,
+            sourceType,
+            dataSourceType,
+            isDataSourceTypeSelectorEnabled
+          })}
           tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
         />
       )
@@ -180,7 +189,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const getDataSourceTypeSelector = (sourceType?: string): JSX.Element | null => {
     if (canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled)) {
-      return <PrometheusDataSourceTypeSelector />
+      return <PrometheusDataSourceTypeSelector isEdit={isEdit} />
     }
 
     return null
@@ -188,7 +197,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const getDataInfoSelector = (sourceType?: string, dataSourceType?: string): JSX.Element | null => {
     if (canShowDataInfoSelector(sourceType, dataSourceType, isDataSourceTypeSelectorEnabled)) {
-      return <DataInfoSelector />
+      return <DataInfoSelector isEdit={isEdit} />
     }
 
     return null
@@ -201,9 +210,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         initialValues={initialValues}
         formName={'defineHealthsource'}
         validate={values => {
-          if (!isEdit) {
-            return validateDuplicateIdentifier(values)
-          }
+          return formValidation({
+            values,
+            isDataSourceTypeSelectorEnabled,
+            isEdit,
+            getString
+          })
         }}
         validationSchema={validate(getString)}
         onSubmit={values => {

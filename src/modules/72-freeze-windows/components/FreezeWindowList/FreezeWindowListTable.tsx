@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { Column } from 'react-table'
-import { TableV2 } from '@harness/uicore'
+import { Color, TableV2, Text } from '@harness/uicore'
 import type { SortBy } from '@freeze-windows/types'
 import type { FreezeSummaryResponse, PageFreezeSummaryResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -15,11 +15,10 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants
 import {
   MenuCell,
   LastModifiedCell,
-  FreezeNameCell,
-  FreezeTimeCell,
+  FreezeWindowCell,
+  ScheduleCell,
   StatusCell,
   RowSelectCell,
-  FreezeToggleCell,
   FreezeWindowListColumnActions
 } from './FreezeWindowListCells'
 import { ToggleAllSelection } from './ToggleAllSelection'
@@ -43,10 +42,11 @@ export function FreezeWindowListTable({
   onViewFreezeRow,
   getViewFreezeRowLink,
   selectedItems,
-  disabled,
+  canEdit,
   freezeStatusMap
 }: FreezeWindowListTableProps): React.ReactElement {
   const { getString } = useStrings()
+
   const {
     content = [],
     totalItems = 0,
@@ -71,43 +71,38 @@ export function FreezeWindowListTable({
       {
         Header: <ToggleAllSelection data={content} />,
         id: 'rowSelectToggle',
-        width: '2.5%',
+        width: '2%',
         Cell: RowSelectCell,
         disableSortBy: true,
         onRowSelectToggle,
         selectedItems,
-        disabled,
-        freezeStatusMap
+        canEdit
       },
       {
-        Header: '',
-        accessor: 'freezeToggle',
-        width: '3.5%',
-        Cell: FreezeToggleCell,
-        disableSortBy: true,
-        onToggleFreezeRow,
-        disabled,
-        freezeStatusMap
-      },
-      {
-        Header: 'Name',
+        Header: 'Freeze Window',
         accessor: 'name',
-        width: '25%',
-        Cell: FreezeNameCell,
+        width: '27%',
+        Cell: FreezeWindowCell,
         serverSortProps: getServerSortProps('name'),
-        getViewFreezeRowLink
+        getViewFreezeRowLink,
+        onToggleFreezeRow,
+        canEdit
       },
       {
-        Header: 'Freeze Time',
-        accessor: 'freezeTime',
-        width: '34%',
-        Cell: FreezeTimeCell,
+        Header: 'Schedule',
+        accessor: 'schedule',
+        width: '35%',
+        Cell: ScheduleCell,
         disableSortBy: true
       },
       {
-        Header: 'Status',
+        Header: (
+          <Text tooltipProps={{ dataTooltipId: 'freezeStatusColumnTitle' }} color={Color.GREY_800}>
+            Status
+          </Text>
+        ),
         accessor: 'status',
-        width: '15%',
+        width: '16%',
         Cell: StatusCell,
         disableSortBy: true,
         freezeStatusMap
@@ -128,11 +123,11 @@ export function FreezeWindowListTable({
         getViewFreezeRowLink,
         onDeleteRow,
         onToggleFreezeRow,
-        disabled,
+        canEdit,
         freezeStatusMap
       }
     ] as unknown as Column<FreezeSummaryResponse>[]
-  }, [currentOrder, currentSort, selectedItems, disabled, freezeStatusMap])
+  }, [currentOrder, currentSort, selectedItems, canEdit, freezeStatusMap])
 
   return (
     <TableV2

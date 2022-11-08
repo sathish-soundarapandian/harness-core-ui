@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, omitBy } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -58,7 +58,7 @@ import {
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import type { Pipeline } from '@pipeline/utils/types'
+import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   ActionReturnType,
@@ -274,6 +274,7 @@ export interface PipelineContextInterface {
   fetchPipeline: (args: FetchPipelineUnboundProps) => Promise<void>
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   setTemplateTypes: (data: { [key: string]: string }) => void
+  setTemplateIcons: (data: TemplateIcons) => void
   setTemplateServiceData: (data: TemplateServiceDataType) => void
   updatePipeline: (pipeline: PipelineInfoConfig, viewType?: SelectedView) => Promise<void>
   updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
@@ -524,9 +525,9 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       branch: defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
     }
     if (data && !forceUpdate) {
-      const { templateTypes, templateServiceData } = data.pipeline
+      const { templateTypes, templateServiceData, templateIcons } = data.pipeline
         ? await getTemplateType(data.pipeline, templateQueryParams, storeMetadata, supportingTemplatesGitx)
-        : { templateTypes: {}, templateServiceData: {} }
+        : { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
 
       const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
         ? await getResolvedCustomDeploymentDetailsMap(data.pipeline, templateQueryParams)
@@ -546,6 +547,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
               ? pipelineWithGitDetails.gitDetails
               : defaultTo(data?.gitDetails, {}),
           templateTypes,
+          templateIcons,
           templateServiceData,
           resolvedCustomDeploymentDetailsByRef,
           entityValidityDetails: defaultTo(
@@ -565,7 +567,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       } catch (_) {
         logger.info(DBNotFoundErrorMessage)
       }
-      const { templateTypes, templateServiceData } = await getTemplateType(
+      const { templateTypes, templateServiceData, templateIcons } = await getTemplateType(
         pipeline,
         templateQueryParams,
         storeMetadata,
@@ -586,6 +588,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           gitDetails: payload.gitDetails,
           entityValidityDetails: payload.entityValidityDetails,
           templateTypes,
+          templateIcons,
           templateServiceData,
           resolvedCustomDeploymentDetailsByRef,
           yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper
@@ -973,6 +976,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   getStageFromPipeline: () => ({ stage: undefined, parent: undefined }),
   setYamlHandler: () => undefined,
   setTemplateTypes: () => undefined,
+  setTemplateIcons: () => undefined,
   setTemplateServiceData: () => undefined,
   updatePipeline: () => new Promise<void>(() => undefined),
   pipelineSaved: () => undefined,
@@ -1164,8 +1168,9 @@ export function PipelineProvider({
       templateRefs,
       state.storeMetadata,
       supportingTemplatesGitx
-    ).then(({ templateTypes, templateServiceData }) => {
+    ).then(({ templateTypes, templateServiceData, templateIcons }) => {
       setTemplateTypes(merge(state.templateTypes, templateTypes))
+      setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })
       setTemplateServiceData(merge(state.templateServiceData, templateServiceData))
     })
 
@@ -1214,6 +1219,10 @@ export function PipelineProvider({
     dispatch(PipelineContextActions.setTemplateTypes({ templateTypes }))
   }, [])
 
+  const setTemplateIcons = React.useCallback(templateIcons => {
+    dispatch(PipelineContextActions.setTemplateIcons({ templateIcons }))
+  }, [])
+
   const setTemplateServiceData = React.useCallback(templateServiceData => {
     dispatch(PipelineContextActions.setTemplateServiceData({ templateServiceData }))
   }, [])
@@ -1236,7 +1245,7 @@ export function PipelineProvider({
         return stages.map(node => {
           if (node.stage?.identifier === newStage.identifier) {
             // This omitBy condition is required to remove any pseudo fields used in the stage
-            return { stage: omitBy(newStage, (_val, key) => key.startsWith('_')) as StageElementConfig }
+            return { stage: newStage }
           } else if (node.parallel) {
             return {
               parallel: _updateStages(node.parallel)
@@ -1323,6 +1332,7 @@ export function PipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes,
+        setTemplateIcons,
         setTemplateServiceData,
         setIntermittentLoading
       }}

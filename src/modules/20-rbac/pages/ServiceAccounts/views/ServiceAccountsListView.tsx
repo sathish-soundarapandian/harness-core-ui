@@ -15,7 +15,8 @@ import {
   Popover,
   TableV2,
   Text,
-  useConfirmationDialog
+  useConfirmationDialog,
+  ButtonSize
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
@@ -82,8 +83,9 @@ const RenderColumnRoleAssignments: Renderer<CellProps<ServiceAccountAggregateDTO
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       <RoleBindingsList data={data.roleAssignmentsMetadataDTO} length={2} />
       <RbacButton
-        text={getString('common.plusNumber', { number: getString('common.role') })}
-        variation={ButtonVariation.LINK}
+        text={`${getString('common.manage')} ${getString('roles')}`}
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.SMALL}
         className={css.roleButton}
         data-testid={`addRole-${data.serviceAccount.identifier}`}
         onClick={event => {
@@ -125,8 +127,8 @@ const RenderColumnEmail: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ ro
 }
 
 const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row, column }) => {
-  const data = row.original.serviceAccount
-  const { accountIdentifier, orgIdentifier, projectIdentifier, identifier } = data
+  const { serviceAccount: serviceAccountData, roleAssignmentsMetadataDTO } = row.original
+  const { accountIdentifier, orgIdentifier, projectIdentifier, identifier } = serviceAccountData
   const [menuOpen, setMenuOpen] = useState(false)
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -135,7 +137,7 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
   })
 
   const { openDialog: openDeleteDialog } = useConfirmationDialog({
-    contentText: getString('rbac.serviceAccounts.confirmDelete', { name: data.name }),
+    contentText: getString('rbac.serviceAccounts.confirmDelete', { name: serviceAccountData.name }),
     titleText: getString('rbac.serviceAccounts.confirmDeleteTitle'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
@@ -148,7 +150,7 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
             headers: { 'content-type': 'application/json' }
           })
           /* istanbul ignore else */ if (deleted) {
-            showSuccess(getString('rbac.serviceAccounts.successMessage', { name: data.name }))
+            showSuccess(getString('rbac.serviceAccounts.successMessage', { name: serviceAccountData.name }))
             ;(column as any).reload()
           } else {
             showError(getString('deleteError'))
@@ -170,7 +172,15 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    ;(column as any).openServiceAccountModal(data)
+    ;(column as any).openServiceAccountModal(serviceAccountData)
+  }
+
+  const permissionRequest = {
+    permission: PermissionIdentifier.EDIT_SERVICEACCOUNT,
+    resource: {
+      resourceType: ResourceType.SERVICEACCOUNT,
+      resourceIdentifier: serviceAccountData.identifier
+    }
   }
 
   return (
@@ -186,7 +196,7 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
         <Button
           minimal
           icon="Options"
-          data-testid={`menu-${data.identifier}`}
+          data-testid={`menu-${serviceAccountData.identifier}`}
           onClick={e => {
             e.stopPropagation()
             setMenuOpen(true)
@@ -194,17 +204,19 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
         />
         <Menu>
           <RbacMenuItem
-            icon="edit"
-            text={getString('edit')}
-            onClick={handleEdit}
-            permission={{
-              permission: PermissionIdentifier.EDIT_SERVICEACCOUNT,
-              resource: {
-                resourceType: ResourceType.SERVICEACCOUNT,
-                resourceIdentifier: data.identifier
-              }
+            icon="res-roles"
+            text={getString('rbac.manageRoleBindings')}
+            onClick={event => {
+              event.stopPropagation()
+              ;(column as any).openRoleAssignmentModal(
+                PrincipalType.SERVICE,
+                serviceAccountData,
+                roleAssignmentsMetadataDTO
+              )
             }}
+            permission={permissionRequest}
           />
+          <RbacMenuItem icon="edit" text={getString('edit')} onClick={handleEdit} permission={permissionRequest} />
           <RbacMenuItem
             icon="trash"
             text={getString('delete')}
@@ -213,7 +225,7 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
               permission: PermissionIdentifier.DELETE_SERVICEACCOUNT,
               resource: {
                 resourceType: ResourceType.SERVICEACCOUNT,
-                resourceIdentifier: data.identifier
+                resourceIdentifier: serviceAccountData.identifier
               }
             }}
           />
@@ -249,7 +261,7 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
         accessor: row => row.roleAssignmentsMetadataDTO,
         width: '35%',
         Cell: isCommunity ? () => noop : RenderColumnRoleAssignments,
-        openRoleAssignmentModal: openRoleAssignmentModal
+        openRoleAssignmentModal
       },
       {
         Header: getString('common.apiKeys'),
@@ -273,7 +285,8 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
         Cell: RenderColumnMenu,
         reload: reload,
         openServiceAccountModal: openServiceAccountModal,
-        disableSortBy: true
+        disableSortBy: true,
+        openRoleAssignmentModal
       }
     ],
     []

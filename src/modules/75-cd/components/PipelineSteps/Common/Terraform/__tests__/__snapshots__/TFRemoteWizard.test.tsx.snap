@@ -1331,23 +1331,28 @@ exports[`Terraform Remote Form tests should be able to load edit mode correctly 
                   class="bp3-form-content"
                 >
                   <div
-                    class="bp3-form-group bp3-disabled runtimeDisabled"
+                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                   >
-                    
                     <div
-                      class="bp3-form-content"
+                      class="bp3-form-group bp3-disabled runtimeDisabled"
+                      style="flex-grow: 1;"
                     >
+                      
                       <div
-                        class="bp3-input-group bp3-disabled"
+                        class="bp3-form-content"
                       >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          disabled=""
-                          name="varFile.spec.store.spec.paths"
-                          type="text"
-                          value="<+input>"
-                        />
+                        <div
+                          class="bp3-input-group bp3-disabled"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            disabled=""
+                            name="varFile.spec.store.spec.paths"
+                            type="text"
+                            value="<+input>"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

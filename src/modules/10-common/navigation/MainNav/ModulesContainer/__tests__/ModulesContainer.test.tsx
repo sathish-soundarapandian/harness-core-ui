@@ -174,7 +174,7 @@ describe('Modules containter test', () => {
         <ModulesContainer />
       </TestWrapper>
     )
-    const scrollableContainer = container.querySelector('[class*="container"]')
+    const scrollableContainer = container.querySelector('[class*="modules"]')
 
     queryByText('common.chaosText')?.scrollIntoView()
 

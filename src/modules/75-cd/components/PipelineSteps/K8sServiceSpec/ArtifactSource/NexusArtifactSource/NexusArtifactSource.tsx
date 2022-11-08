@@ -114,6 +114,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.groupId`, '')
   )
 
+  const groupValue = getDefaultQueryParam(
+    artifact?.spec?.spec?.group,
+    get(initialValues?.artifacts, `${artifactPath}.spec.spec.group`, '')
+  )
+
   const extensionValue = getDefaultQueryParam(
     artifact?.spec?.spec?.extension,
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.extension`, '')
@@ -162,6 +167,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       repositoryFormat: getFinalQueryParamValue(repositoryFormatValue),
       artifactId: getFinalQueryParamValue(artifactIdValue),
       groupId: getFinalQueryParamValue(groupIdValue),
+      group: getFinalQueryParamValue(groupValue),
       extension: getFinalQueryParamValue(extensionValue),
       classifier: getFinalQueryParamValue(classifierValue),
       packageName: getFinalQueryParamValue(packageNameValue),
@@ -253,6 +259,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         lastQueryData.artifactPath !== artifactPathValue ||
         lastQueryData.repositoryUrl !== repositoryUrlValue ||
         lastQueryData.repositoryPort !== repositoryPortValue
+      : repositoryFormatValue === RepositoryFormatTypes.Raw
+      ? lastQueryData.repositoryFormat !== repositoryFormatValue ||
+        lastQueryData.repository !== repositoryValue ||
+        lastQueryData.group !== groupValue
       : lastQueryData.repositoryFormat !== repositoryFormatValue ||
         lastQueryData.repository !== repositoryValue ||
         lastQueryData.packageName !== packageNameValue)
@@ -280,6 +290,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         repositoryDependentFields = {
           artifactPath: artifactPathValue,
           ...optionalFields
+        }
+      } else if (repositoryFormatValue === RepositoryFormatTypes.Raw) {
+        repositoryDependentFields = {
+          group: groupValue
         }
       } else {
         repositoryDependentFields = {
@@ -559,6 +573,36 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.packageName`, value)
+                }}
+              />
+            )}
+          </div>
+          <div className={css.inputFieldLayout}>
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.spec.group`, template) && (
+              <FormInput.MultiTextInput
+                name={`${path}.artifacts.${artifactPath}.spec.spec.group`}
+                label={getString('rbac.group')}
+                placeholder={getString('pipeline.artifactsSelection.groupPlaceholder')}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+              />
+            )}
+            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.spec.group`)) ===
+              MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                className={css.configureOptions}
+                style={{ alignSelf: 'center' }}
+                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.spec.group`)}
+                type="String"
+                variableName="group"
+                showRequiredField={false}
+                showDefaultField={true}
+                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.group`, value)
                 }}
               />
             )}

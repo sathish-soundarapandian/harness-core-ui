@@ -39,8 +39,6 @@ import SshServiceSpecEditable from './SshServiceSpecForm/SshServiceSpecEditable'
 const logger = loggerFor(ModuleName.CD)
 const tagExists = (value: unknown): boolean => typeof value === 'number' || !isEmpty(value)
 
-const ManifestConnectorRefRegex = /^.+manifest\.spec\.store\.spec\.connectorRef$/
-const ManifestConnectorRefType = 'Git'
 const ArtifactsPrimaryRegex = /^.+artifacts\.primary\.spec\.connectorRef$/
 const ArtifactsPrimaryTagRegex = /^.+artifacts\.primary\.spec\.artifactPath$/
 
@@ -62,7 +60,6 @@ export class SshServiceSpec extends Step<ServiceSpec> {
   constructor() {
     super()
     this.invocationMap.set(ArtifactsPrimaryRegex, this.getArtifactsPrimaryConnectorsListForYaml.bind(this))
-    this.invocationMap.set(ManifestConnectorRefRegex, this.getManifestConnectorsListForYaml.bind(this))
     this.invocationMap.set(ArtifactsPrimaryTagRegex, this.getArtifactsTagsListForYaml.bind(this))
   }
 
@@ -74,41 +71,6 @@ export class SshServiceSpec extends Step<ServiceSpec> {
         kind: CompletionItemKind.Field
       })) || []
     )
-  }
-
-  protected getManifestConnectorsListForYaml(
-    path: string,
-    yaml: string,
-    params: Record<string, unknown>
-  ): Promise<CompletionItemInterface[]> {
-    let pipelineObj
-    try {
-      pipelineObj = parse(yaml)
-    } catch (err) {
-      logger.error('Error while parsing the yaml', err)
-    }
-    const { accountId, projectIdentifier, orgIdentifier } = params as {
-      accountId: string
-      orgIdentifier: string
-      projectIdentifier: string
-    }
-
-    if (pipelineObj) {
-      const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
-      if (obj?.type === ManifestConnectorRefType) {
-        return getConnectorListV2Promise({
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            includeAllConnectorsAvailableAtScope: true
-          },
-          body: { types: ['Git', 'Github', 'Gitlab', 'Bitbucket'], filterType: 'Connector' }
-        }).then(this.returnConnectorListFromResponse)
-      }
-    }
-
-    return Promise.resolve([])
   }
 
   protected getArtifactsPrimaryConnectorsListForYaml(
@@ -251,54 +213,54 @@ export class SshServiceSpec extends Step<ServiceSpec> {
       )
     }
 
-    data?.manifests?.forEach((manifest, index) => {
-      const currentManifestTemplate = get(template, `manifests[${index}].manifest.spec.store.spec`, '')
+    data?.configFiles?.forEach((configFile, index) => {
+      const currentFileTemplate = get(template, `configFiles[${index}].configFile.spec.store.spec`, '')
       if (
-        isEmpty(manifest?.manifest?.spec?.store?.spec?.connectorRef) &&
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.files) &&
         isRequired &&
-        getMultiTypeFromValue(currentManifestTemplate?.connectorRef) === MultiTypeInputType.RUNTIME
+        getMultiTypeFromValue(currentFileTemplate?.files) === MultiTypeInputType.RUNTIME
       ) {
         set(
           errors,
-          `manifests[${index}].manifest.spec.store.spec.connectorRef`,
-          getString?.('fieldRequired', { field: 'connectorRef' })
+          `configFiles[${index}].configFile.spec.store.spec.files[0]`,
+          getString?.('fieldRequired', { field: 'File' })
         )
       }
-
-      if (
-        isEmpty(manifest?.manifest?.spec?.store?.spec?.folderPath) &&
-        isRequired &&
-        getMultiTypeFromValue(currentManifestTemplate?.folderPath) === MultiTypeInputType.RUNTIME
-      ) {
-        set(
-          errors,
-          `manifests[${index}].manifest.spec.store.spec.folderPath`,
-          getString?.('fieldRequired', { field: 'folderPath' })
-        )
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.files)) {
+        configFile?.configFile?.spec?.store?.spec?.files?.forEach((value: string, fileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.files[${fileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
       }
       if (
-        isEmpty(manifest?.manifest?.spec?.store?.spec?.branch) &&
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles) &&
         isRequired &&
-        getMultiTypeFromValue(currentManifestTemplate?.branch) === MultiTypeInputType.RUNTIME
+        getMultiTypeFromValue(currentFileTemplate?.secretFiles) === MultiTypeInputType.RUNTIME
       ) {
         set(
           errors,
-          `manifests[${index}].manifest.spec.store.spec.branch`,
-          getString?.('fieldRequired', { field: 'Branch' })
+          `configFiles[${index}].configFile.spec.store.spec.secretFiles[0]`,
+          getString?.('fieldRequired', { field: 'File' })
         )
       }
-      if (
-        isEmpty(manifest?.manifest?.spec?.store?.spec?.paths?.[0]) &&
-        isRequired &&
-        getMultiTypeFromValue(currentManifestTemplate?.paths) === MultiTypeInputType.RUNTIME
-      ) {
-        set(
-          errors,
-          `manifests[${index}].manifest.spec.store.spec.paths`,
-          getString?.('fieldRequired', { field: 'Paths' })
-        )
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles)) {
+        configFile?.configFile?.spec?.store?.spec?.secretFiles?.forEach((value: string, secretFileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.files[${secretFileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
       }
     })
+
     return errors
   }
 

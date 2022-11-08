@@ -42,6 +42,9 @@ jest.mock('services/pipeline-ng', () => ({
     loading: false,
     cancel: jest.fn()
   })),
+  useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
+    return { data: jest.fn(), refetch: jest.fn() }
+  }),
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
@@ -143,13 +146,12 @@ describe('CFPipelineDeploymentList', () => {
 
   test('should render pipelines', async () => {
     renderExecutionPage()
-
     const pipeline = await screen.findByRole('link', {
       name: 'PR Harness Env - CD Selective Stage'
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline'
+      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline?connectorRef=account.PRenvHarnessYamlGithub&repoName=ng-pr-manifests&branch=feat%2FCDS-41594-gitops&storeType=REMOTE'
     )
   })
 

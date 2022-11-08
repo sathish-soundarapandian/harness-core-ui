@@ -26,11 +26,6 @@ const defaultFeatureFlagValues = { MULTI_SERVICE_INFRA: true, NG_SVC_ENV_REDESIG
 const initialValues = { services: { values: [{ serviceRef: 'svc_1' }, { serviceRef: 'svc_2' }] } }
 
 jest.mock('services/cd-ng', () => ({
-  useGetServiceAccessList: jest.fn(() => ({
-    data: { data: services },
-    loading: false
-  })),
-  useGetServicesYamlAndRuntimeInputs: jest.fn().mockReturnValue({ mutate: jest.fn(() => ({ data: metadata })) }),
   useCreateServiceV2: jest.fn().mockReturnValue({
     mutate: jest
       .fn()
@@ -38,6 +33,13 @@ jest.mock('services/cd-ng', () => ({
   }),
   useUpdateServiceV2: jest.fn().mockReturnValue({ mutate: jest.fn().mockResolvedValue({ status: 'SUCCESS' }) }),
   useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetServiceAccessListQuery: jest.fn(() => ({
+    data: { data: services }
+  })),
+  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: metadata } }))
 }))
 
 describe('DeployServiceEntityWidget - multi services tests', () => {

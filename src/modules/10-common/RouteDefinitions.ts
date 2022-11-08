@@ -1018,16 +1018,22 @@ const routes = {
   ),
   toExecutionPipelineView: withAccountId(
     ({
+      accountId: _accountId,
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
       module,
-      source
-    }: PipelineType<ExecutionPathProps>) => {
+      source,
+      ...rest
+    }: PipelineType<ExecutionPathProps> & GitQueryParams) => {
       const basePath = module || 'home'
-
-      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
+      }
     }
   ),
   toExecutionInputsView: withAccountId(
@@ -1540,6 +1546,11 @@ const routes = {
   toCVCreateSLOs: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create`
+    }
+  ),
+  toCVCreateCompositeSLOs: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/composite`
     }
   ),
   toCVAddMonitoringServicesSetup: withAccountId(

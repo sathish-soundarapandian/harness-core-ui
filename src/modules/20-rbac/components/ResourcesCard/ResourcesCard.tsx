@@ -72,7 +72,11 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
             color={Color.BLACK}
             font={{ weight: 'semi-bold' }}
             icon={icon}
-            iconProps={{ size: 30, padding: { right: 'medium' } }}
+            iconProps={{
+              size: 30,
+              padding: { right: 'medium' },
+              className: css.iconColor
+            }}
           >
             {getString(label)}
           </Text>

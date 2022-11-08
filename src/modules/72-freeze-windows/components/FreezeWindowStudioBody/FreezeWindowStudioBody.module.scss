@@ -38,6 +38,12 @@
     padding: 0 var(--spacing-5);
     align-items: center;
   }
+  :global(.bp3-tab-indicator) {
+    bottom: -2px; // height of indicator is 2px
+  }
+  :global(.bp3-tab) {
+    padding: 0 var(--spacing-medium);
+  }
   :global(.bp3-tab-panel) {
     padding: var(--spacing-7);
     margin-top: 0;

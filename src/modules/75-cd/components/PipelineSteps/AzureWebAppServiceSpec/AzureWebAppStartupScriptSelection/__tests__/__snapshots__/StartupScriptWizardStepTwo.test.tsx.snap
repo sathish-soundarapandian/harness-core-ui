@@ -9,7 +9,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
     >
-      pipeline.startupCommand.fileDetails
+      pipeline.startup.command.fileDetails
     </p>
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -179,7 +179,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="startupScriptDetails_paths"
                   >
-                    pipeline.startupCommand.scriptFilePath
+                    pipeline.startup.scriptFilePath
                   </span>
                    
                   <span
@@ -199,7 +199,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="paths"
-                        placeholder="pipeline.startupCommand.scriptFilePath"
+                        placeholder="pipeline.startup.scriptFilePath"
                         type="text"
                         value="filePath"
                       />
@@ -317,7 +317,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
     >
-      pipeline.startupCommand.fileDetails
+      pipeline.startup.command.fileDetails
     </p>
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -634,7 +634,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="startupScriptDetails_paths"
                   >
-                    pipeline.startupCommand.scriptFilePath
+                    pipeline.startup.scriptFilePath
                   </span>
                    
                   <span

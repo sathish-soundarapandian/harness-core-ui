@@ -12,7 +12,9 @@ export const CustomMetricsValidationName = 'CustomMetricsNotPresent'
 export const cloudWatchInitialValues: CloudWatchFormType = {
   region: '',
   customMetrics: [],
-  selectedCustomMetricIndex: 0
+  selectedCustomMetricIndex: 0,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const CloudWatchProperties: Record<string, keyof CloudWatchFormType> = {

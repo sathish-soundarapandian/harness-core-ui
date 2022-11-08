@@ -4,9 +4,15 @@ import type { SelectOption } from '@harness/uicore'
 import type { AnalysisDTO, MetricPackDTO } from 'services/cv'
 import { getIsValidPrimitive } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
-import type { CommonCustomMetricsType, GroupedCreatedMetrics, GroupedMetric } from './CustomMetric.types'
+import type {
+  CommonCustomMetricsType,
+  FilterMetricThresholdsParamsType,
+  GroupedCreatedMetrics,
+  GroupedMetric
+} from './CustomMetric.types'
 import { DefaultCustomMetricGroupName, ExceptionGroupName } from './CustomMetricV2.constants'
 import { getThresholdTypes } from '../utils/HealthSource.utils'
+import type { MetricThresholdType } from '../MetricThresholds/MetricThresholds.types'
 
 export function isAssignSectionValid(customMetric: CommonCustomMetricsType): boolean {
   if (!customMetric) {
@@ -67,7 +73,8 @@ export const getGroupAndMetric = (
   return mappedMetrics.map(item => {
     return {
       groupName: (item.groupName || defaultGroupedMetric(getString)) as SelectOption,
-      metricName: item.metricName
+      metricName: item.metricName,
+      continuousVerification: Boolean(item?.analysis?.deploymentVerification?.enabled)
     }
   })
 }
@@ -338,4 +345,16 @@ export const updateResponseForFormik = (customMetrics?: CommonCustomMetricsType[
       analysis: getAnalysisForFormik(customMetric.analysis)
     }
   })
+}
+
+export const getFilteredMetricThresholds = ({
+  isMetricThresholdEnabled,
+  customMetricNameToRemove,
+  metricThresholdsToFilter
+}: FilterMetricThresholdsParamsType): MetricThresholdType[] => {
+  if (!isMetricThresholdEnabled || !Array.isArray(metricThresholdsToFilter)) {
+    return []
+  }
+
+  return metricThresholdsToFilter.filter(threshold => threshold.metricName !== customMetricNameToRemove)
 }

@@ -293,9 +293,10 @@ export const buildSpotPayload = (formData: FormData) => {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       credential: {
-        type: CredTypeValues.ManualConfig,
+        type: CredTypeValues.PermanentTokenConfig,
         spec: {
-          [formData.accountId.type === ValueType.TEXT ? 'accountId' : 'accountIdRef']: formData.accountId.value,
+          [formData.spotAccountId.type === ValueType.TEXT ? 'spotAccountId' : 'spotAccountIdRef']:
+            formData.spotAccountId.value,
           apiTokenRef: formData.apiTokenRef.referenceString
         }
       }
@@ -509,7 +510,8 @@ export const setupGitFormData = async (connectorInfo: ConnectorInfoDTO, accountI
           }
         : undefined,
 
-    password: await setSecretField(connectorInfo?.spec?.spec?.passwordRef, scopeQueryParams)
+    password: await setSecretField(connectorInfo?.spec?.spec?.passwordRef, scopeQueryParams),
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 
   return formData
@@ -678,11 +680,11 @@ export const setupSpotFormData = async (connectorInfo: ConnectorInfoDTO, account
 
   const authdata = connectorInfo?.spec?.credential?.spec
   const formData = {
-    accountId:
-      authdata?.accountId || authdata?.accountIdRef
+    spotAccountId:
+      authdata?.spotAccountId || authdata?.spotAccountIdRef
         ? {
-            value: authdata.accountId || authdata.accountIdRef,
-            type: authdata.accountIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: authdata.spotAccountId || authdata.spotAccountIdRef,
+            type: authdata.spotAccountIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
     apiTokenRef: await setSecretField(authdata?.apiTokenRef, scopeQueryParams),
@@ -1584,6 +1586,7 @@ export const buildGitPayload = (formData: FormData) => {
     type: Connectors.GIT,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       connectionType: formData.urlType,
       url: formData.url,
       type: formData.connectionType,
@@ -2347,6 +2350,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.azure')
     case Connectors.CUSTOM_SECRET_MANAGER:
       return getString('connectors.testConnectionStep.validationText.customSM')
+    case Connectors.GcpSecretManager:
+      return getString('connectors.testConnectionStep.validationText.gcpSM')
     default:
       return ''
   }

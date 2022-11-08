@@ -36,6 +36,8 @@ import { NewFreezeWindowButton } from '@freeze-windows/components/NewFreezeWindo
 import { useComputedFreezeStatusMap } from '@freeze-windows/hooks/useComputedFreezeStatusMap'
 import freezeWindowsIllustration from '@freeze-windows/images/freeze-windows-illustration.svg'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
+import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
@@ -71,6 +73,11 @@ function _FreezeWindowsPage(): React.ReactElement {
       sort: [sort.join(',')],
       startTime,
       endTime
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
     }
   })
 
@@ -122,12 +129,16 @@ function _FreezeWindowsPage(): React.ReactElement {
   const pageFreezeSummaryResponse = data?.data
 
   const freezeStatusMap = useComputedFreezeStatusMap(data?.data?.content)
+  const { globalFreezes, refetch: refreshGlobalFreezeBanner } = useGlobalFreezeBanner()
 
   return (
     <div className={css.main}>
-      <FreezeWindowListHeader freezeListLoading={freezeListLoading} />
+      <FreezeWindowListHeader
+        freezeListLoading={freezeListLoading}
+        refreshGlobalFreezeBanner={refreshGlobalFreezeBanner}
+      />
       <FreezeWindowListSubHeader />
-      <GlobalFreezeBanner />
+      <GlobalFreezeBanner globalFreezes={globalFreezes} />
 
       <Page.Body
         loading={freezeListLoading}
@@ -135,7 +146,7 @@ function _FreezeWindowsPage(): React.ReactElement {
         retryOnError={refetch}
         noData={{
           when: () => !pageFreezeSummaryResponse?.content?.length,
-          image: freezeWindowsIllustration,
+          image: hasFilter ? EmptySearchResults : freezeWindowsIllustration,
           messageTitle: hasFilter
             ? getString('common.filters.noResultsFound')
             : getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope }),

@@ -110,6 +110,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
       defaultSelected: false,
       allowAdd: false,
       icon: stagesMap[defaultTo(stage.type, '')]?.icon,
+      iconUrl: template.icon,
       showMarkers: false,
       isParallelNode: false,
       isSelected: false,

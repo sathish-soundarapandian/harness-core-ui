@@ -106,7 +106,7 @@ export function getStepPaletteModuleInfosFromStage(
       break
     case ServiceDeploymentType.WinRm:
     case ServiceDeploymentType.Ssh:
-      category = 'SshWinRM'
+      category = 'Commands'
       break
     case ServiceDeploymentType.CustomDeployment:
       category = 'CustomDeployment'

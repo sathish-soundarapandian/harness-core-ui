@@ -22,12 +22,13 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { JiraApprovalDeploymentModeProps } from './types'
 import css from './JiraApproval.module.scss'
 
 function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
-  const { inputSetData, initialValues, allowableTypes } = formContentProps
+  const { inputSetData, initialValues, allowableTypes, stepViewType } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -45,7 +46,9 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             allowableTypes,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
@@ -72,8 +75,15 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
             allowableTypes,
             expressions
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           type={'Jira'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          templateProps={{
+            isTemplatizedView: true,
+            templateValue: template?.spec?.connectorRef
+          }}
         />
       ) : null}
 
@@ -85,6 +95,9 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
             disabled: isApprovalStepFieldDisabled(readonly),
             expressions,
             allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
           className={css.deploymentViewMedium}
           fieldPath="spec.issueKey"
@@ -99,6 +112,9 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           name={`${prefix}spec.approvalCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}
@@ -112,6 +128,9 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           name={`${prefix}spec.rejectionCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}

@@ -129,7 +129,7 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
           {get(spec, 'store.spec.files')?.length && (
             <>
               <Text lineClamp={1} width={200} className={css.elastigroupLocation}>
-                <span>{getString('pipeline.startupCommand.plainText')}</span>
+                <span>{getString('pipeline.startup.plainText')}</span>
               </Text>
               <Text lineClamp={1} width={200} className={css.elastigroupLocation}>
                 <span>{get(spec, 'store.spec.files')}</span>

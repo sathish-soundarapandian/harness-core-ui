@@ -38,6 +38,8 @@ import type { StringsMap } from 'stringTypes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Status } from '@common/utils/Constants'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { InfraProvisioningWizard } from './InfraProvisioningWizard/InfraProvisioningWizard'
 import { InfraProvisiongWizardStepId, ProvisioningStatus } from './InfraProvisioningWizard/Constants'
@@ -49,6 +51,7 @@ import buildImgURL from './build.svg'
 import css from './GetStartedWithCI.module.scss'
 
 export default function GetStartedWithCI(): React.ReactElement {
+  const { trackEvent } = useTelemetry()
   const { accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { CIE_HOSTED_VMS } = useFeatureFlags()
@@ -290,6 +293,11 @@ export default function GetStartedWithCI(): React.ReactElement {
                       size={ButtonSize.LARGE}
                       text={getString('getStarted')}
                       onClick={() => {
+                        try {
+                          trackEvent(CIOnboardingActions.GetStartedClicked, {})
+                        } catch (e) {
+                          // ignore error
+                        }
                         if (CIE_HOSTED_VMS || delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
                           setShowWizard(true)
                         } else {

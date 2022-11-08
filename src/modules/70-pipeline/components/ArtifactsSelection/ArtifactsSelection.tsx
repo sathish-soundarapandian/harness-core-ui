@@ -11,14 +11,11 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-
 import produce from 'immer'
-import get from 'lodash-es/get'
-import set from 'lodash-es/set'
-
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { merge } from 'lodash-es'
+import { get, set, merge } from 'lodash-es'
+import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
@@ -40,7 +37,6 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
@@ -67,7 +63,6 @@ import {
   isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import { CustomArtifactOptionalConfiguration } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import css from './ArtifactsSelection.module.scss'
 
@@ -182,7 +177,7 @@ export default function ArtifactsSelection({
     canOutsideClickClose: false,
     enforceFocus: false,
     title: '',
-    style: { width: 1100, height: 550, borderLeft: 'none', paddingBottom: 0, position: 'relative' }
+    style: { width: 1120, height: 550, borderLeft: 'none', paddingBottom: 0, position: 'relative' }
   }
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(
@@ -428,21 +423,6 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
-  const getLastStepName = () => {
-    switch (selectedArtifact) {
-      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
-        return {
-          key: getString('pipeline.artifactsSelection.artifactDetails'),
-          name: getString('pipeline.artifactsSelection.artifactDetails')
-        }
-      default:
-        return {
-          key: getString('connectors.stepFourName'),
-          name: getString('connectors.stepFourName')
-        }
-    }
-  }
-
   const artifactLastStepProps = React.useMemo((): ImagePathProps<
     ImagePathTypes &
       AmazonS3InitialValuesType &
@@ -453,7 +433,8 @@ export default function ArtifactsSelection({
       Nexus2InitialValuesType
   > => {
     return {
-      ...getLastStepName(),
+      key: getString('connectors.stepFourName'),
+      name: getString('connectors.stepFourName'),
       context,
       expressions,
       allowableTypes,
@@ -523,21 +504,6 @@ export default function ArtifactsSelection({
     isLastStep: false
   }
 
-  const getOptionalConfigurationSteps = useCallback((): JSX.Element | null => {
-    switch (selectedArtifact) {
-      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
-        return (
-          <CustomArtifactOptionalConfiguration
-            {...artifactLastStepProps}
-            name={'Optional Configuration'}
-            key={'Optional_Configuration'}
-          />
-        )
-      default:
-        return null
-    }
-  }, [artifactLastStepProps, selectedArtifact])
-
   const changeArtifactType = useCallback((selected: ArtifactType | null): void => {
     setSelectedArtifact(selected)
   }, [])
@@ -557,7 +523,6 @@ export default function ArtifactsSelection({
           expressions={expressions}
           allowableTypes={allowableTypes}
           lastSteps={artifactSelectionLastSteps}
-          getOptionalConfigurationSteps={getOptionalConfigurationSteps()}
           labels={getLabels()}
           isReadonly={readonly}
           selectedArtifact={selectedArtifact}

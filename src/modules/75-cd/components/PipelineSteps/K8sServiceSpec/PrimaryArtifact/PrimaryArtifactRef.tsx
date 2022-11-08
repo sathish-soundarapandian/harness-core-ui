@@ -69,24 +69,33 @@ function PrimaryArtifactRef({
   useEffect(() => {
     const artifactSourceTemplate = getStageFormTemplate(`${path}.artifacts.primary.sources`)
     const serviceInputsFormikValue = get(formik?.values, `${path}.artifacts.primary.sources`)
+    const isSingleArtifactSource = artifactSources.length === 1
     if (
       typeof artifactSourceTemplate === 'string' &&
       getMultiTypeFromValue(artifactSourceTemplate) === MultiTypeInputType.RUNTIME &&
-      //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
-      stepViewType !== StepViewType.TemplateUsage &&
       //Autoselect primary artifact if there is only 1 artifact source
-      (!isEmpty(serviceInputsFormikValue) || artifactSources.length === 1)
+      (!isEmpty(serviceInputsFormikValue) || isSingleArtifactSource)
     ) {
-      if (artifactSources.length === 1) {
-        formik?.setFieldValue(`${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
-      }
+      const shouldSetDefaultArtifactSource = isSingleArtifactSource && stepViewType !== StepViewType.TemplateUsage
+
       const sourceIdentifierToSourceInputMap = get(
         artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
-        `${initialValues.artifacts?.primary?.primaryArtifactRef}`
+        shouldSetDefaultArtifactSource
+          ? artifactSources[0].value
+          : `${initialValues.artifacts?.primary?.primaryArtifactRef}`
       )
       if (sourceIdentifierToSourceInputMap) {
         const idSourceMap = yamlParse(defaultTo(sourceIdentifierToSourceInputMap, ''))
         if (idSourceMap) {
+          //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
+          if (shouldSetDefaultArtifactSource) {
+            formik?.setValues(
+              produce(formik?.values, (draft: any) => {
+                set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
+                set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
+              })
+            )
+          }
           updateStageFormTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
         }
       }
@@ -120,7 +129,9 @@ function PrimaryArtifactRef({
         formik?.setValues(
           produce(formik?.values, (draft: any) => {
             set(draft, `${path}.artifacts.primary.primaryArtifactRef`, value.value)
-            set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
+            set(draft, `${path}.artifacts.primary.sources`, [
+              stepViewType === StepViewType.TemplateUsage ? idSourceMap : clearRuntimeInput(idSourceMap)
+            ])
           })
         )
       }

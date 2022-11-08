@@ -41,6 +41,7 @@ interface MultiTypeTagSelectorProps {
   tooltipProps?: DataTooltipInterface
   expressions: string[]
   initialTags?: object | string
+  label?: string
 }
 
 const preventEnter = (e: React.KeyboardEvent) => {
@@ -60,7 +61,8 @@ const MultiTypeTagSelector = ({
   className,
   tooltipProps,
   expressions,
-  initialTags
+  initialTags,
+  label
 }: MultiTypeTagSelectorProps) => {
   const formik = useFormikContext()
   const { getString } = useStrings()
@@ -119,7 +121,7 @@ const MultiTypeTagSelector = ({
     <MultiTypeFieldSelector
       className={className}
       name={name}
-      label={getString('tagLabel')}
+      label={label || getString('tagLabel')}
       skipRenderValueInExpressionLabel
       allowedTypes={allowableTypes}
       supportListOfExpressions={true}
@@ -203,7 +205,7 @@ const MultiTypeTagSelector = ({
         size={ButtonSize.SMALL}
         variation={ButtonVariation.LINK}
       >
-        {getString('tagLabel')}
+        {label || getString('tagLabel')}
       </Button>
     </MultiTypeFieldSelector>
   )

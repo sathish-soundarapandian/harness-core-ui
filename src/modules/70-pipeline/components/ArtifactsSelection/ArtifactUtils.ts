@@ -21,7 +21,8 @@ import {
   JenkinsArtifactType,
   Nexus2InitialValuesType,
   RepositoryPortOrServer,
-  TagTypes
+  TagTypes,
+  AmazonMachineImageInitialValuesType
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -45,6 +46,13 @@ export const resetTag = (formik: FormikValues): void => {
     getMultiTypeFromValue(formik.values.tag?.value) === MultiTypeInputType.FIXED &&
     formik.values.tag?.value?.length &&
     formik.setFieldValue('tag', '')
+}
+
+export const resetVersion = (formik: FormikValues): void => {
+  formik.values.spec?.versionType === 'value' &&
+    getMultiTypeFromValue(formik.values.spec?.version?.value) === MultiTypeInputType.FIXED &&
+    formik.values.spec?.version?.value?.length &&
+    formik.setFieldValue('spec.version', '')
 }
 
 export const resetArtifactPath = (formik: FormikValues): void => {
@@ -80,6 +88,12 @@ export const helperTextData = (
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       return {
         imagePath: formik.values?.imagePath,
+        connectorRef: connectorIdValue
+      }
+    case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+      return {
+        artifactArrayPath: formik.values?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath,
+        versionPath: formik.values?.spec?.scripts?.fetchAllArtifacts?.versionPath,
         connectorRef: connectorIdValue
       }
     case ENABLED_ARTIFACT_TYPES.Ecr:
@@ -261,6 +275,7 @@ export type artifactInitialValueTypes =
   | Nexus2InitialValuesType
   | CustomArtifactSource
   | JenkinsArtifactType
+  | AmazonMachineImageInitialValuesType
 
 export const getArtifactFormData = (
   initialValues: artifactInitialValueTypes,
@@ -282,6 +297,7 @@ export const getArtifactFormData = (
       break
     case 'GoogleArtifactRegistry':
     case 'GithubPackageRegistry':
+    case 'AmazonMachineImage':
       values = getVersionValues(specValues)
       break
     case 'Nexus3Registry':
@@ -299,7 +315,9 @@ export const getArtifactFormData = (
 
 const getVersionValues = (
   specValues: any
-): GithubPackageRegistryInitialValuesType & GoogleArtifactRegistryInitialValuesType => {
+): GithubPackageRegistryInitialValuesType &
+  GoogleArtifactRegistryInitialValuesType &
+  AmazonMachineImageInitialValuesType => {
   const formikInitialValues = {
     versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
     spec: {
@@ -332,6 +350,34 @@ export const isFieldFixedAndNonEmpty = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
 }
 
+export const formFillingMethod = {
+  MANUAL: 'manual',
+  SCRIPT: 'script'
+}
+
+export const customArtifactDefaultSpec = {
+  version: '',
+  timeout: '',
+  delegateSelectors: [],
+  inputs: [],
+  scripts: {
+    fetchAllArtifacts: {
+      artifactsArrayPath: '',
+      attributes: [],
+      versionPath: '',
+      spec: {
+        shell: shellScriptType[0].label,
+        source: {
+          spec: {
+            script: ''
+          },
+          type: 'Inline'
+        }
+      }
+    }
+  }
+}
+
 export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
@@ -346,6 +392,18 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           repositoryName: '',
           package: '',
           version: RUNTIME_INPUT_VALUE
+        }
+      }
+    case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
+      return {
+        identifier: '',
+        versionType: TagTypes.Value,
+        spec: {
+          version: '',
+          versionRegex: '',
+          amiTags: [],
+          amiFilters: [],
+          region: ''
         }
       }
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
@@ -363,6 +421,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           repositoryPort: '',
           artifactId: '',
           groupId: '',
+          group: '',
           extension: '',
           classifier: '',
           packageName: ''
@@ -400,7 +459,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         versionType: TagTypes.Value,
         spec: {
           connectorRef: '',
-          packageType: '',
+          packageType: 'container',
           org: '',
           packageName: '',
           version: '',
@@ -411,26 +470,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
       return {
         identifier: '',
         spec: {
-          version: '',
-          timeout: '',
-          delegateSelectors: [],
-          inputs: [],
-          scripts: {
-            fetchAllArtifacts: {
-              artifactsArrayPath: '',
-              attributes: [],
-              versionPath: '',
-              spec: {
-                shell: shellScriptType[0].label,
-                source: {
-                  spec: {
-                    script: ''
-                  },
-                  type: 'Inline'
-                }
-              }
-            }
-          }
+          ...customArtifactDefaultSpec
         }
       }
     case ENABLED_ARTIFACT_TYPES.AmazonS3:
@@ -494,6 +534,27 @@ export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact)
     artifact.spec?.imagePath ??
     artifact.spec?.artifactPath ??
     artifact.spec?.artifactPathFilter ??
-    artifact.spec?.repository
+    artifact.spec?.repository ??
+    artifact.spec?.version ??
+    artifact.spec?.versionRegex
   )
 }
+
+export const amiFilters = [
+  {
+    label: 'ami-image-id',
+    value: 'ami-image-id'
+  },
+  {
+    label: 'ami-name',
+    value: 'ami-name'
+  },
+  {
+    label: 'ami-owner-id',
+    value: 'ami-owner-id'
+  },
+  {
+    label: 'ami-platform',
+    value: 'ami-platform'
+  }
+]

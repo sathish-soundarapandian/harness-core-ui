@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Button, Layout, Container, Heading, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'

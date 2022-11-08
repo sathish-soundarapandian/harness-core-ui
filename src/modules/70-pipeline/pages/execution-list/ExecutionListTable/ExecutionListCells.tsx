@@ -9,8 +9,7 @@
 import { Checkbox, Classes, IconName } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
-import { get, isEmpty } from 'lodash-es'
-import defaultTo from 'lodash-es/defaultTo'
+import { get, isEmpty, defaultTo } from 'lodash-es'
 import React, { useRef, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
@@ -53,7 +52,14 @@ export const getExecutionPipelineViewLink = (
     accountId,
     module,
     executionIdentifier: planExecutionId || '-1',
-    source
+    source,
+    connectorRef: pipelineExecutionSummary.connectorRef,
+    repoName: defaultTo(
+      pipelineExecutionSummary.gitDetails?.repoName,
+      pipelineExecutionSummary.gitDetails?.repoIdentifier
+    ),
+    branch: pipelineExecutionSummary.gitDetails?.branch,
+    storeType: pipelineExecutionSummary.storeType
   })
 }
 
@@ -150,7 +156,7 @@ export const ExecutionCell: CellType = ({ row }) => {
   const data = row.original
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
 
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
   const name =

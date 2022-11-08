@@ -135,6 +135,11 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       return getAWSDisplaySummary(connector)
     case Connectors.GCP:
       return getGCPDisplaySummary(connector)
+    case Connectors.GcpSecretManager:
+      return getConnectorDisplaySummaryLabel(
+        'connectors.gcpSecretManager.gcpCredentialsFile',
+        linkAsTextRenderer(connector?.spec?.credentialsRef)
+      )
     case Connectors.NEW_RELIC:
     case Connectors.DATADOG:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.url))
@@ -153,9 +158,12 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       )
     case Connectors.SPOT:
       return getConnectorDisplaySummaryLabel(
-        'common.accountId',
+        'connectors.spotAccountId',
         textRenderer(
-          defaultTo(connector?.spec?.credential?.spec?.accountId, connector?.spec?.credential?.spec?.accountIdRef)
+          defaultTo(
+            connector?.spec?.credential?.spec?.spotAccountId,
+            connector?.spec?.credential?.spec?.spotAccountIdRef
+          )
         )
       )
     default:

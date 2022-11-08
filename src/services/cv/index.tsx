@@ -881,7 +881,7 @@ export interface CloudWatchMetricDefinition {
 export type CloudWatchMetricsHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: CloudWatchMetricDefinition[]
-  metricThresholds?: TimeSeriesMetricPackDTO[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
   region: string
 }
 
@@ -924,6 +924,10 @@ export interface ClusteredLog {
   timestamp?: number
   uuid?: string
   verificationTaskId?: string
+}
+
+export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+  serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
 export interface ConnectorConfigDTO {
@@ -1061,6 +1065,7 @@ export type CustomHealthSourceLogSpec = HealthSourceSpec & {
 
 export type CustomHealthSourceMetricSpec = HealthSourceSpec & {
   metricDefinitions?: CustomHealthMetricDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export type CustomSecretManager = ConnectorConfigDTO & {
@@ -1765,6 +1770,8 @@ export interface Error {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2180,6 +2187,8 @@ export interface Failure {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3510,6 +3519,16 @@ export interface PageServiceLevelObjectiveResponse {
   totalPages?: number
 }
 
+export interface PageServiceLevelObjectiveV2Response {
+  content?: ServiceLevelObjectiveV2Response[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageStackdriverDashboardDTO {
   content?: StackdriverDashboardDTO[]
   empty?: boolean
@@ -4238,6 +4257,8 @@ export interface ResponseMessage {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4349,6 +4370,13 @@ export interface ResponsePageSLOHealthListView {
 export interface ResponsePageServiceLevelObjectiveResponse {
   correlationId?: string
   data?: PageServiceLevelObjectiveResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageServiceLevelObjectiveV2Response {
+  correlationId?: string
+  data?: PageServiceLevelObjectiveV2Response
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4885,6 +4913,14 @@ export interface RestResponseServiceLevelObjectiveResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseServiceLevelObjectiveV2Response {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: ServiceLevelObjectiveV2Response
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseSetHealthSourceDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5063,6 +5099,18 @@ export interface SLIRecord {
   version?: number
 }
 
+export interface SLODashboardApiFilter {
+  compositeSLOIdentifier?: string
+  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  monitoredServiceIdentifier?: string
+  searchFilter?: string
+  sliTypes?: ('Availability' | 'Latency')[]
+  sloTargetFilterDTO?: SLOTargetFilterDTO
+  targetTypes?: ('Rolling' | 'Calender')[]
+  type?: 'Simple' | 'Composite'
+  userJourneyIdentifiers?: string[]
+}
+
 export interface SLODashboardDetail {
   createdAt?: number
   description?: string
@@ -5152,29 +5200,30 @@ export interface SLOHealthIndicator {
 export interface SLOHealthListView {
   burnRate: number
   description?: string
-  environmentIdentifier: string
-  environmentName: string
+  environmentIdentifier?: string
+  environmentName?: string
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  healthSourceIdentifier: string
-  healthSourceName: string
-  monitoredServiceIdentifier: string
-  monitoredServiceName: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
   name: string
   noOfActiveAlerts: number
-  noOfMaximumAlerts: number
-  serviceIdentifier: string
-  serviceName: string
+  serviceIdentifier?: string
+  serviceName?: string
+  sliType?: 'Availability' | 'Latency'
   sloIdentifier: string
   sloTargetPercentage: number
   sloTargetType: 'Rolling' | 'Calender'
+  sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   totalErrorBudget: number
-  userJourneyIdentifier: string
-  userJourneyName: string
+  userJourneyName?: string
+  userJourneys: UserJourneyDTO[]
 }
 
 export interface SLORiskCountResponse {
@@ -5189,6 +5238,11 @@ export interface SLOTarget {
 
 export interface SLOTargetDTO {
   sloTargetPercentage: number
+  spec: SLOTargetSpec
+  type?: 'Rolling' | 'Calender'
+}
+
+export interface SLOTargetFilterDTO {
   spec: SLOTargetSpec
   type?: 'Rolling' | 'Calender'
 }
@@ -5327,10 +5381,44 @@ export interface ServiceLevelObjectiveDTO {
   userJourneyRef: string
 }
 
+export interface ServiceLevelObjectiveDetailsDTO {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceLevelObjectiveRef: string
+  weightagePercentage: number
+}
+
 export interface ServiceLevelObjectiveResponse {
   createdAt?: number
   lastModifiedAt?: number
   serviceLevelObjective: ServiceLevelObjectiveDTO
+}
+
+export interface ServiceLevelObjectiveSpec {
+  [key: string]: any
+}
+
+export interface ServiceLevelObjectiveV2DTO {
+  description?: string
+  identifier: string
+  name: string
+  notificationRuleRefs?: NotificationRuleRefDTO[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  sloTarget: SLOTargetDTO
+  spec: ServiceLevelObjectiveSpec
+  tags?: {
+    [key: string]: string
+  }
+  type: 'Simple' | 'Composite'
+  userJourneyRefs: string[]
+}
+
+export interface ServiceLevelObjectiveV2Response {
+  createdAt?: number
+  lastModifiedAt?: number
+  serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
@@ -5351,6 +5439,13 @@ export interface ServiceSummaryDetails {
   serviceName?: string
   serviceRef?: string
   type?: 'Application' | 'Infrastructure'
+}
+
+export type SimpleServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+  healthSourceRef: string
+  monitoredServiceRef: string
+  serviceLevelIndicatorType: 'Availability' | 'Latency'
+  serviceLevelIndicators: ServiceLevelIndicatorDTO[]
 }
 
 export interface SloHealthIndicatorDTO {
@@ -5393,6 +5488,7 @@ export interface SplunkMetricDefinition {
 export type SplunkMetricHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: SplunkMetricDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export interface SplunkSavedSearch {
@@ -5408,17 +5504,17 @@ export type SpotConnector = ConnectorConfigDTO & {
 
 export interface SpotCredential {
   spec?: SpotCredentialSpec
-  type: 'ManualConfig'
+  type: 'PermanentTokenConfig'
 }
 
 export interface SpotCredentialSpec {
   [key: string]: any
 }
 
-export type SpotManualConfigSpec = SpotCredentialSpec & {
-  accountId?: string
-  accountIdRef?: string
+export type SpotPermanentTokenConfigSpec = SpotCredentialSpec & {
   apiTokenRef: string
+  spotAccountId?: string
+  spotAccountIdRef?: string
 }
 
 export interface StackTraceElement {
@@ -6132,6 +6228,8 @@ export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSerie
 export type ServiceLevelIndicatorDTORequestBody = ServiceLevelIndicatorDTO
 
 export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
+
+export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
@@ -6942,18 +7040,6 @@ export interface GetPrometheusWorkspacesQueryParams {
   connectorIdentifier: string
   region: string
   tracingId: string
-}
-
-export interface AwsPrometheusWorkspaceDTO {
-  name?: string
-  workspaceId?: string
-}
-
-export interface ResponseListAwsPrometheusWorkspaceDTO {
-  correlationId?: string
-  data?: AwsPrometheusWorkspaceDTO[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
 export type GetPrometheusWorkspacesProps = Omit<
@@ -12030,6 +12116,7 @@ export interface GetServiceLevelObjectivesRiskCountQueryParams {
   sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  filter?: string
 }
 
 export type GetServiceLevelObjectivesRiskCountProps = Omit<
@@ -12148,9 +12235,9 @@ export interface GetSLOHealthListViewQueryParams {
   sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  filter?: string
   pageNumber?: number
   pageSize?: number
-  filter?: string
 }
 
 export type GetSLOHealthListViewProps = Omit<
@@ -12196,6 +12283,441 @@ export const getSLOHealthListViewPromise = (
     props,
     signal
   )
+
+export interface GetSLOHealthListViewV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetSLOHealthListViewV2Props = Omit<
+  MutateProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>,
+  'path' | 'verb'
+>
+
+/**
+ * get slo list view
+ */
+export const GetSLOHealthListViewV2 = (props: GetSLOHealthListViewV2Props) => (
+  <Mutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>
+    verb="POST"
+    path={`/slo-dashboard/widgets/list`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSLOHealthListViewV2Props = Omit<
+  UseMutateProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * get slo list view
+ */
+export const useGetSLOHealthListViewV2 = (props: UseGetSLOHealthListViewV2Props) =>
+  useMutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>(
+    'POST',
+    `/slo-dashboard/widgets/list`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get slo list view
+ */
+export const getSLOHealthListViewV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >('POST', getConfig('cv/api'), `/slo-dashboard/widgets/list`, props, signal)
+
+export interface GetServiceLevelObjectivesV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  offset: number
+  pageSize: number
+  userJourneys?: string[]
+  identifiers?: string[]
+  sliTypes?: ('Availability' | 'Latency')[]
+  targetTypes?: ('Rolling' | 'Calender')[]
+  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+}
+
+export type GetServiceLevelObjectivesV2Props = Omit<
+  GetProps<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * get all service level objectives
+ */
+export const GetServiceLevelObjectivesV2 = (props: GetServiceLevelObjectivesV2Props) => (
+  <Get<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>
+    path={`/slo/v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceLevelObjectivesV2Props = Omit<
+  UseGetProps<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * get all service level objectives
+ */
+export const useGetServiceLevelObjectivesV2 = (props: UseGetServiceLevelObjectivesV2Props) =>
+  useGet<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>(
+    `/slo/v2`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get all service level objectives
+ */
+export const getServiceLevelObjectivesV2Promise = (
+  props: GetUsingFetchProps<
+    ResponsePageServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectivesV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>(
+    getConfig('cv/api'),
+    `/slo/v2`,
+    props,
+    signal
+  )
+
+export interface SaveSLOV2DataQueryParams {
+  accountId: string
+}
+
+export type SaveSLOV2DataProps = Omit<
+  MutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * saves slo data
+ */
+export const SaveSLOV2Data = (props: SaveSLOV2DataProps) => (
+  <Mutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/slo/v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseSaveSLOV2DataProps = Omit<
+  UseMutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * saves slo data
+ */
+export const useSaveSLOV2Data = (props: UseSaveSLOV2DataProps) =>
+  useMutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >('POST', `/slo/v2`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * saves slo data
+ */
+export const saveSLOV2DataPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >('POST', getConfig('cv/api'), `/slo/v2`, props, signal)
+
+export interface DeleteSLOV2DataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type DeleteSLOV2DataProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * delete slo data
+ */
+export const DeleteSLOV2Data = (props: DeleteSLOV2DataProps) => (
+  <Mutate<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>
+    verb="DELETE"
+    path={`/slo/v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteSLOV2DataProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * delete slo data
+ */
+export const useDeleteSLOV2Data = (props: UseDeleteSLOV2DataProps) =>
+  useMutate<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>('DELETE', `/slo/v2`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * delete slo data
+ */
+export const deleteSLOV2DataPromise = (
+  props: MutateUsingFetchProps<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>(
+    'DELETE',
+    getConfig('cv/api'),
+    `/slo/v2`,
+    props,
+    signal
+  )
+
+export interface GetServiceLevelObjectiveV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetServiceLevelObjectiveV2PathParams {
+  identifier: string
+}
+
+export type GetServiceLevelObjectiveV2Props = Omit<
+  GetProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >,
+  'path'
+> &
+  GetServiceLevelObjectiveV2PathParams
+
+/**
+ * get service level objective data
+ */
+export const GetServiceLevelObjectiveV2 = ({ identifier, ...props }: GetServiceLevelObjectiveV2Props) => (
+  <Get<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >
+    path={`/slo/v2/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceLevelObjectiveV2Props = Omit<
+  UseGetProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >,
+  'path'
+> &
+  GetServiceLevelObjectiveV2PathParams
+
+/**
+ * get service level objective data
+ */
+export const useGetServiceLevelObjectiveV2 = ({ identifier, ...props }: UseGetServiceLevelObjectiveV2Props) =>
+  useGet<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >((paramsInPath: GetServiceLevelObjectiveV2PathParams) => `/slo/v2/${paramsInPath.identifier}`, {
+    base: getConfig('cv/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * get service level objective data
+ */
+export const getServiceLevelObjectiveV2Promise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >(getConfig('cv/api'), `/slo/v2/${identifier}`, props, signal)
+
+export interface UpdateSLOV2DataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface UpdateSLOV2DataPathParams {
+  identifier: string
+}
+
+export type UpdateSLOV2DataProps = Omit<
+  MutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSLOV2DataPathParams
+
+/**
+ * update slo data
+ */
+export const UpdateSLOV2Data = ({ identifier, ...props }: UpdateSLOV2DataProps) => (
+  <Mutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >
+    verb="PUT"
+    path={`/slo/v2/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateSLOV2DataProps = Omit<
+  UseMutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSLOV2DataPathParams
+
+/**
+ * update slo data
+ */
+export const useUpdateSLOV2Data = ({ identifier, ...props }: UseUpdateSLOV2DataProps) =>
+  useMutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >('PUT', (paramsInPath: UpdateSLOV2DataPathParams) => `/slo/v2/${paramsInPath.identifier}`, {
+    base: getConfig('cv/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * update slo data
+ */
+export const updateSLOV2DataPromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >('PUT', getConfig('cv/api'), `/slo/v2/${identifier}`, props, signal)
 
 export interface DeleteSLODataQueryParams {
   accountId: string

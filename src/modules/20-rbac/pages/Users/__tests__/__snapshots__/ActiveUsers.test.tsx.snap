@@ -12,7 +12,7 @@ exports[`UsersPage Test Add Roles 1`] = `
       class="bp3-heading"
     >
       <span>
-        rbac.addRole
+        rbac.manageRoleBindings
       </span>
     </h4>
   </div>
@@ -57,7 +57,7 @@ exports[`UsersPage Test Add Roles 1`] = `
                 class="Tooltip--acenter"
                 data-tooltip-id="userRoleAssignementForm_users"
               >
-                rbac.forUser
+                common.userLabel
               </span>
                
               <span
@@ -145,7 +145,7 @@ exports[`UsersPage Test Add Roles 1`] = `
                 <span
                   class="FieldArray--text"
                 >
-                  rbac.usersPage.assignRoleBindings
+                  rbac.roleBindings
                 </span>
                 <button
                   aria-label="Add"
@@ -894,7 +894,7 @@ exports[`UsersPage Test Invite a User 1`] = `
                 <span
                   class="FieldArray--text"
                 >
-                  rbac.usersPage.assignRoleBindings
+                  rbac.roleBindings
                 </span>
                 <button
                   aria-label="Add"
@@ -1379,15 +1379,15 @@ exports[`UsersPage Test render data 1`] = `
                   </span>
                 </span>
                 <button
-                  aria-label="common.plusNumber"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-123"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -1565,15 +1565,15 @@ exports[`UsersPage Test render data 1`] = `
                   </span>
                 </span>
                 <button
-                  aria-label="common.plusNumber"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-locked"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>

@@ -9,6 +9,7 @@ import React from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import pipelineContextMock from '@pipeline/components/ManifestSelection/__tests__/pipeline_mock.json'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
+import type { ServiceDefinition } from 'services/cd-ng'
 import type { ConnectorTypes, StartupScriptSelectionProps } from '../StartupScriptInterface.types'
 import StartupScriptWizardStepTwo from '../StartupScriptWizardStepTwo'
 
@@ -103,15 +104,15 @@ export const propListView = {
 } as any
 
 export const propStepTwo = {
-  key: 'pipeline.startupCommand.fileDetails',
-  name: 'pipeline.startupCommand.fileDetails',
+  key: 'pipeline.startup.command.fileDetails',
+  name: 'pipeline.startup.command.fileDetails',
   expressions: [],
   allowableTypes: [
     MultiTypeInputType.FIXED,
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ] as AllowedTypesWithRunTime[],
-  stepName: 'pipeline.startupCommand.fileDetails',
+  stepName: 'pipeline.startup.command.fileDetails',
   initialValues: {
     ...startupCommand,
     selectedStore: startupCommand?.store?.type,
@@ -125,7 +126,7 @@ const manifestDetailStep = <StartupScriptWizardStepTwo {...propStepTwo} />
 export const propStepOne = {
   handleConnectorViewChange: jest.fn(),
   handleStoreChange: jest.fn(),
-  stepName: 'pipeline.startupCommand.fileSource',
+  stepName: 'pipeline.startup.command.fileSource',
   isReadonly: false,
   connectorTypes: ['Git', 'Github', 'GitLab', 'Bitbucket'] as Array<ConnectorTypes>,
   initialValues: {
@@ -140,7 +141,8 @@ export const propStepOne = {
     MultiTypeInputType.EXPRESSION
   ] as AllowedTypesWithRunTime[],
   prevStepData: { ...prevStepData },
-  nextStep: jest.fn()
+  nextStep: jest.fn(),
+  stepSubtitle: 'Spot Elastigroup'
 }
 
 export const propWizard = {
@@ -161,7 +163,8 @@ export const propWizard = {
   },
   newConnectorSteps: jest.fn(),
   lastSteps: manifestDetailStep,
-  isReadonly: false
+  isReadonly: false,
+  deploymentType: 'AzureWebApp' as ServiceDefinition['type']
 }
 
 export const prevStepDataRuntime = {

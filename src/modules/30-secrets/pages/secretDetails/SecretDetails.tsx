@@ -25,22 +25,19 @@ import {
   usePutSecretViaYaml,
   ResponseSecretResponseWrapper,
   useGetYamlSchema,
-  useGetYamlSnippetMetadata,
-  useGetYamlSnippet,
   SecretResponseWrapper
 } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
-import type { SnippetFetchResponse, YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
 import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
 import type { ModulePathParams, ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInterfaces'
-import { getSnippetTags } from '@common/utils/SnippetUtils'
+
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -75,7 +72,6 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [secretDataState, setSecretDataState] = React.useState<SecretResponseWrapper>(secretData)
   const [hasValidationErrors, setHasValidationErrors] = React.useState<boolean>(false)
-  const [snippetFetchResponse, setSnippetFetchResponse] = React.useState<SnippetFetchResponse>()
   const [fieldsRemovedFromYaml, setFieldsRemovedFromYaml] = useState(['draft', 'createdAt', 'updatedAt'])
 
   useEffect(() => {
@@ -102,49 +98,6 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
       accountIdentifier: accountId
     }
   })
-
-  const { data: snippetData } = useGetYamlSnippetMetadata({
-    queryParams: {
-      tags: getSnippetTags('Secrets')
-    },
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    }
-  })
-
-  const {
-    data: snippet,
-    refetch: refetchSnippet,
-    cancel,
-    loading: isFetchingSnippet,
-    error: errorFetchingSnippet
-  } = useGetYamlSnippet({
-    identifier: '',
-    lazy: true
-  })
-
-  const onSnippetCopy = async (identifier: string): Promise<void> => {
-    cancel()
-    await refetchSnippet({
-      pathParams: {
-        identifier
-      }
-    })
-  }
-
-  useEffect(() => {
-    let snippetStr = ''
-    try {
-      snippetStr = snippet?.data ? yamlStringify(snippet.data, { indent: 4 }) : ''
-    } catch {
-      /**/
-    }
-    setSnippetFetchResponse({
-      snippet: snippetStr,
-      loading: isFetchingSnippet,
-      error: errorFetchingSnippet
-    })
-  }, [isFetchingSnippet])
 
   const { mutate: updateSecretYaml } = usePutSecretViaYaml({
     identifier: secretId,
@@ -210,13 +163,9 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
             existingJSON={omit(secretDataState, fieldsRemovedFromYaml)}
             bind={setYamlHandler}
             height="calc(100vh - 350px)"
-            onSnippetCopy={onSnippetCopy}
-            snippetFetchResponse={snippetFetchResponse}
             schema={secretSchema?.data}
             isReadOnlyMode={false}
-            snippets={snippetData?.data?.yamlSnippets}
             yamlSanityConfig={yamlSanityConfig}
-            showSnippetSection={false}
             onChange={handleChange}
           />
           <Layout.Horizontal spacing="medium">
@@ -244,7 +193,6 @@ const YAMLSecretDetails: React.FC<YAMLSecretDetailsProps> = ({ refetch, secretDa
           fileName={`${secretDataState.secret.name}.yaml`}
           height="calc(100vh - 350px)"
           isReadOnlyMode={true}
-          showSnippetSection={false}
           onEnableEditMode={() => setEdit(true)}
           yamlSanityConfig={yamlSanityConfig}
         />

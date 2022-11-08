@@ -12,6 +12,7 @@ declare const styles: {
   readonly emptyCheckBoxSpace: string
   readonly groupHeaderContainer: string
   readonly panelClassName: string
+  readonly settingCheckBoxContainer: string
   readonly settingLabelContainer: string
   readonly settingOverrideRestore: string
   readonly settingRestore: string

@@ -89,11 +89,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
   }
   if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.customDeployment',
-      icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
-      value: ServiceDeploymentType.CustomDeployment
-    })
-    baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.azureWebApp',
       icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
       value: ServiceDeploymentType.AzureWebApp
@@ -113,6 +108,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
 export interface GetCgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
   NG_SVC_ENV_REDESIGN?: boolean
+  SPOT_ELASTIGROUP_NG?: boolean
 }
 
 export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTypesProps): DeploymentTypeItem[] {

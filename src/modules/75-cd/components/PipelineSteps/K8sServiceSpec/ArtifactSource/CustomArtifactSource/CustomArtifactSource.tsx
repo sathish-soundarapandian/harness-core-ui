@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { defaultTo, get, isArray } from 'lodash-es'
+import React, { useMemo } from 'react'
+import { defaultTo, get, isArray, memoize } from 'lodash-es'
 import cx from 'classnames'
 import { FormInput, Layout, Text } from '@wings-software/uicore'
 import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
+import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import MultiTypeFieldScriptSelector, {
   MultiTypeFieldSelector
@@ -22,10 +23,15 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { scriptInputType } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
-import type { SidecarArtifact } from 'services/cd-ng'
+import { BuildDetails, SidecarArtifact, useGetJobDetailsForCustom } from 'services/cd-ng'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import DelegateSelectors from '@common/components/DelegateSelectors/DelegateSelectors'
-import { isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
+import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { isFieldFixedAndNonEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { useMutateAsGet } from '@common/hooks'
+import { getFqnPath, isFieldfromTriggerTabDisabled, isNewServiceEnvEntity } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -42,13 +48,17 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     template,
     formik,
     path,
+    accountId,
     readonly,
     stageIdentifier,
     allowableTypes,
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    pipelineIdentifier,
+    artifactPath,
+    serviceIdentifier,
+    initialValues
   } = props
 
   const { getString } = useStrings()
@@ -72,6 +82,90 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     }
     return false
   }
+  const versionPathValue = defaultTo(
+    get(formik, `values.${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`),
+    artifact?.spec?.scripts?.fetchAllArtifacts?.versionPath
+  )
+  const artifactsArrayPathValue = defaultTo(
+    get(formik, `values.${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`),
+    artifact?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath
+  )
+  const scriptValue = defaultTo(
+    get(formik, `values.${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`),
+    artifact?.spec?.scripts?.fetchAllArtifacts?.spec?.source?.spec?.script
+  )
+  const inputValue = defaultTo(
+    get(formik, `values.${path}.artifacts.${artifactPath}.spec.inputs`),
+    artifact?.spec?.inputs
+  )
+
+  const isAllFieldsAreFixed = (): boolean => {
+    return isFieldFixedAndNonEmpty(versionPathValue || '') && isFieldFixedAndNonEmpty(artifactsArrayPathValue || '')
+  }
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+
+  const {
+    data: buildDetails,
+    refetch: refetchBuildDetails,
+    loading: fetchingBuilds,
+    error
+  } = useMutateAsGet(useGetJobDetailsForCustom, {
+    lazy: true,
+    body: {
+      script: scriptValue,
+      inputs: inputValue
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      versionPath: versionPathValue || '',
+      arrayPath: artifactsArrayPathValue || '',
+      pipelineIdentifier,
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'version'
+      )
+    }
+  })
+
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={fetchingBuilds}
+        onClick={handleClick}
+      />
+    </div>
+  ))
+
+  const selectItems = useMemo(() => {
+    return buildDetails?.data?.map((builds: BuildDetails) => ({
+      value: defaultTo(builds.number, ''),
+      label: defaultTo(builds.number, '')
+    }))
+  }, [buildDetails?.data])
+
+  const getBuildDetails = (): { label: string; value: string }[] => {
+    if (fetchingBuilds) {
+      return [{ label: 'Loading Builds...', value: 'Loading Builds...' }]
+    }
+    return defaultTo(selectItems, [])
+  }
+
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
@@ -82,8 +176,9 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               <FormMultiTypeDurationField
                 name={`${path}.artifacts.${artifactPath}.spec.timeout`}
                 label={getString('pipelineSteps.timeoutLabel')}
-                disabled={readonly}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.timeout`)}
                 multiTypeDurationProps={{
+                  width: 391,
                   expressions,
                   enableConfigureOptions: false,
                   allowableTypes
@@ -100,7 +195,9 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                 name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
                 label={getString('common.script')}
                 defaultValueToReset=""
-                disabled={readonly}
+                disabled={isFieldDisabled(
+                  `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`
+                )}
                 allowedTypes={allowableTypes}
                 disableTypeSelection={readonly}
                 skipRenderValueInExpressionLabel
@@ -133,8 +230,11 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                 name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
                 label={getString('pipeline.artifactsSelection.artifactsArrayPath')}
                 placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-                disabled={readonly}
+                disabled={isFieldDisabled(
+                  `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`
+                )}
                 multiTextInputProps={{
+                  width: 391,
                   expressions,
                   allowableTypes
                 }}
@@ -147,8 +247,9 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                 name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
                 label={getString('pipeline.artifactsSelection.versionPath')}
                 placeholder={getString('pipeline.artifactsSelection.versionPathPlaceholder')}
-                disabled={readonly}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`)}
                 multiTextInputProps={{
+                  width: 391,
                   expressions,
                   allowableTypes
                 }}
@@ -157,19 +258,58 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
           </div>
 
           <div className={cx(cx(stepCss.formGroup, stepCss.md))}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-              <FormInput.MultiTextInput
+            {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
+              <FormInput.MultiTypeInput
+                selectItems={getBuildDetails()}
                 label={getString('version')}
                 name={`${path}.artifacts.${artifactPath}.spec.version`}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
                 placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
-                multiTextInputProps={{
+                useValue
+                multiTypeInputProps={{
+                  width: 391,
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  selectProps: {
+                    noResults: (
+                      <NoTagResults
+                        tagError={error}
+                        isServerlessDeploymentTypeSelected={false}
+                        defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
+                      />
+                    ),
+                    itemRenderer: itemRenderer,
+                    items: getBuildDetails(),
+                    allowCreatingNewItems: true
+                  },
+                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                    if (
+                      e?.target?.type !== 'text' ||
+                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                    ) {
+                      return
+                    }
+                    if (isAllFieldsAreFixed()) {
+                      refetchBuildDetails()
+                    }
+                  }
                 }}
               />
             )}
           </div>
+          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('version')}
+              multiTextInputProps={{
+                width: 391,
+                expressions,
+                value: TriggerDefaultFieldList.build,
+                allowableTypes
+              }}
+              disabled={true}
+              name={`${path}.artifacts.${artifactPath}.spec.version`}
+            />
+          )}
 
           {get(template, `artifacts.${artifactPath}.spec.inputs`) &&
           isArray(get(template, `artifacts.${artifactPath}.spec.inputs`)) ? (

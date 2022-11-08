@@ -98,7 +98,8 @@ describe('useModuleInfo tests', () => {
         defaultLicenseStoreValues: {
           licenseInformation: {
             SCM: {
-              licenseType: 'PAID'
+              licenseType: 'PAID',
+              id: '1212'
             }
           }
         }
@@ -108,6 +109,6 @@ describe('useModuleInfo tests', () => {
     expect(result.current['SCM'].icon).toBe('gitops-green')
     expect(result.current['SCM'].label).toBe('common.purpose.scm.name')
     expect(result.current['SCM'].shouldVisible).toBe(false)
-    expect(result.current['SCM'].licenseType).toBe('PAID')
+    expect(result.current['SCM'].hasLicense).toBe(true)
   })
 })

@@ -27,6 +27,7 @@ type AllowedStatus = Exclude<
 >
 const allowedOptions = [
   ExecutionStatusEnum.Aborted,
+  ExecutionStatusEnum.AbortedByFreeze,
   ExecutionStatusEnum.Expired,
   ExecutionStatusEnum.Failed,
   ExecutionStatusEnum.Running,
@@ -41,6 +42,7 @@ const allowedOptions = [
 
 const labelMap: Record<AllowedStatus, StringKeys> = {
   Aborted: 'pipeline.executionFilters.labels.Aborted',
+  AbortedByFreeze: 'pipeline.executionFilters.labels.AbortedByFreeze',
   Expired: 'pipeline.executionFilters.labels.Expired',
   Failed: 'pipeline.executionFilters.labels.Failed',
   Running: 'pipeline.executionFilters.labels.Running',

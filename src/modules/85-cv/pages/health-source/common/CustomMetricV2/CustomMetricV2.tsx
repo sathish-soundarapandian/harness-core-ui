@@ -3,10 +3,13 @@ import { useFormikContext } from 'formik'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import CustomMetricSideNav from './components/CustomMetricSideNav'
 import CustomMetricDetails from './components/CustomMetricDetails'
 import type { CommonCustomMetricPropertyType, CommonCustomMetricsType } from './CustomMetric.types'
 import {
+  getFilteredMetricThresholds,
   getIsCustomMetricPresent,
   getIsGivenMetricPresent,
   getNewMetricIdentifier,
@@ -29,6 +32,8 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
 ): JSX.Element {
   const { headingText, subHeading, newCustomMetricDefaultValues, children } = props
   const { values: formikValues, setValues } = useFormikContext<T>()
+
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
 
   const { getString } = useStrings()
 
@@ -61,11 +66,21 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
         setValues({
           ...formikValues,
           customMetrics: filteredCustomMetrics,
-          selectedCustomMetricIndex: getUpdatedSelectedMetricIndex(formikValues.selectedCustomMetricIndex)
+          selectedCustomMetricIndex: getUpdatedSelectedMetricIndex(formikValues.selectedCustomMetricIndex),
+          ignoreThresholds: getFilteredMetricThresholds({
+            isMetricThresholdEnabled,
+            customMetricNameToRemove,
+            metricThresholdsToFilter: formikValues.ignoreThresholds
+          }),
+          failFastThresholds: getFilteredMetricThresholds({
+            isMetricThresholdEnabled,
+            customMetricNameToRemove,
+            metricThresholdsToFilter: formikValues.failFastThresholds
+          })
         })
       }
     },
-    [formikValues, setValues]
+    [formikValues, isMetricThresholdEnabled, setValues]
   )
 
   const isCustomMetricsPresent = useMemo(

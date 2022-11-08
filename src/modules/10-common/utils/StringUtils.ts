@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import isUndefined from 'lodash/isUndefined'
+import { isUndefined } from 'lodash-es'
 import type { GitSyncEntityDTO } from 'services/cd-ng'
 
 export function getIdentifierFromName(str: string): string {
@@ -73,6 +73,8 @@ export const folderPathName = /^[A-Za-z0-9_-][A-Za-z0-9 _-]*$/g
 export const yamlFileExtension = '.yaml'
 
 export const yamlPathRegex = /.*\.ya?ml$/
+
+export const carriageReturnRegex = /(?:\\[rn])+/g
 
 export const UNIQUE_ID_MAX_LENGTH = 64
 export function toVariableStr(str: string): string {

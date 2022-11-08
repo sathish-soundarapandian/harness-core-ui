@@ -46,6 +46,9 @@ jest.mock('services/pipeline-ng', () => ({
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
   }),
+  useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
+    return { data: jest.fn(), refetch: jest.fn() }
+  }),
   useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
   useGetPipeline: jest.fn(() => ({ data: {} })),
   useGetPipelineSummary: jest.fn(() => PipelineDetailsMockResponse),
@@ -148,13 +151,14 @@ describe('CDPipelineDeploymentList', () => {
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline'
+      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline?storeType=INLINE'
     )
   })
 
   test('should be able to show any pipeline`s executions', async () => {
     renderExecutionPage()
     expect(useGetListOfExecutions).toHaveBeenCalled()
+
     // In pipeline execution history avoid module filter since we show all pipelines in any module and execution history also should be shown for any pipeline
     expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cd' }) })

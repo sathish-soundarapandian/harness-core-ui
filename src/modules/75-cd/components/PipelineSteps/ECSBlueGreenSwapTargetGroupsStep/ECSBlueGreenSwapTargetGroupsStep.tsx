@@ -87,6 +87,7 @@ export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<ECSBlueGreenS
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
           inputSetData={inputSetData as InputSetData<ECSBlueGreenSwapTargetGroupsStepValues>}
+          stepViewType={stepViewType}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {

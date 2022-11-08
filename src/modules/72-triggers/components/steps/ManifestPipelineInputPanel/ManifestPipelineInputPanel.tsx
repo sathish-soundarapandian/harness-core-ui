@@ -51,7 +51,7 @@ import {
   TriggerGitEvent,
   ciCodebaseBuildIssueComment
 } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
-import useGitAwareForTriggerEnabled from '@triggers/components/Triggers/useGitAwareForTriggerEnabled'
+import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import css from '@triggers/pages/triggers/views/WebhookPipelineInputPanel.module.scss'
 
 interface ManifestTriggerInputPanelFormProps {
@@ -111,7 +111,7 @@ function ManifestTriggerInputPanelForm({
     values
   } = formikProps
 
-  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
@@ -145,11 +145,11 @@ function ManifestTriggerInputPanelForm({
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
-      gitAwareForTriggerEnabled,
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
       pipelineBranchName: formikProps?.values?.pipelineBranchName,
       branch
     })
-  }, [gitAwareForTriggerEnabled, branch, formikProps?.values?.pipelineBranchName])
+  }, [isNewGitSyncRemotePipeline, branch, formikProps?.values?.pipelineBranchName])
 
   const onReconcile = (inpSetId: string): void => {
     remove(invalidInputSetIds, id => id === inpSetId)
@@ -162,7 +162,7 @@ function ManifestTriggerInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch
+      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch
     }
   })
 
@@ -170,7 +170,7 @@ function ManifestTriggerInputPanelForm({
     const shouldInjectCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
 
     if (
-      !gitAwareForTriggerEnabled &&
+      !isNewGitSyncRemotePipeline &&
       !hasEverRendered &&
       shouldInjectCloneCodebase &&
       !isEdit &&
@@ -205,7 +205,7 @@ function ManifestTriggerInputPanelForm({
     resolvedPipeline,
     triggerIdentifier,
     isEdit,
-    gitAwareForTriggerEnabled
+    isNewGitSyncRemotePipeline
   ])
 
   const inputSetQueryParams = useMemo(
@@ -219,7 +219,7 @@ function ManifestTriggerInputPanelForm({
       repoName,
       storeType,
       branch: getTriggerInputSetsBranchQueryParameter({
-        gitAwareForTriggerEnabled,
+        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
         pipelineBranchName: formikProps?.values?.pipelineBranchName,
         branch
       })
@@ -235,7 +235,7 @@ function ManifestTriggerInputPanelForm({
       repoName,
       storeType,
       branch,
-      gitAwareForTriggerEnabled
+      isNewGitSyncRemotePipeline
     ]
   )
 
@@ -388,12 +388,12 @@ function ManifestTriggerInputPanelForm({
 
   const showPipelineInputSetForm = useMemo(() => {
     // With GitX enabled, only show when at least one input set is selected
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       return showPipelineInputSetSelector && !!selectedInputSets?.length
     }
 
     return showPipelineInputSetSelector
-  }, [showPipelineInputSetSelector, gitAwareForTriggerEnabled, selectedInputSets])
+  }, [showPipelineInputSetSelector, isNewGitSyncRemotePipeline, selectedInputSets])
 
   // When Pipeline Reference Branch is changed (by typing new value), re-merge Input Sets
   const reevaluateInputSetMerge = useCallback(
@@ -454,7 +454,7 @@ function ManifestTriggerInputPanelForm({
   // Don't show spinner when fetching is triggered by typing from
   // Pipeline Reference. Giving users a better experience
   const isPipelineBranchNameInFocus = (): boolean =>
-    !!gitAwareForTriggerEnabled &&
+    !!isNewGitSyncRemotePipeline &&
     !!document.activeElement &&
     document.activeElement === document.querySelector('input[name="pipelineBranchName"]')
 
@@ -464,7 +464,7 @@ function ManifestTriggerInputPanelForm({
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
-      ) : template?.data?.inputSetTemplateYaml || gitAwareForTriggerEnabled ? (
+      ) : template?.data?.inputSetTemplateYaml || isNewGitSyncRemotePipeline ? (
         <div className={css.inputsetGrid}>
           <div className={css.inputSetContent}>
             {showPipelineInputSetSelector && (
@@ -480,7 +480,7 @@ function ManifestTriggerInputPanelForm({
                     onChange={value => {
                       setInputSetError('')
                       setSelectedInputSets(value)
-                      if (gitAwareForTriggerEnabled) {
+                      if (isNewGitSyncRemotePipeline) {
                         formikProps.setValues({
                           ...formikProps.values,
                           inputSetRefs: (value || []).map(v => v.value),
@@ -490,9 +490,9 @@ function ManifestTriggerInputPanelForm({
                     }}
                     value={selectedInputSets}
                     selectedValueClass={css.inputSetSelectedValue}
-                    selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
+                    selectedRepo={isNewGitSyncRemotePipeline ? repoName : repoIdentifier}
                     selectedBranch={inputSetSelectedBranch}
-                    showNewInputSet={gitAwareForTriggerEnabled}
+                    showNewInputSet={isNewGitSyncRemotePipeline}
                     onNewInputSetClick={() => setShowNewInputSetModal(true)}
                     invalidInputSetReferences={invalidInputSetIds}
                     loadingMergeInputSets={mergingInputSets}
@@ -511,7 +511,7 @@ function ManifestTriggerInputPanelForm({
                 )}
               </div>
             )}
-            {gitAwareForTriggerEnabled && (
+            {isNewGitSyncRemotePipeline && (
               <Container padding={{ top: 'medium' }}>
                 <Text
                   color={Color.BLACK_100}
@@ -548,8 +548,8 @@ function ManifestTriggerInputPanelForm({
                   viewType={StepViewType.InputSet}
                   maybeContainerClass={css.pipelineInputSetForm}
                   viewTypeMetadata={{ isTrigger: true }}
-                  readonly={gitAwareForTriggerEnabled}
-                  gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+                  readonly={isNewGitSyncRemotePipeline}
+                  gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
                 />
               )}
           </div>

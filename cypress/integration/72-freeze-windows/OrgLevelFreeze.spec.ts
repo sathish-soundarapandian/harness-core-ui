@@ -231,7 +231,7 @@ describe('Org Level Freeze', () => {
     cy.get('[data-testid="config-view-mode_2"]').should('have.length', 1)
 
     // Delete Rule 2
-    cy.get('[data-testid="config-view-mode_1"] button span.bp3-icon-trash').click()
+    cy.get('[data-testid="config-view-mode_1"] button span[data-icon="main-trash"]').click()
     cy.get('button').contains('span', 'Save').parent().should('not.be.disabled')
     cy.get('button').contains('span', 'Discard').parent().should('not.be.disabled')
     cy.get('button span').contains('Unsaved changes')

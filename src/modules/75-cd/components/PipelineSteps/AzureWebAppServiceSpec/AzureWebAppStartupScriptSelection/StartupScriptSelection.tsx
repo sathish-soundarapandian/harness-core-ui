@@ -20,6 +20,7 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { getDeploymentSpecificYamlKeys } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import StartupScriptListView from './StartupScriptListView'
 import type { StartupScriptSelectionProps } from './StartupScriptInterface.types'
 
@@ -64,14 +65,15 @@ export default function StartupScriptSelection({
   })
 
   const startupCommand = useMemo(() => {
+    const startupKey = getDeploymentSpecificYamlKeys(deploymentType)
     /* istanbul ignore else */
     /* istanbul ignore next */
     if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.startupCommand', {})
+      return get(stage, `stage.spec.serviceConfig.stageOverrides.${startupKey}`, {})
     }
 
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.startupCommand', {})
-  }, [isPropagating, stage])
+    return get(stage, `stage.spec.serviceConfig.serviceDefinition.spec.${startupKey}`, {})
+  }, [deploymentType, isPropagating, stage])
 
   useDeepCompareEffect(() => {
     refetchConnectorList()

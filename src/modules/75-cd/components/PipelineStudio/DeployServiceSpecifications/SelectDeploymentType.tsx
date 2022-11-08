@@ -5,12 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FC, ReactNode } from 'react'
 import { Formik, FormikProps } from 'formik'
 import { get, noop } from 'lodash-es'
 import * as Yup from 'yup'
-import { Card, Checkbox, FormError, HarnessDocTooltip, Layout, Thumbnail, Utils } from '@harness/uicore'
+import {
+  Button,
+  Card,
+  Checkbox,
+  Color,
+  Container,
+  FormError,
+  HarnessDocTooltip,
+  Layout,
+  Text,
+  Thumbnail,
+  Utils
+} from '@harness/uicore'
 import cx from 'classnames'
+import { useParams } from 'react-router-dom'
+import { Spinner } from '@blueprintjs/core'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useGetCommunity } from '@common/utils/utils'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -25,9 +39,22 @@ import {
 } from '@cd/utils/deploymentUtils'
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import { TemplateSummaryResponse, useGetTemplateList } from 'services/template-ng'
+import { useMutateAsGet } from '@common/hooks'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import {
+  getIconForTemplate,
+  Sort,
+  SortFields,
+  TemplateListType
+} from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
+import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 import deployServiceCss from './DeployServiceSpecifications.module.scss'
+
+const DEPLOYMENT_TYPE_KEY = 'deploymentType'
 
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
@@ -35,17 +62,117 @@ export function getServiceDeploymentTypeSchema(
   return Yup.string().nullable().required(getString('cd.pipelineSteps.serviceTab.deploymentTypeRequired'))
 }
 
-interface SelectServiceDeploymentTypeProps {
-  isReadonly: boolean
-  shouldShowGitops: boolean
-  handleDeploymentTypeChange: (deploymentType: ServiceDeploymentType) => void
-  selectedDeploymentType?: ServiceDeploymentType
-  viewContext?: string
-  handleGitOpsCheckChanged?: (ev: React.FormEvent<HTMLInputElement>) => void
-  gitOpsEnabled?: boolean
-  customDeploymentData?: TemplateLinkConfig
-  addOrUpdateTemplate?: (selectedTemplate: TemplateSummaryResponse) => void
-  templateBarOverrideClassName?: string
+interface RecentDeploymentTemplatesProps {
+  readonly: boolean
+  labelClassName?: string
+  templateLinkConfig?: TemplateLinkConfig
+  onDeploymentTemplateSelect: (template: TemplateSummaryResponse, fromTemplateSelector: boolean) => void
+}
+
+const RecentDeploymentTemplates: FC<RecentDeploymentTemplatesProps> = ({
+  readonly,
+  labelClassName,
+  templateLinkConfig,
+  onDeploymentTemplateSelect
+}) => {
+  const { getString } = useStrings()
+  const { getTemplate } = useTemplateSelector()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const { data, loading, error } = useMutateAsGet(useGetTemplateList, {
+    body: {
+      filterType: 'Template',
+      templateEntityTypes: [TemplateType.CustomDeployment]
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      templateListType: TemplateListType.Stable,
+      page: 0,
+      sort: [SortFields.LastUpdatedAt, Sort.DESC],
+      size: 5,
+      includeAllTemplatesAvailableAtScope: true
+    },
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
+  })
+  const templates = data?.data?.content
+
+  const onTemplateSelectorClick = async (): Promise<void> => {
+    try {
+      const { template } = await getTemplate({
+        templateType: TemplateType.CustomDeployment,
+        allowedUsages: [TemplateUsage.USE]
+      })
+
+      onDeploymentTemplateSelect(template, true)
+    } catch (e) {
+      // don't do anything when template isn't selected
+    }
+  }
+
+  const isSelected = (currentTemplateLinkConfig: TemplateLinkConfig): boolean => {
+    return currentTemplateLinkConfig.templateRef === templateLinkConfig?.templateRef
+  }
+
+  if (loading) {
+    return (
+      <Container height={'100px'} margin={{ top: 'medium' }} flex={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Spinner size={20} />
+      </Container>
+    )
+  }
+  if (error) return null
+
+  return (
+    <>
+      <div className={labelClassName}>{getString('cd.deploymentTemplates')}</div>
+      <div className={deployServiceCss.recentDeploymentTemplates}>
+        {templates
+          ?.filter(template => !readonly || isSelected(getTemplateRefVersionLabelObject(template)))
+          ?.map(template => {
+            const currentTemplateLinkConfig = getTemplateRefVersionLabelObject(template)
+            const templateIconName = getIconForTemplate(getString, template)
+
+            return (
+              <div key={currentTemplateLinkConfig.templateRef} className={deployServiceCss.thumbnailContainer}>
+                <Thumbnail
+                  className={cx(!readonly && deployServiceCss.cursorPointer)}
+                  value={currentTemplateLinkConfig.templateRef}
+                  icon={templateIconName}
+                  imageProps={{
+                    src: template.icon,
+                    alt: getString('cd.logoOfName', { name: template.name })
+                  }}
+                  disabled={readonly}
+                  selected={isSelected(currentTemplateLinkConfig)}
+                  onClick={() => onDeploymentTemplateSelect(template, false)}
+                />
+                <Text
+                  lineClamp={2}
+                  font={{ weight: 'semi-bold', size: 'small' }}
+                  color={readonly ? Color.GREY_500 : Color.GREY_600}
+                >
+                  {template.name}
+                </Text>
+              </div>
+            )
+          })}
+
+        {!readonly && (
+          <Button
+            disabled={readonly}
+            className={deployServiceCss.doubleChevron}
+            type="button"
+            intent="primary"
+            icon="double-chevron-right"
+            minimal
+            iconProps={{ size: 18 }}
+            onClick={onTemplateSelectorClick}
+          />
+        )}
+      </div>
+    </>
+  )
 }
 
 interface CardListProps {
@@ -55,8 +182,6 @@ interface CardListProps {
   onChange: (deploymentType: ServiceDeploymentType) => void
   allowDisabledItemClick?: boolean
 }
-
-const DEPLOYMENT_TYPE_KEY = 'deploymentType'
 
 const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps): JSX.Element => {
   const { getString } = useStrings()
@@ -90,6 +215,20 @@ const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps)
   )
 }
 
+interface SelectServiceDeploymentTypeProps {
+  isReadonly: boolean
+  shouldShowGitops: boolean
+  handleDeploymentTypeChange: (deploymentType: ServiceDeploymentType) => void
+  selectedDeploymentType?: ServiceDeploymentType
+  viewContext?: string
+  handleGitOpsCheckChanged?: (ev: React.FormEvent<HTMLInputElement>) => void
+  gitOpsEnabled?: boolean
+  templateLinkConfig?: TemplateLinkConfig
+  onDeploymentTemplateSelect: (template: TemplateSummaryResponse, fromTemplateSelector: boolean) => void
+  addOrUpdateTemplate?: () => void | Promise<void>
+  templateBarOverrideClassName?: string
+}
+
 export default function SelectDeploymentType({
   selectedDeploymentType,
   gitOpsEnabled,
@@ -98,7 +237,8 @@ export default function SelectDeploymentType({
   shouldShowGitops,
   handleDeploymentTypeChange,
   handleGitOpsCheckChanged,
-  customDeploymentData,
+  templateLinkConfig,
+  onDeploymentTemplateSelect,
   addOrUpdateTemplate,
   templateBarOverrideClassName = ''
 }: SelectServiceDeploymentTypeProps): JSX.Element {
@@ -114,8 +254,8 @@ export default function SelectDeploymentType({
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
-    return getCgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN })
-  }, [SSH_NG, NG_SVC_ENV_REDESIGN])
+    return getCgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG })
+  }, [SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)
@@ -138,10 +278,10 @@ export default function SelectDeploymentType({
     return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
   }, [formikRef])
 
-  const renderDeploymentTypes = React.useCallback((): JSX.Element => {
+  const renderDeploymentTypes = (): JSX.Element => {
     if (!isCommunity) {
       return (
-        <Layout.Vertical margin={{ top: 'medium' }}>
+        <Layout.Vertical margin={{ bottom: 'medium' }}>
           <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }}>
             <CardList
               items={ngDeploymentTypes}
@@ -155,10 +295,10 @@ export default function SelectDeploymentType({
                 errorMessage={get(formikRef?.current?.errors, DEPLOYMENT_TYPE_KEY)}
               />
             ) : null}
-            {customDeploymentData ? (
+            {templateLinkConfig ? (
               <Layout.Vertical padding={0} margin={{ top: 'medium' }}>
                 <TemplateBar
-                  templateLinkConfig={customDeploymentData}
+                  templateLinkConfig={templateLinkConfig}
                   onOpenTemplateSelector={addOrUpdateTemplate}
                   className={cx(deployServiceCss.templateBar, templateBarOverrideClassName)}
                   isReadonly={isReadonly}
@@ -177,7 +317,7 @@ export default function SelectDeploymentType({
         selectedValue={selectedDeploymentType}
       />
     )
-  }, [cgDeploymentTypes, ngSupportedDeploymentTypes, getString, isReadonly, handleDeploymentTypeChange])
+  }
 
   const renderGitops = (): JSX.Element | null => {
     if (shouldShowGitops && selectedDeploymentType === ServiceDeploymentType.Kubernetes) {
@@ -193,6 +333,33 @@ export default function SelectDeploymentType({
       )
     }
     return null
+  }
+
+  const renderRecentDeploymentTemplates = (): ReactNode => (
+    <RecentDeploymentTemplates
+      labelClassName={viewContext ? stageCss.tabSubHeading : stageCss.deploymentTypeHeading}
+      readonly={isReadonly}
+      templateLinkConfig={templateLinkConfig}
+      onDeploymentTemplateSelect={onDeploymentTemplateSelect}
+    />
+  )
+
+  const renderDeploymentTypeLabel = (): ReactNode => {
+    // only selected deployment type thumbnail is rendered in readonly mode,
+    // but the thumbnail for CustomDeployment has been removed, so this helps in hiding the label in that case
+    if (isReadonly && selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
+      return null
+    }
+
+    return (
+      <div
+        className={cx(viewContext ? stageCss.tabSubHeading : stageCss.deploymentTypeHeading, 'ng-tooltip-native')}
+        data-tooltip-id="stageOverviewDeploymentType"
+      >
+        {getString('deploymentTypeText')}
+        <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
+      </div>
+    )
   }
 
   return (
@@ -213,28 +380,18 @@ export default function SelectDeploymentType({
         if (viewContext) {
           return (
             <Card className={stageCss.sectionCard}>
-              <div
-                className={cx(stageCss.tabSubHeading, 'ng-tooltip-native')}
-                data-tooltip-id="stageOverviewDeploymentType"
-              >
-                {getString('deploymentTypeText')}
-                <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
-              </div>
+              {renderDeploymentTypeLabel()}
               {renderDeploymentTypes()}
               {renderGitops()}
+              {renderRecentDeploymentTemplates()}
             </Card>
           )
         } else {
           return (
             <div className={stageCss.stageView}>
-              <div
-                className={cx(stageCss.deploymentTypeHeading, 'ng-tooltip-native')}
-                data-tooltip-id="stageOverviewDeploymentType"
-              >
-                {getString('deploymentTypeText')}
-                <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
-              </div>
+              {renderDeploymentTypeLabel()}
               {renderDeploymentTypes()}
+              {renderRecentDeploymentTemplates()}
             </div>
           )
         }

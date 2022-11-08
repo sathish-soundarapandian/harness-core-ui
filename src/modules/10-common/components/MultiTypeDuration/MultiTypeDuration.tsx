@@ -25,7 +25,11 @@ import {
 } from '@wings-software/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import {
+  ALLOWED_VALUES_TYPE,
+  ConfigureOptions,
+  ConfigureOptionsProps
+} from '@common/components/ConfigureOptions/ConfigureOptions'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { getDurationValidationSchema, isValidTimeString } from './helper'
 import css from './MultiTypeDuration.module.scss'
@@ -100,6 +104,7 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
               showAdvanced={true}
               onChange={val => onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)}
               style={{ marginLeft: 'var(--spacing-medium)' }}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
               {...configureOptionsProps}
               isReadonly={props.disabled}
             />

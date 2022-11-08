@@ -166,6 +166,7 @@ testConnectionStep:
     artifactory: Validating Artifactory Repository authentication and permissions
     nexus: Validating Nexus Repository authentication and permissions
     gcp: Validating Google Cloud Provider authentication and permissions
+    gcpSM: Validating Google Cloud Provider Secrets Manager authentication and permissions
     gcr: Validating Google Container Registry authentication and permissions
     aws: Validating the AWS Cloud Provider authentication and permissions
     appD: Validating AppDynamics authentication and permissions
@@ -452,6 +453,7 @@ connectorDetails: Connector Details
 verifyConnection: Verify connection
 createdSuccessfully: 'Connector {{name}} created successfully'
 updatedSuccessfully: 'Connector {{name}} updated successfully'
+spotAccountId: Spot Account Id
 splunk:
   connectorDetailsHeader: Splunk Connection Details
 awsSecretManager:
@@ -903,6 +905,8 @@ pdc:
   selectLabel: 'Select how you would like to define your list of hosts'
   manuallyHosts: 'Manually enter host names'
   uploadJson: 'Upload JSON file'
+  validateHosts: 'At least one host should be provided'
+  validateHostsJson: 'At least one entry with hostname field should be provided'
   hosts: 'Hosts'
   hostsJson: 'JSON content'
   hostsRule: 'Enter JSON or comma separated list here'
@@ -943,5 +947,6 @@ customSM:
     template: Please select a template
 gcpSecretManager:
   gcpSMSecretFile: Google Secrets Manager Credentials File
+  gcpCredentialsFile: Credentials File
   validation:
     credFileRequired: Credentials File is required

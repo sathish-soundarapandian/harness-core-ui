@@ -109,7 +109,8 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
           onRestore: onRestoreLocal,
           settingValue: settingValue || undefined,
           categoryAllSettings: allSettings,
-          setFieldValue
+          setFieldValue,
+          errorMessage
         })}
       </Container>
 

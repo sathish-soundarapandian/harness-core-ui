@@ -14,6 +14,7 @@ import type {
   AmazonS3RegistrySpec,
   ArtifactoryRegistrySpec,
   ArtifactTriggerConfig,
+  CustomArtifactSpec,
   DockerRegistrySpec,
   EcrSpec,
   GcrSpec,
@@ -47,6 +48,7 @@ export type ArtifactType =
   | 'Jenkins'
   | 'AmazonS3'
   | 'GoogleArtifactRegistry'
+  | 'GithubPackageRegistry'
 export interface OrganizationCreationType {
   type: ArtifactType
 }
@@ -252,3 +254,4 @@ export type ArtifactTriggerSpec =
   | GcrSpec
   | JenkinsRegistrySpec
   | NexusRegistrySpec
+  | CustomArtifactSpec

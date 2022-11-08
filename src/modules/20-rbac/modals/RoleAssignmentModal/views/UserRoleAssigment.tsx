@@ -222,9 +222,9 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
     )
   }
   const addRoleValues: FormData = {
-    title: getString('rbac.addRole'),
+    title: getString('rbac.manageRoleBindings'),
     handleSubmit: handleRoleAssignment,
-    label: getString('rbac.forUser')
+    label: getString('common.userLabel')
   }
   const formValues = isInvite ? inviteValues : addRoleValues
 
@@ -263,7 +263,10 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
               items={users}
               tagInputProps={{
                 values: users,
-                placeholder: getString('rbac.roleAssignment.userPlaceHolder')
+                placeholder:
+                  scope == Scope.ACCOUNT
+                    ? getString('rbac.roleAssignment.addUsersPlaceHolder')
+                    : getString('rbac.roleAssignment.searchOrAddUsersPlaceHolder')
               }}
               multiSelectProps={{
                 allowCreatingNewItems: true,

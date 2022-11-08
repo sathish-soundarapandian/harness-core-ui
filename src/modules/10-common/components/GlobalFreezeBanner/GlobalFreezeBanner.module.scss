@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 .globalFreezeBanner {
   padding: var(--spacing-medium) var(--spacing-large) !important;
   background-color: var(--yellow-100) !important;
@@ -5,4 +12,12 @@
 
 .toggleMultiFreezeView {
   font-size: var(--font-size-small) !important;
+}
+
+.freezeWindowList {
+  margin: 0;
+  padding: var(--spacing-small) 0 0 var(--spacing-huge);
+  li {
+    margin-bottom: var(--spacing-small);
+  }
 }

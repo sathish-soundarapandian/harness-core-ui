@@ -131,34 +131,38 @@ exports[`Collaborators test Render Collaborators  1`] = `
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           >
             <div
-              class="bp3-form-group input"
-              data-id="projectsOrgs.collaborator-0"
+              class="Layout--vertical StyledProps--main"
             >
               <div
-                class="bp3-form-content"
+                class="bp3-form-group input"
+                data-id="projectsOrgs.collaborator-0"
               >
                 <div
-                  class="bp3-popover-wrapper MultiSelect--main bp3-fill"
+                  class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-target"
+                    class="bp3-popover-wrapper MultiSelect--main bp3-fill"
                   >
                     <div
-                      class=""
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-input bp3-tag-input bp3-multi-select"
+                        class=""
                       >
                         <div
-                          class="bp3-tag-input-values"
+                          class="bp3-input bp3-tag-input bp3-multi-select"
                         >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                            name="projectsOrgs.collaborator"
-                            placeholder="- Select -"
-                            value=""
-                          />
+                          <div
+                            class="bp3-tag-input-values"
+                          >
+                            <input
+                              autocomplete="off"
+                              class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                              name="projectsOrgs.collaborator"
+                              placeholder="- Select -"
+                              value=""
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>

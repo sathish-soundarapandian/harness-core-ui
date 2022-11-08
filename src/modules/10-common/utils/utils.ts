@@ -107,7 +107,7 @@ export const addHotJarSuppressionAttribute = (): { [HOTJAR_SUPPRESSION_ATTR]: bo
 
 // Utility to check if environment is a PR environment
 export const isPR = (): boolean => {
-  return location.hostname === PR_ENV_HOST_NAME
+  return location.hostname?.includes(PR_ENV_HOST_NAME)
 }
 
 // Utility to check if environment is a local develop environment
@@ -122,6 +122,10 @@ export const getPREnvNameFromURL = (url: string): string => {
   return isPR() ? url.split(PR_ENV_HOST_NAME)?.[1]?.split('/')?.[1] : ''
 }
 
+export function isMultiTypeFixed(type: MultiTypeInputType): boolean {
+  return type === MultiTypeInputType.FIXED
+}
+
 export function isMultiTypeRuntime(type: MultiTypeInputType): boolean {
   return [MultiTypeInputType.EXECUTION_TIME, MultiTypeInputType.RUNTIME].includes(type)
 }
@@ -132,6 +136,10 @@ export function isValueRuntimeInput(
   const type = getMultiTypeFromValue(value)
 
   return isMultiTypeRuntime(type)
+}
+
+export function isMultiTypeExpression(type: MultiTypeInputType): boolean {
+  return type === MultiTypeInputType.EXPRESSION
 }
 
 export const getUserName = (user: UserMetadataDTO): string => {
@@ -155,4 +163,29 @@ export const getGaClientID = (): string => {
   } catch (e) {
     return ''
   }
+}
+
+export const isWindowsOS = (): boolean => navigator?.appVersion?.indexOf('Win') != -1
+
+export const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onloadend = () => resolve((reader.result || '').toString())
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+
+export const getImageDimensions = (url: string): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement('img')
+
+    img.onload = () => {
+      const width = img.naturalWidth
+      const height = img.naturalHeight
+
+      resolve({ width, height })
+    }
+    img.onerror = reject
+    img.src = url
+  })
 }

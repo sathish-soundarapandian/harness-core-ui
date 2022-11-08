@@ -1,0 +1,98 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.body {
+  padding-top: 90px !important;
+  padding-left: 80px !important;
+  height: 100vh;
+  background-size: contain !important;
+  background-position: right bottom !important;
+}
+
+.heading {
+  align-self: center;
+  padding-bottom: 20px !important;
+}
+
+.content {
+  align-self: center;
+}
+
+.learnMore {
+  width: 25%;
+}
+
+.mainArticle {
+  grid-template-columns: 1fr 1px 1fr;
+  gap: var(--spacing-xlarge);
+  width: 800px;
+  padding: var(--spacing-xxxlarge);
+  background-color: var(--grey-0);
+  border-radius: var(--spacing-small);
+  box-shadow: var(--elevation-3);
+  display: grid;
+}
+
+.dontCodeArticle {
+  grid-template-columns: 1fr 2fr;
+  gap: var(--spacing-xlarge);
+  width: 800px;
+  padding: var(--spacing-xxxlarge);
+  background-color: var(--grey-0);
+  border-radius: var(--spacing-small);
+  box-shadow: var(--elevation-3);
+  display: grid;
+}
+
+.forDevs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+}
+
+.dontCode {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-small);
+  width: 450px;
+}
+
+.inviteDeveloper {
+  align-self: center;
+  justify-self: center;
+}
+
+.divider {
+  background-color: var(--grey-200);
+}
+
+.startFreePlanBtn {
+  grid-column: 1/4;
+  justify-self: center;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+  padding: 0;
+  align-items: flex-start;
+
+  li {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    align-items: center;
+    gap: var(--spacing-medium);
+  }
+
+  li::before {
+    content: url('../star.svg');
+    height: 28px;
+    width: 31px;
+  }
+}

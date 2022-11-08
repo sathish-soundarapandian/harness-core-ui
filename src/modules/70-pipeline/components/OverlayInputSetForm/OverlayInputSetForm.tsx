@@ -133,7 +133,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Pipelines',
   width: 620,
   height: 360,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -816,7 +815,6 @@ export function OverlayInputSetForm({
                             bind={setYamlHandler}
                             schema={pipelineSchema?.data}
                             isReadOnlyMode={isReadOnly}
-                            showSnippetSection={false}
                             isEditModeSupported={!isReadOnly}
                             fileName={getYamlFileName({
                               isPipelineRemote,

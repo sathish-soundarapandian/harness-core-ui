@@ -81,6 +81,8 @@ import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/Pipelin
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
 import { getFreezeRouteLink } from '@pipeline/utils/freezeWindowUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -118,7 +120,6 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `run-pipeline.yaml`,
   entityType: 'Pipelines',
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -145,6 +146,7 @@ function RunPipelineFormBasic({
   stagesExecuted,
   executionIdentifier
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
+  const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -172,6 +174,7 @@ function RunPipelineFormBasic({
   const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
+  const [isInputSetApplied, setIsInputSetApplied] = useState(true)
 
   const [canEdit] = usePermission(
     {
@@ -207,7 +210,8 @@ function RunPipelineFormBasic({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
-    }
+    },
+    lazy: !isNgDeploymentFreezeEnabled
   })
 
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
@@ -253,7 +257,7 @@ function RunPipelineFormBasic({
     hasInputSets,
     loading: loadingInputSets,
     error: inputSetsError,
-    isInputSetApplied,
+    canApplyInputSet,
     refetch: getTemplateFromPipeline,
     hasRuntimeInputs,
     invalidInputSetReferences,
@@ -397,6 +401,10 @@ function RunPipelineFormBasic({
     return executionStages
   }, [stageExecutionData?.data])
 
+  useDeepCompareEffect(() => {
+    setIsInputSetApplied(false)
+  }, [selectedInputSets])
+
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
     setSelectedInputSetsContext?.(inputSetSelected)
@@ -531,6 +539,10 @@ function RunPipelineFormBasic({
                 module,
                 source
               }),
+              search:
+                supportingGitSimplification && storeType === StoreType.REMOTE
+                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${branch}&storeType=${storeType}`
+                  : undefined,
               state: {
                 shouldShowGovernanceEvaluations:
                   governanceMetadata?.status === 'error' || governanceMetadata?.status === 'warning',
@@ -608,11 +620,12 @@ function RunPipelineFormBasic({
     if (inputSet?.pipeline && formikRef.current) {
       formikRef.current.setValues(inputSet.pipeline)
 
-      if (isInputSetApplied) {
+      if (canApplyInputSet) {
         formikRef.current.validateForm(inputSet.pipeline)
       }
     }
-  }, [inputSet, isInputSetApplied])
+    setIsInputSetApplied(true)
+  }, [inputSet, canApplyInputSet])
 
   const updateExpressionValue = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target) {
@@ -807,12 +820,11 @@ function RunPipelineFormBasic({
                       setRunClicked={setRunClicked}
                       hasInputSets={hasInputSets}
                       setSelectedInputSets={setSelectedInputSets}
-                      loading={false}
-                      loadingMergeInputSetUpdate={false}
                       selectedStageData={selectedStageData}
                       pipelineResponse={pipelineResponse}
                       invalidInputSetReferences={invalidInputSetReferences}
                       loadingInputSets={loadingInputSets}
+                      isInputSetApplied={isInputSetApplied}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={inputSetYAML}
                     />
@@ -821,13 +833,12 @@ function RunPipelineFormBasic({
                       <Layout.Vertical className={css.content} padding="xlarge">
                         <YamlBuilderMemo
                           {...yamlBuilderReadOnlyModeProps}
-                          existingJSON={{ pipeline: omitBy(values, (_val, key) => key.startsWith('_')) }}
+                          existingJSON={{ pipeline: values }}
                           bind={setYamlHandler}
                           schema={{}}
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
-                          showSnippetSection={false}
                           isEditModeSupported={canEdit}
                         />
                       </Layout.Vertical>

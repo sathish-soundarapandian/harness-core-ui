@@ -14,6 +14,7 @@ export const defaultContext = {
   view: 'VISUAL',
   setDrawerType: noop,
   isReadOnly: false,
+  isActiveFreeze: false,
   setView: noop,
   setYamlHandler: noop,
   updateYamlView: noop,

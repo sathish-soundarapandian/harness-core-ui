@@ -27,7 +27,7 @@ export default function FileView(): React.ReactElement {
   return (
     <Container
       background={Color.WHITE}
-      style={{ width: '100%', height: isModalView ? 530 : 'calc(100vh - 120px)' }}
+      style={{ width: '100%', height: isModalView ? 590 : 'calc(100vh - 120px)' }}
       className={css.mainFileView}
     >
       {error ? (
@@ -58,10 +58,28 @@ export default function FileView(): React.ReactElement {
           ]}
         />
       ) : (
-        <FileDetails
-          handleError={(errorType: string) => {
-            setError(errorType)
-          }}
+        <Tabs
+          id={'serviceLandingPageTabs'}
+          selectedTabId={activeTab}
+          onChange={tabId => setActiveTab(tabId as FILE_VIEW_TAB)}
+          tabList={[
+            {
+              id: FILE_VIEW_TAB.DETAILS,
+              title: getString('details'),
+              panel: (
+                <FileDetails
+                  handleError={(errorType: string) => {
+                    setError(errorType)
+                  }}
+                />
+              )
+            },
+            {
+              id: FILE_VIEW_TAB.REFERENCED_BY,
+              title: getString('referencedBy'),
+              panel: <ReferencedBy />
+            }
+          ]}
         />
       )}
     </Container>

@@ -13,12 +13,11 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 
 import produce from 'immer'
-import get from 'lodash-es/get'
-import set from 'lodash-es/set'
 
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { defaultTo, isEmpty, merge, unset } from 'lodash-es'
+import { get, set, defaultTo, isEmpty, merge, unset } from 'lodash-es'
+import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
@@ -31,7 +30,6 @@ import {
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useStrings } from 'framework/strings'
@@ -69,7 +67,6 @@ import {
   isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import { CustomArtifactOptionalConfiguration } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import css from './ArtifactsSelection.module.scss'
 
@@ -99,7 +96,7 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -112,6 +109,13 @@ export default function ServiceV2ArtifactsSelection({
     }
     if (
       deploymentType === ServiceDeploymentType.Kubernetes &&
+      GITHUB_PACKAGES &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+    }
+    if (
+      ['Kubernetes', 'CustomDeployment'].includes(deploymentType) &&
       NG_GOOGLE_ARTIFACT_REGISTRY &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
@@ -489,21 +493,6 @@ export default function ServiceV2ArtifactsSelection({
     setIsEditMode(false)
   }, [])
 
-  const getOptionalConfigurationSteps = useCallback((): JSX.Element | null => {
-    switch (selectedArtifact) {
-      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
-        return (
-          <CustomArtifactOptionalConfiguration
-            {...artifactLastStepProps}
-            name={'Optional Configuration'}
-            key={'Optional_Configuration'}
-          />
-        )
-      default:
-        return null
-    }
-  }, [artifactLastStepProps, selectedArtifact])
-
   const renderExistingArtifact = (): JSX.Element => {
     return (
       <ArtifactWizard
@@ -517,7 +506,6 @@ export default function ServiceV2ArtifactsSelection({
         isReadonly={readonly}
         selectedArtifact={selectedArtifact}
         changeArtifactType={changeArtifactType}
-        getOptionalConfigurationSteps={getOptionalConfigurationSteps()}
         newConnectorView={connectorView}
         newConnectorProps={{
           auth: authenticationStepProps,

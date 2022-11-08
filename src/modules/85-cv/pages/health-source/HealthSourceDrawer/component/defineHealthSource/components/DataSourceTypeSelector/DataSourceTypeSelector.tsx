@@ -1,11 +1,21 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+import { useFormikContext } from 'formik'
 import { Container, FontVariation, GroupedThumbnailSelect, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getDataGroupSelectorItems } from './DataSourceTypeSelectorUtils'
-import { DataSourceTypeFieldNames } from '../../DefineHealthSource.constant'
+import { ConnectorRefFieldName, DataSourceTypeFieldNames } from '../../DefineHealthSource.constant'
+import type { DefineHealthSourceFormInterface } from '../../DefineHealthSource.types'
 
-export default function PrometheusDataSourceTypeSelector(): JSX.Element {
+export default function PrometheusDataSourceTypeSelector({ isEdit }: { isEdit?: boolean }): JSX.Element {
   const { getString } = useStrings()
+
+  const { setValues } = useFormikContext()
+
+  const handleOnChange = useCallback(selectedValue => {
+    setValues((values: DefineHealthSourceFormInterface) => {
+      return { ...values, [DataSourceTypeFieldNames.DataSourceType]: selectedValue, [ConnectorRefFieldName]: null }
+    })
+  }, [])
 
   return (
     <Container margin={{ bottom: 'large' }} data-testid="dataSourceTypeSelector">
@@ -18,6 +28,8 @@ export default function PrometheusDataSourceTypeSelector(): JSX.Element {
       <GroupedThumbnailSelect
         name={DataSourceTypeFieldNames.DataSourceType}
         groups={getDataGroupSelectorItems(getString)}
+        isReadonly={isEdit}
+        onChange={handleOnChange}
       />
     </Container>
   )

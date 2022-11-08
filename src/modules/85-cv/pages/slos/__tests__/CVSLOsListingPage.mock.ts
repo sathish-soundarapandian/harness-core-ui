@@ -32,7 +32,7 @@ export const testWrapperProps: TestWrapperProps = {
   pathParams
 }
 
-export const dashboardWidgetsContentData: SLOHealthListView = {
+export const dashboardWidgetsContentData = {
   burnRate: 90,
   errorBudgetRemaining: 60,
   errorBudgetRemainingPercentage: 60,
@@ -97,7 +97,7 @@ export const dashboardWidgetsResponse: ResponsePageSLOHealthListView = {
     pageIndex: 0,
     pageItemCount: 1,
     pageSize: 4,
-    content: [dashboardWidgetsContentData]
+    content: [dashboardWidgetsContentData as unknown as SLOHealthListView]
   }
 }
 

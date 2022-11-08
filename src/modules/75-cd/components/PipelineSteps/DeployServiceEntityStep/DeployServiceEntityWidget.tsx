@@ -20,13 +20,22 @@ import {
   Toggle,
   useToggleOpen,
   ConfirmationDialog,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  SelectOption
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { IDialogProps, Intent } from '@blueprintjs/core'
 import produce from 'immer'
-import type { ServiceDefinition, ServiceYaml, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
+import { useParams } from 'react-router-dom'
+import {
+  JsonNode,
+  mergeServiceInputsPromise,
+  ServiceDefinition,
+  ServiceYaml,
+  ServiceYamlV2,
+  TemplateLinkConfig
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -42,6 +51,10 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { sanitize } from '@common/utils/JSONUtils'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { queryClient } from 'services/queryClient'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -144,6 +157,7 @@ export default function DeployServiceEntityWidget({
     getStageFromPipeline
   } = usePipelineContext()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { templateRef: deploymentTemplateIdentifier, versionLabel } =
     (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
   const shouldAddCustomDeploymentData =
@@ -158,9 +172,8 @@ export default function DeployServiceEntityWidget({
     loadingServicesData,
     loadingServicesList,
     updatingData,
-    refetchServicesData,
-    refetchListData,
-    prependServiceToServiceList
+    prependServiceToServiceList,
+    updateServiceInputsData
   } = useGetServicesData({
     gitOpsEnabled,
     serviceIdentifiers: allServices,
@@ -185,23 +198,29 @@ export default function DeployServiceEntityWidget({
 
   const loading = loadingServicesList || loadingServicesData
 
-  useEffect(() => {
-    if (!loading) {
-      // update services in formik
+  const updateServiceInputsForServices = React.useCallback(
+    (serviceOrServices: Pick<FormState, 'service' | 'services'>): void => {
       /* istanbul ignore else */
       if (formikRef.current && servicesData.length > 0) {
-        const { values, setValues } = formikRef.current
-
-        if (values.service && !values.serviceInputs?.[values.service]) {
-          const service = servicesData.find(svc => svc.service.identifier === values.service)
+        const { setValues, values } = formikRef.current
+        if (serviceOrServices.service) {
+          const service = servicesData.find(svc => svc.service.identifier === serviceOrServices.service)
 
           setValues({
             ...values,
+            ...serviceOrServices,
             // if service input is not found, add it, else use the existing one
-            serviceInputs: { [values.service]: get(values.serviceInputs, [values.service], service?.serviceInputs) }
+            serviceInputs: {
+              [serviceOrServices.service]: get(
+                values.serviceInputs,
+                [serviceOrServices.service],
+                service?.serviceInputs
+              )
+            }
           })
-        } else if (Array.isArray(values.services)) {
-          const updatedServices = values.services.reduce<ServicesWithInputs>(
+          /* istanbul ignore else */
+        } else if (Array.isArray(serviceOrServices.services)) {
+          const updatedServices = serviceOrServices.services.reduce<ServicesWithInputs>(
             (p, c) => {
               const service = servicesData.find(svc => svc.service.identifier === c.value)
 
@@ -223,7 +242,31 @@ export default function DeployServiceEntityWidget({
           setValues(updatedServices)
         }
       }
+    },
+    [servicesData]
+  )
+
+  const handleSingleSelectChange = React.useCallback(
+    (service: any) => {
+      updateServiceInputsForServices({ service: service.value || service })
+    },
+    [updateServiceInputsForServices]
+  )
+
+  const handleMultiSelectChange = React.useCallback(
+    (services: SelectOption[]) => {
+      updateServiceInputsForServices({ services })
+    },
+    [updateServiceInputsForServices]
+  )
+
+  useEffect(() => {
+    /* istanbul ignore else */
+    if (!loading && formikRef.current) {
+      // update services in formik
+      updateServiceInputsForServices(formikRef.current.values)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, servicesList, servicesData])
 
   function onServiceEntityCreate(newServiceInfo: ServiceYaml): void {
@@ -254,9 +297,37 @@ export default function DeployServiceEntityWidget({
     }
   }
 
-  function onServiceEntityUpdate(): void {
-    refetchServicesData()
-    refetchListData()
+  async function onServiceEntityUpdate(updatedService: ServiceYaml): Promise<void> {
+    if (formikRef.current) {
+      queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
+      const { values, setValues } = formikRef.current
+      const body = {
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        },
+        serviceIdentifier: updatedService.identifier,
+        pathParams: { serviceIdentifier: updatedService.identifier },
+        body: yamlStringify(
+          sanitize(
+            { serviceInputs: { ...get(values, `serviceInputs.${updatedService.identifier}`) } },
+            { removeEmptyObject: false, removeEmptyString: false }
+          )
+        )
+      }
+      const response = await mergeServiceInputsPromise(body)
+      const mergedServiceInputsResponse = response?.data
+      setValues({
+        ...values,
+        serviceInputs: {
+          [updatedService.identifier]: yamlParse<JsonNode>(
+            defaultTo(mergedServiceInputsResponse?.mergedServiceInputsYaml, '')
+          )?.serviceInputs
+        }
+      })
+      updateServiceInputsData(updatedService.identifier, mergedServiceInputsResponse)
+    }
   }
 
   function updateValuesInFomikAndPropogate(values: FormState): void {
@@ -384,8 +455,7 @@ export default function DeployServiceEntityWidget({
           formikRef.current = formik
           const { values } = formik
 
-          // Multi Service is disabled for gitops enabled temporarily
-          const isMultiSvc = !isNil(values.services) && !gitOpsEnabled
+          const isMultiSvc = !isNil(values.services)
           const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
             Array.isArray(values.services) && values.services
@@ -410,40 +480,24 @@ export default function DeployServiceEntityWidget({
                 >
                   <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                     {isMultiSvc ? (
-                      <div className={css.inputFieldLayout}>
-                        <FormMultiTypeMultiSelectDropDown
-                          tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                          label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
-                          name="services"
-                          disabled={readonly || (isFixed && loading)}
-                          dropdownProps={{
-                            items: selectOptions,
-                            placeholder: placeHolderForServices,
-                            disabled: loading || readonly
-                          }}
-                          multiTypeProps={{
-                            width: 300,
-                            expressions,
-                            allowableTypes
-                          }}
-                          enableConfigureOptions
-                        />
-                        {getMultiTypeFromValue(formik?.values.services) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            className={css.configureOptions}
-                            style={{ alignSelf: 'center' }}
-                            value={formik?.values.services as string}
-                            type="String"
-                            variableName="skipResourceVersioning"
-                            showRequiredField={false}
-                            showDefaultField={true}
-                            showAdvanced={true}
-                            onChange={value => {
-                              formik.setFieldValue('services', value)
-                            }}
-                          />
-                        )}
-                      </div>
+                      <FormMultiTypeMultiSelectDropDown
+                        tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
+                        name="services"
+                        disabled={readonly || (isFixed && loading)}
+                        onChange={handleMultiSelectChange}
+                        dropdownProps={{
+                          items: selectOptions,
+                          placeholder: placeHolderForServices,
+                          disabled: loading || readonly
+                        }}
+                        multiTypeProps={{
+                          width: 300,
+                          expressions,
+                          allowableTypes
+                        }}
+                        enableConfigureOptions
+                      />
                     ) : (
                       <div className={css.inputFieldLayout}>
                         <FormInput.MultiTypeInput
@@ -459,7 +513,8 @@ export default function DeployServiceEntityWidget({
                             selectProps: { items: selectOptions },
                             allowableTypes,
                             defaultValueToReset: '',
-                            onTypeChange: setServiceInputType
+                            onTypeChange: setServiceInputType,
+                            onChange: handleSingleSelectChange
                           }}
                           selectItems={selectOptions}
                         />
@@ -469,7 +524,7 @@ export default function DeployServiceEntityWidget({
                             style={{ alignSelf: 'center' }}
                             value={defaultTo(formik?.values.service, '')}
                             type="String"
-                            variableName="skipResourceVersioning"
+                            variableName="service"
                             showRequiredField={false}
                             showDefaultField={true}
                             showAdvanced={true}
@@ -480,8 +535,6 @@ export default function DeployServiceEntityWidget({
                         )}
                       </div>
                     )}
-
-                    {/* </div> */}
                     {isFixed ? (
                       <RbacButton
                         size={ButtonSize.SMALL}
@@ -501,12 +554,13 @@ export default function DeployServiceEntityWidget({
                       />
                     ) : null}
                   </Layout.Horizontal>
-                  {MULTI_SERVICE_INFRA && !gitOpsEnabled ? (
+                  {MULTI_SERVICE_INFRA ? (
                     <Toggle
                       className={css.serviceActionWrapper}
                       checked={isMultiSvc}
                       onToggle={getMultiSvcToggleHandler(values)}
                       label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
+                      tooltipId={'multiServiceToggle'}
                     />
                   ) : null}
                 </Layout.Horizontal>

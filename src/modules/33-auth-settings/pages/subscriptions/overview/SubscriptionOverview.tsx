@@ -38,7 +38,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         trialInformation={trialInformation}
         refetchGetLicense={refetchGetLicense}
       />
-      {enabled && licenseData && <SubscriptionUsageCard module={module} />}
+      {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
     </Layout.Vertical>
   )
 }

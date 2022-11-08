@@ -19,16 +19,21 @@ import GcrAuthentication from '@connectors/components/CreateConnector/GcrConnect
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
+import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepJenkinsAuthentication from '@connectors/components/CreateConnector/JenkinsConnector/StepAuth/StepJenkinsAuthentication'
 import {
   buildArtifactoryPayload,
   buildAWSPayload,
   buildAzurePayload,
   buildDockerPayload,
   buildGcpPayload,
+  buildJenkinsPayload,
+  buildGithubPayload,
   buildNexusPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import ConnectivityModeStep from '@connectors/components/CreateConnector/commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import { ArtifactoryRepoType } from '../ArtifactRepository/ArtifactoryRepoType'
 import { ArtifactConnector } from '../ArtifactRepository/ArtifactConnector'
 import type { InitialArtifactDataType, ConnectorRefLabelType, ArtifactType } from '../ArtifactInterface'
@@ -46,7 +51,6 @@ interface ArtifactWizardProps {
   artifactInitialValue: InitialArtifactDataType
   types: Array<ArtifactType>
   lastSteps: JSX.Element
-  getOptionalConfigurationSteps?: JSX.Element | null
   newConnectorSteps?: any
   expressions: string[]
   labels: ConnectorRefLabelType
@@ -67,7 +71,6 @@ function ArtifactWizard({
   allowableTypes,
   selectedArtifact,
   changeArtifactType,
-  getOptionalConfigurationSteps,
   handleViewChange,
   artifactInitialValue,
   newConnectorView,
@@ -109,10 +112,13 @@ function ArtifactWizard({
         return <StepDockerAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Gcr:
         return <GcrAuthentication name={getString('details')} {...newConnectorProps.auth} />
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return <StepJenkinsAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Ecr:
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return <StepAWSAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
         return <StepNexusAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <StepArtifactoryAuthentication name={getString('details')} {...newConnectorProps.auth} />
@@ -120,6 +126,23 @@ function ArtifactWizard({
         return <AzureAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
         return <GcpAuthentication name={getString('details')} {...newConnectorProps.auth} />
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return <StepGithubAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
+      default:
+        return <></>
+    }
+  }
+
+  const connectorAccountDetailsStep = (): JSX.Element => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return (
+          <GitDetailsStep
+            type={ArtifactToConnectorMap[selectedArtifact]}
+            {...newConnectorProps.connector}
+            name={getString('details')}
+          />
+        )
       default:
         return <></>
     }
@@ -136,11 +159,16 @@ function ArtifactWizard({
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return buildAWSPayload
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
         return buildNexusPayload
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return buildArtifactoryPayload
       case ENABLED_ARTIFACT_TYPES.Acr:
         return buildAzurePayload
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return buildJenkinsPayload
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return buildGithubPayload
       default:
         return <></>
     }
@@ -186,6 +214,7 @@ function ArtifactWizard({
       {newConnectorView && selectedArtifact ? (
         <StepWizard title={getString('connectors.createNewConnector')}>
           <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...newConnectorProps.connector} />
+          {selectedArtifact === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry ? connectorAccountDetailsStep() : null}
           {connectorAuthStep()}
           {hasConnectivityModeStep() ? (
             <ConnectivityModeStep
@@ -204,7 +233,6 @@ function ArtifactWizard({
         </StepWizard>
       ) : null}
       {lastSteps}
-      {getOptionalConfigurationSteps ? getOptionalConfigurationSteps : null}
     </StepWizard>
   )
 }

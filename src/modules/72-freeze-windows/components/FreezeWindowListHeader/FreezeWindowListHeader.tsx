@@ -6,15 +6,18 @@
  */
 
 import { HarnessDocTooltip, Page } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import React, { FC } from 'react'
 import { useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
-import { GlobalFreezeToggle } from '../GlobalFreezeToggle/GlobalFreezeToggle'
+import { GlobalFreezeToggle, GlobalFreezeToggleProps } from '../GlobalFreezeToggle/GlobalFreezeToggle'
 
-export function FreezeWindowListHeader({ freezeListLoading }: { freezeListLoading: boolean }): ReactElement {
+export const FreezeWindowListHeader: FC<GlobalFreezeToggleProps> = ({
+  freezeListLoading,
+  refreshGlobalFreezeBanner
+}) => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
@@ -29,7 +32,12 @@ export function FreezeWindowListHeader({ freezeListLoading }: { freezeListLoadin
       breadcrumbs={
         <NGBreadcrumbs links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })} />
       }
-      toolbar={<GlobalFreezeToggle freezeListLoading={freezeListLoading} />}
+      toolbar={
+        <GlobalFreezeToggle
+          freezeListLoading={freezeListLoading}
+          refreshGlobalFreezeBanner={refreshGlobalFreezeBanner}
+        />
+      }
     />
   )
 }

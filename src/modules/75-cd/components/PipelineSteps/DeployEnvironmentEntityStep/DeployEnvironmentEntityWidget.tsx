@@ -28,6 +28,9 @@ import {
 
 import { StringKeys, useStrings } from 'framework/strings'
 
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 
@@ -65,6 +68,7 @@ export default function DeployEnvironmentEntityWidget({
 }: DeployEnvironmentEntityWidgetProps): JSX.Element {
   const { getString } = useStrings()
   const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
+  const isEnvGroupFFEnabled = useFeatureFlag(FeatureFlag.ENV_GROUP)
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
 
@@ -199,19 +203,10 @@ export default function DeployEnvironmentEntityWidget({
     if (formikRef.current) {
       const formValues = formikRef.current.values
       if (checked) {
-        // The gitOpsEnabled check is to be removed once multi environments is supported for gitOps
-        if (gitOpsEnabled) {
-          if (formValues.environment) {
-            openSwitchToEnvironmentGroupDialog()
-          } else {
-            handleSwitchToEnvironmentGroupConfirmation(true)
-          }
+        if (formValues.environment) {
+          openSwitchToMultiEnvironmentDialog()
         } else {
-          if (formValues.environment) {
-            openSwitchToMultiEnvironmentDialog()
-          } else {
-            handleSwitchToMultiEnvironmentConfirmation(true)
-          }
+          handleSwitchToMultiEnvironmentConfirmation(true)
         }
       } else {
         if (!isEmpty(formValues.environments) || !isEmpty(formValues.environmentGroup)) {
@@ -260,26 +255,26 @@ export default function DeployEnvironmentEntityWidget({
           const isMultiEnvironment = values.category === 'multi'
           const isEnvironmentGroup = values.category === 'group'
 
-          // The first check is to be removed once BE supports multi environments for gitops
-          const toggleLabel = gitOpsEnabled
-            ? getString('cd.pipelineSteps.environmentTab.envGroupToggleText')
-            : getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
-                name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
-              })
+          const toggleLabel = getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
+            name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
+          })
 
           return (
             <FormikForm>
-              {/* Gitops stage css to be removed once BE supports multi environments for gitops */}
-              <div className={cx(css.environmentEntityWidget, { [css.gitOpsStage]: gitOpsEnabled })}>
+              <div
+                className={cx(css.environmentEntityWidget, {
+                  [css.centerRadio]: !isEnvGroupFFEnabled
+                })}
+              >
                 <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
                   <Layout.Vertical flex={{ alignItems: 'center' }}>
                     <Toggle
                       checked={isMultiEnvironment || isEnvironmentGroup}
                       onToggle={handleMultiEnvironmentToggle}
                       label={toggleLabel}
+                      tooltipId={'multiEnvInfraToggle'}
                     />
-                    {/* !gitOpsEnabled check is to be removed once BE supports multi environments for gitops */}
-                    {(isMultiEnvironment || isEnvironmentGroup) && !gitOpsEnabled && (
+                    {(isMultiEnvironment || isEnvironmentGroup) && isEnvGroupFFEnabled && (
                       <RadioGroup
                         onChange={handleEnvironmentGroupToggle}
                         options={[

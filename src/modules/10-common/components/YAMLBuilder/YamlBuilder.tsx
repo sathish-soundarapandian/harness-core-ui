@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useRef, ReactElement, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import ReactMonacoEditor from 'react-monaco-editor'
@@ -16,7 +16,6 @@ import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
-import SplitPane from 'react-split-pane'
 import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
@@ -28,7 +27,6 @@ import type {
   CompletionItemInterface,
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
-import SnippetSection from '@common/components/SnippetSection/SnippetSection'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
@@ -63,6 +61,8 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { isWindowsOS } from '@common/utils/utils'
+import { carriageReturnRegex } from '@common/utils/StringUtils'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -105,14 +105,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     isEditModeSupported = true,
     isHarnessManaged = false,
     hideErrorMesageOnReadOnlyMode = false,
-    showSnippetSection = true,
     invocationMap,
     bind,
-    showIconMenu = false,
     onExpressionTrigger,
-    snippets,
-    onSnippetCopy,
-    snippetFetchResponse,
     schema,
     onEnableEditMode,
     theme = 'LIGHT',
@@ -173,10 +168,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     setDynamicWidth(width as number)
   }, [width])
 
-  const handleResize = (newSize: number): void => {
-    setDynamicWidth(newSize)
-  }
-
   const getEditorCurrentVersion = (): number | undefined => {
     return editorRef.current?.editor?.getModel()?.getAlternativeVersionId()
   }
@@ -185,7 +176,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const sanitizedJSONObj = jsonObj ? sanitize(jsonObj, yamlSanityConfig) : null
     if (sanitizedJSONObj && Object.keys(sanitizedJSONObj).length > 0) {
       const yamlEqOfJSON = yamlStringify(sanitizedJSONObj)
-      const sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
+      let sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
+
+      if (isWindowsOS()) {
+        sanitizedYAML = sanitizedYAML.replace(carriageReturnRegex, '\n')
+      }
+
       setCurrentYaml(sanitizedYAML)
       yamlRef.current = sanitizedYAML
       verifyYAML({
@@ -248,7 +244,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   /* #region Handle various interactions with the editor */
 
   const onYamlChange = useCallback(
-    debounce((updatedYaml: string): void => {
+    debounce((editedYaml: string): void => {
+      const updatedYaml = isWindowsOS() ? editedYaml.replace(carriageReturnRegex, '\n') : editedYaml
       setCurrentYaml(updatedYaml)
       yamlRef.current = updatedYaml
       verifyYAML({
@@ -508,18 +505,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     )
   }
 
-  const renderSnippetSection = (): ReactElement => {
-    return (
-      <SnippetSection
-        showIconMenu={showIconMenu}
-        entityType={entityType}
-        snippets={snippets}
-        onSnippetCopy={onSnippetCopy}
-        snippetFetchResponse={snippetFetchResponse}
-      />
-    )
-  }
-
   const renderHeader = useCallback(
     (): JSX.Element => (
       <div className={cx(css.header)}>
@@ -600,28 +585,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   return (
     <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' })}>
-      {showSnippetSection ? (
-        <SplitPane
-          split="vertical"
-          className={css.splitPanel}
-          onChange={handleResize}
-          maxSize={-1 * MIN_SNIPPET_SECTION_WIDTH}
-          style={{ height: defaultTo(height, DEFAULT_EDITOR_HEIGHT) }}
-          pane1Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH, width: dynamicWidth }}
-          pane2Style={{ minWidth: MIN_SNIPPET_SECTION_WIDTH }}
-        >
-          <div className={css.editor}>
-            {defaultTo(renderCustomHeader, renderHeader)()}
-            {renderEditor()}
-          </div>
-          {showSnippetSection ? renderSnippetSection() : null}
-        </SplitPane>
-      ) : (
-        <div className={css.editor}>
-          {defaultTo(renderCustomHeader, renderHeader)()}
-          {renderEditor()}
-        </div>
-      )}
+      <div className={css.editor}>
+        {defaultTo(renderCustomHeader, renderHeader)()}
+        {renderEditor()}
+      </div>
     </div>
   )
 }

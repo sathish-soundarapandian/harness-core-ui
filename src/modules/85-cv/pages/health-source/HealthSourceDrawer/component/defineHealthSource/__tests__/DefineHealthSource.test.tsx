@@ -17,7 +17,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import DefineHealthSource from '../DefineHealthSource'
-import { workspaceMock } from './DefineHealthSource.mock'
+import { workspaceIdqueryParamsExpected, workspaceMock } from './DefineHealthSource.mock'
 
 const createModeProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
@@ -43,12 +43,14 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
   }
 }))
 
+const fetchWorkspaceIdMock = jest.fn()
+
 jest.mock('services/cv', () => ({
   useGetAllAwsRegions: jest.fn().mockImplementation(() => {
     return { data: { data: ['region 1', 'region 2'] } } as any
   }),
   useGetPrometheusWorkspaces: jest.fn().mockImplementation(() => {
-    return { data: workspaceMock } as any
+    return { data: workspaceMock, refetch: fetchWorkspaceIdMock } as any
   })
 }))
 
@@ -229,8 +231,8 @@ describe('DefineHealthSource', () => {
     const onSubmitMock = jest.fn()
 
     const accountLevelProps: TestWrapperProps = {
-      path: routes.toTemplateStudio({ ...accountPathProps, ...orgPathProps }),
-      pathParams: { accountId: '1234_accountId', orgIdentifier: '1234_org' }
+      path: routes.toTemplateStudio({ ...accountPathProps, ...orgPathProps, ...projectPathProps }),
+      pathParams: { accountId: '1234_accountId', orgIdentifier: '1234_org', projectIdentifier: 'abc' }
     }
 
     const { container } = render(
@@ -243,17 +245,31 @@ describe('DefineHealthSource', () => {
 
     expect(screen.queryByTestId('dataSourceTypeSelector')).not.toBeInTheDocument()
 
-    await act(() => {
+    act(() => {
       userEvent.click(container.querySelector('span[data-icon="service-prometheus"]')!)
     })
 
+    await waitFor(() => {
+      expect(fetchWorkspaceIdMock).not.toHaveBeenCalled()
+    })
+
     expect(screen.getByTestId('dataSourceTypeSelector')).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(screen.getByText(/next/))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.healthSource.dataSourceTypeValidation/)).toBeInTheDocument()
+      expect(screen.getByPlaceholderText(/- cv.healthSource.featurePlaceholder -/)).toBeDisabled()
+    })
 
     await act(() => {
       userEvent.click(screen.getByText(/cv.healthSource.awsDataSourceName/))
     })
 
     await waitFor(() => {
+      expect(screen.queryByText(/cv.healthSource.dataSourceTypeValidation/)).not.toBeInTheDocument()
       expect(screen.getByText(/cv.healthSource.awsRegionLabel/)).toBeInTheDocument()
       expect(screen.getByText(/cv.healthSource.awsWorkspaceLabel/)).toBeInTheDocument()
     })
@@ -272,6 +288,10 @@ describe('DefineHealthSource', () => {
 
     act(() => {
       userEvent.click(screen.getByText(/region 1/))
+    })
+
+    await waitFor(() => {
+      expect(fetchWorkspaceIdMock).toHaveBeenCalledWith(workspaceIdqueryParamsExpected)
     })
 
     act(() => {

@@ -11,6 +11,7 @@ declare const styles: {
   readonly almostFullScreenCloseBtn: string
   readonly almostFullScreenPortal: string
   readonly applyChanges: string
+  readonly customButtons: string
   readonly discard: string
   readonly fullScreen: string
   readonly helpPanel: string

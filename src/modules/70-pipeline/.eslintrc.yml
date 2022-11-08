@@ -2,31 +2,39 @@ rules:
   no-restricted-imports:
     - error
     - patterns:
-        - lodash.*
-        - microfrontends/*
-        - '!microfrontends/ChildAppMounter'
-        - modules/72-freeze-windows/*
-        - modules/72-templates-library/*
-        - modules/72-triggers/*
-        - modules/75-cd/*
-        - modules/75-ce/*
-        - modules/75-cf/*
-        - modules/75-chaos/*
-        - modules/75-ci/*
-        - modules/85-cv/*
-        - modules/85-sto/*
-        - modules/90-gitops/*
-        - '@freeze-windows/*'
-        - '@templates-library/*'
-        - '@triggers/*'
-        - '@cd/*'
-        - '@ce/*'
-        - '@cf/*'
-        - '@chaos/*'
-        - '@ci/*'
-        - '@cv/*'
-        - '@sto/*'
-        - '@gitops/*'
+        - group:
+            - lodash/*
+            - lodash.*
+            - lodash-es/*
+            - '!lodash/fp'
+          message: Import from 'lodash-es' instead
+        - group:
+            - microfrontends/*
+            - '!microfrontends/ChildAppMounter'
+        - group:
+            - modules/72-freeze-windows/*
+            - modules/72-templates-library/*
+            - modules/72-triggers/*
+            - modules/75-cd/*
+            - modules/75-ce/*
+            - modules/75-cf/*
+            - modules/75-chaos/*
+            - modules/75-ci/*
+            - modules/85-cv/*
+            - modules/85-sto/*
+            - modules/90-gitops/*
+            - '@freeze-windows/*'
+            - '@templates-library/*'
+            - '@triggers/*'
+            - '@cd/*'
+            - '@ce/*'
+            - '@cf/*'
+            - '@chaos/*'
+            - '@ci/*'
+            - '@cv/*'
+            - '@sto/*'
+            - '@gitops/*'
+          message: Import from higher layer modules is not allowed
       paths:
         - lodash
         - name: js-yaml

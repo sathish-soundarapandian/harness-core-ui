@@ -19,13 +19,14 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import {
   GARBuildDetailsDTO,
   RegionGar,
+  SidecarArtifact,
   useGetBuildDetailsForGoogleArtifactRegistry,
   useGetRegionsForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
-import { isFieldFixedAndNonEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
+import { isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -41,11 +42,14 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     artifactPath,
     initialValues,
     accountId,
+    stageIdentifier,
     projectIdentifier,
     orgIdentifier,
     artifact,
     repoIdentifier,
-    branch
+    branch,
+    fromTrigger,
+    isSidecar
   } = props
 
   const { getString } = useStrings()
@@ -87,16 +91,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
-  const isAllFieldsAreFixed = (): boolean => {
-    return (
-      isFieldFixedAndNonEmpty(packageValue) &&
-      isFieldFixedAndNonEmpty(projectValue) &&
-      isFieldFixedAndNonEmpty(regionValue) &&
-      isFieldFixedAndNonEmpty(repositoryNameValue) &&
-      isFieldFixedAndNonEmpty(connectorRefValue)
-    )
-  }
-
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
       <Menu.Item
@@ -137,6 +131,23 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   }, [regionData])
 
+  const isFieldDisabled = (fieldName: string): boolean => {
+    /* instanbul ignore else */
+    if (
+      readonly ||
+      isFieldfromTriggerTabDisabled(
+        fieldName,
+        formik,
+        stageIdentifier,
+        fromTrigger,
+        isSidecar ? (artifact as SidecarArtifact)?.identifier : undefined
+      )
+    ) {
+      return true
+    }
+    return false
+  }
+
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
@@ -153,7 +164,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               orgIdentifier={orgIdentifier}
               width={391}
               setRefValue
-              disabled={readonly}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
                 allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
                 expressions
@@ -171,8 +182,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               name={`${path}.artifacts.${artifactPath}.spec.project`}
               label={getString('projectLabel')}
               placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
-              disabled={readonly}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.project`)}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -184,10 +196,11 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               name={`${path}.artifacts.${artifactPath}.spec.region`}
               useValue
               placeholder={getString('pipeline.regionPlaceholder')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, type),
-                width: 500,
+                width: 391,
                 expressions,
                 selectProps: {
                   allowCreatingNewItems: true,
@@ -204,8 +217,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               name={`${path}.artifacts.${artifactPath}.spec.repositoryName`}
               label={getString('common.repositoryName')}
               placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
-              disabled={readonly}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryName`)}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -216,22 +230,24 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               name={`${path}.artifacts.${artifactPath}.spec.package`}
               label={getString('pipeline.testsReports.callgraphField.package')}
               placeholder={getString('pipeline.manifestType.packagePlaceholder')}
-              disabled={readonly}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.package`)}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
             <FormInput.MultiTypeInput
               selectItems={getBuildDetails()}
-              disabled={!isAllFieldsAreFixed()}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               useValue
               multiTypeInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes,
                 selectProps: {
@@ -246,27 +262,33 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   items: getBuildDetails(),
                   allowCreatingNewItems: true
                 },
-                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                  if (
-                    e?.target?.type !== 'text' ||
-                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-                  ) {
-                    return
-                  }
-                  if (isAllFieldsAreFixed()) {
-                    refetchBuildDetails({
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRefValue,
-                        package: packageValue,
-                        project: projectValue,
-                        region: regionValue,
-                        repositoryName: repositoryNameValue
-                      }
-                    })
-                  }
+                onFocus: () => {
+                  refetchBuildDetails({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefValue,
+                      package: packageValue,
+                      project: projectValue,
+                      region: regionValue,
+                      repositoryName: repositoryNameValue
+                    }
+                  })
                 }
               }}
+            />
+          )}
+
+          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('version')}
+              multiTextInputProps={{
+                width: 391,
+                expressions,
+                value: TriggerDefaultFieldList.build,
+                allowableTypes
+              }}
+              disabled={true}
+              name={`${path}.artifacts.${artifactPath}.spec.version`}
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.versionRegex`, template) && (
@@ -276,6 +298,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}

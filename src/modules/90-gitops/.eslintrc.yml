@@ -2,9 +2,15 @@ rules:
   no-restricted-imports:
     - error
     - patterns:
-        - lodash.*
-        - microfrontends/*
-        - '!microfrontends/ChildAppMounter'
+        - group:
+            - lodash/*
+            - lodash.*
+            - lodash-es/*
+            - '!lodash/fp'
+          message: Import from 'lodash-es' instead
+        - group:
+            - microfrontends/*
+            - '!microfrontends/ChildAppMounter'
       paths:
         - lodash
         - name: js-yaml

@@ -13,6 +13,7 @@ import { MultiTypeInputType } from '@harness/uicore'
 import type { StepElementConfig } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { GenericExecutionStepInputSet } from '../GenericExecutionStepInputSet'
 
 // type is not used in the component anywhere, just need to pass it as prop for typecheck to pass
@@ -35,6 +36,7 @@ describe('GenericExecutionStepInputSet tests', () => {
                 timeout: '<+input>'
               }
             }}
+            stepViewType={StepViewType.InputSet}
           />
         </Formik>
       </TestWrapper>
@@ -70,6 +72,7 @@ describe('GenericExecutionStepInputSet tests', () => {
               },
               readonly: true
             }}
+            stepViewType={StepViewType.InputSet}
           />
         </Formik>
       </TestWrapper>
@@ -95,6 +98,7 @@ describe('GenericExecutionStepInputSet tests', () => {
               path: 'pipeline.stages[0].stage.spec.execution.steps[0].step',
               readonly: true
             }}
+            stepViewType={StepViewType.InputSet}
           />
         </Formik>
       </TestWrapper>
@@ -123,6 +127,7 @@ describe('GenericExecutionStepInputSet tests', () => {
               },
               readonly: false
             }}
+            stepViewType={StepViewType.InputSet}
           />
         </Formik>
       </TestWrapper>

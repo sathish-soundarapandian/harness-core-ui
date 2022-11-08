@@ -19,20 +19,20 @@ import css from './FreezeWindowStudioConfigSection.module.scss'
 interface FreezeStudioConfigSectionProps {
   onBack: () => void
   onNext: () => void
+  isReadOnly: boolean
   resources: ResourcesInterface
   validationErrors: ValidationErrorType
 }
 
 export const FreezeStudioConfigSection = (
-  { onNext, onBack, resources, validationErrors }: FreezeStudioConfigSectionProps,
+  { onNext, onBack, resources, validationErrors, isReadOnly }: FreezeStudioConfigSectionProps,
   formikRef: unknown
 ) => {
   const { getString } = useStrings()
   const {
     state: { freezeObj },
     updateFreeze,
-    freezeWindowLevel,
-    isReadOnly
+    freezeWindowLevel
   } = React.useContext(FreezeWindowContext)
 
   const fieldsVisibility: FieldVisibility = React.useMemo(() => {

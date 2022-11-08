@@ -24,11 +24,10 @@ import {
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
+import { noop, isEmpty } from 'lodash-es'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { Drawer } from '@blueprintjs/core'
-import isEmpty from 'lodash-es/isEmpty'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {

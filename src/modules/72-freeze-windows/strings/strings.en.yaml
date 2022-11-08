@@ -10,7 +10,7 @@ freezeWindowsPage:
   deleteFailure: Failed to delete freeze window(s)
   updateStatusSuccess: Freeze Window(s) {{value}}
   updateStatusFailure: Failed to update Freeze Window(s)
-
+  dateRangeLabel: 'Updated: Last 7 days'
 freezeStudio:
   freezeConfiguration: Freeze Configuration
   freezeOverview: Freeze Overview
@@ -25,16 +25,18 @@ freezeStudio:
   excludeFollowingOrgs: Exclude the following Organizations
   freezeCreatedSuccessfully: Freeze window created successfully
   freezeUpdatedSuccessfully: Freeze window updated successfully
+  activeFreeze: Freeze is in ACTIVE state
 
 globalFreeze:
   disabled: Freeze disabled on all deployments for this <b>{{scope}}</b>
   disableFreezeTitle: Disable Freeze on all deployments for this {{scope}}
-  disableFreezeText: For any deployments frozen, you will have to manually go back and resume them.
+  disableFreezeText: For any deployments that were frozen, you will have to manually go back and resume them.
   disableFreezeSuccess: Freeze disabled on all deployments for this {{scope}}
   disableFreezeFailure: Failed to disable freeze
   enabled: Freeze enabled on all deployments for this <b>{{scope}}</b>
   enabledWindow: from <b>{{startTime}}</b> {{supportText}} <b>{{endTimeOrDuration}}</b> {{timeZone}}
   enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
+  enableFreezeTitleInfo: When a freeze is applied, all deployments for this {{scope}} cannot be started manually, nor through Triggers. Any ongoing deployments in the freeze will be aborted.
   enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
   enableFreezeFailure: Failed to enable freeze
 

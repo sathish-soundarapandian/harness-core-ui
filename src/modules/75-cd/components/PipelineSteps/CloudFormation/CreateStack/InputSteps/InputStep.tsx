@@ -37,6 +37,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import TemplateFileInputs from './TemplateFile'
 import ParameterFileInputs from './ParameterInputs'
@@ -49,7 +50,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   props: CreateStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes, formik, allValues, initialValues } = props
+  const { inputSetData, readonly, path, allowableTypes, formik, allValues, initialValues, stepViewType } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { expressions } = useVariablesExpression()
@@ -199,7 +200,9 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly
@@ -220,6 +223,9 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             data-testid={`${path}.spec.provisionerIdentifier`}
             template={inputSetData?.template}
             fieldPath={'spec.provisionerIdentifier'}
@@ -236,6 +242,9 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             style={{ marginBottom: 10 }}
             multiTypeProps={{ expressions, allowableTypes }}
             disabled={readonly}
@@ -284,6 +293,9 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             selectItems={regions ? regions : []}
             template={inputSetData?.template}
             fieldPath={'spec.configuration.region'}
@@ -302,6 +314,9 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             multiTextInputProps={{
               expressions,
               allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
             fieldPath={'spec.configuration.stackName'}
@@ -323,6 +338,10 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               },
               expressions,
               allowableTypes
+            }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             selectItems={awsRoles}
             template={inputSetData?.template}

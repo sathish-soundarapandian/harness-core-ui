@@ -203,7 +203,6 @@ export const CreateDockerDelegate = ({
                       isEditModeSupported={false}
                       hideErrorMesageOnReadOnlyMode={true}
                       existingYaml={yaml}
-                      showSnippetSection={false}
                       height="462px"
                       theme="DARK"
                     />

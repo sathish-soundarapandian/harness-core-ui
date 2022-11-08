@@ -6,17 +6,18 @@
  */
 
 import { useMemo } from 'react'
-import { noop } from 'lodash-es'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { useStrings } from 'framework/strings'
 import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
-import type { ServiceResponseDTO } from 'services/cd-ng'
-import { ADD_NEW_VALUE } from '@cv/constants'
+import type { ServiceRequestDTO, ServiceResponseDTO } from 'services/cd-ng'
+import { AddNewSelectOption, initModalData } from './UseServiceSelectOrCreate.constants'
 
 export interface MultiSelectService {
   options: SelectOption[]
   onNewCreated(value: ServiceResponseDTO): void
   modalTitle?: string
+  skipServiceCreateOrUpdate?: boolean
+  customLoading?: boolean
 }
 export interface MultiSelectReturn {
   serviceOptions: SelectOption[]
@@ -26,36 +27,23 @@ export interface MultiSelectReturn {
 export const useServiceSelectOrCreate = ({
   options,
   onNewCreated,
-  modalTitle
+  modalTitle,
+  skipServiceCreateOrUpdate,
+  customLoading
 }: MultiSelectService): MultiSelectReturn => {
   const { getString } = useStrings()
-  const serviceOptions = useMemo(
-    () => [
-      {
-        label: '+ Add New',
-        value: ADD_NEW_VALUE
-      },
-      ...options
-    ],
-    [options]
-  )
+  const serviceOptions = useMemo(() => [{ ...AddNewSelectOption(getString) }, ...options], [options]) as SelectOption[]
 
-  const onSubmit = async (values: any): Promise<void> => {
+  const onSubmit = async (values: ServiceRequestDTO): Promise<void> => {
     onNewCreated(values)
   }
 
   const { openHarnessServiceModal } = useHarnessServicetModal({
-    data: {
-      name: '',
-      description: '',
-      identifier: '',
-      tags: {}
-    },
-    isService: true,
-    isEdit: false,
-    onClose: noop,
+    ...initModalData,
     modalTitle: modalTitle || getString('newService'),
-    onCreateOrUpdate: onSubmit
+    onCreateOrUpdate: onSubmit,
+    skipServiceCreateOrUpdate,
+    customLoading
   })
   return { serviceOptions, openHarnessServiceModal }
 }

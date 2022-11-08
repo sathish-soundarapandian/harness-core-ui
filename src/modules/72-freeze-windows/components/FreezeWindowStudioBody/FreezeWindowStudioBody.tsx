@@ -14,15 +14,11 @@ import { FreezeWindowStudioYAMLView } from './FreezeWindowStudioYAMLView'
 import css from './FreezeWindowStudioBody.module.scss'
 
 interface FreezeWindowStudioBodyProps {
-  error?: any
   resources: ResourcesInterface
 }
 
-export const FreezeWindowStudioBody = ({ error, resources }: FreezeWindowStudioBodyProps) => {
+export const FreezeWindowStudioBody = ({ resources }: FreezeWindowStudioBodyProps) => {
   const { view } = React.useContext(FreezeWindowContext)
-  if (error) {
-    return <div>Error</div>
-  }
   const isYaml = view === SelectedView.YAML
   const content = isYaml ? <FreezeWindowStudioYAMLView /> : <FreezeWindowStudioVisualView resources={resources} />
 

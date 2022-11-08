@@ -6,8 +6,7 @@
  */
 
 import { cloneDeep, defaultTo, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
-import type { SelectOption } from '@harness/uicore'
-
+import type { IconName, SelectOption } from '@harness/uicore'
 import type { AllowedTypes, MultiTypeInputType } from '@wings-software/uicore'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
@@ -17,7 +16,11 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
+import cdExecutionListIllustration from '../pages/execution-list/images/cd-execution-illustration.svg'
+import ciExecutionListIllustration from '../pages/execution-list/images/ci-execution-illustration.svg'
+import stoExecutionListIllustration from '../pages/execution-list/images/sto-execution-illustration.svg'
+import executionListIllustration from '../pages/execution-list/images/execution-illustration.svg'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
@@ -46,7 +49,8 @@ export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAls
         }
 
         if (parsed.default !== null) {
-          return `"${parsed.default}"`
+          // retain a number value as number instead of converting it to a string
+          return typeof parsed.default === 'number' ? `${parsed.default}` : `"${parsed.default}"`
         }
 
         return '""'
@@ -163,14 +167,14 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
       set(toBeUpdated, 'pipeline.template.templateInputs.stages', mergedStages)
     }
 
-    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).properties?.ci) {
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.properties?.ci) {
       set(
         toBeUpdated,
         'pipeline.template.templateInputs.properties.ci',
         (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).properties?.ci
       )
     }
-    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).variables) {
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables) {
       set(
         toBeUpdated,
         'pipeline.template.templateInputs.variables',
@@ -189,7 +193,7 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
       )
     }
 
-    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).delegateSelectors) {
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.delegateSelectors) {
       set(
         toBeUpdated,
         'pipeline.template.templateInputs.delegateSelectors',
@@ -297,49 +301,38 @@ export const getMergedVariables = (props: GetMergedVariablesProps): AllNGVariabl
     const variable = variablesMap[name]
     const type = defaultTo(variable?.type, 'String')
 
-    // if a variable with same name exists in input set variables
-    if (name in inputSetVariablesMap) {
-      // copy the variable data
-      const varFromInpuSet: AllNGVariables = { ...inputSetVariablesMap[name] }
-      const varFromAllVars: AllNGVariables = allVariablesMap[name]
-
-      // remove the variable from input set variables
-      delete inputSetVariablesMap[name]
-
-      // use new value if the type of varibale is same else use the current value
-      let value = varFromInpuSet.type === type ? varFromInpuSet.value : variable.value
-
-      // fallback to default value, if the flag is true, the value is empty and
-      // the variable has a default value defined in pipeline
-      if (shouldUseDefaultValues && !value && typeof varFromAllVars?.default !== 'undefined') {
-        value = varFromAllVars.default
-      }
-
-      value = defaultTo(value, '')
-
-      return {
-        name,
-        type,
-        value
-      } as AllNGVariables
-    }
-
-    // return the original variable
     if (variable) {
+      if (name in inputSetVariablesMap) {
+        // copy the variable data
+        const varFromInpuSet: AllNGVariables = { ...inputSetVariablesMap[name] }
+        const varFromAllVars: AllNGVariables = allVariablesMap[name]
+
+        // remove the variable from input set variables
+        delete inputSetVariablesMap[name]
+
+        // use new value if the type of varibale is same else use the current value
+        let value = varFromInpuSet.type === type ? varFromInpuSet.value : variable.value
+
+        // fallback to default value, if the flag is true, the value is empty and
+        // the variable has a default value defined in pipeline
+        if (shouldUseDefaultValues && !value && typeof varFromAllVars?.default !== 'undefined') {
+          value = varFromAllVars.default
+        }
+
+        value = defaultTo(value, '')
+
+        return {
+          name,
+          type,
+          value
+        } as AllNGVariables
+      }
       return variable
     }
-
-    return {
-      name,
-      type: 'String',
-      value: ''
-    } as AllNGVariables
+    return inputSetVariablesMap[name]
   })
 
-  const remainingVariables = Object.values(inputSetVariablesMap)
-
-  // append the remaining input set variables to existing variables
-  return finalVariables.concat(...remainingVariables)
+  return finalVariables
 }
 
 export const getRbacButtonModules = (module?: string): string[] => {
@@ -420,3 +413,30 @@ export function getFilteredAllowableTypes(allowableTypes: AllowedTypes, viewType
     ? allowableTypes
     : ((allowableTypes as MultiTypeInputType[]).filter(allowedType => !isMultiTypeRuntime(allowedType)) as AllowedTypes)
 }
+
+export function getAllowableTypesWithoutFixedValue(allowableTypes: MultiTypeInputType[]): AllowedTypes {
+  return allowableTypes.filter(type => !isMultiTypeFixed(type)) as AllowedTypes
+}
+
+export function getAllowableTypesWithoutExpression(allowableTypes: MultiTypeInputType[]): AllowedTypes {
+  return allowableTypes.filter(type => !isMultiTypeExpression(type)) as AllowedTypes
+}
+
+export const isExecutionTimeFieldDisabled = (viewType?: StepViewType): boolean => {
+  return viewType === StepViewType.DeploymentForm
+}
+export const getModuleRunType = (module = '') =>
+  ({
+    [module]: 'executions',
+    ci: 'builds',
+    cd: 'deployments',
+    sto: 'security test runs'
+  }[module])
+
+export const getModuleRunTypeDetails = (module = '') =>
+  ({
+    [module]: { icon: 'cd-main' as IconName, illustration: executionListIllustration },
+    ci: { icon: 'ci-main' as IconName, illustration: ciExecutionListIllustration },
+    cd: { icon: 'cd-main' as IconName, illustration: cdExecutionListIllustration },
+    sto: { icon: 'sto-color-filled' as IconName, illustration: stoExecutionListIllustration }
+  }[module])

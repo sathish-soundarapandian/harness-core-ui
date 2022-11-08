@@ -46,7 +46,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Service',
   width: '100%',
   height: 194,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -233,7 +232,6 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
                     }}
                     bind={setYamlHandler}
                     schema={serviceSchema?.data}
-                    showSnippetSection={false}
                   />
                   <Layout.Horizontal spacing={'small'} padding={{ top: 'large' }}>
                     <Button

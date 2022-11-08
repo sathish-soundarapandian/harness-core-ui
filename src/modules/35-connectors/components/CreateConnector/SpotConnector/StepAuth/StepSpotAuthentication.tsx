@@ -53,7 +53,7 @@ interface StepConfigureProps extends ConnectorConfigDTO {
 }
 
 interface SpotFormInterface {
-  accountId: TextReferenceInterface | void
+  spotAccountId: TextReferenceInterface | void
   apiTokenRef: SecretReferenceInterface | void
 }
 
@@ -62,7 +62,7 @@ const StepSpotAuthentication: React.FC<StepProps<StepConfigureProps> & SpotAuthe
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const [initialValues, setInitialValues] = useState<SpotFormInterface>({
-    accountId: undefined,
+    spotAccountId: undefined,
     apiTokenRef: undefined
   })
 
@@ -121,7 +121,7 @@ const StepSpotAuthentication: React.FC<StepProps<StepConfigureProps> & SpotAuthe
         }}
         formName="stepSpotAuthForm"
         validationSchema={Yup.object().shape({
-          accountId: Yup.string().trim().required(getString('validation.accountRequired')),
+          spotAccountId: Yup.string().trim().required(getString('validation.accountRequired')),
           apiTokenRef: Yup.string().trim().required(getString('connectors.apiTokenValidation'))
         })}
         onSubmit={handleSubmit}
@@ -136,9 +136,9 @@ const StepSpotAuthentication: React.FC<StepProps<StepConfigureProps> & SpotAuthe
               </Container>
               <div>
                 <TextReference
-                  name="accountId"
-                  stringId="common.accountId"
-                  type={formikProps.values.accountId ? formikProps.values.accountId?.type : ValueType.TEXT}
+                  name="spotAccountId"
+                  stringId="connectors.spotAccountId"
+                  type={formikProps.values.spotAccountId ? formikProps.values.spotAccountId?.type : ValueType.TEXT}
                 />
                 <SecretInput name="apiTokenRef" label={getString('connectors.apiToken')} scope={scope} />
               </div>

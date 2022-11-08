@@ -63,6 +63,7 @@ export class WaitStep extends PipelineStep<WaitStepData> {
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
           allowableTypes={allowableTypes}
+          stepViewType={stepViewType}
         />
       )
     }

@@ -8,6 +8,7 @@
 import { createContext, useContext } from 'react'
 
 import type { PipelineExecutionDetail, GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 
 export interface GraphCanvasState {
@@ -26,7 +27,7 @@ export interface ExecutionContextParams {
   selectedStageExecutionId: string
   loading: boolean
   isDataLoadedForSelectedStage: boolean
-  queryParams: ExecutionPageQueryParams
+  queryParams: ExecutionPageQueryParams & GitQueryParams
   logsToken: string
   setLogsToken: (token: string) => void
   refetch?: (() => Promise<void>) | undefined

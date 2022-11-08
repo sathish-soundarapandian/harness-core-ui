@@ -133,7 +133,8 @@ describe('CD Pipeline List Page', () => {
         ...getModuleParams(),
         pipelineIdentifier: 'Sonar_Develop',
         executionIdentifier: 'uBrIkDHwTU2lv4o7ri7iCQ',
-        source: 'deployments'
+        source: 'deployments',
+        storeType: 'INLINE'
       } as any)
     )
   })

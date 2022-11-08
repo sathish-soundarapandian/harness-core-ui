@@ -24,7 +24,8 @@ import {
   ButtonVariation,
   Label,
   DropDown,
-  Heading
+  Heading,
+  FormError
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
@@ -41,6 +42,7 @@ import routes from '@common/RouteDefinitions'
 import { InvitationStatus, handleInvitationResponse, isAccountBasicRole } from '@rbac/utils/utils'
 import { getDefaultRole, getDetailsUrl } from '@projects-orgs/utils/utils'
 import { useGetCommunity } from '@common/utils/utils'
+import { EmailSchema } from '@common/utils/Validation'
 import { useMutateAsGet } from '@common/hooks'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
@@ -183,7 +185,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
       validationSchema={Yup.object().shape({
         collaborators: Yup.array().of(
           Yup.object().shape({
-            value: Yup.string().email().required()
+            value: EmailSchema()
           })
         )
       })}
@@ -223,6 +225,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
                   ) as any
                 }
               />
+
               <Layout.Horizontal padding={{ top: 'medium' }} className={cx(css.align, css.input)} flex>
                 <Layout.Horizontal width="50%">
                   <Label>{getString('projectsOrgs.inviteCollab')}</Label>
@@ -251,24 +254,34 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
                   </Layout.Horizontal>
                 )}
               </Layout.Horizontal>
+
               <Layout.Horizontal spacing="small">
-                <FormInput.MultiSelect
-                  name={getString('projectsOrgs.collaborator')}
-                  items={users}
-                  multiSelectProps={{
-                    allowCreatingNewItems: true,
-                    onQueryChange: (query: string) => {
-                      setSearch(query)
-                    },
-                    tagRenderer: (item: MultiSelectOption) => (
-                      <UserTagRenderer key={item.value.toString()} item={item} />
-                    ),
-                    itemRender: (item, { handleClick }) => (
-                      <UserItemRenderer key={item.value.toString()} item={item} handleClick={handleClick} />
-                    )
-                  }}
-                  className={css.input}
-                />
+                <Layout.Vertical>
+                  <FormInput.MultiSelect
+                    name={getString('projectsOrgs.collaborator')}
+                    items={users}
+                    multiSelectProps={{
+                      allowCreatingNewItems: true,
+                      onQueryChange: (query: string) => {
+                        setSearch(query)
+                      },
+                      tagRenderer: (item: MultiSelectOption) => (
+                        <UserTagRenderer key={item.value.toString()} item={item} />
+                      ),
+                      itemRender: (item, { handleClick }) => (
+                        <UserItemRenderer key={item.value.toString()} item={item} handleClick={handleClick} />
+                      )
+                    }}
+                    className={css.input}
+                  />
+                  {!!formik?.errors?.collaborators?.length && (
+                    <FormError
+                      errorMessage={getString('common.validation.email.someAreInvalid')}
+                      name={'collaborators'}
+                    />
+                  )}
+                </Layout.Vertical>
+
                 <Button
                   text={getString('add')}
                   variation={ButtonVariation.PRIMARY}
@@ -278,6 +291,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
                   loading={loading}
                 />
               </Layout.Horizontal>
+
               {inviteData?.data?.content?.length ? (
                 <Layout.Vertical padding={{ top: 'medium', bottom: 'xxxlarge' }}>
                   <Text padding={{ bottom: 'small' }}>

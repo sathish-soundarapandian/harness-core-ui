@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, Text } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text } from '@wings-software/uicore'
 
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -24,6 +24,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TerraformPlanProps } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
 import TfVarFiles from './InputSteps/TfPlanVarFiles'
@@ -31,7 +32,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactElement {
   const { getString } = useStrings()
-  const { inputSetData, readonly, initialValues, allowableTypes } = props
+  const { inputSetData, readonly, initialValues, allowableTypes, stepViewType } = props
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -54,6 +55,9 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
           />
         </div>
       )}
@@ -66,7 +70,9 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
             fieldPath={'timeout'}
             template={inputSetData?.template}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -86,6 +92,9 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
             orgIdentifier={orgIdentifier}
             width={400}
             multiTypeProps={{ allowableTypes, expressions }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             category={'SECRET_MANAGER'}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.secretManagerRef`}
             placeholder={getString('select')}
@@ -103,7 +112,7 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.backendConfig?.spec?.content) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${
               isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
             }spec.configuration.backendConfig.spec.content`}
@@ -113,6 +122,11 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            fieldPath={'spec.configuration.backendConfig.spec.content'}
+            template={inputSetData?.template}
           />
         </div>
       )}
@@ -139,6 +153,10 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
             }spec.configuration.exportTerraformPlanJson`}
             label={getString('cd.exportTerraformPlanJson')}
             multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
           />
         </div>
       )}

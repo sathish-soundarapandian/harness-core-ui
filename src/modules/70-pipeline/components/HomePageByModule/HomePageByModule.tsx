@@ -113,7 +113,6 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
     accountIdentifier: accountId,
     projectIdentifier: selectedProject?.identifier || '',
     orgIdentifier: selectedProject?.orgIdentifier || '',
-    module,
     lazy: true,
     size: 1
   })

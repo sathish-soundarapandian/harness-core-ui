@@ -21,7 +21,8 @@ export const usernamePassword: ConnectorInfoDTO = {
     type: 'Http',
     connectionType: 'Account',
     validationRepo: 'test',
-    spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.connectorPass' }
+    spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.connectorPass' },
+    executeOnDelegate: true
   }
 }
 

@@ -12,5 +12,6 @@ export enum VerificationTypes {
   Bluegreen = 'Bluegreen',
   Canary = 'Canary',
   Rolling = 'Rolling',
-  Health = 'Health'
+  Health = 'Health',
+  Auto = 'Auto'
 }

@@ -94,12 +94,13 @@ export interface VariableInterface {
 export interface CustomArtifactSource {
   type?: string
   identifier?: string
+  formType?: string
   spec?: {
-    version: string
-    delegateSelectors?: SelectOption | string[] | string
+    version?: string
+    delegateSelectors?: SelectOption[] | string[] | string
     inputs?: VariableInterface[]
     timeout?: string
-    scripts: {
+    scripts?: {
       fetchAllArtifacts?: {
         artifactsArrayPath?: string
         attributes?: VariableInterface[]
@@ -169,6 +170,19 @@ export interface GithubPackageRegistryInitialValuesType {
     packageName: string
     version: string
     versionRegex: string
+  }
+}
+
+export interface AmazonMachineImageInitialValuesType {
+  identifier?: string
+  versionType?: string
+  spec: {
+    connectorRef?: string
+    region?: string | SelectOption
+    amiFilters?: VariableInterface[]
+    amiTags?: VariableInterface[]
+    version?: string
+    versionRegex?: string
   }
 }
 
@@ -271,6 +285,7 @@ export interface Nexus2InitialValuesType {
   spec: {
     artifactId?: string
     groupId?: string
+    group?: string
     extension?: string
     classifier?: string
     packageName?: string
@@ -314,6 +329,8 @@ export interface ArtifactTagHelperText {
   repositoryFormat?: RepositoryFormatTypes
   artifactId?: string
   groupId?: string
+  artifactArrayPath?: string
+  versionPath?: string
   packageName?: string
 }
 export interface ArtifactImagePathTagViewProps {

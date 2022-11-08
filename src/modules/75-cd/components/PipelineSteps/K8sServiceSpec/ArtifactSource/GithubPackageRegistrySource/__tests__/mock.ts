@@ -21,6 +21,49 @@ export const templateGithubPackageRegistry: ServiceSpec = {
   }
 }
 
+export const packagesData = {
+  status: 'SUCCESS',
+  data: {
+    githubPackageResponse: [
+      {
+        packageId: '2244066',
+        packageName: 'helloworld',
+        packageType: 'container',
+        visibility: 'private',
+        packageUrl: 'https://github.com/orgs/org-vtxorxwitty/packages/container/package/helloworld'
+      }
+    ]
+  },
+  metaData: null,
+  correlationId: '8b6291b9-3b68-4b0b-bde2-ca25147d100e'
+}
+
+export const versionsData = {
+  status: 'SUCCESS',
+  data: [
+    {
+      number: '100',
+      revision: null,
+      description: null,
+      artifactPath: 'ghcr.io/vtxorxwitty/helloworld:100',
+      buildUrl: 'https://github.com/users/vtxorxwitty/packages/container/helloworld/38299907',
+      buildDisplayName: 'helloworld: 100',
+      buildFullDisplayName: 'sha256:e987fb89e5455d7a465e50d88f4c1497e8947342acfab6cfd347ec201ed6885f',
+      artifactFileSize: null,
+      uiDisplayName: 'Tag# 100',
+      status: 'SUCCESS',
+      buildParameters: {},
+      metadata: {
+        '100': 'helloworld'
+      },
+      labels: {},
+      artifactFileMetadataList: []
+    }
+  ],
+  metaData: null,
+  correlationId: '8b6291b9-3b68-4b0b-bde2-ca25147d100e'
+}
+
 export const templateGithubPackageRegistryWithVersionRegex: ServiceSpec = {
   artifacts: {
     primary: {

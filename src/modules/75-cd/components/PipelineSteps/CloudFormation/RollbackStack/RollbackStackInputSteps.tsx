@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isRuntime } from '../CloudFormationHelper'
 import type { RollbackStackData, RollbackStackProps } from '../CloudFormationInterfaces.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -21,7 +22,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 export function RollbackStackInputStepRef<T extends RollbackStackData = RollbackStackData>(
   props: RollbackStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes } = props
+  const { inputSetData, readonly, path, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -36,7 +37,9 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly
@@ -58,6 +61,9 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
               multiTextInputProps={{
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               template={inputSetData?.template}
               fieldPath={'spec.configuration.provisionerIdentifier'}

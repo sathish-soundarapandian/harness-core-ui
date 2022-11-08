@@ -50,7 +50,7 @@ import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import useGitAwareForTriggerEnabled from '@triggers/components/Triggers/useGitAwareForTriggerEnabled'
+import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import { TriggerBreadcrumbs } from '../trigger-details/TriggerDetails'
 import { getTriggerIcon, getEnabledStatusTriggerValues } from './utils/TriggersListUtils'
 import { clearNullUndefined, ResponseStatus } from './utils/TriggersWizardPageUtils'
@@ -377,10 +377,10 @@ export default function TriggersDetailPage(): JSX.Element {
 
   const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
 
-  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   let pipelineInputSet
-  if (gitAwareForTriggerEnabled) {
+  if (isNewGitSyncRemotePipeline) {
     pipelineInputSet = yamlStringify(
       pickBy(
         {
@@ -500,7 +500,6 @@ export default function TriggersDetailPage(): JSX.Element {
                   <YAMLBuilder
                     {...yamlBuilderReadOnlyModeProps}
                     isReadOnlyMode={true}
-                    showSnippetSection={false}
                     schema={pipelineSchema?.data}
                     onEnableEditMode={goToEditWizard}
                     isEditModeSupported={!isPipelineInvalid}

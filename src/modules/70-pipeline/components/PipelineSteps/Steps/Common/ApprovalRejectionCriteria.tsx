@@ -32,6 +32,7 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { errorCheck } from '@common/utils/formikHelpers'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isApprovalStepFieldDisabled } from './ApprovalCommons'
 import {
   handleOperatorChange,
@@ -245,6 +246,9 @@ export function Jexl(props: ApprovalRejectionCriteriaProps) {
         className={css.jexlExpression}
         placeholder={getString('pipeline.jiraApprovalStep.jexlExpressionPlaceholder')}
         multiTypeTextArea={{
+          configureOptionsProps: {
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(props.stepViewType)
+          },
           expressions
         }}
       />

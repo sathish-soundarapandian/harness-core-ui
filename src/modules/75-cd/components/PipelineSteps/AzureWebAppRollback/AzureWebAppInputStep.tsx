@@ -13,6 +13,7 @@ import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { AzureWebAppRollbackData, AzureWebAppRollbackProps } from './Rollback.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -21,7 +22,7 @@ const isRuntime = (value: string): boolean => getMultiTypeFromValue(value) === M
 export function AzureWebAppRollbackInputStepRef<T extends AzureWebAppRollbackData = AzureWebAppRollbackData>(
   props: AzureWebAppRollbackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, allowableTypes } = props
+  const { inputSetData, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -36,7 +37,9 @@ export function AzureWebAppRollbackInputStepRef<T extends AzureWebAppRollbackDat
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly

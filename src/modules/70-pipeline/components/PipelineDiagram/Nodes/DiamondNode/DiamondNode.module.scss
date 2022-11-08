@@ -26,7 +26,8 @@
     transform: rotate(-45deg);
   }
 
-  & > span {
+  & > span,
+  .iconImage {
     transform: rotate(-45deg);
   }
   & > div.diamondPortIn {

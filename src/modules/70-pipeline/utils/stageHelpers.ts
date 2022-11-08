@@ -79,8 +79,8 @@ export enum RepositoryFormatTypes {
 export const nexus2RepositoryFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NPM', value: RepositoryFormatTypes.NPM },
-  { label: 'NuGet', value: RepositoryFormatTypes.NuGet },
-  { label: 'Raw', value: RepositoryFormatTypes.Raw }
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+  // { label: 'Raw', value: RepositoryFormatTypes.Raw }
 ]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
@@ -187,6 +187,8 @@ export const getHelpeTextForTags = (
     artifactId?: string
     groupId?: string
     packageName?: string
+    artifactArrayPath?: string
+    versionPath?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -208,7 +210,9 @@ export const getHelpeTextForTags = (
     repositoryFormat,
     artifactId,
     groupId,
-    packageName
+    packageName,
+    artifactArrayPath,
+    versionPath
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -219,6 +223,18 @@ export const getHelpeTextForTags = (
     (!repositoryName || getMultiTypeFromValue(repositoryName) === MultiTypeInputType.RUNTIME)
   ) {
     invalidFields.push(getString('common.repositoryName'))
+  }
+  if (
+    artifactArrayPath !== undefined &&
+    (!artifactArrayPath || getMultiTypeFromValue(artifactArrayPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactsArrayPath'))
+  }
+  if (
+    versionPath !== undefined &&
+    (!versionPath || getMultiTypeFromValue(versionPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.versionPath'))
   }
   if (
     packageName !== undefined &&
@@ -606,6 +622,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.EcsService
     case ServiceDeploymentType.CustomDeployment:
       return StepType.CustomDeploymentServiceSpec
+    case ServiceDeploymentType.Elastigroup:
+      return StepType.ElastigroupService
     default:
       return StepType.K8sServiceSpec
   }

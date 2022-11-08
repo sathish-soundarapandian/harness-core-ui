@@ -12,7 +12,7 @@ exports[`UsersPage Test Add Roles 1`] = `
       class="bp3-heading"
     >
       <span>
-        rbac.addRole
+        rbac.manageRoleBindings
       </span>
     </h4>
   </div>
@@ -93,7 +93,7 @@ exports[`UsersPage Test Add Roles 1`] = `
                 <span
                   class="FieldArray--text"
                 >
-                  rbac.usersPage.assignRoleBindings
+                  rbac.roleBindings
                 </span>
                 <button
                   aria-label="Add"
@@ -812,15 +812,15 @@ exports[`UsersPage Test render data 1`] = `
                   </span>
                 </span>
                 <button
-                  aria-label="common.plusNumber"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-Testing_User_Group"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -946,15 +946,15 @@ exports[`UsersPage Test render data 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
               >
                 <button
-                  aria-label="common.plusNumber"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-dummyid"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -1219,15 +1219,15 @@ exports[`UsersPage Test render data 1`] = `
                   </span>
                 </span>
                 <button
-                  aria-label="common.plusNumber"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-Testing_User_Group_with_sso"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>
@@ -1391,15 +1391,15 @@ exports[`UsersPage Test render data 1`] = `
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
               >
                 <button
-                  aria-label="common.plusNumber"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-link"
+                  aria-label="common.manage roles"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main roleButton Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                   data-testid="addRole-Testing_User_Group_with_sso_no_users"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    common.plusNumber
+                    common.manage roles
                   </span>
                 </button>
               </div>

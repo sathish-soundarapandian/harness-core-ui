@@ -67,8 +67,11 @@ export default function DeployInfrastructureEntityInputStep({
   const { updateStageFormTemplate } = useStageFormContext()
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
 
-  const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-  const pathForDeployToAll = `${pathPrefix}deployToAll`
+  // This is the full path that is part of the outer formik
+  const fullPathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+  const localPath = 'infrastructureDefinitions'
+  const pathForDeployToAll = 'deployToAll'
+
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith(TEMPLATE_INPUT_PATH)
 
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentRef || {}
@@ -168,8 +171,8 @@ export default function DeployInfrastructureEntityInputStep({
     // if no value is selected, clear the inputs and template
     if (infrastructureIdentifiers.length === 0) {
       if (isMultipleInfrastructure) {
-        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}infrastructureDefinitions`)
-        formik.setFieldValue(`${pathPrefix}infrastructureDefinitions`, [])
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}infrastructureDefinitions`)
+        formik.setFieldValue(localPath, [])
       } else {
         updateStageFormTemplate(
           [
@@ -178,10 +181,10 @@ export default function DeployInfrastructureEntityInputStep({
               inputs: RUNTIME_INPUT_VALUE
             }
           ],
-          `${pathPrefix}infrastructureDefinitions`
+          `${fullPathPrefix}infrastructureDefinitions`
         )
 
-        formik.setFieldValue(`${pathPrefix}infrastructureDefinitions`, [])
+        formik.setFieldValue(localPath, [])
       }
       return
     }
@@ -208,12 +211,10 @@ export default function DeployInfrastructureEntityInputStep({
       // Start - Retain form values
 
       let infrastructureInputs = isMultipleInfrastructure
-        ? Array.isArray(get(formik.values, `${pathPrefix}infrastructureDefinitions`))
-          ? get(formik.values, `${pathPrefix}infrastructureDefinitions`).find(
-              (infra: InfrastructureYaml) => infra.identifier === infraId
-            )?.inputs
+        ? Array.isArray(get(formik.values, localPath))
+          ? get(formik.values, localPath).find((infra: InfrastructureYaml) => infra.identifier === infraId)?.inputs
           : undefined
-        : get(formik.values, `${pathPrefix}infrastructureDefinitions`)
+        : get(formik.values, localPath)
 
       if (!infrastructureInputs || isValueRuntimeInput(infrastructureInputs)) {
         infrastructureInputs = infraTemplateValue ? clearRuntimeInput(infraTemplateValue) : undefined
@@ -233,13 +234,13 @@ export default function DeployInfrastructureEntityInputStep({
     })
 
     if (isMultipleInfrastructure) {
-      updateStageFormTemplate(newInfrastructuresTemplate, `${pathPrefix}infrastructureDefinitions`)
-      formik.setFieldValue(`${pathPrefix}infrastructureDefinitions`, newInfrastructuresValues)
+      updateStageFormTemplate(newInfrastructuresTemplate, `${fullPathPrefix}infrastructureDefinitions`)
+      formik.setFieldValue(localPath, newInfrastructuresValues)
     } else {
-      updateStageFormTemplate(newInfrastructuresTemplate[0], `${pathPrefix}infrastructureDefinitions[0]`)
+      updateStageFormTemplate(newInfrastructuresTemplate[0], `infrastructureDefinitions[0]`)
 
       formik.setFieldValue(
-        `${pathPrefix}infrastructureDefinitions[0]`,
+        'infrastructureDefinitions[0]',
         defaultTo(newInfrastructuresValues[0], isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : [])
       )
     }
@@ -264,7 +265,7 @@ export default function DeployInfrastructureEntityInputStep({
 
       const newFormikValues = { ...formik.values }
       set(newFormikValues, pathForDeployToAll, true)
-      unset(newFormikValues, `${pathPrefix}infrastructureDefinitions`)
+      unset(newFormikValues, localPath)
       formik.setValues(newFormikValues)
     } else {
       const newValues = values.map(val => ({
@@ -274,9 +275,9 @@ export default function DeployInfrastructureEntityInputStep({
 
       const newFormikValues = { ...formik.values }
 
-      set(newFormikValues, `${pathPrefix}infrastructureDefinitions`, newValues)
+      set(newFormikValues, localPath, newValues)
       if (!isBoolean(deployToAllInfrastructures)) {
-        set(newFormikValues, `${pathPrefix}deployToAll`, false)
+        set(newFormikValues, pathForDeployToAll, false)
       }
 
       setInfrastructureIdentifiers(getInfrastructureIdentifiers())
@@ -299,7 +300,7 @@ export default function DeployInfrastructureEntityInputStep({
           <ExperimentalInput
             tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
             label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
-            name={`${pathPrefix}infrastructureDefinitions[0].identifier`}
+            name={'infrastructureDefinitions[0].identifier'}
             placeholder={getString('cd.pipelineSteps.environmentTab.selectInfrastructure')}
             selectItems={selectOptions}
             useValue

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, set, unset } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEqual, isNil, set, unset } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -52,8 +52,8 @@ export default function DeployClusterEntityInputStep({
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
 
-  const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-  const pathForDeployToAll = `${pathPrefix}deployToAll`
+  const pathForDeployToAll = 'deployToAll'
+
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith(TEMPLATE_INPUT_PATH)
 
   const clusterValue = get(initialValues, `gitOpsClusters.[0].identifier`)
@@ -145,7 +145,7 @@ export default function DeployClusterEntityInputStep({
 
       const newFormikValues = { ...formik.values }
       set(newFormikValues, pathForDeployToAll, true)
-      unset(newFormikValues, `${pathPrefix}gitOpsClusters`)
+      unset(newFormikValues, `gitOpsClusters`)
       formik.setValues(newFormikValues)
     } else {
       const newValues = values.map(val => ({
@@ -154,7 +154,7 @@ export default function DeployClusterEntityInputStep({
 
       const newFormikValues = { ...formik.values }
 
-      set(newFormikValues, `${pathPrefix}gitOpsClusters`, newValues)
+      set(newFormikValues, `gitOpsClusters`, newValues)
       if (!isBoolean(deployToAllClusters)) {
         set(newFormikValues, pathForDeployToAll, false)
       }
@@ -179,7 +179,7 @@ export default function DeployClusterEntityInputStep({
           <ExperimentalInput
             tooltipProps={{ dataTooltipId: 'specifyGitOpsClusters' }}
             label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
-            name={`${pathPrefix}gitOpsClusters[0].identifier`}
+            name={'gitOpsClusters[0].identifier'}
             placeholder={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
             selectItems={selectOptions}
             useValue

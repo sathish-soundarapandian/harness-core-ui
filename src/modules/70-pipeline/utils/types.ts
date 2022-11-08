@@ -83,3 +83,5 @@ export interface ECSRollingDeployStepInitialValues extends StepElementConfig {
   sameAsAlreadyRunningInstances?: boolean | string
   forceNewDeployment?: boolean | string
 }
+
+export type TemplateIcons = { [K: string]: string | undefined | TemplateIcons }

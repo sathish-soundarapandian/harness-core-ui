@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { Link } from 'react-router-dom'
 import { Classes, Drawer, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color, Container, Icon, Layout, Text, Popover } from '@harness/uicore'
-import { String } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import useNavModuleInfo, {
   GroupConfig,
@@ -53,7 +53,7 @@ interface GroupProps {
 }
 
 const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
-  const { homePageUrl, shouldVisible } = useNavModuleInfo(data)
+  const { homePageUrl, shouldVisible, color } = useNavModuleInfo(data)
   const { module } = useModuleInfo()
   const currentModule = module ? moduleToModuleNameMapping[module] : undefined
 
@@ -62,14 +62,14 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
   }
 
   return (
-    <Link to={homePageUrl}>
+    <Link to={homePageUrl} className={css.link}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
         <NavModule module={data} active={currentModule === data} onClick={onModuleClick} />
         <Icon
           name="tooltip-icon"
           padding={'small'}
           margin={{ left: 'small' }}
-          color={tooltipProps.activeModule === data ? Color.SUCCESS : undefined}
+          style={{ color: tooltipProps.activeModule === data ? `var(${color})` : undefined }}
           size={12}
           className={css.clickable}
           onClick={e => {
@@ -106,6 +106,7 @@ const Group: React.FC<GroupProps> = ({ data, tooltipProps, onModuleClick }) => {
 }
 
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true, onConfigIconClick }) => {
+  const { getString } = useStrings()
   const [activeModuleCarousel, setActiveModuleCarousel] = useState<NavModuleName | undefined>(undefined)
   const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
@@ -126,30 +127,40 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
       >
         <div className={css.modulesListContainer}>
           <Container flex={{ alignItems: 'center' }} margin={{ bottom: 'huge' }}>
-            <Text font={{ size: 'large', weight: 'bold' }} color={Color.WHITE}>
-              <String stringID="common.moduleList.title" />
-            </Text>
-            <Popover
-              content={
-                <Text color={Color.WHITE} padding="small">
-                  <String stringID="common.moduleConfig.customize" />
+            <Layout.Vertical width="100%">
+              <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }} width="100%">
+                <Text font={{ size: 'large', weight: 'bold' }} color={Color.WHITE}>
+                  <String stringID="common.moduleList.title" />
                 </Text>
-              }
-              popoverClassName={Classes.DARK}
-              interactionKind={PopoverInteractionKind.HOVER}
-              position={Position.RIGHT}
-            >
-              <Icon
-                name="customize"
-                size={24}
-                className={cx(css.blue, css.clickable)}
-                padding={'small'}
-                onClick={() => {
-                  onConfigIconClick?.()
-                  setActiveModuleCarousel(undefined)
-                }}
-              />
-            </Popover>
+                <Popover
+                  content={
+                    <Text color={Color.WHITE} padding="small">
+                      <String stringID="common.moduleConfig.customize" />
+                    </Text>
+                  }
+                  popoverClassName={Classes.DARK}
+                  interactionKind={PopoverInteractionKind.HOVER}
+                  position={Position.RIGHT}
+                >
+                  <Icon
+                    name="customize"
+                    size={24}
+                    className={cx(css.blue, css.clickable)}
+                    padding={'small'}
+                    onClick={() => {
+                      onConfigIconClick?.()
+                      setActiveModuleCarousel(undefined)
+                    }}
+                  />
+                </Popover>
+              </Layout.Horizontal>
+              <Layout.Horizontal className={css.secondaryTextContainer} margin={{ right: 'medium' }}>
+                <Text margin={{ right: 'small' }} color={Color.GREY_200} className={css.secondaryText}>
+                  {getString('common.configureNav')}
+                </Text>
+                <Icon size={24} name="wiggly-arrow" />
+              </Layout.Horizontal>
+            </Layout.Vertical>
           </Container>
           <Layout.Vertical flex spacing="xxxlarge" data-testId="grouplistContainer">
             {moduleGroupConfig.map(item => (

@@ -19,6 +19,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { UpdateReleaseRepoFormData, UpdateReleaseRepoStepData } from './UpdateReleaseRepo'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -41,7 +42,7 @@ const scriptOutputType: SelectOption[] = [
 ]
 
 export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInputStepProps): React.ReactElement {
-  const { template, path, readonly, allowableTypes } = props
+  const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = defaultTo(path, '')
@@ -51,7 +52,9 @@ export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInput
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly

@@ -25,9 +25,14 @@ import {
   AWSDataSourceType,
   DataSourceTypeFieldNames
 } from './DefineHealthSource.constant'
-import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
+import type {
+  ConnectorDisableFunctionProps,
+  DataSourceTypeValidateFunctionProps,
+  DefineHealthSourceFormInterface,
+  FormValidationFunctionProps
+} from './DefineHealthSource.types'
 
-export const validate = (getString: UseStringsReturn['getString']) => {
+export const validate = (getString: UseStringsReturn['getString']): Yup.ObjectSchema => {
   return Yup.object().shape({
     sourceType: Yup.string().trim().required(getString('cv.onboarding.selectProductScreen.validationText.source')),
     healthSourceName: Yup.string().trim().required(getString('cv.onboarding.selectProductScreen.validationText.name')),
@@ -49,11 +54,72 @@ export const validate = (getString: UseStringsReturn['getString']) => {
   })
 }
 
-export const validateDuplicateIdentifier = (values: DefineHealthSourceFormInterface): any => {
+export const validateDuplicateIdentifier = (
+  values: DefineHealthSourceFormInterface,
+  getString: UseStringsReturn['getString']
+): Record<string, string> => {
   const { healthSourceIdentifier, healthSourceList } = values
   if (healthSourceList?.some(item => item.identifier === healthSourceIdentifier)) {
-    return { healthSourceName: 'identifier already exist' }
+    return { healthSourceName: getString('cv.changeSource.duplicateIdentifier') }
   }
+
+  return {}
+}
+
+const isDataSourceTypeNotValid = ({
+  isDataSourceTypeSelectorEnabled,
+  sourceType,
+  dataSourceType
+}: DataSourceTypeValidateFunctionProps): boolean => {
+  return Boolean(isDataSourceTypeSelectorEnabled && sourceType === HealthSourceTypes.Prometheus && !dataSourceType)
+}
+
+export const formValidation = ({
+  values,
+  isEdit,
+  isDataSourceTypeSelectorEnabled,
+  getString
+}: FormValidationFunctionProps): Record<string, string> => {
+  let errors = {}
+
+  const { dataSourceType, sourceType } = values || {}
+
+  if (!isEdit) {
+    errors = validateDuplicateIdentifier(values, getString)
+  }
+
+  if (
+    isDataSourceTypeNotValid({
+      dataSourceType,
+      sourceType,
+      isDataSourceTypeSelectorEnabled
+    })
+  ) {
+    errors = {
+      ...errors,
+      dataSourceType: getString('cv.healthSource.dataSourceTypeValidation')
+    }
+  }
+
+  return errors
+}
+
+export const getIsConnectorDisabled = ({
+  isEdit,
+  connectorRef,
+  sourceType,
+  isDataSourceTypeSelectorEnabled,
+  dataSourceType
+}: ConnectorDisableFunctionProps): boolean => {
+  if (isEdit && connectorRef) {
+    return true
+  } else if (!isEdit && !sourceType) {
+    return true
+  } else if (isDataSourceTypeNotValid({ isDataSourceTypeSelectorEnabled, sourceType, dataSourceType })) {
+    return true
+  }
+
+  return false
 }
 
 export const getConnectorTypeName = (name: HealthSourceTypes): string => {
@@ -128,6 +194,7 @@ export const getFeatureOption = (
         }
       ]
     case Connectors.PROMETHEUS:
+    case HealthSourceTypes.AwsPrometheus:
       return [
         {
           label: PrometheusProductNames.APM,
@@ -214,6 +281,7 @@ export function getProductBasedOnType(
     case 'CustomHealthMetric':
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[0]
     case Connectors.PROMETHEUS:
+    case HealthSourceTypes.AwsPrometheus:
       return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
     default:
       return { ...currProduct } as SelectOption

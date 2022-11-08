@@ -100,7 +100,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Environment',
   width: '100%',
   height: 220,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -327,7 +326,6 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
                       }}
                       schema={environmentSchema?.data}
                       bind={setYamlHandler}
-                      showSnippetSection={false}
                     />
 
                     <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>

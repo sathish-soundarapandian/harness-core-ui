@@ -73,7 +73,7 @@ import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpe
 import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
-import { useGetTemplate } from 'services/template-ng'
+import { TemplateSummaryResponse, useGetTemplate } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { isEditInfrastructure } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
@@ -97,7 +97,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Infrastructure',
   width: '100%',
   height: 540,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -265,13 +264,16 @@ function BootstrapDeployInfraDefinition({
     const variables = get(stage, 'stage.spec.infrastructure.infrastructureDefinition.spec.variables')
     return {
       templateMetaData: get(stage, 'stage.spec.infrastructure.infrastructureDefinition.spec.customDeploymentRef'),
-      ...(variables && variables)
+      ...(variables && { variables })
     }
   }, [stage])
 
   const [customDeploymentMetaData, setCustomDeploymentMetaData] = useState<CustomDeploymentMetaData | undefined>(
     getDeploymentTemplateData()
   )
+  const selectedDeploymentTemplateRef = useRef<TemplateSummaryResponse | undefined>()
+  const fromTemplateSelectorRef = useRef(false)
+
   const [deployInfraRemountCount, setDeployInfraRemountCount] = useState(0)
 
   const shouldFetchCustomDeploymentTemplate =
@@ -501,57 +503,83 @@ function BootstrapDeployInfraDefinition({
   }
 
   const onCustomDeploymentSelection = async (): Promise<void> => {
+    if (fromTemplateSelectorRef.current && selectedDeploymentTemplateRef.current) {
+      const templateRefObj = getTemplateRefVersionLabelObject(selectedDeploymentTemplateRef.current)
+      const templateJSON = parse(selectedDeploymentTemplateRef.current.yaml || '')?.template
+
+      return setCustomDeploymentMetaData({
+        templateMetaData: templateRefObj,
+        variables: templateJSON?.spec?.infrastructure?.variables
+      })
+    }
+
     if (getTemplate && !stageCustomDeploymentData) {
       try {
         const { template } = await getTemplate({
+          selectedTemplate: selectedDeploymentTemplateRef.current,
           templateType: TemplateType.CustomDeployment,
-          allowedUsages: [TemplateUsage.USE]
+          allowedUsages: [TemplateUsage.USE],
+          showChangeTemplateDialog: false,
+          hideTemplatesView: true,
+          disableUseTemplateIfUnchanged: false
         })
         const templateRefObj = getTemplateRefVersionLabelObject(template)
         const templateJSON = parse(template.yaml || '').template
+
         setCustomDeploymentMetaData({
           templateMetaData: templateRefObj,
           variables: templateJSON?.spec?.infrastructure?.variables
         })
       } catch (_) {
-        // Reset data.. user cancelled template selection
-        setSelectedDeploymentType(undefined)
-        setCustomDeploymentMetaData(undefined)
+        // user cancelled template selection
       }
     }
   }
 
-  const handleDeploymentTypeChange = useCallback(
-    (deploymentType: ServiceDeploymentType, resetInfrastructureDefinition = true): void => {
-      // istanbul ignore else
-      if (deploymentType !== selectedDeploymentType) {
-        const stageData = produce(stage, draft => {
-          const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
-          serviceDefinition.type = deploymentType
+  const handleDeploymentTypeChange = (
+    deploymentType: ServiceDeploymentType,
+    resetInfrastructureDefinition = true
+  ): void => {
+    // istanbul ignore else
+    if (deploymentType !== selectedDeploymentType) {
+      const stageData = produce(stage, draft => {
+        const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
+        serviceDefinition.type = deploymentType
 
-          if (draft?.stage?.spec?.infrastructure?.infrastructureDefinition && resetInfrastructureDefinition) {
-            delete draft.stage.spec.infrastructure.infrastructureDefinition
-            delete draft.stage.spec.infrastructure.allowSimultaneousDeployments
-          }
-        })
-        setSelectedDeploymentType(deploymentType)
-        const customDeploymentRef =
-          stage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec?.customDeploymentRef
-        if (deploymentType === ServiceDeploymentType.CustomDeployment) {
-          if (isEmpty(customDeploymentRef)) {
-            onCustomDeploymentSelection()
-          } else {
-            setCustomDeploymentMetaData(getDeploymentTemplateData())
-          }
-        } else {
-          setCustomDeploymentMetaData(undefined)
-          updateStage(stageData?.stage as StageElementConfig)
+        if (draft?.stage?.spec?.infrastructure?.infrastructureDefinition && resetInfrastructureDefinition) {
+          delete draft.stage.spec.infrastructure.infrastructureDefinition
+          delete draft.stage.spec.infrastructure.allowSimultaneousDeployments
         }
+      })
+      setSelectedDeploymentType(deploymentType)
+      const customDeploymentRef =
+        stage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec?.customDeploymentRef
+      if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+        if (isEmpty(customDeploymentRef)) {
+          onCustomDeploymentSelection()
+        } else {
+          setCustomDeploymentMetaData(getDeploymentTemplateData())
+        }
+      } else {
+        setCustomDeploymentMetaData(undefined)
+        updateStage(stageData?.stage as StageElementConfig)
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stage, updateStage]
-  )
+    }
+  }
+
+  const onDeploymentTemplateSelect = (
+    deploymentTemplate: TemplateSummaryResponse,
+    fromTemplateSelector: boolean
+  ): void => {
+    selectedDeploymentTemplateRef.current = deploymentTemplate
+    fromTemplateSelectorRef.current = fromTemplateSelector
+
+    if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
+      onCustomDeploymentSelection()
+    } else {
+      handleDeploymentTypeChange(ServiceDeploymentType.CustomDeployment)
+    }
+  }
 
   const handleEditMode = (): void => {
     setIsYamlEditable(true)
@@ -662,8 +690,9 @@ function BootstrapDeployInfraDefinition({
                 selectedDeploymentType={selectedDeploymentType}
                 isReadonly={!!stageDeploymentType || isReadOnly}
                 handleDeploymentTypeChange={handleDeploymentTypeChange}
+                onDeploymentTemplateSelect={onDeploymentTemplateSelect}
                 shouldShowGitops={false}
-                customDeploymentData={customDeploymentMetaData?.templateMetaData}
+                templateLinkConfig={customDeploymentMetaData?.templateMetaData}
                 addOrUpdateTemplate={isEmpty(stageCustomDeploymentData) ? addOrUpdateTemplate : undefined}
               />
               {selectedDeploymentType && <DeployInfraDefinition key={deployInfraRemountCount} />}
@@ -691,7 +720,6 @@ function BootstrapDeployInfraDefinition({
                 key={refreshYAMLBuilder}
                 schema={infrastructureDefinitionSchema?.data}
                 bind={setYamlHandler}
-                showSnippetSection={false}
                 isReadOnlyMode={!isYamlEditable}
                 onEnableEditMode={handleEditMode}
                 isEditModeSupported={!isReadOnly}

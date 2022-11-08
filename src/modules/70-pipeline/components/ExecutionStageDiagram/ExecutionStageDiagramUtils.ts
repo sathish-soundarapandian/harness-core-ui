@@ -156,6 +156,7 @@ export const getNodeStyles = (
         style.backgroundColor = Utils.getRealCSSColor(Color.WHITE)
         break
       case ExecutionStatusEnum.Aborted:
+      case ExecutionStatusEnum.AbortedByFreeze:
         if (type === ExecutionPipelineNodeType.DIAMOND) {
           style.borderColor = 'var(--execution-pipeline-color-dark-grey2)'
           style.backgroundColor = isSelected ? 'var(--execution-pipeline-color-red)' : 'var(--red-50)'

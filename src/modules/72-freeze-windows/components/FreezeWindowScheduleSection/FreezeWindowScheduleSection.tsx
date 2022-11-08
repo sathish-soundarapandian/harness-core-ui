@@ -50,47 +50,48 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
           freezeWindow={(freezeObj?.windows as FreezeWindow[])?.[0]}
           onSubmit={onSave}
           onChange={validate}
-          formActions={
-            <Layout.Horizontal
-              spacing="small"
-              margin={{ top: 'xxlarge' }}
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-            >
-              <Button
-                icon="chevron-left"
-                onClick={onBack}
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-              />
-              {isSaveInProgress ? (
-                <Container padding={{ left: 'xxlarge', right: 'medium' }}>
-                  <Spinner size={Spinner.SIZE_SMALL} />
-                </Container>
-              ) : (
-                <RbacButton
-                  type="submit"
-                  disabled={isSaveDisabled}
-                  variation={ButtonVariation.PRIMARY}
-                  text={getString('save')}
-                  icon="send-data"
-                  loading={isSaveInProgress}
-                  permission={{
-                    permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
-                    resource: {
-                      resourceType: ResourceType.DEPLOYMENTFREEZE
-                    },
-                    resourceScope: {
-                      accountIdentifier,
-                      orgIdentifier,
-                      projectIdentifier
-                    }
-                  }}
-                />
-              )}
-            </Layout.Horizontal>
-          }
         />
       </Card>
+      <Layout.Horizontal
+        spacing="small"
+        margin={{ top: 'xxlarge' }}
+        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      >
+        <Button
+          margin={{ top: 'medium' }}
+          icon="chevron-left"
+          onClick={onBack}
+          variation={ButtonVariation.SECONDARY}
+          text={getString('back')}
+        />
+        {isSaveInProgress ? (
+          <Container padding={{ left: 'xxlarge', right: 'medium' }} margin={{ top: 'medium' }}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </Container>
+        ) : (
+          <RbacButton
+            onClick={onSave}
+            margin={{ top: 'medium' }}
+            type="submit"
+            disabled={isSaveDisabled}
+            variation={ButtonVariation.PRIMARY}
+            text={getString('save')}
+            icon="send-data"
+            loading={isSaveInProgress}
+            permission={{
+              permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+              resource: {
+                resourceType: ResourceType.DEPLOYMENTFREEZE
+              },
+              resourceScope: {
+                accountIdentifier,
+                orgIdentifier,
+                projectIdentifier
+              }
+            }}
+          />
+        )}
+      </Layout.Horizontal>
     </Container>
   )
 }

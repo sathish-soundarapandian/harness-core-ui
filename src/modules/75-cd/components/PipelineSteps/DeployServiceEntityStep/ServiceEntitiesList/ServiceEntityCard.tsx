@@ -23,6 +23,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServiceSpec } from 'services/cd-ng'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
+import { useDeepCompareEffect } from '@common/hooks'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -59,6 +60,10 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const arifactsSpecPath = `serviceInputs.${serviceIdentifier}.serviceDefinition.spec`
 
   const type = service.serviceDefinition?.type as ServiceDeploymentType
+
+  useDeepCompareEffect(() => {
+    setTemplate(serviceInputs?.serviceDefinition?.spec)
+  }, [serviceInputs?.serviceDefinition?.spec])
 
   function toggle(): void {
     setShowInputs(s => !s)

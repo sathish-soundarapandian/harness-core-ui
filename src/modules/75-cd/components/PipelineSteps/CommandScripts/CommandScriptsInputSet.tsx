@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { InputOutputVariablesInputSet } from '../Common/InputOutputVariablesInputSet/InputOutputVariablesInputSet'
 import type { CommandScriptsData, CommandScriptsFormData } from './CommandScriptsTypes'
 import { CommandListInputSet } from './CommandListInputSet'
@@ -44,7 +45,9 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
             name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: inputSetData.readonly

@@ -18,6 +18,7 @@ export const ToggleAllSelection: FC<{ data: FreezeSummaryResponse[] }> = ({ data
   return (
     <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
+        aria-label="Select all rows"
         indeterminate={selectedItems.length > 0 && selectedItems.length !== data.length}
         large
         checked={selectedItems.length === data.length}

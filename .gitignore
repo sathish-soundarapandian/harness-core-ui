@@ -5,7 +5,7 @@ reports
 cypress-coverage
 merged-coverage
 .DS_Store
-dist*
+dist/*
 tsconfig.tmp
 .idea
 yarn-error.log
@@ -17,6 +17,7 @@ junit.xml
 cypress/videos/
 src/microfrontends/types
 src/microfrontends/declarations
+src/microfrontends/dist
 certificates
 .npmrc
 .vscode/launch.json

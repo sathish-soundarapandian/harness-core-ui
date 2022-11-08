@@ -8,7 +8,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import isEmpty from 'lodash-es/isEmpty'
+import { isEmpty } from 'lodash-es'
 import { Button, ButtonVariation, Container, Formik, FormikForm, Layout } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'

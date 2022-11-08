@@ -431,6 +431,8 @@ export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact)
     artifact.spec?.imagePath ??
     artifact.spec?.artifactPath ??
     artifact.spec?.artifactPathFilter ??
-    artifact.spec?.repository
+    artifact.spec?.repository ??
+    artifact.spec?.version ??
+    artifact.spec?.versionRegex
   )
 }
