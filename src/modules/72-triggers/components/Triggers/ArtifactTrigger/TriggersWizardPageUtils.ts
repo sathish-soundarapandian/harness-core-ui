@@ -29,7 +29,8 @@ import type {
   ArtifactTriggerConfig,
   CustomArtifactSpec,
   GithubPackagesSpec,
-  GarSpec
+  GarSpec,
+  AzureArtifactsRegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -2126,6 +2127,18 @@ export const getTriggerArtifactInitialSpec = (
         repositoryName: '',
         version
       } as GarSpec
+    }
+    case 'AzureArtifacts': {
+      return {
+        packageName: '',
+        connectorRef,
+        eventConditions,
+        packageType: 'maven',
+        scope: 'project',
+        project: '',
+        feed: '',
+        version
+      } as AzureArtifactsRegistrySpec
     }
   }
 }

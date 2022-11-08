@@ -335,6 +335,16 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tagRegex: RUNTIME_INPUT_VALUE,
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl
       }
+    case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+      return {
+        identifier: '',
+        version: RUNTIME_INPUT_VALUE,
+        packageType: 'maven',
+        scope: 'project',
+        project: '',
+        feed: '',
+        packageName: ''
+      }
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
       return {
         identifier: '',

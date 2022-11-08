@@ -74,7 +74,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   Jenkins: 'connectors.jenkins.jenkins',
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
-  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle'
+  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
+  AzureArtifacts: 'pipeline.artifactsSelection.azureArtifactRegistryTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -88,7 +89,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
-  GithubPackageRegistry: 'GithubPackageRegistry'
+  GithubPackageRegistry: 'GithubPackageRegistry',
+  AzureArtifacts: 'AzureArtifacts'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -114,7 +116,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
-  GithubPackageRegistry: 'Github'
+  GithubPackageRegistry: 'Github',
+  AzureArtifacts: 'Azure Artifacts'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
