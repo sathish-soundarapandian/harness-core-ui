@@ -121,8 +121,7 @@ function PipelineYamlView(): React.ReactElement {
     } catch (e) {
       // Ignore Error
     }
-    // }, [yamlHandler, pipeline, isDrawerOpened])
-  }, [yamlHandler])
+  }, [yamlHandler, pipeline, isDrawerOpened])
 
   React.useEffect(() => {
     if (yamlHandler) {
