@@ -55,6 +55,7 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { queryClient } from 'services/queryClient'
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -135,6 +136,8 @@ export default function DeployServiceEntityWidget({
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { refetchPipelineVariable } = usePipelineVariables()
+
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<FormState>()
   const formikRef = React.useRef<FormikProps<FormState> | null>(null)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
@@ -316,6 +319,7 @@ export default function DeployServiceEntityWidget({
           )
         )
       }
+      await refetchPipelineVariable?.()
       const response = await mergeServiceInputsPromise(body)
       const mergedServiceInputsResponse = response?.data
       setValues({

@@ -44,6 +44,7 @@ export interface PipelineVariablesData {
   error?: UseMutateAsGetReturn<Failure | Error>['error'] | null
   initLoading: boolean
   loading: boolean
+  refetchPipelineVariable?: (props?: any) => Promise<void> | undefined
   onSearchInputChange?: (value: string) => void
   goToPrevSearchResult?: (value: string) => void
   goToNextSearchResult?: (value: string) => void
@@ -87,6 +88,7 @@ export const PipelineVariablesContext = React.createContext<PipelineVariablesDat
   serviceExpressionPropertiesList: [],
   error: null,
   initLoading: true,
+  refetchPipelineVariable: () => Promise.resolve(),
   loading: false,
   setPipeline: () => void 0,
   setResolvedPipeline: () => void 0,
@@ -140,7 +142,13 @@ export function PipelineVariablesContextProvider(
       ...newState
     }))
   }
-  const { data, error, initLoading, loading } = useMutateAsGet(useCreateVariablesV2, {
+  const {
+    data,
+    error,
+    initLoading,
+    loading,
+    refetch: refetchPipelineVariable
+  } = useMutateAsGet(useCreateVariablesV2, {
     body: yamlStringify({ pipeline: originalPipeline }) as unknown as void,
     requestOptions: {
       headers: {
@@ -256,6 +264,7 @@ export function PipelineVariablesContextProvider(
         serviceExpressionPropertiesList,
         error,
         initLoading: initLoading || initLoadingResolvedPipeline,
+        refetchPipelineVariable,
         loading: loading || loadingResolvedPipeline,
         onSearchInputChange,
         searchResults,
