@@ -6,7 +6,8 @@ import type {
   CloudWatchMetricDefinition,
   CloudWatchMetricsHealthSourceSpec,
   HealthSource,
-  ResponseListString
+  ResponseListString,
+  TimeSeriesMetricPackDTO
 } from 'services/cv'
 import {
   isDuplicateMetricIdentifier,
@@ -24,7 +25,8 @@ import type {
   CreatePayloadUtilParams,
   HealthSourceListData,
   IsMultiRecordDataErrorParameters,
-  MetricSamplePointsData
+  MetricSamplePointsData,
+  MetricThresholdsForFormParams
 } from './CloudWatch.types'
 import {
   cloudWatchInitialValues,
@@ -33,6 +35,16 @@ import {
   CustomMetricsValidationName,
   newCloudWatchCustomMetricValues
 } from './CloudWatchConstants'
+import {
+  getFilteredMetricThresholdValues,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  MetricThresholdPropertyName,
+  MetricThresholdTypes,
+  MetricTypeValues
+} from '../../common/MetricThresholds/MetricThresholds.constants'
+import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 
 export function getRegionsDropdownOptions(regions: ResponseListString['data']): SelectOption[] {
   const regionOptions: SelectOption[] = []
@@ -51,7 +63,22 @@ export function getRegionsDropdownOptions(regions: ResponseListString['data']): 
   return regionOptions
 }
 
-export const getFormikInitialValue = (data: CloudWatchSetupSource): CloudWatchFormType => {
+const getMetricThresholdsForForm = ({
+  metricThresholds,
+  thresholdType,
+  isMetricThresholdEnabled
+}: MetricThresholdsForFormParams): MetricThresholdType[] => {
+  if (!isMetricThresholdEnabled || !Array.isArray(metricThresholds) || !thresholdType) {
+    return []
+  }
+
+  return getFilteredMetricThresholdValues(thresholdType, metricThresholds)
+}
+
+export const getFormikInitialValue = (
+  data: CloudWatchSetupSource,
+  isMetricThresholdEnabled: boolean
+): CloudWatchFormType => {
   if (!data || !data?.isEdit) {
     return cloudWatchInitialValues
   }
@@ -70,7 +97,17 @@ export const getFormikInitialValue = (data: CloudWatchSetupSource): CloudWatchFo
   return {
     region: spec?.region,
     customMetrics: updateResponseForFormik(spec?.metricDefinitions) as CloudWatchFormType['customMetrics'],
-    selectedCustomMetricIndex: 0
+    selectedCustomMetricIndex: 0,
+    failFastThresholds: getMetricThresholdsForForm({
+      metricThresholds: spec?.metricPacks,
+      thresholdType: MetricThresholdTypes.FailImmediately,
+      isMetricThresholdEnabled
+    }),
+    ignoreThresholds: getMetricThresholdsForForm({
+      metricThresholds: spec?.metricPacks,
+      thresholdType: MetricThresholdTypes.IgnoreThreshold,
+      isMetricThresholdEnabled
+    })
   }
 }
 
@@ -89,14 +126,48 @@ export function getSelectedGroupItem(
   return undefined
 }
 
+const isMetricThresholdsPresent = (formValues: CloudWatchFormType): boolean => {
+  const { failFastThresholds, ignoreThresholds } = formValues || {}
+
+  return (
+    Array.isArray(ignoreThresholds) &&
+    Array.isArray(failFastThresholds) &&
+    Boolean(ignoreThresholds.length || failFastThresholds.length)
+  )
+}
+
+const getCloudWatchMetricThresholds = (
+  formValues: CloudWatchFormType,
+  isMetricThresholdEnabled?: boolean
+): TimeSeriesMetricPackDTO[] => {
+  const { failFastThresholds, ignoreThresholds } = formValues || {}
+
+  if (!isMetricThresholdsPresent(formValues) || !isMetricThresholdEnabled) {
+    return [
+      {
+        identifier: MetricTypeValues.Custom,
+        metricThresholds: []
+      }
+    ]
+  }
+
+  return [
+    {
+      identifier: MetricTypeValues.Custom,
+      metricThresholds: [...ignoreThresholds, ...failFastThresholds]
+    }
+  ]
+}
+
 const getCloudWatchSpec = (params: CreatePayloadUtilParams): CloudWatchMetricsHealthSourceSpec => {
-  const { formikValues, setupSourceData } = params
+  const { formikValues, setupSourceData, isMetricThresholdEnabled } = params
   const { customMetrics, region } = formikValues
   return {
     region,
     connectorRef: setupSourceData.connectorRef,
     feature: CloudWatchProductNames.METRICS,
-    metricDefinitions: updateFormikValuesForPayload(customMetrics) as CloudWatchMetricDefinition[]
+    metricDefinitions: updateFormikValuesForPayload(customMetrics) as CloudWatchMetricDefinition[],
+    metricPacks: getCloudWatchMetricThresholds(formikValues, isMetricThresholdEnabled)
   }
 }
 
@@ -121,14 +192,43 @@ const isIdentifierValid = (identifierText: string): boolean => {
   return Boolean(identifierText && testRegex.test(identifierText))
 }
 
+const validateMetricThresholds = (
+  errors: Record<string, string>,
+  values: CloudWatchFormType,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold],
+    getString,
+    false
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds],
+    getString,
+    false
+  )
+}
+
 export const validateForm = (
   formValues: CloudWatchFormType,
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  isMetricThresholdEnabled?: boolean
 ): Record<string, string> => {
   const errors: Record<string, string> = {}
 
   if (!formValues) {
     return {}
+  }
+
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(errors, formValues, getString)
   }
 
   const { customMetrics, region } = formValues

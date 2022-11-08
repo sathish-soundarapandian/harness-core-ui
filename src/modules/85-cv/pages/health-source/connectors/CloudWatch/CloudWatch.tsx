@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react'
-import { Formik } from 'formik'
+import { Formik, FormikForm } from '@wings-software/uicore'
 import { noop } from 'lodash-es'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -13,7 +13,9 @@ import DrawerFooter from '../../common/DrawerFooter/DrawerFooter'
 import { createPayloadForCloudWatch, getFormikInitialValue, validateForm } from './CloudWatch.utils'
 import { CustomMetricsV2HelperContext } from '../../common/CustomMetricV2/CustomMetricV2.constants'
 import type { CustomMetricsV2HelperContextType } from '../../common/CustomMetricV2/CustomMetric.types'
-
+import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
+import { getGroupedCustomMetrics } from '../../common/CustomMetricV2/CustomMetric.utils'
+import { getCustomMetricGroupNames } from '../../common/MetricThresholds/MetricThresholds.utils'
 import css from './CloudWatch.module.scss'
 
 export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Element | null {
@@ -21,11 +23,13 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
 
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+
   const { getString } = useStrings()
 
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
-  const initialValues = getFormikInitialValue(data)
+  const initialValues = getFormikInitialValue(data, isMetricThresholdEnabled)
 
   const customMetricHelperContextValue = useMemo(() => {
     const value: CustomMetricsV2HelperContextType = {
@@ -42,16 +46,26 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
   return (
     <Container padding="medium" className={css.cloudWatch} data-testid="cloudWatchContainer">
       <Formik<CloudWatchFormType>
+        formName="cloudWatch"
         validateOnMount
         initialValues={initialValues}
-        validate={values => validateForm(values, getString)}
+        validate={values => validateForm(values, getString, isMetricThresholdEnabled)}
         onSubmit={noop}
       >
         {formikProps => {
+          const groupedCreatedMetrics = getGroupedCustomMetrics(formikProps.values.customMetrics, getString)
+
           return (
-            <>
+            <FormikForm>
               <CustomMetricsV2HelperContext.Provider value={customMetricHelperContextValue}>
                 <CloudWatchContent />
+
+                {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
+                  <MetricThresholdProvider
+                    formikValues={formikProps.values}
+                    groupedCreatedMetrics={groupedCreatedMetrics}
+                  />
+                )}
 
                 <Container height={200} />
                 <DrawerFooter
@@ -63,7 +77,8 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
                     if (formikProps.isValid && isCloudWatchEnabled) {
                       const payload = createPayloadForCloudWatch({
                         setupSourceData: data,
-                        formikValues: formikProps.values
+                        formikValues: formikProps.values,
+                        isMetricThresholdEnabled
                       })
 
                       await onSubmit(data, payload)
@@ -71,7 +86,7 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
                   }}
                 />
               </CustomMetricsV2HelperContext.Provider>
-            </>
+            </FormikForm>
           )
         }}
       </Formik>
