@@ -6,6 +6,9 @@
       "type": "string",
       "enum": ["Java with Maven", "Java with Gradle"]
     },
+    "version": {
+      "type": "integer"
+    },
     "stages": {
       "type": "array",
       "items": [
@@ -18,90 +21,88 @@
             "type": {
               "type": "string"
             },
-            "steps": {
-              "type": "array",
-              "items": [
-                {
+            "spec": {
+              "type": "object",
+              "properties": {
+                "clone": {
                   "type": "object",
                   "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    },
-                    "spec": {
-                      "type": "object",
-                      "properties": {
-                        "run": {
-                          "type": "string"
-                        }
-                      },
-                      "required": ["run"]
+                    "disabled": {
+                      "type": "boolean"
                     }
                   },
-                  "required": ["name", "type", "spec"]
+                  "required": ["disabled"]
                 },
-                {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    },
-                    "spec": {
+                "steps": {
+                  "type": "array",
+                  "items": [
+                    {
                       "type": "object",
                       "properties": {
-                        "language": {
+                        "name": {
                           "type": "string"
                         },
-                        "build_tool": {
+                        "type": {
                           "type": "string"
                         },
-                        "build_args": {
-                          "type": "string"
-                        },
-                        "test_reports": {
+                        "spec": {
                           "type": "object",
                           "properties": {
-                            "type": {
+                            "run": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["run"]
+                        }
+                      },
+                      "required": ["name", "type", "spec"]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "spec": {
+                          "type": "object",
+                          "properties": {
+                            "language": {
                               "type": "string"
                             },
-                            "paths": {
-                              "type": "array",
-                              "items": [
-                                {
-                                  "type": "string"
+                            "build_tool": {
+                              "type": "string"
+                            },
+                            "build_args": {
+                              "type": "string"
+                            },
+                            "strategy": {
+                              "type": "object",
+                              "properties": {
+                                "parallelism": {
+                                  "type": "integer"
                                 }
-                              ]
+                              },
+                              "required": ["parallelism"]
                             }
                           },
-                          "required": ["type", "paths"]
-                        },
-                        "strategy": {
-                          "type": "object",
-                          "properties": {
-                            "parallelism": {
-                              "type": "integer"
-                            }
-                          },
-                          "required": ["parallelism"]
+                          "required": ["language", "build_tool", "build_args", "strategy"]
                         }
                       },
-                      "required": ["language", "build_tool", "build_args", "test_reports", "strategy"]
+                      "required": ["name", "type", "spec"]
                     }
-                  },
-                  "required": ["name", "type", "spec"]
+                  ]
                 }
-              ]
+              },
+              "required": ["clone", "steps"]
             }
           },
-          "required": ["name", "type", "steps"]
+          "required": ["name", "type", "spec"]
         }
       ]
     }
   },
-  "required": ["name", "stages"]
+  "required": ["name", "version", "stages"]
 }
