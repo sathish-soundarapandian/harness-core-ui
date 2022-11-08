@@ -43,6 +43,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
+import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -354,6 +355,14 @@ export default (
       <TemplatesPage />
     </RouteWithLayout>
 
+    <RouteWithLayout
+      exact
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toTemplates({ ...accountPathProps, ...projectPathProps })}
+    >
+      <TemplatesPage />
+    </RouteWithLayout>
+
     {/* Replace TemplateStudioWrapper route with following code once BE integration is complete: */}
     {/*{*/}
     {/*  TemplateRouteDestinations({*/}
@@ -365,6 +374,13 @@ export default (
       sidebarProps={CVSideNavProps}
       exact
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
+    >
+      <TemplateStudio />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      exact
+      path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps })}
     >
       <TemplateStudio />
     </RouteWithLayout>
