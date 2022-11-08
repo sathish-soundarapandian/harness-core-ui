@@ -449,7 +449,7 @@ function SavePipelinePopover(
 
   return (
     <SplitButton
-      // disabled={isSaveDisabled}
+      disabled={isSaveDisabled}
       variation={ButtonVariation.PRIMARY}
       text={getString('save')}
       loading={loading}
