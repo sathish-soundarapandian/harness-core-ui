@@ -93,8 +93,6 @@ const getRedirectionUrl = (accountId: string, source: string | undefined): strin
   return source === 'signup' ? onboardingUrl : dashboardUrl
 }
 
-const LOCAL_FF_PREFERENCE_STORE_ENABLED = true
-
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { showError } = useToaster()
   const history = useHistory()
@@ -124,7 +122,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     connectivityMode: undefined
   })
 
-  if (!projectIdentifier && !orgIdentifier && LOCAL_FF_PREFERENCE_STORE_ENABLED) {
+  if (!projectIdentifier && !orgIdentifier) {
     const identifiersFromSavedProj = getIdentifiersFromSavedProj(savedProject)
     projectIdentifier = identifiersFromSavedProj.projectIdentifier
     orgIdentifier = identifiersFromSavedProj.orgIdentifier
@@ -289,14 +287,10 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
             ...prevState,
             selectedProject: project
           }))
-          if (LOCAL_FF_PREFERENCE_STORE_ENABLED) {
-            setSavedProject({ projectIdentifier, orgIdentifier })
-          }
+          setSavedProject({ projectIdentifier, orgIdentifier })
         } else {
           // if no project was fetched, clear preference
-          if (LOCAL_FF_PREFERENCE_STORE_ENABLED) {
-            clearSavedProject()
-          }
+          clearSavedProject()
           setState(prevState => ({
             ...prevState,
             selectedOrg: undefined,
