@@ -2,7 +2,6 @@ import React from 'react'
 import { defaultTo } from 'lodash-es'
 import { SelectOption, FormInput, MultiTypeInputType, FormError, MultiTypeInput, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
 // eslint-disable-next-line import/no-unresolved
 //import { getTypeOfInput } from '../../../../AppAppDHealthSource.utils'
 // eslint-disable-next-line aliased-module-imports
@@ -31,8 +30,6 @@ export default function MultiTextOrSelectInput({
   placeholder,
   name
 }: any): JSX.Element {
-  const { getString } = useStrings()
-
   React.useEffect(() => {
     if (
       getTypeOfInput(connectorIdentifier) !== MultiTypeInputType.FIXED &&
