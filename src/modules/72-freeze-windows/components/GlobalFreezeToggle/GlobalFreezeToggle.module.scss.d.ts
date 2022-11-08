@@ -9,5 +9,6 @@
 declare const styles: {
   readonly dialog: string
   readonly switch: string
+  readonly toggleContainer: string
 }
 export default styles

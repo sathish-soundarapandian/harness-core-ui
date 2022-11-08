@@ -36,6 +36,7 @@ globalFreeze:
   enabled: Freeze enabled on all deployments for this <b>{{scope}}</b>
   enabledWindow: from <b>{{startTime}}</b> {{supportText}} <b>{{endTimeOrDuration}}</b> {{timeZone}}
   enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
+  enableFreezeTitleInfo: When a freeze is applied, all deployments for this {{scope}} cannot be started manually, nor through Triggers. Any ongoing deployments in the freeze will be aborted.
   enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
   enableFreezeFailure: Failed to enable freeze
 

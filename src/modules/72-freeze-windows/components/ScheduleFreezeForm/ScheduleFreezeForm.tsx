@@ -72,7 +72,7 @@ const validationSchema = Yup.object().shape({
   endTimeMode: Yup.string().oneOf(['duration', 'date']),
   duration: Yup.string().when('endTimeMode', {
     is: 'duration',
-    then: getDurationValidationSchema({ minimum: '30m' })
+    then: getDurationValidationSchema({ minimum: '30m' }).required('Duration is required')
   }),
   endTime: Yup.string().when('endTimeMode', {
     is: 'date',

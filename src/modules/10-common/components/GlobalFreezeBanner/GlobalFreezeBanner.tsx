@@ -72,21 +72,23 @@ export const GlobalFreezeBanner: FC<{ globalFreezes: FreezeBannerDetails[] | und
 
       {hasMultipleFreezes && (
         <Collapse isOpen={open}>
-          <Layout.Vertical spacing="small" margin={{ top: 'small', left: 'xxlarge' }}>
+          <ul className={css.freezeWindowList}>
             {globalFreezes.map((freeze, i) => (
-              <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} key={i}>
-                <String
-                  stringID={'common.freezeListActiveBannerExpandedText'}
-                  useRichText
-                  vars={{
-                    scope: scopeText[freeze.freezeScope as Scope],
-                    startTime: getReadableDateFromEpoch(freeze.window?.startTime),
-                    endTime: getReadableDateFromEpoch(freeze.window?.endTime)
-                  }}
-                />
-              </Text>
+              <li key={i}>
+                <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
+                  <String
+                    stringID={'common.freezeListActiveBannerExpandedText'}
+                    useRichText
+                    vars={{
+                      scope: scopeText[freeze.freezeScope as Scope],
+                      startTime: getReadableDateFromEpoch(freeze.window?.startTime),
+                      endTime: getReadableDateFromEpoch(freeze.window?.endTime)
+                    }}
+                  />
+                </Text>
+              </li>
             ))}
-          </Layout.Vertical>
+          </ul>
         </Collapse>
       )}
     </Layout.Vertical>
