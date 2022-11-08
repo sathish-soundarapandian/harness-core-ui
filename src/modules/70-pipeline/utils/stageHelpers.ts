@@ -399,8 +399,7 @@ export const getSelectedDeploymentType = (
 export const getDeploymentTypeWithSvcEnvFF = (
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
 ): ServiceDefinition['type'] => {
-  const service = get(stage, 'stage.spec.service', null)
-  return service && get(stage, 'stage.spec.deploymentType', null)
+  return get(stage, 'stage.spec.deploymentType', null)
 }
 
 export const getServiceDefinitionType = (

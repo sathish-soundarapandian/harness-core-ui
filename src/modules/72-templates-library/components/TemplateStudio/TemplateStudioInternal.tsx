@@ -299,6 +299,8 @@ export function TemplateStudioInternal(): React.ReactElement {
             fetchTemplate({ forceFetch: true, forceUpdate: true })
           }}
           updateRootEntity={updateEntity}
+          gitDetails={gitDetails}
+          storeMetadata={storeMetadata}
         />
       )}
       <Container className={css.canvasContainer}>{renderView}</Container>

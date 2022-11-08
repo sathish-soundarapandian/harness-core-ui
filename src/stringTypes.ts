@@ -569,6 +569,7 @@ export interface StringsMap {
   'common.performAction': string
   'common.pipeline': string
   'common.pipelineDetails': string
+  'common.pipelineExecution': string
   'common.plans.currentPlan': string
   'common.plans.faq': string
   'common.plans.featureComparison': string
@@ -2585,6 +2586,7 @@ export interface StringsMap {
   'connectors.splunk.connectorDetailsHeader': string
   'connectors.splunkConnectorDetails': string
   'connectors.splunkLabel': string
+  'connectors.spotAccountId': string
   'connectors.stackdriverLogsLabel': string
   'connectors.stackdriverMetricsLabel': string
   'connectors.stepFourName': string
@@ -3084,6 +3086,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
   'pipeline.artifactTriggerConfigPanel.selectAnArtifact': string
   'pipeline.artifactTriggerConfigPanel.tagArtifactPathBuild': string
+  'pipeline.artifactsSelection.AmazonMachineImageTitle': string
   'pipeline.artifactsSelection.addArtifactSource': string
   'pipeline.artifactsSelection.addPrimaryArtifact': string
   'pipeline.artifactsSelection.addSidecar': string
@@ -3313,7 +3316,6 @@ export interface StringsMap {
   'pipeline.dashboards.noTargetBaselines': string
   'pipeline.dashboards.noWorkloads': string
   'pipeline.dashboards.pendingDeployments': string
-  'pipeline.dashboards.pipelineExecution': string
   'pipeline.dashboards.pipelineHealth': string
   'pipeline.dashboards.successRate': string
   'pipeline.dashboards.successfulBuilds': string
@@ -3371,6 +3373,7 @@ export interface StringsMap {
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
   'pipeline.execution.elapsedTime': string
+  'pipeline.execution.emptyStepGroup': string
   'pipeline.execution.ignoreFailedWarningText': string
   'pipeline.execution.iotab.noInputText': string
   'pipeline.execution.iotab.noOutputText': string

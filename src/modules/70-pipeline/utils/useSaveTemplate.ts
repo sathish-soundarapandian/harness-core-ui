@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, omit } from 'lodash-es'
-import { useHistory, useParams } from 'react-router-dom'
-import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
 import {
   createTemplatePromise,
   EntityGitDetails,
@@ -16,23 +15,17 @@ import {
   TemplateSummaryResponse,
   updateExistingTemplateVersionPromise
 } from 'services/template-ng'
-import { useStrings } from 'framework/strings'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import { useToaster } from '@common/exports'
 import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
-import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
-import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
-import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { Pipeline } from './types'
 
 export interface FetchTemplateUnboundProps {
   forceFetch?: boolean
@@ -65,45 +58,20 @@ interface UseSaveTemplateReturnType {
 }
 
 export interface TemplateContextMetadata {
-  yamlHandler?: YamlBuilderHandlerBinding
-  fetchTemplate?: (args: FetchTemplateUnboundProps) => Promise<void>
-  deleteTemplateCache?: (gitDetails?: EntityGitDetails) => Promise<void>
-  view?: string
-  isTemplateStudio?: boolean
+  onSuccessCallback: (
+    latestTemplate: NGTemplateInfoConfig,
+    updatedGitDetails?: SaveToGitFormInterface,
+    updatedStoreMetadata?: StoreMetadata
+  ) => Promise<void>
 }
 
-export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata): UseSaveTemplateReturnType {
-  const { yamlHandler, fetchTemplate, deleteTemplateCache, view, isTemplateStudio = true } = TemplateContextMetadata
-  const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
+export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata): UseSaveTemplateReturnType {
+  const { templateIdentifier, projectIdentifier, orgIdentifier, accountId } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { branch } = useQueryParams<GitQueryParams>()
-  const { getString } = useStrings()
-  const { showSuccess, showError, clear } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-  const history = useHistory()
-  const isYaml = view === SelectedView.YAML
-
-  const navigateToLocation = useCallback(
-    (newTemplate: NGTemplateInfoConfig, updatedGitDetails?: SaveToGitFormInterface): void => {
-      history.replace(
-        routes.toTemplateStudio({
-          projectIdentifier: newTemplate.projectIdentifier,
-          orgIdentifier: newTemplate.orgIdentifier,
-          accountId,
-          ...(!isEmpty(newTemplate.projectIdentifier) && { module }),
-          templateType: templateType,
-          templateIdentifier: newTemplate.identifier,
-          versionLabel: newTemplate.versionLabel,
-          repoIdentifier: updatedGitDetails?.repoIdentifier,
-          branch: updatedGitDetails?.branch
-        })
-      )
-    },
-    [accountId, history, module, templateType]
-  )
 
   const stringifyTemplate = React.useCallback(
     // Important to sanitize the final template to avoid sending null values as it fails schema validation
@@ -117,26 +85,6 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       }),
     []
   )
-
-  const publishTemplate = async (
-    latestTemplate: NGTemplateInfoConfig,
-    updatedGitDetails?: SaveToGitFormInterface
-  ): Promise<void> => {
-    // If new template creation
-    if (templateIdentifier === DefaultNewTemplateId) {
-      await deleteTemplateCache?.(updatedGitDetails)
-
-      navigateToLocation(latestTemplate, updatedGitDetails)
-    } else {
-      // Update template in existing branch
-      if (updatedGitDetails?.isNewBranch === false) {
-        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
-      } else {
-        // Update template in new branch
-        navigateToLocation(latestTemplate, updatedGitDetails)
-      }
-    }
-  }
 
   const updateExistingLabel = async (
     latestTemplate: NGTemplateInfoConfig,
@@ -166,15 +114,12 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     if (response && response.status === 'SUCCESS') {
       const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
       if (isInlineTemplate) {
-        clear()
-        showSuccess(getString('common.template.updateTemplate.templateUpdated'))
-        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
+        onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
       }
-
       return {
         status: response.status,
         nextCallback: () => {
-          publishTemplate(latestTemplate, updatedGitDetails)
+          onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
         }
       }
     } else {
@@ -209,24 +154,15 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
       })
       if (response && response.status === 'SUCCESS') {
-        if (!isTemplateStudio && response.data?.templateResponseDTO) {
-          window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
-        }
-
         const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
         if (isInlineTemplate) {
-          clear()
-          showSuccess(getString('common.template.saveTemplate.publishTemplate'))
-          await deleteTemplateCache?.()
-          if (isTemplateStudio) {
-            navigateToLocation(latestTemplate, updatedGitDetails)
-          }
+          onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
         }
 
         return {
           status: response.status,
           nextCallback: () => {
-            publishTemplate(latestTemplate, updatedGitDetails)
+            onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
           }
         }
       } else {
@@ -243,19 +179,8 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     lastCommitId = '',
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
-    let latestTemplate = payload?.template as NGTemplateInfoConfig
-
-    if (isYaml && yamlHandler) {
-      try {
-        latestTemplate =
-          payload?.template || (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as NGTemplateInfoConfig)
-      } /* istanbul ignore next */ catch (err) {
-        showError(getRBACErrorMessage(err as RBACError), undefined, 'template.save.gitinfo.error')
-      }
-    }
-
     const response = await saveAndPublishTemplate(
-      latestTemplate,
+      payload?.template as NGTemplateInfoConfig,
       '',
       isEdit,
       omit(updatedGitDetails, 'name', 'identifier'),

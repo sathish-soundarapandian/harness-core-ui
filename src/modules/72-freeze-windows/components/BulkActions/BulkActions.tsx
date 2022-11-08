@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonSize, ButtonVariation, Layout } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Intent, Layout } from '@harness/uicore'
 import React, { FC } from 'react'
 import { useStrings } from 'framework/strings'
 import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
@@ -39,6 +39,7 @@ export const BulkActions: FC<BulkActionsProps> = ({ onDelete, onToggleFreeze }) 
         onClick={() => onDelete()}
         text={getString('delete')}
         size={ButtonSize.SMALL}
+        intent={Intent.DANGER}
       />
     </Layout.Horizontal>
   ) : null

@@ -113,6 +113,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
   )[]
 }
 
@@ -486,6 +487,10 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -838,6 +843,10 @@ export interface ErrorMetadata {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   errorMessage?: string
 }
 
@@ -1196,6 +1205,10 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1387,6 +1400,7 @@ export type PipelineFilterProperties = FilterProperties & {
   name?: string
   pipelineIdentifiers?: string[]
   pipelineTags?: NGTag[]
+  repoName?: string
 }
 
 export interface Principal {
@@ -1480,6 +1494,13 @@ export interface ResponseBoolean {
 export interface ResponseFilterDTO {
   correlationId?: string
   data?: FilterDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseHashSetString {
+  correlationId?: string
+  data?: string[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1842,6 +1863,10 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2038,6 +2063,7 @@ export interface TemplateFilterProperties {
     | 'Anomaly'
     | 'Environment'
   listingScope?: TemplateScope
+  repoName?: string
   tags?: {
     [key: string]: string
   }
@@ -2104,6 +2130,7 @@ export interface TemplateMetadataSummaryResponse {
   createdAt?: number
   description?: string
   gitDetails?: EntityGitDetails
+  icon?: string
   identifier?: string
   lastUpdatedAt?: number
   name?: string
@@ -2640,12 +2667,15 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
   versionLabel: string
   branch?: string
   repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
@@ -2703,12 +2733,15 @@ export interface RefreshAllQueryParams {
   versionLabel: string
   branch?: string
   repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export type RefreshAllProps = Omit<
@@ -2770,6 +2803,7 @@ export interface GetRefreshedYamlQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetRefreshedYamlProps = Omit<
@@ -2839,6 +2873,7 @@ export interface GetYamlDiffQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetYamlDiffProps = Omit<
@@ -2899,6 +2934,7 @@ export interface ValidateTemplateInputsQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type ValidateTemplateInputsProps = Omit<
@@ -3053,6 +3089,7 @@ export interface GetYamlWithTemplateRefsResolvedQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetYamlWithTemplateRefsResolvedProps = Omit<
@@ -3288,6 +3325,7 @@ export interface GetTemplateListQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -3451,6 +3489,57 @@ export const getTemplateMetadataListPromise = (
     void
   >('POST', getConfig('template/api'), `/templates/list-metadata`, props, signal)
 
+export interface GetRepositoryListQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  includeAllTemplatesAvailableAtScope?: boolean
+}
+
+export type GetRepositoryListProps = Omit<
+  GetProps<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets all repo list
+ */
+export const GetRepositoryList = (props: GetRepositoryListProps) => (
+  <Get<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>
+    path={`/templates/list-repo`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetRepositoryListProps = Omit<
+  UseGetProps<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets all repo list
+ */
+export const useGetRepositoryList = (props: UseGetRepositoryListProps) =>
+  useGet<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>(`/templates/list-repo`, {
+    base: getConfig('template/api'),
+    ...props
+  })
+
+/**
+ * Gets all repo list
+ */
+export const getRepositoryListPromise = (
+  props: GetUsingFetchProps<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>(
+    getConfig('template/api'),
+    `/templates/list-repo`,
+    props,
+    signal
+  )
+
 export interface GetsMergedTemplateInputYamlQueryParams {
   accountIdentifier: string
 }
@@ -3601,6 +3690,7 @@ export interface GetTemplateInputSetYamlQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetTemplateInputSetYamlPathParams {
@@ -3673,6 +3763,7 @@ export interface GetTemplateReferencesQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetTemplateReferencesProps = Omit<
@@ -3761,6 +3852,7 @@ export interface GetTemplateAlongWithInputSetYamlQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetTemplateAlongWithInputSetYamlPathParams {
@@ -3976,6 +4068,7 @@ export interface UpdateStableTemplateQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   comments?: string
 }
 
@@ -4071,6 +4164,7 @@ export interface UpdateTemplateSettingsQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -4167,6 +4261,7 @@ export interface GetYamlWithTemplateRefsResolvedV2QueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetYamlWithTemplateRefsResolvedV2Props = Omit<
@@ -4492,6 +4587,7 @@ export interface GetTemplateQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetTemplatePathParams {

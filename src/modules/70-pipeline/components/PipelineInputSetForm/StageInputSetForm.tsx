@@ -766,7 +766,7 @@ export function StageInputSetFormInternal({
             })
           ) : (
             <Container className={stepCss.bottomMargin3}>
-              <FormConnectorReferenceField
+              <FormMultiTypeConnectorField
                 width={getConnectorRefWidth(viewType)}
                 name={`${namePath}infrastructure.spec.spec.harnessImageConnectorRef`}
                 label={
@@ -778,6 +778,9 @@ export function StageInputSetFormInternal({
                 orgIdentifier={orgIdentifier}
                 gitScope={gitScope}
                 disabled={readonly}
+                multiTypeProps={{
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                }}
                 type={Connectors.DOCKER}
               />
             </Container>

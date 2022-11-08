@@ -42,10 +42,11 @@ export function FreezeWindowListTable({
   onViewFreezeRow,
   getViewFreezeRowLink,
   selectedItems,
-  disabled,
+  canEdit,
   freezeStatusMap
 }: FreezeWindowListTableProps): React.ReactElement {
   const { getString } = useStrings()
+
   const {
     content = [],
     totalItems = 0,
@@ -75,7 +76,7 @@ export function FreezeWindowListTable({
         disableSortBy: true,
         onRowSelectToggle,
         selectedItems,
-        disabled
+        canEdit
       },
       {
         Header: 'Freeze Window',
@@ -85,7 +86,7 @@ export function FreezeWindowListTable({
         serverSortProps: getServerSortProps('name'),
         getViewFreezeRowLink,
         onToggleFreezeRow,
-        disabled
+        canEdit
       },
       {
         Header: 'Schedule',
@@ -122,11 +123,11 @@ export function FreezeWindowListTable({
         getViewFreezeRowLink,
         onDeleteRow,
         onToggleFreezeRow,
-        disabled,
+        canEdit,
         freezeStatusMap
       }
     ] as unknown as Column<FreezeSummaryResponse>[]
-  }, [currentOrder, currentSort, selectedItems, disabled, freezeStatusMap])
+  }, [currentOrder, currentSort, selectedItems, canEdit, freezeStatusMap])
 
   return (
     <TableV2

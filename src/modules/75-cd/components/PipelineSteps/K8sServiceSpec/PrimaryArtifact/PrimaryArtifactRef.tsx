@@ -129,7 +129,9 @@ function PrimaryArtifactRef({
         formik?.setValues(
           produce(formik?.values, (draft: any) => {
             set(draft, `${path}.artifacts.primary.primaryArtifactRef`, value.value)
-            set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
+            set(draft, `${path}.artifacts.primary.sources`, [
+              stepViewType === StepViewType.TemplateUsage ? idSourceMap : clearRuntimeInput(idSourceMap)
+            ])
           })
         )
       }

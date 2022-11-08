@@ -24,7 +24,7 @@ import {
   recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
-describe('Pipeline Template creation and assertion', () => {
+describe.skip('Pipeline Template creation and assertion', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from

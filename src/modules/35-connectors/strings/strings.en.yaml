@@ -453,6 +453,7 @@ connectorDetails: Connector Details
 verifyConnection: Verify connection
 createdSuccessfully: 'Connector {{name}} created successfully'
 updatedSuccessfully: 'Connector {{name}} updated successfully'
+spotAccountId: Spot Account Id
 splunk:
   connectorDetailsHeader: Splunk Connection Details
 awsSecretManager:

@@ -167,14 +167,14 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
       set(toBeUpdated, 'pipeline.template.templateInputs.stages', mergedStages)
     }
 
-    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).properties?.ci) {
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.properties?.ci) {
       set(
         toBeUpdated,
         'pipeline.template.templateInputs.properties.ci',
         (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).properties?.ci
       )
     }
-    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).variables) {
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables) {
       set(
         toBeUpdated,
         'pipeline.template.templateInputs.variables',
@@ -193,7 +193,7 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
       )
     }
 
-    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).delegateSelectors) {
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.delegateSelectors) {
       set(
         toBeUpdated,
         'pipeline.template.templateInputs.delegateSelectors',

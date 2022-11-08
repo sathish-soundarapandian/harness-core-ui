@@ -107,7 +107,7 @@ export const addHotJarSuppressionAttribute = (): { [HOTJAR_SUPPRESSION_ATTR]: bo
 
 // Utility to check if environment is a PR environment
 export const isPR = (): boolean => {
-  return location.hostname === PR_ENV_HOST_NAME
+  return location.hostname?.includes(PR_ENV_HOST_NAME)
 }
 
 // Utility to check if environment is a local develop environment

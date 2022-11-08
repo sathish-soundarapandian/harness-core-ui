@@ -285,6 +285,7 @@ export default function DeployEnvironmentEntityWidget({
                       checked={isMultiEnvironment || isEnvironmentGroup}
                       onToggle={handleMultiEnvironmentToggle}
                       label={toggleLabel}
+                      tooltipId={'multiEnvInfraToggle'}
                     />
                     {/* !gitOpsEnabled check is to be removed once BE supports multi environments for gitops */}
                     {(isMultiEnvironment || isEnvironmentGroup) && isEnvGroupFFEnabled && !gitOpsEnabled && (

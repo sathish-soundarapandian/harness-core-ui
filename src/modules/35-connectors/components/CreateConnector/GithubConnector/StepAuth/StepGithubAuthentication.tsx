@@ -26,7 +26,6 @@ import { FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { Status } from '@common/utils/Constants'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   setupGithubFormData,
   GitConnectionType,
@@ -48,11 +47,7 @@ import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/util
 import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-import {
-  ConnectorSecretScope,
-  handleOAuthEventProcessing,
-  OAuthEventProcessingResponse
-} from '../../CreateConnectorUtils'
+import { handleOAuthEventProcessing, OAuthEventProcessingResponse } from '../../CreateConnectorUtils'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGithubAuthentication.module.scss'
@@ -257,11 +252,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       if (oAuthStatus === Status.SUCCESS && oAuthResponse) {
         const { accessTokenRef } = oAuthResponse
         const formValuesCopy = { ...formikRef.current?.values }
-        const updatedFormValues = set(
-          formValuesCopy,
-          'oAuthAccessTokenRef',
-          `${ConnectorSecretScope[Scope.ACCOUNT]}${accessTokenRef}`
-        )
+        const updatedFormValues = set(formValuesCopy, 'oAuthAccessTokenRef', `${accessTokenRef}`)
         formikRef.current?.setValues(updatedFormValues)
       }
     }, [oAuthStatus, oAuthResponse, formikRef.current])

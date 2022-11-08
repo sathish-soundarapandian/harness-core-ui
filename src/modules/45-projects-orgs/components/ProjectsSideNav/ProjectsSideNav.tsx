@@ -57,27 +57,31 @@ export default function ProjectsSideNav(): React.ReactElement {
       )}
       {selectedProject && (
         <Container className={allProjectsPath?.isExact ? css.projectSelectorContainer : undefined}>
-          <ProjectSelector
-            onSelect={data => {
-              updateAppStore({ selectedProject: data })
-              // changing project
-              history.push(
-                compile(routeMatch.path)({
-                  ...routeMatch.params,
-                  projectIdentifier: data.identifier,
-                  orgIdentifier: data.orgIdentifier
-                })
-              )
-            }}
-          />
+          <Container className={css.selector}>
+            <ProjectSelector
+              onSelect={data => {
+                updateAppStore({ selectedProject: data })
+                // changing project
+                history.push(
+                  compile(routeMatch.path)({
+                    ...routeMatch.params,
+                    projectIdentifier: data.identifier,
+                    orgIdentifier: data.orgIdentifier
+                  })
+                )
+              }}
+            />
+          </Container>
           <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
+          {NEW_LEFT_NAVBAR_SETTINGS && (
+            <SidebarLink
+              label={getString('common.pipelineExecution')}
+              to={routes.toDeployments(projectDetailsParams)}
+            />
+          )}
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
           )}
-          {NEW_LEFT_NAVBAR_SETTINGS && (
-            <SidebarLink label={getString('executionsText')} to={routes.toDeployments(projectDetailsParams)} />
-          )}
-
           <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
         </Container>
       )}

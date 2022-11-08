@@ -21,7 +21,7 @@ export interface PipelineOutOfSyncErrorStripProps {
 
 export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfSyncErrorStripProps) {
   const {
-    state: { pipeline, originalPipeline, gitDetails },
+    state: { pipeline, originalPipeline, gitDetails, storeMetadata },
     isReadonly,
     fetchPipeline
   } = usePipelineContext()
@@ -59,6 +59,8 @@ export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfS
       isReadOnly={isReadonly}
       onRefreshEntity={onRefreshEntity}
       updateRootEntity={updateRootEntity}
+      gitDetails={gitDetails}
+      storeMetadata={storeMetadata}
     />
   ) : (
     <></>

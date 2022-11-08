@@ -1096,4 +1096,5 @@ freezeListActiveBannerText: There are {{count}} ongoing deployment freeze window
 freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
+pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions

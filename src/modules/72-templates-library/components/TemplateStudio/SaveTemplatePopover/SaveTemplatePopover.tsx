@@ -11,7 +11,7 @@ import { parse } from 'yaml'
 import { Button, ButtonVariation, SplitButton, SplitButtonOption, useToaster } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { isEmpty, unset } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
 import produce from 'immer'
 import classNames from 'classnames'
@@ -31,13 +31,15 @@ import type { EntityGitDetails, Failure, NGTemplateInfoConfig } from 'services/t
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
+import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
+import routes from '@common/RouteDefinitions'
 import css from './SaveTemplatePopover.module.scss'
 
 export interface GetErrorResponse extends Omit<Failure, 'errors'> {
@@ -69,19 +71,21 @@ function SaveTemplatePopover(
     },
     fetchTemplate,
     deleteTemplateCache,
-    view,
     isReadonly,
     updateTemplate
   } = React.useContext(TemplateContext)
   const { getString } = useStrings()
-  const { templateIdentifier } = useParams<TemplateStudioPathProps & ModulePathParams>()
+  const { accountId, templateIdentifier, templateType, module } = useParams<
+    TemplateStudioPathProps & ModulePathParams
+  >()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const { getComments } = useCommentModal()
-  const { showError, clear } = useToaster()
+  const { showSuccess, showError, clear } = useToaster()
   const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
   const [loading, setLoading] = React.useState<boolean>()
   const templateConfigModalHandler = React.useRef<TemplateConfigModalHandle>(null)
   const { getRBACErrorMessage } = useRBACError()
+  const history = useHistory()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -100,22 +104,69 @@ function SaveTemplatePopover(
     [modalProps, templateConfigModalHandler.current]
   )
 
-  const { saveAndPublish } = useSaveTemplate({
-    yamlHandler,
-    fetchTemplate,
-    deleteTemplateCache: async (details?: EntityGitDetails) => {
+  const customDeleteTemplateCache = async (details?: EntityGitDetails) => {
+    if (templateIdentifier === DefaultNewTemplateId) {
+      await updateTemplate(
+        produce(originalTemplate, draft => {
+          unset(draft, 'type')
+        })
+      )
+    } else {
+      await updateTemplate(originalTemplate)
+    }
+    await deleteTemplateCache(details)
+  }
+
+  const navigateToLocation = (newTemplate: NGTemplateInfoConfig, updatedGitDetails?: SaveToGitFormInterface): void => {
+    history.replace(
+      routes.toTemplateStudio({
+        projectIdentifier: newTemplate.projectIdentifier,
+        orgIdentifier: newTemplate.orgIdentifier,
+        accountId,
+        ...(!isEmpty(newTemplate.projectIdentifier) && { module }),
+        templateType: templateType,
+        templateIdentifier: newTemplate.identifier,
+        versionLabel: newTemplate.versionLabel,
+        repoIdentifier: updatedGitDetails?.repoIdentifier,
+        branch: updatedGitDetails?.branch
+      })
+    )
+  }
+
+  const nextCallback = async (
+    latestTemplate: NGTemplateInfoConfig,
+    updatedGitDetails?: SaveToGitFormInterface,
+    updatedStoreMetadata?: StoreMetadata
+  ) => {
+    const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
+    if (isInlineTemplate) {
+      clear()
+      showSuccess(getString('common.template.saveTemplate.publishTemplate'))
       if (templateIdentifier === DefaultNewTemplateId) {
-        await updateTemplate(
-          produce(originalTemplate, draft => {
-            unset(draft, 'type')
-          })
-        )
+        await customDeleteTemplateCache()
+        navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
-        await updateTemplate(originalTemplate)
+        await fetchTemplate({ forceFetch: true, forceUpdate: true })
       }
-      await deleteTemplateCache(details)
-    },
-    view
+    } else {
+      // If new template creation
+      if (templateIdentifier === DefaultNewTemplateId) {
+        await customDeleteTemplateCache(updatedGitDetails)
+        navigateToLocation(latestTemplate, updatedGitDetails)
+      } else {
+        // Update template in existing branch
+        if (updatedGitDetails?.isNewBranch === false) {
+          await fetchTemplate({ forceFetch: true, forceUpdate: true })
+        } else {
+          // Update template in new branch
+          navigateToLocation(latestTemplate, updatedGitDetails)
+        }
+      }
+    }
+  }
+
+  const { saveAndPublish } = useSaveTemplate({
+    onSuccessCallback: nextCallback
   })
 
   const triggerSave = async (latestTemplate: NGTemplateInfoConfig, comment?: string) => {

@@ -34,10 +34,10 @@ export const connectorInfoMock: ConnectorInfoDTO = {
   type: 'Spot',
   spec: {
     credential: {
-      type: 'ManualConfig',
+      type: 'PermanentTokenConfig',
       spec: {
-        accountId: null,
-        accountIdRef: 'testAccountRef',
+        spotAccountId: null,
+        spotAccountIdRef: 'testAccountRef',
         apiTokenRef: 'testTokenRef'
       }
     },

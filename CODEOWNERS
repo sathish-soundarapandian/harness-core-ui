@@ -59,6 +59,11 @@ src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline
 src/modules/75-cd/modals/CDTrial @harness/ui-plg
 src/modules/75-cd/pages/home @harness/ui-plg
+src/modules/75-cd/components/EnvironmentsV2 @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployClusterEntityStep @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployEnvironmentEntityStep @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployInfrastructureEntityStep @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployEnvironmentGroupStep @vkbansal-harness @AshwinBhatkal-Harness
 src/modules/85-cv @harness/ui-cv
 src/modules/85-cv/pages/home @harness/ui-plg
 src/modules/85-sto @harness/ui-sto
