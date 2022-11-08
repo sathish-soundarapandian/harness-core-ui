@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, PageSpinner } from '@wings-software/uicore'
+import { Color, Container, PageSpinner, Text } from '@harness/uicore'
 import React from 'react'
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
@@ -27,6 +27,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
+import { useStrings } from 'framework/strings'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -120,7 +121,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     startPolling: page === DEFAULT_PAGE_INDEX && !loading,
     pollingInterval: 20_000
   })
-
+  const { getString } = useStrings()
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity
   const executionList = data?.data
@@ -144,7 +145,14 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
         {showSpinner ? (
           <PageSpinner />
         ) : executionList && hasExecutions ? (
-          <Executions executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
+          <>
+            <div className={css.tableTitle}>
+              <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
+                {`${getString('total')}: ${data?.data?.totalElements}`}
+              </Text>
+            </div>
+            <Executions executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
+          </>
         ) : (
           <ExecutionListEmpty {...rest} />
         )}
