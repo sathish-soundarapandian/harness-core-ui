@@ -126,7 +126,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
-  const [currentJSON, setCurrentJSON] = useState<object>()
+  const [setCurrentJSON] = useState<object>()
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
@@ -210,17 +210,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Bootstrap editor with schema */
 
+  // useEffect(() => {
+  //   //for optimization, restrict setting value to editor if previous and current json inputs are the same.
+  //   //except when editor is reset/cleared, by setting empty json object as input
+  //   if (
+  //     every([existingJSON, isEmpty(existingJSON), isEmpty(currentJSON)]) ||
+  //     JSON.stringify(existingJSON) !== JSON.stringify(currentJSON)
+  //   ) {
+  //     attempt(verifyIncomingJSON, existingJSON)
+  //     setCurrentJSON(existingJSON)
+  //   }
+  // }, [existingJSON])
+
   useEffect(() => {
-    //for optimization, restrict setting value to editor if previous and current json inputs are the same.
-    //except when editor is reset/cleared, by setting empty json object as input
-    if (
-      every([existingJSON, isEmpty(existingJSON), isEmpty(currentJSON)]) ||
-      JSON.stringify(existingJSON) !== JSON.stringify(currentJSON)
-    ) {
-      attempt(verifyIncomingJSON, existingJSON)
-      setCurrentJSON(existingJSON)
-    }
-  }, [existingJSON])
+    verifyIncomingJSON(existingJSON)
+  }, [JSON.stringify(existingJSON)])
 
   useEffect(() => {
     if (existingYaml) {

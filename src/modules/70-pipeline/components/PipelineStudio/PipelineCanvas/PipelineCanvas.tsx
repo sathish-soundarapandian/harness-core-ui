@@ -465,8 +465,8 @@ export function PipelineCanvas({
     ) => {
       pipeline.name = values.name
       pipeline.description = values.description
-      pipeline.identifier = values.identifier
-      pipeline.tags = values.tags ?? {}
+      // pipeline.identifier = values.identifier
+      // pipeline.tags = values.tags ?? {}
       delete (pipeline as PipelineWithGitContextFormProps).repo
       delete (pipeline as PipelineWithGitContextFormProps).branch
       delete (pipeline as PipelineWithGitContextFormProps).connectorRef
