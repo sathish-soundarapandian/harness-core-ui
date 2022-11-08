@@ -31,12 +31,10 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
-      // window.browserRouterEnabled = 'BROWSER_ROUTER_ENABLED_PLACEHOLDER' === 'true'
       if (window.browserRouterEnabled === undefined) {
         window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       }
-      window.nameSpace =
-        window.location.pathname.split('/ng/').length > 1 ? window.location.pathname.split('/ng/')[0] : ''
+      window.harnessNameSpace = HARNESS_NAME_SPACE_PLACEHOLDER ? HARNESS_NAME_SPACE_PLACEHOLDER : ''
       window.getApiBaseUrl = str => {
         if (window.browserRouterEnabled) {
           return `${window.apiUrl || ''}/${str}`
@@ -62,7 +60,7 @@
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
     <script>
-      window.NON_CDN_BASE_PATH = `${window.nameSpace}/ng/static/`
+      window.NON_CDN_BASE_PATH = `${window.harnessNameSpace}/ng/static/`
       if (window.deploymentType === 'SAAS') {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')
