@@ -231,7 +231,9 @@ function SavePipelinePopover(
       !!OPA_PIPELINE_GOVERNANCE
     )
     setLoading(false)
-    const newPipelineId = latestPipeline?.identifier
+    // const newPipelineId = latestPipeline?.identifier
+    // @ts-ignore
+    const newPipelineId = response?.data
 
     if (response && response.status === 'SUCCESS') {
       const governanceData: GovernanceMetadata | undefined = get(response, 'data.governanceMetadata')

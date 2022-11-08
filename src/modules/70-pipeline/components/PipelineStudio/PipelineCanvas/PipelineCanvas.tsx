@@ -403,7 +403,10 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     if (isInitialized) {
-      if (pipeline?.identifier === DefaultNewPipelineId) {
+      // if (pipeline?.identifier === DefaultNewPipelineId) {
+      //   showModal()
+      // }
+      if (pipeline?.name === '') {
         showModal()
       }
       // if (isBEPipelineUpdated && !discardBEUpdateDialog) {
@@ -462,8 +465,8 @@ export function PipelineCanvas({
     ) => {
       pipeline.name = values.name
       pipeline.description = values.description
-      pipeline.identifier = values.identifier
-      pipeline.tags = values.tags ?? {}
+      // pipeline.identifier = values.identifier
+      // pipeline.tags = values.tags ?? {}
       delete (pipeline as PipelineWithGitContextFormProps).repo
       delete (pipeline as PipelineWithGitContextFormProps).branch
       delete (pipeline as PipelineWithGitContextFormProps).connectorRef

@@ -155,9 +155,11 @@ export interface PipelineReducerState {
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
+// @ts-ignore
 export const DefaultPipeline: PipelineInfoConfig = {
-  name: '',
-  identifier: DefaultNewPipelineId
+  name: ''
+  // @ts-ignore
+  // identifier: DefaultNewPipelineId
 }
 
 export interface ActionResponse {

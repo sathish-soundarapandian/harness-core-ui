@@ -605,16 +605,16 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       PipelineContextActions.success({
         error: '',
         pipeline: defaultTo(data?.pipeline, {
-          ...DefaultPipeline,
-          projectIdentifier: queryParams.projectIdentifier,
-          orgIdentifier: queryParams.orgIdentifier
+          ...DefaultPipeline
+          // projectIdentifier: queryParams.projectIdentifier,
+          // orgIdentifier: queryParams.orgIdentifier
         }),
         originalPipeline: defaultTo(
           cloneDeep(data?.originalPipeline),
           cloneDeep({
-            ...DefaultPipeline,
-            projectIdentifier: queryParams.projectIdentifier,
-            orgIdentifier: queryParams.orgIdentifier
+            ...DefaultPipeline
+            // projectIdentifier: queryParams.projectIdentifier,
+            // orgIdentifier: queryParams.orgIdentifier
           })
         ),
         isUpdated: true,

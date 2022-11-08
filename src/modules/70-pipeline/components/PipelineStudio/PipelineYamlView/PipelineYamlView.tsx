@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { defaultTo, isEqual, omit } from 'lodash-es'
+import React, { useMemo } from 'react'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Checkbox, Tag, Text, useConfirmationDialog } from '@wings-software/uicore'
 import { Intent } from '@blueprintjs/core'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
+import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -98,18 +98,18 @@ function PipelineYamlView(): React.ReactElement {
         Interval = window.setInterval(() => {
           try {
             const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
-            // if (
-            //   (!isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
-            //     entityValidityDetails?.valid === false) &&
-            //   yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
-            // ) {
-            // @ts-ignore
-            updatePipeline(pipelineFromYaml).then(() => {
-              if (entityValidityDetails?.valid === false) {
-                updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
-              }
-            })
-            // }
+            if (
+              // !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
+              // entityValidityDetails?.valid === false &&
+              yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
+            ) {
+              // @ts-ignore
+              updatePipeline(pipelineFromYaml).then(() => {
+                if (entityValidityDetails?.valid === false) {
+                  updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
+                }
+              })
+            }
           } catch (e) {
             // Ignore Error
           }
@@ -145,11 +145,14 @@ function PipelineYamlView(): React.ReactElement {
     setYamlAlwaysEditMode(String(isAlwaysEditMode))
   }
 
-  const yamlOrJsonProp =
-    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
-      ? { existingYaml: entityValidityDetails?.invalidYaml }
-      : // : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
-        { existingJSON: pipeline }
+  const yamlOrJsonProp = useMemo(
+    (): Record<string, any> =>
+      entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
+        ? { existingYaml: entityValidityDetails?.invalidYaml }
+        : // : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+          { existingJSON: pipeline },
+    [pipeline]
+  )
 
   React.useEffect(() => {
     !isYamlEditable && updatePipelineView({ ...pipelineView, isYamlEditable: userPreferenceEditMode })
@@ -194,7 +197,7 @@ function PipelineYamlView(): React.ReactElement {
     <div className={css.yamlBuilder}>
       <>
         {!isDrawerOpened && (
-          <YamlBuilderMemo
+          <YAMLBuilder
             key={isYamlEditable.toString()}
             fileName={isPipelineRemote ? remoteFileName : defaultTo(yamlFileName, defaultFileName)}
             entityType="Pipelines"
