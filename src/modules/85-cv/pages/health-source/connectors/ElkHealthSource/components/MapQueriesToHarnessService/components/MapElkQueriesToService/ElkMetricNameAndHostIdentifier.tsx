@@ -16,9 +16,8 @@ import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/El
 
 import type { MapElkQueriesToServiceProps } from './MapElkQueriesToService.types'
 // eslint-disable-next-line import/no-unresolved
-import MultiTextOrSelectInput from './components/MapQueriesToHarnessServiceLayout/logIndexes'
+import MultiTextOrSelectInput from './components/MapQueriesToHarnessServiceLayout/MultiTextOrSelectInput'
 import css from './ElkMetricNameAndHostIdentifier.module.scss'
-//import LogIndexes from './components/MapQueriesToHarnessServiceLayout/logIndexes'
 
 export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProps): JSX.Element {
   const {

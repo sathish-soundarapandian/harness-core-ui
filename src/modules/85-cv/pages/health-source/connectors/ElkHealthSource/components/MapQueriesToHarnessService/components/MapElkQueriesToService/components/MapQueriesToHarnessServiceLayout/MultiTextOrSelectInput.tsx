@@ -10,7 +10,6 @@ import { getTypeOfInput } from '@cv/pages/health-source/connectors/AppDynamics/A
 // eslint-disable-next-line aliased-module-imports
 import { setLogIndexes } from '@cv/pages/health-source/connectors/ElkHealthSource/ElkHealthSource.utils'
 // eslint-disable-next-line aliased-module-imports
-import { MapElkToServiceFieldNames } from '../../../../constants'
 
 import styles from './MapQueriesToHarnessServiceLayout.module.scss'
 
