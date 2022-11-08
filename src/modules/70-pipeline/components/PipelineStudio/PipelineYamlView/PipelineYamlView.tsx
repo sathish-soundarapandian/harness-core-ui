@@ -97,12 +97,13 @@ function PipelineYamlView(): React.ReactElement {
       if (yamlHandler && !isDrawerOpened) {
         Interval = window.setInterval(() => {
           try {
-            const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())?.pipeline
+            const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
             if (
               (!isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
                 entityValidityDetails?.valid === false) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
+              // @ts-ignore
               updatePipeline(pipelineFromYaml).then(() => {
                 if (entityValidityDetails?.valid === false) {
                   updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
@@ -144,10 +145,11 @@ function PipelineYamlView(): React.ReactElement {
     setYamlAlwaysEditMode(String(isAlwaysEditMode))
   }
 
-  // const yamlOrJsonProp =
-  //   entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
-  //     ? { existingYaml: entityValidityDetails?.invalidYaml }
-  //     : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+  const yamlOrJsonProp =
+    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
+      ? { existingYaml: entityValidityDetails?.invalidYaml }
+      : // : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+        { existingJSON: pipeline }
 
   React.useEffect(() => {
     !isYamlEditable && updatePipelineView({ ...pipelineView, isYamlEditable: userPreferenceEditMode })
@@ -211,8 +213,8 @@ function PipelineYamlView(): React.ReactElement {
             onEnableEditMode={onEnableEditMode}
             isEditModeSupported={!isReadonly}
             openDialogProp={openDialog}
-            // existingJSON={{}}
             showErrorPanel={true}
+            {...yamlOrJsonProp}
           />
         )}
       </>

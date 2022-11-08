@@ -379,7 +379,8 @@ function SavePipelinePopover(
         return
       }
       try {
-        latestPipeline = parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig
+        // @ts-ignore
+        latestPipeline = parse<Pipeline>(yamlHandler.getLatestYaml()) as PipelineInfoConfig
       } /* istanbul ignore next */ catch (err) {
         showError(err.message || err, undefined, 'pipeline.save.pipeline.error')
       }
@@ -414,7 +415,9 @@ function SavePipelinePopover(
     ref,
     () => ({
       updatePipeline: async (pipelineYaml: string) => {
-        await initPipelinePublish(parse<Pipeline>(pipelineYaml).pipeline)
+        // await initPipelinePublish(parse<Pipeline>(pipelineYaml).pipeline)
+        //@ts-ignore
+        await initPipelinePublish(parse<Pipeline>(pipelineYaml))
       }
     }),
     [initPipelinePublish]
@@ -446,7 +449,7 @@ function SavePipelinePopover(
 
   return (
     <SplitButton
-      disabled={isSaveDisabled}
+      // disabled={isSaveDisabled}
       variation={ButtonVariation.PRIMARY}
       text={getString('save')}
       loading={loading}

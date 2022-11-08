@@ -197,21 +197,21 @@ export function PipelineCanvas({
   const { showError, clear } = useToaster()
 
   useDocumentTitle([parse(pipeline?.name || getString('pipelines'))])
-  const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
-  const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
-    cancelButtonText: getString('cancel'),
-    contentText: getString('pipelines-studio.pipelineUpdatedError'),
-    titleText: getString('pipelines-studio.pipelineUpdated'),
-    confirmButtonText: getString('update'),
-    intent: Intent.WARNING,
-    onCloseDialog: isConfirmed => {
-      if (isConfirmed) {
-        fetchPipeline({ forceFetch: true, forceUpdate: true })
-      } else {
-        setDiscardBEUpdate(true)
-      }
-    }
-  })
+  // const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
+  // const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
+  //   cancelButtonText: getString('cancel'),
+  //   contentText: getString('pipelines-studio.pipelineUpdatedError'),
+  //   titleText: getString('pipelines-studio.pipelineUpdated'),
+  //   confirmButtonText: getString('update'),
+  //   intent: Intent.WARNING,
+  //   onCloseDialog: isConfirmed => {
+  //     if (isConfirmed) {
+  //       fetchPipeline({ forceFetch: true, forceUpdate: true })
+  //     } else {
+  //       setDiscardBEUpdate(true)
+  //     }
+  //   }
+  // })
 
   const history = useHistory()
   const { supportingGitSimplification } = useAppStore()
@@ -398,13 +398,17 @@ export function PipelineCanvas({
   }, [entityValidityDetails?.valid, CI_YAML_VERSIONING])
 
   React.useEffect(() => {
+    fetchPipeline({ forceFetch: true, forceUpdate: true })
+  }, [])
+
+  React.useEffect(() => {
     if (isInitialized) {
       if (pipeline?.identifier === DefaultNewPipelineId) {
         showModal()
       }
-      if (isBEPipelineUpdated && !discardBEUpdateDialog) {
-        openConfirmBEUpdateError()
-      }
+      // if (isBEPipelineUpdated && !discardBEUpdateDialog) {
+      //   openConfirmBEUpdateError()
+      // }
       if (blockNavigation && isUpdated) {
         openUnsavedChangesDialog()
       }
@@ -416,7 +420,7 @@ export function PipelineCanvas({
     showModal,
     isInitialized,
     isBEPipelineUpdated,
-    discardBEUpdateDialog,
+    // discardBEUpdateDialog,
     blockNavigation
   ])
 

@@ -136,7 +136,8 @@ export const getPipelineByIdentifier = (
       }
 
       return {
-        ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
+        // ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
+        ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails }),
         gitDetails: obj.data.gitDetails ?? {},
         entityValidityDetails: obj.data.entityValidityDetails ?? {},
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},
@@ -198,9 +199,11 @@ export const savePipeline = (
   const createPipeline = useAPIV2 ? createPipelineV2Promise : createPipelinePromise
   const updatePipeline = useAPIV2 ? putPipelineV2Promise : putPipelinePromise
 
-  const body = yamlStringify({
-    pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
-  })
+  // const body = yamlStringify({
+  //   pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
+  // })
+
+  const body = yamlStringify(pipeline)
 
   return isEdit
     ? updatePipeline({

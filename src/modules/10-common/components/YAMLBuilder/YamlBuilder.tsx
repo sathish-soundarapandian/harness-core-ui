@@ -285,8 +285,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         const { lineNumber, column } = currentCursorPosition || {}
         if (lineNumber && column) {
           const editorContent = editor.getModel()?.getValue() || ''
-          const { autoCompletionYAML } = AutoCompletionMap.get(editorContent) || {}
-          if (AutoCompletionMap.has(editorContent)) {
+          const contextKey = editorContent.replace('\n', '')
+          const { autoCompletionYAML } = AutoCompletionMap.get(contextKey) || {}
+          if (AutoCompletionMap.has(contextKey)) {
             editor.executeEdits('', [
               {
                 range: {
