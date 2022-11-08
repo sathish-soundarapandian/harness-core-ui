@@ -58,6 +58,7 @@ import {
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
@@ -207,7 +208,7 @@ export const savePipeline = (
 
   return isEdit
     ? updatePipeline({
-        pipelineIdentifier: pipeline.identifier,
+        pipelineIdentifier: getIdentifierFromName(pipeline.name),
         queryParams: {
           ...params
         },
