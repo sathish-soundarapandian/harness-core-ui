@@ -65,7 +65,6 @@ export default function MultiTextOrSelectInput({
         style={{ marginBottom: !applicationError ? '20px' : '' }}
         expressions={expressions}
         onChange={(item, _valueType, multiType) => {
-          console.log('rere', item, _valueType, multiType)
           if (inputType !== multiType) {
             setInputType(multiType)
           }
@@ -82,7 +81,7 @@ export default function MultiTextOrSelectInput({
   ) : (
     <FormInput.Select
       label={label}
-      name={MapElkToServiceFieldNames.LOG_INDEXES}
+      name={name}
       selectProps={{ allowCreatingNewItems: true }}
       disabled={areOptionsLoading}
       placeholder={placeholder}
