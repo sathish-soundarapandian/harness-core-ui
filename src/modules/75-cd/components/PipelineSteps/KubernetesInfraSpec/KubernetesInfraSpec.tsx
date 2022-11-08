@@ -34,7 +34,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { K8SDirectInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -53,6 +53,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -147,7 +148,7 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
+                  <ConnectorConfigureOptions
                     style={{ marginTop: `25px !important` }}
                     value={formik.values.connectorRef as string}
                     type={
@@ -164,6 +165,17 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                       formik.setFieldValue('connectorRef', value)
                     }}
                     isReadonly={readonly}
+                    connectorReferenceFieldProps={{
+                      accountIdentifier: accountId,
+                      projectIdentifier,
+                      orgIdentifier,
+                      label: getString('connector'),
+                      disabled: readonly,
+                      gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true },
+                      tooltipProps: {
+                        dataTooltipId: 'k8InfraConnector'
+                      }
+                    }}
                   />
                 )}
               </Layout.Horizontal>
@@ -192,6 +204,7 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                       formik.setFieldValue('namespace', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )}
               </Layout.Horizontal>
@@ -229,6 +242,7 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                             formik.setFieldValue('releaseName', value)
                           }}
                           isReadonly={readonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                     </Layout.Horizontal>
@@ -290,6 +304,10 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             setRefValue
             className={css.connectorMargin}
             multiTypeProps={{ allowableTypes, expressions }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template?.connectorRef
+            }}
           />
         </div>
       )}
