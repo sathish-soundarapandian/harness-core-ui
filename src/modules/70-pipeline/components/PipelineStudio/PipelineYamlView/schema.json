@@ -51,8 +51,7 @@
                             "run": {
                               "type": "string"
                             }
-                          },
-                          "required": ["run"]
+                          }
                         }
                       },
                       "required": ["name", "type", "spec"]
@@ -87,8 +86,7 @@
                               },
                               "required": ["parallelism"]
                             }
-                          },
-                          "required": ["language", "build_tool", "build_args", "strategy"]
+                          }
                         }
                       },
                       "required": ["name", "type", "spec"]
@@ -96,7 +94,7 @@
                   ]
                 }
               },
-              "required": ["clone", "steps"]
+              "required": ["steps"]
             }
           },
           "required": ["name", "type", "spec"]
