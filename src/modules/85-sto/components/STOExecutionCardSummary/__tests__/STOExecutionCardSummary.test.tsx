@@ -16,6 +16,7 @@ import * as stoService from 'services/sto'
 import type { SeverityPillProps } from '@sto/components/SeverityPill/SeverityPill'
 import STOExecutionCardSummary from '@sto/components/STOExecutionCardSummary/STOExecutionCardSummary'
 
+// eslint-disable-next-line react/display-name
 jest.mock('@sto/components/SeverityPill/SeverityPill', () => ({ severity, value }: SeverityPillProps) => (
   <div data-testid={severity} data-value={value} />
 ))
