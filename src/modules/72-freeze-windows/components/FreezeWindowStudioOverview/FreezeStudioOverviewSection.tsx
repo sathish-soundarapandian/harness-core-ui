@@ -67,7 +67,7 @@ export const FreezeStudioOverviewSection = (
           <FormikForm>
             <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
               <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-                {getString('freezeWindows.freezeStudio.freezeOverview')}
+                {getString('overview')}
               </Heading>
               <Card className={css.sectionCard}>
                 <NameIdDescriptionTags

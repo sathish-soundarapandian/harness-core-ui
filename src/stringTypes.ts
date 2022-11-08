@@ -186,6 +186,7 @@ export interface StringsMap {
   'common.copyFqn': string
   'common.copyVariableName': string
   'common.countryOrRegion': string
+  'common.coverage': string
   'common.createPipeline': string
   'common.creating': string
   'common.current': string
@@ -4272,10 +4273,7 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.excludeFollowingProjects': string
   'freezeWindows.freezeStudio.excludeOrgs': string
   'freezeWindows.freezeStudio.excludeProjects': string
-  'freezeWindows.freezeStudio.freezeConfiguration': string
   'freezeWindows.freezeStudio.freezeCreatedSuccessfully': string
-  'freezeWindows.freezeStudio.freezeOverview': string
-  'freezeWindows.freezeStudio.freezeSchedule': string
   'freezeWindows.freezeStudio.freezeUpdatedSuccessfully': string
   'freezeWindows.freezeWindowsPage.aboutFeezeWindows': string
   'freezeWindows.freezeWindowsPage.confirmDeleteText': string
@@ -5670,7 +5668,6 @@ export interface StringsMap {
   'ce.commitmentOrchestration.commitmentUtilisation': string
   'ce.commitmentOrchestration.computeCoverage': string
   'ce.commitmentOrchestration.computeSpend': string
-  'ce.commitmentOrchestration.coverage': string
   'ce.commitmentOrchestration.enableBanner.finalText': string
   'ce.commitmentOrchestration.enableBanner.initialText': string
   'ce.commitmentOrchestration.exitSetupBtn': string

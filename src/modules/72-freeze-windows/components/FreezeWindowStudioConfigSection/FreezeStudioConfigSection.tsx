@@ -45,7 +45,7 @@ export const FreezeStudioConfigSection = (
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
       <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-        {getString('freezeWindows.freezeStudio.freezeConfiguration')}
+        {getString('common.coverage')}
       </Heading>
       <Card className={css.sectionCard}>
         <Heading color={Color.GREY_700} level={4} style={{ fontWeight: 600, fontSize: '14px', lineHeight: '24px' }}>

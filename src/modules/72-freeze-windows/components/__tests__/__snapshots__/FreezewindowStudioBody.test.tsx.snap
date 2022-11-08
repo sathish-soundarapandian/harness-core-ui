@@ -89,7 +89,7 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
                   />
                 </svg>
               </span>
-              freezeWindows.freezeStudio.freezeConfiguration
+              common.coverage
             </span>
           </div>
           <div
@@ -150,7 +150,7 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
                     level="3"
                     style="font-weight: 600; font-size: 16px; line-height: 24px;"
                   >
-                    freezeWindows.freezeStudio.freezeOverview
+                    overview
                   </h3>
                   <div
                     class="bp3-card bp3-elevation-0 Card--card sectionCard"

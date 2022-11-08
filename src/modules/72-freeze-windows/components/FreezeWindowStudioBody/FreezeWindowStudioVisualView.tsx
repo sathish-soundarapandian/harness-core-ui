@@ -93,7 +93,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
           title={
             <span>
               <Icon name="services" height={20} size={20} className={css.tabIcon} />
-              {getString('freezeWindows.freezeStudio.freezeConfiguration')}
+              {getString('common.coverage')}
             </span>
           }
         />

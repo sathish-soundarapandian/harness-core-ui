@@ -341,7 +341,7 @@ exports[`Freeze Window Studio Wrapper it should render FreezeWindow Studio in a 
                       />
                     </svg>
                   </span>
-                  freezeWindows.freezeStudio.freezeConfiguration
+                  common.coverage
                 </span>
               </div>
               <div
@@ -402,7 +402,7 @@ exports[`Freeze Window Studio Wrapper it should render FreezeWindow Studio in a 
                         level="3"
                         style="font-weight: 600; font-size: 16px; line-height: 24px;"
                       >
-                        freezeWindows.freezeStudio.freezeOverview
+                        overview
                       </h3>
                       <div
                         class="bp3-card bp3-elevation-0 Card--card sectionCard"

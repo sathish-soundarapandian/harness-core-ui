@@ -12,10 +12,7 @@ freezeWindowsPage:
   updateStatusFailure: Failed to update Freeze Window(s)
   dateRangeLabel: 'Updated: Last 7 days'
 freezeStudio:
-  freezeConfiguration: Freeze Configuration
-  freezeOverview: Freeze Overview
-  freezeSchedule: Freeze Schedule
-  defineResources: Define which resources you want to include in this freeze window
+  defineResources: Freeze any deployments that have the following resources defined in the rules below
   excludeOrgs: Exclude specific Organizations
   excludeProjects: Exclude specific Projects
   allOrganizations: All Organizations
