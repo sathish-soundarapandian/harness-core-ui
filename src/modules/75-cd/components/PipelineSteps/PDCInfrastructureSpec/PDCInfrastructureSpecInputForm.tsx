@@ -76,6 +76,9 @@ export const getAttributeFilters = (value: PdcInfrastructure): string => {
 }
 
 export const getHostNames = (value: PdcInfrastructure): string => {
+  if (value.hostFilter?.type === 'HostAttributes') {
+    return ''
+  }
   const hostNameValue = defaultTo((value.hostFilter?.spec as HostNamesFilter)?.value, '')
   return isString(hostNameValue) ? hostNameValue : hostNameValue?.join('\n')
 }

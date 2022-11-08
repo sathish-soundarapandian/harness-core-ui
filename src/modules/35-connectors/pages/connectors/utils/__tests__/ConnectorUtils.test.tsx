@@ -131,6 +131,7 @@ describe('Connector Utils', () => {
           tags: {},
           spec: {
             connectionType: 'Repo',
+            executeOnDelegate: true,
             url: 'url',
             type: 'Ssh',
             spec: {

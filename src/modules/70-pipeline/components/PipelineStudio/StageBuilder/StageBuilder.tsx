@@ -193,6 +193,7 @@ function StageBuilder(): JSX.Element {
       isInitialized,
       selectionState: { selectedStageId },
       templateTypes,
+      templateIcons,
       gitDetails,
       storeMetadata
     },
@@ -521,11 +522,12 @@ function StageBuilder(): JSX.Element {
     return getPipelineGraphData({
       data: pipeline.stages as StageElementWrapperConfig[],
       templateTypes: templateTypes,
+      templateIcons,
       serviceDependencies: undefined,
       errorMap: errorMap,
       parentPath: `pipeline.stages`
     })
-  }, [pipeline, errorMap, templateTypes])
+  }, [pipeline, errorMap, templateTypes, templateIcons])
 
   const referenceId = (sectionIdPassed: string | null | undefined): string => {
     switch (sectionIdPassed) {

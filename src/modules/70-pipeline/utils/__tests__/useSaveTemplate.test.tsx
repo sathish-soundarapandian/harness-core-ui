@@ -98,7 +98,7 @@ function Wrapped({ updatedGitDetails, ...rest }: WrappedComponentProps): React.R
 describe('useSaveTemplate Test', () => {
   test('create should work as expected', async () => {
     const props: TemplateContextMetadata = {
-      deleteTemplateCache: jest.fn()
+      onSuccessCallback: jest.fn()
     }
     const { getByText } = render(
       <TestWrapper>
@@ -111,11 +111,11 @@ describe('useSaveTemplate Test', () => {
       fireEvent.click(saveBtn)
     })
     expect(templateNg.createTemplatePromise).toBeCalled()
-    expect(props.deleteTemplateCache).toBeCalled()
+    expect(props.onSuccessCallback).toBeCalled()
   })
   test('edit should work as expected', async () => {
     const props: TemplateContextMetadata = {
-      fetchTemplate: jest.fn()
+      onSuccessCallback: jest.fn()
     }
     const { getByText } = render(
       <TestWrapper>
@@ -128,12 +128,12 @@ describe('useSaveTemplate Test', () => {
       fireEvent.click(saveBtn)
     })
     expect(templateNg.updateExistingTemplateVersionPromise).toBeCalled()
-    expect(props.fetchTemplate).toBeCalled()
+    expect(props.onSuccessCallback).toBeCalled()
   })
 
   test('filePath should be expected', async () => {
     const props: WrappedComponentProps = {
-      deleteTemplateCache: jest.fn(),
+      onSuccessCallback: jest.fn(),
       updatedGitDetails: {
         repoIdentifier: 'testRepo',
         branch: 'testBranch'
@@ -159,7 +159,7 @@ describe('useSaveTemplate Test', () => {
 
   test('filePath should be expected for underscore and hyphen', async () => {
     const props: WrappedComponentProps = {
-      deleteTemplateCache: jest.fn(),
+      onSuccessCallback: jest.fn(),
       updatedGitDetails: {
         repoIdentifier: 'testRepo',
         branch: 'testBranch'
@@ -193,7 +193,7 @@ describe('useSaveTemplate Test', () => {
           repoIdentifier: 'gitSyncRepo',
           rootFolder: '/rootFolderTest/.harness/'
         },
-        fetchTemplate: jest.fn()
+        onSuccessCallback: jest.fn()
       }
       const { getByText } = render(
         <GitSyncTestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
@@ -223,7 +223,7 @@ describe('useSaveTemplate Test', () => {
         updateExistingTemplateVersionPromiseArg
       )
 
-      expect(props.fetchTemplate).not.toBeCalled()
+      expect(props.onSuccessCallback).not.toBeCalled()
     })
 
     test('edit should work as expected', async () => {
@@ -239,7 +239,7 @@ describe('useSaveTemplate Test', () => {
           repoIdentifier: 'gitSyncRepo',
           rootFolder: '/rootFolderTest/.harness/'
         },
-        fetchTemplate: jest.fn()
+        onSuccessCallback: jest.fn()
       }
       const { getByText } = render(
         <GitSyncTestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
@@ -269,13 +269,13 @@ describe('useSaveTemplate Test', () => {
         updateExistingTemplateVersionPromiseArg
       )
 
-      expect(props.fetchTemplate).toBeCalledTimes(0)
+      expect(props.onSuccessCallback).toBeCalledTimes(0)
       await waitFor(() => expect(getByText('There was error')).toBeInTheDocument())
     })
 
     test('create should work as expected', async () => {
       const props: WrappedComponentProps = {
-        deleteTemplateCache: jest.fn(),
+        onSuccessCallback: jest.fn(),
         updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',
@@ -309,7 +309,7 @@ describe('useSaveTemplate Test', () => {
       await waitFor(() => expect(templateNg.createTemplatePromise).toHaveBeenCalled())
       expect(templateNg.createTemplatePromise).toHaveBeenCalledWith(createTemplatePromiseArg)
 
-      expect(props.deleteTemplateCache).not.toBeCalled()
+      expect(props.onSuccessCallback).not.toBeCalled()
     })
 
     test('error should be displayed in the progress modal when create API fails', async () => {
@@ -318,7 +318,7 @@ describe('useSaveTemplate Test', () => {
         .mockImplementation(() => Promise.reject({ status: 'ERROR', message: 'There was error' }))
 
       const props: WrappedComponentProps = {
-        deleteTemplateCache: jest.fn(),
+        onSuccessCallback: jest.fn(),
         updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',
@@ -352,7 +352,7 @@ describe('useSaveTemplate Test', () => {
       await waitFor(() => expect(templateNg.createTemplatePromise).toHaveBeenCalled())
       expect(templateNg.createTemplatePromise).toHaveBeenCalledWith(createTemplatePromiseArg)
 
-      expect(props.deleteTemplateCache).toBeCalledTimes(0)
+      expect(props.onSuccessCallback).toBeCalledTimes(0)
       await waitFor(() => expect(getByText('There was error')).toBeInTheDocument())
     })
   })

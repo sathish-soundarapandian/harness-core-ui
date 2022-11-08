@@ -28,6 +28,8 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
     name: '',
     identifier: '',
     type: 'Github',
+    orgIdentifier: '',
+    projectIdentifier: '',
     spec: {
       authentication: {
         type: 'Http',
@@ -53,11 +55,15 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
 export const getOAuthConnectorPayload = ({
   tokenRef,
   refreshTokenRef,
-  gitProviderType
+  gitProviderType,
+  orgIdentifier,
+  projectIdentifier
 }: {
   tokenRef: string
   refreshTokenRef?: string
   gitProviderType?: ConnectorInfoDTO['type']
+  orgIdentifier: string
+  projectIdentifier: string
 }): ConnectorRequestBody => {
   let updatedConnectorPayload: ConnectorRequestBody = {}
   updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.name', `${gitProviderType} OAuth`)
@@ -66,6 +72,8 @@ export const getOAuthConnectorPayload = ({
     'connector.identifier',
     `${gitProviderType}_OAuth_${new Date().getTime()}`
   )
+  updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.orgIdentifier', orgIdentifier)
+  updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.projectIdentifier', projectIdentifier)
   updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.type', gitProviderType)
   switch (gitProviderType) {
     case Connectors.GITHUB:

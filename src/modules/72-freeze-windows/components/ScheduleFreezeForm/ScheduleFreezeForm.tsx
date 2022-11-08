@@ -11,7 +11,7 @@ import * as Yup from 'yup'
 import { omit } from 'lodash-es'
 import moment from 'moment'
 import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
-import { DOES_NOT_REPEAT, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
+import { DOES_NOT_REPEAT, getMomentFormat, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
 import type { FreezeWindow } from 'services/cd-ng'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { DateTimePicker, DATE_PARSE_FORMAT } from './DateTimePicker'
@@ -101,7 +101,8 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
     ...freezeWindow,
     timeZone: freezeWindow?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
     startTime: freezeWindow?.startTime ?? moment().format(DATE_PARSE_FORMAT),
-    endTime: freezeWindow?.endTime ?? moment(freezeWindow?.startTime).add(30, 'minutes').format(DATE_PARSE_FORMAT),
+    endTime:
+      freezeWindow?.endTime ?? getMomentFormat(freezeWindow?.startTime).add(30, 'minutes').format(DATE_PARSE_FORMAT),
     duration: freezeWindow?.duration ?? '30m',
     endTimeMode: freezeWindow?.endTime ? 'date' : 'duration',
     recurrence: {
@@ -109,7 +110,7 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
       spec: {
         until:
           freezeWindow?.recurrence?.spec?.until ??
-          moment(freezeWindow?.endTime).endOf('year').format(DATE_PARSE_FORMAT),
+          getMomentFormat(freezeWindow?.endTime).endOf('year').format(DATE_PARSE_FORMAT),
         recurrenceEndMode: freezeWindow?.recurrence?.type && freezeWindow?.recurrence?.spec?.until ? 'date' : 'never'
       }
     }

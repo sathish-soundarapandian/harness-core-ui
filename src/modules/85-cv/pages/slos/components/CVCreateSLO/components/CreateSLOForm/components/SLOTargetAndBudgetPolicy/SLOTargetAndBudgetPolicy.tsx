@@ -33,6 +33,61 @@ import { flexStart } from './SLOTargetAndBudgetPolicy.constants'
 import SLOTargetNotificationsContainer from './components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 
+interface SLOPeriodInterface {
+  periodType?: string
+  periodLengthType?: string
+  verticalOrientation?: boolean
+}
+
+export const SloPeriodLength = ({
+  periodType,
+  periodLengthType,
+  verticalOrientation
+}: SLOPeriodInterface): JSX.Element => {
+  const { getString } = useStrings()
+  const ComponentLayout = verticalOrientation ? Layout.Vertical : Layout.Horizontal
+  return (
+    <ComponentLayout spacing="medium">
+      <FormInput.Select
+        name={SLOFormFields.PERIOD_TYPE}
+        label={getString('cv.slos.sloTargetAndBudget.periodType')}
+        items={getPeriodTypeOptions(getString)}
+      />
+      {periodType === PeriodTypes.CALENDAR ? (
+        <>
+          <FormInput.Select
+            name={SLOFormFields.PERIOD_LENGTH_TYPE}
+            label={getString('cv.periodLength')}
+            items={getPeriodLengthOptions(getString)}
+          />
+          {periodLengthType === PeriodLengthTypes.MONTHLY && (
+            <FormInput.Select
+              name={SLOFormFields.DAY_OF_MONTH}
+              label={getString('cv.windowEndsDay')}
+              items={getWindowEndOptionsForMonth()}
+              disabled={!periodLengthType}
+            />
+          )}
+          {periodLengthType === PeriodLengthTypes.WEEKLY && (
+            <FormInput.Select
+              name={SLOFormFields.DAY_OF_WEEK}
+              label={getString('cv.widowEnds')}
+              items={getWindowEndOptionsForWeek(getString)}
+              disabled={!periodLengthType}
+            />
+          )}
+        </>
+      ) : (
+        <FormInput.Select
+          name={SLOFormFields.PERIOD_LENGTH}
+          label={getString('cv.periodLengthDays')}
+          items={getPeriodLengthOptionsForRolling()}
+        />
+      )}
+    </ComponentLayout>
+  )
+}
+
 const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ children, formikProps, ...rest }) => {
   const { getString } = useStrings()
   const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
@@ -55,45 +110,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
               >
                 {getString('cv.slos.sloTargetAndBudget.complianceTimePeriodTitle')}
               </Heading>
-              <Layout.Horizontal spacing="medium">
-                <FormInput.Select
-                  name={SLOFormFields.PERIOD_TYPE}
-                  label={getString('cv.slos.sloTargetAndBudget.periodType')}
-                  items={getPeriodTypeOptions(getString)}
-                />
-                {periodType === PeriodTypes.CALENDAR ? (
-                  <>
-                    <FormInput.Select
-                      name={SLOFormFields.PERIOD_LENGTH_TYPE}
-                      label={getString('cv.periodLength')}
-                      items={getPeriodLengthOptions(getString)}
-                    />
-                    {periodLengthType === PeriodLengthTypes.MONTHLY && (
-                      <FormInput.Select
-                        name={SLOFormFields.DAY_OF_MONTH}
-                        label={getString('cv.windowEndsDay')}
-                        items={getWindowEndOptionsForMonth()}
-                        disabled={!periodLengthType}
-                      />
-                    )}
-                    {periodLengthType === PeriodLengthTypes.WEEKLY && (
-                      <FormInput.Select
-                        name={SLOFormFields.DAY_OF_WEEK}
-                        label={getString('cv.widowEnds')}
-                        items={getWindowEndOptionsForWeek(getString)}
-                        disabled={!periodLengthType}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <FormInput.Select
-                    name={SLOFormFields.PERIOD_LENGTH}
-                    label={getString('cv.periodLengthDays')}
-                    items={getPeriodLengthOptionsForRolling()}
-                  />
-                )}
-              </Layout.Horizontal>
-
+              <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} />
               <FormInput.Text
                 name={SLOFormFields.SLO_TARGET_PERCENTAGE}
                 label={getString('cv.SLOTarget')}

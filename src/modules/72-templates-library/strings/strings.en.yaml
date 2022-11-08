@@ -33,6 +33,11 @@ createNewModal:
   namePlaceholder: 'New {{entity}} Template Name'
   identifierPlaceholder: 'new_{{entity}}_template_name'
   lastPublishedVersion: 'Last published:'
+  logo: Logo
+  logoHelpText: 'Max file size: {{size}} KB. Recommended logo size: {{dimension}} x {{dimension}} pixels.'
+  iconSizeError: Only images of size less than 30 KB are supported
+  iconTypeError: Only JPEG, JPG, PNG, SVG extensions are supported
+  iconDimensionsError: Only images with height and width less than {{dimension}} pixels are supported
 saveAsNewLabelModal:
   heading: 'Save as new version'
 templateSettingsModal:

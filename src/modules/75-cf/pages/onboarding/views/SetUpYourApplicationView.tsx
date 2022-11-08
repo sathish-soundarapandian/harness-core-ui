@@ -34,7 +34,7 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
   const [apiKey, setApiKey] = useState<ApiKey | undefined>(props.apiKey)
   const { trackEvent } = useTelemetry()
   const [currentOption, setCurrentOption] = useState<StringKeys>('cf.onboarding.android')
-  const [currentReadme, setcurrentReadme] = useState<StringKeys>('cf.onboarding.readme.xamarinAndroid')
+  const [currentReadme, setcurrentReadme] = useState<StringKeys | undefined>()
 
   useEffect(() => {
     trackEvent(FeatureActions.SetUpYourApplicationView, {
@@ -42,6 +42,12 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (language?.name !== 'Xamarin') {
+      setcurrentReadme(undefined)
+    }
+  }, [language?.name])
 
   return (
     <Container height="100%">
@@ -90,33 +96,32 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
             <Layout.Vertical spacing="xsmall">
               <Text className={css.setUpYourCode}>{getString('cf.onboarding.setUpYourCode')}</Text>
               <Container className={css.setUpYourCodeContainer}>
-                {language.name === getString('cf.onboarding.android') ||
-                  (getString('cf.onboarding.ios') && (
-                    <RadioButtonGroup
-                      padding={{ top: 'small' }}
-                      asPills
-                      selectedValue={currentOption}
-                      onChange={() => {
-                        if (currentOption === 'cf.onboarding.android') {
-                          setCurrentOption('cf.onboarding.ios')
-                          setcurrentReadme('cf.onboarding.readme.xamarinIOS')
-                        } else {
-                          setCurrentOption('cf.onboarding.android')
-                          setcurrentReadme('cf.onboarding.readme.xamarinAndroid')
-                        }
-                      }}
-                      options={[
-                        {
-                          label: getString('cf.onboarding.android'),
-                          value: 'cf.onboarding.android'
-                        },
-                        {
-                          label: getString('cf.onboarding.ios'),
-                          value: 'cf.onboarding.ios'
-                        }
-                      ]}
-                    />
-                  ))}
+                {language.name === 'Xamarin' && (
+                  <RadioButtonGroup
+                    padding={{ top: 'small' }}
+                    asPills
+                    selectedValue={currentOption}
+                    onChange={() => {
+                      if (currentOption === 'cf.onboarding.android') {
+                        setCurrentOption('cf.onboarding.ios')
+                        setcurrentReadme('cf.onboarding.readme.xamarinIOS')
+                      } else {
+                        setCurrentOption('cf.onboarding.android')
+                        setcurrentReadme('cf.onboarding.readme.xamarinAndroid')
+                      }
+                    }}
+                    options={[
+                      {
+                        label: getString('cf.onboarding.android'),
+                        value: 'cf.onboarding.android'
+                      },
+                      {
+                        label: getString('cf.onboarding.ios'),
+                        value: 'cf.onboarding.ios'
+                      }
+                    ]}
+                  />
+                )}
                 <SetUpYourCodeView
                   apiKey={apiKey}
                   language={language}

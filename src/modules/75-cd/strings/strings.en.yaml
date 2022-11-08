@@ -79,6 +79,9 @@ steps:
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
+  emailStep:
+    ccOptionalLabel: CC (optional)
+    timeout1DayMinimum: 'Minimum Timeout is 1 day'
   awsInfraStep:
     regionError: Error fetching regions
     placeholders:
@@ -163,7 +166,7 @@ specifyTfVarStore: Specify Terraform Var File Store
 addTFVarFileLabel: 'Add File Path'
 enterWorkDirectory: Enter Working Directory
 enterTragets: Enter Targets
-exportTerraformPlanJson: Export Json representation of Terraform Plan
+exportTerraformPlanJson: Export JSON representation of Terraform Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
 terraformVarFiles: 'Terraform Var Files'
@@ -611,3 +614,5 @@ createAndUseTemplate: Create and Use Template
 ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
 artifactVersion: 'Version :'
 artifactPath: 'Path :'
+logoOfName: 'Logo of {{name}}'
+deploymentTemplates: 'Deployment Templates'

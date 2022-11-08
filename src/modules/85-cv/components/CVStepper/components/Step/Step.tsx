@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react'
-import { Container, Layout, Card } from '@harness/uicore'
+import { Container, Layout, Card, Text } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import type { StepPropsInterface, StepStatusType } from './Step.types'
 import { StepTitle } from './components/StepTitle/StepTitle'
 import { StepNavButtons } from './components/StepNavButtons/StepNavButtons'
@@ -24,11 +25,11 @@ const Step = ({
   setSelectedStepId,
   runValidationOnMount
 }: StepPropsInterface): JSX.Element => {
+  const { getString } = useStrings()
   const selectedStepIndex = stepList.map(item => item.id).indexOf(selectedStepId || '')
   const [stepStatus, setStepStatus] = useState<StepStatusType>(StepStatus.INCONCLUSIVE)
   const isLastStep = selectedStepIndex === stepList.length - 1
-  const isCurrent = selectedStepIndex === index
-  const isPreviewVisible = selectedStepIndex > index && step.preview
+  const isCurrentStep = selectedStepIndex === index
 
   const onTitleClick = useCallback(
     (titleIndex: number): void => {
@@ -55,13 +56,19 @@ const Step = ({
     [isStepValid, runValidationOnMount, step.id, stepStatus]
   )
 
+  const isErrorMessageVisible = stepTitleStatus === StepStatus.ERROR
+  const isPreviewVisible = useMemo(
+    () => selectedStepIndex > index && step.preview && !isErrorMessageVisible,
+    [index, selectedStepIndex, step.preview, isErrorMessageVisible]
+  )
+
   return (
     <>
       <Layout.Vertical key={`${step.id}_vertical`} spacing="medium">
         <StepTitle
           step={step}
           index={index}
-          isCurrent={isCurrent}
+          isCurrent={isCurrentStep}
           stepStatus={stepTitleStatus}
           onClick={onTitleClick}
         />
@@ -70,12 +77,21 @@ const Step = ({
             <>{step.preview}</>
           </Container>
         )}
-        {isCurrent && (
+        {(isCurrentStep || isErrorMessageVisible) && (
           <Container className={css.alignContainerRight}>
-            <Card data-testid={`panel_${step.id}`} className={css.card}>
-              {step.panel}
-            </Card>
-            <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
+            {isErrorMessageVisible && (
+              <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
+                {getString('cv.CVStepper.StepError')}
+              </Text>
+            )}
+            {isCurrentStep && (
+              <>
+                <Card data-testid={`panel_${step.id}`} className={css.card}>
+                  {step.panel}
+                </Card>
+                <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
+              </>
+            )}
           </Container>
         )}
       </Layout.Vertical>

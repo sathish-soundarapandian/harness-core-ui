@@ -45,6 +45,7 @@ import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Node
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { StepType as ExecutionStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { TemplateIcons } from '@pipeline/utils/types'
 import { DiagramType, Event, StepsType } from '@pipeline/components/PipelineDiagram/Constants'
 import { RollbackToggleSwitch } from '@pipeline/components/PipelineDiagram/RollbackToggleSwitch/RollbackToggleSwitch'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
@@ -240,6 +241,7 @@ export interface ExecutionGraphProp<T extends StageElementConfig> {
   rollBackBannerStyle?: React.CSSProperties
   canvasButtonsLayout?: 'horizontal' | 'vertical'
   templateTypes: { [key: string]: string }
+  templateIcons?: TemplateIcons
   addLinkedTemplatesLabel?: string
 }
 
@@ -263,6 +265,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     rollBackBannerStyle = {},
     canvasButtonsLayout,
     templateTypes,
+    templateIcons,
     addLinkedTemplatesLabel
   } = props
   const {
@@ -816,6 +819,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       ? getPipelineGraphData({
           data: stage?.stage?.spec?.execution?.rollbackSteps as ExecutionWrapperConfig[],
           templateTypes: templateTypes,
+          templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
           parentPath: `${stagePath}.stage.spec.execution.rollbackSteps`
@@ -823,11 +827,12 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       : getPipelineGraphData({
           data: stage?.stage?.spec?.execution?.steps as ExecutionWrapperConfig[],
           templateTypes: templateTypes,
+          templateIcons,
           serviceDependencies: serviceDependencies,
           errorMap: errorMap,
           parentPath: `${stagePath}.stage.spec.execution.steps`
         })
-  }, [stage, state?.isRollback, templateTypes])
+  }, [stage, state?.isRollback, templateTypes, templateIcons])
 
   return (
     <div

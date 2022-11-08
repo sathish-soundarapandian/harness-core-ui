@@ -22,7 +22,7 @@ import {
 } from '@wings-software/uicore'
 import { Color, Intent } from '@harness/design-system'
 import produce from 'immer'
-import { debounce, defaultTo, get, isEmpty, set, unset } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -471,6 +471,7 @@ export default function DeployServiceSpecifications({
                 isReadonly={isReadonly}
                 handleDeploymentTypeChange={handleDeploymentTypeChange}
                 shouldShowGitops={false}
+                onDeploymentTemplateSelect={noop}
               />
               <Layout.Horizontal>
                 <StepWidget<K8SDirectServiceStep>

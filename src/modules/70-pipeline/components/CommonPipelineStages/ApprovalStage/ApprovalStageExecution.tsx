@@ -23,7 +23,8 @@ export function ApprovalStageExecution(): React.ReactElement {
       originalPipeline,
       pipelineView,
       selectionState: { selectedStageId = '', selectedStepId = '' },
-      templateTypes
+      templateTypes,
+      templateIcons
     },
     isReadonly,
     updateStage,
@@ -43,6 +44,7 @@ export function ApprovalStageExecution(): React.ReactElement {
       ref={executionRef}
       hasRollback={false}
       templateTypes={templateTypes}
+      templateIcons={templateIcons}
       selectedStepId={selectedStepId}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       stage={selectedStage!}

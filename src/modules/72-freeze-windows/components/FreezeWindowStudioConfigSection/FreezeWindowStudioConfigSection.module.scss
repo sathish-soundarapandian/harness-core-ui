@@ -23,6 +23,10 @@
       fill: var(--primary-7) !important;
     }
   }
+  &:hover,
+  &:focus {
+    background-color: unset !important;
+  }
 }
 
 .crossButton {
@@ -32,6 +36,10 @@
     svg {
       fill: var(--red-500) !important;
     }
+  }
+  &:hover,
+  &:focus {
+    background-color: var(--red-50) !important;
   }
 }
 

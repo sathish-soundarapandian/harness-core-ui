@@ -126,7 +126,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   const { updateDimensions, childrenDimensions } = useNodeDimensionContext()
   const { errorMap } = useValidationErrors()
   const {
-    state: { templateTypes },
+    state: { templateTypes, templateIcons },
     getStagePathFromPipeline
   } = usePipelineContext()
 
@@ -137,6 +137,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
         getPipelineGraphData({
           data: props.data,
           templateTypes: templateTypes,
+          templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
           parentPath: `${stagePath}.stage.spec.execution.steps.stepGroup.steps`, //index after step missing - getStepPathFromPipeline??
@@ -144,7 +145,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
         })
       )
     }
-  }, [treeRectangle, props.data, templateTypes])
+  }, [treeRectangle, props.data, templateTypes, templateIcons])
 
   useLayoutEffect(() => {
     if (state?.length) {

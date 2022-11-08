@@ -51,7 +51,7 @@ const renderComponent = (props?: Partial<UseGitSync>): void => {
           handleGitPause: () => Promise.resolve(undefined),
           saveWithGit: () => Promise.resolve(undefined),
           isAutoCommitEnabled: false,
-          isGitSyncActionsEnabled: false,
+          isGitSyncActionsEnabled: true,
           isGitSyncEnabled: true,
           isGitSyncPaused: false,
           ...props
@@ -178,10 +178,17 @@ describe('GitSyncActions', () => {
     expect(screen.getByTestId('git-sync-spinner')).toBeInTheDocument()
   })
 
-  test('it should render the button to Setup Git Sync when isGitSyncEnabled is FALSE', async () => {
-    renderComponent({ isGitSyncEnabled: false })
+  test('it should render the button to Setup Git Sync when isGitSyncActionsEnabled is FALSE', async () => {
+    renderComponent({ isGitSyncEnabled: false, isGitSyncActionsEnabled: false })
 
     expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'test branch settings' })).not.toBeInTheDocument()
+  })
+
+  test('it should render the button to Setup Git Sync when isGitSyncEnabled is FALSE and isGitSyncActionsEnabled is TRUE', async () => {
+    renderComponent({ isGitSyncEnabled: true, isGitSyncActionsEnabled: true })
+
+    expect(screen.queryByRole('button', { name: 'cf.featureFlags.setupGitSync' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'test branch settings' })).toBeInTheDocument()
   })
 })

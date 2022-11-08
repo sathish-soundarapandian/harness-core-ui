@@ -41,6 +41,8 @@ import {
   useGetSLOHealthListView,
   useGetSLOAssociatedMonitoredServices
 } from 'services/cv'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage, getRiskColorLogo, getRiskColorValue, getSearchString } from '@cv/utils/CommonUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -73,6 +75,7 @@ import css from './CVSLOsListingPage.module.scss'
 const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService }) => {
   const history = useHistory()
   const { getString } = useStrings()
+  const SRM_COMPOSITE_SLO = useFeatureFlag(FeatureFlag.SRM_COMPOSITE_SLO)
   const monitoredServiceIdentifier = useMemo(() => monitoredService?.identifier, [monitoredService?.identifier])
   useDocumentTitle([getString('cv.srmTitle'), getServiceTitle(getString, monitoredServiceIdentifier)])
 
@@ -147,7 +150,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     queryParams: pathParams
   })
 
-  const onEdit = (sloIdentifier: string): void => {
+  const onEdit = (sloIdentifier: string, sloType?: string): void => {
     history.push({
       pathname: routes.toCVSLODetailsPage({
         identifier: sloIdentifier,
@@ -155,7 +158,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         orgIdentifier,
         projectIdentifier
       }),
-      search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, monitoredServiceIdentifier })
+      search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, monitoredServiceIdentifier, sloType })
     })
   }
 
@@ -175,25 +178,48 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   }
 
   const getAddSLOButton = (): JSX.Element => (
-    <RbacButton
-      icon="plus"
-      text={getString('cv.slos.createSLO')}
-      variation={ButtonVariation.PRIMARY}
-      onClick={() => {
-        history.push({
-          pathname: routes.toCVCreateSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
-          search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
-        })
-      }}
-      className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredServiceIdentifier)}
-      permission={{
-        permission: PermissionIdentifier.EDIT_SLO_SERVICE,
-        resource: {
-          resourceType: ResourceType.SLO,
-          resourceIdentifier: projectIdentifier
-        }
-      }}
-    />
+    <Layout.Horizontal spacing="medium">
+      <RbacButton
+        icon="plus"
+        text={getString('cv.slos.createSLO')}
+        variation={ButtonVariation.PRIMARY}
+        onClick={() => {
+          history.push({
+            pathname: routes.toCVCreateSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
+            search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
+          })
+        }}
+        className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredServiceIdentifier)}
+        permission={{
+          permission: PermissionIdentifier.EDIT_SLO_SERVICE,
+          resource: {
+            resourceType: ResourceType.SLO,
+            resourceIdentifier: projectIdentifier
+          }
+        }}
+      />
+      {SRM_COMPOSITE_SLO && (
+        <RbacButton
+          icon="plus"
+          text={getString('cv.slos.createCompositeSLO')}
+          variation={ButtonVariation.PRIMARY}
+          onClick={() => {
+            history.push({
+              pathname: routes.toCVCreateCompositeSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
+              search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
+            })
+          }}
+          className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredServiceIdentifier)}
+          permission={{
+            permission: PermissionIdentifier.EDIT_SLO_SERVICE,
+            resource: {
+              resourceType: ResourceType.SLO,
+              resourceIdentifier: projectIdentifier
+            }
+          }}
+        />
+      )}
+    </Layout.Horizontal>
   )
 
   const onFilter = (currentRiskFilter: SLORiskFilter): void => {
@@ -378,8 +404,15 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const RenderSLOActions: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
-    const { sloIdentifier = '', name = '' } = slo || {}
-    return <SLOActions sloIdentifier={sloIdentifier} title={name} onDelete={onDelete} onEdit={onEdit} />
+    const { sloIdentifier = '', name = '', sloType = '' } = slo || {}
+    return (
+      <SLOActions
+        sloIdentifier={sloIdentifier}
+        title={name}
+        onDelete={onDelete}
+        onEdit={(id: string) => onEdit(id, sloType)}
+      />
+    )
   }
   return (
     <>

@@ -108,12 +108,12 @@ describe('<SpotConnector />', () => {
     })
 
     expect(getByText('authentication')).toBeInTheDocument()
-    expect(getByText('common.accountId')).toBeInTheDocument()
+    expect(getByText('connectors.spotAccountId')).toBeInTheDocument()
     expect(getByText('connectors.apiToken')).toBeInTheDocument()
 
     // Change account id
     await act(async () => {
-      fireEvent.change(container.querySelector('input[name="accountIdtextField"]')!, {
+      fireEvent.change(container.querySelector('input[name="spotAccountIdtextField"]')!, {
         target: { value: 'Dummy Acc Id' }
       })
     })
@@ -155,7 +155,7 @@ describe('<SpotConnector />', () => {
 
     // Change account id
     await act(async () => {
-      fireEvent.change(container.querySelector('input[name="accountIdtextField"]')!, {
+      fireEvent.change(container.querySelector('input[name="spotAccountIdtextField"]')!, {
         target: { value: 'Dummy Acc Id' }
       })
     })
@@ -198,10 +198,10 @@ describe('<SpotConnector />', () => {
           spec: {
             credential: {
               spec: {
-                accountId: 'Dummy Acc Id',
+                spotAccountId: 'Dummy Acc Id',
                 apiTokenRef: 'account.SpotSecretToken'
               },
-              type: 'ManualConfig'
+              type: 'PermanentTokenConfig'
             },
             executeOnDelegate: false
           },
@@ -262,7 +262,7 @@ describe('<SpotConnector />', () => {
 
     // Change account id
     await act(async () => {
-      fireEvent.change(container.querySelector('input[name="accountIdtextField"]')!, {
+      fireEvent.change(container.querySelector('input[name="spotAccountIdtextField"]')!, {
         target: { value: 'Dummy Acc Id' }
       })
     })
@@ -315,10 +315,10 @@ describe('<SpotConnector />', () => {
           spec: {
             credential: {
               spec: {
-                accountId: 'Dummy Acc Id',
+                spotAccountId: 'Dummy Acc Id',
                 apiTokenRef: 'account.SpotSecretToken'
               },
-              type: 'ManualConfig'
+              type: 'PermanentTokenConfig'
             },
             executeOnDelegate: true,
             delegateSelectors: []

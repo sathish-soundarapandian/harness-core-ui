@@ -1,11 +1,10 @@
-import { pageHeaderClassName, featureFlagsCall } from '../../support/70-pipeline/constants'
+import { featureFlagsCall } from '../../support/70-pipeline/constants'
 import { environmentConfigurationRoute, environmentConfigurationCall } from '../../support/75-cd/constants'
 import {
   infraCall,
   selectInfraCall,
   validateInfraDtYamlCall,
   getUpdatedYamlCall,
-  deploymentTemplatesListCall,
   useTemplateCall,
   useTemplateResponse,
   afterUseTemplateListCall,
@@ -14,7 +13,8 @@ import {
   validateInfraDtYamlResponse,
   selectInfraResponse,
   infraResponse,
-  depTempTestVariables
+  depTempTestVariables,
+  recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
 describe('Deployment Template - Infrastructures Page', () => {
@@ -55,20 +55,21 @@ describe('Deployment Template - Infrastructures Page', () => {
     cy.intercept('GET', environmentConfigurationCall, {
       fixture: 'ng/api/environmentConfiguration/environmentConfiguration.json'
     })
-
-    cy.intercept('POST', deploymentTemplatesListCall, { fixture: '/ng/api/deploymentTemplateList' }).as('templateList')
+    cy.intercept('POST', recentDeploymentTemplatesUrl, {
+      fixture: '/ng/api/deploymentTemplate/recentDeploymentTemplates'
+    })
     cy.intercept('GET', useTemplateCall, useTemplateResponse).as('useTemplate')
     cy.intercept('POST', afterUseTemplateListCall, afterUseTemplateListResponse).as('afterUseTemplateList')
 
-    cy.visitPageAssertion(pageHeaderClassName)
+    cy.visitPageAssertion('[id*="bp3-tab-title_environmentDetails_CONFIGURATION"]')
+
     cy.contains('div', 'Infrastructure Definitions').click({ force: true })
     cy.contains('span', 'Infrastructure Definition').click()
     cy.fillField('name', 'testInfra_Cypress')
-    cy.contains('p', 'Deployment Template').click()
-    cy.contains('p', 'dep temp test').click()
-    cy.contains('p', 'Id: dep_temp_test').click()
-    cy.contains('p', 'DEPLOYMENT').click()
 
+    cy.get('input[value="dep_temp_test"]').click({ force: true })
+
+    cy.get('[data-template-id="dep_temp_test"]').should('be.visible')
     cy.contains('span', 'Use Template').click()
     cy.contains('p', 'Using Template: dep temp test (1)').click()
     cy.get('span[icon="more"]').should('be.visible').click()
@@ -96,7 +97,9 @@ describe('Deployment Template - Infrastructures Page', () => {
     cy.intercept('GET', selectInfraCall, selectInfraResponse).as('selectInfra')
     cy.intercept('GET', validateInfraDtYamlCall, validateInfraDtYamlResponse).as('validateInfraDT')
     cy.intercept('POST', getUpdatedYamlCall, getUpdatedYamlResponse).as('updatedYaml')
-    cy.visitPageAssertion(pageHeaderClassName)
+
+    cy.visitPageAssertion('[id*="bp3-tab-title_environmentDetails_CONFIGURATION"]')
+
     cy.contains('div', 'Infrastructure Definitions').click({ force: true })
     cy.contains('p', 'testReconcileInfra').click()
 

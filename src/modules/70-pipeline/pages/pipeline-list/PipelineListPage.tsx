@@ -47,6 +47,7 @@ import type { PartiallyRequired } from '@pipeline/utils/types'
 import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
@@ -229,6 +230,8 @@ export function PipelineListPage(): React.ReactElement {
     />
   )
 
+  const { globalFreezes } = useGlobalFreezeBanner()
+
   return (
     <GitSyncStoreProvider>
       <Page.Header
@@ -273,7 +276,7 @@ export function PipelineListPage(): React.ReactElement {
           />
         </Layout.Horizontal>
       </Page.SubHeader>
-      <GlobalFreezeBanner />
+      <GlobalFreezeBanner globalFreezes={globalFreezes} />
       <Page.Body
         className={css.pageBody}
         error={pipelineListLoadingError?.message}

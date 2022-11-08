@@ -20,7 +20,8 @@ import {
   Toggle,
   useToggleOpen,
   ConfirmationDialog,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  SelectOption
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -185,23 +186,29 @@ export default function DeployServiceEntityWidget({
 
   const loading = loadingServicesList || loadingServicesData
 
-  useEffect(() => {
-    if (!loading) {
-      // update services in formik
+  const updateServiceInputsForServices = React.useCallback(
+    (serviceOrServices: Pick<FormState, 'service' | 'services'>): void => {
       /* istanbul ignore else */
       if (formikRef.current && servicesData.length > 0) {
-        const { values, setValues } = formikRef.current
-
-        if (values.service && !values.serviceInputs?.[values.service]) {
-          const service = servicesData.find(svc => svc.service.identifier === values.service)
+        const { setValues, values } = formikRef.current
+        if (serviceOrServices.service) {
+          const service = servicesData.find(svc => svc.service.identifier === serviceOrServices.service)
 
           setValues({
             ...values,
+            ...serviceOrServices,
             // if service input is not found, add it, else use the existing one
-            serviceInputs: { [values.service]: get(values.serviceInputs, [values.service], service?.serviceInputs) }
+            serviceInputs: {
+              [serviceOrServices.service]: get(
+                values.serviceInputs,
+                [serviceOrServices.service],
+                service?.serviceInputs
+              )
+            }
           })
-        } else if (Array.isArray(values.services)) {
-          const updatedServices = values.services.reduce<ServicesWithInputs>(
+          /* istanbul ignore else */
+        } else if (Array.isArray(serviceOrServices.services)) {
+          const updatedServices = serviceOrServices.services.reduce<ServicesWithInputs>(
             (p, c) => {
               const service = servicesData.find(svc => svc.service.identifier === c.value)
 
@@ -223,7 +230,31 @@ export default function DeployServiceEntityWidget({
           setValues(updatedServices)
         }
       }
+    },
+    [servicesData]
+  )
+
+  const handleSingleSelectChange = React.useCallback(
+    (service: any) => {
+      updateServiceInputsForServices({ service: service.value || service })
+    },
+    [updateServiceInputsForServices]
+  )
+
+  const handleMultiSelectChange = React.useCallback(
+    (services: SelectOption[]) => {
+      updateServiceInputsForServices({ services })
+    },
+    [updateServiceInputsForServices]
+  )
+
+  useEffect(() => {
+    /* istanbul ignore else */
+    if (!loading && formikRef.current) {
+      // update services in formik
+      updateServiceInputsForServices(formikRef.current.values)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, servicesList, servicesData])
 
   function onServiceEntityCreate(newServiceInfo: ServiceYaml): void {
@@ -416,6 +447,7 @@ export default function DeployServiceEntityWidget({
                           label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
                           name="services"
                           disabled={readonly || (isFixed && loading)}
+                          onChange={handleMultiSelectChange}
                           dropdownProps={{
                             items: selectOptions,
                             placeholder: placeHolderForServices,
@@ -459,7 +491,8 @@ export default function DeployServiceEntityWidget({
                             selectProps: { items: selectOptions },
                             allowableTypes,
                             defaultValueToReset: '',
-                            onTypeChange: setServiceInputType
+                            onTypeChange: setServiceInputType,
+                            onChange: handleSingleSelectChange
                           }}
                           selectItems={selectOptions}
                         />
@@ -480,8 +513,6 @@ export default function DeployServiceEntityWidget({
                         )}
                       </div>
                     )}
-
-                    {/* </div> */}
                     {isFixed ? (
                       <RbacButton
                         size={ButtonSize.SMALL}
@@ -507,6 +538,7 @@ export default function DeployServiceEntityWidget({
                       checked={isMultiSvc}
                       onToggle={getMultiSvcToggleHandler(values)}
                       label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
+                      tooltipId={'multiServiceToggle'}
                     />
                   ) : null}
                 </Layout.Horizontal>

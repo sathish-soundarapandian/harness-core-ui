@@ -86,13 +86,15 @@ export const FreezeWindowStudioYAMLView = () => {
     }
   })
 
+  const _isReadOnly = isReadOnly || !isYamlEditable || isActiveFreeze
+
   return isDrawerOpened ? null : (
     <div className={css.yamlBuilder}>
       <YamlBuilderMemo
         key={`${isYamlEditable.toString()}_${freezeObj.identifier}`}
         fileName={defaultTo(yamlFileName, defaultFileName)}
         entityType={'Freeze'}
-        isReadOnlyMode={isReadOnly || !isYamlEditable || isActiveFreeze}
+        isReadOnlyMode={_isReadOnly}
         existingJSON={{ freeze: freezeObj }}
         // existingYaml
         bind={setYamlHandler}
@@ -107,9 +109,9 @@ export const FreezeWindowStudioYAMLView = () => {
         }}
         isEditModeSupported={!isReadOnly || !isActiveFreeze}
       />
-      {isReadOnly || isActiveFreeze || !isYamlEditable ? (
+      {_isReadOnly ? (
         <div className={css.buttonsWrapper}>
-          {isReadOnly || isActiveFreeze ? <Tag>{getString('common.readOnly')}</Tag> : null}
+          <Tag>{getString('common.readOnly')}</Tag>
           <RbacButton
             permission={{
               resourceScope: {

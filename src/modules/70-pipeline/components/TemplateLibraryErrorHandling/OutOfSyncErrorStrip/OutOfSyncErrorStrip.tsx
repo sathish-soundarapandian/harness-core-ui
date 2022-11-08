@@ -12,9 +12,10 @@ import { Color, FontVariation } from '@wings-software/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
+import type { EntityGitDetails, ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
 import { ReconcileDialog } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import css from './OutOfSyncErrorStrip.module.scss'
 
 export interface OutOfSyncErrorStripProps {
@@ -24,6 +25,8 @@ export interface OutOfSyncErrorStripProps {
   isReadOnly: boolean
   onRefreshEntity: () => void
   updateRootEntity: (entityYaml: string) => Promise<void>
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 export function OutOfSyncErrorStrip({
@@ -32,7 +35,9 @@ export function OutOfSyncErrorStrip({
   originalYaml,
   isReadOnly,
   onRefreshEntity,
-  updateRootEntity
+  updateRootEntity,
+  gitDetails,
+  storeMetadata
 }: OutOfSyncErrorStripProps) {
   const { getString } = useStrings()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
@@ -59,6 +64,8 @@ export function OutOfSyncErrorStrip({
             hideReconcileDialog()
             await updateRootEntity(entityYaml)
           }}
+          gitDetails={gitDetails}
+          storeMetadata={storeMetadata}
         />
       </Dialog>
     )

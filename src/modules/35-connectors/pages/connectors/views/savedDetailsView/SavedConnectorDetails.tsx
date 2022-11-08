@@ -338,8 +338,8 @@ const getGcpSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowIn
 const getSpotSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
-      label: 'common.accountId',
-      value: connector?.spec?.credential?.spec?.accountId || connector?.spec?.credential?.spec?.accountIdRef
+      label: 'connectors.spotAccountId',
+      value: connector?.spec?.credential?.spec?.spotAccountId || connector?.spec?.credential?.spec?.spotAccountIdRef
     },
     {
       label: 'connectors.apiToken',

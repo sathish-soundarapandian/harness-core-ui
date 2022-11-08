@@ -6,14 +6,26 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { ButtonVariation, Container, ExpandingSearchInput, FlexExpander, Layout, Page, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import {
+  Button,
+  ButtonVariation,
+  Card,
+  Container,
+  ExpandingSearchInput,
+  FlexExpander,
+  Icon,
+  Layout,
+  Page,
+  Text
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { PopoverInteractionKind, Position, Tab, Tabs } from '@blueprintjs/core'
 import { get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Utils } from '@ce/common/Utils'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import useK8sQuickCreateModal from '@ce/components/K8sQuickCreate/K8sQuickCreateModal'
 
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -33,6 +45,7 @@ import {
   mapCCMK8sMetadataToConnector
 } from '@ce/utils/cloudIntegrationUtils'
 import { useCCMK8SMetadata } from 'services/ce'
+import QuickK8sIcon from '@ce/images/quick-kubernetes.svg'
 
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
@@ -43,10 +56,82 @@ enum CloudIntegrationTabs {
   CloudAccounts
 }
 
+interface CreateConnectorPopoverProps {
+  k8sSelected: boolean
+  setK8sSelected: React.Dispatch<React.SetStateAction<boolean>>
+  handleConnectorCreation: (selectedProvider: string) => void
+  openAdvancedK8sModal: () => void
+  openQuicK8sCreateModal: () => void
+}
+
+const CreateConnectorPopover = ({
+  handleConnectorCreation,
+  k8sSelected,
+  setK8sSelected,
+  openAdvancedK8sModal,
+  openQuicK8sCreateModal
+}: CreateConnectorPopoverProps): JSX.Element => {
+  const { getString } = useStrings()
+
+  return (
+    <Container className={css.newConnectorPopover}>
+      {k8sSelected ? (
+        <>
+          <Button
+            text={getString('back')}
+            className={css.backButton}
+            icon="chevron-left"
+            variation={ButtonVariation.LINK}
+            onClick={() => setK8sSelected(false)}
+          />
+          <Text font={{ variation: FontVariation.H5 }}>
+            {getString('pipelineSteps.kubernetesInfraStep.kubernetesConnector')}
+          </Text>
+          <div className={css.k8SCardCtn}>
+            <Card onClick={openQuicK8sCreateModal} interactive className={css.k8SCard}>
+              <img src={QuickK8sIcon} />
+              <Text className={css.recommended} color={Color.PRIMARY_7}>
+                {getString('common.recommended')}
+              </Text>
+            </Card>
+            <Card onClick={openAdvancedK8sModal} interactive className={css.k8SCard}>
+              <Icon name={'app-kubernetes'} size={34} />
+            </Card>
+          </div>
+          <div className={css.k8SCardLabelCtn}>
+            <div>
+              <Text color={Color.GREY_700} font={{ variation: FontVariation.H6, weight: 'semi-bold' }}>
+                {getString('ce.k8sQuickCreate.quickCreate')}
+              </Text>
+              <Text color={Color.GREY_700} font={{ variation: FontVariation.SMALL }} margin={{ top: 'small' }}>
+                {getString('ce.k8sQuickCreate.time.5mins')}
+              </Text>
+            </div>
+            <div>
+              <Text color={Color.GREY_700} font={{ variation: FontVariation.H6, weight: 'semi-bold' }}>
+                {getString('ce.k8sQuickCreate.advanced')}
+              </Text>
+              <Text color={Color.GREY_700} font={{ variation: FontVariation.SMALL }} margin={{ top: 'small' }}>
+                {getString('ce.k8sQuickCreate.time.10mins')}
+              </Text>
+            </div>
+          </div>
+        </>
+      ) : (
+        <Container className={css.allConnectorsState}>
+          <Text font={{ variation: FontVariation.H5 }}>{getString('ce.cloudIntegration.selectProvider')}</Text>
+          <CloudProviderList kubernetesFirst onChange={handleConnectorCreation} iconSize={34} />
+        </Container>
+      )}
+    </Container>
+  )
+}
+
 const CloudIntegrationPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string }>()
   const { trackEvent } = useTelemetry()
+  const [k8sSelected, setK8sSelected] = useState(false)
 
   const [ccmMetaResult, refetchCCMMetaData] = useFetchCcmMetaDataQuery()
   const { data: ccmMetaDataRes, fetching: ccmMetaDataLoading } = ccmMetaResult
@@ -113,6 +198,10 @@ const CloudIntegrationPage: React.FC = () => {
     onClose: refetchMetadataAndK8sConnectors
   })
 
+  const [openQuicK8sCreateModal] = useK8sQuickCreateModal({
+    onClose: refetchMetadataAndK8sConnectors
+  })
+
   const handleConnectorCreation = /* istanbul ignore next */ (selectedProvider: string): void => {
     let connectorType
     switch (selectedProvider) {
@@ -126,12 +215,18 @@ const CloudIntegrationPage: React.FC = () => {
         connectorType = Connectors.CE_AZURE
         break
       case 'Kubernetes':
+      case 'kubernetesText':
         connectorType = Connectors.KUBERNETES_CLUSTER
         break
     }
 
     if (connectorType) {
       trackEvent(USER_JOURNEY_EVENTS.ONBOARDING_CONNECTOR_CLICK, { connector: connectorType })
+      if (connectorType === Connectors.KUBERNETES_CLUSTER) {
+        setK8sSelected(true)
+        return
+      }
+
       openConnectorModal(false, connectorType)
     }
   }
@@ -158,18 +253,20 @@ const CloudIntegrationPage: React.FC = () => {
                 id="newConnectorBtn"
                 data-test="newConnectorButton"
                 tooltip={
-                  <Container className={css.newConnectorPopover}>
-                    <Text font={{ variation: FontVariation.H5 }}>
-                      {getString('ce.cloudIntegration.selectProvider')}
-                    </Text>
-                    <CloudProviderList kubernetesFirst onChange={handleConnectorCreation} iconSize={34} />
-                  </Container>
+                  <CreateConnectorPopover
+                    handleConnectorCreation={handleConnectorCreation}
+                    k8sSelected={k8sSelected}
+                    setK8sSelected={setK8sSelected}
+                    openAdvancedK8sModal={() => openConnectorModal(false, Connectors.KUBERNETES_CLUSTER)}
+                    openQuicK8sCreateModal={openQuicK8sCreateModal}
+                  />
                 }
                 tooltipProps={{
                   minimal: true,
                   position: Position.BOTTOM_LEFT,
                   interactionKind: PopoverInteractionKind.CLICK,
-                  popoverClassName: css.popover
+                  popoverClassName: css.popover,
+                  onClosed: () => setK8sSelected(false)
                 }}
               />
               <FlexExpander />

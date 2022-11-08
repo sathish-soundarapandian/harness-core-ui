@@ -14,7 +14,6 @@ import * as cdServices from 'services/cd-ng'
 import { SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import CFTrialHomePage from '../CFTrialHomePage'
-
 jest.mock('services/cf')
 
 jest.mock('services/cd-ng', () => ({
@@ -52,6 +51,7 @@ const renderComponent = (defaultFlagValue?: any): RenderResult =>
 
 describe('CFTrialHomePage', () => {
   const openRoleAssignmentModalMock = jest.fn()
+
   jest.spyOn(roleAssignmentModal, 'useRoleAssignmentModal').mockReturnValue({
     openRoleAssignmentModal: openRoleAssignmentModalMock
   } as any)
@@ -64,34 +64,32 @@ describe('CFTrialHomePage', () => {
   test('it should show a different description if trial enabled', async () => {
     window.deploymentType = 'ON_PREM'
     renderComponent()
-    await waitFor(() => expect(screen.getByText('cf.cfTrialHomePage.startTrial.startBtn.description')).toBeVisible())
+
+    expect(screen.getByText('cf.cfTrialHomePage.startTrial.startBtn.description')).toBeVisible()
   })
 
   test('it should show Start Free Plan description if trial is not enabled', async () => {
     renderComponent({ FREE_PLAN_ENABLED: true })
-    await waitFor(() => expect(screen.getByText('cf.cfTrialHomePage.startFreePlanBtn')).toBeVisible())
+
+    expect(screen.getByText('cf.cfTrialHomePage.startFreePlanBtn')).toBeVisible()
   })
 
   test('it should show Start Free Plan page with corresponding for Developers descriptions if trial is not enabled', async () => {
     // window.deploymentType = 'SAAS'
     renderComponent({ FREE_PLAN_ENABLED: true })
-    await waitFor(() => {
-      expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.title')).toBeVisible()
-      expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.createFlag')).toBeVisible()
-      expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.shipCode')).toBeVisible()
-      expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.realTime')).toBeVisible()
-    })
+    expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.title')).toBeVisible()
+    expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.createFlag')).toBeVisible()
+    expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.shipCode')).toBeVisible()
+    expect(screen.getByText('cf.cfTrialHomePage.forDevelopers.realTime')).toBeVisible()
   })
 
   test('it should show Start Free Plan page with corresponding for DevOps descriptions if trial is not enabled', async () => {
     // window.deploymentType = 'SAAS'
     renderComponent({ FREE_PLAN_ENABLED: true })
-    await waitFor(() => {
-      expect(screen.getByText('cf.cfTrialHomePage.forDevOps.title')).toBeVisible()
-      expect(screen.getByText('cf.cfTrialHomePage.forDevOps.automatedFeature')).toBeVisible()
-      expect(screen.getByText('cf.cfTrialHomePage.forDevOps.avoidRollbacks')).toBeVisible()
-      expect(screen.getByText('cf.cfTrialHomePage.forDevOps.scaleManagement')).toBeVisible()
-    })
+    expect(screen.getByText('cf.cfTrialHomePage.forDevOps.title')).toBeVisible()
+    expect(screen.getByText('cf.cfTrialHomePage.forDevOps.automatedFeature')).toBeVisible()
+    expect(screen.getByText('cf.cfTrialHomePage.forDevOps.avoidRollbacks')).toBeVisible()
+    expect(screen.getByText('cf.cfTrialHomePage.forDevOps.scaleManagement')).toBeVisible()
   })
 
   test('it should try to open the Role Assignment modal when the Invite Developer button is clicked', async () => {
@@ -117,16 +115,9 @@ describe('CFTrialHomePage', () => {
 
     renderComponent()
     expect(handleStartButtonClick).not.toHaveBeenCalled()
+
     userEvent.click(screen.getByText('cf.cfTrialHomePage.startFreePlanBtn'))
-    await waitFor(() =>
-      expect(
-        screen
-          .getByTestId('location')
-          .innerHTML.endsWith(
-            routes.toSubscriptions({ accountId: 'dummy', moduleCard: 'cf', tab: SubscriptionTabNames.PLANS })
-          )
-      )
-    )
+    await waitFor(() => expect(handleStartButtonClick).toHaveBeenCalled())
   })
 
   test('it should start trial when Start 14 day FF Enterprise trial is clicked', async () => {
@@ -139,8 +130,11 @@ describe('CFTrialHomePage', () => {
     } as any)
 
     renderComponent()
+
     expect(handleEnterpriseButtonClick).not.toHaveBeenCalled()
+
     userEvent.click(screen.getByText('cf.cfTrialHomePage.startTrial.startBtn.description'))
+
     await waitFor(() => expect(handleEnterpriseButtonClick).toHaveBeenCalled())
   })
 })

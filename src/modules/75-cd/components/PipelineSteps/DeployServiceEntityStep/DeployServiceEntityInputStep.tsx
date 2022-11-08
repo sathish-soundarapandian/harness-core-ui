@@ -175,7 +175,7 @@ export function DeployServiceEntityInputStep({
             ? RUNTIME_INPUT_VALUE
             : undefined
         ),
-        `${localPathPrefix}serviceInputs`
+        `${fullPathPrefix}serviceInputs`
       )
       formik.setFieldValue(
         `${localPathPrefix}serviceInputs`,
@@ -189,10 +189,6 @@ export function DeployServiceEntityInputStep({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])
-
-  const onServiceRefChange = (): void => {
-    formik.setFieldValue(`${localPathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
-  }
 
   function handleServicesChange(values: SelectOption[]): void {
     const newValues = values.map(val => ({
@@ -223,8 +219,7 @@ export function DeployServiceEntityInputStep({
                 selectProps: {
                   addClearBtn: !inputSetData?.readonly,
                   items: selectOptions
-                },
-                onChange: onServiceRefChange
+                }
               }}
               disabled={inputSetData?.readonly}
               className={css.inputWidth}

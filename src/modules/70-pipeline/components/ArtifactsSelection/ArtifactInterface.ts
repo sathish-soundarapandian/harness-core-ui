@@ -173,6 +173,19 @@ export interface GithubPackageRegistryInitialValuesType {
   }
 }
 
+export interface AmazonMachineImageInitialValuesType {
+  identifier?: string
+  versionType?: string
+  spec: {
+    connectorRef?: string
+    region?: string | SelectOption
+    amiFilters?: VariableInterface[]
+    amiTags?: VariableInterface[]
+    version?: string
+    versionRegex?: string
+  }
+}
+
 export interface GithubPackageRegistryProps {
   key: string
   name: string

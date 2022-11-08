@@ -15,7 +15,8 @@ import type {
   ConnectorResponse,
   PageCcmK8sConnectorResponse,
   ConnectorValidationResult,
-  ConnectorInfoDTO
+  ConnectorInfoDTO,
+  DelegateSetupDetails
 } from 'services/cd-ng'
 import type { CcmK8sMetaInfo, CcmK8sMetaInfoResponseDTO } from 'services/ce'
 import type { CcmMetaData } from 'services/ce/services'
@@ -146,4 +147,18 @@ export const getCloudViewCostsLink = ({
       filters: JSON.stringify(generateFilters(filters, connectorTypeToCloudProvider[connector?.type || '']))
     })}`
   )
+}
+
+/**
+ * Quick Create Utils
+ */
+
+export const quickCreateDelegateParams: Omit<DelegateSetupDetails, 'name' | 'indentifier'> = {
+  delegateType: 'KUBERNETES',
+  size: 'SMALL',
+  k8sConfigDetails: {
+    k8sPermissionType: 'CLUSTER_ADMIN'
+  },
+  runAsRoot: true,
+  tokenName: 'default_token'
 }

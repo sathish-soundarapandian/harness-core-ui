@@ -498,7 +498,7 @@ describe('getMergedVariables tests', () => {
       variables: [{ name: 'var1', type: 'String', value: '' }],
       inputSetVariables: [
         { name: 'var1', type: 'String', value: 'val1' },
-        { name: 'var2', type: 'String', value: 'val2' }
+        { name: 'var2', type: 'Secret', value: 'val2' }
       ],
       allVariables: [],
       shouldUseDefaultValues: false
@@ -506,7 +506,7 @@ describe('getMergedVariables tests', () => {
 
     expect(result).toEqual([
       { name: 'var1', type: 'String', value: 'val1' },
-      { name: 'var2', type: 'String', value: 'val2' }
+      { name: 'var2', type: 'Secret', value: 'val2' }
     ])
   })
 })

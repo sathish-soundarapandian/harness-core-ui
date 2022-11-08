@@ -16,10 +16,10 @@ import {
   ButtonVariation,
   Dialog,
   Formik,
-  Text
+  Text,
+  MultiSelectOption
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { Classes } from '@blueprintjs/core'
@@ -39,22 +39,23 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import CreateMonitoredServiceFromSLO from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO'
 import type { ServiceAndEnv } from './SLOName.types'
 import { initialFormData } from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO.constants'
+import { createServiceProps, getActiveUserJourney } from './SLOName.utils'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 
-const SLOName: React.FC<SLONameProps> = ({
+const SLOName = <T,>({
   children,
   formikProps,
   identifier,
-  monitoredServicesLoading,
-  monitoredServicesOptions,
-  fetchingMonitoredServices
-}) => {
+  monitoredServicesLoading = false,
+  monitoredServicesOptions = [],
+  fetchingMonitoredServices,
+  isMultiSelect
+}: SLONameProps<T>): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const TEXT_USER_JOURNEY = getString('cv.slos.userJourney')
-  const { userJourneyRef } = formikProps.values
-
+  const { userJourneyRef } = formikProps.values as { userJourneyRef?: string | SelectOption | MultiSelectOption }
   const {
     data: userJourneysData,
     error: userJourneysError,
@@ -85,26 +86,6 @@ const SLOName: React.FC<SLONameProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userJourneysError])
 
-  const handleCreateUserJourney = useCallback(async newOption => {
-    if (newOption?.identifier && newOption?.name) {
-      try {
-        // creating new user journey
-        await createUserJourney({ name: newOption.name, identifier: newOption.identifier })
-
-        // selecting the current user journey
-        formikProps.setFieldValue('userJourneyRef', newOption.identifier)
-
-        // listing all user journeys
-        await fetchUserJourneys()
-
-        showSuccess(getString('cv.slos.userJourneyCreated'))
-      } catch (e) {
-        showError(getErrorMessage(e))
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const key = useMemo(() => Utils.randomId(), [userJourneyRef])
 
   const userJourneyOptions = useMemo(
@@ -113,8 +94,36 @@ const SLOName: React.FC<SLONameProps> = ({
   )
 
   const activeUserJourney = useMemo(
-    () => userJourneyOptions.find(userJourney => userJourney.value === userJourneyRef),
-    [userJourneyOptions, userJourneyRef]
+    () => getActiveUserJourney(userJourneyRef, isMultiSelect, userJourneyOptions),
+    [userJourneyOptions, userJourneyRef, isMultiSelect]
+  )
+
+  const handleCreateUserJourney = useCallback(
+    async newOption => {
+      if (newOption?.identifier && newOption?.name) {
+        try {
+          // creating new user journey
+          await createUserJourney({ name: newOption.name, identifier: newOption.identifier })
+
+          // selecting the current user journey
+          if (isMultiSelect && Array.isArray(userJourneyRef)) {
+            userJourneyRef?.push({ value: newOption.identifier, label: newOption.name })
+            formikProps.setFieldValue('userJourneyRef', userJourneyRef)
+          } else {
+            formikProps.setFieldValue('userJourneyRef', newOption.identifier)
+          }
+
+          // listing all user journeys
+          await fetchUserJourneys()
+
+          showSuccess(getString('cv.slos.userJourneyCreated'))
+        } catch (e) {
+          showError(getErrorMessage(e))
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [isMultiSelect, activeUserJourney]
   )
 
   const [showModal, hideModal] = useModalHook(
@@ -134,7 +143,7 @@ const SLOName: React.FC<SLONameProps> = ({
                 <CreateMonitoredServiceFromSLO
                   monitoredServiceFormikProps={monitoredServiceFormikProps}
                   setFieldForSLOForm={formikProps?.setFieldValue}
-                  fetchingMonitoredServices={fetchingMonitoredServices}
+                  fetchingMonitoredServices={fetchingMonitoredServices!}
                   hideModal={hideModal}
                 />
               </Form>
@@ -146,20 +155,20 @@ const SLOName: React.FC<SLONameProps> = ({
     []
   )
 
-  return (
+  const content = (
     <>
-      <Card className={css.card}>
-        <Container width={350}>
-          <NameIdDescriptionTags
-            formikProps={formikProps}
-            className={css.selectPrimary}
-            identifierProps={{
-              inputLabel: getString('cv.slos.sloName'),
-              inputName: SLOFormFields.NAME,
-              isIdentifierEditable: !identifier
-            }}
-          />
-        </Container>
+      <Container width={350}>
+        <NameIdDescriptionTags
+          formikProps={formikProps}
+          className={css.selectPrimary}
+          identifierProps={{
+            inputLabel: getString('cv.slos.sloName'),
+            inputName: SLOFormFields.NAME,
+            isIdentifierEditable: !identifier
+          }}
+        />
+      </Container>
+      {fetchingMonitoredServices && (
         <Container flex={{ justifyContent: 'flex-start' }}>
           <Container width={350}>
             <FormInput.Select
@@ -190,29 +199,33 @@ const SLOName: React.FC<SLONameProps> = ({
             }}
           />
         </Container>
-        <Container width={350}>
-          <HarnessServiceAsFormField
-            key={key}
-            customRenderProps={{
-              name: SLOFormFields.USER_JOURNEY_REF,
-              label: TEXT_USER_JOURNEY
-            }}
-            serviceProps={{
-              item: activeUserJourney,
-              options: userJourneyOptions,
-              onSelect: (selectedUserJourney: SelectOption) =>
-                formikProps.setFieldValue(SLOFormFields.USER_JOURNEY_REF, selectedUserJourney.value),
-              modalTitle: TEXT_USER_JOURNEY,
-              placeholder: getString('cv.slos.userJourneyPlaceholder'),
-              skipServiceCreateOrUpdate: true,
-              onNewCreated: newOption => handleCreateUserJourney(newOption),
-              loading: userJourneysLoading,
-              name: TEXT_USER_JOURNEY
-            }}
-            customLoading={saveUserJourneyLoading}
-          />
-        </Container>
-      </Card>
+      )}
+      <Container width={350}>
+        <HarnessServiceAsFormField
+          key={key}
+          customRenderProps={{
+            name: SLOFormFields.USER_JOURNEY_REF,
+            label: TEXT_USER_JOURNEY
+          }}
+          isMultiSelectField={isMultiSelect}
+          serviceProps={createServiceProps({
+            onChange: formikProps.setFieldValue,
+            getString,
+            isMultiSelect: Boolean(isMultiSelect),
+            activeUserJourney,
+            userJourneysLoading,
+            userJourneyOptions,
+            handleCreateUserJourney
+          })}
+          customLoading={saveUserJourneyLoading}
+        />
+      </Container>
+    </>
+  )
+
+  return (
+    <>
+      {fetchingMonitoredServices ? <Card className={css.card}>{content}</Card> : content}
       {children}
     </>
   )

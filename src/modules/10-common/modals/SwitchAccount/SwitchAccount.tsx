@@ -129,6 +129,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
           })
         } else if (response.resource) {
           SecureStorage.set('acctId', account.uuid)
+          // This may be overriden by the defaultExperience of the most recent account opened (in AppStoreContext)
           localStorage.setItem('defaultExperience', account.defaultExperience || '')
           // this needs to be a server-redirect to support cluster isolation
           window.location.href = window.location.pathname

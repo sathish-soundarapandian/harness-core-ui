@@ -737,6 +737,7 @@ slos:
   burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
+  createCompositeSLO: Create Composite SLO
   healthSource: Health source
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
@@ -819,6 +820,17 @@ slos:
       calendarBased: Calendar-based
       calendarBasedDefinition: Compliance periods can be set to calendar periods like a weekly, monthly or quarterly. At the end of a calendar period, you are given a performance score. The performance score, which is calculated against the performance threshold, tells you whether your service was compliant or not. Even though you may view the performance throughout the period when you use a calendar period, you only get a compliance rating for every compliance period.
       calendarBasedDefinition2: Calendar windows are more closely aligned with business planning and project work.
+CompositeSLO:
+  DefineSLO: Define SLO Identification
+  SetTimeWindow: Set SLO Time Window
+  AddSLO: Add SLOs
+  AddSLOMessage: By default, all services are equally weighted. If you assign a service a custom weighting, the remaining services will be computed automatically to receive 100 percent for the composite SLO.
+  SetTarget: Set SLO Target
+  ErrorBudgetPolicy: Error Budget Policy
+  Weightage: Weightage
+  PeriodChangeWarning:
+    title: Review Period Type Change
+    message: Updating period type will reset selected SLOs, Do you want to continue ?
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
@@ -977,3 +989,5 @@ codeErrorsHeading: Review code errors related to your project
 codeErrorsAgents: '{{projectName}} Code Error Agents'
 codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
 codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
+CVStepper:
+  StepError: Required fields are missing or incorrect data
