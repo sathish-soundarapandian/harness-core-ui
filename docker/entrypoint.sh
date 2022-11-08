@@ -18,7 +18,6 @@ sed -i "s|HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER|$HARNESS_ENABLE_APPDY_EUM_PLACEHO
 sed -i "s|HARNESS_ENABLE_CDN_PLACEHOLDER|$HARNESS_ENABLE_CDN_PLACEHOLDER|" index.html
 sed -i "s|BROWSER_ROUTER_ENABLED_PLACEHOLDER|$BROWSER_ROUTER_ENABLED_PLACEHOLDER|" index.html
 sed -i "s|HARNESS_ENABLE_SABER_PLACEHOLDER|$HARNESS_ENABLE_SABER_PLACEHOLDER|" index.html
-sed -i "s|HARNESS_NAME_SPACE_PLACEHOLDER|$HARNESS_NAME_SPACE_PLACEHOLDER|" index.html
 sed -i "s|<\!-- segmentToken -->|<script>window.segmentToken = '$SEGMENT_TOKEN'</script>|" index.html
 sed -i "s|<\!-- bugsnagToken -->|<script>window.bugsnagToken = '$BUGSNAG_TOKEN'</script>|" index.html
 sed -i "s|<\!-- appDyEUMToken -->|<script>window.appDyEUMToken = '$APPDY_EUM_TOKEN'</script>|" index.html
@@ -32,6 +31,7 @@ sed -i "s|<\!-- helpPanelEnvironment -->|<script>window.helpPanelEnvironment = '
 sed -i "s|<\!-- newNavContentfulAccessToken -->|<script>window.newNavContentfulAccessToken = '$NEW_NAV_CONTENTFUL_ACCESS_TOKEN'</script>|" index.html
 sed -i "s|<\!-- newNavContetfulSpace -->|<script>window.newNavContetfulSpace = '$NEW_NAV_CONTENTFUL_SPACE'</script>|" index.html
 sed -i "s|<\!-- newNavContentfulEnvironment -->|<script>window.newNavContentfulEnvironment = '$NEW_NAV_CONTENTFUL_ENVIRONMENT'</script>|" index.html
+sed -i "s|<\!-- harnessNameSpacePlaceHolder -->|<script>window.harnessNameSpace = '$HARNESS_NAME_SPACE'</script>|" index.html
 sed -i "s|<\!-- stripeApiKey -->|<script>window.stripeApiKey = '$STRIPE_API_KEY'</script>|" index.html
 if [ "$HARNESS_ENABLE_CDN_PLACEHOLDER" = "true" ]
 then

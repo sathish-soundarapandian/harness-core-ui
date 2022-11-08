@@ -34,7 +34,6 @@
       if (window.browserRouterEnabled === undefined) {
         window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       }
-      window.harnessNameSpace = HARNESS_NAME_SPACE_PLACEHOLDER ? HARNESS_NAME_SPACE_PLACEHOLDER : ''
       window.getApiBaseUrl = str => {
         if (window.browserRouterEnabled) {
           return `${window.apiUrl || ''}/${str}`
@@ -56,7 +55,7 @@
     <!-- newNavContentfulAccessToken -->
     <!-- newNavContetfulSpace -->
     <!-- newNavContentfulEnvironment -->
-
+    <!-- harnessNameSpacePlaceHolder -->
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
     <script>
@@ -89,6 +88,7 @@
       window.newNavContentfulAccessToken = '<%= NEW_NAV_CONTENTFUL_ACCESS_TOKEN_DEV %>'
       window.newNavContetfulSpace = '<%= NEW_NAV_CONTENTFUL_SPACE_DEV %>'
       window.newNavContentfulEnvironment = '<%= NEW_NAV_CONTENTFUL_ENVIRONMENT_DEV %>'
+      window.harnessNameSpace = ''
     </script>
     <% } %>
     <!-- Enabling ng-auth-ui -->
