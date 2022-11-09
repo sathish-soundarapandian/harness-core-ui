@@ -872,7 +872,7 @@ clientSecret: Client Secret
 copy: Copy
 levelUp: LEVEL UP
 overuse: OVERUSE
-scope: '{{ $.delegate.Scope }}'
+scope: '{{ $.common.scopeLabel }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
@@ -973,6 +973,7 @@ environmentOverrides: Environment Overrides
 serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 repositoryFormat: Repository Format
+scopeLabel: Scope
 hostLabel: Host
 useSSL: Use SSL
 moduleList:

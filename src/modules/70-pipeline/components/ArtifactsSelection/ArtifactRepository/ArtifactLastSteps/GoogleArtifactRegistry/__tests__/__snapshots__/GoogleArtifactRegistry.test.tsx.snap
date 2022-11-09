@@ -1902,7 +1902,11 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                       </span>
                     </button>
                   </div>
-                  
+                  <div
+                    class="bp3-form-helper-text"
+                  >
+                    pipeline.artifactsSelection.feed  is  pipeline.tagDependencyRequired
+                  </div>
                 </div>
               </div>
             </div>

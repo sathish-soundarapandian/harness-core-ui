@@ -762,6 +762,7 @@ export interface StringsMap {
   'common.schedulePanel.weeklyTabTitle': string
   'common.schedulePanel.yearlyTabTitle': string
   'common.scope': string
+  'common.scopeLabel': string
   'common.script': string
   'common.scriptRequired': string
   'common.scriptType': string
@@ -1955,6 +1956,9 @@ export interface StringsMap {
   'connectors.azure.managedIdentities.systemAssigned': string
   'connectors.azure.managedIdentities.userAssigned': string
   'connectors.azure.managedIdentity': string
+  'connectors.azureArtifacts.azureArtifactsUrl': string
+  'connectors.azureArtifacts.azureArtifactsUrlRequired': string
+  'connectors.azureArtifacts.tokenRefRequired': string
   'connectors.azureKeyVault.labels.fetchVault': string
   'connectors.azureKeyVault.labels.setupVault': string
   'connectors.azureKeyVault.labels.subscription': string
@@ -2656,6 +2660,7 @@ export interface StringsMap {
   'connectors.title.awsKms': string
   'connectors.title.awsSecretManager': string
   'connectors.title.azure': string
+  'connectors.title.azureArtifacts': string
   'connectors.title.azureKeyVault': string
   'connectors.title.azureRepoConnector': string
   'connectors.title.bitbucketConnector': string
@@ -3103,7 +3108,6 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.artifactsArrayPath': string
-  'pipeline.artifactsSelection.azureArtifactRegistryTitle': string
   'pipeline.artifactsSelection.classifier': string
   'pipeline.artifactsSelection.classifierPlaceholder': string
   'pipeline.artifactsSelection.customArtifactManualFill': string
@@ -3116,6 +3120,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder': string
   'pipeline.artifactsSelection.extension': string
   'pipeline.artifactsSelection.extensionPlaceholder': string
+  'pipeline.artifactsSelection.feed': string
+  'pipeline.artifactsSelection.feedPlaceholder': string
   'pipeline.artifactsSelection.filePathRegexLabel': string
   'pipeline.artifactsSelection.filePathRegexPlaceholder': string
   'pipeline.artifactsSelection.githubPackageRegistryTitle': string
@@ -3127,6 +3133,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.loadingTags': string
   'pipeline.artifactsSelection.orgNamePlaceholder': string
   'pipeline.artifactsSelection.packageName': string
+  'pipeline.artifactsSelection.packageNamePlaceholder': string
   'pipeline.artifactsSelection.projectPlaceholder': string
   'pipeline.artifactsSelection.repositoryPlaceholder': string
   'pipeline.artifactsSelection.repositoryPort': string
@@ -3137,11 +3144,14 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.artifactPath': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
   'pipeline.artifactsSelection.validation.artifactsArrayPath': string
+  'pipeline.artifactsSelection.validation.feed': string
   'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.group': string
   'pipeline.artifactsSelection.validation.groupId': string
   'pipeline.artifactsSelection.validation.imagePath': string
   'pipeline.artifactsSelection.validation.noBuild': string
+  'pipeline.artifactsSelection.validation.noFeeds': string
+  'pipeline.artifactsSelection.validation.noPackage': string
   'pipeline.artifactsSelection.validation.noVersion': string
   'pipeline.artifactsSelection.validation.packageName': string
   'pipeline.artifactsSelection.validation.packageType': string
@@ -8420,10 +8430,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'delegate.ReturnToDelegates': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'delegate.Scope': string
   /**
    * @deprecated migrate this string to module level file
    */

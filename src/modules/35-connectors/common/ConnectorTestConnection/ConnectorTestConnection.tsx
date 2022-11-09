@@ -111,6 +111,8 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.GITHUB:
       case Connectors.GIT:
         return getString('connectors.testConnectionStep.url.bitbucket')
+      case Connectors.AZURE_ARTIFACTS:
+        return getString('connectors.azureArtifacts.azureArtifactsUrl')
       default:
         return ''
     }
@@ -127,6 +129,8 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
         return props.prevStepData?.dockerRegistryUrl
       case Connectors.JENKINS:
         return props.prevStepData?.jenkinsUrl
+      case Connectors.AZURE_ARTIFACTS:
+        return props.prevStepData?.azureArtifactsUrl
       case Connectors.NEXUS:
         return props.prevStepData?.nexusServerUrl
 

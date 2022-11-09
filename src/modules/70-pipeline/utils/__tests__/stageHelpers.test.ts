@@ -121,7 +121,7 @@ test('isServerlessDeploymentType', () => {
 test('getHelpeTextForTags', () => {
   expect(
     getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, false)
-  ).toBe('pipeline.artifactPathLabel  is  pipeline.tagDependencyRequired')
+  ).toBe('pipeline.artifactsSelection.feed, pipeline.artifactPathLabel  are  pipeline.tagDependencyRequired')
 
   expect(
     getHelpeTextForTags(
@@ -129,11 +129,13 @@ test('getHelpeTextForTags', () => {
       (str: string) => str,
       false
     )
-  ).toBe('pipeline.imagePathLabel  is  pipeline.tagDependencyRequired')
+  ).toBe('pipeline.artifactsSelection.feed, pipeline.imagePathLabel  are  pipeline.tagDependencyRequired')
 
   expect(
     getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
-  ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
+  ).toBe(
+    'pipeline.artifactsSelection.feed, pipeline.artifactsSelection.artifactDirectory  are  pipeline.artifactPathDependencyRequired'
+  )
 })
 
 test('getCustomStepProps', () => {

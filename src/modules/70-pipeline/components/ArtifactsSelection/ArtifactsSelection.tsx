@@ -37,6 +37,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
@@ -51,7 +52,8 @@ import type {
   GoogleArtifactRegistryInitialValuesType,
   CustomArtifactSource,
   GithubPackageRegistryInitialValuesType,
-  Nexus2InitialValuesType
+  Nexus2InitialValuesType,
+  AzureArtifactsInitialValues
 } from './ArtifactInterface'
 import {
   ENABLED_ARTIFACT_TYPES,
@@ -93,7 +95,7 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES, AZURE_ARTIFACTS_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -105,14 +107,23 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
     if (
-      deploymentType === 'Kubernetes' &&
+      deploymentType === ServiceDeploymentType.Kubernetes &&
       GITHUB_PACKAGES &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
-      ['Kubernetes', 'CustomDeployment'].includes(deploymentType) &&
+      deploymentType === ServiceDeploymentType.Kubernetes &&
+      AZURE_ARTIFACTS_NG &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
+    }
+    if (
+      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.CustomDeployment].includes(
+        deploymentType as ServiceDeploymentType
+      ) &&
       NG_GOOGLE_ARTIFACT_REGISTRY &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
@@ -430,7 +441,8 @@ export default function ArtifactsSelection({
       GoogleArtifactRegistryInitialValuesType &
       CustomArtifactSource &
       GithubPackageRegistryInitialValuesType &
-      Nexus2InitialValuesType
+      Nexus2InitialValuesType &
+      AzureArtifactsInitialValues
   > => {
     return {
       key: getString('connectors.stepFourName'),

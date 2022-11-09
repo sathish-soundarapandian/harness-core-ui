@@ -839,9 +839,12 @@ artifactsSelection:
   classifier: Classifier
   classifierPlaceholder: Enter Classifier
   packageName: Package Name
+  packageNamePlaceholder: Select Package
   addPrimaryArtifact: Add Primary Artifact
   addArtifactSource: Add Artifact Source
   addSidecar: Add Sidecar
+  feed: Feed
+  feedPlaceholder: Select Feed
   artifactSourceName: Artifact Source Name
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
@@ -870,7 +873,6 @@ artifactsSelection:
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
   githubPackageRegistryTitle: Github Package Registry
-  azureArtifactRegistryTitle: Azure Artifact Registry
   AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
     sidecarId: Sidecar Name
@@ -882,8 +884,11 @@ artifactsSelection:
     artifactsArrayPath: Artifact array path is required
     versionPath: Version path is required
     noBuild: No build found with given details
+    noPackage: No package found with given details
+    noFeeds: No feeds found with given details
     noVersion: No version found with given details
     packageType: Package Type is required
+    feed: Feed is required
     versionRegex: Version Regex is required
     packageName: Package Name is required
     imagePath: Image Path is required
