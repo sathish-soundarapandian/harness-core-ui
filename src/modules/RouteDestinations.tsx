@@ -29,6 +29,7 @@ import CVRoutes from '@cv/RouteDestinations'
 import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto-steps/RouteDestinations'
+import IDPRoutes from '@idp/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
 import DASHBOARDRoutes from '@dashboards/RouteDestinations'
@@ -79,6 +80,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
+      {IDPRoutes.props.children}
       {SECURITY ? (
         <Route path="/account/:accountId/:module(sto)">
           <STORoutes />

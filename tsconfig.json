@@ -56,6 +56,7 @@
       "@sto-steps/*": ["modules/85-sto-steps/*"],
       "@ce/*": ["modules/75-ce/*"],
       "@gitops/*": ["modules/90-gitops/*"],
+      "@idp/*": ["modules/75-idp/*"],
       "@wings-software/*": ["../node_modules/@harness/*"]
     }
   },
