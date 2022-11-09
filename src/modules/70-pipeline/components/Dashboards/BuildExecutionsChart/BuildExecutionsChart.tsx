@@ -206,8 +206,8 @@ export function ExecutionsChart({
         (failedCount && successCount && abortedCount && expiredCount) ? (
         <Container className={styles.emptyView}>
           <Container className={styles.emptyViewCard}>
-            <img src={module === 'ci' ? NoBuilds : NoDeployments} />
-            <Text> {getString('pipeline.noRunsText', { moduleRunType: getModuleRunType(module) })}</Text>
+            <img src={module === 'ci' ? NoBuilds : NoDeployments} height="96px" />
+            <Text> {getString('pipeline.noRunsSimpleText', { moduleRunType: getModuleRunType(module) })}</Text>
           </Container>
         </Container>
       ) : (

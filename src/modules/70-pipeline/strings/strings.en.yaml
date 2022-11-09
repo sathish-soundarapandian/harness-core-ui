@@ -42,6 +42,7 @@ stageExecutionsHelperText: Allow selective stage(s) executions?
 sslVerify: SSL Verify
 noPipelinesLabel: No pipelines
 noPipelinesText: There are no pipelines in your project. Click the button below to create a pipeline.
+noRunsSimpleText: No {{moduleRunType}}
 noRunsLabel: No {{moduleRunType}} in your project
 noRunsText: Your project does not have any {{moduleRunType}} yet. Click the button below to run a pipeline.
 parallelSelectedStages: '{{selected}}, +{{total}} Stages'
