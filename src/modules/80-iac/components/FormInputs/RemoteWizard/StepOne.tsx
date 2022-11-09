@@ -98,8 +98,8 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
   }
 
   const getInitialValues = useCallback(() => {
-    const connectorRef = get(initialValues, `spec.configuration.spec.store.spec.connectorRef`, '')
-    const store = get(initialValues, `spec.configuration.spec.store.type`, '')
+    const connectorRef = get(initialValues, `spec.connectorRef`, '')
+    const store = get(initialValues, `type`, '')
     const initValues = { store, connectorRef }
 
     if (!isEmpty(selectedStore) && selectedStore !== store) {
@@ -111,13 +111,12 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
     return initValues
   }, [selectedStore])
 
-  const connectorTypesOptions = useMemo(
-    (): Item[] =>
-      connectorTypes.map((store: string) => ({
-        label: store,
-        icon: ConnectorIcons[store],
-        value: store
-      })),
+  const connectorTypesOptions = useMemo((): Item[] =>
+    connectorTypes.map((store: string) => ({
+      label: store,
+      icon: ConnectorIcons[store],
+      value: store
+    })),
     [connectorTypes]
   )
   const validationSchema = () => {

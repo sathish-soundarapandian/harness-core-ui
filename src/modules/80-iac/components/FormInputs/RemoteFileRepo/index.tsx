@@ -35,7 +35,7 @@ const RemoteFileRepo = ({
         setIsOpen(false)
         setConnectorView(false)
     }
-    const path = get(initialValues, 'spec.path')
+    const path = get(initialValues, 'spec.folderPath')
     return (
         <>
             <Layout.Vertical>
@@ -48,8 +48,8 @@ const RemoteFileRepo = ({
                             <a className={cx(styles.fullWidth, styles.placeholder)}>
                                 {getMultiTypeFromValue(path) === MultiTypeInputType.RUNTIME
                                     ? `/${path}`
-                                    : path?.[0]
-                                        ? path?.[0]
+                                    : path
+                                        ? path
                                         : getString('iac.pipelineSteps.remoteRepoPlaceHolder')}
                             </a>
                             <Button minimal icon="Edit" withoutBoxShadow iconProps={{ size: 16 }} withoutCurrentColor={true} />

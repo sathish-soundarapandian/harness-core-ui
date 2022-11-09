@@ -7,6 +7,6 @@
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 
-import { TestStep } from './TestStep/TestStep'
+import { TerraformPlan } from './Terraform/TerraformPlan/TerraformPlan'
 
-factory.registerStep(new TestStep())
+factory.registerStep(new TerraformPlan())

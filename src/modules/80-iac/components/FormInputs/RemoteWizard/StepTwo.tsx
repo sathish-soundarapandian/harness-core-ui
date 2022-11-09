@@ -59,7 +59,7 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
       ? GitRepoName.Repo
       : GitRepoName.Account
   const getInitialValues = useCallback(() => {
-    const specValues = get(initialValues, `spec.configuration.spec.store.spec`, '')
+    const specValues = get(initialValues, `spec`, '')
     if (specValues) {
       return {
         ...specValues,
@@ -67,8 +67,8 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
         commitId: specValues.commitId,
         repoName: specValues.repoName,
         gitFetchType: specValues.gitFetchType,
-        paths:
-          typeof specValues.paths === 'string' || isUndefined(specValues.paths) ? specValues.paths : specValues.paths[0]
+        folderPath:
+          typeof specValues.folderPath === 'string' || isUndefined(specValues.folderPath) ? specValues.folderPath : specValues.folderPath[0]
       }
     }
 
@@ -76,7 +76,7 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      paths: undefined,
+      folderPath: undefined,
       repoName: undefined
     }
   }, [])
@@ -88,8 +88,8 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
         connectorRef: formData?.connectorRef,
         gitFetchType: formData?.gitFetchType,
         ...(formData?.gitFetchType === 'Branch' ? { branch: formData?.branch } : { commitId: formData?.commitId }),
-        paths:
-          getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
+        folderPath:
+          getMultiTypeFromValue(formData.folderPath) === MultiTypeInputType.RUNTIME ? formData?.folderPath : [formData?.folderPath]
       }
     }
 
@@ -118,7 +118,7 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
             is: 'Commit',
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
-          paths: Yup.string()
+          folderPath: Yup.string()
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
@@ -249,19 +249,19 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                   <FormInput.MultiTextInput
                     label={getString('common.git.filePath')}
                     placeholder={getString('common.git.filePath')}
-                    name={'paths'}
+                    name={'folderPath'}
                     multiTextInputProps={{ expressions, allowableTypes }}
                   />
-                  {getMultiTypeFromValue(values?.paths as string) === MultiTypeInputType.RUNTIME && (
+                  {getMultiTypeFromValue(values?.folderPath as string) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
                       style={{ alignSelf: 'center', marginTop: 1 }}
-                      value={values?.paths as string}
+                      value={values?.folderPath as string}
                       type="String"
-                      variableName={'paths'}
+                      variableName={'folderPath'}
                       showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
-                      onChange={value => setFieldValue('paths', value)}
+                      onChange={value => setFieldValue('folderPath', value)}
                       isReadonly={isReadonly}
                       allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                     />
