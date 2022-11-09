@@ -1,0 +1,31 @@
+.label {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+.remoteFile {
+  display: flex;
+  width: 100% !important;
+  height: 32px;
+  background: var(--white);
+  border: 1px solid var(--grey-200);
+  border-radius: 4px;
+  align-items: center;
+  padding: 10px;
+}
+
+.addMarginBottom {
+  margin-bottom: var(--spacing-medium) !important;
+}
+
+.fullWidth {
+  width: 100% !important;
+}
+
+.placeholder {
+  color: var(--primary-7) !important;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

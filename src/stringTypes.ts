@@ -6922,6 +6922,8 @@ export interface StringsMap {
   'ci.titleResources': string
   'ci.titleSettings': string
   'ci.welcome': string
+  'iac.pipelineSteps.configureRemoteFile': string
+  'iac.pipelineSteps.remoteRepoPlaceHolder': string
   'iac.stacks': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string

@@ -1,1 +1,4 @@
 stacks: Stacks
+pipelineSteps:
+  configureRemoteFile: Configure File Repository
+  remoteRepoPlaceHolder: 'Specify File...'
