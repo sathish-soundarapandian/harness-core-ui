@@ -127,7 +127,7 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.InputTimeoutError
   ],
   [StageType.FEATURE]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
-  [StageType.SECURITY]: [],
+  [StageType.SECURITY]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
   [StageType.PIPELINE]: [
     ErrorType.Authentication,
     ErrorType.Authorization,
