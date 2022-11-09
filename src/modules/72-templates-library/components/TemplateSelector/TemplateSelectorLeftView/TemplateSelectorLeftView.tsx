@@ -58,6 +58,8 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
+  const [selectedRepo, setSelectedRepo] = useState<string>('')
+
   const [searchParam, setSearchParam] = useState('')
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
@@ -94,6 +96,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     return {
       filterType: 'Template',
       templateEntityTypes: [templateType],
+      repoName: selectedRepo,
       childTypes: selectedChildType ? [selectedChildType] : childTypes,
       templateIdentifiers: selectedTemplateRefs,
       ...(!supportingTemplatesGitx
@@ -149,7 +152,12 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     },
     [templateType]
   )
-
+  const dropDown = [
+    { label: 'Repo1', value: 'suman' },
+    { label: 'Repo2', value: 'gitx-bb' },
+    { label: 'Repo3', value: 'Repo3' },
+    { label: 'Repo4', value: 'Repo4' }
+  ]
   const dropdownItems = React.useMemo(
     (): SelectOption[] =>
       childTypes
@@ -195,6 +203,13 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     }
   }, [loading])
 
+  const onChangeRepo = (selected: SelectOption): void => {
+    if (selected.value === selectedRepo) {
+      return
+    }
+    setSelectedRepo(selected.value as string)
+  }
+
   return (
     <Container width={762} background={Color.FORM_BG} className={css.container}>
       <Layout.Vertical spacing={'xxlarge'} height={'100%'}>
@@ -222,7 +237,12 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   onChange={item => setSelectedScope(item)}
                   filterable={false}
                 />
-                <RepoFilter placeholder={getString('common.selectRepository')} />
+                <RepoFilter
+                  placeholder={getString('common.selectRepository')}
+                  dropDownItems={dropDown}
+                  selectedRepo={selectedRepo}
+                  onChange={selected => onChangeRepo(selected)}
+                />
                 <ExpandingSearchInput
                   alwaysExpanded
                   className={css.searchBox}

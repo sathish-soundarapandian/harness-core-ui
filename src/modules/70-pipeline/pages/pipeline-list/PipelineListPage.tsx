@@ -13,6 +13,7 @@ import {
   HarnessDocTooltip,
   Layout,
   PageSpinner,
+  SelectOption,
   shouldShowError,
   Text,
   useToggleOpen
@@ -49,6 +50,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 
 import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
@@ -81,6 +83,8 @@ export function PipelineListPage(): React.ReactElement {
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
+  const [selectedRepo, setSelectedRepo] = useState<string>('')
+
   const {
     open: openClonePipelineModal,
     isOpen: isClonePipelineModalOpen,
@@ -137,6 +141,7 @@ export function PipelineListPage(): React.ReactElement {
     try {
       const filter: PipelineFilterProperties = {
         filterType: 'PipelineSetup',
+        repoName: selectedRepo,
         ...appliedFilter?.filterProperties
       }
       const { status, data } = await loadPipelineList(filter, {
@@ -173,7 +178,8 @@ export function PipelineListPage(): React.ReactElement {
     repoIdentifier,
     searchTerm,
     size,
-    sort?.toString()
+    sort?.toString(),
+    selectedRepo
   ])
 
   useDocumentTitle([getString('pipelines')])
@@ -232,6 +238,20 @@ export function PipelineListPage(): React.ReactElement {
   )
 
   const { globalFreezes } = useGlobalFreezeBanner()
+  const dropDown = [
+    { label: 'Repo1', value: 'suman' },
+    { label: 'Repo2', value: 'gitx-bb' },
+    { label: 'Repo3', value: 'Repo3' },
+    { label: 'Repo4', value: 'Repo4' }
+  ]
+
+  const onChangeRepo = (selected: SelectOption): void => {
+    if (selected.value === selectedRepo) {
+      return
+    }
+    updateQueryParams({ repoName: (selected.value || []) as string })
+    setSelectedRepo(selected.value as string)
+  }
 
   return (
     <GitSyncStoreProvider>
@@ -256,7 +276,13 @@ export function PipelineListPage(): React.ReactElement {
                 branch
               }}
             />
-          ) : null}
+          ) : (
+            <RepoFilter
+              dropDownItems={dropDown}
+              selectedRepo={selectedRepo}
+              onChange={selected => onChangeRepo(selected)}
+            />
+          )}
         </Layout.Horizontal>
         <Layout.Horizontal style={{ alignItems: 'center' }}>
           <ExpandingSearchInput

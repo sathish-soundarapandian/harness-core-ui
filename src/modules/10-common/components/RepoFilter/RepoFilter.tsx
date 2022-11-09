@@ -6,57 +6,31 @@
  */
 import React from 'react'
 import { DropDown, Layout, SelectOption } from '@harness/uicore'
-// eslint-disable-next-line @typescript-eslint/no-duplicate-imports
-
 import { useStrings } from 'framework/strings'
-// import { useStrings } from 'framework/strings'
-// import { useEffect } from '@storybook/addons'
-
-// import { useStrings } from 'framework/strings'
-
-// import css from './RepoFilter.module.scss'
-
-export interface RepoSelectOption {
-  repo: string
-}
 
 export interface RepoFilterProps {
+  dropDownItems: SelectOption[]
+  selectedRepo: string
   placeholder?: string
-  onChange?: (selected: RepoSelectOption) => void
+  onChange?: (selected: SelectOption) => void
   disabled?: boolean
   repoFilterClassName?: string
 }
 
 const RepoFilter: React.FC<RepoFilterProps> = props => {
+  const { onChange, dropDownItems, selectedRepo } = props
   const { getString } = useStrings()
   const { placeholder = getString('repository'), disabled = false } = props
-
-  const dropDown = [
-    { label: 'Repo1', value: 'Repo1' },
-    { label: 'Repo2', value: 'Repo2' },
-    { label: 'Repo3', value: 'Repo3' },
-    { label: 'Repo4', value: 'Repo4' }
-  ]
-  //   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>(dropDown)
-
-  const [selectedRepo, setSelectedRepo] = React.useState<string>('')
-
-  const onChangeRepo = (selected: SelectOption): void => {
-    if (selected.value === selectedRepo) {
-      return
-    }
-    setSelectedRepo(selected.value as string)
-  }
 
   return (
     <div>
       <Layout.Horizontal spacing="xsmall">
         <DropDown
-          items={dropDown}
+          items={dropDownItems}
           disabled={disabled}
           buttonTestId={'repo-filter'}
           value={selectedRepo}
-          onChange={selected => onChangeRepo(selected)}
+          onChange={selected => onChange?.(selected)}
           placeholder={placeholder}
           addClearBtn={true}
           minWidth={160}
