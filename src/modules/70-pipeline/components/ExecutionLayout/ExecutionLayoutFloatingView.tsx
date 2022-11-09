@@ -65,15 +65,16 @@ export default function ExecutionLayoutFloatingView(props: React.PropsWithChildr
           handle="#pipeline-step-details-drag"
         >
           <div className={css.stepDetails} ref={setReferenceElement}>
-            <Button minimal icon="drag-handle-vertical" id="pipeline-step-details-drag" />
-            <Button
-              onClick={toggleDialog}
-              className={css.toggleButton}
-              rightIcon={isOpen ? 'minus' : 'plus'}
-              variation={ButtonVariation.LINK}
-              data-testid="restore"
-            >
-              <String stringID="pipeline.stepDetails" />
+            <Button minimal icon="drag-handle-vertical" id="pipeline-step-details-drag">
+              <Button
+                onClick={toggleDialog}
+                className={css.toggleButton}
+                rightIcon={isOpen ? 'minus' : 'plus'}
+                variation={ButtonVariation.LINK}
+                data-testid="restore"
+              >
+                <String stringID="pipeline.stepDetails" />
+              </Button>
             </Button>
           </div>
         </Draggable>
