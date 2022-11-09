@@ -13,6 +13,12 @@ declare const styles: {
   readonly discard: string
   readonly drawerTitleContainer: string
   readonly drawertitle: string
+  readonly errorHandler: string
+  readonly inputsContainer: string
   readonly main: string
+  readonly saveButton: string
+  readonly stepCommand: string
+  readonly stepTabs: string
+  readonly withoutTabs: string
 }
 export default styles

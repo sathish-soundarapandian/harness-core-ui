@@ -11,14 +11,11 @@ import { noop } from 'lodash-es'
 import { Button } from '@wings-software/uicore'
 import { DrawerSizes, DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { TemplateStepNode } from 'services/pipeline-ng'
-import {
-  StepCommandsWithRef as StepCommands,
-  StepFormikRef
-} from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
-import { StepCommandsViews } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
+import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ArtifactConfigDrawerTitle } from '@pipeline/components/ArtifactsSelection/ArtifactConfigDrawer/ArtifactConfigDrawerTitle'
+import { ArtifactSourceTemplateDetailsWithRef } from './ArtifactSourceTemplateDetails'
 import css from './ArtifactConfigDrawer.module.scss'
 
 interface Props {
@@ -37,7 +34,6 @@ export function ArtifactConfigDrawer(props: Props) {
     artifactSourceConfigNode,
     isDrawerOpened,
     onCloseDrawer,
-    checkDuplicateStep,
     isNewStep,
     addOrUpdateTemplate,
     formikRef,
@@ -72,19 +68,15 @@ export function ArtifactConfigDrawer(props: Props) {
       <Button minimal className={css.closeButton} icon="cross" withoutBoxShadow onClick={onCloseDrawer} />
 
       {artifactSourceConfigNode && (
-        <StepCommands
-          step={artifactSourceConfigNode}
+        <ArtifactSourceTemplateDetailsWithRef
+          artifactSourceConfigNode={artifactSourceConfigNode}
           isReadonly={isReadonly}
           ref={formikRef}
-          checkDuplicateStep={checkDuplicateStep}
           isNewStep={isNewStep}
           stepsFactory={stepsFactory}
-          hasStepGroupAncestor={false}
           onUpdate={noop}
-          viewType={StepCommandsViews.Template}
           allowableTypes={allowableTypes}
           onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate)}
-          isStepGroup={false}
           gitDetails={gitDetails}
           storeMetadata={storeMetadata}
         />

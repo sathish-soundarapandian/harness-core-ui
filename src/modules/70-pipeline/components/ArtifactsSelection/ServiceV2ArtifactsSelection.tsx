@@ -513,10 +513,14 @@ export default function ServiceV2ArtifactsSelection({
     } else {
       // update the node
       const artifactSourceConfigValues = formikRef.current?.getValues() as ArtifactSource | SidecarArtifact
-      const updatedArtifactSourceConfigValues = {
-        ...artifactSourceConfigValues,
-        identifier: artifactSourceConfigValues.name
-      }
+      const updatedArtifactSourceConfigValues = produce(artifactSourceConfigValues, draft => {
+        set(draft, 'identifier', artifactSourceConfigValues.name)
+        set(
+          draft,
+          'template.templateInputs',
+          get(artifactSourceConfigValues, 'template.templateInputs.artifacts.primary')
+        )
+      })
       if (artifactContext === ModalViewFor.PRIMARY) {
         setPrimaryArtifactData(updatedArtifactSourceConfigValues as ArtifactSource)
       } else {
