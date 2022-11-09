@@ -47,7 +47,7 @@ import {
   Values
 } from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
-import { addStepOrGroup, getStepFromId, StepState } from '../ExecutionGraph/ExecutionGraphUtil'
+import { addService, addStepOrGroup, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
 import PipelineVariables, { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables'
 import { PipelineNotifications, PipelineNotificationsRef } from '../PipelineNotifications/PipelineNotifications'
 import { PipelineTemplates } from '../PipelineTemplates/PipelineTemplates'
@@ -672,29 +672,25 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
-  const getMaxIndex = (
-    stepType: string,
-    stepName: string,
-    stepsMap?: Map<string, StepState>,
-    isProvisioner?: boolean
-  ) => {
+  const getStepMaxIndex = (stepType: string, stepName: string, isProvisioner = false) => {
     let maxId = -1
-
+    const stepsMap = data?.paletteData?.stepsMap
     stepsMap?.forEach((_value, key: string) => {
       const stepDetails = getStepFromId(
         isProvisioner
-          ? (selectedStage?.stage?.spec as any)?.infrastructure?.infrastructureDefinition?.provisioner
+          ? (selectedStage as StageElementWrapper<DeploymentStageElementConfig>)?.stage?.spec?.infrastructure
+              ?.infrastructureDefinition?.provisioner
           : selectedStage?.stage?.spec?.execution,
         key
       )
       if (stepDetails?.node?.type === stepType) {
-        const stepId = stepDetails?.node?.identifier
-        const tempName = stepId.slice(0, stepName.length)
+        const stepNodeName = stepDetails?.node?.name
+        const tempName = stepNodeName.slice(0, stepName.length)
         if (tempName === stepName) {
-          if (stepId.length > stepName.length && stepId[stepName.length] === '_') {
-            let idx = parseInt(stepId.slice(stepName.length + 1))
+          if (stepNodeName.length > stepName.length && stepNodeName[stepName.length] === '_') {
+            let idx = parseInt(stepNodeName.slice(stepName.length + 1))
             if (idx > maxId) maxId = idx
-          } else if (stepId.length === stepName.length) maxId = maxId === -1 ? 0 : maxId
+          } else if (stepNodeName.length === stepName.length) maxId = maxId === -1 ? 0 : maxId
         }
       }
     })
@@ -703,7 +699,7 @@ export function RightDrawer(): React.ReactElement {
   }
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
-    const maxIndex = getMaxIndex(item.type, item.name, paletteData?.stepsMap)
+    const maxIndex = getStepMaxIndex(item.type, item.name)
     const stepName = maxIndex === 0 ? item.name : `${item.name}_${maxIndex}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
@@ -1004,7 +1000,7 @@ export function RightDrawer(): React.ReactElement {
             const paletteData = data.paletteData
             if (paletteData?.entity) {
               const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
-              const maxIndex = getMaxIndex(item.type, item.name, paletteData?.stepsMap, true)
+              const maxIndex = getStepMaxIndex(item.type, item.name, true)
               const stepName = maxIndex === 0 ? item.name : `${item.name}_${maxIndex}`
               const newStepData = {
                 step: {
