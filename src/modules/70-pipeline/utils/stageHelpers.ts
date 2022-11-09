@@ -654,3 +654,7 @@ export const isSshOrWinrmDeploymentType = (deploymentType: string): boolean => {
 export const withoutSideCar = (deploymentType: string): boolean => {
   return isSshOrWinrmDeploymentType(deploymentType)
 }
+
+export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']) => {
+  return `${selectedDeploymentType}DeploymentTypeVariables`
+}
