@@ -262,7 +262,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Handle various interactions with the editor */
 
-  const findValidationErrors = useCallback(
+  const validateYAMLAgainstSchema = useCallback(
     (updatedYaml: string): void => {
       if (schema) {
         validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
@@ -292,7 +292,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         errorMessage: yamlError
       })
       if (updatedYaml && schema) {
-        findValidationErrors(updatedYaml)
+        validateYAMLAgainstSchema(updatedYaml)
       }
       onChange?.(!(updatedYaml === ''))
       autoCompleteYAML()
