@@ -60,12 +60,13 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     const data = { ...formData }
 
-    if (hostsJSON?.length <= 0) {
+    if (hostsJSON?.length <= 0 && !data.hosts) {
       return
     }
 
-    data.hosts = hostsJSON
-
+    if (hostsJSON?.length > 0) {
+      data.hosts = hostsJSON
+    }
     nextStep?.({ ...prevStepData, ...data } as StepConfigureProps)
   }
 
@@ -78,7 +79,7 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
           ? hosts
           : (hosts?.map?.((host: any) => host.hostname).join('\n') as string | string[]),
       hostsJson: JSON.stringify(hosts, undefined, 4),
-      selectionType: SelectionType.JSON
+      selectionType: SelectionType.MANUAL
     }
   }, [])
 
