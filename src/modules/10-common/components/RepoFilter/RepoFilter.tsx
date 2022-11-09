@@ -5,20 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { DropDown, Layout, SelectOption } from '@harness/uicore'
+import { Color, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
+import css from './RepoFilter.module.scss'
 
 export interface RepoFilterProps {
   dropDownItems: SelectOption[]
   selectedRepo: string
   placeholder?: string
   onChange?: (selected: SelectOption) => void
+  onClick?: () => void
   disabled?: boolean
   repoFilterClassName?: string
+  showRefetchButton?: boolean
 }
 
 const RepoFilter: React.FC<RepoFilterProps> = props => {
-  const { onChange, dropDownItems, selectedRepo } = props
+  const { onChange, dropDownItems, selectedRepo, showRefetchButton = false, onClick } = props
   const { getString } = useStrings()
   const { placeholder = getString('repository'), disabled = false } = props
 
@@ -36,6 +40,24 @@ const RepoFilter: React.FC<RepoFilterProps> = props => {
           minWidth={160}
           usePortal={true}
         ></DropDown>
+
+        {showRefetchButton && (
+          <Layout.Horizontal
+            spacing="small"
+            flex={{ alignItems: 'flex-start' }}
+            className={cx(css.refreshButtonWrapper)}
+          >
+            <Icon
+              name="refresh"
+              size={16}
+              color={Color.PRIMARY_7}
+              background={Color.PRIMARY_1}
+              padding="small"
+              className={css.refreshIcon}
+              onClick={onClick}
+            />
+          </Layout.Horizontal>
+        )}
       </Layout.Horizontal>
     </div>
   )

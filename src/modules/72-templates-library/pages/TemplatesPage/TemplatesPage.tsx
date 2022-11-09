@@ -19,12 +19,20 @@ import {
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
+import { defaultTo } from 'lodash-es'
+import type { GetDataError } from 'restful-react'
 import { TemplateSettingsModal } from '@templates-library/components/TemplateSettingsModal/TemplateSettingsModal'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { Sort, SortFields, TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateDetailsDrawer } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
-import { TemplateSummaryResponse, useGetTemplateList, useGetTemplateMetadataList } from 'services/template-ng'
+import {
+  Failure,
+  TemplateSummaryResponse,
+  useGetRepositoryList,
+  useGetTemplateList,
+  useGetTemplateMetadataList
+} from 'services/template-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { NewTemplatePopover } from '@templates-library/pages/TemplatesPage/views/NewTemplatePopover/NewTemplatePopover'
@@ -119,6 +127,26 @@ export default function TemplatesPage(): React.ReactElement {
     lazy: !templateFeatureEnabled
   })
 
+  const {
+    data: repoListData,
+    error: ErrorRepoList,
+    loading: isLoadingRepoList,
+    refetch: refetchRepoList
+  } = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier
+    }
+  })
+
+  const repoSelectOptions = repoListData?.data?.repositories?.map(repo => {
+    return {
+      label: defaultTo(repo, ''),
+      value: defaultTo(repo, '')
+    }
+  })
+
   const reset = React.useCallback((): void => {
     searchRef.current.clear()
     updateQueryParams({ templateType: [] as any })
@@ -185,19 +213,21 @@ export default function TemplatesPage(): React.ReactElement {
     reloadTemplates()
   }, [reloadTemplates])
 
-  const dropDown = [
-    { label: 'Repo1', value: 'suman' },
-    { label: 'Repo2', value: 'gitx-bb' },
-    { label: 'Repo3', value: 'Repo3' },
-    { label: 'Repo4', value: 'Repo4' }
-  ]
-
   const onChangeRepo = (selected: SelectOption): void => {
     if (selected.value === selectedRepo) {
       return
     }
     updateQueryParams({ repoName: (selected.value || []) as string })
     setSelectedRepo(selected.value as string)
+  }
+
+  const onClickHandler = (): void => {
+    if (!isLoadingRepoList) refetchRepoList()
+  }
+
+  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null) => {
+    const responseMessages = (Error?.data as Error)?.message
+    return !isLoading && ((responseMessages?.length && responseMessages?.length > 0) || !!Error)
   }
 
   return (
@@ -232,9 +262,12 @@ export default function TemplatesPage(): React.ReactElement {
           />
 
           <RepoFilter
-            dropDownItems={dropDown}
+            dropDownItems={repoSelectOptions as SelectOption[]}
             onChange={selected => onChangeRepo(selected)}
             selectedRepo={selectedRepo}
+            disabled={isLoadingRepoList}
+            onClick={onClickHandler}
+            showRefetchButton={showRefetchButton(isLoadingRepoList, ErrorRepoList)}
           />
 
           {isGitSyncEnabled ? (
