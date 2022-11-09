@@ -200,6 +200,9 @@ export function StepGroupNode(props: any): JSX.Element {
                       data: { ...props }
                     })
                   }}
+                  tooltipProps={{
+                    position: 'bottom'
+                  }}
                 >
                   {props.name}
                 </Text>
