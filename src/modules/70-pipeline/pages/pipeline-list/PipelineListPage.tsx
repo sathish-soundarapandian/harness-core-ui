@@ -21,6 +21,7 @@ import {
 import { defaultTo, pick } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import type { GetDataError } from 'restful-react'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page, useToaster } from '@common/exports'
@@ -35,11 +36,13 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
 import {
+  Failure,
   FilterDTO,
   PagePMSPipelineSummaryResponse,
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
   useGetPipelineList,
+  useGetRepositoryList,
   useSoftDeletePipeline
 } from 'services/pipeline-ng'
 import { DEFAULT_PIPELINE_LIST_TABLE_SORT, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
@@ -83,7 +86,6 @@ export function PipelineListPage(): React.ReactElement {
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
-  const [selectedRepo, setSelectedRepo] = useState<string>('')
 
   const {
     open: openClonePipelineModal,
@@ -92,11 +94,10 @@ export function PipelineListPage(): React.ReactElement {
   } = useToggleOpen()
 
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
-  const { searchTerm, repoIdentifier, branch, page, size } = queryParams
+  const { searchTerm, repoIdentifier, branch, page, size, repoName } = queryParams
   const pathParams = useParams<PipelineListPagePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = pathParams
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
-
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
     'PipelineSortingPreference'
@@ -123,6 +124,39 @@ export function PipelineListPage(): React.ReactElement {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
+  const {
+    data: repoListData,
+    error: ErrorRepoList,
+    loading: isLoadingRepoList,
+    refetch: refetchRepoList
+  } = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier
+    }
+  })
+
+  const onChangeRepo = (selected: SelectOption): void => {
+    updateQueryParams({ repoName: (selected.value || []) as string })
+  }
+
+  const repoSelectOptions = repoListData?.data?.repositories?.map(repo => {
+    return {
+      label: defaultTo(repo, ''),
+      value: defaultTo(repo, '')
+    }
+  }) as SelectOption[]
+
+  const onClickHandler = (): void => {
+    if (!isLoadingRepoList) refetchRepoList()
+  }
+
+  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null): boolean => {
+    const responseMessages = (Error?.data as Error)?.message
+    return !isLoading && ((responseMessages?.length && responseMessages?.length > 0) || !!Error)
+  }
+
   const { mutate: deletePipeline, loading: isDeletingPipeline } = useSoftDeletePipeline({
     queryParams: {
       accountIdentifier: accountId,
@@ -141,7 +175,7 @@ export function PipelineListPage(): React.ReactElement {
     try {
       const filter: PipelineFilterProperties = {
         filterType: 'PipelineSetup',
-        repoName: selectedRepo,
+        repoName,
         ...appliedFilter?.filterProperties
       }
       const { status, data } = await loadPipelineList(filter, {
@@ -179,7 +213,7 @@ export function PipelineListPage(): React.ReactElement {
     searchTerm,
     size,
     sort?.toString(),
-    selectedRepo
+    repoName
   ])
 
   useDocumentTitle([getString('pipelines')])
@@ -238,20 +272,6 @@ export function PipelineListPage(): React.ReactElement {
   )
 
   const { globalFreezes } = useGlobalFreezeBanner()
-  const dropDown = [
-    { label: 'Repo1', value: 'suman' },
-    { label: 'Repo2', value: 'gitx-bb' },
-    { label: 'Repo3', value: 'Repo3' },
-    { label: 'Repo4', value: 'Repo4' }
-  ]
-
-  const onChangeRepo = (selected: SelectOption): void => {
-    if (selected.value === selectedRepo) {
-      return
-    }
-    updateQueryParams({ repoName: (selected.value || []) as string })
-    setSelectedRepo(selected.value as string)
-  }
 
   return (
     <GitSyncStoreProvider>
@@ -265,7 +285,7 @@ export function PipelineListPage(): React.ReactElement {
         breadcrumbs={<NGBreadcrumbs links={[]} />}
       />
       <Page.SubHeader className={css.subHeader}>
-        <Layout.Horizontal style={{ alignItems: 'center' }}>
+        <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
           {createPipelineButton}
           {isGitSyncEnabled ? (
             <GitFilters
@@ -278,9 +298,12 @@ export function PipelineListPage(): React.ReactElement {
             />
           ) : (
             <RepoFilter
-              dropDownItems={dropDown}
-              selectedRepo={selectedRepo}
+              dropDownItems={repoSelectOptions}
               onChange={selected => onChangeRepo(selected)}
+              selectedRepo={repoName as string}
+              disabled={isLoadingRepoList}
+              onClick={onClickHandler}
+              showRefetchButton={showRefetchButton(isLoadingRepoList, ErrorRepoList)}
             />
           )}
         </Layout.Horizontal>

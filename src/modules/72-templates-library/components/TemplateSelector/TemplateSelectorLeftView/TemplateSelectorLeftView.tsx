@@ -21,9 +21,16 @@ import {
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { GetDataError } from 'restful-react'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { TemplateSummaryResponse, useGetTemplateList, useGetTemplateMetadataList } from 'services/template-ng'
+import {
+  Failure,
+  TemplateSummaryResponse,
+  useGetRepositoryList,
+  useGetTemplateList,
+  useGetTemplateMetadataList
+} from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { useMutateAsGet } from '@common/hooks'
@@ -152,12 +159,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     },
     [templateType]
   )
-  const dropDown = [
-    { label: 'Repo1', value: 'suman' },
-    { label: 'Repo2', value: 'gitx-bb' },
-    { label: 'Repo3', value: 'Repo3' },
-    { label: 'Repo4', value: 'Repo4' }
-  ]
+
   const dropdownItems = React.useMemo(
     (): SelectOption[] =>
       childTypes
@@ -181,6 +183,25 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     debounce: true
   })
 
+  const {
+    data: repoListData,
+    error: ErrorRepoList,
+    loading: isLoadingRepoList,
+    refetch: refetchRepoList
+  } = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier
+    }
+  })
+
+  const repoSelectOptions = repoListData?.data?.repositories?.map(repo => {
+    return {
+      label: defaultTo(repo, ''),
+      value: defaultTo(repo, '')
+    }
+  }) as SelectOption[]
+
   useEffect(() => {
     if (areTemplatesSame(selectedTemplate, defaultTemplate)) {
       setTemplate(defaultTemplate)
@@ -203,11 +224,13 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     }
   }, [loading])
 
-  const onChangeRepo = (selected: SelectOption): void => {
-    if (selected.value === selectedRepo) {
-      return
-    }
-    setSelectedRepo(selected.value as string)
+  const onClickHandler = (): void => {
+    if (!isLoadingRepoList) refetchRepoList()
+  }
+
+  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null): boolean => {
+    const responseMessages = (Error?.data as Error)?.message
+    return !isLoading && ((responseMessages?.length && responseMessages?.length > 0) || !!Error)
   }
 
   return (
@@ -239,9 +262,11 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 />
                 <RepoFilter
                   placeholder={getString('common.selectRepository')}
-                  dropDownItems={dropDown}
+                  dropDownItems={repoSelectOptions}
                   selectedRepo={selectedRepo}
-                  onChange={selected => onChangeRepo(selected)}
+                  onChange={selected => setSelectedRepo(selected.value as string)}
+                  showRefetchButton={showRefetchButton(isLoadingRepoList, ErrorRepoList)}
+                  onClick={onClickHandler}
                 />
                 <ExpandingSearchInput
                   alwaysExpanded

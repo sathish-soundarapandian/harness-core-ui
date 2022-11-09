@@ -71,7 +71,6 @@ export default function TemplatesPage(): React.ReactElement {
   const [templateIdentifierToSettings, setTemplateIdentifierToSettings] = React.useState<string>()
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | undefined>()
   const [gitFilter, setGitFilter] = useState<GitFilterScope | null>(null)
-  const [selectedRepo, setSelectedRepo] = useState<string>('')
   const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const {
@@ -145,7 +144,7 @@ export default function TemplatesPage(): React.ReactElement {
       label: defaultTo(repo, ''),
       value: defaultTo(repo, '')
     }
-  })
+  }) as SelectOption[]
 
   const reset = React.useCallback((): void => {
     searchRef.current.clear()
@@ -214,18 +213,14 @@ export default function TemplatesPage(): React.ReactElement {
   }, [reloadTemplates])
 
   const onChangeRepo = (selected: SelectOption): void => {
-    if (selected.value === selectedRepo) {
-      return
-    }
     updateQueryParams({ repoName: (selected.value || []) as string })
-    setSelectedRepo(selected.value as string)
   }
 
   const onClickHandler = (): void => {
     if (!isLoadingRepoList) refetchRepoList()
   }
 
-  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null) => {
+  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null): boolean => {
     const responseMessages = (Error?.data as Error)?.message
     return !isLoading && ((responseMessages?.length && responseMessages?.length > 0) || !!Error)
   }
@@ -262,9 +257,9 @@ export default function TemplatesPage(): React.ReactElement {
           />
 
           <RepoFilter
-            dropDownItems={repoSelectOptions as SelectOption[]}
+            dropDownItems={repoSelectOptions}
             onChange={selected => onChangeRepo(selected)}
-            selectedRepo={selectedRepo}
+            selectedRepo={repoName as string}
             disabled={isLoadingRepoList}
             onClick={onClickHandler}
             showRefetchButton={showRefetchButton(isLoadingRepoList, ErrorRepoList)}
