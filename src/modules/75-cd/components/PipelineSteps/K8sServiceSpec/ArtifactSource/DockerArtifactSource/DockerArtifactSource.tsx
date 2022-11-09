@@ -186,39 +186,20 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               }}
             />
           )}
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
-              <TextFieldInputSetView
-                label={getString('pipeline.imagePathLabel')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
-                onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-                fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
-                template={template}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.imagePath`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.imagePath`)}
-                type="String"
-                variableName="imagePath"
-                showRequiredField={false}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.imagePath`, value)
-                }}
-              />
-            )}
-          </div>
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.imagePathLabel')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
+              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
+              fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
+              template={template}
+            />
+          )}
 
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
             <FormInput.MultiTextInput

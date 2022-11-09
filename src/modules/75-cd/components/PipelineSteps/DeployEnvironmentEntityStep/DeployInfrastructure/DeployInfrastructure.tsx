@@ -40,6 +40,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
 
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import InfrastructureEntitiesList from '../InfrastructureEntitiesList/InfrastructureEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -98,6 +99,7 @@ export default function DeployInfrastructure({
   const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { refetchPipelineVariable } = usePipelineVariables()
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentRef || {}
   const { getTemplate } = useTemplateSelector()
@@ -298,6 +300,7 @@ export default function DeployInfrastructure({
   }
 
   const onInfrastructureEntityUpdate = (): void => {
+    refetchPipelineVariable?.()
     refetchInfrastructuresList()
     refetchInfrastructuresData()
   }

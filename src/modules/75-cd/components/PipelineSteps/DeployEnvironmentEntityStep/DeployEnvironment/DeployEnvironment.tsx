@@ -38,6 +38,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -100,6 +101,7 @@ export default function DeployEnvironment({
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { refetchPipelineVariable } = usePipelineVariables()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
@@ -289,6 +291,7 @@ export default function DeployEnvironment({
   }
 
   const onEnvironmentEntityUpdate = (): void => {
+    refetchPipelineVariable?.()
     refetchEnvironmentsList()
     refetchEnvironmentsData()
   }

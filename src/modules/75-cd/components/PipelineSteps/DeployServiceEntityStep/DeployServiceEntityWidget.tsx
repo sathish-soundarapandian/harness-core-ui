@@ -319,7 +319,7 @@ export default function DeployServiceEntityWidget({
           )
         )
       }
-      await refetchPipelineVariable?.()
+      refetchPipelineVariable?.()
       const response = await mergeServiceInputsPromise(body)
       const mergedServiceInputsResponse = response?.data
       setValues({
