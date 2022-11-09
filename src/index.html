@@ -140,6 +140,41 @@
       }
     </script>
     <!-- End of Saber Feedback button -->
+
+    <!-- Harness Feature Flags -->
+    <% if (__DEV__) { %>
+    <script>
+      window.featureFlagsConfig = {
+        useLegacyFeatureFlags: '<%= USE_LEGACY_FEATURE_FLAGS_DEV %>' !== 'false',
+        baseUrl: '<%= HARNESS_FF_SDK_BASE_URL_DEV %>' || 'https://config.feature-flags.uat.harness.io/api/1.0',
+        enableStream: '<%= HARNESS_FF_SDK_ENABLE_STREAM_DEV %>' === 'true',
+        sdkKey: '<%= HARNESS_FF_SDK_KEY_DEV %>',
+        async: '<%= HARNESS_FF_SDK_ASYNC_DEV %>' !== 'false'
+      }
+    </script>
+    <% } else { %>
+    <script>
+      window.featureFlagsConfig = {
+        useLegacyFeatureFlags: 'USE_LEGACY_FEATURE_FLAGS_PLACEHOLDER' !== 'false',
+        baseUrl: 'HARNESS_FF_SDK_BASE_URL_PLACEHOLDER' || 'https://config.feature-flags.uat.harness.io/api/1.0',
+        enableStream: 'HARNESS_FF_SDK_ENABLE_STREAM_PLACEHOLDER' === 'true',
+        sdkKey: 'HARNESS_FF_SDK_KEY_PLACEHOLDER',
+        async: 'HARNESS_FF_SDK_ASYNC_PLACEHOLDER' !== 'false'
+      }
+    </script>
+    <% } %>
+    <script>
+      if (!window.featureFlagsConfig.useLegacyFeatureFlags) {
+        try {
+          window.featureFlagsConfig.useLegacyFeatureFlags = !new URL(window.featureFlagsConfig.baseUrl).href.match(
+            /^https?:\/\//
+          )
+        } catch (e) {
+          window.featureFlagsConfig.useLegacyFeatureFlags = true
+        }
+      }
+    </script>
+    <!-- End of Harness Feature Flags -->
   </head>
   <body>
     <div id="react-root">

@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 
-import { fromPairs, defaultTo } from 'lodash-es'
+import { defaultTo, fromPairs } from 'lodash-es'
+import { withFeatureFlags } from '@harnessio/ff-react-client-sdk'
 
 // useToaster not imported from '@common/exports' to prevent circular dependency
 import { PageSpinner, useToaster } from '@harness/uicore'
@@ -43,7 +44,7 @@ export interface AppStoreContextProps {
   readonly selectedProject?: Project
   readonly selectedOrg?: Organization
   readonly isGitSyncEnabled?: boolean
-  readonly isGitSimplificationEnabled?: boolean // DB state for a roject
+  readonly isGitSimplificationEnabled?: boolean // DB state for a project
   readonly supportingGitSimplification?: boolean // Computed value based on multiple flags
   readonly gitSyncEnabledOnlyForFF?: boolean
   readonly supportingTemplatesGitx?: boolean
@@ -93,7 +94,11 @@ const getRedirectionUrl = (accountId: string, source: string | undefined): strin
   return source === 'signup' ? onboardingUrl : dashboardUrl
 }
 
-export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
+export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown>>(function AppStoreProvider({
+  children,
+  flags: featureFlags,
+  loading: loadingFeatureFlags
+}): ReactElement {
   const { showError } = useToaster()
   const history = useHistory()
 
@@ -128,9 +133,14 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     orgIdentifier = identifiersFromSavedProj.orgIdentifier
   }
 
-  const { data: featureFlags, loading: featureFlagsLoading } = useGetFeatureFlags({
+  const {
+    data: legacyFeatureFlags,
+    loading: legacyFeatureFlagsLoading,
+    refetch: fetchLegacyFeatureFlags
+  } = useGetFeatureFlags({
     accountId,
-    pathParams: { accountId }
+    pathParams: { accountId },
+    lazy: true
   })
 
   const { refetch: refetchOrg, data: orgDetails } = useGetOrganization({
@@ -180,9 +190,9 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   // update feature flags in context
   useEffect(() => {
     // TODO: Handle better if fetching feature flags fails
-    if (featureFlags) {
-      const featureFlagsMap = fromPairs(
-        featureFlags?.resource?.map(flag => {
+    if (legacyFeatureFlags) {
+      const featureFlagsMap: FeatureFlagMap = fromPairs(
+        legacyFeatureFlags?.resource?.map(flag => {
           return [flag.name, !!flag.enabled]
         })
       )
@@ -193,11 +203,32 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
 
       setState(prevState => ({
         ...prevState,
-        featureFlags: featureFlagsMap as FeatureFlagMap
+        featureFlags: featureFlagsMap
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [featureFlags])
+  }, [legacyFeatureFlags])
+
+  useEffect(() => {
+    if (window.featureFlagsConfig.useLegacyFeatureFlags) {
+      fetchLegacyFeatureFlags()
+    }
+  }, [fetchLegacyFeatureFlags])
+
+  useEffect(() => {
+    if (!window.featureFlagsConfig.useLegacyFeatureFlags && !loadingFeatureFlags) {
+      const featureFlagsMap = { ...featureFlags }
+
+      if (__DEV__ && DEV_FF) {
+        Object.assign(featureFlagsMap, DEV_FF)
+      }
+
+      setState(prevState => ({
+        ...prevState,
+        featureFlags: featureFlagsMap
+      }))
+    }
+  }, [featureFlags, loadingFeatureFlags])
 
   useEffect(() => {
     if (
@@ -355,7 +386,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         updateAppStore
       }}
     >
-      {featureFlagsLoading || userInfoLoading ? <PageSpinner /> : props.children}
+      {loadingFeatureFlags || legacyFeatureFlagsLoading || userInfoLoading ? <PageSpinner /> : children}
     </AppStoreContext.Provider>
   )
-}
+})
