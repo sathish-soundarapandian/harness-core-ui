@@ -667,7 +667,8 @@ export function RightDrawer(): React.ReactElement {
       if (isConfirmed) {
         applyChanges(formikRef, data, getString, updatePipelineView, pipelineView, setSelectedStepId, trackEvent)
       }
-    }
+    },
+    className: css.dialogWrapper
   })
 
   const { onSearchInputChange } = usePipelineVariables()
