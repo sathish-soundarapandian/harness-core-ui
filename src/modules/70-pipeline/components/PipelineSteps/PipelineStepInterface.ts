@@ -122,7 +122,8 @@ export enum StepType {
   ShellScriptProvision = 'ShellScriptProvision',
   ChaosExperiment = 'Chaos',
   Elastigroup = 'Elastigroup',
-  ElastigroupService = 'ElastigroupService'
+  ElastigroupService = 'ElastigroupService',
+  ElastigroupRollback = 'ElastigroupRollback'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

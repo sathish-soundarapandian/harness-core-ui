@@ -4063,6 +4063,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSRollingDeploy': string
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
+  'pipeline.stepDescription.ElastigroupRollback': string
   'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string

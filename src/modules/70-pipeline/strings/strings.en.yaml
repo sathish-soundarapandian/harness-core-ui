@@ -1091,6 +1091,7 @@ stepDescription:
   ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
+  ElastigroupRollback: Rollback for the Elastigroup steps
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
