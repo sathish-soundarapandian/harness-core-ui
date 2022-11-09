@@ -67,11 +67,27 @@ export default function L1Nav(): React.ReactElement {
   })
 
   useEffect(() => {
-    if (!modulesPreferenceData?.orderedModules?.length && NEW_LEFT_NAVBAR_SETTINGS) {
-      const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].hasLicense)
+    if (NEW_LEFT_NAVBAR_SETTINGS) {
+      let selectedModules = modulesPreferenceData?.selectedModules
+      let orderedModules = modulesPreferenceData?.orderedModules
+
+      if (modulesPreferenceData?.selectedModules?.length) {
+        selectedModules = modulesPreferenceData?.selectedModules.filter(module => moduleMap[module].shouldVisible)
+      }
+
+      if (!modulesPreferenceData?.orderedModules.length) {
+        const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].hasLicense)
+        selectedModules = modulesWithLicense
+        orderedModules = DEFAULT_MODULES_ORDER
+      } else if (modulesPreferenceData?.orderedModules.length < DEFAULT_MODULES_ORDER.length) {
+        const newModules = DEFAULT_MODULES_ORDER.filter(
+          module => !modulesPreferenceData.orderedModules.includes(module)
+        )
+        orderedModules = [...(modulesPreferenceData?.orderedModules || []), ...newModules]
+      }
       setModuleConfigPreference({
-        selectedModules: modulesWithLicense,
-        orderedModules: DEFAULT_MODULES_ORDER
+        orderedModules,
+        selectedModules
       })
     }
   }, [])
