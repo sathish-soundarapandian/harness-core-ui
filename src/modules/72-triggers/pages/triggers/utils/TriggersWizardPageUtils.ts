@@ -175,7 +175,13 @@ const checkValidTriggerConfiguration = ({
   }
 
   if (sourceRepo !== CUSTOM) {
-    if (!formikValues['connectorRef'] || !formikValues['event'] || !formikValues['actions']) return false
+    if (
+      !formikValues['connectorRef'] ||
+      !formikValues['event'] ||
+      !formikValues['actions'] ||
+      (formikValues['isGithubWebhookAuthenticationEnabled'] && !formikValues['encryptedWebhookSecretIdentifier'])
+    )
+      return false
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
     else if (

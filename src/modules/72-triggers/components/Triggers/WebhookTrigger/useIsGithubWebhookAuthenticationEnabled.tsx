@@ -7,23 +7,27 @@
 
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { useToaster } from '@harness/uicore'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useGetSettingValue } from 'services/cd-ng'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getWebhookGithubTriggersAuthenticationSetting } from './utils'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SettingType } from '@default-settings/interfaces/SettingType.types'
 
-const useIsGithubWebhookAuthenticationEnabled = (): boolean => {
+const useIsGithubWebhookAuthenticationEnabled = (): {
+  isGithubWebhookAuthenticationEnabled: boolean
+  isGithubWebhookAuthenticationDataLoading: boolean
+} => {
+  const { showError } = useToaster()
   const isSpgNgGithubWebhookAuthenticationEnabled = useFeatureFlag(FeatureFlag.SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION)
-  const {
-    accountId: accountIdentifier,
-    orgIdentifier,
-    projectIdentifier,
-    module
-  } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  const { data: projectSettingData } = useGetSettingValue({
-    identifier: getWebhookGithubTriggersAuthenticationSetting(module),
+  const {
+    data: projectSettingData,
+    loading: isGithubWebhookAuthenticationDataLoading,
+    error: projectSettingDataError
+  } = useGetSettingValue({
+    identifier: SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION,
     queryParams: {
       accountIdentifier,
       orgIdentifier,
@@ -31,11 +35,15 @@ const useIsGithubWebhookAuthenticationEnabled = (): boolean => {
     }
   })
 
+  if (projectSettingDataError) {
+    showError(projectSettingDataError.message)
+  }
+
   const isGithubWebhookAuthenticationEnabled = useMemo(() => {
     return isSpgNgGithubWebhookAuthenticationEnabled && projectSettingData?.data?.value === 'true'
   }, [projectSettingData, isSpgNgGithubWebhookAuthenticationEnabled])
 
-  return isGithubWebhookAuthenticationEnabled
+  return { isGithubWebhookAuthenticationEnabled, isGithubWebhookAuthenticationDataLoading }
 }
 
 export default useIsGithubWebhookAuthenticationEnabled

@@ -1181,7 +1181,7 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
                           class="Tooltip--acenter"
                           data-tooltip-id="wrapperComponentTestForm_encryptedWebhookSecretIdentifier"
                         >
-                          secrets.secret.configureSecret
+                          secrets.secret.configureSecret (projectsOrgs.optional)
                         </span>
                       </label>
                       <div
