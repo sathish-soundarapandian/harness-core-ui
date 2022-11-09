@@ -52,7 +52,8 @@ export default function MultiTextOrSelectInput({
         selectProps={{
           items: options,
           inputProps: {
-            placeholder
+            placeholder,
+            name: 'logIndexInput'
           }
         }}
         multitypeInputValue={inputType}

@@ -79,17 +79,6 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         name={MapElkToServiceFieldNames.METRIC_NAME}
       />
 
-      {/* <FormInput.Select
-        label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
-        name={MapElkToServiceFieldNames.LOG_INDEXES}
-        selectProps={{ allowCreatingNewItems: true }}
-        disabled={indicesLoading}
-        placeholder={indicesLoading ? getString('loading') : getString('cv.monitoringSources.elk.selectLogIndex')}
-        items={getIndexItems}
-        onChange={handleSelectChange}
-        value={logIndexes ? { label: logIndexes, value: logIndexes } : undefined}
-      /> */}
-
       <MultiTextOrSelectInput
         allowedTypes={
           isConnectorRuntimeOrExpression
@@ -156,12 +145,6 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         recordsModalHeader={getString('cv.monitoringSources.elk.identifyTimeStamprecordsModalHeader')}
       />
 
-      {/* <FormInput.Select
-        label={getString('cv.monitoringSources.elk.timeStampFormatInputLabel')}
-        name={MapElkToServiceFieldNames.TIMESTAMP_FORMAT}
-        placeholder={getString('cv.monitoringSources.elk.selectTimeStampFormat')}
-        items={getTimeFormatItems}
-      /> */}
       <MultiTextOrSelectInput
         setFieldValue={formikProps.setFieldValue}
         allowedTypes={

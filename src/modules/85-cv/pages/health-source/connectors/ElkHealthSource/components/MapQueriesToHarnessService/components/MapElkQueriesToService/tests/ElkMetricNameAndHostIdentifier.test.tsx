@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { render, waitFor, fireEvent, act } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -97,7 +97,7 @@ describe('Unit tests for MapELKQueriesToService', () => {
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
   })
 
-  test('Ensure that logIndexes field is present', async () => {
+  test.only('Ensure that logIndexes field is present', async () => {
     const { getByText, container } = render(
       <TestWrapper>
         <Formik formName="allowedValueTest" onSubmit={jest.fn()} initialValues={{}}>
@@ -126,8 +126,11 @@ describe('Unit tests for MapELKQueriesToService', () => {
       </TestWrapper>
     )
     expect(container.querySelector('[data-testid="logIndexesField"]')).not.toBeNull()
-    fireEvent.click(container.querySelector('[data-testid="logIndexesField"]')!)
-
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="logIndexInput"]')!, {
+        target: { value: 'dummy name' }
+      })
+    })
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
   })
 })
