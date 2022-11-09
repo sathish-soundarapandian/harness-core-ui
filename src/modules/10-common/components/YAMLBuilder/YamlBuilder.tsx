@@ -144,7 +144,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
-  const yamlValidationErrorsRef = useRef<Map<number, string | string[]>>()
+  const yamlValidationErrorsRef = useRef<Map<number, string>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
@@ -262,6 +262,23 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Handle various interactions with the editor */
 
+  const findValidationErrors = useCallback(
+    (updatedYaml: string): void => {
+      if (schema) {
+        validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
+          setSchemaValidationErrors(errors)
+          if (isEmpty(errors)) {
+            setShouldShowErrorPanel(false)
+          }
+        })
+      } else {
+        setSchemaValidationErrors([])
+        setShouldShowErrorPanel(false)
+      }
+    },
+    [schema]
+  )
+
   const onYamlChange = useCallback(
     debounce((editedYaml: string): void => {
       const updatedYaml = isWindowsOS() ? editedYaml.replace(carriageReturnRegex, '\n') : editedYaml
@@ -274,60 +291,54 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         schema,
         errorMessage: yamlError
       })
-      if (updatedYaml) {
-        if (schema) {
-          validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
-            setSchemaValidationErrors(errors)
-            if (isEmpty(errors)) {
-              setShouldShowErrorPanel(false)
-            }
-          })
-        }
-      } else {
-        setSchemaValidationErrors([])
-        setShouldShowErrorPanel(false)
+      if (updatedYaml && schema) {
+        findValidationErrors(updatedYaml)
       }
       onChange?.(!(updatedYaml === ''))
-      const editor = editorRef.current?.editor
-      if (editor) {
-        const currentCursorPosition = editor.getPosition()
-        const { lineNumber, column } = currentCursorPosition || {}
-        if (lineNumber && column) {
-          const editorContent = editor.getModel()?.getValue() || ''
-          const contextKey = editorContent.replace('\n', '')
-          const { autoCompletionYAML } = AutoCompletionMap.get(contextKey) || {}
-          if (AutoCompletionMap.has(contextKey)) {
-            editor.executeEdits('', [
-              {
-                range: {
-                  startLineNumber: lineNumber,
-                  startColumn: column,
-                  endLineNumber: lineNumber,
-                  endColumn: column
-                } as Range,
-                text: autoCompletionYAML || '',
-                forceMoveMarkers: true
-              }
-            ])
-            const lastLineNum = editor.getModel()?.getLineCount()
-            if (lastLineNum) {
-              const lastColumn = editor.getModel()?.getLineMaxColumn(lastLineNum)
-              editor.setSelection(new monaco.Range(0, 0, 0, 0))
-              editor.setPosition({
-                lineNumber: lastLineNum,
-                column: lastColumn
-              } as IPosition)
-              const updatedPosition = editor.getPosition()
-              if (updatedPosition) {
-                setTimeout(() => editor.setPosition({ ...updatedPosition, column: updatedPosition?.column + 1 }), 1000)
-              }
+      autoCompleteYAML()
+    }, 500),
+    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
+  )
+
+  const autoCompleteYAML = useCallback((): void => {
+    const editor = editorRef.current?.editor
+    if (editor) {
+      const currentCursorPosition = editor.getPosition()
+      const { lineNumber, column } = currentCursorPosition || {}
+      if (lineNumber && column) {
+        const editorContent = editor.getModel()?.getValue() || ''
+        const contextKey = editorContent.replace('\n', '')
+        const { autoCompletionYAML } = AutoCompletionMap.get(contextKey) || {}
+        if (AutoCompletionMap.has(contextKey)) {
+          editor.executeEdits('', [
+            {
+              range: {
+                startLineNumber: lineNumber,
+                startColumn: column,
+                endLineNumber: lineNumber,
+                endColumn: column
+              } as Range,
+              text: autoCompletionYAML || '',
+              forceMoveMarkers: true
+            }
+          ])
+          const lastLineNum = editor.getModel()?.getLineCount()
+          if (lastLineNum) {
+            const lastColumn = editor.getModel()?.getLineMaxColumn(lastLineNum)
+            editor.setSelection(new monaco.Range(0, 0, 0, 0))
+            editor.setPosition({
+              lineNumber: lastLineNum,
+              column: lastColumn
+            } as IPosition)
+            const updatedPosition = editor.getPosition()
+            if (updatedPosition) {
+              setTimeout(() => editor.setPosition({ ...updatedPosition, column: updatedPosition?.column + 1 }), 1000)
             }
           }
         }
       }
-    }, 500),
-    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
-  )
+    }
+  }, [editorRef.current?.editor])
 
   const showNoPermissionError = useCallback(
     throttle(() => {
