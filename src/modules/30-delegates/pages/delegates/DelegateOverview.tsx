@@ -32,12 +32,13 @@ interface DelegateOverviewProps {
   delegate: DelegateGroupDetails
   delegateProfile?: DelegateProfileDetails
   showConnectivityStatus?: boolean
+  className?: string
 }
 
 export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
   delegate,
   delegateProfile,
-  showConnectivityStatus
+  showConnectivityStatus = false
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<

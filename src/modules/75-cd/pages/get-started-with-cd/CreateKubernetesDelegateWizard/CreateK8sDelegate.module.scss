@@ -19,6 +19,13 @@
 .kubernetes {
   border-radius: 20px !important;
   color: var(--black);
+  :global {
+    span {
+      svg > path {
+        fill: none !important;
+      }
+    }
+  }
 }
 
 .dangerColor {
@@ -285,4 +292,7 @@
 
 .hover:hover {
   text-decoration: underline;
+}
+.cursor {
+  cursor: pointer;
 }

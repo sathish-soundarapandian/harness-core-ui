@@ -13,61 +13,159 @@ import {
   Layout,
   MultiStepProgressIndicator,
   PageSpinner,
-  useToaster,
-  getErrorInfoFromErrorObject
+  useConfirmationDialog,
+  Text,
+  Color,
+  Intent,
+  getErrorInfoFromErrorObject,
+  useToaster
 } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
-import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useStrings } from 'framework/strings'
 import { createPipelineV2Promise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
 import { Status } from '@common/utils/Constants'
 import routes from '@common/RouteDefinitions'
-import type { UserRepoResponse } from 'services/cd-ng'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { StringUtils } from '@common/exports'
+import type { UserRepoResponse } from 'services/cd-ng'
+import { useQueryParams } from '@common/hooks'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
-import { SelectWorkload, SelectWorkloadRefInstance } from '../SelectWorkload/SelectWorkload'
-import { SelectInfrastructure, SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
-import { SelectArtifact, SelectArtifactRefInstance } from '../SelectArtifact/SelectArtifact'
+import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
+import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
+import { DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
+import { ConfigureService } from '../ConfigureService/ConfigureService'
+import {
+  DEFAULT_PIPELINE_NAME,
+  DEFAULT_PIPELINE_PAYLOAD,
+  DOCUMENT_URL,
+  getUniqueEntityIdentifier,
+  PipelineRefPayload
+} from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../CDOnboardingUtils'
+import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
 import css from './DeployProvisioningWizard.module.scss'
+const WizardStepOrder = [
+  DeployProvisiongWizardStepId.SelectDeploymentType,
+  DeployProvisiongWizardStepId.DelegateSelector,
+  DeployProvisiongWizardStepId.ConfigureService,
+  DeployProvisiongWizardStepId.RunPipeline
+]
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectWorkload } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectDeploymentType } = props
   const { getString } = useStrings()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
-  const { showError } = useToaster()
   const [currentWizardStepId, setCurrentWizardStepId] =
     useState<DeployProvisiongWizardStepId>(lastConfiguredWizardStepId)
+  const {
+    state: { service: serviceData, selectedSectionId, infrastructure, environment },
+    setSelectedSectionId
+  } = useCDOnboardingContext()
 
-  const selectWorkloadRef = React.useRef<SelectWorkloadRefInstance | null>(null)
-  const selectArtifactRef = React.useRef<SelectArtifactRefInstance | null>(null)
-  const selectInfrastructureRef = React.useRef<SelectInfrastructureRefInstance | null>(null)
+  const query = useQueryParams()
 
+  const history = useHistory()
+  const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const SelectDeploymentTypeRef = React.useRef<SelectDeploymentTypeRefInstance | null>(null)
+  const configureServiceRef = React.useRef<SelectInfrastructureRefInstance | null>(null)
 
   const [showPageLoader, setShowPageLoader] = useState<boolean>(false)
 
   const [wizardStepStatus, setWizardStepStatus] = useState<Map<DeployProvisiongWizardStepId, StepStatus>>(
     new Map<DeployProvisiongWizardStepId, StepStatus>([
-      [DeployProvisiongWizardStepId.SelectWorkload, StepStatus.InProgress],
-      [DeployProvisiongWizardStepId.SelectArtifact, StepStatus.ToDo],
-      [DeployProvisiongWizardStepId.SelectInfrastructure, StepStatus.ToDo]
+      [DeployProvisiongWizardStepId.SelectDeploymentType, StepStatus.InProgress],
+      [DeployProvisiongWizardStepId.DelegateSelector, StepStatus.ToDo],
+      [DeployProvisiongWizardStepId.ConfigureService, StepStatus.ToDo],
+      [DeployProvisiongWizardStepId.RunPipeline, StepStatus.ToDo]
     ])
   )
-  const history = useHistory()
-  const {
-    state: { service: serviceData }
-  } = useCDOnboardingContext()
+
+  const updateStepStatusFromContextTab = (sectionId: string): void => {
+    const indexAt = WizardStepOrder.findIndex(tab => tab === sectionId)
+    if (indexAt > -1) {
+      updateStepStatus(WizardStepOrder.slice(0, indexAt), StepStatus.Success)
+      updateStepStatus([WizardStepOrder[indexAt]], StepStatus.InProgress)
+      updateStepStatus(WizardStepOrder.slice(indexAt + 1), StepStatus.ToDo)
+      setCurrentWizardStepId(WizardStepOrder[indexAt])
+    }
+  }
+
+  React.useEffect(() => {
+    const sectionId = (query as any).sectionId || ''
+    if (sectionId?.length && WizardStepOrder.includes(sectionId)) {
+      updateStepStatusFromContextTab(sectionId)
+    } else {
+      setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
+      updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.InProgress)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSectionId])
+
+  const deletionContentText = React.useMemo(
+    () => (
+      <Text color={Color.BLACK} padding="medium">
+        {`${getString('cd.getStartedWithCD.delegateRequiredWarning')} `}
+        <a rel="noreferrer" target="_blank" href={DOCUMENT_URL}>
+          {getString('pipeline.createPipeline.learnMore')}
+        </a>
+      </Text>
+    ),
+    [getString]
+  )
+
+  const { openDialog: showOnboaringExitWarning } = useConfirmationDialog({
+    contentText: getString('cd.getStartedWithCD.closeOnboarding.subtitle'),
+    titleText: getString('cd.getStartedWithCD.closeOnboarding.title'),
+    confirmButtonText: getString('confirm'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.WARNING,
+    onCloseDialog: async (isConfirmed: boolean) => {
+      if (isConfirmed) {
+        closeCDWizard()
+      }
+    }
+  })
+
+  const { openDialog: showDelegateRequiredWarning } = useConfirmationDialog({
+    contentText: deletionContentText,
+    titleText: getString('cd.getStartedWithCD.delegateNotConnected'),
+    confirmButtonText: getString('continue'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.WARNING,
+    onCloseDialog: async (isConfirmed: boolean) => {
+      if (isConfirmed) {
+        setDisableBtn(true)
+        setSelectedSectionId(DeployProvisiongWizardStepId.ConfigureService)
+        setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
+        updateStepStatus(
+          [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.DelegateSelector],
+          StepStatus.Success
+        )
+        updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.InProgress)
+        updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+      }
+    }
+  })
+
+  const updateStepStatus = React.useCallback((stepIds: DeployProvisiongWizardStepId[], status: StepStatus) => {
+    if (Array.isArray(stepIds)) {
+      setWizardStepStatus((prevState: Map<DeployProvisiongWizardStepId, StepStatus>) => {
+        const clonedState = new Map(prevState)
+        stepIds.forEach((item: DeployProvisiongWizardStepId) => clonedState.set(item, status))
+        return clonedState
+      })
+    }
+  }, [])
 
   const constructPipelinePayload = React.useCallback(
-    (repository: UserRepoResponse, data: PipelineRefPayload): string => {
-      const { name: repoName, namespace } = repository
+    (repository = { name: DEFAULT_PIPELINE_NAME } as UserRepoResponse, data: PipelineRefPayload): string => {
+      const { name: repoName } = repository
       const { serviceRef, environmentRef, infraStructureRef, deploymentType } = data
 
-      if (!repoName || !namespace || !serviceRef || !environmentRef || !infraStructureRef) {
+      if (!repoName || !serviceRef || !environmentRef || !infraStructureRef) {
         return ''
       }
       const uniquePipelineId = getUniqueEntityIdentifier(repoName)
@@ -121,118 +219,101 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           }
         }
       })
-    } catch (e) {
+    } catch (e: any) {
       setShowPageLoader(false)
       showError(getErrorInfoFromErrorObject(e))
       setDisableBtn(false)
     }
   }
 
-  const updateStepStatus = React.useCallback((stepIds: DeployProvisiongWizardStepId[], status: StepStatus) => {
-    if (Array.isArray(stepIds)) {
-      setWizardStepStatus((prevState: Map<DeployProvisiongWizardStepId, StepStatus>) => {
-        const clonedState = new Map(prevState)
-        stepIds.forEach((item: DeployProvisiongWizardStepId) => clonedState.set(item, status))
-        return clonedState
-      })
-    }
-  }, [])
+  const closeCDWizard = (): void => {
+    history.push(routes.toGetStartedWithCD({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+  }
 
   const WizardSteps: Map<DeployProvisiongWizardStepId, WizardStep> = new Map([
     [
-      DeployProvisiongWizardStepId.SelectWorkload,
+      DeployProvisiongWizardStepId.SelectDeploymentType,
       {
         stepRender: (
-          <SelectWorkload
-            ref={selectWorkloadRef}
-            onSuccess={() => {
-              setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectArtifact)
-              updateStepStatus([DeployProvisiongWizardStepId.SelectWorkload], StepStatus.Success)
-              updateStepStatus([DeployProvisiongWizardStepId.SelectArtifact], StepStatus.InProgress)
-              updateStepStatus([DeployProvisiongWizardStepId.SelectInfrastructure], StepStatus.ToDo)
-              updateStepStatus([DeployProvisiongWizardStepId.CreatePipeline], StepStatus.ToDo)
-            }}
-            disableNextBtn={() => setDisableBtn(true)}
-            enableNextBtn={() => setDisableBtn(false)}
-          />
-        ),
-        onClickNext: async () => {
-          const { submitForm } = selectWorkloadRef.current || {}
-          try {
-            submitForm?.()
-          } catch (_e) {
-            // catch any errors and do nothing
-          }
-        },
-        stepFooterLabel: 'cd.getStartedWithCD.configureRepo'
-      }
-    ],
-    [
-      DeployProvisiongWizardStepId.SelectArtifact,
-      {
-        stepRender: (
-          <SelectArtifact
-            ref={selectArtifactRef}
+          <SelectDeploymentType
+            ref={SelectDeploymentTypeRef}
             onSuccess={() => {
               setDisableBtn(true)
-              setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectInfrastructure)
-              updateStepStatus(
-                [DeployProvisiongWizardStepId.SelectWorkload, DeployProvisiongWizardStepId.SelectArtifact],
-                StepStatus.Success
-              )
-              updateStepStatus([DeployProvisiongWizardStepId.SelectInfrastructure], StepStatus.InProgress)
-              updateStepStatus([DeployProvisiongWizardStepId.CreatePipeline], StepStatus.ToDo)
+              setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.DelegateSelector)
+              updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.Success)
+              updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.InProgress)
+              updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
+              updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
             }}
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
           />
         ),
-        onClickBack: () => {
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectWorkload)
-          updateStepStatus([DeployProvisiongWizardStepId.SelectArtifact], StepStatus.ToDo)
-        },
         onClickNext: async () => {
-          const { submitForm } = selectArtifactRef.current || {}
-
+          const { submitForm } = SelectDeploymentTypeRef.current || {}
           try {
             submitForm?.()
           } catch (_e) {
             // catch any errors and do nothing
           }
         },
-
-        stepFooterLabel: 'cd.getStartedWithCD.manifestFile'
+        stepFooterLabel: 'cd.getStartedWithCD.configureEnvironment'
       }
     ],
     [
-      DeployProvisiongWizardStepId.SelectInfrastructure,
+      DeployProvisiongWizardStepId.DelegateSelector,
       {
         stepRender: (
-          <SelectInfrastructure
-            onSuccess={(data: PipelineRefPayload) => {
-              setShowPageLoader(true)
-              setupPipeline(data)
+          <>
+            <DelegateSelectorWizard
+              disableNextBtn={() => setDisableBtn(true)}
+              enableNextBtn={() => setDisableBtn(false)}
+            />
+          </>
+        ),
+        onClickBack: () => {
+          setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
+          updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.ToDo)
+        },
+        onClickNext: async () => {
+          showDelegateRequiredWarning()
+        },
+
+        stepFooterLabel: 'cd.getStartedWithCD.configureService'
+      }
+    ],
+    [
+      DeployProvisiongWizardStepId.ConfigureService,
+      {
+        stepRender: (
+          <ConfigureService
+            onSuccess={() => {
+              setSelectedSectionId(DeployProvisiongWizardStepId.RunPipeline)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.RunPipeline)
               updateStepStatus(
                 [
-                  DeployProvisiongWizardStepId.SelectWorkload,
-                  DeployProvisiongWizardStepId.SelectArtifact,
-                  DeployProvisiongWizardStepId.SelectInfrastructure
+                  DeployProvisiongWizardStepId.SelectDeploymentType,
+                  DeployProvisiongWizardStepId.DelegateSelector,
+                  DeployProvisiongWizardStepId.ConfigureService
                 ],
                 StepStatus.Success
               )
-              updateStepStatus([DeployProvisiongWizardStepId.CreatePipeline], StepStatus.InProgress)
+              updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.InProgress)
             }}
-            ref={selectInfrastructureRef}
+            ref={configureServiceRef}
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
           />
         ),
         onClickBack: () => {
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectArtifact)
-          updateStepStatus([DeployProvisiongWizardStepId.SelectInfrastructure], StepStatus.ToDo)
+          setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.DelegateSelector)
+          updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
         },
         onClickNext: async () => {
-          const { submitForm } = selectInfrastructureRef.current || {}
+          const { submitForm } = configureServiceRef.current || {}
           try {
             submitForm?.()
           } catch (_e) {
@@ -241,78 +322,129 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         },
         stepFooterLabel: 'common.createPipeline'
       }
+    ],
+    [
+      DeployProvisiongWizardStepId.RunPipeline,
+      {
+        stepRender: (
+          <RunPipelineSummary
+            onSuccess={() => {
+              setShowPageLoader(true)
+              const refsData = {
+                serviceRef: serviceData?.identifier as string,
+                environmentRef: environment?.identifier as string,
+                infraStructureRef: infrastructure?.identifier as string,
+                deploymentType: serviceData?.serviceDefinition?.type as string
+              }
+              setupPipeline(refsData)
+              updateStepStatus(
+                [
+                  DeployProvisiongWizardStepId.SelectDeploymentType,
+                  DeployProvisiongWizardStepId.DelegateSelector,
+                  DeployProvisiongWizardStepId.ConfigureService,
+                  DeployProvisiongWizardStepId.RunPipeline
+                ],
+                StepStatus.Success
+              )
+            }}
+          />
+        ),
+        onClickBack: () => {
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
+          updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+        },
+        stepFooterLabel: 'common.createPipeline'
+      }
     ]
   ])
 
   const { stepRender, onClickBack, onClickNext, stepFooterLabel } = WizardSteps.get(currentWizardStepId) ?? {}
 
-  let buttonLabel: string
-  if (stepFooterLabel) {
-    if (currentWizardStepId === DeployProvisiongWizardStepId.SelectArtifact) {
-      buttonLabel = getString(stepFooterLabel)
-    } else {
-      buttonLabel = `${getString('next')}: ${getString(stepFooterLabel)}`
-    }
-  } else {
-    buttonLabel = getString('next')
-  }
+  const buttonLabel = stepFooterLabel ? `${getString('next')}: ${getString(stepFooterLabel)}` : getString('next')
 
+  const onwizardStepClick = (name: DeployProvisiongWizardStepId): void => {
+    wizardStepStatus.get(name) !== StepStatus.ToDo && setCurrentWizardStepId(name)
+  }
   return stepRender ? (
-    <>
-      <Container className={css.header}>
-        <MultiStepProgressIndicator
-          progressMap={
-            new Map([
-              [
-                0,
-                {
-                  StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.SelectWorkload), 'TODO'),
-                  StepName: getString('pipelineSteps.workload')
-                }
-              ],
-              [
-                1,
-                {
-                  StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.SelectArtifact), 'TODO'),
-                  StepName: getString('pipeline.artifactTriggerConfigPanel.artifact')
-                }
-              ],
-              [
-                2,
-                {
-                  StepStatus: defaultTo(
-                    wizardStepStatus.get(DeployProvisiongWizardStepId.SelectInfrastructure),
-                    'TODO'
-                  ),
-                  StepName: getString('infrastructureText')
-                }
-              ],
-              [
-                3,
-                {
-                  StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.CreatePipeline), 'TODO'),
-                  StepName: getString('common.pipeline')
-                }
-              ]
-            ])
-          }
-        />
-      </Container>
-      <Layout.Vertical
-        padding={{ left: 'huge', right: 'huge', top: 'huge' }}
-        flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-        height="90%"
-      >
-        <Layout.Vertical width="100%" height="90%" className={css.main}>
-          {stepRender}
-        </Layout.Vertical>
-        <Layout.Horizontal
-          spacing="medium"
-          padding={{ top: 'large', bottom: 'xlarge' }}
-          className={css.footer}
+    <Layout.Vertical
+      flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+      width="100%"
+      style={{ minHeight: '100vh', position: 'relative' }}
+    >
+      <Layout.Vertical width="100%">
+        {/* header */}
+        <Container className={css.header}>
+          <MultiStepProgressIndicator
+            progressMap={
+              new Map([
+                [
+                  0,
+                  {
+                    StepStatus: defaultTo(
+                      wizardStepStatus.get(DeployProvisiongWizardStepId.SelectDeploymentType),
+                      'TODO'
+                    ),
+                    StepName: getString('cd.getStartedWithCD.selectDeploymentType'),
+                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.SelectDeploymentType)
+                  }
+                ],
+                [
+                  1,
+                  {
+                    StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.DelegateSelector), 'TODO'),
+                    StepName: getString('cd.getStartedWithCD.configureEnvironment'),
+                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.DelegateSelector)
+                  }
+                ],
+                [
+                  2,
+                  {
+                    StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), 'TODO'),
+                    StepName: getString('cd.getStartedWithCD.configureService'),
+                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
+                  }
+                ],
+                [
+                  3,
+                  {
+                    StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.RunPipeline), 'TODO'),
+                    StepName: getString('runPipeline'),
+                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.RunPipeline)
+                  }
+                ]
+              ])
+            }
+            textClassName={css.stepWizardText}
+            barWidth={160}
+          />
+          <Button
+            minimal
+            icon="cross"
+            iconProps={{ size: 18 }}
+            onClick={showOnboaringExitWarning}
+            style={{ position: 'absolute', right: 'var(--spacing-large)', top: 'var(--spacing-large)' }}
+            data-testid={'close-cd-onboarding-wizard'}
+          />
+        </Container>
+        {/* content */}
+        <Layout.Vertical
+          padding={{ left: 'huge', right: 'huge', top: 'huge' }}
+          flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+          height="90vh"
           width="100%"
         >
-          {currentWizardStepId !== DeployProvisiongWizardStepId.SelectWorkload ? (
+          <Layout.Vertical width="100%" height="90%" className={css.main}>
+            {stepRender}
+          </Layout.Vertical>
+
+          {showPageLoader ? <PageSpinner /> : null}
+        </Layout.Vertical>
+      </Layout.Vertical>
+
+      {/* footer */}
+      <Layout.Vertical padding={{ left: 'huge' }} className={css.footer}>
+        <Layout.Horizontal spacing="medium" padding={{ top: 'large', bottom: 'xlarge' }} width="100%">
+          {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType ? (
             <Button
               variation={ButtonVariation.SECONDARY}
               text={getString('back')}
@@ -321,16 +453,17 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               onClick={() => onClickBack?.()}
             />
           ) : null}
-          <Button
-            text={buttonLabel}
-            variation={ButtonVariation.PRIMARY}
-            rightIcon="chevron-right"
-            onClick={() => onClickNext?.()}
-            disabled={disableBtn}
-          />
+          {currentWizardStepId !== DeployProvisiongWizardStepId.RunPipeline && (
+            <Button
+              text={buttonLabel}
+              variation={ButtonVariation.PRIMARY}
+              rightIcon="chevron-right"
+              onClick={() => onClickNext?.()}
+              disabled={disableBtn}
+            />
+          )}
         </Layout.Horizontal>
-        {showPageLoader ? <PageSpinner /> : null}
       </Layout.Vertical>
-    </>
+    </Layout.Vertical>
   ) : null
 }

@@ -25,7 +25,7 @@ describe('Test SelectRepository component', () => {
   test('Initial render', async () => {
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCD({ ...pathParams, module: 'cd' })} pathParams={pathParams}>
-        <SelectRepository enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} />
+        <SelectRepository />
       </TestWrapper>
     )
     const testRepoName = getFullRepoName(repos[1])

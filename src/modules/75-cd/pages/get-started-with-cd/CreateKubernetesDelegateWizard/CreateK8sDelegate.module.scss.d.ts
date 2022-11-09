@@ -18,6 +18,7 @@ declare const styles: {
   readonly collapseDiv: string
   readonly containerPadding: string
   readonly createPipelineBtn: string
+  readonly cursor: string
   readonly danger: string
   readonly dangerColor: string
   readonly dangerDialog: string

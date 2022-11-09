@@ -189,9 +189,16 @@ interface CardListProps {
   selectedValue?: string
   onChange: (deploymentType: ServiceDeploymentType) => void
   allowDisabledItemClick?: boolean
+  className?: string
 }
 
-const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps): JSX.Element => {
+export const CardList = ({
+  items,
+  isReadonly,
+  selectedValue,
+  onChange,
+  className = ''
+}: CardListProps): JSX.Element => {
   const { getString } = useStrings()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange(e.target.value as ServiceDeploymentType)
@@ -210,6 +217,7 @@ const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps)
               disabled={item.disabled || isReadonly}
               selected={item.value === selectedValue}
               onClick={handleChange}
+              className={className}
             />
           )
 

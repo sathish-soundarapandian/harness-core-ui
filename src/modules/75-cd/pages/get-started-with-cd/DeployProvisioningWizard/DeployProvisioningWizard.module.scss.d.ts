@@ -18,8 +18,11 @@ declare const styles: {
   readonly authMethodBtn: string
   readonly authTitle: string
   readonly borderBottom: string
+  readonly borderBottomClass: string
   readonly containerPadding: string
   readonly credentialsButton: string
+  readonly delegateOverviewWrapper: string
+  readonly dropdownPopover: string
   readonly footer: string
   readonly formInput: string
   readonly header: string
@@ -27,7 +30,9 @@ declare const styles: {
   readonly learnMore: string
   readonly main: string
   readonly noDelegateWarning: string
+  readonly provisioningFailed: string
   readonly provisioningSuccessful: string
+  readonly radioButton: string
   readonly repoCard: string
   readonly repoborderBottom: string
   readonly repositories: string
@@ -37,9 +42,12 @@ declare const styles: {
   readonly selectedCard: string
   readonly serviceDeploymentTypeCard: string
   readonly serviceDeploymentTypeIcon: string
+  readonly stepWizardText: string
   readonly testConnectionBtn: string
   readonly text: string
   readonly text1: string
+  readonly uppercase: string
+  readonly verticalSeparation: string
   readonly workloadTypeCard: string
   readonly workloadTypeIcon: string
 }

@@ -182,7 +182,8 @@ const SelectAuthenticationMethodRef = (
     accountId,
     isEditMode: false,
     isGitSyncEnabled: false,
-    afterSuccessHandler
+    afterSuccessHandler,
+    skipGoveranceCheck: true
   })
 
   useEffect(() => {

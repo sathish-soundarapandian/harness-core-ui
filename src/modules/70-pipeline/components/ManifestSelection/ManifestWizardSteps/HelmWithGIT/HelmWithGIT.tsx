@@ -60,6 +60,7 @@ interface HelmWithGITPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  isOnboardingFlow?: boolean
 }
 
 function HelmWithGIT({
@@ -72,7 +73,8 @@ function HelmWithGIT({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  deploymentType
+  deploymentType,
+  isOnboardingFlow = false
 }: StepProps<ConnectorConfigDTO> & HelmWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
 
@@ -168,6 +170,22 @@ function HelmWithGIT({
     handleCommandFlagsSubmitData(manifestObj, formData)
     handleSubmit(manifestObj)
   }
+
+  const handleValidate = (formData: HelmWithGITDataType) => {
+    if (isOnboardingFlow) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorRef: prevStepData?.connectorRef
+          ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ? prevStepData?.connectorRef
+            : prevStepData?.connectorRef?.value
+          : prevStepData?.identifier
+          ? prevStepData?.identifier
+          : ''
+      })
+    }
+  }
   return (
     <Layout.Vertical spacing="xxlarge" padding="small" className={css.manifestStore}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -216,6 +234,7 @@ function HelmWithGIT({
             })
           )
         })}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -402,21 +421,22 @@ function HelmWithGIT({
                 />
               </Accordion>
             </div>
-
-            <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-              <Button
-                text={getString('back')}
-                icon="chevron-left"
-                variation={ButtonVariation.SECONDARY}
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isOnboardingFlow && (
+              <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                <Button
+                  text={getString('back')}
+                  icon="chevron-left"
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

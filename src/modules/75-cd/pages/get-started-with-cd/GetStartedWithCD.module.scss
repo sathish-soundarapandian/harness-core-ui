@@ -123,3 +123,18 @@
   padding: 15px !important;
   font-size: 14px !important;
 }
+
+// NEW
+.centerAlign {
+  align-items: center;
+}
+.samplePipeline {
+  width: 1133px;
+  height: 229px;
+}
+.separator {
+  width: 60%;
+  border: 1px solid var(--black);
+  margin: var(--spacing-xxlarge) var(--spacing-xxlarge) !important;
+  opacity: 0.1;
+}

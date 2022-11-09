@@ -5,13 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { debounce } from 'lodash-es'
-import type { Column, CellProps } from 'react-table'
-import { Text, Layout, TableV2, Container, RadioButton, TextInput, FormError, Icon } from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
+import { defaultTo, isEmpty } from 'lodash-es'
+import { Text, Layout, Container, FormError, DropDown, SelectOption } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useGetListOfAllReposByRefConnector, UserRepoResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -28,25 +27,27 @@ export type SelectRepositoryForwardRef =
   | React.MutableRefObject<SelectRepositoryRefInstance | null>
   | null
 
+interface RepoOption extends SelectOption {
+  repository: UserRepoResponse
+}
 interface SelectRepositoryProps {
   selectedRepository?: UserRepoResponse
   showError?: boolean
   validatedConnectorRef?: string
   onChange?: (repository: UserRepoResponse) => void
-  disableNextBtn: () => void
-  enableNextBtn: () => void
 }
 
 const SelectRepositoryRef = (
   props: SelectRepositoryProps,
   forwardRef: SelectRepositoryForwardRef
 ): React.ReactElement => {
-  const { selectedRepository, showError, validatedConnectorRef, disableNextBtn, enableNextBtn, onChange } = props
+  const { selectedRepository, showError, validatedConnectorRef, onChange } = props
   const { getString } = useStrings()
   const [repository, setRepository] = useState<UserRepoResponse | undefined>(selectedRepository)
   const [query, setQuery] = useState<string>('')
   const [repositories, setRepositories] = useState<UserRepoResponse[]>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
   const {
     data: repoData,
     loading: fetchingRepositories,
@@ -72,26 +73,11 @@ const SelectRepositoryRef = (
         }
       })
     }
-  }, [validatedConnectorRef])
+  }, [accountId, fetchRepositories, orgIdentifier, projectIdentifier, validatedConnectorRef])
 
   useEffect(() => {
     setRepositories(repoData?.data)
   }, [repoData?.data])
-
-  const debouncedRepositorySearch = useCallback(
-    debounce((queryText: string): void => {
-      setQuery(queryText)
-    }, 500),
-    []
-  )
-
-  useEffect(() => {
-    if (fetchingRepositories) {
-      disableNextBtn()
-    } else {
-      enableNextBtn()
-    }
-  }, [fetchingRepositories])
 
   useEffect(() => {
     if (selectedRepository) {
@@ -108,8 +94,9 @@ const SelectRepositoryRef = (
   }, [query])
 
   useEffect(() => {
-    repository && onChange?.(repository)
+    !isEmpty(repository) && onChange?.(repository as UserRepoResponse)
   }, [repository])
+
   useEffect(() => {
     if (!forwardRef) {
       return
@@ -126,42 +113,37 @@ const SelectRepositoryRef = (
     }
   })
 
-  const renderView = React.useCallback((): JSX.Element => {
-    if (fetchingRepositories) {
-      return (
-        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" padding={{ top: 'large' }}>
-          <Icon name="steps-spinner" color="primary7" size={25} />
-          <Text font={{ variation: FontVariation.H6 }}>{getString('common.getStarted.fetchingRepos')}</Text>
-        </Layout.Horizontal>
-      )
-    }
-    if (Array.isArray(repositories) && repositories.length > 0) {
-      return <RepositorySelectionTable repositories={repositories} onRowClick={setRepository} />
-    }
-    return (
-      <Text flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
-        {getString('noSearchResultsFoundPeriod')}
-      </Text>
-    )
-  }, [fetchingRepositories, repositories, repoData?.data])
-
   const showValidationErrorForRepositoryNotSelected = showError && !repository?.name
 
+  const selectOptions = React.useMemo((): RepoOption[] => {
+    return defaultTo(repositories, []).map(repo => ({
+      label: getFullRepoName(repo),
+      value: repo.name as string,
+      repository: repo
+    }))
+  }, [repositories])
+
   return (
-    <Layout.Vertical spacing="small">
-      <Text font={{ variation: FontVariation.BODY2 }}>{getString('common.getStarted.codebaseHelptext')}</Text>
+    <Layout.Vertical spacing="small" padding={{ bottom: 'xxlarge' }}>
+      <Text font={{ variation: FontVariation.H5 }} padding={{ bottom: 'small' }}>
+        {getString('common.selectYourRepo')}
+      </Text>
       <Container padding={{ top: 'small' }} className={cx(css.repositories)}>
-        <TextInput
-          leftIcon="search"
-          placeholder={getString('common.getStarted.searchRepo')}
+        <DropDown
           className={css.repositorySearch}
-          leftIconProps={{ name: 'search', size: 18, padding: 'xsmall' }}
-          onChange={e => {
-            debouncedRepositorySearch((e.currentTarget as HTMLInputElement).value)
+          items={selectOptions}
+          value={repository?.name as string}
+          onChange={item => {
+            setRepository((item as RepoOption).repository)
           }}
           disabled={fetchingRepositories}
+          usePortal={true}
+          popoverClassName={css.dropdownPopover}
+          addClearBtn={true}
+          query={query}
+          onQueryChange={setQuery}
+          placeholder={fetchingRepositories ? getString('cd.fetchingRepository') : getString('cd.selectRepository')}
         />
-        {renderView()}
         {showValidationErrorForRepositoryNotSelected ? (
           <Container padding={{ top: 'xsmall' }}>
             <FormError
@@ -174,67 +156,6 @@ const SelectRepositoryRef = (
         ) : null}
       </Container>
     </Layout.Vertical>
-  )
-}
-
-interface RepositorySelectionTableProps {
-  repositories: UserRepoResponse[]
-  onRowClick: (repo: UserRepoResponse) => void
-}
-
-function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelectionTableProps): React.ReactElement {
-  const { getString } = useStrings()
-  const [selectedRow, setSelectedRow] = useState<UserRepoResponse | undefined>(undefined)
-
-  useEffect(() => {
-    if (selectedRow) {
-      onRowClick(selectedRow)
-    }
-  }, [selectedRow])
-
-  const columns: Column<UserRepoResponse>[] = React.useMemo(
-    () => [
-      {
-        accessor: 'name',
-        width: '100%',
-        Cell: ({ row }: CellProps<UserRepoResponse>) => {
-          const { name: repositoryName } = row.original
-          const isRowSelected = repositoryName === selectedRow?.name
-          return (
-            <Layout.Horizontal
-              data-testid={repositoryName}
-              className={css.repositoryRow}
-              flex={{ justifyContent: 'flex-start' }}
-              spacing="small"
-            >
-              <RadioButton checked={isRowSelected} />
-              <Text
-                lineClamp={1}
-                font={{ variation: FontVariation.BODY2 }}
-                color={isRowSelected ? Color.PRIMARY_7 : Color.GREY_900}
-              >
-                {getFullRepoName(row.original)}
-              </Text>
-            </Layout.Horizontal>
-          )
-        },
-        disableSortBy: true
-      }
-    ],
-    [getString]
-  )
-
-  return (
-    <TableV2<UserRepoResponse>
-      columns={columns}
-      data={repositories || []}
-      hideHeaders={true}
-      minimal={true}
-      resizable={false}
-      sortable={false}
-      className={css.repositoryTable}
-      onRowClick={data => setSelectedRow(data)}
-    />
   )
 }
 

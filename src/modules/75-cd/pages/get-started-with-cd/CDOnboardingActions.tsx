@@ -13,7 +13,9 @@ import {
   newServiceState as initialServiceState,
   newEnvironmentState as initialEnvironmentState,
   ServiceDataType,
-  InfrastructureDataType
+  InfrastructureDataType,
+  newDelegateState,
+  DelegateDataType
 } from './CDOnboardingUtils'
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -26,12 +28,14 @@ export interface CDOnboardingReducerState {
   service?: ServiceDataType
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
+  delegate?: DelegateDataType
   pipelineIdentifier?: string
   error?: string
   schemaErrors?: boolean
   isLoading?: boolean
   isInitialized?: boolean
   isUpdated?: boolean
+  selectedSectionId?: string
 }
 
 export enum CDOnboardingActions {
@@ -41,8 +45,10 @@ export enum CDOnboardingActions {
   UpdateService = 'UpdateService',
   UpdateEnvironment = 'UpdateEnvironment',
   UpdateInfrastructure = 'UpdateInfrastructure',
+  UpdateDelegate = 'UpdateDelegate',
   Success = 'Success',
-  Error = 'Error'
+  Error = 'Error',
+  UpdateSelection = 'UpdateSelection'
 }
 
 export interface ActionResponse {
@@ -54,6 +60,8 @@ export interface ActionResponse {
   service?: ServiceDataType
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
+  delegate?: DelegateDataType
+  selectedSectionId?: string
 }
 
 export interface ActionReturnType {
@@ -75,6 +83,16 @@ const updateInfrastructure = (response: ActionResponse): ActionReturnType => ({
   type: CDOnboardingActions.UpdateInfrastructure,
   response
 })
+
+const updateDelegate = (response: ActionResponse): ActionReturnType => ({
+  type: CDOnboardingActions.UpdateDelegate,
+  response
+})
+const updateSectionId = (response: ActionResponse): ActionReturnType => ({
+  type: CDOnboardingActions.UpdateSelection,
+  response
+})
+
 const fetching = (): ActionReturnType => ({ type: CDOnboardingActions.Fetching })
 const success = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Success, response })
 const error = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Error, response })
@@ -85,6 +103,8 @@ export const CDOnboardingContextActions = {
   updateService,
   updateEnvironment,
   updateInfrastructure,
+  updateDelegate,
+  updateSectionId,
   fetching,
   success,
   error
@@ -96,10 +116,12 @@ export const initialState: CDOnboardingReducerState = {
   service: initialServiceState,
   environment: initialEnvironmentState.environment,
   infrastructure: initialEnvironmentState.infrastructure,
+  delegate: newDelegateState.delegate,
   schemaErrors: false,
   isLoading: false,
   isUpdated: false,
-  isInitialized: false
+  isInitialized: false,
+  selectedSectionId: 'CONFIGURE_SERVICE'
 }
 
 export const CDOnboardingReducer = (state = initialState, data: ActionReturnType): CDOnboardingReducerState => {
@@ -131,6 +153,17 @@ export const CDOnboardingReducer = (state = initialState, data: ActionReturnType
       return {
         ...state,
         infrastructure: response?.infrastructure ? clone(response?.infrastructure) : state.infrastructure
+      }
+
+    case CDOnboardingActions.UpdateDelegate:
+      return {
+        ...state,
+        delegate: response?.delegate ? clone(response?.delegate) : state.delegate
+      }
+    case CDOnboardingActions.UpdateSelection:
+      return {
+        ...state,
+        selectedSectionId: response?.selectedSectionId
       }
     case CDOnboardingActions.Fetching:
       return {
