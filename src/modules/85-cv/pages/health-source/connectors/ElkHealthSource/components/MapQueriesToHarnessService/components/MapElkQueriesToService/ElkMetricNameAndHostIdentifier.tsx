@@ -99,7 +99,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
         applicationOptions={getIndexItems}
         applicationLoading={indicesLoading}
-        applicationError={formikProps.errors.logIndexes ? formikProps?.errors?.logIndexes : ''}
+        applicationError={formikProps?.errors?.logIndexes ? formikProps.errors.logIndexes : ''}
         connectorIdentifier={connectorIdentifier}
         formikAppDynamicsValue={logIndexes}
         appdMultiType={logIdxMultitype}
@@ -156,12 +156,12 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         recordsModalHeader={getString('cv.monitoringSources.elk.identifyTimeStamprecordsModalHeader')}
       />
 
-      <FormInput.Select
+      {/* <FormInput.Select
         label={getString('cv.monitoringSources.elk.timeStampFormatInputLabel')}
         name={MapElkToServiceFieldNames.TIMESTAMP_FORMAT}
         placeholder={getString('cv.monitoringSources.elk.selectTimeStampFormat')}
         items={getTimeFormatItems}
-      />
+      /> */}
       <MultiTextOrSelectInput
         setFieldValue={formikProps.setFieldValue}
         allowedTypes={
@@ -171,7 +171,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         }
         label={getString('cv.monitoringSources.elk.timeStampFormatInputLabel')}
         options={getTimeFormatItems}
-        applicationError={formikProps.errors.timeStampFormat ? formikProps?.errors?.timeStampFormat : ''}
+        applicationError={formikProps?.errors?.timeStampFormat ? formikProps.errors.timeStampFormat : ''}
         applicationLoading={false}
         connectorIdentifier={connectorIdentifier}
         formikAppDynamicsValue={timeStampFormat}
