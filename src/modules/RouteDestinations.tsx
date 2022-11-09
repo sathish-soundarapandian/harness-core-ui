@@ -54,7 +54,8 @@ export default function RouteDestinations(): React.ReactElement {
     SECURITY,
     CHAOS_ENABLED,
     NG_SETTINGS,
-    SCM_ENABLED
+    SCM_ENABLED,
+    IACM_ENABLED
   } = useFeatureFlags()
 
   return (
@@ -94,7 +95,7 @@ export default function RouteDestinations(): React.ReactElement {
         </Route>
       ) : null}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
-      {IacRoutes.props.children}
+      {IACM_ENABLED ? IacRoutes().props.children : null}
       <Route path="*">
         <NotFoundPage />
       </Route>

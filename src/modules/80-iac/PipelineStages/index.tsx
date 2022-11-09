@@ -1,7 +1,6 @@
 import React from 'react'
 import type { UseStringsReturn } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import type { StageAttributes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { IacStage } from '@iac/RouteDestinations'
 
@@ -31,4 +30,7 @@ const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStrings
   )
 }
 
-stagesCollection.registerStageFactory(StageType.IAC, getStageAttributes, getStageEditorImplementation)
+export const iacmStageConfiguration = {
+  getStageAttributes,
+  getStageEditorImplementation
+}

@@ -35,6 +35,7 @@ const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableSCM = process.env.ENABLE_SCM === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
+const enableIACM = process.env.ENABLE_IACM === 'true'
 
 console.log('Common build flags')
 console.table({
@@ -46,7 +47,8 @@ console.table({
   enableTIUI,
   enableSTO,
   enableSCM,
-  enableFFUI
+  enableFFUI,
+  enableIACM
 })
 
 const config = {
@@ -203,7 +205,8 @@ const config = {
         enableCIUI,
         enableTIUI,
         enableSCM,
-        enableFFUI
+        enableFFUI,
+        enableIACM
       })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
@@ -276,6 +279,15 @@ if (!enableSCM) {
 
 if (!enableFFUI) {
   config.resolve.alias['ffui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableIACM) {
+  config.resolve.alias['iac/MicroFrontendApp'] = ChildAppError
+  config.resolve.alias['iac/TestStepForm'] = ChildAppError
+  config.resolve.alias['iac/TestInputStep'] = ChildAppError
+  config.resolve.alias['iac/StepUtils'] = ChildAppError
+  config.resolve.alias['iac/VariableView'] = ChildAppError
+  config.resolve.alias['iac/IacStage'] = ChildAppError
 }
 
 module.exports = config

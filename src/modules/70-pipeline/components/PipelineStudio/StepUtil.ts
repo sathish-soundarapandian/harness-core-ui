@@ -35,8 +35,6 @@ import '@cd/components/PipelineSteps'
 import '@ci/components/PipelineSteps'
 // eslint-disable-next-line no-restricted-imports
 import '@sto/components/PipelineSteps'
-// eslint-disable-next-line no-restricted-imports
-import '@iac/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
