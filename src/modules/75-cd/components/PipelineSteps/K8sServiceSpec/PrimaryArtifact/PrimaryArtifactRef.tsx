@@ -73,19 +73,22 @@ function PrimaryArtifactRef({
     if (
       typeof artifactSourceTemplate === 'string' &&
       getMultiTypeFromValue(artifactSourceTemplate) === MultiTypeInputType.RUNTIME &&
-      //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
-      stepViewType !== StepViewType.TemplateUsage &&
       //Autoselect primary artifact if there is only 1 artifact source
       (!isEmpty(serviceInputsFormikValue) || isSingleArtifactSource)
     ) {
+      const shouldSetDefaultArtifactSource = isSingleArtifactSource && stepViewType !== StepViewType.TemplateUsage
+
       const sourceIdentifierToSourceInputMap = get(
         artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
-        isSingleArtifactSource ? artifactSources[0].value : `${initialValues.artifacts?.primary?.primaryArtifactRef}`
+        shouldSetDefaultArtifactSource
+          ? artifactSources[0].value
+          : `${initialValues.artifacts?.primary?.primaryArtifactRef}`
       )
       if (sourceIdentifierToSourceInputMap) {
         const idSourceMap = yamlParse(defaultTo(sourceIdentifierToSourceInputMap, ''))
         if (idSourceMap) {
-          if (isSingleArtifactSource) {
+          //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
+          if (shouldSetDefaultArtifactSource) {
             formik?.setValues(
               produce(formik?.values, (draft: any) => {
                 set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
