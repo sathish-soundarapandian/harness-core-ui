@@ -169,11 +169,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
    * if versionMap call fails, stop calling
    */
   useEffect(() => {
-    let getVersionTimeOut = setTimeout(() => {
-      pollVersionMap(state.versionMap)
-    }, POLL_VERSION_INTERVAL)
-
-    async function pollVersionMap(versionMap: VersionMap): Promise<void> {
+    fetchVersionMap(state.versionMap)
+    async function fetchVersionMap(versionMap: VersionMap): Promise<void> {
       try {
         // We are using promise since mutate was rerendering the whole applications every 60 seconds
         // even if no data change in store
@@ -206,18 +203,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
             versionMap: response.data || {}
           }))
         }
-
-        // set next poll
-        getVersionTimeOut = setTimeout(() => {
-          pollVersionMap(latestVersionMap || versionMap)
-        }, POLL_VERSION_INTERVAL)
-      } catch (_err) {
-        clearTimeout(getVersionTimeOut)
-      }
-    }
-
-    return () => {
-      clearTimeout(getVersionTimeOut)
+      } catch (_err) {}
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
