@@ -126,7 +126,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
-  const [setCurrentJSON] = useState<object>()
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
@@ -159,7 +158,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         getLatestYaml: () => yamlRef.current,
         setLatestYaml: (json: Record<string, any>) => {
           attempt(verifyIncomingJSON, json)
-          setCurrentJSON(json)
         },
         getYAMLValidationErrorMap: () => yamlValidationErrorsRef.current
       } as YamlBuilderHandlerBinding),
