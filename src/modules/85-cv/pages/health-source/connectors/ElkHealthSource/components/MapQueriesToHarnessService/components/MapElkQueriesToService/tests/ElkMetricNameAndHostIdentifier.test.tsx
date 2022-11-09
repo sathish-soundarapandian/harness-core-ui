@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -94,6 +94,40 @@ describe('Unit tests for MapELKQueriesToService', () => {
         </Formik>
       </TestWrapper>
     )
+    await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
+  })
+
+  test('Ensure that logIndexes field is present', async () => {
+    const { getByText, container } = render(
+      <TestWrapper>
+        <Formik formName="allowedValueTest" onSubmit={jest.fn()} initialValues={{}}>
+          {formik => (
+            <FormikForm>
+              <ElkMetricNameAndHostIdentifier
+                {...{
+                  onChange: jest.fn(),
+                  sampleRecord: null,
+                  serviceInstance: 'serviceInstance',
+                  isQueryExecuted: true,
+                  loading: false,
+                  messageIdentifier: '',
+                  isConnectorRuntimeOrExpression: true,
+                  isTemplate: true,
+                  expressions: [],
+                  connectorIdentifier: '',
+                  identifyTimestamp: '',
+                  formikProps: { ...formik, values: { ...formik?.values, logIndexes: 'integration-test' } },
+                  logIndexes: 'integration-test'
+                }}
+              />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-testid="logIndexesField"]')).not.toBeNull()
+    fireEvent.click(container.querySelector('[data-testid="logIndexesField"]')!)
+
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
   })
 })

@@ -67,7 +67,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
   )
 
   const handleSelectChange = useCallback(() => {
-    if (formikProps?.values?.logIndexes) {
+    /* istanbul ignore else */ if (formikProps?.values?.logIndexes) {
       onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, true)
     }
   }, [formikProps?.values?.logIndexes, onChange])
