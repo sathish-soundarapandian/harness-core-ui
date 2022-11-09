@@ -12,6 +12,7 @@ declare const styles: {
   readonly buildImg: string
   readonly buildYourOwnPipeline: string
   readonly buttonRow: string
+  readonly centerAlign: string
   readonly ciIcon: string
   readonly ciLogo: string
   readonly containerItemCss: string
@@ -26,6 +27,8 @@ declare const styles: {
   readonly listContainerCss: string
   readonly listItemCss: string
   readonly paddingXSmall: string
+  readonly samplePipeline: string
+  readonly separator: string
   readonly topPage: string
 }
 export default styles

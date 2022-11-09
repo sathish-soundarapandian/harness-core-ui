@@ -5,92 +5,56 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Text, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { FontVariation } from '@harness/design-system'
+import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
-import bgImageURL from '../home/images/cd.svg'
-import delegateImageURL from '../home/images/cd-delegates-banner.svg'
-import { DelegateSelectorWizard } from './DelegateSelectorWizard/DelegateSelectorWizard'
+import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
+import cdOnboardingSteps from '../home/images/cd-onboarding-steps.svg'
 import css from './GetStartedWithCD.module.scss'
 
-export default function GetStartedWithCI(): React.ReactElement {
+export default function GetStartedWithCD(): React.ReactElement {
   const { getString } = useStrings()
-  const [showWizard, setShowWizard] = useState<boolean>(false)
-  const closeWizard = (): void => {
-    setShowWizard(false)
-  }
+  const history = useHistory()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ServicePathProps>()
 
-  const { trackEvent } = useTelemetry()
-
-  return showWizard ? (
-    <DelegateSelectorWizard onClickBack={closeWizard} />
-  ) : (
-    <>
-      <Layout.Vertical flex>
-        <Container className={css.topPage}>
-          <Container className={css.buildYourOwnPipeline}>
-            <Layout.Vertical width="80%" className={css.contentWrapper}>
-              <Container>
-                <Layout.Horizontal flex className={css.ciLogo}>
-                  <Icon name="cd-main" size={42} />
-                  <Layout.Vertical flex padding={{ left: 'xsmall' }}>
-                    <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
-                      {getString('common.purpose.ci.continuousLabel')}
-                    </Text>
-                    <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
-                      {getString('common.purpose.cd.delivery')}
-                    </Text>
-                  </Layout.Vertical>
-                </Layout.Horizontal>
-              </Container>
-
-              <Container>
-                <Layout.Vertical>
-                  <Text font={{ variation: FontVariation.H2, weight: 'semi-bold' }} padding={{ bottom: 'medium' }}>
-                    {getString('cd.welcomeToHarnessCD')}
-                  </Text>
-                  <Text font="normal">{getString('cd.getStartedWithCD.delegateInfo1')}</Text>
-                  <Text font="normal" padding={{ top: 'small', bottom: 'xxlarge' }}>
-                    {getString('cd.getStartedWithCD.delegateInfo2')}
-                  </Text>
-                  <img
-                    className={css.buildImg}
-                    title={getString('common.getStarted.buildPipeline')}
-                    src={delegateImageURL}
-                  />
-                  <Layout.Horizontal className={css.buttonRow}>
-                    <Button
-                      variation={ButtonVariation.PRIMARY}
-                      size={ButtonSize.LARGE}
-                      text={getString('getStarted')}
-                      className={css.btn}
-                      onClick={() => {
-                        setShowWizard(true)
-                        trackEvent(CDOnboardingActions.delegateInstallWizardStart, {
-                          category: Category.DELEGATE
-                        })
-                      }}
-                    />
-                    <a
-                      href="https://docs.harness.io/article/2k7lnc7lvl-delegates-overview"
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_6} className={css.linkText}>
-                        {getString('cd.learnMoreDelegate')}
-                      </Text>
-                    </a>
-                  </Layout.Horizontal>
-                </Layout.Vertical>
-              </Container>
-            </Layout.Vertical>
-          </Container>
-        </Container>
-      </Layout.Vertical>
-      <img src={bgImageURL} className={css.image} />
-    </>
+  return (
+    <Layout.Vertical flex>
+      <Container className={css.topPage}>
+        <Layout.Horizontal flex margin="auto">
+          <Layout.Vertical padding="xlarge" style={{ flex: 1, textAlign: 'center' }} className={css.centerAlign}>
+            <Icon name="cd-main" size={40} padding="xlarge" />
+            <Text font={{ variation: FontVariation.H1 }} className={css.centerAlign}>
+              {getString('cd.getStartedWithCD.onboardingTitle')}
+            </Text>
+            <Text padding="medium" font={{ variation: FontVariation.BODY1 }} className={css.centerAlign}>
+              {getString('common.purpose.cd.description')}
+            </Text>
+            <Container padding="xxlarge" style={{ flex: 1 }} className={css.centerAlign}>
+              <Container
+                style={{ background: `transparent url(${cdOnboardingSteps}) no-repeat` }}
+                className={css.samplePipeline}
+              />
+            </Container>
+            <hr className={css.separator} />
+            <Container className={css.buttonRow}>
+              <Button
+                variation={ButtonVariation.PRIMARY}
+                size={ButtonSize.LARGE}
+                text={getString('getStarted')}
+                rightIcon="chevron-right"
+                onClick={() => {
+                  history.push(
+                    routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' })
+                  )
+                }}
+              />
+            </Container>
+          </Layout.Vertical>
+        </Layout.Horizontal>
+      </Container>
+    </Layout.Vertical>
   )
 }

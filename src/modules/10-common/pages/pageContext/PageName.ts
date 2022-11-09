@@ -80,6 +80,7 @@ export enum PAGE_NAME {
   PlanPage = 'PlanPage',
   GetStartedWithCI = 'GetStartedWithCI',
   GetStartedWithCD = 'GetStartedWithCD',
+  CDOnboardingWizard = 'CDOnboardingWizard',
   CFHomePage = 'CFHomePage',
   CFTrialHomePage = 'CFTrialHomePage',
   FeatureFlagsLandingPage = 'FeatureFlagsLandingPage',

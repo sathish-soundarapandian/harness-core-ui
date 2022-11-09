@@ -29,6 +29,7 @@ interface ManifestDetailsCoreSectionProps {
   selectedManifest: ManifestTypes | null
   isReadonly?: boolean
   showIdentifierField?: boolean
+  filePathFieldWidth?: number
 }
 
 const getAccountUrl = (prevStepData?: ConnectorConfigDTO): string => {
@@ -42,7 +43,8 @@ export function ManifestDetailsCoreSection({
   allowableTypes,
   prevStepData,
   isReadonly = false,
-  showIdentifierField = true
+  showIdentifierField = true,
+  filePathFieldWidth = filePathWidth
 }: StepProps<ConnectorConfigDTO> & ManifestDetailsCoreSectionProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -155,7 +157,7 @@ export function ManifestDetailsCoreSection({
           pathLabel={getString('fileFolderPathText')}
           placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
           defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-          dragDropFieldWidth={filePathWidth}
+          dragDropFieldWidth={filePathFieldWidth}
           allowOnlyOneFilePath={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
         />
         {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (

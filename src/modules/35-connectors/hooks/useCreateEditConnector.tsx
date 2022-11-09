@@ -27,6 +27,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
+import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 export interface BuildPayloadProps {
   projectIdentifier?: string
   orgIdentifier?: string
@@ -40,6 +41,8 @@ interface UseCreateEditConnector {
   isGitSyncEnabled: boolean
   afterSuccessHandler: (data: UseSaveSuccessResponse) => void
   gitDetails?: EntityGitDetails
+  onErrorHandler?: (data: ResponseMessage) => void
+  skipGoveranceCheck?: boolean
 }
 interface OnInitiateConnectorCreateEditProps<T> {
   buildPayload: (data: T & BuildPayloadProps) => Connector
@@ -53,6 +56,7 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
+  const { skipGoveranceCheck = false } = props
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const [connectorPayload, setConnectorPayload] = useState<Connector>({})
   const [connectorResponse, setConnectorResponse] = useState<UseSaveSuccessResponse>()
@@ -121,7 +125,8 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
       props.afterSuccessHandler(response)
     }
     if (response.data?.governanceMetadata) {
-      conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessGovernanceCall)
+      !skipGoveranceCheck &&
+        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessGovernanceCall)
     }
     const returnVal: UseSaveSuccessResponse = {
       status: !governanceMetaDataHasError ? response.status : 'FAILURE',
@@ -178,6 +183,7 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
               .catch(e => {
                 if (shouldShowError(e)) {
                   showError(getRBACErrorMessage(e))
+                  props?.onErrorHandler?.(e)
                 }
               })
           }

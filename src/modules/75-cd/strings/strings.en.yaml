@@ -391,6 +391,7 @@ backendConfigFileStore: 'Specify Terraform Backend Config File Store'
 backendConfigFileStepOne: 'Terraform Backend Config Store'
 backendConfigFileStoreTitle: 'Backend Config File'
 selectRepository: Select a repository
+fetchingRepository: Fetching repositories...
 selectArtifact: Select an artifact
 artifactName: Artifact Name
 selectArtifactSource: Select Artifact Source
@@ -496,6 +497,31 @@ manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 getStartedWithCD:
+  onboardingTitle: Start your deployments journey with Harness CD
+  selectDeploymentType: Select Deployment Type
+  deployToGitops: Do you want to deploy using GitOps?
+  configureEnvironment: Connect to Environment
+  configureService: Configure Service
+  helm: Helm
+  manifestTypeSelection: 'What is your {{ $.manifestsText }} type?'
+  gitopsRedirect:
+    title: Deploy with Gitops
+    subtitle: You will be redirected to Gitops section. Are you sure you want to leave this page?
+  closeOnboarding:
+    title: Leave Onboarding Process?
+    subtitle: You are about to leave without having set up a pipeline for deployment. Are you sure you want to leave anyway?
+  inHarnessFileStore: Use the Harness provided manifests from your Harness account file store
+  environmentDetails: Environment details
+  entityCreationTitle: Following entities have been auto-created
+  delegateRunAs: Delegate run as
+  artifactStorage: Artifact Storage
+  manifestStorage: ManifestStorage
+  serviceConfiguration: Service Configuration
+  allSet: You are all set!
+  successFull: successful
+  connectTo: Connect to
+  selectArtifactRepo: Select your artifactory repository
+  artifactToDeploy: Do you have an Artifact to deploy?
   workloadDeploy: What workload would you like to deploy?
   serviceDeploy: Where do you want to deploy your service?
   serviceHeading: What is the name of your Service?
@@ -519,8 +545,12 @@ getStartedWithCD:
   setupDelegate: Setup Delegate
   delegateInfo1: Harness Continuous Delivery empowers teams to deliver new features, fast and securely. The first step to creating deployment pipelines is connecting to your target environment by installing a Harness Delegate.
   delegateInfo2: The delegate is a worker process that runs on your infrastructure execute tasks on your infrastructure on behalf of Harness platform.
+  delegateNotConnected: Delegate not connected
   delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
+  viewDelegateDetails: View Delegate Details
+  hideDelegateDetails: Hide Delegate Details
+
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -531,6 +561,7 @@ skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
 connectorRefText: connectorRef
 loadingDelegate: Please Wait, Creating a Delegate for you...
+fetchingDelegate: Please wait, fetching delegate details for you...
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters
@@ -552,7 +583,7 @@ validation:
 welcomeMessage: Welcome to Harness
 welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 learnMoreDelegate: Learn more about Delegates
-runDelegate: How do you want to run the Delegate
+runDelegate: How do you want to run the Delegate?
 installDelegate: Install Delegate
 instructionsDelegate: Instructions to Install the Delegate
 downloadYAML: Download the YAML

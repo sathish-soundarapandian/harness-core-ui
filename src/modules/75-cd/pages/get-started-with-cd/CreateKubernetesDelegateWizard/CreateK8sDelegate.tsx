@@ -11,7 +11,6 @@ import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harne
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { get, isEmpty, set } from 'lodash-es'
-import { nanoid as nanoUuid } from 'nanoid'
 import { StringUtils } from '@common/exports'
 import {
   DelegateType,
@@ -33,7 +32,9 @@ import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from './StepProcessing'
-import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
+import { DelegateSuccessHandler, getUniqueEntityIdentifier } from '../CDOnboardingUtils'
+import { useCDOnboardingContext } from '../CDOnboardingStore'
+import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
 import css from './CreateK8sDelegate.module.scss'
 export interface CreateK8sDelegateProps {
   onSuccessHandler: (data: DelegateSuccessHandler) => void
@@ -48,6 +49,9 @@ export const CreateK8sDelegate = ({
   successRef,
   delegateNameRef
 }: CreateK8sDelegateProps): JSX.Element => {
+  const {
+    state: { delegate: delegateData }
+  } = useCDOnboardingContext()
   const [delegateName, setDelegateName] = React.useState<string>('')
   const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
   const [showPageLoader, setLoader] = React.useState<boolean>(true)
@@ -91,17 +95,20 @@ export const CreateK8sDelegate = ({
     if (get(delegateTokens, 'responseMessages', []).length) {
       showError(getString('somethingWentWrong'))
     } else {
+      const existingDelegate = get(delegateData, 'environmentEntities.delegate', null) // delegateName from context
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const delegateName1 = `del-${nanoUuid()}`
+      const delegateName1 = existingDelegate || getUniqueEntityIdentifier('pratyush_sample_delegate')
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
-      trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
-        category: Category.DELEGATE,
-        data: {
-          delegateName: delegateName1,
-          delegateType: delegateType
-        }
-      })
+
+      !existingDelegate &&
+        trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
+          category: Category.DELEGATE,
+          data: {
+            delegateName: delegateName1,
+            delegateType: delegateType
+          }
+        })
       const createParams1 = {
         name: delegateName1,
         identifier: StringUtils.getIdentifierFromName(delegateName1),
@@ -117,19 +124,23 @@ export const CreateK8sDelegate = ({
         projectIdentifier: projectIdentifier,
         orgIdentifier: orgIdentifier
       }
-      const createKubernetesYamlResponse = await validateKubernetesYamlPromise({
-        queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
-        body: {
-          ...(createParams1 as DelegateSetupDetails)
-        }
-      })
+      // if existing delegate in context, read YAMLResponse from context
+      const createKubernetesYamlResponse =
+        delegateData?.delegateYAMLResponse ||
+        (await validateKubernetesYamlPromise({
+          queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
+          body: {
+            ...(createParams1 as DelegateSetupDetails)
+          }
+        }))
       if (get(createKubernetesYamlResponse, 'responseMessages', []).length) {
         showError(getString('somethingWentWrong'))
       } else {
-        trackEvent(CDOnboardingActions.SetupOnboardingDelegate, {
-          category: Category.DELEGATE,
-          data: createParams1
-        })
+        !existingDelegate &&
+          trackEvent(CDOnboardingActions.SetupOnboardingDelegate, {
+            category: Category.DELEGATE,
+            data: createParams1
+          })
         const delegateYaml = createKubernetesYamlResponse.resource
         /* istanbul ignore else */ if (delegateSizeMappings) {
           const delegateSize: DelegateSizeDetails =
@@ -157,11 +168,12 @@ export const CreateK8sDelegate = ({
             })
             setVisibleYaml(generatedYamlResponse as any)
             setLoader(false)
-            onSuccessHandler({ delegateCreated: true })
-            trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
-              category: Category.DELEGATE,
-              data: { ...stepPrevData, generatedYaml: generatedYamlResponse }
-            })
+            onSuccessHandler({ delegateCreated: true, delegateYamlResponse: createKubernetesYamlResponse })
+            !existingDelegate &&
+              trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
+                category: Category.DELEGATE,
+                data: { ...stepPrevData, generatedYaml: generatedYamlResponse }
+              })
           }
         }
       }
@@ -177,14 +189,20 @@ export const CreateK8sDelegate = ({
   if (showPageLoader) {
     return (
       <Container className={css.spinner}>
-        <PageSpinner message={getString('cd.loadingDelegate')} />
+        <PageSpinner
+          message={
+            isEmpty(delegateData?.delegateYAMLResponse)
+              ? getString('cd.loadingDelegate')
+              : getString('cd.fetchingDelegate')
+          }
+        />
       </Container>
     )
   }
   return (
     <>
-      <Layout.Vertical>
-        <Text font="normal" className={css.subHeading}>
+      <Layout.Vertical className={css.marginBottomClass}>
+        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
           {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
@@ -219,22 +237,23 @@ export const CreateK8sDelegate = ({
                   outlined
                 />
               </Layout.Horizontal>
-              <Layout.Vertical width="568px">
-                {isYamlVisible ? (
-                  <div className={css.collapseDiv}>
-                    <YamlBuilder
-                      entityType="Delegates"
-                      fileName={delegateFileName}
-                      isReadOnlyMode={true}
-                      isEditModeSupported={false}
-                      hideErrorMesageOnReadOnlyMode={true}
-                      existingYaml={visibleYaml}
-                      height="462px"
-                      theme="DARK"
-                    />
-                  </div>
-                ) : null}
-              </Layout.Vertical>
+              {isYamlVisible ? (
+                <>
+                  <RightDrawer isOpen={isYamlVisible} setIsOpen={setYamlVisible}>
+                    <div className={css.collapseDiv}>
+                      <YamlBuilder
+                        entityType="Delegates"
+                        fileName={delegateFileName}
+                        isReadOnlyMode={true}
+                        isEditModeSupported={false}
+                        hideErrorMesageOnReadOnlyMode={true}
+                        existingYaml={visibleYaml}
+                        height="100vh"
+                      />
+                    </div>
+                  </RightDrawer>
+                </>
+              ) : null}
               <div className={css.spacing} />
             </Layout.Vertical>
           </li>

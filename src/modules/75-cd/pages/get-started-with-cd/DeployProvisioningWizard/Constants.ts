@@ -37,10 +37,10 @@ export enum ProvisioningStatus {
 }
 
 export enum DeployProvisiongWizardStepId {
-  SelectArtifact = 'SELECT_ARTIFACT',
-  SelectWorkload = 'SELECT_WORKLOAD',
-  SelectInfrastructure = 'SELECT_INFRASTRUCTURE',
-  CreatePipeline = 'CREATE_PIPELINE'
+  SelectDeploymentType = 'SELECT_DEPLOYMENT_TYPE',
+  DelegateSelector = 'ENVIRONMENT_DELEGATE_SELECTOR',
+  ConfigureService = 'CONFIGURE_SERVICE',
+  RunPipeline = 'RUN_PIPELINE'
 }
 
 export enum StepStatus {

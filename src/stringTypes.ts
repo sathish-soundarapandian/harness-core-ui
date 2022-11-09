@@ -4723,34 +4723,62 @@ export interface StringsMap {
   'cd.featureRestriction.banners.serviceLevelUpTeamEnterprise': string
   'cd.featureRestriction.banners.serviceOveruseTeamEnterprise': string
   'cd.featureRestriction.banners.serviceWarningActive': string
+  'cd.fetchingDelegate': string
+  'cd.fetchingRepository': string
   'cd.filePathPlaceholder': string
   'cd.filePathRequired': string
   'cd.gCloud': string
   'cd.gcloudClusterCmd': string
+  'cd.getStartedWithCD.allSet': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
   'cd.getStartedWithCD.artifactManifestContent': string
+  'cd.getStartedWithCD.artifactStorage': string
+  'cd.getStartedWithCD.artifactToDeploy': string
   'cd.getStartedWithCD.awsElasticK8s': string
   'cd.getStartedWithCD.azureK8s': string
+  'cd.getStartedWithCD.closeOnboarding.subtitle': string
+  'cd.getStartedWithCD.closeOnboarding.title': string
   'cd.getStartedWithCD.codeRepos': string
+  'cd.getStartedWithCD.configureEnvironment': string
   'cd.getStartedWithCD.configureRepo': string
+  'cd.getStartedWithCD.configureService': string
+  'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
+  'cd.getStartedWithCD.delegateNotConnected': string
   'cd.getStartedWithCD.delegateRequiredWarning': string
+  'cd.getStartedWithCD.delegateRunAs': string
+  'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.directK8s': string
+  'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
+  'cd.getStartedWithCD.environmentDetails': string
+  'cd.getStartedWithCD.gitopsRedirect.subtitle': string
+  'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.googleK8s': string
+  'cd.getStartedWithCD.helm': string
+  'cd.getStartedWithCD.hideDelegateDetails': string
+  'cd.getStartedWithCD.inHarnessFileStore': string
   'cd.getStartedWithCD.inManifest': string
   'cd.getStartedWithCD.inManifestContent': string
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.manifestFile': string
+  'cd.getStartedWithCD.manifestStorage': string
+  'cd.getStartedWithCD.manifestTypeSelection': string
+  'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.selectArtifactRepo': string
+  'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.serverless': string
+  'cd.getStartedWithCD.serviceConfiguration': string
   'cd.getStartedWithCD.serviceDeploy': string
   'cd.getStartedWithCD.serviceHeading': string
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupaNewDelegate': string
+  'cd.getStartedWithCD.successFull': string
+  'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.workloadDeploy': string
   'cd.gitFetchTypeRequired': string
   'cd.gitOps': string

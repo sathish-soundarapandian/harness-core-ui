@@ -212,9 +212,9 @@ export default function CDSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedCDTabInMainMenu && CD_ONBOARDING_ENABLED && (
-            <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
-          )}
+          {/* {showGetStartedCDTabInMainMenu && CD_ONBOARDING_ENABLED && ( */}
+          <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
+          {/* )} */}
           {!isCommunity && (!CD_ONBOARDING_ENABLED || !showGetStartedCDTabInMainMenu) && (
             <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}

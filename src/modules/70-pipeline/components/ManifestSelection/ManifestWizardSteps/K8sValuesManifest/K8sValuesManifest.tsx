@@ -46,6 +46,7 @@ interface K8sValuesManifestPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  isOnboardingFlow?: boolean
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
@@ -62,7 +63,8 @@ function K8sValuesManifest({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly = false
+  isReadonly = false,
+  isOnboardingFlow = false
 }: StepProps<ConnectorConfigDTO> & K8sValuesManifestPropType): React.ReactElement {
   const { getString } = useStrings()
 
@@ -81,7 +83,7 @@ function K8sValuesManifest({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
-        repoName: getRepositoryName(prevStepData, initialValues),
+        repoName: getRepositoryName(prevStepData, initialValues), //CHECK IN INTIAL CALUE
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
@@ -150,13 +152,29 @@ function K8sValuesManifest({
     }
     handleSubmit(manifestObj)
   }
+  const handleValidate = (formData: CommonManifestDataType) => {
+    if (isOnboardingFlow) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorRef: prevStepData?.connectorRef
+          ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ? prevStepData?.connectorRef
+            : prevStepData?.connectorRef?.value
+          : prevStepData?.identifier
+          ? prevStepData?.identifier
+          : ''
+      })
+    }
+  }
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
-      </Text>
-
+      {!isOnboardingFlow && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {stepName}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="manifestDetails"
@@ -200,6 +218,7 @@ function K8sValuesManifest({
             return !isEmpty(value) && value?.length > 0
           })
         })}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -273,21 +292,22 @@ function K8sValuesManifest({
                     />
                   )}
                 </div>
-
-                <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-                  <Button
-                    variation={ButtonVariation.SECONDARY}
-                    text={getString('back')}
-                    icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
-                  />
-                  <Button
-                    variation={ButtonVariation.PRIMARY}
-                    type="submit"
-                    text={getString('submit')}
-                    rightIcon="chevron-right"
-                  />
-                </Layout.Horizontal>
+                {!isOnboardingFlow && (
+                  <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                    <Button
+                      variation={ButtonVariation.SECONDARY}
+                      text={getString('back')}
+                      icon="chevron-left"
+                      onClick={() => previousStep?.(prevStepData)}
+                    />
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      type="submit"
+                      text={getString('submit')}
+                      rightIcon="chevron-right"
+                    />
+                  </Layout.Horizontal>
+                )}
               </Layout.Vertical>
             </FormikForm>
           )
