@@ -688,7 +688,7 @@ export function RightDrawer(): React.ReactElement {
         const tempName = stepNodeName.slice(0, stepName.length)
         if (tempName === stepName) {
           if (stepNodeName.length > stepName.length && stepNodeName[stepName.length] === '_') {
-            let idx = parseInt(stepNodeName.slice(stepName.length + 1))
+            const idx = parseInt(stepNodeName.slice(stepName.length + 1))
             if (idx > maxId) maxId = idx
           } else if (stepNodeName.length === stepName.length) maxId = maxId === -1 ? 0 : maxId
         }
