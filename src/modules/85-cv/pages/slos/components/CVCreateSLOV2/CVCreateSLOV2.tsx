@@ -42,6 +42,7 @@ import {
 } from './CVCreateSLOV2.utils'
 import { CreateCompositeSloForm } from './components/CreateCompositeSloForm/CreateCompositeSloForm'
 import type { SLOV2Form } from './CVCreateSLOV2.types'
+import { SLOType } from './CVCreateSLOV2.constants'
 import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.module.scss'
 
 const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element => {
@@ -186,7 +187,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
     }
   ]
   // TODO: Update with swagger
-  const sloType = isComposite ? 'Composite' : 'Simple'
+  const sloType = isComposite ? SLOType.COMPOSITE : SLOType.SIMPLE
   return (
     <Container margin={{ bottom: 'large' }}>
       {!identifier && (

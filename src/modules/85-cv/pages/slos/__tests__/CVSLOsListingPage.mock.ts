@@ -52,9 +52,8 @@ export const dashboardWidgetsContentData = {
   environmentName: 'env',
   serviceName: 'serviceName',
   noOfActiveAlerts: 0,
-  noOfMaximumAlerts: 5,
-  userJourneyIdentifier: 'userJourney',
-  userJourneyName: 'userJourney'
+  userJourneys: [{ name: 'userJourney', identifier: 'userJourney' }],
+  sloType: 'Composite'
 }
 
 export const dashboardWidgetsContent: SLODashboardWidget = {
@@ -207,7 +206,6 @@ export const mockSLODashboardWidgetsData = {
         sloTargetType: 'Rolling',
         sloTargetPercentage: 97.0,
         noOfActiveAlerts: 12,
-        noOfMaximumAlerts: 5,
         errorBudgetRisk: 'HEALTHY'
       }
     ],

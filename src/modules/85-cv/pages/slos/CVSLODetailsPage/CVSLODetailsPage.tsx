@@ -23,6 +23,7 @@ import DetailsPanel from './DetailsPanel/DetailsPanel'
 import TabToolbar from './DetailsPanel/views/TabToolbar'
 import { SLODetailsPageTabIds } from './CVSLODetailsPage.types'
 import CVCreateSLOV2 from '../components/CVCreateSLOV2/CVCreateSLOV2'
+import { SLOType } from '../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import css from './CVSLODetailsPage.module.scss'
 
 const CVSLODetailsPage: React.FC = () => {
@@ -151,7 +152,7 @@ const CVSLODetailsPage: React.FC = () => {
                     when: () => !sloDashboardWidget && !sloType
                   }}
                 >
-                  {sloType ? <CVCreateSLOV2 isComposite /> : <CVCreateSLO />}
+                  {sloType === SLOType.COMPOSITE ? <CVCreateSLOV2 isComposite /> : <CVCreateSLO />}
                 </Page.Body>
               )
             }
