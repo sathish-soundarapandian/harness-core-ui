@@ -380,7 +380,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
 
@@ -1177,6 +1177,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const renderPlatformInfraSection = (): React.ReactElement => {
     let buildInfraSelectOptions = []
+    const buildArchSelectOptions = [
+      {
+        label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+        value: ArchTypes.Amd64
+      }
+    ]
 
     switch (buildInfraType) {
       case CIBuildInfrastructureType.KubernetesDirect:
@@ -1189,10 +1195,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         ]
         break
       case CIBuildInfrastructureType.Cloud:
-        buildInfraSelectOptions = [
-          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-          { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS }
-        ]
+        buildInfraSelectOptions = [{ label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux }]
+        if (CIE_HOSTED_VMS_MAC)
+          buildInfraSelectOptions.push({
+            label: getString('pipeline.infraSpecifications.osTypes.macos'),
+            value: OsTypes.MacOS
+          })
         break
       default:
         buildInfraSelectOptions = [
@@ -1204,6 +1212,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           }
         ]
     }
+
+    if (CIE_HOSTED_VMS_MAC)
+      buildArchSelectOptions.push({
+        label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+        value: ArchTypes.Arm64
+      })
 
     return (
       <>
@@ -1244,16 +1258,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             name={'arch'}
             style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
             multiTypeInputProps={{
-              selectItems: [
-                {
-                  label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-                  value: ArchTypes.Amd64
-                },
-                {
-                  label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-                  value: ArchTypes.Arm64
-                }
-              ],
+              selectItems: buildArchSelectOptions,
               multiTypeInputProps: {
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
                 disabled: isReadonly
