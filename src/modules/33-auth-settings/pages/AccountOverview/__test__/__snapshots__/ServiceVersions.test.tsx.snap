@@ -339,7 +339,7 @@ exports[`Service versions open accordion 1`] = `
                         role="cell"
                         style="width: 30%;"
                       >
-                        PMS
+                        Pipelines under versions
                       </div>
                       <div
                         class="TableV2--cell"
