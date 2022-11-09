@@ -112,7 +112,11 @@ const RenderColumnMenu: Renderer<CellProps<FileStoreNodeDTO>> = ({ row }) => {
   const deleteMenuItem = useDelete(original.identifier, original.name, original.type, NOT_CURRENT_NODE)
   const optionsMenuItems = getMenuOptionItems([editMenuItem, deleteMenuItem])
 
-  return <NodeMenuButton items={optionsMenuItems} position={Position.RIGHT_TOP} />
+  return (
+    <Container flex={{ justifyContent: 'flex-end' }}>
+      <NodeMenuButton items={optionsMenuItems} position={Position.RIGHT_TOP} />
+    </Container>
+  )
 }
 
 const NodesList: React.FC = () => {

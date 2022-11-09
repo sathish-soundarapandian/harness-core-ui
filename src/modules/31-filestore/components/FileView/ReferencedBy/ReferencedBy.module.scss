@@ -31,3 +31,11 @@
 .body {
   --page-header-height: 136px !important;
 }
+
+.referenceByFilter {
+  :global {
+    .bp3-form-group {
+      margin-bottom: 0px;
+    }
+  }
+}

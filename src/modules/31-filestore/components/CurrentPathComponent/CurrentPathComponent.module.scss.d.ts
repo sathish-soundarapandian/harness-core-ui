@@ -7,12 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly body: string
-  readonly expandSearch: string
-  readonly header: string
-  readonly name: string
-  readonly page: string
-  readonly referenceByFilter: string
-  readonly table: string
+  readonly currentPathContainer: string
 }
 export default styles

@@ -9,7 +9,7 @@ import { Container, PageSpinner } from '@harness/uicore'
 import EmptyNodeView from '@filestore/components/EmptyNodeView/EmptyNodeView'
 import { useStrings } from 'framework/strings'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
-import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
+import { FILE_VIEW_TAB, FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import NodesList from '@filestore/components/NodesList/NodesList'
 import FileView from '@filestore/components/FileView/FileView'
 import CurrentPathComponent from '@filestore/components/CurrentPathComponent/CurrentPathComponent'
@@ -17,7 +17,14 @@ import css from './StoreView.module.scss'
 
 export default function StoreView(): React.ReactElement {
   const { getString } = useStrings()
-  const { currentNode, loading, isModalView } = useContext(FileStoreContext)
+  const { currentNode, loading, isModalView, activeTab, setActiveTab } = useContext(FileStoreContext)
+
+  React.useEffect(() => {
+    if (activeTab === FILE_VIEW_TAB.DETAILS) {
+      return
+    }
+    setActiveTab(FILE_VIEW_TAB.DETAILS)
+  }, [currentNode])
 
   if (loading) {
     return <PageSpinner />
@@ -25,7 +32,7 @@ export default function StoreView(): React.ReactElement {
 
   if (currentNode?.type === FileStoreNodeTypes.FOLDER && !currentNode?.children?.length) {
     return (
-      <Container padding="xlarge" style={{ width: '100%' }}>
+      <Container style={{ width: '100%' }}>
         <EmptyNodeView title={getString('filestore.noFilesInFolderTitle')} />
       </Container>
     )

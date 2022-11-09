@@ -18,11 +18,11 @@ import FileIcon from '@filestore/images/file-.svg'
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FileStoreNodeTypes, StoreNodeType } from '@filestore/interfaces/FileStore'
-import { FILE_STORE_ROOT } from '@filestore/utils/constants'
+import { FILE_STORE_ROOT, ExtensionType } from '@filestore/utils/constants'
 import NodeMenuButton from '@filestore/common/NodeMenu/NodeMenuButton'
 import useNewNodeModal from '@filestore/common/useNewNodeModal/useNewNodeModal'
 import useUploadFile, { UPLOAD_EVENTS } from '@filestore/common/useUpload/useUpload'
-import { getMenuOptionItems, FileStorePopoverOptionItem } from '@filestore/utils/FileStoreUtils'
+import { getMenuOptionItems, FileStorePopoverOptionItem, checkSupportedMime } from '@filestore/utils/FileStoreUtils'
 import { useUnsavedConfirmation } from '@filestore/common/useUnsavedConfirmation/useUnsavedConfirmation'
 
 import useDelete from '@filestore/common/useDelete/useDelete'
@@ -211,7 +211,21 @@ export const FolderNode = React.memo((props: PropsWithChildren<FileStoreNodeDTO>
       ? [newFileMenuItem, newFolderMenuItem, uploadFile, '-', editMenuItem, deleteMenuItem]
       : [newFileMenuItem, newFolderMenuItem, uploadFile]
 
-  const optionsMenuItems = getMenuOptionItems(ACTIONS, nodeItem.type as FileStoreNodeTypes)
+  const isUnsupported =
+    isCachedNode(currentNode.identifier) &&
+    !checkSupportedMime(currentNode?.mimeType as ExtensionType) &&
+    currentNode.type === FileStoreNodeTypes.FILE
+
+  const optionsMenuItems = isUnsupported
+    ? [
+        {
+          actionType: deleteMenuItem.actionType,
+          text: deleteMenuItem.label,
+          onClick: deleteMenuItem.onClick,
+          identifier: deleteMenuItem.identifier
+        }
+      ]
+    : getMenuOptionItems(ACTIONS, nodeItem.type as FileStoreNodeTypes)
 
   const NodesList = React.useMemo(() => {
     return (

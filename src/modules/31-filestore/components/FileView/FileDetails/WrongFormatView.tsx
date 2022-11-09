@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import { Container, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
+import { Container, Layout, Text, Button, ButtonVariation, Icon } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
@@ -14,7 +14,7 @@ import useUploadFile, { UPLOAD_EVENTS } from '@filestore/common/useUpload/useUpl
 
 export default function WrongFormatView(): React.ReactElement {
   const { getString } = useStrings()
-  const { currentNode, isModalView } = useContext(FileStoreContext)
+  const { isModalView } = useContext(FileStoreContext)
 
   const uploadNewFile = useUploadFile({
     isBtn: true,
@@ -28,16 +28,7 @@ export default function WrongFormatView(): React.ReactElement {
       background={Color.GREY_100}
     >
       <Layout.Vertical spacing={'xxlarge'} height={'100%'} flex={{ align: 'center-center' }}>
-        <Container
-          style={{ width: isModalView ? '110px' : '220px', position: 'relative', minHeight: isModalView ? 150 : 300 }}
-        >
-          <img
-            style={{ position: 'absolute', width: isModalView ? '110px' : '220px', top: 0, left: 0 }}
-            src={currentNode?.content ? currentNode.content : ''}
-            alt={getString('filestore.view.noPreview')}
-          />
-        </Container>
-        <Container />
+        <Icon name="error-outline" size={64} />
         <Container>
           <Text font={{ weight: 'bold', size: 'medium', align: 'center' }} color={Color.GREY_600}>
             {getString('filestore.view.noPreview')}
