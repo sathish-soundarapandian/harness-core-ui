@@ -14,6 +14,7 @@ import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHa
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { useGetCommunity } from '@common/utils/utils'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 
 export interface PipelineOutOfSyncErrorStripProps {
   updateRootEntity: (entityYaml: string) => Promise<void>
@@ -26,7 +27,8 @@ export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfS
     fetchPipeline
   } = usePipelineContext()
   const isCommunity = useGetCommunity()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const params = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = params
 
   const { data: errorData } = useValidateTemplateInputs({
     queryParams: {
@@ -34,9 +36,7 @@ export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfS
       orgIdentifier,
       projectIdentifier,
       identifier: pipeline.identifier,
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, params)
     },
     lazy: isCommunity
   })
