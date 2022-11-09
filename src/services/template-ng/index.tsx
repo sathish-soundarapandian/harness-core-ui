@@ -1498,13 +1498,6 @@ export interface ResponseFilterDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseHashSetString {
-  correlationId?: string
-  data?: string[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseJsonNode {
   correlationId?: string
   data?: JsonNode
@@ -1933,6 +1926,13 @@ export interface ResponseTemplateImportSaveResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseTemplateListRepoResponse {
+  correlationId?: string
+  data?: TemplateListRepoResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseTemplateMergeResponse {
   correlationId?: string
   data?: TemplateMergeResponse
@@ -2115,6 +2115,10 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
     [key: string]: TemplateInputsErrorDTO
   }
   errorYaml?: string
+}
+
+export interface TemplateListRepoResponse {
+  repositories?: string[]
 }
 
 export interface TemplateMergeResponse {
@@ -3497,7 +3501,7 @@ export interface GetRepositoryListQueryParams {
 }
 
 export type GetRepositoryListProps = Omit<
-  GetProps<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>,
+  GetProps<ResponseTemplateListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>,
   'path'
 >
 
@@ -3505,7 +3509,7 @@ export type GetRepositoryListProps = Omit<
  * Gets all repo list
  */
 export const GetRepositoryList = (props: GetRepositoryListProps) => (
-  <Get<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>
+  <Get<ResponseTemplateListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>
     path={`/templates/list-repo`}
     base={getConfig('template/api')}
     {...props}
@@ -3513,7 +3517,7 @@ export const GetRepositoryList = (props: GetRepositoryListProps) => (
 )
 
 export type UseGetRepositoryListProps = Omit<
-  UseGetProps<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>,
+  UseGetProps<ResponseTemplateListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>,
   'path'
 >
 
@@ -3521,19 +3525,19 @@ export type UseGetRepositoryListProps = Omit<
  * Gets all repo list
  */
 export const useGetRepositoryList = (props: UseGetRepositoryListProps) =>
-  useGet<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>(`/templates/list-repo`, {
-    base: getConfig('template/api'),
-    ...props
-  })
+  useGet<ResponseTemplateListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>(
+    `/templates/list-repo`,
+    { base: getConfig('template/api'), ...props }
+  )
 
 /**
  * Gets all repo list
  */
 export const getRepositoryListPromise = (
-  props: GetUsingFetchProps<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>,
+  props: GetUsingFetchProps<ResponseTemplateListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseHashSetString, Failure | Error, GetRepositoryListQueryParams, void>(
+  getUsingFetch<ResponseTemplateListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>(
     getConfig('template/api'),
     `/templates/list-repo`,
     props,
