@@ -57,11 +57,9 @@ describe('Azure Arm Steps', () => {
     cy.wait(500)
     cy.contains('span', 'Apply Changes').click({ force: true })
     // show validation errors
-    cy.contains('span', 'Step Name is required').should('be.visible')
     cy.contains('span', 'Provisioner Identifier is required').should('be.visible')
 
     // fill in form
-    cy.get('input[name="name"]').type('azure rollback')
     cy.get('input[name="spec.provisionerIdentifier"]').type('azureProvisionerIdentifier')
     cy.contains('span', 'Apply Changes').click({ force: true })
   })
@@ -72,7 +70,6 @@ describe('Azure Arm Steps', () => {
     cy.contains('section', 'Rollback Azure ARM Resources').should('be.visible')
     cy.contains('section', 'Rollback Azure ARM Resources').click({ force: true })
     cy.wait(500)
-    cy.get('input[name="name"]').type('azure rollback')
     // timeout
     cy.get('.MultiTypeInput--btn').eq(0).click()
     cy.contains('span', 'Runtime input').click()
@@ -92,12 +89,10 @@ describe('Azure Arm Steps', () => {
     cy.wait(500)
 
     // show validation errors
-    cy.contains('span', 'Step Name is required').should('be.visible')
     cy.contains('span', 'Connector is required').should('be.visible')
     cy.contains('span', 'Assignment Name Required').should('be.visible')
 
     // fill in form
-    cy.get('input[name="name"]').type('azure blueprint')
     cy.get('input[name="spec.configuration.assignmentName"]').type('azureBlueprintAssignmentName')
     cy.contains('span', 'Select').click()
     cy.contains('p', 'azureConnector').click({ force: true })
@@ -131,8 +126,6 @@ describe('Azure Arm Steps', () => {
     cy.contains('section', 'Create Azure BP Resources').click({ force: true })
     cy.wait(500)
 
-    // fill in form
-    cy.get('input[name="name"]').type('azure blueprint')
     // timeout
     cy.get('.MultiTypeInput--btn').eq(0).click()
     cy.contains('span', 'Runtime input').click()
@@ -172,7 +165,6 @@ describe('Azure Arm Steps', () => {
     cy.wait(500)
     cy.contains('span', 'Apply Changes').click({ force: true })
     // show validation errors
-    cy.contains('span', 'Step Name is required').should('be.visible')
     cy.contains('span', 'Provisioner Identifier is required').should('be.visible')
     cy.contains('span', 'Connector is required').should('be.visible')
     cy.contains('span', 'Subscription is Required').should('be.visible')
@@ -180,7 +172,6 @@ describe('Azure Arm Steps', () => {
     cy.contains('span', 'Mode is Required').should('be.visible')
 
     // fill in form
-    cy.get('input[name="name"]').type('project1')
     cy.get('input[name="spec.provisionerIdentifier"]').type('azureArmProvisionerIdentifier')
     cy.contains('span', 'Select').click()
     cy.contains('p', 'azureConnector').click()
@@ -217,7 +208,6 @@ describe('Azure Arm Steps', () => {
     cy.contains('section', 'Create Azure ARM Resources').should('be.visible')
     cy.contains('section', 'Create Azure ARM Resources').click({ force: true })
     cy.wait(500)
-    cy.get('input[name="name"]').type('project1')
     // timeout
     cy.get('.MultiTypeInput--btn').eq(0).click()
     cy.contains('span', 'Runtime input').click()
