@@ -1217,7 +1217,6 @@ biDashboard:
 commitmentOrchestration:
   sideNavLabel: 'Commitment Orchestrator'
   exitSetupBtn: 'Exit Setup'
-  coverage: 'Coverage'
   filterPanel:
     allAccounts: 'All Accounts'
     allInstanceFamilies: 'All Instance Families'
@@ -1354,7 +1353,7 @@ k8sQuickCreate:
     10mins: ~10 min
   downloadAndApplyYaml: Download and Apply YAML
   overview:
-    nameInfo: Please note, this is the name with which the Kubernetes Cluster will be identified in Harness Cloud Cost Management.<br> Also you need to have <b>Cluster Admin Role</b> to the Cluster you would like to add
+    nameInfo: Please note, this is the name with which the Kubernetes Cluster will be identified in Harness Cloud Cost Management.<br>Also you need to have <b>Cluster Admin Role</b> to the Cluster you would like to add
   applyYaml:
     header: To provide your cluster with permissions apply the following YAML.
     desc: 'Applying the YAML file will:'

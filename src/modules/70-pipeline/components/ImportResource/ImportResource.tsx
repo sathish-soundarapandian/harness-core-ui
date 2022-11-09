@@ -28,11 +28,11 @@ import { useStrings } from 'framework/strings'
 import { Error, importInputSetPromise, importPipelinePromise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
 import { importTemplatePromise, ResponseTemplateImportSaveResponse } from 'services/template-ng'
 import { IdentifierSchema, NameSchema, TemplateVersionLabelSchema } from '@common/utils/Validation'
-import { NameIdDescriptionTags } from '@common/components'
 import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
+import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { ExtraQueryParams, InitialValuesType, ModifiedInitialValuesType } from './useImportResource'
 import css from './ImportResource.module.scss'
 
@@ -279,7 +279,7 @@ export default function ImportResource({
               <PageSpinner message={getString('loading')} />
             ) : (
               <>
-                <NameIdDescriptionTags formikProps={formikProps} tooltipProps={{ dataTooltipId: 'createEntity' }} />
+                <NameId />
                 {resourceType === ResourceType.TEMPLATE && (
                   <FormInput.Text
                     name="versionLabel"

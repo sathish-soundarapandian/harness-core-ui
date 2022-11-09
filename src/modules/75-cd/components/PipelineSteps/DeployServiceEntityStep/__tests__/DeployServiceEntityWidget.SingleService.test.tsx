@@ -28,6 +28,7 @@ jest.mock('services/cd-ng', () => ({
       .fn()
       .mockResolvedValue({ status: 'SUCCESS', data: { service: { identifier: 'svc_4', name: 'Service 4' } } })
   }),
+  mergeServiceInputsPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   useUpdateServiceV2: jest.fn().mockReturnValue({ mutate: jest.fn().mockResolvedValue({ status: 'SUCCESS' }) }),
   useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } })
 }))

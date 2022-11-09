@@ -54,7 +54,7 @@ import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
-import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
+import factory from '../PipelineSteps/PipelineStepFactory'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './InputSetForm.module.scss'
@@ -495,6 +495,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                           filePath: get(inputSet, 'gitDetails.filePath'),
                           defaultName: yamlBuilderReadOnlyModeProps.fileName
                         })}
+                        comparableYaml={template?.data?.inputSetTemplateYaml}
                       />
                     </Layout.Vertical>
                     <Layout.Horizontal className={css.footer} padding="xlarge">

@@ -43,7 +43,7 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
       <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-        {getString('freezeWindows.freezeStudio.freezeSchedule')}
+        {getString('common.schedule')}
       </Heading>
       <Card className={css.sectionCard}>
         <ScheduleFreezeForm

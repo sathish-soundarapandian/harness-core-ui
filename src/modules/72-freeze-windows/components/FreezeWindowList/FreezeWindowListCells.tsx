@@ -15,7 +15,7 @@ import React from 'react'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
-import type { FreezeSummaryResponse, FreezeWindow, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
+import type { FreezeSummaryResponse, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
 import { FreezeStatus, getReadableDateFromDateString } from '@freeze-windows/utils/freezeWindowUtils'
 import css from './FreezeWindowList.module.scss'
 
@@ -26,7 +26,7 @@ export interface FreezeWindowListColumnActions {
   onViewFreezeRow: (freezeWindow: FreezeSummaryResponse) => void
   getViewFreezeRowLink: (freezeWindow: FreezeSummaryResponse) => string
   selectedItems: string[]
-  disabled: boolean
+  canEdit: boolean
   freezeStatusMap: Record<string, FreezeStatus>
 }
 
@@ -47,7 +47,7 @@ export const FreezeWindowCell: CellType = ({ row, column }) => {
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
       <div onClick={killEvent}>
         <Switch
-          disabled={column.disabled}
+          disabled={!column.canEdit}
           aria-label="Toggle freeze"
           onChange={event =>
             column.onToggleFreezeRow({
@@ -105,7 +105,12 @@ export const FreezeWindowCell: CellType = ({ row, column }) => {
 
 export const ScheduleCell: CellType = ({ row }) => {
   const data = row.original
-  const freezeWindow = data.windows?.[0] || ({} as FreezeWindow)
+  const freezeWindow = data.windows?.[0]
+
+  if (!freezeWindow) {
+    return null
+  }
+
   const { startTime, duration, endTime, timeZone, recurrence } = freezeWindow
   return (
     <Layout.Vertical>
@@ -162,20 +167,44 @@ export const LastModifiedCell: CellType = ({ row }) => {
 
 export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
-  const disabled = column.disabled
+  const canEdit = column.canEdit
+  const { getString } = useStrings()
 
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
-        <Button variation={ButtonVariation.ICON} icon="Options" aria-label="Freeze window menu actions" />
+        <Button
+          variation={ButtonVariation.ICON}
+          icon="Options"
+          aria-label="Freeze window menu actions"
+          padding="small"
+        />
         <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
           <Menu.Item
+            text={
+              <Layout.Horizontal
+                spacing="xsmall"
+                color={Color.WHITE}
+                flex={{ alignItems: 'center', justifyContent: 'start' }}
+              >
+                <Icon name="edit" size={16} />
+                <Link to={column.getViewFreezeRowLink(data)}>{getString(canEdit ? 'edit' : 'common.viewText')}</Link>
+              </Layout.Horizontal>
+            }
             className={css.link}
-            text={<Link to={column.getViewFreezeRowLink(data)}>{disabled ? 'View' : 'Edit'}</Link>}
           />
           <Menu.Item
-            disabled={disabled}
-            text={data.status === 'Disabled' ? 'Enable' : 'Disable'}
+            disabled={!canEdit}
+            text={
+              <Layout.Horizontal
+                spacing="xsmall"
+                color={Color.WHITE}
+                flex={{ alignItems: 'center', justifyContent: 'start' }}
+              >
+                <Icon name={data.status === 'Disabled' ? 'switch-on' : 'switch-off'} size={16} />
+                <Text color={Color.WHITE}>{data.status === 'Disabled' ? 'Enable' : 'Disable'}</Text>
+              </Layout.Horizontal>
+            }
             onClick={() => {
               column.onToggleFreezeRow({
                 freezeWindowId: data.identifier!,
@@ -183,7 +212,20 @@ export const MenuCell: CellType = ({ row, column }) => {
               })
             }}
           />
-          <Menu.Item disabled={disabled} text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
+          <Menu.Item
+            text={
+              <Layout.Horizontal
+                spacing="xsmall"
+                color={Color.WHITE}
+                flex={{ alignItems: 'center', justifyContent: 'start' }}
+              >
+                <Icon name="main-trash" size={16} />
+                <Text color={Color.WHITE}>Delete</Text>
+              </Layout.Horizontal>
+            }
+            disabled={!canEdit}
+            onClick={() => column.onDeleteRow(data.identifier!)}
+          />
         </Menu>
       </Popover>
     </Layout.Horizontal>
@@ -197,7 +239,7 @@ export const RowSelectCell: CellType = ({ row, column }) => {
     <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
         aria-label="Select row"
-        disabled={column.disabled}
+        disabled={!column.canEdit}
         large
         checked={column.selectedItems.includes(data.identifier!)}
         onChange={event => {

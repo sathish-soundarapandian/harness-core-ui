@@ -223,6 +223,7 @@ export class TemplateStep extends PipelineStep<TemplateStepNode> {
         readonly={readonly}
         factory={factory}
         allowableTypes={allowableTypes}
+        customStepProps={customStepProps}
       />
     )
   }

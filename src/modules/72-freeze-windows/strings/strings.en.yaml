@@ -12,10 +12,7 @@ freezeWindowsPage:
   updateStatusFailure: Failed to update Freeze Window(s)
   dateRangeLabel: 'Updated: Last 7 days'
 freezeStudio:
-  freezeConfiguration: Freeze Configuration
-  freezeOverview: Freeze Overview
-  freezeSchedule: Freeze Schedule
-  defineResources: Define which resources you want to include in this freeze window
+  defineResources: Freeze any deployments that have the following resources defined in the rules below
   excludeOrgs: Exclude specific Organizations
   excludeProjects: Exclude specific Projects
   allOrganizations: All Organizations
@@ -36,6 +33,7 @@ globalFreeze:
   enabled: Freeze enabled on all deployments for this <b>{{scope}}</b>
   enabledWindow: from <b>{{startTime}}</b> {{supportText}} <b>{{endTimeOrDuration}}</b> {{timeZone}}
   enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
+  enableFreezeTitleInfo: When a freeze is applied, all deployments for this {{scope}} cannot be started manually, nor through Triggers. Any ongoing deployments in the freeze will be aborted.
   enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
   enableFreezeFailure: Failed to enable freeze
 

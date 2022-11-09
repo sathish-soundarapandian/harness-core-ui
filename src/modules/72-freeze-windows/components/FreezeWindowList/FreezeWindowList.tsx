@@ -76,7 +76,7 @@ export const FreezeWindowList: FC<FreezeWindowList> = ({ data, onToggleFreezeRow
       gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
       setSortBy={appliedSort => updateQueryParams({ sort: appliedSort })}
       sortBy={sort}
-      disabled={!canEdit}
+      canEdit={canEdit}
       freezeStatusMap={freezeStatusMap}
     />
   )

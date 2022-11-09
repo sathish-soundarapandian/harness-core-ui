@@ -1,4 +1,11 @@
-import { formValidation, getConnectorPlaceholderText, getIsConnectorDisabled } from '../DefineHealthSource.utils'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import { AWSDataSourceType } from '../DefineHealthSource.constant'
+import {
+  formValidation,
+  getConnectorPlaceholderText,
+  getDataSourceType,
+  getIsConnectorDisabled
+} from '../DefineHealthSource.utils'
 
 describe('DefineHealthSource.utils.test', () => {
   test('should return correct connector placeholder text', () => {
@@ -51,5 +58,17 @@ describe('DefineHealthSource.utils.test', () => {
       dataSourceType: 'AwsPrometheus'
     })
     expect(result).toBe(false)
+  })
+
+  test('getDataSourceType should return AwsPrometheus, if selected dataSourceType is AWS', () => {
+    const result = getDataSourceType({ dataSourceType: AWSDataSourceType, isDataSourceTypeSelectorEnabled: true })
+
+    expect(result).toBe(AWSDataSourceType)
+  })
+
+  test('getDataSourceType should return AwsPrometheus, if selected health source type is AwaPrometheus', () => {
+    const result = getDataSourceType({ type: HealthSourceTypes.AwsPrometheus, isDataSourceTypeSelectorEnabled: true })
+
+    expect(result).toBe(AWSDataSourceType)
   })
 })

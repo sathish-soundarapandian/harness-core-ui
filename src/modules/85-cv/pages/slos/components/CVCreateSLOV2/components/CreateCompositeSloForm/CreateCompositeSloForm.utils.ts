@@ -6,9 +6,11 @@
  */
 
 import type { FormikProps } from 'formik'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual } from 'lodash-es'
+import type { SLOTargetFilterDTO } from 'services/cv'
 import { PeriodLengthTypes, PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
+import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 
 export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): boolean => {
@@ -106,13 +108,14 @@ export const isFormDataValid = (
 }
 
 export const shouldOpenPeriodUpdateModal = (
-  formikProps: FormikProps<SLOV2Form>,
-  periodTypesRef: React.MutableRefObject<'Rolling' | 'Calender' | undefined>
+  formikValues: SLOV2Form,
+  filterData: React.MutableRefObject<SLOTargetFilterDTO | undefined>
 ): boolean => {
+  const formikFilterData = createSloTargetFilterDTO(formikValues)
   return (
-    Boolean(formikProps.values.periodType) &&
-    Boolean(periodTypesRef?.current) &&
-    !isEmpty(formikProps.values.serviceLevelObjectivesDetails) &&
-    formikProps.values.periodType !== periodTypesRef?.current
+    Boolean(formikValues.periodType) &&
+    Boolean(filterData?.current) &&
+    !isEmpty(formikValues.serviceLevelObjectivesDetails) &&
+    !isEqual(formikFilterData, filterData?.current)
   )
 }

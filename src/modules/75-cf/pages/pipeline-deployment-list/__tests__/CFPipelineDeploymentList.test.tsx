@@ -42,6 +42,9 @@ jest.mock('services/pipeline-ng', () => ({
     loading: false,
     cancel: jest.fn()
   })),
+  useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
+    return { data: jest.fn(), refetch: jest.fn() }
+  }),
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
@@ -143,7 +146,6 @@ describe('CFPipelineDeploymentList', () => {
 
   test('should render pipelines', async () => {
     renderExecutionPage()
-
     const pipeline = await screen.findByRole('link', {
       name: 'PR Harness Env - CD Selective Stage'
     })

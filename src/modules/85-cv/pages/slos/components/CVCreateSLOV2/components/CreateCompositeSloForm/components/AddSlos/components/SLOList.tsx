@@ -9,20 +9,32 @@ import React, { useState, useEffect } from 'react'
 import type QueryString from 'qs'
 import { useParams } from 'react-router-dom'
 import type { Row } from 'react-table'
-import { Text, TableV2, Page, Button, Container, ButtonVariation, ExpandingSearchInput } from '@harness/uicore'
+import {
+  Text,
+  TableV2,
+  Page,
+  Button,
+  Container,
+  ButtonVariation,
+  ExpandingSearchInput,
+  NoDataCard
+} from '@harness/uicore'
+import { useMutateAsGet } from '@common/hooks'
+import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
-  SLOTargetDTO,
-  useGetSLOHealthListView,
+  useGetSLOHealthListViewV2,
   GetSLOHealthListViewQueryParams,
   ServiceLevelObjectiveDetailsDTO,
-  SLOHealthListView
+  SLOHealthListView,
+  SLODashboardApiFilter
 } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import {
   getUpdatedSLOObjectives,
   RenderCheckBoxes,
   RenderMonitoredService,
+  RenderSLIType,
   RenderSLOName,
   RenderTags,
   RenderTarget,
@@ -36,19 +48,19 @@ interface SLODashboardWidgetsParams {
 
 interface SLOListProps {
   hideDrawer: () => void
-  filter: SLOTargetDTO['type']
+  filter: SLODashboardApiFilter
   onAddSLO: (key: string, value: ServiceLevelObjectiveDetailsDTO[]) => void
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
-export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideDrawer }: SLOListProps): JSX.Element => {
+export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDetails }: SLOListProps): JSX.Element => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [pageNumber, setPageNumber] = useState(0)
   const [selectedSlos, setSelectedSlos] = useState<SLOHealthListView[]>([])
 
   const sloDashboardWidgetsParams: SLODashboardWidgetsParams = {
-    queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber, pageSize: 10, targetTypes: [filter!] },
+    queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber, pageSize: 10 },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
     }
@@ -59,7 +71,10 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
     loading: dashboardWidgetsLoading,
     refetch: refetchDashboardWidgets,
     error: dashboardWidgetsError
-  } = useGetSLOHealthListView(sloDashboardWidgetsParams)
+  } = useMutateAsGet(useGetSLOHealthListViewV2, {
+    queryParams: { ...sloDashboardWidgetsParams.queryParams },
+    body: { ...filter }
+  })
 
   const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = dashboardWidgetsResponse?.data ?? {}
 
@@ -75,7 +90,7 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
 
   const addSLos = (): void => {
     const updatedSLOObjective = getUpdatedSLOObjectives(selectedSlos, accountId, orgIdentifier, projectIdentifier)
-    onAddSLO('serviceLevelObjectivesDetails', updatedSLOObjective)
+    onAddSLO(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLOObjective)
     hideDrawer()
   }
 
@@ -88,57 +103,66 @@ export const SLOList = ({ filter, onAddSLO, serviceLevelObjectivesDetails, hideD
       <Container margin={'medium'}>
         <Page.Body
           loading={dashboardWidgetsLoading}
-          error={dashboardWidgetsError}
+          error={Boolean(dashboardWidgetsError)}
           retryOnError={() => refetchDashboardWidgets()}
         >
-          <TableV2
-            sortable={false}
-            columns={[
-              {
-                Header: '',
-                id: 'selectSlo',
-                width: '50px',
-                Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
-                  return <RenderCheckBoxes row={row} selectedSlos={selectedSlos} setSelectedSlos={setSelectedSlos} />
+          {content?.length ? (
+            <TableV2
+              sortable={false}
+              columns={[
+                {
+                  Header: '',
+                  id: 'selectSlo',
+                  width: '50px',
+                  Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
+                    return <RenderCheckBoxes row={row} selectedSlos={selectedSlos} setSelectedSlos={setSelectedSlos} />
+                  }
+                },
+                {
+                  Header: getString('cv.slos.sloName').toUpperCase(),
+                  width: '20%',
+                  Cell: RenderSLOName
+                },
+                {
+                  Header: getString('cv.slos.monitoredService').toUpperCase(),
+                  width: '20%',
+                  Cell: RenderMonitoredService
+                },
+                {
+                  Header: getString('cv.slos.userJourney').toUpperCase(),
+                  width: '20%',
+                  Cell: RenderUserJourney
+                },
+                {
+                  Header: getString('tagsLabel').toUpperCase(),
+                  width: '20%',
+                  Cell: RenderTags
+                },
+                {
+                  Header: getString('cv.slos.sliType'),
+                  width: '20%',
+                  Cell: RenderSLIType
+                },
+                {
+                  Header: getString('cv.slos.target').toUpperCase(),
+                  width: '20%',
+                  Cell: RenderTarget
                 }
-              },
-              {
-                Header: getString('cv.slos.sloName').toUpperCase(),
-                width: '20%',
-                Cell: RenderSLOName
-              },
-              {
-                Header: getString('cv.slos.monitoredService').toUpperCase(),
-                width: '20%',
-                Cell: RenderMonitoredService
-              },
-              {
-                Header: getString('cv.slos.userJourney').toUpperCase(),
-                width: '20%',
-                Cell: RenderUserJourney
-              },
-              {
-                Header: getString('tagsLabel').toUpperCase(),
-                width: '20%',
-                Cell: RenderTags
-              },
-              {
-                Header: getString('cv.slos.target').toUpperCase(),
-                width: '20%',
-                Cell: RenderTarget
-              }
-            ]}
-            data={content || []}
-            pagination={{
-              pageSize,
-              pageIndex,
-              pageCount: totalPages,
-              itemCount: totalItems,
-              gotoPage: nextPage => {
-                setPageNumber(nextPage)
-              }
-            }}
-          />
+              ]}
+              data={content || []}
+              pagination={{
+                pageSize,
+                pageIndex,
+                pageCount: totalPages,
+                itemCount: totalItems,
+                gotoPage: nextPage => {
+                  setPageNumber(nextPage)
+                }
+              }}
+            />
+          ) : (
+            <NoDataCard icon={'join-table'} message={getString('cv.healthSource.noData')} />
+          )}
           <Button
             width={150}
             data-testid={'addSloButton'}

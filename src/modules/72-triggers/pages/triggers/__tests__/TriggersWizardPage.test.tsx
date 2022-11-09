@@ -32,8 +32,9 @@ import {
   GetCustomTriggerWithVariablesResponse,
   GetCustomWebhookTriggerResponse,
   updateCustomTriggerMockResponseYaml,
-  GetSettingValueResponse,
-  GetSecretV2PromiseResponse
+  GithubWebhookAuthenticationEnabledFalse,
+  GetSecretV2PromiseResponse,
+  GithubWebhookAuthenticationEnabledTrue
 } from './webhookMockResponses'
 
 import {
@@ -155,7 +156,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
       const { container } = render(<WrapperComponent />)
@@ -193,7 +194,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
       const { container } = render(<WrapperComponent />)
@@ -223,7 +224,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
         mutate: jest.fn().mockReturnValue(GetMergeInputSetFromPipelineTemplateWithListInputResponse) as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       const { container } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
       await waitFor(() => expect(() => queryByText(document.body, result.current.getString('name'))).not.toBeNull())
@@ -265,7 +266,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
       await waitFor(() =>
@@ -308,7 +309,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
       const { container } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
@@ -359,7 +360,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
       const { container } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
@@ -425,7 +426,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       const { container } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
       await waitFor(() =>
@@ -491,7 +492,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
       const { container } = render(<WrapperComponent />)
       await waitFor(() =>
@@ -546,7 +547,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
       const { container } = render(<WrapperComponent />)
 
@@ -590,7 +591,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
         mutate: jest.fn().mockReturnValue(GetMergeInputSetFromPipelineTemplateWithListInputResponse) as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       const { container } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
       await waitFor(() => expect(() => queryByText(document.body, result.current.getString('name'))).not.toBeNull())
@@ -660,7 +661,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
         mutate: jest.fn().mockReturnValue(GetMergeInputSetFromPipelineTemplateWithListInputResponse) as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       const { container } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
       await waitFor(() => expect(() => queryByText(document.body, result.current.getString('name'))).not.toBeNull())
@@ -723,7 +724,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -766,7 +767,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
         mutate: jest.fn().mockReturnValue(GetMergeInputSetFromPipelineTemplateWithListInputResponse) as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       const { container, getByText } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
       await waitFor(() =>
@@ -793,7 +794,7 @@ describe('TriggersWizardPage Triggers tests', () => {
   })
 
   describe('Initial Renders/snapshots', () => {
-    test('Initial Render - GitHub Webhook', async () => {
+    test('Initial Render - GitHub Webhook: Github Webhook Authentication Disabled', async () => {
       jest.spyOn(cdng, 'useGetConnector').mockReturnValue(ConnectorResponse as any)
 
       jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
@@ -833,7 +834,60 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
         mutate: jest.fn().mockReturnValue(GetMergeInputSetFromPipelineTemplateWithListInputResponse) as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
+      jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
+      jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
+      const { container } = render(<WrapperComponent />)
+      await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
+      await waitFor(() =>
+        expect(() =>
+          queryByText(document.body, result.current.getString('triggers.triggerConfigurationPanel.listenOnNewWebhook'))
+        ).not.toBeNull()
+      )
+      expect(container).toMatchSnapshot()
+    })
+
+    test('Initial Render - GitHub Webhook: Github Webhook Authentication Enabled', async () => {
+      jest.spyOn(cdng, 'useGetConnector').mockReturnValue(ConnectorResponse as any)
+
+      jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
+        return {
+          data: GetSchemaYaml as any,
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          absolutePath: '',
+          cancel: jest.fn(),
+          response: null
+        }
+      })
+
+      jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
+      jest.spyOn(hooks, 'useQueryParams').mockReturnValue({
+        storeType: 'INLINE',
+        triggerType: 'Webhook',
+        sourceRepo: 'Github'
+      })
+
+      jest.spyOn(pipelineNg, 'useGetInputSetsListForPipeline').mockReturnValue(GetInputSetsResponse as any)
+      jest.spyOn(pipelineNg, 'useGetPipeline').mockReturnValue(GetPipelineResponse as any)
+      jest.spyOn(pipelineNg, 'useGetTemplateFromPipeline').mockReturnValue(GetTemplateFromPipelineResponse as any)
+      jest.spyOn(hooks, 'useMutateAsGet').mockReturnValue(GetTemplateFromPipelineResponse as any)
+      jest.spyOn(pipelineNg, 'useGetTrigger').mockReturnValue({
+        loading: false,
+        refetch: jest.fn(),
+        error: null,
+        data: {
+          status: 'SUCCESS',
+          data: {},
+          metaData: null as unknown as undefined,
+          correlationId: '25df5700-e9a4-49c4-98eb-dea4c371fd6e'
+        }
+      } as any)
+      jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
+        mutate: jest.fn().mockReturnValue(GetMergeInputSetFromPipelineTemplateWithListInputResponse) as unknown
+      } as UseMutateReturn<any, any, any, any, any>)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledTrue as any)
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
       const { container } = render(<WrapperComponent />)
@@ -885,7 +939,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput').mockReturnValue({
         mutate: jest.fn().mockReturnValue(GetMergeInputSetFromPipelineTemplateWithListInputResponse) as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       const { container } = render(<WrapperComponent />)
       await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
       await waitFor(() =>
@@ -935,7 +989,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
         mutate: mockUpdate as unknown
       } as UseMutateReturn<any, any, any, any, any>)
-      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
       const { container } = render(<WrapperComponent />)
       setFieldValue({ container, type: InputTypes.SELECT, fieldId: 'event', value: 'PullRequest' })
       const tab3 = document.body.querySelector('[class*="bp3-tab-list"] [data-tab-id="Pipeline Input"]')

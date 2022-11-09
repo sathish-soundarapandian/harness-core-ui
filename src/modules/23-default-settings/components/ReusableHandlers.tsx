@@ -82,6 +82,7 @@ export const DefaultSettingRadioBtnWithTrueAndFalse: React.FC<DefaultSettingRadi
         onChange={(e: FormEvent<HTMLInputElement>) => {
           onSettingSelectionChange(e.currentTarget.value)
         }}
+        style={{ margin: 0 }}
         items={[
           { label: trueLabel ? getString(trueLabel) : getString('common.true'), value: 'true' },
           { label: falseLabel ? getString(falseLabel) : getString('common.false'), value: 'false' }

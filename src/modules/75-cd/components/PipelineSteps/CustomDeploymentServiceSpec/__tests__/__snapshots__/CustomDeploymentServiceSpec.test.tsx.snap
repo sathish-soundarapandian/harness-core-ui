@@ -75,7 +75,8 @@ exports[`CustomDeploymentServiceSpec tests When stepViewType is Edit render prop
         id="common.variables"
       >
         <div
-          class="tabSubHeading"
+          class="tabSubHeading ng-tooltip-native"
+          data-tooltip-id="CustomDeploymentDeploymentTypeVariables"
         >
           common.variables
         </div>

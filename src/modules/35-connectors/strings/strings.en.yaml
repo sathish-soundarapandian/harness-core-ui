@@ -87,6 +87,7 @@ connectivityMode:
 title:
   customSecretManager: 'Custom Secrets Manager'
   gcpSecretManager: 'GCP Secrets Manager'
+  azureArtifacts: 'Azure Artifacts'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -314,6 +315,10 @@ jenkins:
   jenkins: 'Jenkins'
   jenkinsUrlRequired: 'Jenkins Registry URL is required'
   jenkinsUrl: 'Jenkins Registry URL'
+azureArtifacts:
+  azureArtifactsUrlRequired: Azure Artifacts URL is required
+  tokenRefRequired: Token ref is required
+  azureArtifactsUrl: Azure Artifacts URL
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
 aws:

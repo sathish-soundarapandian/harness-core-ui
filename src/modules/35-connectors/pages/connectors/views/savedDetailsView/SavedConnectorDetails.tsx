@@ -301,6 +301,19 @@ const getDockerSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
   ]
 }
 
+const getAzureArtifactSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.azureArtifacts.azureArtifactsUrl',
+      value: connector?.spec?.azureArtifactsUrl
+    },
+    {
+      label: 'personalAccessToken',
+      value: connector?.spec?.auth?.spec?.spec?.tokenRef
+    }
+  ]
+}
+
 const getJenkinsSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -855,6 +868,8 @@ const getSchemaByType = (
       return getDockerSchema(connector)
     case Connectors.HttpHelmRepo:
       return getHelmHttpSchema(connector)
+    case Connectors.AZURE_ARTIFACTS:
+      return getAzureArtifactSchema(connector)
     case Connectors.OciHelmRepo:
       return getOCIHelmSchema(connector)
     case Connectors.GCP:

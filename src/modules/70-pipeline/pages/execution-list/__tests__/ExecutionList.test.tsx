@@ -104,6 +104,7 @@ const commonRequest = (): any =>
     queryParams: {
       accountIdentifier: 'accountId',
       module: 'cd',
+      filterIdentifier: undefined,
       orgIdentifier: 'orgIdentifier',
       projectIdentifier: 'projectIdentifier',
       page: 0,
@@ -111,6 +112,7 @@ const commonRequest = (): any =>
       sort: 'startTs,DESC',
       searchTerm: undefined,
       status: undefined,
+      repoIdentifier: undefined,
       pipelineIdentifier: undefined,
       myDeployments: undefined
     }

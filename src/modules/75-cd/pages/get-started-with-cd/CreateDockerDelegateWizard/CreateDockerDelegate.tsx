@@ -16,7 +16,8 @@ import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryP
 import {
   validateDockerDelegatePromise,
   ValidateDockerDelegateQueryParams,
-  generateDockerDelegateYAMLPromise
+  generateDockerDelegateYAMLPromise,
+  createDelegateGroupPromise
 } from 'services/portal'
 
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
@@ -134,6 +135,15 @@ export const CreateDockerDelegate = ({
         } else {
           setYaml(dockerYaml)
           setLoader(false)
+          await createDelegateGroupPromise({
+            queryParams: {
+              accountId
+            },
+            body: {
+              ...createParams,
+              delegateType
+            }
+          })
           onSuccessHandler({ delegateCreated: true })
           trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
             category: Category.DELEGATE,

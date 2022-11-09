@@ -128,8 +128,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
       const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
       updateFreeze({ ...freezeObj, oldFreezeObj: { ...freezeObj } })
       setIsActiveFreeze(
-        getFreezeStatus(freezeObjData.data?.currentOrUpcomingWindow, freezeObjData.data?.status === 'Enabled') ===
-          FreezeStatus['ACTIVE']
+        getFreezeStatus(freezeObjData.data, freezeObjData.data?.status === 'Enabled') === FreezeStatus['ACTIVE']
       )
       setIsUpdatingFreeze(false)
     }

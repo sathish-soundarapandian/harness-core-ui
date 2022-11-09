@@ -17,7 +17,8 @@ export const AuthTypes = {
   SERVICE_ACCOUNT: 'ServiceAccount',
   OIDC: 'OpenIdConnect',
   ANNONYMOUS: 'Anonymous',
-  BEARER_TOKEN: 'Bearer Token (HTTP Header)'
+  BEARER_TOKEN: 'Bearer Token (HTTP Header)',
+  PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken'
 }
 
 export enum GitAuthTypes {
@@ -170,6 +171,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.gcpSecretManager'
     case Connectors.SPOT:
       return 'connectors.title.spot'
+    case Connectors.AZURE_ARTIFACTS:
+      return 'connectors.title.azureArtifacts'
     default:
       return 'connector'
   }
@@ -235,6 +238,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'aws-kms'
     case Connectors.CE_AZURE:
     case Connectors.AZURE_REPO:
+      return 'service-azure'
+    case Connectors.AZURE_ARTIFACTS:
       return 'service-azure'
     case Connectors.DATADOG:
       return 'service-datadog'

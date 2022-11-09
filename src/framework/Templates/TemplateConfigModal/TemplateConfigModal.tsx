@@ -389,7 +389,8 @@ const BasicTemplateDetails = (
       const base64 = await toBase64(file)
       formikRef.current?.setFieldValue('icon', base64, true)
     } catch (error) {
-      formikRef.current?.setFieldValue('icon', undefined, true)
+      // setting the value to 'invalid-image' shows a broken image which can be removed
+      formikRef.current?.setFieldValue('icon', 'invalid-image', true)
     } finally {
       setLoading(false)
     }

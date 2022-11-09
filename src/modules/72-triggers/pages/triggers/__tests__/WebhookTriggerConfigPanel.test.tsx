@@ -19,7 +19,12 @@ import { accountPathProps, pipelineModuleParams, triggerPathProps } from '@commo
 import { useStrings } from 'framework/strings'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { getTriggerConfigDefaultProps, getTriggerConfigInitialValues } from './webhookMockConstants'
-import { GetGitTriggerEventDetailsResponse, GetSecretV2PromiseResponse } from './webhookMockResponses'
+import {
+  GetGitTriggerEventDetailsResponse,
+  GetSecretV2PromiseResponse,
+  GithubWebhookAuthenticationEnabledFalse,
+  GithubWebhookAuthenticationEnabledTrue
+} from './webhookMockResponses'
 import WebhookTriggerConfigPanel from '../views/WebhookTriggerConfigPanel'
 
 const params = {
@@ -61,6 +66,7 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledTrue as any)
 
       const { container } = render(<WrapperComponent initialValues={getTriggerConfigInitialValues({})} />)
       await waitFor(() =>
@@ -73,12 +79,17 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
+      jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
 
       const { container } = render(<WrapperComponent initialValues={getTriggerConfigInitialValues({})} />)
       await waitFor(() =>
         queryByText(container, result.current.getString('triggers.triggerConfigurationPanel.listenOnNewWebhook'))
       )
-      expect(queryByText(container, result.current.getString('secrets.secret.configureSecret'))).toBeInTheDocument()
+      const secretInputLabel = `${result.current.getString(
+        'secrets.secret.configureSecret'
+      )} (${result.current.getString('projectsOrgs.optional')})`
+
+      expect(queryByText(container, secretInputLabel)).toBeInTheDocument()
       expect(container).toMatchSnapshot()
     })
     test('Initial Render - Custom Trigger Configuration Panel', async () => {

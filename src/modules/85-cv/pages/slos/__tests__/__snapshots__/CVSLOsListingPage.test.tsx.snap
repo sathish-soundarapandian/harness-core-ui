@@ -866,9 +866,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               >
                 <p
                   class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                  title="userJourney"
+                  title=""
                 >
-                  userJourney
+                  
                 </p>
               </div>
               <div

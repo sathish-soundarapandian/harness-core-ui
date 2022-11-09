@@ -103,7 +103,7 @@ const OrganizationDetailsPage: React.FC = () => {
   const deploymentFreezeCard: ResourceOption[] = [
     {
       label: <String stringID="common.freezeWindows" />,
-      icon: 'nav-settings',
+      icon: 'FreezeWindow',
       colorClass: css.freezeWindows,
       route: routes.toFreezeWindows({ accountId, orgIdentifier }),
       selectable: true

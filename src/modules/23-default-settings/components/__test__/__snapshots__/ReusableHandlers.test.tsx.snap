@@ -46,6 +46,7 @@ exports[`Reusable Components DefaultSettingRadioBtnWithTrueAndFalse 1`] = `
 <div>
   <div
     class="bp3-form-group bp3-inline"
+    style="margin: 0px;"
   >
     <div
       class="bp3-form-content"

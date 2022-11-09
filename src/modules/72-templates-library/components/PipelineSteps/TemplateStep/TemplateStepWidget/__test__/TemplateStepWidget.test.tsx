@@ -61,6 +61,15 @@ describe('<TemplateStepWidgetWithRef /> tests', () => {
               } as JsonNode
             }
           }}
+          customStepProps={{
+            selectedStage: {
+              identifier: 'testStage',
+              name: 'Test Stage',
+              type: 'Deployment',
+              spec: {}
+            },
+            stageIdentifier: 'testStage'
+          }}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
           factory={factory}
         />

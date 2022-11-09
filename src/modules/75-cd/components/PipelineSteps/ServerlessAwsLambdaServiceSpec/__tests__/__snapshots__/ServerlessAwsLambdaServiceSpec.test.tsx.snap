@@ -171,7 +171,8 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
         id="common.variables"
       >
         <div
-          class="tabSubHeading listHeader"
+          class="tabSubHeading listHeader ng-tooltip-native"
+          data-tooltip-id="ServerlessAwsLambdaDeploymentTypeVariables"
         >
           common.variables
         </div>

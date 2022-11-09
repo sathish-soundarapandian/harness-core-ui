@@ -50,7 +50,7 @@ describe('Freeze Window Studio Config Section', () => {
       }
     ])
 
-    const configTab = getByText('freezeWindows.freezeStudio.freezeConfiguration')
+    const configTab = getByText('common.coverage')
     expect(configTab).toBeDefined()
     userEvent.click(configTab)
     expect(await screen.findByText('Add rule')).toBeInTheDocument()
@@ -114,7 +114,7 @@ describe('Freeze Window Studio Config Section', () => {
       }
     ])
 
-    const configTab = getByText('freezeWindows.freezeStudio.freezeConfiguration')
+    const configTab = getByText('common.coverage')
     expect(configTab).toBeDefined()
     userEvent.click(configTab)
     expect(await screen.findByText('Add rule')).toBeInTheDocument()
@@ -199,6 +199,6 @@ describe('Freeze Window Studio Config Section', () => {
     // Move to config Tab
     userEvent.click(continueButton)
 
-    expect(await screen.findByText('freezeWindows.freezeStudio.freezeConfiguration')).toBeInTheDocument()
+    expect(await screen.findByText('common.coverage')).toBeInTheDocument()
   })
 })

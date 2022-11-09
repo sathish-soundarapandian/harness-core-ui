@@ -1,6 +1,6 @@
 This repo contains code used in the [Harness CD Community Edition](https://github.com/harness/harness-cd-community) which is licensed under the [PolyForm Shield License 1.0.0](./licenses/PolyForm-Shield-1.0.0.txt). This repo also contains code belonging to Harness CD Enterprise Plan which is licensed under the [PolyForm Free Trial License 1.0.0](./licenses/PolyForm-Free-Trial-1.0.0.txt). You may obtain a copy of these licenses in the [licenses](./licenses/) directory at the root of this repository.
 
-# Harness Next Gen UI
+# Harness Core UI
 
 Grouped Code Coverage report for master branch: [Coverage Report](https://github.com/harness/harness-core-ui/wiki/Coverage)
 
@@ -22,11 +22,11 @@ Grouped Code Coverage report for master branch: [Coverage Report](https://github
    - Use Homebrew: `brew install node@16`
    - If you already have Node installed, use `nvm` or `n` to install/select correct version. (see https://www.npmjs.com/package/n)
 
-**Note:** Additional installation requirements for M1-based Macs found [here](./docs/M1_macs.md)
+**Note:** Additional installation requirements for M1-based Macs found [here](./docs/M1_mac.md)
 
 2. Install **yarn** package manager
 
-```
+```shell
 $ brew install yarn
 ```
 
@@ -34,14 +34,14 @@ $ brew install yarn
 
 3. Clone this repo
 
-```
+```shell
 $ git clone git@github.com:harness/harness-core-ui.git
 $ cd harness-core-ui
 ```
 
-4. Add config to make Harness Github Package Registry accessible. Before running this step, make sure your github personal access token is authorized for both "wings-software" and "harness", step is here: https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on
+4. Add config to make Harness GitHub Package Registry accessible. Before running this step, make sure your GitHub personal access token is authorized for both "wings-software" and "harness", step is here: https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on
 
-```
+```shell
 $ yarn setup-github-registry
 ```
 
@@ -49,13 +49,13 @@ $ yarn setup-github-registry
 
 5. Create self-assigned certificate before running the app
 
-```
+```shell
 $ yarn generate-certificate
 ```
 
 6. Install/Update/Refresh dependencies
 
-```
+```shell
 $ yarn
 ```
 
@@ -65,7 +65,7 @@ $ yarn
 
 7. Compile/Build the code **and** start the web-server in watch mode
 
-```
+```shell
 $ yarn dev
 ```
 
@@ -73,15 +73,11 @@ $ yarn dev
 
 8. View in the browser
 
-```
 https://localhost:8181
-```
-
-</details>
 
 ### Publishing
 
-```
+```shell
 $ yarn build
 $ yarn docker <tagname>
 ```
@@ -117,7 +113,7 @@ See [src/services/README.md](https://github.com/harness/harness-core-ui/blob/mas
 You can configure the application to use remote environments such as `uat.harness.io`, `qa.harness.io` or `qb.harness.io` to allow local UI development without the need to run backend services. To achieve this, two environment variables are available.
 
 | Variable            | Default value                   | Description                                                                  |
-| ------------------- | ------------------------------- | ---------------------------------------------------------------------------- |
+|---------------------|---------------------------------|------------------------------------------------------------------------------|
 | `BASE_URL`          | `https://qa.harness.io/gateway` | Location of backend services to access                                       |
 | `TARGET_LOCALHOST`  | `true`                          | Whether to use local backend services. Set to `false` to use remote services |
 | `DISABLE_TYPECHECK` | `false`                         | Whether to disable the `ForkTsCheckerWebpackPlugin` for local development    |
@@ -132,19 +128,19 @@ $ TARGET_LOCALHOST=false yarn dev
 
 Run lint checks
 
-```
+```shell
 $ yarn lint
 ```
 
 Run unit tests
 
-```
+```shell
 $ yarn test
 ```
 
-### Enabling Feature Flags in local
+### Enabling feature flags in local
 
-To enable a Feature-Flag in local development mode, just add an entry to `.env` by prefixing the feature flag name with `FF_` and setting its value to `true` and (re)start your development server.
+To enable a feature flag in local development mode, just add an entry to `.env` by prefixing the feature flag name with `FF_` and setting its value to `true` and (re)start your development server.
 
 For example, if you want to enable a feature flag named `MY_FETAURE_FLAG`. Just add an entry `FF_MY_FEATURE_FLAG=true` in `.env` file.
 
@@ -152,20 +148,20 @@ For example, if you want to enable a feature flag named `MY_FETAURE_FLAG`. Just 
 
 ### Hotfix Process
 
-1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For prod environment, you can hit https://app.harness.io/ng/static/version.json to get the currently deployed version. (eg. `0.53.4`)
-2. Create a branch from the corresponding release branch (eg. `release/0.53.x`) which you want to hotfix
+1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For e.g. For prod environment, you can hit https://app.harness.io/ng/static/version.json to get the currently deployed version. (eg. `0.53.4`)
+2. Create a branch from the corresponding release branch (e.g. `release/0.53.x`) which you want to hotfix
 3. Commit your changes on your branch
 4. Bump up the patch version in `package.json` (eg. 0.53.4 -> 0.53.5)
 5. Raise PR with these changes
 6. When this PR gets merged, this [Pipeline](https://stage.harness.io/ng/#/account/wFHXHD0RRQWoO8tIZT5YVw/ci/orgs/Harness/projects/RELEASEBUILDS/pipelines/nextGenUI_release_build/executions) will create a new build for you automatically
 7. Please inform Ops/QE team to deploy your new build, especially in QA, UAT or prod environment.
-8. Make sure to raise a PR with the same changes (minus the version bump) for `develop` branch too. Otherwise your changes will get overriden with next deployment.
+8. Make sure to raise a PR with the same changes (minus the version bump) for `develop` branch too. Otherwise, your changes will get overridden with next deployment.
 
-## For windows environment setup only
+## For Windows environment setup only
 
-#### Download Git bash for windows
+#### Download Git bash for Windows
 
-Use git bash for executing any git command and it is also helpful to run scripts of package.json where shell script is used.
+Use git bash for executing any git command, and it is also helpful to run scripts of package.json where shell script is used.
 
 https://git-scm.com/download/win
 
@@ -183,4 +179,4 @@ Example:-
 1. To run this script "dev": "NODE_ENV=development webpack-dev-server --progress", just change it to "dev": "cross-env NODE_ENV=development webpack-dev-server --progress"
 2. To run shell script "setup-github-registry": "sh scripts/setup-github-registry.sh", just change it to "setup-github-registry": "cross-env scripts/setup-github-registry.sh"
 
-> Note: Similary you can update the scripts part wherever needed as per above to run in windows environment.
+> Note: Similarly you can update the scripts part wherever needed as per above to run in Windows environment.

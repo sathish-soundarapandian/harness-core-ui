@@ -37,3 +37,9 @@ export interface DataSourceTypeValidateFunctionProps {
   sourceType?: string
   dataSourceType?: string
 }
+
+export interface GetDataSourceTypeParams {
+  type?: string
+  dataSourceType?: string
+  isDataSourceTypeSelectorEnabled?: boolean
+}

@@ -77,6 +77,7 @@ describe('Template Schema Validation', () => {
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
 
     cy.contains('span', 'Edit YAML').click()
+    cy.contains('span', 'Enable').click()
 
     cy.get('div[class="view-lines"]').should('be.visible')
     cy.contains('span', 'testStep_Cypress.yaml').should('be.visible')
