@@ -164,6 +164,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
     <OverlaySpinner show={updateGlobalFreezeLoading || getGlobalFreezeLoading} size={Spinner.SIZE_SMALL}>
       <Layout.Horizontal className={css.toggleContainer}>
         <Switch
+          aria-label="Global Freeze Toggle"
           disabled={!canEdit}
           onChange={event => (event.currentTarget.checked ? openEnableFreezeDialog() : openDisableFreezeDialog())}
           className={css.switch}
