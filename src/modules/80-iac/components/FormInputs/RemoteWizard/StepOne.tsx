@@ -68,7 +68,9 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
 
   const newConnectorLabel =
     selectedStore &&
-    `${getString('common.new')} ${getString(ConnectorLabelMap[selectedStore as ConnectorTypes])} ${getString('connector')}`
+    `${getString('common.new')} ${getString(ConnectorLabelMap[selectedStore as ConnectorTypes])} ${getString(
+      'connector'
+    )}`
 
   useEffect(() => {
     const type = get(initialValues, `spec.configuration.spec.store.type`, '')

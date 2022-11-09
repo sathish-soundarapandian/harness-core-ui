@@ -22,7 +22,12 @@ import StepBitbucketAuthentication from '@connectors/components/CreateConnector/
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import { buildBitbucketPayload, buildGithubPayload, buildGitlabPayload, buildGitPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import {
+  buildBitbucketPayload,
+  buildGithubPayload,
+  buildGitlabPayload,
+  buildGitPayload
+} from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 
 import WizardStepOne from './StepOne'

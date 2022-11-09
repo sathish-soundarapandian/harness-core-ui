@@ -55,7 +55,7 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
   const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-      prevStepData?.urlType === GitRepoName.Repo
+    prevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
   const getInitialValues = useCallback(() => {
@@ -150,8 +150,8 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                 ? prevStepData?.connectorRef
                 : prevStepData?.connectorRef?.value
               : prevStepData?.identifier
-                ? prevStepData?.identifier
-                : ''
+              ? prevStepData?.identifier
+              : ''
           })
         }}
       >
@@ -166,29 +166,29 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                   connectionType === GitRepoName.Account &&
                   getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED
                 ) && (
-                    <div className={cx(stepCss.formGroup, stepCss.md)}>
-                      <FormInput.MultiTextInput
-                        multiTextInputProps={{ expressions, allowableTypes }}
-                        label={getString('common.repositoryName')}
-                        placeholder={getString('common.repositoryName')}
-                        name="repoName"
-                      />
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
+                    <FormInput.MultiTextInput
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                      label={getString('common.repositoryName')}
+                      placeholder={getString('common.repositoryName')}
+                      name="repoName"
+                    />
 
-                      {getMultiTypeFromValue(values?.repoName) === MultiTypeInputType.RUNTIME && (
-                        <ConfigureOptions
-                          value={values?.repoName as string}
-                          type="String"
-                          variableName="repoName"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          showAdvanced={true}
-                          onChange={value => setFieldValue('repoName', value)}
-                          isReadonly={isReadonly}
-                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                        />
-                      )}
-                    </div>
-                  )}
+                    {getMultiTypeFromValue(values?.repoName) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={values?.repoName as string}
+                        type="String"
+                        variableName="repoName"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => setFieldValue('repoName', value)}
+                        isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                      />
+                    )}
+                  </div>
+                )}
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.Select
                     name="gitFetchType"
