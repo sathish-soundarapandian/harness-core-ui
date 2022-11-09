@@ -35,7 +35,8 @@ const CEHomePage: React.FC = () => {
 
   const { data, error, refetch, loading } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier: accountId
+    accountIdentifier: accountId,
+    lazy: true
   })
 
   const expiryTime = data?.data?.maxExpiryTime

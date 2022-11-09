@@ -35,6 +35,10 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
     error: limitError,
     refetch: refetchLimit
   } = useFetchLicenseUseAndSummary(moduleName, accountId)
+
+  useEffect(() => {
+    refetchLimit()
+  }, [])
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)
