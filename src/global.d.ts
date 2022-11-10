@@ -184,27 +184,7 @@ declare module 'iac/MicroFrontendApp' {
   export default ChildApp
 }
 
-declare module 'iac/TestStepForm' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'iac/TestInputStep' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'iac/VariableView' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
 declare module 'iac/IacStage' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'iac/StepUtils' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

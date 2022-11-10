@@ -6,8 +6,6 @@
  */
 
 import type routes from '@common/RouteDefinitions'
-import type { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import type { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { ApprovalStageOverview } from '@pipeline/components/CommonPipelineStages/ApprovalStage/ApprovalStageOverview'
 import type { ApprovalStageExecution } from '@pipeline/components/CommonPipelineStages/ApprovalStage/ApprovalStageExecution'
 import type ApprovalAdvancedSpecifications from '@pipeline/components/CommonPipelineStages/ApprovalStage/ApprovalStageAdvanced'
@@ -29,8 +27,6 @@ export interface IacCustomMicroFrontendProps {
     getStyles: typeof getStyles
   }
   customComponents: {
-    FormMultiTypeConnectorField: typeof FormMultiTypeConnectorField
-    VariablesListTable: typeof VariablesListTable
     ApprovalStageOverview: typeof ApprovalStageOverview
     ApprovalStageExecution: typeof ApprovalStageExecution
     ApprovalAdvancedSpecifications: typeof ApprovalAdvancedSpecifications
