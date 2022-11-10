@@ -8,16 +8,7 @@
 import { useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import {
-  useGetLicensesAndSummary,
-  GetLicensesAndSummaryQueryParams,
-  CILicenseSummaryDTO,
-  CFLicenseSummaryDTO,
-  CELicenseSummaryDTO,
-  CDLicenseSummaryDTO,
-  useGetCDLicenseUsageForServiceInstances,
-  useGetCDLicenseUsageForServices
-} from 'services/cd-ng'
+import { useGetCDLicenseUsageForServiceInstances, useGetCDLicenseUsageForServices } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
 import { useGetUsage as useGetCIUsage } from 'services/ci'
