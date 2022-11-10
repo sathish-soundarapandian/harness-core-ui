@@ -120,7 +120,7 @@ describe('<DefaultLayout /> tests', () => {
       expect(() => getByText(BANNER_TEXT)).toThrow()
     })
 
-    test.only('features banner stays dismissed for a module', async () => {
+    test('features banner stays dismissed for a module', async () => {
       featuresFactory.registerFeaturesByModule('cd', { features: [], renderMessage })
       featuresFactory.registerFeaturesByModule('ci', { features: [], renderMessage })
 
