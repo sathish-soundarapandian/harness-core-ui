@@ -1802,7 +1802,6 @@ const routes = {
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
   toCEGovernance: withAccountId(() => `/ce/governance/`),
   toCEGovernancePolicies: withAccountId(() => `/ce/governance/policies/`),
-  toCEGovernancePolicyPacks: withAccountId(() => `/ce/governance/policy-packs/`),
   toCEGovernanceEnforcements: withAccountId(() => `/ce/governance/enforcements/`),
   toCEGovernanceEvaluations: withAccountId(() => `/ce/governance/evaluations/`),
   toCEGovernancePolicyEditor: withAccountId(
