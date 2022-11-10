@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect } from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
+import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Text } from '@harness/uicore'
@@ -102,9 +103,19 @@ export const PrimaryArtifactSource = (props: KubernetesArtifactsProps): React.Re
                 }
               : primarySource
 
+            const updatedInitialValues = isArtifactTemplatePresent
+              ? produce(props.initialValues, draft => {
+                  const identifierValue = get(props.initialValues?.artifacts, `primary.sources[${index}].identifier`)
+                  if (identifierValue) {
+                    set(draft, `artifacts.${artifactPath}.identifier`, `${identifierValue}.template.templateInputs`)
+                  }
+                })
+              : props.initialValues
+
             return (
               <ArtifactInputField
                 {...props}
+                initialValues={updatedInitialValues}
                 artifact={updatedPrimarySource}
                 artifactPath={artifactPath}
                 key={primarySource?.identifier}
