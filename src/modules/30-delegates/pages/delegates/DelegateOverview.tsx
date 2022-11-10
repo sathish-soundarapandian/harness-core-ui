@@ -38,7 +38,8 @@ interface DelegateOverviewProps {
 export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
   delegate,
   delegateProfile,
-  showConnectivityStatus = false
+  showConnectivityStatus = false,
+  className = ''
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<
@@ -55,7 +56,7 @@ export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
     <SectionContainer>
       <SectionContainerTitle>{getString('overview')}</SectionContainerTitle>
 
-      <Container className={css.delegateDetailsContainer}>
+      <Container className={cx(css.delegateDetailsContainer, className)}>
         <Container flex style={{ borderBottom: '0.5px solid #dce0e7' }}>
           <SectionLabelValuePair label={getString('delegate.delegateName')} value={delegate.groupName} />
 

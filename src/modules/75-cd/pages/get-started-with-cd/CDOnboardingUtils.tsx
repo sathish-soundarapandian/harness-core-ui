@@ -327,7 +327,7 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
           tokenRef: ''
         }
       },
-      executeOnDelegate: true,
+      executeOnDelegate: false,
       type: 'Account'
     }
   }
