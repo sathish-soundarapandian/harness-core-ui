@@ -22,22 +22,12 @@ import { FeatureFlag } from '@common/featureFlags'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { iacmStageConfiguration } from '@iac/PipelineStages'
-import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import IacSideNav from './components/IacSideNav'
 import { getStyles } from './Utils'
 import type { IacCustomMicroFrontendProps } from './IacCustomMicroFrontendProps.types'
-import { TestStep } from './PipelineSteps/TestStep/TestStep'
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteIacApp = lazy(() => import('iac/MicroFrontendApp'))
-// eslint-disable-next-line import/no-unresolved
-export const TestStepForm = lazy(() => import('iac/TestStepForm'))
-// eslint-disable-next-line import/no-unresolved
-export const TestInputStep = lazy(() => import('iac/TestInputStep'))
-// eslint-disable-next-line import/no-unresolved
-export const IacStepUtils = import('iac/StepUtils')
-// eslint-disable-next-line import/no-unresolved
-const VariableView = lazy(() => import('iac/VariableView'))
 // eslint-disable-next-line import/no-unresolved
 const IacStageRemote = lazy(() => import('iac/IacStage'))
 
@@ -98,16 +88,6 @@ const IacApp = (props: any): React.ReactElement => (
   />
 )
 
-export const StepVariableView = (props: any): React.ReactElement => (
-  <ChildAppMounter<IacCustomMicroFrontendProps>
-    ChildApp={VariableView}
-    customComponents={customComponents}
-    customFunctions={customFunctions}
-    customHooks={customHooks}
-    {...props}
-  />
-)
-
 export const IacStage = (props: any): React.ReactElement => (
   <ChildAppMounter<IacCustomMicroFrontendProps>
     ChildApp={RemoteIacApp}
@@ -126,7 +106,6 @@ function IacmRoutes(): JSX.Element {
 
   if (iacmEnabled) {
     stagesCollection.registerStageFactory(StageType.IAC, getStageAttributes, getStageEditorImplementation)
-    factory.registerStep(new TestStep())
   }
 
   return (

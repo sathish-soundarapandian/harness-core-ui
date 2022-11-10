@@ -283,10 +283,6 @@ if (!enableFFUI) {
 
 if (!enableIACM) {
   config.resolve.alias['iac/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['iac/TestStepForm'] = ChildAppError
-  config.resolve.alias['iac/TestInputStep'] = ChildAppError
-  config.resolve.alias['iac/StepUtils'] = ChildAppError
-  config.resolve.alias['iac/VariableView'] = ChildAppError
   config.resolve.alias['iac/IacStage'] = ChildAppError
 }
 
