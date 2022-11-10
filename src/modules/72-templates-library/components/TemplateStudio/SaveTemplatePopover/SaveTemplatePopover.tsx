@@ -135,33 +135,28 @@ function SaveTemplatePopover(
 
   const nextCallback = async (
     latestTemplate: NGTemplateInfoConfig,
+    isEdit: boolean,
     updatedGitDetails?: SaveToGitFormInterface,
     updatedStoreMetadata?: StoreMetadata
   ) => {
     const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
-    if (isInlineTemplate) {
-      clear()
-      showSuccess(getString('common.template.saveTemplate.publishTemplate'))
-      if (templateIdentifier === DefaultNewTemplateId) {
-        await customDeleteTemplateCache()
+    if (isEdit) {
+      if (isInlineTemplate) {
+        clear()
+        showSuccess(getString('common.template.updateTemplate.templateUpdated'))
+      }
+      if (updatedGitDetails?.isNewBranch) {
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
         await fetchTemplate({ forceFetch: true, forceUpdate: true })
       }
     } else {
-      // If new template creation
-      if (templateIdentifier === DefaultNewTemplateId) {
-        await customDeleteTemplateCache(updatedGitDetails)
-        navigateToLocation(latestTemplate, updatedGitDetails)
-      } else {
-        // Update template in existing branch
-        if (updatedGitDetails?.isNewBranch === false) {
-          await fetchTemplate({ forceFetch: true, forceUpdate: true })
-        } else {
-          // Update template in new branch
-          navigateToLocation(latestTemplate, updatedGitDetails)
-        }
+      if (isInlineTemplate) {
+        clear()
+        showSuccess(getString('common.template.saveTemplate.publishTemplate'))
       }
+      await customDeleteTemplateCache(updatedGitDetails)
+      navigateToLocation(latestTemplate, updatedGitDetails)
     }
   }
 

@@ -78,6 +78,7 @@ export function useSaveAsTemplate({
   const { saveAndPublish } = useSaveTemplate({
     onSuccessCallback: async (
       latestTemplate: NGTemplateInfoConfig,
+      _isEdit: boolean,
       updatedGitDetails?: SaveToGitFormInterface,
       updatedStoreMetadata?: StoreMetadata
     ) => {

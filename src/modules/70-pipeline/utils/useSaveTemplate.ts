@@ -60,6 +60,7 @@ interface UseSaveTemplateReturnType {
 export interface TemplateContextMetadata {
   onSuccessCallback: (
     latestTemplate: NGTemplateInfoConfig,
+    isEdit: boolean,
     updatedGitDetails?: SaveToGitFormInterface,
     updatedStoreMetadata?: StoreMetadata
   ) => Promise<void>
@@ -114,12 +115,12 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     if (response && response.status === 'SUCCESS') {
       const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
       if (isInlineTemplate) {
-        onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+        onSuccessCallback(latestTemplate, true, updatedGitDetails, storeMetadata)
       }
       return {
         status: response.status,
         nextCallback: () => {
-          onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+          onSuccessCallback(latestTemplate, true, updatedGitDetails, storeMetadata)
         }
       }
     } else {
@@ -156,13 +157,13 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       if (response && response.status === 'SUCCESS') {
         const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
         if (isInlineTemplate) {
-          onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+          onSuccessCallback(latestTemplate, false, updatedGitDetails, storeMetadata)
         }
 
         return {
           status: response.status,
           nextCallback: () => {
-            onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+            onSuccessCallback(latestTemplate, false, updatedGitDetails, storeMetadata)
           }
         }
       } else {
