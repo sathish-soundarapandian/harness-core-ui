@@ -136,9 +136,10 @@ describe('<DefaultLayout /> tests', () => {
       const btn = screen.getByTestId(DISMISS_TEST_ID)
       fireEvent.click(btn)
       expect(() => getByText(BANNER_TEXT)).toThrow()
-
+      console.log(btn, 'hiii')
       // go to CI
       const toCI = getByText('To CI')
+      console.log(toCI, 'hiii22')
       fireEvent.click(toCI)
 
       const txt = screen.getByText(BANNER_TEXT)

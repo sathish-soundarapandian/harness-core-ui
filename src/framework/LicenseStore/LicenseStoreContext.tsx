@@ -5,29 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { isEmpty, isEqual } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 
 import { PageSpinner } from '@harness/uicore'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
-import {
-  getLastModifiedTimeForAllModuleTypesPromise,
-  ModuleLicenseDTO,
-  useGetAccountLicenses,
-  useGetLastModifiedTimeForAllModuleTypes
-} from 'services/cd-ng'
+import { ModuleLicenseDTO, useGetAccountLicenses } from 'services/cd-ng'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import GenericErrorPage, { GENERIC_ERROR_CODES } from '@common/pages/GenericError/GenericErrorPage'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
-import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
 import { VersionMap, LICENSE_STATE_VALUES } from './licenseStoreUtil'
 
 // Only keep GA modules for now
@@ -123,7 +116,6 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
 
   const {
     data: accountLicensesData,
-    refetch: getAccountLicenses,
     error,
     loading: getAccountLicensesLoading
   } = useGetAccountLicenses({
@@ -131,81 +123,6 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       accountIdentifier: accountId
     }
   })
-
-  const { mutate: getVersionMap } = useGetLastModifiedTimeForAllModuleTypes({
-    queryParams: {
-      accountIdentifier: accountId
-    },
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json'
-      }
-    }
-  })
-
-  useEffect(() => {
-    getVersionMap()
-      .then(response => {
-        setState(prevState => ({
-          ...prevState,
-          versionMap: response.data || {}
-        }))
-      })
-      .catch(_err => {
-        // do nothing
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const { requestFeatures } = useFeaturesContext()
-
-  /*
-   * this is to poll versionMap every minute
-   * if versionMap changes, refresh license
-   * and refresh feature context
-   * if versionMap call fails, stop calling
-   */
-  useEffect(() => {
-    fetchVersionMap(state.versionMap)
-    async function fetchVersionMap(versionMap: VersionMap): Promise<void> {
-      try {
-        // We are using promise since mutate was rerendering the whole applications every 60 seconds
-        // even if no data change in store
-        const response = await getLastModifiedTimeForAllModuleTypesPromise({
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          queryParams: { accountIdentifier: accountId, routingId: accountId } as any,
-          body: undefined,
-          requestOptions: {
-            headers: {
-              'content-type': 'application/json'
-            }
-          }
-        })
-        const latestVersionMap = response.data
-        if (latestVersionMap && !isEqual(latestVersionMap, versionMap)) {
-          // refresh licenses
-          getAccountLicenses()
-
-          // refresh feature context
-          requestFeatures(
-            { featureName: FeatureIdentifier.BUILDS },
-            {
-              skipCache: true
-            }
-          )
-
-          // refresh versionMap
-          setState(prevState => ({
-            ...prevState,
-            versionMap: response.data || {}
-          }))
-        }
-      } catch (_err) {
-        return
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const [isLoading, setIsLoading] = useState(true)
 
@@ -236,6 +153,13 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
         licenses[key] = moduleLicenses[moduleLicenses.length - 1]
       }
     })
+    const keys = Object.keys(allLicenses)
+    let finalVersionMap: {
+      [key: string]: number
+    } = {}
+    for (const key of keys) {
+      finalVersionMap[key] = allLicenses[key][0]?.lastModifiedAt as number
+    }
 
     const CIModuleLicenseData = licenses['CI']
     const FFModuleLicenseData = licenses['CF']
@@ -256,7 +180,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       FF_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedFFLicenseState,
       CCM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCCMLicenseState,
       CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCDLicenseState,
-      CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedChaosLicenseState
+      CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedChaosLicenseState,
+      versionMap: finalVersionMap || {}
     }))
 
     if (!getAccountLicensesLoading && !isEmpty(currentUserInfo)) {
