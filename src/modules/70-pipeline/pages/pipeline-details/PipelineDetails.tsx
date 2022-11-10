@@ -30,6 +30,7 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
+
 // add custom event to the global scope
 declare global {
   interface WindowEventMap {
@@ -181,6 +182,16 @@ function PipelinePageHeader(): React.ReactElement {
     })
   ) || { isExact: false }
 
+  const isExecutionHistoryView = !!matchPath(location.pathname, {
+    path: routes.toPipelineDeploymentList({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId,
+      module
+    })
+  })
+
   React.useEffect(() => {
     // For studio tab we do not need information as Page.Header below renders Name and GitRemoteDetails only for other 3 tabs
     if (!isPipelineStudioRoute && pipelineIdentifier !== DefaultNewPipelineId) {
@@ -256,7 +267,10 @@ function PipelinePageHeader(): React.ReactElement {
                     filePath={pipeline?.data?.gitDetails?.filePath}
                     fileUrl={pipeline?.data?.gitDetails?.fileUrl}
                     onBranchChange={onGitBranchChange}
-                    flags={{ readOnly: isTriggersView }}
+                    flags={{
+                      readOnly: isTriggersView,
+                      showBranch: !isExecutionHistoryView
+                    }}
                   />
                 </div>
               ) : isGitSyncEnabled && repoIdentifier ? (

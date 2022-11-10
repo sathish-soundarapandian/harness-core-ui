@@ -15,8 +15,6 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
-import type { Module } from '@common/interfaces/RouteInterfaces'
-import { SettingType } from '@default-settings/interfaces/SettingType.types'
 import type { SourceRepo, TriggerBaseType } from '../TriggerInterface'
 import { ciCodebaseBuild, CUSTOM, TriggerGitEvent } from '../utils'
 
@@ -61,7 +59,13 @@ const checkValidTriggerConfiguration = ({
   }
 
   if (sourceRepo !== CUSTOM) {
-    if (!formikValues['connectorRef'] || !formikValues['event'] || !formikValues['actions']) return false
+    if (
+      !formikValues['connectorRef'] ||
+      !formikValues['event'] ||
+      !formikValues['actions'] ||
+      (formikValues['isGithubWebhookAuthenticationEnabled'] && !formikValues['encryptedWebhookSecretIdentifier'])
+    )
+      return false
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
     else if (
@@ -401,16 +405,4 @@ export const eventTypes = {
   ISSUE_COMMENT: 'IssueComment',
   PR_COMMENT: 'PRComment',
   MR_COMMENT: 'MRComment'
-}
-
-export const getWebhookGithubTriggersAuthenticationSetting = (moduleName: Module): string => {
-  if (moduleName === 'cd') {
-    return SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CD
-  }
-
-  if (moduleName === 'ci') {
-    return SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CI
-  }
-
-  return ''
 }

@@ -840,6 +840,7 @@ function RunPipelineFormBasic({
                           height="55vh"
                           width="100%"
                           isEditModeSupported={canEdit}
+                          comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
                         />
                       </Layout.Vertical>
                     </div>

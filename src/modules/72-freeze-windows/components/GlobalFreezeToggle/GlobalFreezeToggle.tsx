@@ -8,7 +8,16 @@
 import React, { FC } from 'react'
 import { Classes, Intent, Spinner, Switch } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
-import { Dialog, OverlaySpinner, useConfirmationDialog, useToaster, Text, Layout, FontVariation } from '@harness/uicore'
+import {
+  Dialog,
+  OverlaySpinner,
+  useConfirmationDialog,
+  useToaster,
+  Text,
+  Layout,
+  FontVariation,
+  Icon
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -19,6 +28,9 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindow, useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getReadableDateFromDateString, scopeText } from '@freeze-windows/utils/freezeWindowUtils'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { GlobalFreezeScheduleForm } from './GlobalFreezeScheduleForm'
 import css from './GlobalFreezeToggle.module.scss'
 
@@ -33,6 +45,18 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   const { getRBACErrorMessage } = useRBACError()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountId })
+
+  const [canEdit] = usePermission({
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    resource: {
+      resourceType: ResourceType.DEPLOYMENTFREEZE
+    },
+    permissions: [PermissionIdentifier.GLOBAL_DEPLOYMENT_FREEZE]
+  })
 
   const {
     loading: getGlobalFreezeLoading,
@@ -75,10 +99,19 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   const [openEnableFreezeDialog, hideEnableFreezeDialog] = useModalHook(
     () => (
       <Dialog
-        // usePortal={false}
         isOpen
         canOutsideClickClose={false}
-        title={`${getString('freezeWindows.globalFreeze.enableFreezeTitle', { scope: scopeText[scope] })} ?`}
+        title={
+          <Layout.Horizontal padding={{ left: 'xsmall' }} flex={{ alignItems: 'center' }}>
+            <Icon name="warning-icon" size={32} margin={{ right: 'small' }} intent="warning" />
+            <Text
+              font={{ variation: FontVariation.H4 }}
+              tooltip={getString('freezeWindows.globalFreeze.enableFreezeTitleInfo', { scope: scopeText[scope] })}
+            >
+              {`${getString('freezeWindows.globalFreeze.enableFreezeTitle', { scope: scopeText[scope] })} ?`}
+            </Text>
+          </Layout.Horizontal>
+        }
         onClose={hideEnableFreezeDialog}
         enforceFocus={false}
         className={cx(css.dialog, Classes.DIALOG)}
@@ -129,9 +162,10 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
 
   return (
     <OverlaySpinner show={updateGlobalFreezeLoading || getGlobalFreezeLoading} size={Spinner.SIZE_SMALL}>
-      <Layout.Horizontal>
+      <Layout.Horizontal className={css.toggleContainer}>
         <Switch
-          disabled={!updateGlobalFreeze}
+          aria-label="Global Freeze Toggle"
+          disabled={!canEdit}
           onChange={event => (event.currentTarget.checked ? openEnableFreezeDialog() : openDisableFreezeDialog())}
           className={css.switch}
           checked={isGlobalFreezeEnabled}

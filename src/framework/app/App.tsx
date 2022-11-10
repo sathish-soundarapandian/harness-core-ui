@@ -36,8 +36,9 @@ import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
-import './App.scss'
 import { ToolTipProvider } from 'framework/tooltip/TooltipContext'
+import { FeatureFlagsProvider } from 'framework/FeatureFlags/FeatureFlagsProvider'
+import './App.scss'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -187,24 +188,26 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
         <StringsContextProvider initialStrings={props.strings}>
           <ToolTipProvider>
             <PreferenceStoreProvider>
-              <AppStoreProvider>
-                <AppErrorBoundary>
-                  <FeaturesProvider>
-                    <LicenseStoreProvider>
-                      <HelpPanelProvider>
-                        <PermissionsProvider>
-                          <SideNavProvider>
-                            <Suspense fallback={<PageSpinner />}>
-                              <RouteDestinations />
-                            </Suspense>
-                          </SideNavProvider>
-                        </PermissionsProvider>
-                      </HelpPanelProvider>
-                      <ThirdPartyIntegrations />
-                    </LicenseStoreProvider>
-                  </FeaturesProvider>
-                </AppErrorBoundary>
-              </AppStoreProvider>
+              <FeatureFlagsProvider>
+                <AppStoreProvider>
+                  <AppErrorBoundary>
+                    <FeaturesProvider>
+                      <LicenseStoreProvider>
+                        <HelpPanelProvider>
+                          <PermissionsProvider>
+                            <SideNavProvider>
+                              <Suspense fallback={<PageSpinner />}>
+                                <RouteDestinations />
+                              </Suspense>
+                            </SideNavProvider>
+                          </PermissionsProvider>
+                        </HelpPanelProvider>
+                        <ThirdPartyIntegrations />
+                      </LicenseStoreProvider>
+                    </FeaturesProvider>
+                  </AppErrorBoundary>
+                </AppStoreProvider>
+              </FeatureFlagsProvider>
             </PreferenceStoreProvider>
           </ToolTipProvider>
         </StringsContextProvider>

@@ -1771,10 +1771,10 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@^1.73.0":
-  version "1.73.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.73.0/8ad43574200427d450fb70b3d2a0ed6b087dfec1#8ad43574200427d450fb70b3d2a0ed6b087dfec1"
-  integrity sha512-6EiUktAQttGlL/qNEzWeTmXIwaAzk5sOYGNlW9C7CuD59GEzezpWUH+t+ZT63wrpNCZKhN6bJz2whvkQlM/kpA==
+"@harness/icons@^1.75.0":
+  version "1.75.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.75.0/d4b221903558691d86528a29edca4bab4d302349#d4b221903558691d86528a29edca4bab4d302349"
+  integrity sha512-l9J+wub+0Yy47u5IkYSN749tNQX703eI9+FFvg2/hv+Bck3Wf73A06jruYraMzqWdlFGcOZaQoFPRE0fCJsqpg==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1816,15 +1816,31 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@3.86.0":
-  version "3.86.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.86.0/e41afd46e56b4837f0ec6d014093c9ba5f92609a#e41afd46e56b4837f0ec6d014093c9ba5f92609a"
-  integrity sha512-opV6resTFw7E2+UjaCXbOCbF9P9PSbu8J+7K3+GRCNPVau0QrizjKvBx79h9SeMnFH5nxluRABxH3hus78ftFQ==
+"@harness/uicore@^3.89.0":
+  version "3.89.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.89.0/8326512dc81c67c091b047b48cc12f8114f0b3b3#8326512dc81c67c091b047b48cc12f8114f0b3b3"
+  integrity sha512-o9ubHk7epT934u0IVv2MacquavJytL4Fiz3LnttgE6pIONA9mc/OwZFIwqhYS/jxJiXW70lrfvgle4trUXbV+A==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
   resolved "https://npm.pkg.github.com/download/@harness/use-modal/1.1.0/693a3bb3e6ea5d3ec02d301316a8a940773fefec4d88019302fc57428fc913c6#98ff8498247e27c239626ff1b195797e4c69882c"
   integrity sha512-cpbd8xUfbkz1jA9ANGlbLjd1bC+aP3/SJ66j7V3ErsHIv6apK6B8eTgL4N7pnMiTemuTNyjhGvsGCZOF9FO6Pg==
+
+"@harnessio/ff-javascript-client-sdk@^1.4.12":
+  version "1.4.14"
+  resolved "https://registry.yarnpkg.com/@harnessio/ff-javascript-client-sdk/-/ff-javascript-client-sdk-1.4.14.tgz#e2b8237f2c1e490d59cfc65ae3c1fe8c73be8e39"
+  integrity sha512-VJsScAE6Lb5m4HZg5yxFUMFKNef4YGkVIApMsvUukkqXiIz+uEhqp44Lj8i76oe26vfcipmLCba5nVSNxln++g==
+  dependencies:
+    jwt-decode "^3.1.2"
+    mitt "^2.1.0"
+
+"@harnessio/ff-react-client-sdk@^1.0.0-alpha.12":
+  version "1.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/@harnessio/ff-react-client-sdk/-/ff-react-client-sdk-1.0.0-alpha.12.tgz#5cc0056000e2e198dadb2030cf77829b83c61bf8"
+  integrity sha512-tXOeyHsbcFNWlmCBzsk+TAN+jQM8RccGErOD/uSmLEAKKD/mYyf1qrfXij9RyhIKrPS6huJrtuiDYTEidnMd9w==
+  dependencies:
+    "@harnessio/ff-javascript-client-sdk" "^1.4.12"
+    lodash.omit "^4.5.0"
 
 "@harnessio/oats-cli@^2.0.0":
   version "2.0.0"
@@ -11245,6 +11261,11 @@ jws@^3.2.2:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
 
+jwt-decode@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
+
 keyv@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-3.1.0.tgz#ecc228486f69991e49e9476485a5be1e8fc5c4d9"
@@ -11631,6 +11652,11 @@ lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
+lodash.omit@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.omit/-/lodash.omit-4.5.0.tgz#6eb19ae5a1ee1dd9df0b969e66ce0b7fa30b5e60"
+  integrity sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==
 
 lodash.once@^4.0.0:
   version "4.1.1"
@@ -12227,6 +12253,11 @@ minizlib@^2.1.1:
   dependencies:
     minipass "^3.0.0"
     yallist "^4.0.0"
+
+mitt@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mitt/-/mitt-2.1.0.tgz#f740577c23176c6205b121b2973514eade1b2230"
+  integrity sha512-ILj2TpLiysu2wkBbWjAmww7TkZb65aiQO+DkVdUTBpBXq+MHYiETENkKFMtsJZX1Lf4pe4QOrTSjIfUwN5lRdg==
 
 mixin-deep@^1.2.0:
   version "1.3.2"

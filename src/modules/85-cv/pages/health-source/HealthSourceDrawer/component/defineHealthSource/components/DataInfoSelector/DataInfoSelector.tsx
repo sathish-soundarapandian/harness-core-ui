@@ -44,7 +44,7 @@ export default function DataInfoSelector({ isEdit }: { isEdit?: boolean }): JSX.
         }
       })
     }
-  }, [accountId, connectorRef, orgIdentifier, projectIdentifier, region])
+  }, [accountId, connectorRef, orgIdentifier, projectIdentifier, region, isEdit])
 
   const regionPlaceholderText = regionsLoading
     ? getString('loading')
@@ -73,7 +73,7 @@ export default function DataInfoSelector({ isEdit }: { isEdit?: boolean }): JSX.
         items={workspaceItems}
         placeholder={workspacePlaceholderText}
         name={DataSourceTypeFieldNames.WorkspaceId}
-        disabled={workspaceLoading || isEdit || !region}
+        disabled={workspaceLoading || isEdit || !region || !connectorRef}
         label={getString('cv.healthSource.awsWorkspaceLabel')}
         tooltipProps={{ dataTooltipId: 'healthSourcesAWSWorkspace' }}
       />

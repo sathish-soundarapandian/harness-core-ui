@@ -145,6 +145,18 @@ export interface ImagePathProps<T> {
   prevStepData?: ConnectorConfigDTO
 }
 
+export interface AzureArtifactsInitialValues {
+  identifier?: string
+  versionType?: string
+  scope: string
+  project?: string
+  feed: string
+  packageType: string
+  package: string
+  version?: string
+  versionRegex?: string
+}
+
 export interface AmazonS3ArtifactProps {
   key: string
   name: string
@@ -332,6 +344,7 @@ export interface ArtifactTagHelperText {
   artifactArrayPath?: string
   versionPath?: string
   packageName?: string
+  feed?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType

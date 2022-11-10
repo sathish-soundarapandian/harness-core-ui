@@ -6,7 +6,7 @@
  */
 
 import type { Schema } from 'yup'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName, SelectOption } from '@wings-software/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
 import { NameSchema } from '@common/utils/Validation'
@@ -65,7 +65,7 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
   GithubPackageRegistry: 'service-github-package',
-  AzureArtifacts: 'service-github',
+  AzureArtifacts: 'microsoft-azure',
   AmazonMachineImage: 'service-ami'
 }
 
@@ -82,7 +82,7 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
-  AzureArtifacts: 'pipeline.artifactsSelection.azureArtifactRegistryTitle',
+  AzureArtifacts: 'connectors.title.azureArtifacts',
   AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle'
 }
 
@@ -99,7 +99,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
   GithubPackageRegistry: 'GithubPackageRegistry',
-  AmazonMachineImage: 'AmazonMachineImage'
+  AmazonMachineImage: 'AmazonMachineImage',
+  AzureArtifacts: 'AzureArtifacts'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -114,6 +115,7 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
   GithubPackageRegistry: Connectors.GITHUB,
+  AzureArtifacts: Connectors.AZURE_ARTIFACTS,
   AmazonMachineImage: Connectors.AWS
 }
 
@@ -129,6 +131,7 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
   GithubPackageRegistry: 'Github',
+  AzureArtifacts: 'Azure Artifacts',
   AmazonMachineImage: 'AWS'
 }
 
@@ -209,6 +212,17 @@ export const tagOptions: IOptionProps[] = [
   {
     label: 'Regex',
     value: 'regex'
+  }
+]
+
+export const scopeOptions: SelectOption[] = [
+  {
+    label: 'Project',
+    value: 'project'
+  },
+  {
+    label: 'Org',
+    value: 'org'
   }
 ]
 

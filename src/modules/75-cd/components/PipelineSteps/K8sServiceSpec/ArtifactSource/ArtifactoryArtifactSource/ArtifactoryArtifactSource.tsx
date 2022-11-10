@@ -609,39 +609,21 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               />
             )}
           </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) && isGenericArtifactory && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.artifactDirectory')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactDirectory`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
-                onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
-                fieldPath={`artifacts.${artifactPath}.spec.artifactDirectory`}
-                template={template}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactDirectory`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactDirectory`)}
-                type="String"
-                variableName="artifactDirectory"
-                showRequiredField={false}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactDirectory`, value)
-                }}
-              />
-            )}
-          </div>
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) && isGenericArtifactory && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.artifactDirectory')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactDirectory`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
+              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
+              fieldPath={`artifacts.${artifactPath}.spec.artifactDirectory`}
+              template={template}
+            />
+          )}
+
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && !isGenericArtifactory && (
               <FormInput.MultiTypeInput

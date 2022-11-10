@@ -130,35 +130,16 @@ const ManifestGitStoreRuntimeFields = ({
 
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
-          <div className={css.verticalSpacingInput}>
-            <TextFieldInputSetView
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
-              name={`${path}.${manifestPath}.spec.store.spec.branch`}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              label={getString('pipelineSteps.deploy.inputSet.branch')}
-              fieldPath={`${manifestPath}.spec.store.spec.branch`}
-              template={template}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.branch`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.branch`)}
-            type="String"
-            variableName="branch"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.branch`, value)
+          <TextFieldInputSetView
+            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
+            name={`${path}.${manifestPath}.spec.store.spec.branch`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
             }}
+            label={getString('pipelineSteps.deploy.inputSet.branch')}
+            fieldPath={`${manifestPath}.spec.store.spec.branch`}
+            template={template}
           />
         )}
       </div>

@@ -50,5 +50,12 @@ export default function CFPipelineDeploymentList(): React.ReactElement {
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  return <ExecutionList onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
+  return (
+    <ExecutionList
+      onRunPipeline={onRunPipeline}
+      isPipelineInvalid={isPipelineInvalid}
+      showBranchFilter
+      repoName={repoName}
+    />
+  )
 }

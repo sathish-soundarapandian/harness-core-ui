@@ -189,6 +189,7 @@ export const getHelpeTextForTags = (
     packageName?: string
     artifactArrayPath?: string
     versionPath?: string
+    feed?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -211,12 +212,16 @@ export const getHelpeTextForTags = (
     artifactId,
     groupId,
     packageName,
+    feed,
     artifactArrayPath,
     versionPath
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
     invalidFields.push(getString('connector'))
+  }
+  if (!feed || getMultiTypeFromValue(feed) === MultiTypeInputType.RUNTIME) {
+    invalidFields.push(getString('pipeline.artifactsSelection.feed'))
   }
   if (
     repositoryName !== undefined &&
@@ -653,4 +658,8 @@ export const isSshOrWinrmDeploymentType = (deploymentType: string): boolean => {
 
 export const withoutSideCar = (deploymentType: string): boolean => {
   return isSshOrWinrmDeploymentType(deploymentType)
+}
+
+export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']) => {
+  return `${selectedDeploymentType}DeploymentTypeVariables`
 }

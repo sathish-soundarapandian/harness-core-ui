@@ -850,7 +850,8 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                       id="common.variables"
                     >
                       <div
-                        class="tabSubHeading listHeader"
+                        class="tabSubHeading listHeader ng-tooltip-native"
+                        data-tooltip-id="KubernetesDeploymentTypeVariables"
                       >
                         common.variables
                       </div>

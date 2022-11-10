@@ -64,6 +64,7 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'PROMETHEUS':
     case 'Prometheus':
     case 'AwsPrometheus':
+    case 'AWS_PROMETHEUS':
       return 'service-prometheus'
     //TODO one type will be removed once it is full deprecated from backend.
     case 'STACKDRIVER_LOG':
@@ -94,6 +95,7 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'ErrorTracking':
       return 'error-tracking'
     case HealthSourceTypes.CloudWatchMetrics:
+    case 'CLOUDWATCH_METRICS':
       return 'service-aws'
     default:
       return 'placeholder'

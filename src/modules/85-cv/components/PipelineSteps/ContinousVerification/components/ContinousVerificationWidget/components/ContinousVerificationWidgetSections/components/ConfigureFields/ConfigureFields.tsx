@@ -64,6 +64,7 @@ export default function ConfigureFields(props: {
       case VerificationTypes.Bluegreen:
       case VerificationTypes.Canary:
       case VerificationTypes.Rolling:
+      case VerificationTypes.Auto:
         return (
           <>
             <div className={stepCss.formGroup}>

@@ -122,7 +122,6 @@ export const RenderColumnDetails: Renderer<CellProps<ConnectorResponse>> = ({ ro
 
 export const RenderGitDetails: Renderer<CellProps<ConnectorResponse>> = ({ row }) => {
   const data = row.original
-
   return data.gitDetails ? (
     <div className={css.wrapper}>
       <Layout.Horizontal>

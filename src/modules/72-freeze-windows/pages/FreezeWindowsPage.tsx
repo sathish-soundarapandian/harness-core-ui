@@ -37,6 +37,7 @@ import { useComputedFreezeStatusMap } from '@freeze-windows/hooks/useComputedFre
 import freezeWindowsIllustration from '@freeze-windows/images/freeze-windows-illustration.svg'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
+import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
@@ -145,7 +146,7 @@ function _FreezeWindowsPage(): React.ReactElement {
         retryOnError={refetch}
         noData={{
           when: () => !pageFreezeSummaryResponse?.content?.length,
-          image: freezeWindowsIllustration,
+          image: hasFilter ? EmptySearchResults : freezeWindowsIllustration,
           messageTitle: hasFilter
             ? getString('common.filters.noResultsFound')
             : getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope }),

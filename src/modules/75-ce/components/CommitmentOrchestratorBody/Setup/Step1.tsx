@@ -33,7 +33,7 @@ const Step1: React.FC = () => {
       <Container>
         <div>
           <Text inline font={{ variation: FontVariation.BODY }}>
-            {getString('ce.commitmentOrchestration.coverage') + ' '}
+            {getString('common.coverage') + ' '}
           </Text>
           <Text inline>{coverage === RECOMMENDED_COVERAGE ? `(${getString('common.recommended')})` : ''}</Text>
         </div>

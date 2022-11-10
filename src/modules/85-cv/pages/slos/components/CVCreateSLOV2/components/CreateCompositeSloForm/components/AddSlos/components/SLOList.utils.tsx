@@ -26,7 +26,8 @@ export const getUpdatedSLOObjectives = (
       orgIdentifier,
       projectIdentifier,
       serviceLevelObjectiveRef: item?.sloIdentifier,
-      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
+      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight),
+      ...item
     }
   })
   return updatedSLOObjective
@@ -75,16 +76,17 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
 
 export const RenderUserJourney: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
   const slo = row.original
-  const { userJourneyName = '' } = slo
-  return (
+  const { userJourneys = [] } = slo || {}
+  return userJourneys?.map(userJourney => (
     <Text
+      key={userJourney.identifier}
       className={css.titleInSloTable}
-      title={userJourneyName}
+      title={userJourney.name}
       font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
     >
-      {userJourneyName}
+      {userJourney.name}
     </Text>
-  )
+  ))
 }
 
 export const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
@@ -111,6 +113,15 @@ export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) =>
       font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
     >
       {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+    </Text>
+  )
+}
+
+export const RenderSLIType: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
+  const slo = row.original
+  return (
+    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+      {slo?.sliType}
     </Text>
   )
 }
@@ -160,10 +171,10 @@ export const resetSLOWeightage = (
   const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
   const updatedSLOObjective = selectedSlos.map((item, index) => {
     return {
+      ...item,
       accountId,
       orgIdentifier,
       projectIdentifier,
-      serviceLevelObjectiveRef: item.serviceLevelObjectiveRef,
       weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
     }
   })

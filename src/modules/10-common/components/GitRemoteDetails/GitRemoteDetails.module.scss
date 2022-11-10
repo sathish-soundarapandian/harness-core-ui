@@ -6,8 +6,9 @@
  */
 
 .wrapper {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+
   &.normalInputStyle {
     .repoDetails,
     .branchSelector {

@@ -61,6 +61,7 @@ import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmCon
 import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
 import CreateGCPSecretManager from '../CreateConnector/GCPSecretManager/CreateGCPSecretManager'
 import SpotConnector from '../CreateConnector/SpotConnector/SpotConnector'
+import CreateAzureArtifactsConnector from '../CreateConnector/AzureArtifactConnector/CreateAzureArtifactConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -202,6 +203,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG ? <CreateGCPSecretManager {...commonProps} /> : null
     case Connectors.SPOT:
       return SPOT_ELASTIGROUP_NG ? <SpotConnector {...commonProps} /> : null
+    case Connectors.AZURE_ARTIFACTS:
+      return <CreateAzureArtifactsConnector {...commonProps} />
     default:
       return null
   }

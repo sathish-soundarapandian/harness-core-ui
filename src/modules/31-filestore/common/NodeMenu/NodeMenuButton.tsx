@@ -25,9 +25,10 @@ export type Item = NodeMenuItem | '-'
 export interface NodeMenuButtonProps extends ButtonProps {
   items: Item[]
   position: PopoverPosition
+  isReadonly?: boolean
 }
 
-const NodeMenuButton = ({ items, position }: NodeMenuButtonProps): ReactElement => {
+const NodeMenuButton = ({ items, position, isReadonly = false }: NodeMenuButtonProps): ReactElement => {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -67,6 +68,7 @@ const NodeMenuButton = ({ items, position }: NodeMenuButtonProps): ReactElement 
     >
       <Button
         minimal
+        disabled={isReadonly}
         intent="primary"
         icon="Options"
         withoutBoxShadow

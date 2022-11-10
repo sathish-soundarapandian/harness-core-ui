@@ -67,30 +67,10 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SETTING, {
   }
 })
 
-DefaultSettingsFactory.registerCategory('CD', {
-  icon: 'cd-main',
-  label: 'deploymentsText',
-  settingsAndGroupDisplayOrder: [SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CD],
-  modulesWhereCategoryWillBeDisplayed: ['cd']
-})
-
-DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CD, {
+DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION, {
   label: 'defaultSettings.mandateWebhookSecretsGithubTriggers',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
-  settingCategory: 'CD'
-})
-
-DefaultSettingsFactory.registerCategory('CI', {
-  icon: 'ci-main',
-  label: 'buildsText',
-  settingsAndGroupDisplayOrder: [SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CI],
-  modulesWhereCategoryWillBeDisplayed: ['ci']
-})
-
-DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION_CI, {
-  label: 'defaultSettings.mandateWebhookSecretsGithubTriggers',
-  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
-  settingCategory: 'CI'
+  settingCategory: 'CORE'
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {

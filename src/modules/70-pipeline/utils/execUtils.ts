@@ -245,11 +245,13 @@ const processStepGroupSteps = ({
         isNestedGroup
       )
       if (nodeData.name === 'parallel') {
-        steps.push({
-          parallel: childrenNodes.map(node => ({
-            step: { ...node, ...getNodeConditions(node as ExecutionNode), graphType: PipelineGraphType.STEP_GRAPH }
-          }))
-        })
+        if (!isEmpty(childrenNodes)) {
+          steps.push({
+            parallel: childrenNodes.map(node => ({
+              step: { ...node, ...getNodeConditions(node as ExecutionNode), graphType: PipelineGraphType.STEP_GRAPH }
+            }))
+          })
+        }
       } else {
         steps.push(
           ...childrenNodes.map(node => ({
@@ -487,60 +489,62 @@ ProcessGroupItemArgs): void => {
     const childStep = nodeMap?.[childId]
 
     /** If we have parallel steps then create parallel object so that it can be processed by StepGroupGraphNode to create a Graph inside step group **/
-    if (childStep?.name === 'parallel' && nodeAdjacencyListMap?.[childStep?.uuid as string]?.children?.length) {
-      const stepGroupChildrenNodes = nodeAdjacencyListMap?.[childStep?.uuid as string]?.children
+    if (childStep?.name === 'parallel') {
+      if (nodeAdjacencyListMap?.[childStep?.uuid as string]?.children?.length) {
+        const stepGroupChildrenNodes = nodeAdjacencyListMap?.[childStep?.uuid as string]?.children
 
-      steps.push({
-        parallel: stepGroupChildrenNodes?.map(childItemId => {
-          const stepNodeData = nodeMap?.[childItemId]
-          const nodeStrategyType =
-            stepNodeData?.stepType === NodeType.STRATEGY
-              ? ((stepNodeData?.stepParameters?.strategyType || 'MATRIX') as string)
-              : (stepNodeData?.stepType as string)
+        steps.push({
+          parallel: stepGroupChildrenNodes?.map(childItemId => {
+            const stepNodeData = nodeMap?.[childItemId]
+            const nodeStrategyType =
+              stepNodeData?.stepType === NodeType.STRATEGY
+                ? ((stepNodeData?.stepParameters?.strategyType || 'MATRIX') as string)
+                : (stepNodeData?.stepType as string)
 
-          const stepData =
-            isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP
-              ? processStepGroupSteps({
-                  nodeAdjacencyListMap,
-                  id: stepNodeData?.uuid as string,
-                  nodeMap,
-                  rootNodes,
-                  isNestedGroup
-                })
-              : []
+            const stepData =
+              isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP
+                ? processStepGroupSteps({
+                    nodeAdjacencyListMap,
+                    id: stepNodeData?.uuid as string,
+                    nodeMap,
+                    rootNodes,
+                    isNestedGroup
+                  })
+                : []
 
-          return {
-            step: {
-              //strategy
-              ...stepNodeData,
-              ...getNodeConditions(stepNodeData as ExecutionNode),
-              type: nodeStrategyType,
-              nodeType: nodeStrategyType,
-              graphType: PipelineGraphType.STEP_GRAPH,
-              isNestedGroup,
-              data: {
+            return {
+              step: {
+                //strategy
                 ...stepNodeData,
+                ...getNodeConditions(stepNodeData as ExecutionNode),
+                type: nodeStrategyType,
+                nodeType: nodeStrategyType,
                 graphType: PipelineGraphType.STEP_GRAPH,
-                conditionalExecutionEnabled: getConditionalExecutionFlag(stepNodeData?.nodeRunInfo),
-                ...((isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP) && {
-                  isNestedGroup: true, // strategy in step_group
-                  type: nodeStrategyType,
-                  nodeType: nodeStrategyType,
-                  maxParallelism: stepNodeData?.stepParameters?.maxConcurrency,
-                  stepGroup: {
-                    ...stepNodeData,
-                    graphType: PipelineGraphType.STEP_GRAPH,
+                isNestedGroup,
+                data: {
+                  ...stepNodeData,
+                  graphType: PipelineGraphType.STEP_GRAPH,
+                  conditionalExecutionEnabled: getConditionalExecutionFlag(stepNodeData?.nodeRunInfo),
+                  ...((isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP) && {
+                    isNestedGroup: true, // strategy in step_group
                     type: nodeStrategyType,
                     nodeType: nodeStrategyType,
-                    steps: stepData,
-                    maxParallelism: stepNodeData?.stepParameters?.maxConcurrency
-                  }
-                })
+                    maxParallelism: stepNodeData?.stepParameters?.maxConcurrency,
+                    stepGroup: {
+                      ...stepNodeData,
+                      graphType: PipelineGraphType.STEP_GRAPH,
+                      type: nodeStrategyType,
+                      nodeType: nodeStrategyType,
+                      steps: stepData,
+                      maxParallelism: stepNodeData?.stepParameters?.maxConcurrency
+                    }
+                  })
+                }
               }
             }
-          }
-        })
-      } as ParallelStepPipelineGraphState)
+          })
+        } as ParallelStepPipelineGraphState)
+      }
     } else {
       const childStepIconData = getIconDataBasedOnType(childStep)
 

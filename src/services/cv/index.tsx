@@ -881,7 +881,7 @@ export interface CloudWatchMetricDefinition {
 export type CloudWatchMetricsHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: CloudWatchMetricDefinition[]
-  metricThresholds?: TimeSeriesMetricPackDTO[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
   region: string
 }
 
@@ -1065,6 +1065,7 @@ export type CustomHealthSourceLogSpec = HealthSourceSpec & {
 
 export type CustomHealthSourceMetricSpec = HealthSourceSpec & {
   metricDefinitions?: CustomHealthMetricDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export type CustomSecretManager = ConnectorConfigDTO & {
@@ -1674,7 +1675,6 @@ export interface Error {
     | 'NO_AVAILABLE_DELEGATES'
     | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
-    | 'DELEGATE_NOT_REGISTERED'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
     | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
@@ -1771,6 +1771,7 @@ export interface Error {
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2091,7 +2092,6 @@ export interface Failure {
     | 'NO_AVAILABLE_DELEGATES'
     | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
-    | 'DELEGATE_NOT_REGISTERED'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
     | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
@@ -2188,6 +2188,7 @@ export interface Failure {
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4161,7 +4162,6 @@ export interface ResponseMessage {
     | 'NO_AVAILABLE_DELEGATES'
     | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
-    | 'DELEGATE_NOT_REGISTERED'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
     | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
@@ -4258,6 +4258,7 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5098,6 +5099,18 @@ export interface SLIRecord {
   version?: number
 }
 
+export interface SLODashboardApiFilter {
+  compositeSLOIdentifier?: string
+  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  monitoredServiceIdentifier?: string
+  searchFilter?: string
+  sliTypes?: ('Availability' | 'Latency')[]
+  sloTargetFilterDTO?: SLOTargetFilterDTO
+  targetTypes?: ('Rolling' | 'Calender')[]
+  type?: 'Simple' | 'Composite'
+  userJourneyIdentifiers?: string[]
+}
+
 export interface SLODashboardDetail {
   createdAt?: number
   description?: string
@@ -5187,29 +5200,30 @@ export interface SLOHealthIndicator {
 export interface SLOHealthListView {
   burnRate: number
   description?: string
-  environmentIdentifier: string
-  environmentName: string
+  environmentIdentifier?: string
+  environmentName?: string
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  healthSourceIdentifier: string
-  healthSourceName: string
-  monitoredServiceIdentifier: string
-  monitoredServiceName: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
   name: string
   noOfActiveAlerts: number
-  noOfMaximumAlerts: number
-  serviceIdentifier: string
-  serviceName: string
+  serviceIdentifier?: string
+  serviceName?: string
+  sliType?: 'Availability' | 'Latency'
   sloIdentifier: string
   sloTargetPercentage: number
   sloTargetType: 'Rolling' | 'Calender'
+  sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   totalErrorBudget: number
-  userJourneyIdentifier: string
-  userJourneyName: string
+  userJourneyName?: string
+  userJourneys: UserJourneyDTO[]
 }
 
 export interface SLORiskCountResponse {
@@ -5224,6 +5238,11 @@ export interface SLOTarget {
 
 export interface SLOTargetDTO {
   sloTargetPercentage: number
+  spec: SLOTargetSpec
+  type?: 'Rolling' | 'Calender'
+}
+
+export interface SLOTargetFilterDTO {
   spec: SLOTargetSpec
   type?: 'Rolling' | 'Calender'
 }
@@ -5469,6 +5488,7 @@ export interface SplunkMetricDefinition {
 export type SplunkMetricHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: SplunkMetricDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export interface SplunkSavedSearch {
@@ -6213,7 +6233,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -9620,7 +9640,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9634,7 +9654,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -9649,7 +9669,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9663,7 +9683,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9675,7 +9695,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9684,7 +9704,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    UpdateMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -12096,6 +12116,7 @@ export interface GetServiceLevelObjectivesRiskCountQueryParams {
   sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  filter?: string
 }
 
 export type GetServiceLevelObjectivesRiskCountProps = Omit<
@@ -12214,9 +12235,9 @@ export interface GetSLOHealthListViewQueryParams {
   sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  filter?: string
   pageNumber?: number
   pageSize?: number
-  filter?: string
 }
 
 export type GetSLOHealthListViewProps = Omit<
@@ -12262,6 +12283,73 @@ export const getSLOHealthListViewPromise = (
     props,
     signal
   )
+
+export interface GetSLOHealthListViewV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetSLOHealthListViewV2Props = Omit<
+  MutateProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>,
+  'path' | 'verb'
+>
+
+/**
+ * get slo list view
+ */
+export const GetSLOHealthListViewV2 = (props: GetSLOHealthListViewV2Props) => (
+  <Mutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>
+    verb="POST"
+    path={`/slo-dashboard/widgets/list`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSLOHealthListViewV2Props = Omit<
+  UseMutateProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * get slo list view
+ */
+export const useGetSLOHealthListViewV2 = (props: UseGetSLOHealthListViewV2Props) =>
+  useMutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>(
+    'POST',
+    `/slo-dashboard/widgets/list`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get slo list view
+ */
+export const getSLOHealthListViewV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >('POST', getConfig('cv/api'), `/slo-dashboard/widgets/list`, props, signal)
 
 export interface GetServiceLevelObjectivesV2QueryParams {
   accountId: string

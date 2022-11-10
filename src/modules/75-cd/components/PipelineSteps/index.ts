@@ -82,6 +82,7 @@ import { ShellScriptProvisionStep } from './ShellScriptProvision/ShellScriptProv
 import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/ElastigroupInfraSpec'
 import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
 import { EmailStep } from './EmailStep/EmailStep'
+import { ElastigroupRollbackStep } from './ElastigroupRollbackStep/ElastigroupRollbackStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -158,3 +159,4 @@ factory.registerStep(new CustomDeploymentInfrastructureSpec())
 factory.registerStep(new ShellScriptProvisionStep())
 factory.registerStep(new ElastigroupInfrastructureSpec())
 factory.registerStep(new ElastigroupServiceSpec())
+factory.registerStep(new ElastigroupRollbackStep())

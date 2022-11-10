@@ -283,7 +283,7 @@ Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   // clear any cached values
   cy.get('body').then($body => {
     if ($body.text().includes('Unsaved changes')) {
-      cy.contains('span', 'Discard').click()
+      cy.contains('span', 'Discard').click({ force: true })
     }
   })
 

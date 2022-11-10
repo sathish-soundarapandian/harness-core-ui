@@ -22,7 +22,8 @@ import {
   Nexus2InitialValuesType,
   RepositoryPortOrServer,
   TagTypes,
-  AmazonMachineImageInitialValuesType
+  AmazonMachineImageInitialValuesType,
+  AzureArtifactsInitialValues
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -77,6 +78,13 @@ export const helperTextData = (
   connectorIdValue: string
 ): ArtifactTagHelperText => {
   switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+      return {
+        package: formik.values?.package,
+        project: formik.values?.project,
+        feed: formik.values?.feed,
+        connectorRef: connectorIdValue
+      }
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return {
         package: formik.values?.spec?.package,
@@ -276,6 +284,7 @@ export type artifactInitialValueTypes =
   | CustomArtifactSource
   | JenkinsArtifactType
   | AmazonMachineImageInitialValuesType
+  | AzureArtifactsInitialValues
 
 export const getArtifactFormData = (
   initialValues: artifactInitialValueTypes,
@@ -291,16 +300,19 @@ export const getArtifactFormData = (
 
   let values: artifactInitialValueTypes | null = {} as artifactInitialValueTypes
   switch (selectedArtifact) {
-    case 'CustomArtifact':
-    case 'Jenkins':
+    case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+    case ENABLED_ARTIFACT_TYPES.Jenkins:
       values = initialValues
       break
-    case 'GoogleArtifactRegistry':
-    case 'GithubPackageRegistry':
-    case 'AmazonMachineImage':
+    case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+    case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+    case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
       values = getVersionValues(specValues)
       break
-    case 'Nexus3Registry':
+    case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+      values = getSpecForAzureArtifacts(specValues)
+      break
+    case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       values = getRepoValues(specValues)
       break
     default:
@@ -325,6 +337,16 @@ const getVersionValues = (
       version: specValues?.version,
       versionRegex: specValues?.versionRegex
     }
+  }
+  return formikInitialValues
+}
+
+const getSpecForAzureArtifacts = (specValues: any): AzureArtifactsInitialValues => {
+  const formikInitialValues = {
+    versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
+    ...specValues,
+    version: specValues?.version,
+    versionRegex: specValues?.versionRegex
   }
   return formikInitialValues
 }
@@ -380,6 +402,17 @@ export const customArtifactDefaultSpec = {
 
 export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
   switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+      return {
+        identifier: '',
+        versionType: TagTypes.Value,
+        scope: 'project',
+        project: '',
+        feed: '',
+        packageType: 'maven',
+        package: '',
+        version: RUNTIME_INPUT_VALUE
+      }
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return {
         identifier: '',

@@ -503,6 +503,7 @@ execution:
   timePrefix: 'Execution Time: '
   compareAction: Compare
   compareExecutionsTitle: Select executions to compare the compiled YAML
+  emptyStepGroup: Step Group is empty
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
@@ -838,9 +839,12 @@ artifactsSelection:
   classifier: Classifier
   classifierPlaceholder: Enter Classifier
   packageName: Package Name
+  packageNamePlaceholder: Select Package
   addPrimaryArtifact: Add Primary Artifact
   addArtifactSource: Add Artifact Source
   addSidecar: Add Sidecar
+  feed: Feed
+  feedPlaceholder: Select Feed
   artifactSourceName: Artifact Source Name
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
@@ -869,7 +873,6 @@ artifactsSelection:
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
   githubPackageRegistryTitle: Github Package Registry
-  azureArtifactRegistryTitle: Azure Artifact Registry
   AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
     sidecarId: Sidecar Name
@@ -881,8 +884,11 @@ artifactsSelection:
     artifactsArrayPath: Artifact array path is required
     versionPath: Version path is required
     noBuild: No build found with given details
+    noPackage: No package found with given details
+    noFeeds: No feeds found with given details
     noVersion: No version found with given details
     packageType: Package Type is required
+    feed: Feed is required
     versionRegex: Version Regex is required
     packageName: Package Name is required
     imagePath: Image Path is required
@@ -1085,6 +1091,7 @@ stepDescription:
   ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
+  ElastigroupRollback: Rollback for the Elastigroup steps
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

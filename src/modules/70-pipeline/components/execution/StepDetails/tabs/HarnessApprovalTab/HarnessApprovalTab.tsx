@@ -108,7 +108,7 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
               <Text
                 intent="warning"
                 font={{ align: 'left' }}
-                style={{ wordBreak: 'break-word' }}
+                style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
                 lineClamp={3}
                 width={500}
               >

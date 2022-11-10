@@ -29,7 +29,8 @@ import type {
   ConnectorDisableFunctionProps,
   DataSourceTypeValidateFunctionProps,
   DefineHealthSourceFormInterface,
-  FormValidationFunctionProps
+  FormValidationFunctionProps,
+  GetDataSourceTypeParams
 } from './DefineHealthSource.types'
 
 export const validate = (getString: UseStringsReturn['getString']): Yup.ObjectSchema => {
@@ -296,8 +297,12 @@ const getHealthSourceType = (type?: string, sourceType?: string): string | undef
   return sourceType
 }
 
-const getDataSourceType = (type?: string, isDataSourceTypeSelectorEnabled?: boolean): string | null => {
-  if (type === HealthSourceTypes.AwsPrometheus) {
+export const getDataSourceType = ({
+  type,
+  dataSourceType,
+  isDataSourceTypeSelectorEnabled
+}: GetDataSourceTypeParams): string | null => {
+  if (type === HealthSourceTypes.AwsPrometheus || dataSourceType === AWSDataSourceType) {
     return AWSDataSourceType
   } else if (isDataSourceTypeSelectorEnabled) {
     return HealthSourceTypes.Prometheus
@@ -319,7 +324,7 @@ export const getInitialValues = (
 
   const { region, workspaceId } = currentHealthSource?.spec || {}
 
-  const { sourceType } = sourceData || {}
+  const { sourceType, dataSourceType, region: sourceDataRegion, workspaceId: sourceDataWorkspaceId } = sourceData || {}
 
   // TODO: remove check for prometheus when BE changes are done
   const selectedFeature = PrometheusTypes.includes(currentHealthSource?.type) ? '' : currentHealthSource?.spec?.feature
@@ -328,9 +333,13 @@ export const getInitialValues = (
     ...sourceData,
     type: getHealthSourceType(currentHealthSource?.type),
     sourceType: getHealthSourceType(currentHealthSource?.type, sourceType),
-    dataSourceType: getDataSourceType(currentHealthSource?.type, isDataSourceTypeSelectorEnabled),
-    region,
-    workspaceId,
+    dataSourceType: getDataSourceType({
+      type: currentHealthSource?.type,
+      dataSourceType,
+      isDataSourceTypeSelectorEnabled
+    }),
+    region: sourceDataRegion || region,
+    workspaceId: sourceDataWorkspaceId || workspaceId,
     product: selectedFeature
       ? { label: selectedFeature, value: selectedFeature }
       : getProductBasedOnType(getString, currentHealthSource?.type, sourceData?.product)

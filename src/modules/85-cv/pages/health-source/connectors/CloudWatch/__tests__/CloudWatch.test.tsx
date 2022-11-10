@@ -9,6 +9,8 @@ import CloudWatch from '../CloudWatch'
 import {
   emptyHealthSource,
   emptySampleDataMockResponse,
+  healthSourceWithEmptyCustomMetrics,
+  healthSourceWithMetricThresholds,
   mockData,
   riskCategoryMock,
   sampleDataMockResponse,
@@ -625,5 +627,88 @@ describe('CloudWatch', () => {
 
     expect(regionLoadingDropdown).toBeInTheDocument()
     expect(regionLoadingDropdown).toBeDisabled()
+  })
+
+  describe('Metric thresholds', () => {
+    beforeAll(() => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+    })
+    test('should render metric thresholds', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      const onSubmit = jest.fn()
+      render(
+        <TestWrapper>
+          <CloudWatch data={healthSourceWithMetricThresholds} onSubmit={onSubmit} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (1)')).toBeInTheDocument()
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      userEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (2)')).toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds when feature flag is turned off', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+      const onSubmit = jest.fn()
+      render(
+        <TestWrapper>
+          <CloudWatch data={healthSourceWithMetricThresholds} onSubmit={onSubmit} />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds when there is no custom metric', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      const onSubmit = jest.fn()
+      render(
+        <TestWrapper>
+          <CloudWatch data={healthSourceWithEmptyCustomMetrics} onSubmit={onSubmit} />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should prompt when custom metric having metric threshold is being deleted', async () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      const onSubmit = jest.fn()
+      const { container } = render(
+        <TestWrapper>
+          <CloudWatch data={healthSourceWithMetricThresholds} onSubmit={onSubmit} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (1)')).toBeInTheDocument()
+
+      const deleteButton = container.querySelectorAll('span[data-icon="main-delete"]')[0]
+
+      act(() => {
+        userEvent.click(deleteButton!)
+      })
+
+      expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
+
+      const modalDeleteBtn = screen.queryAllByText('confirm')[0]
+      act(() => {
+        userEvent.click(modalDeleteBtn!)
+      })
+
+      await waitFor(() => {
+        expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
+      })
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+    })
   })
 })

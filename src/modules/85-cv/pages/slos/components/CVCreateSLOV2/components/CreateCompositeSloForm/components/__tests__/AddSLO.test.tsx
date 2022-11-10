@@ -11,11 +11,16 @@ import { Formik } from 'formik'
 import { Button } from '@harness/uicore'
 import { act } from 'react-test-renderer'
 import userEvent from '@testing-library/user-event'
-import * as cvServices from 'services/cv'
+import { useMutateAsGet } from '@common/hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { getDistribution } from '../AddSlos/AddSLOs.utils'
 import { AddSLOs } from '../AddSlos/AddSLOs'
 import { mockSLODashboardWidgetsData } from '../AddSlos/components/__tests__/SLOList.mock'
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn()
+}))
 
 const serviceLevelObjectivesDetails = [
   {
@@ -40,6 +45,16 @@ describe('Validate  AddSLO', () => {
   })
 
   test('should render AddSLOs with no values', () => {
+    // eslint-disable-next-line
+    // @ts-ignore
+    useMutateAsGet.mockImplementation(() => {
+      return {
+        data: [],
+        loading: true,
+        error: null,
+        refetch: jest.fn()
+      }
+    })
     const { getByText } = render(
       <TestWrapper>
         <AddSLOs />
@@ -49,12 +64,16 @@ describe('Validate  AddSLO', () => {
   })
 
   test('should be able to add new SLO', async () => {
-    jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
-      data: mockSLODashboardWidgetsData,
-      loading: false,
-      error: null,
-      refetch: jest.fn()
-    } as any)
+    // eslint-disable-next-line
+    // @ts-ignore
+    useMutateAsGet.mockImplementation(() => {
+      return {
+        data: mockSLODashboardWidgetsData,
+        loading: true,
+        error: null,
+        refetch: jest.fn()
+      }
+    })
     const { getByText } = render(
       <TestWrapper>
         <Formik initialValues={{ serviceLevelObjectivesDetails }} onSubmit={jest.fn()}>

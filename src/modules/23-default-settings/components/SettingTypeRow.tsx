@@ -99,7 +99,12 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
     <Layout.Horizontal>
       <Container flex={{ alignItems: 'center' }} className={css.settingLabelContainer}>
         <Container flex={{ alignItems: 'center' }} className={cx(isSubCategory && css.subCategoryLabel)}>
-          <Text font={{ variation: FontVariation.BODY2 }}>{getString(label)}</Text>
+          <Text
+            font={{ variation: FontVariation.BODY2 }}
+            tooltipProps={{ dataTooltipId: `defaultSettingsForm_${settingType}` }}
+          >
+            {getString(label)}
+          </Text>
         </Container>
       </Container>
       <Container flex={{ alignItems: 'center' }} className={css.typeRenderer}>
