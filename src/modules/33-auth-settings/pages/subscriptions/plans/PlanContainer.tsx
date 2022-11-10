@@ -308,7 +308,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   }
 
   if (error) {
-    return <PageError message={(error.data as Error)?.message} onClick={() => refetch()} />
+    return <PageError message={(error.data as Error)?.message} onClick={() => refetchLicense()} />
   }
 
   if (actionErrs) {
