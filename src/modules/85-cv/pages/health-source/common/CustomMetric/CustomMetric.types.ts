@@ -63,13 +63,17 @@ export interface CustomMetricInterface {
   formikValues: CustomMappedMetric
   mappedMetrics: Map<string, CustomMappedMetric>
   initCustomForm: InitCustomFormData
+  // TODO - will become part of component and will always be true.
   groupedCreatedMetrics?: GroupedCreatedMetrics
   shouldBeAbleToDeleteLastMetric?: boolean
+  // TODO - get info from Deepesh
   isPrimaryMetric?: boolean
   setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
   setCreatedMetrics: React.Dispatch<React.SetStateAction<CreatedMetricsWithSelectedIndex>>
   setGroupedCreatedMetrics: React.Dispatch<React.SetStateAction<GroupedCreatedMetrics>>
+  // TODO - should be part of component itself.
   isMetricThresholdEnabled?: boolean
+  // TODO - will become part of component and will always be true.
   filterRemovedMetricNameThresholds?: (metricName: string) => void
 }
 

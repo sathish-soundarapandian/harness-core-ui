@@ -1,0 +1,96 @@
+
+{
+  "appTierAndMetricPack": {
+    "enabled": true,
+    "appTier": {
+      "enabled": true,
+      "fields": [
+        {
+          "type": "application",
+          "label": "Harshil"
+        },
+        {
+          "type": "tier",
+          "label": "Tier-1"
+        },
+        {
+          "type": "application",
+          "label": "Harshil-1"
+        }
+      ]
+    },
+    "metricPacks": {
+      "enabled": true
+    }
+  },
+  "customMetrics": {
+    "enabled": true,
+    "Map Metric(s) to Harness Services" :
+    [
+        // This can be reused for metric name also.
+        { "type": "Name", "label": "name-label", "placeholder": "placeholder-text" },
+        { "type": "MetricTags", "label": "name-label" },
+        { "type": "QueryContent", "label": "name-label" },
+        { "type": "ValidationChart", "label": "name-label" },
+        {
+          "type": "InputWithDynamicModalForJsonMultiType",
+          "label": "Identify service path",
+          "identifier": "serviceInstance",
+          "meta": {
+            "noRecordModalHeader": "label",
+            "noRecordInputLabel": "label",
+            "recordsModalHeader": "recordsModalHeader",
+            "dataTooltipId": "tooltip-value"
+          }
+        },
+        {
+          "type": "InputWithDynamicModalForJsonMultiType",
+          "label": "Identify service path",
+          "identifier": "serviceInstance",
+          "meta": {
+            "noRecordModalHeader": "label",
+            "noRecordInputLabel": "label",
+            "recordsModalHeader": "recordsModalHeader",
+            "dataTooltipId": "tooltip-value"
+          }
+        },
+        {
+          "type": "SelectMetric", // this is used in splunk (dropdown component)
+          "label": "Select Metric"  // this is used in dynatrace (dropdown component)
+        },
+        {
+          "type": "QueryBox",
+          "meta": {
+            "dataTooltipId": "tooltip-value"
+          }
+        },
+        {
+          "type": "SelectQuery", // this is used in splunk (dropdown component)
+          "label": "Select Query"
+        }
+      ],
+    "Assign": [
+        {
+        "type": "Assign",
+        "label": "assign-label",
+        "options": {
+            "sli": true, // for splunk metrics there is only SLI true
+            "serviceHealth": true,
+            "continousVerification": true
+        }
+        }
+    ]
+  },
+  "metricThreshold": {
+    "enabled": true,
+    "isOnlyCustomMetricHealthSource": true
+  }
+}
+
+
+
+// New components ->
+
+1. Build Your query component in prometheus.
+2. Build Appd Path - new component.
+

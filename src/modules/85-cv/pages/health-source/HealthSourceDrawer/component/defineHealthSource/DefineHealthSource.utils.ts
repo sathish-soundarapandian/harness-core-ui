@@ -188,6 +188,18 @@ export const getFeatureOption = (
           label: CloudWatchProductNames.METRICS
         }
       ]
+
+    case Connectors.SUMOLOGIC:
+      return [
+        {
+          value: 'Sumo Logic Cloud Metrics',
+          label: 'Sumo Logic Cloud Metrics'
+        },
+        {
+          value: 'Sumo Logic Cloud Logs',
+          label: 'Sumo Logic Cloud Logs'
+        }
+      ]
     default:
       return []
   }

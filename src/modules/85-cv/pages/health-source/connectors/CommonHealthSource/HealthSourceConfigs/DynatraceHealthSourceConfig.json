@@ -1,0 +1,15 @@
+{
+  "appTierAndMetricPack": {
+    "enabled": true,
+    "appTier": {
+      "enabled": true,
+      "fields": {
+        "application": true,
+        "tier": false
+      }
+    },
+    "metricPacks": {
+      "enabled": true
+    }
+  }
+}

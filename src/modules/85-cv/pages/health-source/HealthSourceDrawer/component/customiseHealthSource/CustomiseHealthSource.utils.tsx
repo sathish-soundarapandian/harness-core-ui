@@ -31,6 +31,7 @@ import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch
 import type { SourceDataInterface, UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
 import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 import { CustomHealthMetric } from './CustomiseHealthSource.constant'
+import CommonHealthSourceContainer from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.container'
 
 const shouldRenderCustomHealthMetric = (data: SourceDataInterface): boolean => {
   return (
@@ -55,7 +56,9 @@ export const LoadSourceByType = ({
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
-  switch (type) {
+  let sumoLogicType = 'SumoLogic'
+
+  switch (sumoLogicType) {
     case HealthSourceTypes.AppDynamics:
       return (
         <AppDHealthSourceContainer data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
@@ -154,9 +157,15 @@ export const LoadSourceByType = ({
         return null
       }
       return <CloudWatch data={data} onSubmit={onSubmit} />
-
     default:
-      return <></>
+      return (
+        <CommonHealthSourceContainer
+          data={data}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          onSubmit={onSubmit}
+        />
+      )
   }
 }
 
