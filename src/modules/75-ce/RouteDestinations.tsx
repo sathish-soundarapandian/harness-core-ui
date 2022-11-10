@@ -773,7 +773,6 @@ const CERoutes: React.FC = () => {
         routes.toCommitmentOrchestration({ ...accountPathProps }),
         routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
         routes.toCEGovernancePolicies({ ...accountPathProps }),
-        routes.toCEGovernancePolicyPacks({ ...accountPathProps }),
         routes.toCEGovernanceEnforcements({ ...accountPathProps }),
         routes.toCEGovernanceEvaluations({ ...accountPathProps }),
         routes.toCEGovernancePolicyEditor({ ...accountPathProps, policyId: ':policyId' })
