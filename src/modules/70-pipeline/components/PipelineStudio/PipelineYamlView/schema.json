@@ -4,7 +4,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "enum": ["Java with Maven", "Java with Gradle"]
+      "examples": ["Java with Maven", "Java with Gradle"]
     },
     "version": {
       "type": "integer"
