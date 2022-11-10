@@ -5,61 +5,85 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { Color, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
-import cx from 'classnames'
+import { Color, Container, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
+import { defaultTo, isEmpty } from 'lodash-es'
+import { useParams } from 'react-router-dom'
+import type { UseGetReturn } from 'restful-react'
 import { useStrings } from 'framework/strings'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Failure, GetRepositoryListQueryParams, UseGetRepositoryListProps } from 'services/pipeline-ng'
 import css from './RepoFilter.module.scss'
 
 export interface RepoFilterProps {
-  dropDownItems: SelectOption[]
-  selectedRepo: string
-  placeholder?: string
-  onChange?: (selected: SelectOption) => void
-  onClick?: () => void
-  disabled?: boolean
-  repoFilterClassName?: string
-  showRefetchButton?: boolean
+  value?: string
+  onChange?: (repoName: string) => void
+  className?: string
+  getRepoListPromise: (
+    props: UseGetRepositoryListProps
+  ) => UseGetReturn<any, Failure | Error, GetRepositoryListQueryParams, unknown>
 }
 
-const RepoFilter: React.FC<RepoFilterProps> = props => {
-  const { onChange, dropDownItems, selectedRepo, showRefetchButton = false, onClick } = props
+export function RepoFilter({ value, onChange, className, getRepoListPromise }: RepoFilterProps) {
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-  const { placeholder = getString('repository'), disabled = false } = props
+
+  const {
+    data: repoListData,
+    error,
+    loading,
+    refetch
+  } = getRepoListPromise({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier
+    }
+  })
+
+  const dropDownItems = React.useMemo(
+    () =>
+      repoListData?.data?.repositories?.map((repo: string) => ({
+        label: defaultTo(repo, ''),
+        value: defaultTo(repo, '')
+      })) as SelectOption[],
+    [repoListData?.data?.repositories]
+  )
+
+  const onRefetch = React.useCallback((): void => {
+    refetch()
+  }, [refetch])
+
+  if (loading) {
+    return null
+  }
 
   return (
-    <div>
+    <Container css={className}>
       <Layout.Horizontal spacing="xsmall">
         <DropDown
           items={dropDownItems}
-          disabled={disabled}
+          disabled={!isEmpty(error)}
           buttonTestId={'repo-filter'}
-          value={selectedRepo}
-          onChange={selected => onChange?.(selected)}
-          placeholder={placeholder}
+          value={value}
+          onChange={selected => onChange?.(selected.value.toString())}
+          placeholder={getString('repository')}
           addClearBtn={true}
           minWidth={160}
           usePortal={true}
         ></DropDown>
-
-        {showRefetchButton && (
-          <Layout.Horizontal
-            spacing="small"
-            flex={{ alignItems: 'flex-start' }}
-            className={cx(css.refreshButtonWrapper)}
-          >
-            <Icon
-              name="refresh"
-              size={16}
-              color={Color.PRIMARY_7}
-              background={Color.PRIMARY_1}
-              padding="small"
-              className={css.refreshIcon}
-              onClick={onClick}
-            />
-          </Layout.Horizontal>
+        {!isEmpty(error) && (
+          <Icon
+            name="refresh"
+            size={16}
+            color={Color.PRIMARY_7}
+            background={Color.PRIMARY_1}
+            padding="small"
+            className={css.refreshIcon}
+            onClick={onRefetch}
+          />
         )}
       </Layout.Horizontal>
-    </div>
+    </Container>
   )
 }
 

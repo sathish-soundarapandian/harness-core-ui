@@ -13,7 +13,6 @@ import {
   HarnessDocTooltip,
   Layout,
   PageSpinner,
-  SelectOption,
   shouldShowError,
   Text,
   useToggleOpen
@@ -21,7 +20,6 @@ import {
 import { defaultTo, pick } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import type { GetDataError } from 'restful-react'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page, useToaster } from '@common/exports'
@@ -36,7 +34,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
 import {
-  Failure,
   FilterDTO,
   PagePMSPipelineSummaryResponse,
   PipelineFilterProperties,
@@ -124,37 +121,8 @@ export function PipelineListPage(): React.ReactElement {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
-  const {
-    data: repoListData,
-    error: ErrorRepoList,
-    loading: isLoadingRepoList,
-    refetch: refetchRepoList
-  } = useGetRepositoryList({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier
-    }
-  })
-
-  const onChangeRepo = (selected: SelectOption): void => {
-    updateQueryParams({ repoName: (selected.value || []) as string })
-  }
-
-  const repoSelectOptions = repoListData?.data?.repositories?.map(repo => {
-    return {
-      label: defaultTo(repo, ''),
-      value: defaultTo(repo, '')
-    }
-  }) as SelectOption[]
-
-  const onClickHandler = (): void => {
-    if (!isLoadingRepoList) refetchRepoList()
-  }
-
-  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null): boolean => {
-    const responseMessages = (Error?.data as Error)?.message
-    return !isLoading && ((responseMessages?.length && responseMessages?.length > 0) || !!Error)
+  const onChangeRepo = (_repoName: string): void => {
+    updateQueryParams({ repoName: (_repoName || []) as string })
   }
 
   const { mutate: deletePipeline, loading: isDeletingPipeline } = useSoftDeletePipeline({
@@ -297,14 +265,7 @@ export function PipelineListPage(): React.ReactElement {
               }}
             />
           ) : (
-            <RepoFilter
-              dropDownItems={repoSelectOptions}
-              onChange={selected => onChangeRepo(selected)}
-              selectedRepo={repoName as string}
-              disabled={isLoadingRepoList}
-              onClick={onClickHandler}
-              showRefetchButton={showRefetchButton(isLoadingRepoList, ErrorRepoList)}
-            />
+            <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal style={{ alignItems: 'center' }}>

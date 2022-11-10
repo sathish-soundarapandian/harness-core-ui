@@ -21,11 +21,9 @@ import {
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import type { GetDataError } from 'restful-react'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
-  Failure,
   TemplateSummaryResponse,
   useGetRepositoryList,
   useGetTemplateList,
@@ -183,25 +181,6 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     debounce: true
   })
 
-  const {
-    data: repoListData,
-    error: ErrorRepoList,
-    loading: isLoadingRepoList,
-    refetch: refetchRepoList
-  } = useGetRepositoryList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier
-    }
-  })
-
-  const repoSelectOptions = repoListData?.data?.repositories?.map(repo => {
-    return {
-      label: defaultTo(repo, ''),
-      value: defaultTo(repo, '')
-    }
-  }) as SelectOption[]
-
   useEffect(() => {
     if (areTemplatesSame(selectedTemplate, defaultTemplate)) {
       setTemplate(defaultTemplate)
@@ -223,15 +202,6 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
       setSelectedTemplate(undefined)
     }
   }, [loading])
-
-  const onClickHandler = (): void => {
-    if (!isLoadingRepoList) refetchRepoList()
-  }
-
-  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null): boolean => {
-    const responseMessages = (Error?.data as Error)?.message
-    return !isLoading && ((responseMessages?.length && responseMessages?.length > 0) || !!Error)
-  }
 
   return (
     <Container width={762} background={Color.FORM_BG} className={css.container}>
@@ -260,14 +230,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   onChange={item => setSelectedScope(item)}
                   filterable={false}
                 />
-                <RepoFilter
-                  placeholder={getString('common.selectRepository')}
-                  dropDownItems={repoSelectOptions}
-                  selectedRepo={selectedRepo}
-                  onChange={selected => setSelectedRepo(selected.value as string)}
-                  showRefetchButton={showRefetchButton(isLoadingRepoList, ErrorRepoList)}
-                  onClick={onClickHandler}
-                />
+                <RepoFilter value={selectedRepo} onChange={setSelectedRepo} getRepoListPromise={useGetRepositoryList} />
                 <ExpandingSearchInput
                   alwaysExpanded
                   className={css.searchBox}

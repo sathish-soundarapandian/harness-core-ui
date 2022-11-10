@@ -13,21 +13,17 @@ import {
   GridListToggle,
   HarnessDocTooltip,
   Layout,
-  SelectOption,
   Views
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
-import type { GetDataError } from 'restful-react'
 import { TemplateSettingsModal } from '@templates-library/components/TemplateSettingsModal/TemplateSettingsModal'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { Sort, SortFields, TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateDetailsDrawer } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
 import {
-  Failure,
   TemplateSummaryResponse,
   useGetRepositoryList,
   useGetTemplateList,
@@ -126,26 +122,6 @@ export default function TemplatesPage(): React.ReactElement {
     lazy: !templateFeatureEnabled
   })
 
-  const {
-    data: repoListData,
-    error: ErrorRepoList,
-    loading: isLoadingRepoList,
-    refetch: refetchRepoList
-  } = useGetRepositoryList({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier
-    }
-  })
-
-  const repoSelectOptions = repoListData?.data?.repositories?.map(repo => {
-    return {
-      label: defaultTo(repo, ''),
-      value: defaultTo(repo, '')
-    }
-  }) as SelectOption[]
-
   const reset = React.useCallback((): void => {
     searchRef.current.clear()
     updateQueryParams({ templateType: [] as any })
@@ -212,17 +188,8 @@ export default function TemplatesPage(): React.ReactElement {
     reloadTemplates()
   }, [reloadTemplates])
 
-  const onChangeRepo = (selected: SelectOption): void => {
-    updateQueryParams({ repoName: (selected.value || []) as string })
-  }
-
-  const onClickHandler = (): void => {
-    if (!isLoadingRepoList) refetchRepoList()
-  }
-
-  const showRefetchButton = (isLoading: boolean, Error: GetDataError<Failure | Error> | null): boolean => {
-    const responseMessages = (Error?.data as Error)?.message
-    return !isLoading && ((responseMessages?.length && responseMessages?.length > 0) || !!Error)
+  const onChangeRepo = (_repoName: string): void => {
+    updateQueryParams({ repoName: (_repoName || []) as string })
   }
 
   return (
@@ -255,16 +222,7 @@ export default function TemplatesPage(): React.ReactElement {
             placeholder={getString('all')}
             popoverClassName={css.dropdownPopover}
           />
-
-          <RepoFilter
-            dropDownItems={repoSelectOptions}
-            onChange={selected => onChangeRepo(selected)}
-            selectedRepo={repoName as string}
-            disabled={isLoadingRepoList}
-            onClick={onClickHandler}
-            showRefetchButton={showRefetchButton(isLoadingRepoList, ErrorRepoList)}
-          />
-
+          <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
           {isGitSyncEnabled ? (
             <GitSyncStoreProvider>
               <GitFilters
