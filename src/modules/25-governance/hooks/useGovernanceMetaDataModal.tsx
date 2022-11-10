@@ -27,11 +27,13 @@ export interface UseGovernanceModalProps {
   considerWarningAsError: boolean
   warningHeaderMsg: StringKeys
   errorHeaderMsg: StringKeys
+  skipGoveranceCheck?: boolean // will skip warning modals
 }
 export const useGovernanceMetaDataModal = ({
   considerWarningAsError,
   warningHeaderMsg,
-  errorHeaderMsg
+  errorHeaderMsg,
+  skipGoveranceCheck
 }: UseGovernanceModalProps): UseConnectorGovernanceModalPayload => {
   const { getString } = useStrings()
 
@@ -78,12 +80,15 @@ export const useGovernanceMetaDataModal = ({
   const conditionallyOpenGovernanceErrorModal = (
     governanceMetadataLocal: GovernanceMetadata | undefined,
     onModalCloseWhenNoErrorInGovernanceData: () => void
-  ) => {
+  ): void => {
     if (governanceMetadataLocal) {
       setGovernanceMetadata(governanceMetadataLocal)
       if (governanceMetadataLocal?.status === 'error' || governanceMetadataLocal?.status === 'warning') {
         setonModalCloseWhenNoErrorInGovernanceDataCall(() => onModalCloseWhenNoErrorInGovernanceData)
-        showGovernanceErrorModal()
+        // skip error modal on skipGoveranceCheck and warnings
+        if (!(skipGoveranceCheck && governanceMetadataLocal?.status === 'warning')) {
+          showGovernanceErrorModal()
+        }
       } // assuming all other cases governancemetadata status to be pass
       else {
         onModalCloseWhenNoErrorInGovernanceData()

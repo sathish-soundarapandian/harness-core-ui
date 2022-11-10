@@ -57,7 +57,10 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
   const { getRBACErrorMessage } = useRBACError()
 
   const { skipGoveranceCheck = false } = props
-  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
+    ...connectorGovernanceModalProps(),
+    skipGoveranceCheck
+  })
   const [connectorPayload, setConnectorPayload] = useState<Connector>({})
   const [connectorResponse, setConnectorResponse] = useState<UseSaveSuccessResponse>()
   const [connectorData, setConnectorData] = useState<T & BuildPayloadProps>({} as T & BuildPayloadProps)
@@ -125,8 +128,7 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
       props.afterSuccessHandler(response)
     }
     if (response.data?.governanceMetadata) {
-      !skipGoveranceCheck &&
-        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessGovernanceCall)
+      conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessGovernanceCall)
     }
     const returnVal: UseSaveSuccessResponse = {
       status: !governanceMetaDataHasError ? response.status : 'FAILURE',
