@@ -287,7 +287,7 @@ export const mockedElkSampleData = [
 ]
 
 export const mockedElkIndicesData = [
-  'filebeat-6.8.8-2022.09.03',
+  'integration-test',
   '.kibana_1',
   'filebeat-6.8.8-2022.08.25',
   'filebeat-6.8.8-2022.09.12',

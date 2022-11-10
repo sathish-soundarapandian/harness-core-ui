@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, act } from '@testing-library/react'
+import { render, waitFor, fireEvent, act, screen } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   mockedElkIndicesData,
@@ -97,7 +98,7 @@ describe('Unit tests for MapELKQueriesToService', () => {
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
   })
 
-  test.only('Ensure that logIndexes field is present', async () => {
+  test('Ensure that logIndexes field is present', async () => {
     const { getByText, container } = render(
       <TestWrapper>
         <Formik formName="allowedValueTest" onSubmit={jest.fn()} initialValues={{}}>
@@ -125,11 +126,50 @@ describe('Unit tests for MapELKQueriesToService', () => {
         </Formik>
       </TestWrapper>
     )
-    expect(container.querySelector('[data-testid="logIndexesField"]')).not.toBeNull()
+    // expect(container.querySelector('[data-testid="logIndexesField"]')).not.toBeNull()
+    // await act(async () => {
+    //   fireEvent.change(container.querySelector('input[name="logIndexInput"]')!, {
+    //     target: { value: 'dummy name' }
+    //   })
+    // })
+    await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
+  })
+
+  test('Ensure that logIndexes field is present', async () => {
+    const { getByText, container } = render(
+      <TestWrapper>
+        <Formik formName="allowedValueTest" onSubmit={jest.fn()} initialValues={{}}>
+          {formik => (
+            <FormikForm>
+              <ElkMetricNameAndHostIdentifier
+                {...{
+                  onChange: jest.fn(),
+                  sampleRecord: null,
+                  serviceInstance: 'serviceInstance',
+                  isQueryExecuted: true,
+                  loading: false,
+                  messageIdentifier: '',
+                  isConnectorRuntimeOrExpression: true,
+                  isTemplate: false,
+                  expressions: [],
+                  connectorIdentifier: '',
+                  identifyTimestamp: '',
+                  formikProps: { ...formik, values: { ...formik?.values, logIndexes: 'integration-test' } },
+                  logIndexes: 'integration-test'
+                }}
+              />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+    const indexDropdown = screen.getByPlaceholderText('- cv.monitoringSources.elk.selectLogIndex -')
     await act(async () => {
-      fireEvent.change(container.querySelector('input[name="logIndexInput"]')!, {
-        target: { value: 'dummy name' }
-      })
+      userEvent.click(indexDropdown)
+    })
+
+    await act(async () => {
+      userEvent.click(screen.getByText('integration-test'))
     })
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
   })
