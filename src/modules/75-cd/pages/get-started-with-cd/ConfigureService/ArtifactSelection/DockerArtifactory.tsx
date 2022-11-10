@@ -102,17 +102,12 @@ const DockerArtifactory = ({ onSuccess }: { onSuccess: (status: StepStatus) => v
       : TestStatus.NOT_INITIATED
   )
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
-  const [editMode, setIsEditMode] = useState(false) // connector edit mode
+  const [editMode, setIsEditMode] = useState(Boolean(serviceData?.data?.artifactData?.connectorResponse) || false) // connector edit mode
 
   const scrollRef = useRef<Element>()
   const formikRef = useRef<FormikContextType<any>>()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
-  useEffect(() => {
-    if (scrollRef) {
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [testConnectionErrors?.length])
 
   const TestConnection = (): React.ReactElement => {
     switch (testConnectionStatus) {
@@ -206,13 +201,11 @@ const DockerArtifactory = ({ onSuccess }: { onSuccess: (status: StepStatus) => v
         orgIdentifier: orgIdentifier
       }
 
-      await onInitiate({
+      onInitiate({
         connectorFormData: connectorData,
         buildPayload: buildDockerPayload
       })
     }
-
-    // TODO: save data in context
   }, [onInitiate, orgIdentifier, projectIdentifier])
 
   const getArtifactInitialValues = (): DockerFormInterface => {

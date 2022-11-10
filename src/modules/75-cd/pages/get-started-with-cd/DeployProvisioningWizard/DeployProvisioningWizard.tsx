@@ -161,7 +161,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }, [])
 
   const constructPipelinePayload = React.useCallback(
-    (repository = { name: DEFAULT_PIPELINE_NAME } as UserRepoResponse, data: PipelineRefPayload): string => {
+    (data: PipelineRefPayload, repository = { name: DEFAULT_PIPELINE_NAME } as UserRepoResponse): string => {
       const { name: repoName } = repository
       const { serviceRef, environmentRef, infraStructureRef, deploymentType } = data
 
@@ -194,7 +194,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const setupPipeline = (data: PipelineRefPayload): void => {
     try {
       createPipelineV2Promise({
-        body: constructPipelinePayload(get(serviceData, 'data.repoValues'), data),
+        body: constructPipelinePayload(data, get(serviceData, 'data.repoValues')),
         queryParams: {
           accountIdentifier: accountId,
           orgIdentifier,
@@ -444,7 +444,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       {/* footer */}
       <Layout.Vertical padding={{ left: 'huge' }} className={css.footer}>
         <Layout.Horizontal spacing="medium" padding={{ top: 'large', bottom: 'xlarge' }} width="100%">
-          {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType ? (
+          {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType && (
             <Button
               variation={ButtonVariation.SECONDARY}
               text={getString('back')}
@@ -452,7 +452,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               minimal
               onClick={() => onClickBack?.()}
             />
-          ) : null}
+          )}
           {currentWizardStepId !== DeployProvisiongWizardStepId.RunPipeline && (
             <Button
               text={buttonLabel}

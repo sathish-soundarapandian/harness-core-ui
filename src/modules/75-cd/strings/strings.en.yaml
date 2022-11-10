@@ -504,6 +504,7 @@ getStartedWithCD:
   configureService: Configure Service
   helm: Helm
   manifestTypeSelection: 'What is your {{ $.manifestsText }} type?'
+  manifestStoreLabel: Where is your Manifest stored?
   gitopsRedirect:
     title: Deploy with Gitops
     subtitle: You will be redirected to Gitops section. Are you sure you want to leave this page?

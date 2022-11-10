@@ -68,7 +68,6 @@ const InHarnessFileStore = ({
 
   const [childNodes, setChildNodes] = React.useState<FileStoreNodeDTO[]>(formikProps?.values?.fileNodesData || [])
   const [openFileDrawer, setOpenFileDrawer] = React.useState<boolean>(false)
-  // const [drawerData, setDrawerData] = React.useState<DrawerDataType>()
 
   // fetch all files from onBoarding sample folder
   const getListOfAllFiles = React.useCallback(async (): Promise<void> => {
@@ -264,6 +263,3 @@ const InHarnessFileStore = ({
 }
 
 export default InHarnessFileStore
-
-// TODO:: service call re-renders the filestore component - 2 API call for folder listing
-// TODO:: file content to be cached and in formik to reduce API call and disable save

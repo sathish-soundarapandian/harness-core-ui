@@ -79,8 +79,6 @@ export const CreateDockerDelegate = ({
       } as GetDelegateTokensQueryParams
     })
 
-    // TODO:: retain docker yaml value
-
     if (get(delegateTokens, 'responseMessages', []).length) {
       showError(getString('somethingWentWrong'))
     } else {

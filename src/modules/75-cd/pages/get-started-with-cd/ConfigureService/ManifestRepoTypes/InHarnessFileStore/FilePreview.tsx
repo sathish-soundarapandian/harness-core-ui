@@ -170,7 +170,7 @@ export default function FilePreview(): JSX.Element {
               minimap: {
                 enabled: false
               },
-              readOnly: !!(drawerData?.mode === DrawerMode.Preview),
+              readOnly: drawerData?.mode === DrawerMode.Preview,
               scrollBeyondLastLine: false
             }}
           />
