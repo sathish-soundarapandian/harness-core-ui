@@ -378,7 +378,7 @@ export const DelegateSelectorWizard = ({ enableNextBtn, disableNextBtn }: Delega
                   />
                 </Layout.Vertical>
               )}
-              <Container className={css.borderBottomClass} style={{ width: '55%' }} />
+              <Container className={css.borderBottomClass} />
               {!isEmpty(environmentEntities?.connector) && !isDelegateInstalled ? environmentEntitiesData : null}
             </>
           )}
