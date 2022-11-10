@@ -102,7 +102,13 @@ function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
     selectedConnectorTooltip
   } = props
 
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
+  const {
+    state: { template }
+  } = React.useContext(TemplateContext)
+
+  const { projectIdentifier, orgIdentifier } = template
+
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
 
