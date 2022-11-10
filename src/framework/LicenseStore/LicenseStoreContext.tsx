@@ -200,7 +200,9 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
             versionMap: response.data || {}
           }))
         }
-      } catch (_err) {}
+      } catch (_err) {
+        return
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

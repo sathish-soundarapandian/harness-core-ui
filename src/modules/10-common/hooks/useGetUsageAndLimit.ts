@@ -164,7 +164,7 @@ function useGetCCMTimeStamp(): number {
   return licenseInformation?.CE?.startTime || 0
 }
 
-function useGetUsage(module: ModuleName): UsageReturn {
+export function useGetUsage(module: ModuleName): UsageReturn {
   const { accountId } = useParams<AccountPathProps>()
   const [usageData, setUsageData] = useState<UsageReturn>({})
   const {

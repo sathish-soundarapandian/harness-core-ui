@@ -20,9 +20,10 @@ import { useLocalStorage } from '@common/hooks/useLocalStorage'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
-import { useGetUsageNew } from '@common/hooks/useGetUsageNew'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import { UsageAndLimitReturn, useGetUsage } from '@common/hooks/useGetUsageAndLimit'
+import type { CEModuleLicenseDTO } from 'services/cd-ng'
 import {
   ViewUsageLink,
   ExplorePlansBtn,
@@ -33,8 +34,6 @@ import {
 } from './FeatureUtils'
 import { BannerType } from './Constants'
 import css from './layouts.module.scss'
-import type { UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
-import type { CEModuleLicenseDTO } from 'services/cd-ng'
 
 export const BANNER_KEY = 'feature_banner_dismissed'
 
@@ -166,12 +165,12 @@ export default function FeatureBanner(): React.ReactElement | null {
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-  const usageInfo = useGetUsageNew(moduleName)
 
+  const usage = useGetUsage(moduleName)
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, moduleName)
-  let usageAndLimitInfo: UsageAndLimitReturn = {
-    usageData: usageInfo.usageData,
+  const usageAndLimitInfo: UsageAndLimitReturn = {
+    usageData: usage,
     limitData: {
       limit: { ccm: { totalSpendLimit: (licenseInformation?.CE as CEModuleLicenseDTO)?.spendLimit } }
     }

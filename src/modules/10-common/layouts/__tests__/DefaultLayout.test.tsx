@@ -11,7 +11,13 @@ import { Link } from 'react-router-dom'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import featuresFactory from 'framework/featureStore/FeaturesFactory'
-import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback } from 'services/cd-ng'
+import {
+  useGetLicensesAndSummary,
+  useExtendTrialLicense,
+  useSaveFeedback,
+  useGetCDLicenseUsageForServiceInstances,
+  useGetCDLicenseUsageForServices
+} from 'services/cd-ng'
 
 import { BANNER_KEY } from '../FeatureBanner'
 import { BannerType } from '../Constants'
@@ -27,17 +33,21 @@ jest.mock('@common/hooks/useFeatures', () => ({
   useFeatures: jest.fn(() => ({}))
 }))
 
-jest.mock('@common/hooks/useGetUsageAndLimit', () => {
-  return {
-    useGetUsageAndLimit: () => {
-      return useGetUsageAndLimitReturnMock
-    }
-  }
-})
-
 jest.mock('services/cd-ng')
 const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 useGetLicensesAndSummaryMock.mockImplementation(() => {
+  return {
+    data: {}
+  }
+})
+const useGetCDLicenseUsageForServiceInstancesMock = useGetCDLicenseUsageForServiceInstances as jest.MockedFunction<any>
+useGetCDLicenseUsageForServiceInstancesMock.mockImplementation(() => {
+  return {
+    data: {}
+  }
+})
+const useGetCDLicenseUsageForServicesMock = useGetCDLicenseUsageForServices as jest.MockedFunction<any>
+useGetCDLicenseUsageForServicesMock.mockImplementation(() => {
   return {
     data: {}
   }
@@ -54,14 +64,6 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
-const useGetUsageAndLimitReturnMock = {
-  limitData: {
-    limit: {}
-  },
-  usageData: {
-    usage: {}
-  }
-}
 
 jest.mock('@common/hooks/useFeatureFlag', () => ({
   useFeatureFlag: jest.fn(() => true),
@@ -118,7 +120,7 @@ describe('<DefaultLayout /> tests', () => {
       expect(() => getByText(BANNER_TEXT)).toThrow()
     })
 
-    test('features banner stays dismissed for a module', async () => {
+    test.only('features banner stays dismissed for a module', async () => {
       featuresFactory.registerFeaturesByModule('cd', { features: [], renderMessage })
       featuresFactory.registerFeaturesByModule('ci', { features: [], renderMessage })
 
