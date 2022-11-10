@@ -99,7 +99,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
         <>
           {/* ARTIFACT TYPE SELECTION */}
           <Layout.Vertical padding={{ top: 'xxlarge' }}>
-            <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+            <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xxlarge' }} color={Color.GREY_600}>
               {getString('cd.getStartedWithCD.selectArtifactRepo')}
             </Text>
             <Layout.Horizontal>
@@ -122,7 +122,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
           <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
           {!isEmpty(formikProps?.values?.artifactType) && (
             <Container padding="large" className={moduleCss.connectorContainer}>
-              <Layout.Vertical>
+              <Layout.Vertical margin={{ bottom: 'large' }}>
                 <Layout.Horizontal margin={{ bottom: 'large', top: 'large' }}>
                   <Icon name={ArtifactIconByType[formikProps?.values?.artifactType as ArtifactType]} size={28} flex />
                   <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'large' }}>

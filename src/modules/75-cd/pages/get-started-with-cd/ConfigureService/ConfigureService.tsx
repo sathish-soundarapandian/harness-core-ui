@@ -249,6 +249,7 @@ const ConfigureServiceRef = (
       set(draft, 'data.gitValues', gitValues)
       set(draft, 'data.manifestValues', manifestValues)
       set(draft, 'data.artifactType', formikRef?.current?.values?.artifactType)
+      set(draft, 'data.artifactToDeploy', formikRef?.current?.values?.artifactToDeploy)
       set(draft, 'data.manifestData', formikRef?.current?.values?.manifestData)
       set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
       set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
@@ -335,8 +336,9 @@ const ConfigureServiceRef = (
     setManifestStepStatus(DefaultManifestStepStatus)
     selectGitProviderRef.current = null
     const updatedContextService = produce(serviceData as ServiceDataType, draft => {
-      set(draft, 'data.gitValues', {})
       set(draft, 'data.manifestStoreType', type)
+      unset(draft, 'data.gitValues')
+      unset(draft, 'data.repovalues')
       unset(draft, 'data.gitConnectionStatus')
       unset(draft, 'data.connectorRef')
       unset(draft, 'serviceDefinition.spec.manifest[0]')
@@ -354,7 +356,7 @@ const ConfigureServiceRef = (
     return (
       <Layout.Vertical padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
         <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
-          {getString('cd.getStartedWithCD.manifestTypeSelection')}
+          {getString('cd.getStartedWithCD.manifestStoreLabel')}
         </Text>
         <Layout.Horizontal>
           <Button
@@ -447,7 +449,7 @@ const ConfigureServiceRef = (
       repository: initialRepoValue,
       manifestData: isEmpty(manifestData) ? { type: allowableManifestTypes[0] } : manifestData,
       manifestStoreType,
-      artifactToDeploy: BinaryLabels.YES,
+      artifactToDeploy: get(serviceData, 'data.artifactToDeploy') || BinaryLabels.YES,
       artifactConfig,
       manifestConfig,
       artifactData,
@@ -595,5 +597,3 @@ const ConfigureServiceRef = (
 }
 
 export const ConfigureService = React.forwardRef(ConfigureServiceRef)
-
-// TODO:: stepStatus artifact update when coming back

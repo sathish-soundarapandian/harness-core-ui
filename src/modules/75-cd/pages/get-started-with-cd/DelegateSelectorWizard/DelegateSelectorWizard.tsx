@@ -386,7 +386,6 @@ export const DelegateSelectorWizard = ({ enableNextBtn, disableNextBtn }: Delega
         {helpPanelVisible && (
           <Layout.Vertical width={'45%'} padding={'large'} background={Color.PRIMARY_1} flex={{ alignItems: 'center' }}>
             <div className={css.tabs}>
-              {/* TODO:: Close helpPanel cross icon */}
               <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.marginBottomClass}>
                 {getString('cd.instructionsCluster')}
               </Text>

@@ -1,4 +1,4 @@
-2 /* eslint-disable import/no-unresolved */
+/* eslint-disable import/no-unresolved */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -674,7 +674,6 @@ const SelectGitProviderRef = (
       default:
         return false
     }
-    return false
   }, [gitProvider, authMethod])
 
   //#endregion
@@ -879,7 +878,7 @@ const SelectGitProviderRef = (
                             }}
                             intent={shouldRenderAuthFormFields() ? 'primary' : 'none'}
                           />
-                          {authMethod === GitAuthenticationMethod.OAuth ? renderOAuthConnectionStatus() : null}
+                          {authMethod === GitAuthenticationMethod.OAuth && renderOAuthConnectionStatus()}
                         </Layout.Horizontal>
                         {formikProps.touched.gitAuthenticationMethod && !formikProps.values.gitAuthenticationMethod ? (
                           <Container padding={{ top: 'xsmall' }}>
@@ -893,7 +892,7 @@ const SelectGitProviderRef = (
                         ) : null}
                       </Layout.Vertical>
 
-                      {shouldRenderAuthFormFields() ? (
+                      {shouldRenderAuthFormFields() && (
                         <Layout.Vertical padding={{ top: 'medium' }} flex={{ alignItems: 'flex-start' }}>
                           <Container padding={{ top: 'xsmall' }} width="100%">
                             {renderNonOAuthView(formikProps)}
@@ -927,9 +926,9 @@ const SelectGitProviderRef = (
                             ) : null}
                           </Layout.Horizontal>
                         </Layout.Vertical>
-                      ) : null}
+                      )}
                     </Container>
-                    {shouldRenderAuthFormFields() ? (
+                    {shouldRenderAuthFormFields() && (
                       <Layout.Vertical padding={{ top: 'small' }}>
                         <Text font={{ variation: FontVariation.H5 }}>{getString('common.smtp.testConnection')}</Text>
                         <Text>{getString('common.getStarted.verifyConnection')}</Text>
@@ -937,7 +936,7 @@ const SelectGitProviderRef = (
                           <TestConnection />
                         </Container>
                       </Layout.Vertical>
-                    ) : null}
+                    )}
                   </Layout.Vertical>
                 ) : null}
               </Form>

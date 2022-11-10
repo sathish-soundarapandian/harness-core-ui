@@ -4883,6 +4883,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.manifestStorage': string
+  'cd.getStartedWithCD.manifestStoreLabel': string
   'cd.getStartedWithCD.manifestTypeSelection': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
