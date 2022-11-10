@@ -307,7 +307,7 @@ export function ArtifactSourceTemplateDetails(
                     )}
                     {!isLoading && !error && templateInputs && allValues && (
                       <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'}>
-                        <Heading level={5} color={Color.BLACK}>
+                        <Heading level={5} color={Color.BLACK} margin={{ bottom: 'large' }}>
                           {getString('pipeline.templateInputs')}
                         </Heading>
                         {artifactSource &&
