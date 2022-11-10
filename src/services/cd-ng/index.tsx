@@ -44,6 +44,8 @@ export type AMIArtifactConfig = ArtifactConfig & {
     | 'me-south-1'
     | 'me-central-1'
     | 'sa-east-1'
+    | 'us-gov-east-1'
+    | 'us-gov-west-1'
   tags?: AMITag[]
   version?: string
   versionRegex?: string
@@ -1768,6 +1770,7 @@ export interface CDStageModuleInfo {
   freezeExecutionSummary?: FreezeExecutionSummary
   infraExecutionSummary?: InfraExecutionSummary
   nodeExecutionId?: string
+  rollbackDuration?: number
   serviceInfo?: ServiceExecutionSummary
 }
 
@@ -1814,6 +1817,7 @@ export type CILicenseSummaryDTO = LicensesWithSummaryDTO & {
 }
 
 export type CIModuleLicenseDTO = ModuleLicenseDTO & {
+  hostingCredits?: number
   numberOfCommitters?: number
 }
 
@@ -2606,6 +2610,7 @@ export interface CustomScriptBaseSource {
 
 export interface CustomScriptInfo {
   inputs?: NGVariable[]
+  runtimeInputYaml?: string
   script: string
 }
 
@@ -3278,6 +3283,11 @@ export type ElastigroupInfrastructure = Infrastructure & {
   metadata?: string
 }
 
+export type ElastigroupRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  metadata?: string
+}
+
 export type ElastigroupServiceSpec = ServiceSpec & {
   startupScript?: StartupScriptConfiguration
 }
@@ -3451,6 +3461,7 @@ export interface EntityDetail {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5698,6 +5709,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5821,6 +5833,7 @@ export interface GitEntityFilterProperties {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5977,6 +5990,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6108,6 +6122,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6347,6 +6362,7 @@ export interface GitSyncEntityDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6472,6 +6488,7 @@ export interface GitSyncEntityListDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6614,6 +6631,7 @@ export interface GitSyncErrorDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9549,6 +9567,7 @@ export interface ReferencedByDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
 }
 
 export interface RefreshResponse {
@@ -10625,6 +10644,7 @@ export interface ResponseListEntityType {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11743,6 +11763,13 @@ export interface ResponseScmConnectorResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseScmListFilesResponseDTO {
+  correlationId?: string
+  data?: ScmListFilesResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseSecretManagerMetadataDTO {
   correlationId?: string
   data?: SecretManagerMetadataDTO
@@ -12515,7 +12542,6 @@ export type SamlSettings = SSOSettings & {
   entityIdentifier?: string
   groupMembershipAttr?: string
   logoutUrl?: string
-  metaDataFile?: string
   origin: string
   samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
   settingType?:
@@ -12642,6 +12668,17 @@ export interface ScmConnectorResponse {
 
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
+}
+
+export interface ScmFileGitDetailsDTO {
+  blobId?: string
+  commitId?: string
+  contentType?: 'INVALID_CONTENT_TYPE' | 'UNKNOWN_CONTENT' | 'FILE' | 'DIRECTORY' | 'SYMLINK' | 'GITLINK'
+  path?: string
+}
+
+export interface ScmListFilesResponseDTO {
+  fileGitDetailsDTOList?: ScmFileGitDetailsDTO[]
 }
 
 export interface Scope {
@@ -13577,6 +13614,7 @@ export interface StepData {
     | 'EcsBlueGreenRollback'
     | 'GitOpsUpdateReleaseRepo'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
 }
 
 export interface StepElementConfig {
@@ -14593,9 +14631,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -14621,11 +14659,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -15222,6 +15260,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15339,6 +15378,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -15560,6 +15600,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15677,6 +15718,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -29786,6 +29828,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -29964,6 +30007,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   searchTerm?: string
 }
 
@@ -32988,6 +33032,7 @@ export interface GetReferencedByQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   searchTerm?: string
 }
 
@@ -33441,7 +33486,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33455,7 +33500,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -33470,7 +33515,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33484,7 +33529,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -33496,7 +33541,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33505,7 +33550,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -34011,7 +34056,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34025,7 +34070,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -34040,7 +34085,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34054,7 +34099,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -34066,7 +34111,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -34075,7 +34120,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -35295,6 +35340,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -35480,6 +35526,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsRunTask'
       | 'Chaos'
       | 'ElastigroupDeploy'
+      | 'ElastigroupRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41139,6 +41186,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   yamlGroup?: string
 }
 
@@ -41384,6 +41432,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -43108,7 +43157,7 @@ export interface SearchScimUserPathParams {
 }
 
 export type SearchScimUserProps = Omit<
-  GetProps<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>,
+  GetProps<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>,
   'path'
 > &
   SearchScimUserPathParams
@@ -43117,7 +43166,7 @@ export type SearchScimUserProps = Omit<
  * Search users by their email address. Supports pagination. If nothing is passed in filter, all results will be returned.
  */
 export const SearchScimUser = ({ accountIdentifier, ...props }: SearchScimUserProps) => (
-  <Get<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>
+  <Get<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>
     path={`/scim/account/${accountIdentifier}/Users`}
     base={getConfig('ng/api')}
     {...props}
@@ -43125,7 +43174,7 @@ export const SearchScimUser = ({ accountIdentifier, ...props }: SearchScimUserPr
 )
 
 export type UseSearchScimUserProps = Omit<
-  UseGetProps<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>,
+  UseGetProps<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>,
   'path'
 > &
   SearchScimUserPathParams
@@ -43134,7 +43183,7 @@ export type UseSearchScimUserProps = Omit<
  * Search users by their email address. Supports pagination. If nothing is passed in filter, all results will be returned.
  */
 export const useSearchScimUser = ({ accountIdentifier, ...props }: UseSearchScimUserProps) =>
-  useGet<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>(
+  useGet<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>(
     (paramsInPath: SearchScimUserPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/Users`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
   )
@@ -43146,12 +43195,12 @@ export const searchScimUserPromise = (
   {
     accountIdentifier,
     ...props
-  }: GetUsingFetchProps<void, void, SearchScimUserQueryParams, SearchScimUserPathParams> & {
+  }: GetUsingFetchProps<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams> & {
     accountIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>(
+  getUsingFetch<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>(
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users`,
     props,
@@ -43163,7 +43212,7 @@ export interface CreateScimUserPathParams {
 }
 
 export type CreateScimUserProps = Omit<
-  MutateProps<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>,
+  MutateProps<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>,
   'path' | 'verb'
 > &
   CreateScimUserPathParams
@@ -43172,7 +43221,7 @@ export type CreateScimUserProps = Omit<
  * Create a new user
  */
 export const CreateScimUser = ({ accountIdentifier, ...props }: CreateScimUserProps) => (
-  <Mutate<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>
+  <Mutate<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>
     verb="POST"
     path={`/scim/account/${accountIdentifier}/Users`}
     base={getConfig('ng/api')}
@@ -43181,7 +43230,7 @@ export const CreateScimUser = ({ accountIdentifier, ...props }: CreateScimUserPr
 )
 
 export type UseCreateScimUserProps = Omit<
-  UseMutateProps<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>,
+  UseMutateProps<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>,
   'path' | 'verb'
 > &
   CreateScimUserPathParams
@@ -43190,7 +43239,7 @@ export type UseCreateScimUserProps = Omit<
  * Create a new user
  */
 export const useCreateScimUser = ({ accountIdentifier, ...props }: UseCreateScimUserProps) =>
-  useMutate<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>(
+  useMutate<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>(
     'POST',
     (paramsInPath: CreateScimUserPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/Users`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
@@ -43203,12 +43252,12 @@ export const createScimUserPromise = (
   {
     accountIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, ScimUserRequestBody, CreateScimUserPathParams> & {
+  }: MutateUsingFetchProps<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams> & {
     accountIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>(
+  mutateUsingFetch<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>(
     'POST',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users`,
@@ -43221,7 +43270,7 @@ export interface DeleteScimUserPathParams {
 }
 
 export type DeleteScimUserProps = Omit<
-  MutateProps<void, void, void, string, DeleteScimUserPathParams>,
+  MutateProps<void, Failure | Error, void, string, DeleteScimUserPathParams>,
   'path' | 'verb'
 > &
   DeleteScimUserPathParams
@@ -43230,7 +43279,7 @@ export type DeleteScimUserProps = Omit<
  * Delete an user by uuid
  */
 export const DeleteScimUser = ({ accountIdentifier, ...props }: DeleteScimUserProps) => (
-  <Mutate<void, void, void, string, DeleteScimUserPathParams>
+  <Mutate<void, Failure | Error, void, string, DeleteScimUserPathParams>
     verb="DELETE"
     path={`/scim/account/${accountIdentifier}/Users`}
     base={getConfig('ng/api')}
@@ -43239,7 +43288,7 @@ export const DeleteScimUser = ({ accountIdentifier, ...props }: DeleteScimUserPr
 )
 
 export type UseDeleteScimUserProps = Omit<
-  UseMutateProps<void, void, void, string, DeleteScimUserPathParams>,
+  UseMutateProps<void, Failure | Error, void, string, DeleteScimUserPathParams>,
   'path' | 'verb'
 > &
   DeleteScimUserPathParams
@@ -43248,7 +43297,7 @@ export type UseDeleteScimUserProps = Omit<
  * Delete an user by uuid
  */
 export const useDeleteScimUser = ({ accountIdentifier, ...props }: UseDeleteScimUserProps) =>
-  useMutate<void, void, void, string, DeleteScimUserPathParams>(
+  useMutate<void, Failure | Error, void, string, DeleteScimUserPathParams>(
     'DELETE',
     (paramsInPath: DeleteScimUserPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/Users`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
@@ -43261,10 +43310,12 @@ export const deleteScimUserPromise = (
   {
     accountIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, string, DeleteScimUserPathParams> & { accountIdentifier: string },
+  }: MutateUsingFetchProps<void, Failure | Error, void, string, DeleteScimUserPathParams> & {
+    accountIdentifier: string
+  },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, string, DeleteScimUserPathParams>(
+  mutateUsingFetch<void, Failure | Error, void, string, DeleteScimUserPathParams>(
     'DELETE',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users`,
@@ -43277,27 +43328,28 @@ export interface GetScimUserPathParams {
   userIdentifier: string
 }
 
-export type GetScimUserProps = Omit<GetProps<void, void, void, GetScimUserPathParams>, 'path'> & GetScimUserPathParams
+export type GetScimUserProps = Omit<GetProps<void, Failure | Error, void, GetScimUserPathParams>, 'path'> &
+  GetScimUserPathParams
 
 /**
  * Get an existing user by uuid
  */
 export const GetScimUser = ({ accountIdentifier, userIdentifier, ...props }: GetScimUserProps) => (
-  <Get<void, void, void, GetScimUserPathParams>
+  <Get<void, Failure | Error, void, GetScimUserPathParams>
     path={`/scim/account/${accountIdentifier}/Users/${userIdentifier}`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseGetScimUserProps = Omit<UseGetProps<void, void, void, GetScimUserPathParams>, 'path'> &
+export type UseGetScimUserProps = Omit<UseGetProps<void, Failure | Error, void, GetScimUserPathParams>, 'path'> &
   GetScimUserPathParams
 
 /**
  * Get an existing user by uuid
  */
 export const useGetScimUser = ({ accountIdentifier, userIdentifier, ...props }: UseGetScimUserProps) =>
-  useGet<void, void, void, GetScimUserPathParams>(
+  useGet<void, Failure | Error, void, GetScimUserPathParams>(
     (paramsInPath: GetScimUserPathParams) =>
       `/scim/account/${paramsInPath.accountIdentifier}/Users/${paramsInPath.userIdentifier}`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier, userIdentifier }, ...props }
@@ -43311,13 +43363,13 @@ export const getScimUserPromise = (
     accountIdentifier,
     userIdentifier,
     ...props
-  }: GetUsingFetchProps<void, void, void, GetScimUserPathParams> & {
+  }: GetUsingFetchProps<void, Failure | Error, void, GetScimUserPathParams> & {
     accountIdentifier: string
     userIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<void, void, void, GetScimUserPathParams>(
+  getUsingFetch<void, Failure | Error, void, GetScimUserPathParams>(
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users/${userIdentifier}`,
     props,
@@ -43330,7 +43382,7 @@ export interface PatchScimUserPathParams {
 }
 
 export type PatchScimUserProps = Omit<
-  MutateProps<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>,
+  MutateProps<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>,
   'path' | 'verb'
 > &
   PatchScimUserPathParams
@@ -43339,7 +43391,7 @@ export type PatchScimUserProps = Omit<
  * Update some fields of a user by uuid
  */
 export const PatchScimUser = ({ accountIdentifier, userIdentifier, ...props }: PatchScimUserProps) => (
-  <Mutate<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>
+  <Mutate<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>
     verb="PATCH"
     path={`/scim/account/${accountIdentifier}/Users/${userIdentifier}`}
     base={getConfig('ng/api')}
@@ -43348,7 +43400,7 @@ export const PatchScimUser = ({ accountIdentifier, userIdentifier, ...props }: P
 )
 
 export type UsePatchScimUserProps = Omit<
-  UseMutateProps<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>,
+  UseMutateProps<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>,
   'path' | 'verb'
 > &
   PatchScimUserPathParams
@@ -43357,7 +43409,7 @@ export type UsePatchScimUserProps = Omit<
  * Update some fields of a user by uuid
  */
 export const usePatchScimUser = ({ accountIdentifier, userIdentifier, ...props }: UsePatchScimUserProps) =>
-  useMutate<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>(
+  useMutate<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>(
     'PATCH',
     (paramsInPath: PatchScimUserPathParams) =>
       `/scim/account/${paramsInPath.accountIdentifier}/Users/${paramsInPath.userIdentifier}`,
@@ -43372,13 +43424,13 @@ export const patchScimUserPromise = (
     accountIdentifier,
     userIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams> & {
+  }: MutateUsingFetchProps<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams> & {
     accountIdentifier: string
     userIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>(
+  mutateUsingFetch<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>(
     'PATCH',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users/${userIdentifier}`,
@@ -43392,7 +43444,7 @@ export interface UpdateScimUserPathParams {
 }
 
 export type UpdateScimUserProps = Omit<
-  MutateProps<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>,
+  MutateProps<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>,
   'path' | 'verb'
 > &
   UpdateScimUserPathParams
@@ -43401,7 +43453,7 @@ export type UpdateScimUserProps = Omit<
  * Update an existing user by uuid
  */
 export const UpdateScimUser = ({ accountIdentifier, userIdentifier, ...props }: UpdateScimUserProps) => (
-  <Mutate<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>
+  <Mutate<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>
     verb="PUT"
     path={`/scim/account/${accountIdentifier}/Users/${userIdentifier}`}
     base={getConfig('ng/api')}
@@ -43410,7 +43462,7 @@ export const UpdateScimUser = ({ accountIdentifier, userIdentifier, ...props }: 
 )
 
 export type UseUpdateScimUserProps = Omit<
-  UseMutateProps<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>,
+  UseMutateProps<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>,
   'path' | 'verb'
 > &
   UpdateScimUserPathParams
@@ -43419,7 +43471,7 @@ export type UseUpdateScimUserProps = Omit<
  * Update an existing user by uuid
  */
 export const useUpdateScimUser = ({ accountIdentifier, userIdentifier, ...props }: UseUpdateScimUserProps) =>
-  useMutate<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>(
+  useMutate<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>(
     'PUT',
     (paramsInPath: UpdateScimUserPathParams) =>
       `/scim/account/${paramsInPath.accountIdentifier}/Users/${paramsInPath.userIdentifier}`,
@@ -43434,13 +43486,13 @@ export const updateScimUserPromise = (
     accountIdentifier,
     userIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams> & {
+  }: MutateUsingFetchProps<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams> & {
     accountIdentifier: string
     userIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>(
+  mutateUsingFetch<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>(
     'PUT',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users/${userIdentifier}`,
@@ -43814,6 +43866,60 @@ export const getListOfBranchesByRefConnectorV2Promise = (
   getUsingFetch<ResponseGitBranchesResponseDTO, Failure | Error, GetListOfBranchesByRefConnectorV2QueryParams, void>(
     getConfig('ng/api'),
     `/scm/list-branches`,
+    props,
+    signal
+  )
+
+export interface ListFilesQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repoName?: string
+  connectorRef?: string
+  branch?: string
+  filePath?: string
+}
+
+export type ListFilesProps = Omit<
+  GetProps<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>,
+  'path'
+>
+
+/**
+ * List files
+ */
+export const ListFiles = (props: ListFilesProps) => (
+  <Get<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>
+    path={`/scm/list-files`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListFilesProps = Omit<
+  UseGetProps<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>,
+  'path'
+>
+
+/**
+ * List files
+ */
+export const useListFiles = (props: UseListFilesProps) =>
+  useGet<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>(`/scm/list-files`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * List files
+ */
+export const listFilesPromise = (
+  props: GetUsingFetchProps<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/list-files`,
     props,
     signal
   )
@@ -52302,7 +52408,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -52312,7 +52418,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -52325,7 +52431,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -52339,7 +52445,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -52351,7 +52457,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52360,7 +52466,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -52753,7 +52859,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52767,7 +52873,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -52782,7 +52888,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52796,7 +52902,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -52808,7 +52914,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52817,7 +52923,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -52952,7 +53058,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -52967,7 +53073,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -52982,7 +53088,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -52997,7 +53103,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -53016,7 +53122,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -53025,7 +53131,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -53044,7 +53150,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -53059,7 +53165,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -53074,7 +53180,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -53089,7 +53195,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -53108,7 +53214,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -53117,7 +53223,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -53747,6 +53853,7 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'

@@ -119,7 +119,7 @@ function FormContent({
   ]
 
   const versionPathValue = getGenuineValue(get(formik, `values.spec.scripts.fetchAllArtifacts.versionPath`))
-  const scriptValue = getGenuineValue(get(formik, `values.spec.scripts.fetchAllArtifacts.spec.source.spec.script`))
+  const scriptValue = get(formik, `values.spec.scripts.fetchAllArtifacts.spec.source.spec.script`)
   const inputValue = get(formik, `values.spec.inputs`)
 
   const artifactArrayPathValue = getGenuineValue(

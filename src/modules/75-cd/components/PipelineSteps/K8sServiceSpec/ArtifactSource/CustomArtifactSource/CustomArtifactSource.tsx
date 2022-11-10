@@ -28,10 +28,10 @@ import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/
 import DelegateSelectors from '@common/components/DelegateSelectors/DelegateSelectors'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
-import { isFieldFixedAndNonEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
-import { getFqnPath, isFieldfromTriggerTabDisabled, isNewServiceEnvEntity } from '../artifactSourceUtils'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { getFqnPath, getYamlData, isFieldfromTriggerTabDisabled, isNewServiceEnvEntity } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -58,7 +58,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     pipelineIdentifier,
     artifactPath,
     serviceIdentifier,
-    initialValues
+    initialValues,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
@@ -99,9 +100,6 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     artifact?.spec?.inputs
   )
 
-  const isAllFieldsAreFixed = (): boolean => {
-    return isFieldFixedAndNonEmpty(versionPathValue || '') && isFieldFixedAndNonEmpty(artifactsArrayPathValue || '')
-  }
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
   const {
@@ -113,7 +111,13 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     lazy: true,
     body: {
       script: scriptValue,
-      inputs: inputValue
+      inputs: inputValue,
+      runtimeInputYaml: getYamlData(formik?.values, stepViewType as StepViewType, path as string)
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
     },
     queryParams: {
       accountIdentifier: accountId,
@@ -289,9 +293,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                     ) {
                       return
                     }
-                    if (isAllFieldsAreFixed()) {
-                      refetchBuildDetails()
-                    }
+                    refetchBuildDetails()
                   }
                 }}
               />
