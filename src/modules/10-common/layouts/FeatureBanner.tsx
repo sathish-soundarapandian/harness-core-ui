@@ -22,7 +22,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-import { UsageAndLimitReturn, useGetUsage } from '@common/hooks/useGetUsageAndLimit'
+import { useGetUsage, UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
 import type { CEModuleLicenseDTO } from 'services/cd-ng'
 import {
   ViewUsageLink,

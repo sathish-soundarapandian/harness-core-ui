@@ -154,7 +154,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       }
     })
     const keys = Object.keys(allLicenses)
-    let finalVersionMap: {
+    const finalVersionMap: {
       [key: string]: number
     } = {}
     for (const key of keys) {

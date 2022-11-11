@@ -11,13 +11,7 @@ import { Link } from 'react-router-dom'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import featuresFactory from 'framework/featureStore/FeaturesFactory'
-import {
-  useGetLicensesAndSummary,
-  useExtendTrialLicense,
-  useSaveFeedback,
-  useGetCDLicenseUsageForServiceInstances,
-  useGetCDLicenseUsageForServices
-} from 'services/cd-ng'
+import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback } from 'services/cd-ng'
 
 import { BANNER_KEY } from '../FeatureBanner'
 import { BannerType } from '../Constants'
@@ -40,18 +34,21 @@ useGetLicensesAndSummaryMock.mockImplementation(() => {
     data: {}
   }
 })
-const useGetCDLicenseUsageForServiceInstancesMock = useGetCDLicenseUsageForServiceInstances as jest.MockedFunction<any>
-useGetCDLicenseUsageForServiceInstancesMock.mockImplementation(() => {
-  return {
-    data: {}
+
+jest.mock('@common/utils/dateUtils', () => ({
+  formatDatetoLocale: (x: number) => x.toString()
+}))
+
+jest.mock('@common/hooks/useGetUsageandLimit', () => ({
+  useGetUsage: () => useGetUsageAndLimitReturnMock
+}))
+
+const useGetUsageAndLimitReturnMock = {
+  usageData: {
+    usage: {}
   }
-})
-const useGetCDLicenseUsageForServicesMock = useGetCDLicenseUsageForServices as jest.MockedFunction<any>
-useGetCDLicenseUsageForServicesMock.mockImplementation(() => {
-  return {
-    data: {}
-  }
-})
+}
+
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 useExtendTrialLicenseMock.mockImplementation(() => {
   return {
