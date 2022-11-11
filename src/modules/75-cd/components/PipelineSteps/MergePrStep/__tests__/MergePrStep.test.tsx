@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, queryByAttribute, render } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -135,5 +135,31 @@ describe('Test MergePrStep', () => {
       />
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render Merge Params when FF is true', async () => {
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={{}}
+        type={StepType.MergePR}
+        stepViewType={StepViewType.Edit}
+        testWrapperProps={{ defaultFeatureFlagValues: { GITOPS_API_PARAMS_MERGE_PR: true } }}
+      />
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    await fireEvent.click(getByText('common.optionalConfig'))
+    await fireEvent.click(getByText('connectors.addParameter'))
+    fireEvent.change(queryByNameAttribute('spec.variables[0].name')!, { target: { value: 'bypassPolicy' } })
+    fireEvent.change(queryByNameAttribute('spec.variables[0].value')!, {
+      target: { value: 'true' }
+    })
+    expect(container).toMatchSnapshot('Merge Params section')
+
+    await fireEvent.click(getByText('connectors.addParameter'))
+    fireEvent.change(queryByNameAttribute('spec.variables[1].name')!, { target: { value: 'bypassReason' } })
+    fireEvent.change(queryByNameAttribute('spec.variables[1].value')!, {
+      target: { value: 'test bypass reason' }
+    })
   })
 })
