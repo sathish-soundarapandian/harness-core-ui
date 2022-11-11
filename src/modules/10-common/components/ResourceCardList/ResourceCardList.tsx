@@ -13,10 +13,10 @@ import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
-import { isOnPrem } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
+import { isOnPrem } from '@common/utils/utils'
 import { useGetSmtpConfig } from 'services/cd-ng'
 import css from './ResourceCardList.module.scss'
 
@@ -38,7 +38,9 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { NG_FILE_STORE, NG_SETTINGS } = useFeatureFlags()
+  const { NG_FILE_STORE, NG_SETTINGS, GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
+  const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
@@ -47,7 +49,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
   const showGitOpsCard = useMemo(
-    () => history?.location?.pathname.includes('resources') && !isOnPrem(),
+    () => history?.location?.pathname.includes('resources') && !hideGitopsOnPrem,
     [history?.location?.pathname]
   )
   const smtpResource: ResourceOption[] = [
