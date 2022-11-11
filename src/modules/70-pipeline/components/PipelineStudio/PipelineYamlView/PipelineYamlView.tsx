@@ -184,13 +184,14 @@ function PipelineYamlView(): React.ReactElement {
             }}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
             height={'calc(100vh - 215px)'}
-            width="calc(100vw - 400px)"
+            width="50vw"
             invocationMap={stepsFactory.getInvocationMap()}
             schema={schema}
             onEnableEditMode={enableEditMode}
             isEditModeSupported={!isReadonly}
             openDialogProp={onEditButtonClick}
             showErrorPanel={true}
+            showPluginsPanel={true}
             {...yamlOrJsonProp}
           />
         )}

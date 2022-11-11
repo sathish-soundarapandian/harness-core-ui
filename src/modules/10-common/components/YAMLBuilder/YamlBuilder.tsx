@@ -70,6 +70,7 @@ import { isWindowsOS } from '@common/utils/utils'
 import { carriageReturnRegex } from '@common/utils/StringUtils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { PluginsPanel } from './PluginsPanel/PluginsPanel'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -125,7 +126,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     openDialogProp,
     showCopyIcon = true,
     showErrorPanel = false,
-    comparableYaml
+    comparableYaml,
+    showPluginsPanel = false
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -771,15 +773,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
   return (
-    <Layout.Vertical>
-      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
-        <div className={css.editor}>
-          {defaultTo(renderCustomHeader, renderHeader)()}
-          {renderEditor()}
+    <Layout.Horizontal>
+      <Layout.Vertical>
+        <div
+          className={cx(
+            css.main,
+            { [css.darkBg]: theme === 'DARK' },
+            { [css.borderWithErrorPanel]: showErrorFooter },
+            { [css.borderWithPluginsPanel]: showPluginsPanel }
+          )}
+        >
+          <div className={css.editor}>
+            {defaultTo(renderCustomHeader, renderHeader)()}
+            {renderEditor()}
+          </div>
         </div>
-      </div>
-      {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
-    </Layout.Vertical>
+        {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
+      </Layout.Vertical>
+      {showPluginsPanel ? <PluginsPanel /> : null}
+    </Layout.Horizontal>
   )
 }
 

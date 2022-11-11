@@ -19,7 +19,7 @@
     & > .editModeCheckbox {
       margin-bottom: 0 !important;
       margin-top: 0 !important;
-      margin-right: var(--spacing-13) !important;
+      margin-right: calc(3 * var(--spacing-14)) !important;
     }
   }
 }

@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Run",
+    "description": "Run a script on macOS, Linux, or Windows",
+    "pluginIcon": "run-step",
+    "publisherIcon": "ci-main"
+  },
+  {
+    "name": "Run Tests",
+    "description": "Run tests as part of your pipeline",
+    "pluginIcon": "run-tests-step",
+    "publisherIcon": "ci-main"
+  },
+  {
+    "name": "SonarQube",
+    "description": "Scan your code using SonarQube",
+    "pluginIcon": "SonarQube",
+    "publisherIcon": "ci-main"
+  },
+  {
+    "name": "Codecov",
+    "description": "Pushing test coverage results to Codecove",
+    "pluginIcon": "plugin-step",
+    "publisherIcon": "ci-main"
+  },
+  {
+    "name": "slack-send",
+    "description": "Send data into Slack",
+    "pluginIcon": "Slack",
+    "publisherIcon": "github-action"
+  },
+  {
+    "name": "Xcode build-for-test",
+    "description": "Performs xcodebuild's build-for-testing action",
+    "pluginIcon": "plugin-step",
+    "publisherIcon": "bitrise"
+  },
+  {
+    "name": "Unity - Builder",
+    "description": "Build Unity projects",
+    "pluginIcon": "plugin-step",
+    "publisherIcon": "github-action"
+  },
+  {
+    "name": "Sign apk",
+    "description": "Signs your APK or Android App Bundle before uploading it to Google Play Store",
+    "pluginIcon": "plugin-step",
+    "publisherIcon": "bitrise"
+  },
+  {
+    "name": "Bluepill build-test-for-ios",
+    "description": "Build and run parallel UI/Unit tests for iOS using LinkedIn's bluepill testing tool",
+    "pluginIcon": "Slack",
+    "publisherIcon": "bitrise"
+  }
+]

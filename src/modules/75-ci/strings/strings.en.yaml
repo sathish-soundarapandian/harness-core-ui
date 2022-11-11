@@ -203,7 +203,6 @@ getStartedWithCI:
       complexPipelines: Complex Pipelines
       containerizedSteps: Containerized Steps
       useCaching: Caching
-      usePlugins: Plugins
       integration: Seamlessly Integrate
     helptext:
       connectToRepo: After we provision your build infrastructure, we’ll connect to your repo and codebase.

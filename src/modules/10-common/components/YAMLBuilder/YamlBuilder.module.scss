@@ -11,10 +11,15 @@
   border: 1px solid var(--grey-250);
 }
 
-.borderWithPanel {
+.borderWithErrorPanel {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
   border-bottom: none !important;
+}
+
+.borderWithPluginsPanel {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 
 .filePath {
