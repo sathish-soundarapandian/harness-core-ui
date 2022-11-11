@@ -37,7 +37,8 @@ export enum InfraDeploymentType {
   AzureWebApp = 'AzureWebApp',
   ECS = 'ECS',
   CustomDeployment = 'CustomDeployment',
-  Elastigroup = 'Elastigroup'
+  Elastigroup = 'Elastigroup',
+  TAS = 'TAS'
 }
 
 export const deploymentTypeToInfraTypeMap = {

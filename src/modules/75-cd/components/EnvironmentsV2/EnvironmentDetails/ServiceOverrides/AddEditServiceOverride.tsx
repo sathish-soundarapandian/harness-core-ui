@@ -49,11 +49,15 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
+import { allowedManifestTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
 import type { AddEditServiceOverrideFormProps, VariableOverride } from './ServiceOverridesInterface'
 import ServiceConfigFileOverride from './ServiceConfigFileOverride/ServiceConfigFileOverride'
+import { AllowedManifestOverrideTypes } from './ServiceManifestOverride/ServiceManifestOverrideUtils'
 import css from './ServiceOverrides.module.scss'
 
 export interface AddEditServiceOverrideProps {
@@ -331,6 +335,12 @@ export default function AddEditServiceOverride({
     }
   }
 
+  const availableManifestTypes = React.useMemo(
+    (): ManifestTypes[] =>
+      serviceType === ServiceDeploymentType.TAS ? allowedManifestTypes[serviceType] : AllowedManifestOverrideTypes,
+    [serviceType]
+  )
+
   return (
     <Formik<AddEditServiceOverrideFormProps>
       formName="addEditServiceOverrideForm"
@@ -413,6 +423,7 @@ export default function AddEditServiceOverride({
                               isReadonly={isReadonly}
                               expressions={expressions}
                               allowableTypes={allowableTypes}
+                              availableManifestTypes={availableManifestTypes}
                             />
                           }
                         />

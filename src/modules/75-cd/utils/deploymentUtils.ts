@@ -27,7 +27,7 @@ export const deploymentIconMap: Record<ServiceDeploymentType, IconName> = {
   [ServiceDeploymentType.amazonAmi]: 'main-service-ami',
   [ServiceDeploymentType.awsCodeDeploy]: 'app-aws-code-deploy',
   [ServiceDeploymentType.awsLambda]: 'service-aws-lamda',
-  [ServiceDeploymentType.pcf]: 'service-pivotal',
+  [ServiceDeploymentType.TAS]: 'tas',
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
   [ServiceDeploymentType.Elastigroup]: 'elastigroup'
 }
@@ -45,10 +45,11 @@ export interface GetNgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
   NG_SVC_ENV_REDESIGN?: boolean
   SPOT_ELASTIGROUP_NG?: boolean
+  TAS_NG?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, TAS_NG } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -101,6 +102,13 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.Elastigroup
     })
   }
+  if (TAS_NG) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.tas',
+      icon: deploymentIconMap[ServiceDeploymentType.TAS],
+      value: ServiceDeploymentType.TAS
+    })
+  }
 
   return baseTypes
 }
@@ -131,9 +139,9 @@ export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTyp
       value: ServiceDeploymentType.awsLambda
     },
     {
-      label: 'pipeline.serviceDeploymentTypes.pcf',
-      icon: deploymentIconMap[ServiceDeploymentType.pcf],
-      value: ServiceDeploymentType.pcf
+      label: 'pipeline.serviceDeploymentTypes.tas',
+      icon: deploymentIconMap[ServiceDeploymentType.TAS],
+      value: ServiceDeploymentType.TAS
     }
   ]
 

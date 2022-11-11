@@ -13,7 +13,8 @@ import type {
   ConnectorConfigDTO,
   ManifestConfigWrapper,
   PageConnectorResponse,
-  ServiceDefinition
+  ServiceDefinition,
+  TasManifest
 } from 'services/cd-ng'
 
 export type ManifestTypes =
@@ -29,8 +30,17 @@ export type ManifestTypes =
   | 'EcsServiceDefinition'
   | 'EcsScalableTargetDefinition'
   | 'EcsScalingPolicyDefinition'
+  | 'TasManifest'
+  | 'Vars'
+  | 'AutoScaler'
 
-export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
+export type PrimaryManifestType =
+  | 'K8sManifest'
+  | 'HelmChart'
+  | 'OpenshiftTemplate'
+  | 'Kustomize'
+  | 'Vars'
+  | 'AutoScaler'
 
 export type ManifestStores =
   | 'Git'
@@ -50,6 +60,7 @@ export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness
 
 export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
+export type CLIVersionOptions = TasManifest['cfCliVersion']
 export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
 
 export interface ManifestSelectionProps {
@@ -75,8 +86,13 @@ export interface ManifestListViewProps {
   allowableTypes: AllowedTypes
   updateManifestList: (obj: ManifestConfigWrapper, idx: number) => void
   removeManifestConfig: (idx: number) => void
-  attachPathYaml: (formData: ConnectorConfigDTO, manifestId: string, manifestType: PrimaryManifestType) => void
-  removeValuesYaml: (index: number, manifestId: string, manifestType: PrimaryManifestType) => void
+  attachPathYaml: (
+    formData: ConnectorConfigDTO,
+    manifestId: string,
+    manifestType: PrimaryManifestType,
+    pathKey?: string
+  ) => void
+  removeValuesYaml: (index: number, manifestId: string, manifestType: PrimaryManifestType, pathKey?: string) => void
   allowOnlyOneManifest?: boolean
   addManifestBtnText?: string
   preSelectedManifestType?: ManifestTypes
@@ -111,6 +127,7 @@ export interface ManifestLastStepProps {
   isReadonly?: boolean
   deploymentType?: string
   showIdentifierField?: boolean
+  containsTASManifest?: boolean
 }
 export interface CommandFlags {
   commandType: string | SelectOption | undefined
@@ -149,7 +166,18 @@ export interface HelmWithOCIDataType {
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }
-
+export interface TASManifestDataType {
+  identifier: string
+  branch: string | undefined
+  commitId: string | undefined
+  gitFetchType: 'Branch' | 'Commit'
+  paths: any
+  skipResourceVersioning?: boolean
+  repoName?: string
+  varsPaths?: any
+  autoScalerPath?: any
+  cfCliVersion?: TasManifest['cfCliVersion']
+}
 export interface HelmWithGcsDataType extends HelmWithHTTPDataType {
   bucketName: SelectOption | string
   folderPath: string
@@ -245,5 +273,14 @@ export interface CustomManifestManifestDataType {
   delegateSelectors: Array<string> | string
   valuesPaths?: Array<{ path: string }> | string
   paramsPaths?: Array<{ path: string }> | string
+  varsPaths?: Array<{ path: string }> | string
+  autoScalerPath?: Array<{ path: string }> | string
+  cfCliVersion?: CLIVersionOptions
   skipResourceVersioning?: boolean
+}
+
+export interface TASWithHarnessStorePropType extends Omit<HarnessFileStoreFormData, 'skipResourceVersioning'> {
+  varsPaths?: string[] | string
+  autoScalerPath?: string[] | string
+  cfCliVersion?: CLIVersionOptions
 }

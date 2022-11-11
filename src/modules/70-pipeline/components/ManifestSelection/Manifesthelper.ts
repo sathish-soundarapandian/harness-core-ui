@@ -20,6 +20,7 @@ import {
   buildGitPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type {
+  CLIVersionOptions,
   HelmVersionOptions,
   ManifestStores,
   ManifestStoreWithoutConnector,
@@ -64,26 +65,37 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   EcsTaskDefinition: 'EcsTaskDefinition',
   EcsServiceDefinition: 'EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition',
+  TasManifest: 'TasManifest',
+  Vars: 'Vars',
+  AutoScaler: 'AutoScaler'
 }
+
+export const TASManifestAllowedPaths = [ManifestDataType.Vars, ManifestDataType.AutoScaler]
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'Values',
   HelmChart: 'Values',
   OpenshiftTemplate: 'OpenshiftParam',
-  Kustomize: 'KustomizePatches'
+  Kustomize: 'KustomizePatches',
+  Vars: 'Vars',
+  AutoScaler: 'AutoScaler'
 }
 export const ManifestToPathLabelMap: Record<PrimaryManifestType, StringKeys> = {
   K8sManifest: 'pipeline.manifestType.valuesYamlPath',
   HelmChart: 'pipeline.manifestType.valuesYamlPath',
   OpenshiftTemplate: 'pipeline.manifestType.paramsYamlPath',
-  Kustomize: 'pipeline.manifestTypeLabels.KustomizePatches'
+  Kustomize: 'pipeline.manifestTypeLabels.KustomizePatches',
+  Vars: 'pipeline.manifestType.addVarsYAMLPath',
+  AutoScaler: 'pipeline.manifestType.addAutoScalerYAMLPath'
 }
 export const ManifestToPathKeyMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'valuesPaths',
   HelmChart: 'valuesPaths',
   OpenshiftTemplate: 'paramsPaths',
-  Kustomize: 'patchesPaths'
+  Kustomize: 'patchesPaths',
+  Vars: 'varsPaths',
+  AutoScaler: 'autoScalerPath'
 }
 
 export const ManifestStoreMap: { [key: string]: ManifestStores } = {
@@ -122,7 +134,8 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
   ],
-  CustomDeployment: []
+  CustomDeployment: [],
+  TAS: [ManifestDataType.TasManifest, ManifestDataType.Vars, ManifestDataType.AutoScaler]
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -164,7 +177,10 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
   EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
   EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
+  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType,
+  TasManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  Vars: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  AutoScaler: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -179,7 +195,10 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsTaskDefinition: 'service-amazon-ecs',
   EcsServiceDefinition: 'service-amazon-ecs',
   EcsScalingPolicyDefinition: 'service-amazon-ecs',
-  EcsScalableTargetDefinition: 'service-amazon-ecs'
+  EcsScalableTargetDefinition: 'service-amazon-ecs',
+  TasManifest: 'tas-manifest',
+  Vars: 'list-vars',
+  AutoScaler: 'autoScaler'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -194,12 +213,19 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   EcsTaskDefinition: 'pipeline.manifestTypeLabels.EcsTaskDefinition',
   EcsServiceDefinition: 'pipeline.manifestTypeLabels.EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
+  TasManifest: 'pipeline.manifestTypeLabels.TASManifest',
+  Vars: 'pipeline.manifestTypeLabels.VarsYAML',
+  AutoScaler: 'pipeline.manifestTypeLabels.Autoscaler'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
   { label: 'Version 2', value: 'V2' },
   { label: 'Version 3', value: 'V3' }
+]
+
+export const cfCliVersions: Array<{ label: string; value: CLIVersionOptions }> = [
+  { label: 'CLI Version 7.0', value: 'V7' }
 ]
 
 export const ManifestIconByType: Record<ManifestStores, IconName> = {

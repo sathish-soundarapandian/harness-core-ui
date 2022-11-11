@@ -1064,6 +1064,12 @@ export interface AuthorInfo {
   url?: string
 }
 
+export type AutoScalerManifest = ManifestAttributes & {
+  metadata?: string
+  skipResourceVersioning?: ParameterFieldBoolean
+  store?: StoreConfigWrapper
+}
+
 export type AvailabilityRestrictionDTO = RestrictionDTO & {
   enabled?: boolean
 }
@@ -2146,6 +2152,7 @@ export interface ConnectorCatalogueItem {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
   )[]
 }
@@ -2228,6 +2235,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
   )[]
 }
@@ -2286,6 +2294,7 @@ export interface ConnectorInfoDTO {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
 }
 
@@ -2361,6 +2370,7 @@ export interface ConnectorTypeStatistics {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
 }
 
@@ -2960,6 +2970,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -7590,6 +7601,7 @@ export interface InfrastructureDef {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -7604,6 +7616,7 @@ export interface InfrastructureDefinitionConfig {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7627,6 +7640,7 @@ export interface InfrastructureDefinitionConfig {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
 }
 
 export interface InfrastructureDetails {
@@ -7665,6 +7679,7 @@ export interface InfrastructureRequestDTO {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   yaml?: string
 }
 
@@ -7686,6 +7701,7 @@ export interface InfrastructureResponseDTO {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7707,6 +7723,7 @@ export interface InfrastructureResponseDTO {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   yaml?: string
 }
 
@@ -8577,6 +8594,9 @@ export interface ManifestConfig {
     | 'EcsServiceDefinition'
     | 'EcsScalableTargetDefinition'
     | 'EcsScalingPolicyDefinition'
+    | 'TasManifest'
+    | 'Vars'
+    | 'AutoScaler'
 }
 
 export interface ManifestConfigWrapper {
@@ -8978,9 +8998,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -11481,6 +11502,7 @@ export interface ResponseListServiceDefinitionType {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13649,6 +13671,7 @@ export interface ServiceDefinition {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
 }
 
 export interface ServiceDeployment {
@@ -14507,6 +14530,60 @@ export interface TailFilePattern {
   tailPattern?: ParameterFieldString
 }
 
+export type TanzuApplicationServiceInfrastructure = Infrastructure & {
+  connectorRef: string
+  metadata?: string
+  organization: string
+  space: string
+}
+
+export type TanzuApplicationServiceSpec = ServiceSpec & {}
+
+export type TasConnector = ConnectorConfigDTO & {
+  credential: TasCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface TasCredential {
+  spec?: TasCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface TasCredentialSpec {
+  [key: string]: any
+}
+
+export type TasInfrastructureDetails = InfrastructureDetails & {
+  organization?: string
+  space?: string
+  tasApplicationName?: string
+}
+
+export type TasInstanceInfoDTO = InstanceInfoDTO & {
+  id: string
+  instanceIndex?: string
+  organization: string
+  space: string
+  tasApplicationGuid?: string
+  tasApplicationName: string
+}
+
+export type TasManifest = ManifestAttributes & {
+  autoScalerPath?: string[]
+  cfCliVersion?: 'V7'
+  metadata?: string
+  store?: StoreConfigWrapper
+  varsPaths?: string[]
+}
+
+export type TasManualDetails = TasCredentialSpec & {
+  endpointUrl: string
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface TechStack {
   category?: string
   technology?: string
@@ -15122,6 +15199,11 @@ export interface VariableResponseDTO {
   variable: VariableDTO
 }
 
+export type VarsManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
 export type VaultAgentCredentialDTO = VaultCredentialDTO & {
   sinkPath?: string
 }
@@ -15410,9 +15492,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -15440,11 +15522,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -26379,6 +26461,7 @@ export interface GetConnectorListQueryParams {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
   category?:
     | 'CLOUD_PROVIDER'
@@ -26779,6 +26862,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
 }
 
@@ -34961,7 +35045,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34975,7 +35059,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -34990,7 +35074,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35004,7 +35088,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -35016,7 +35100,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35025,7 +35109,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -35531,7 +35615,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35545,7 +35629,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -35560,7 +35644,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35574,7 +35658,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -35586,7 +35670,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35595,7 +35679,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -38992,6 +39076,7 @@ export interface GetInfrastructureListQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -43528,6 +43613,7 @@ export interface GetStepsQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -43674,6 +43760,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -43734,6 +43821,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -47432,6 +47520,7 @@ export interface GetServiceListQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -47995,6 +48084,7 @@ export interface GetServiceAccessListQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -50490,6 +50580,109 @@ export const updateSubscriptionPromise = (
     SubscriptionDTORequestBody,
     UpdateSubscriptionPathParams
   >('PUT', getConfig('ng/api'), `/subscriptions/${subscriptionId}`, props, signal)
+
+export interface GetTasOrganizationsQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetTasOrganizationsProps = Omit<
+  GetProps<ResponseListString, Failure | Error, GetTasOrganizationsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets tas organizations
+ */
+export const GetTasOrganizations = (props: GetTasOrganizationsProps) => (
+  <Get<ResponseListString, Failure | Error, GetTasOrganizationsQueryParams, void>
+    path={`/tas/organizations`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetTasOrganizationsProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, GetTasOrganizationsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets tas organizations
+ */
+export const useGetTasOrganizations = (props: UseGetTasOrganizationsProps) =>
+  useGet<ResponseListString, Failure | Error, GetTasOrganizationsQueryParams, void>(`/tas/organizations`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets tas organizations
+ */
+export const getTasOrganizationsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, GetTasOrganizationsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, GetTasOrganizationsQueryParams, void>(
+    getConfig('ng/api'),
+    `/tas/organizations`,
+    props,
+    signal
+  )
+
+export interface GetTasSpacesQueryParams {
+  connectorRef: string
+  organization: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetTasSpacesProps = Omit<
+  GetProps<ResponseListString, Failure | Error, GetTasSpacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets tas spaces
+ */
+export const GetTasSpaces = (props: GetTasSpacesProps) => (
+  <Get<ResponseListString, Failure | Error, GetTasSpacesQueryParams, void>
+    path={`/tas/space`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetTasSpacesProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, GetTasSpacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets tas spaces
+ */
+export const useGetTasSpaces = (props: UseGetTasSpacesProps) =>
+  useGet<ResponseListString, Failure | Error, GetTasSpacesQueryParams, void>(`/tas/space`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets tas spaces
+ */
+export const getTasSpacesPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, GetTasSpacesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, GetTasSpacesQueryParams, void>(
+    getConfig('ng/api'),
+    `/tas/space`,
+    props,
+    signal
+  )
 
 export interface GetTokenQueryParams {
   tokenId?: string
@@ -54389,7 +54582,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -54399,7 +54592,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -54412,7 +54605,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -54426,7 +54619,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -54438,7 +54631,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -54447,7 +54640,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -54840,7 +55033,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -54854,7 +55047,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -54869,7 +55062,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -54883,7 +55076,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -54895,7 +55088,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -54904,7 +55097,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -55040,7 +55233,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -55055,7 +55248,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -55070,7 +55263,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -55085,7 +55278,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -55104,7 +55297,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -55113,7 +55306,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -55132,7 +55325,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -55147,7 +55340,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -55162,7 +55355,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -55177,7 +55370,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -55196,7 +55389,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -55205,7 +55398,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -56076,6 +56269,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
   projectIdentifier?: string
   orgIdentifier?: string

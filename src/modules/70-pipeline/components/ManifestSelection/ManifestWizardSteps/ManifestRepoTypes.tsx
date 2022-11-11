@@ -10,6 +10,7 @@ import { Button, Text, Formik, IconName, Layout, StepProps, ThumbnailSelect, But
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { manifestTypeIcons, manifestTypeLabels } from '../Manifesthelper'
@@ -23,6 +24,7 @@ interface ManifestPropType {
   selectedManifest: ManifestTypes | null
   stepName: string
   initialValues: ManifestStepInitData
+  listOfDisabledManifestTypes?: ManifestTypes[]
 }
 
 export function ManifestRepoTypes({
@@ -32,7 +34,8 @@ export function ManifestRepoTypes({
   stepName,
   prevStepData,
   nextStep,
-  initialValues
+  initialValues,
+  listOfDisabledManifestTypes
 }: StepProps<ConnectorConfigDTO> & ManifestPropType): React.ReactElement {
   const [selectedManifestType, setselectedManifestType] = React.useState(selectedManifest)
 
@@ -48,9 +51,10 @@ export function ManifestRepoTypes({
       manifestTypes?.map(manifest => ({
         label: getString(manifestTypeLabels[manifest]),
         icon: manifestTypeIcons[manifest] as IconName,
-        value: manifest
+        value: manifest,
+        disabled: defaultTo(listOfDisabledManifestTypes?.includes(manifest), false)
       })),
-    [getString, manifestTypes]
+    [getString, listOfDisabledManifestTypes, manifestTypes]
   )
 
   return (

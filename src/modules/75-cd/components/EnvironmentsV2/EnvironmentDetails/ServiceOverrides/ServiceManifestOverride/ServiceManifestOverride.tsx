@@ -9,8 +9,9 @@ import React, { useCallback, useState } from 'react'
 import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { get, noop } from 'lodash-es'
+import { defaultTo, get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -24,17 +25,22 @@ import HarnessFileStore from '@pipeline/components/ManifestSelection/ManifestWiz
 import CustomRemoteManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CustomRemoteManifest/CustomRemoteManifest'
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import { CommonManifestDetails } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
-import type { ManifestLastStepProps } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { getConnectorPath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
+import type { ManifestLastStepProps, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import {
-  AllowedManifestOverrideTypes,
+  getConnectorPath,
+  getListOfDisabledManifestTypes
+} from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
+import TasManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TasManifest/TasManifest'
+import TASWithHarnessStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
+import {
   OverrideManifestTypes,
   OverrideManifestStores,
   OverrideManifestStoreMap,
   ManifestLabels,
   ManifestIcons,
   OverrideManifests,
-  OverrideManifestStoresTypes
+  OverrideManifestStoresTypes,
+  getAllowedOverrideManifests
 } from './ServiceManifestOverrideUtils'
 import ServiceManifestOverridesList from './ServiceManifestOverridesList'
 import css from './ServiceManifestOverride.module.scss'
@@ -47,6 +53,7 @@ interface ManifestVariableOverrideProps {
   expressions: string[]
   allowableTypes: AllowedTypes
   fromEnvConfigPage?: boolean
+  availableManifestTypes?: ManifestTypes[]
 }
 const DIALOG_PROPS: IDialogProps = {
   isOpen: true,
@@ -63,12 +70,14 @@ function ServiceManifestOverride({
   removeManifestConfig,
   isReadonly,
   expressions,
-  allowableTypes
+  allowableTypes,
+  availableManifestTypes
 }: ManifestVariableOverrideProps): React.ReactElement {
   const { getString } = useStrings()
   const [selectedManifest, setSelectedManifest] = useState<OverrideManifestTypes | null>(null)
   const [manifestStore, setManifestStore] = useState('')
   const [manifestIndex, setEditIndex] = useState(0)
+  const { TAS_NG } = useFeatureFlags()
 
   const createNewManifestOverride = (): void => {
     setEditIndex(manifestOverrides.length)
@@ -177,13 +186,24 @@ function ServiceManifestOverride({
       ) && manifestStore === OverrideManifestStores.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
-      case [OverrideManifests.Values, OverrideManifests.OpenshiftParam].includes(
-        selectedManifest as OverrideManifestTypes
-      ) && manifestStore === OverrideManifestStores.CustomRemote:
+      case [
+        OverrideManifests.Values,
+        OverrideManifests.OpenshiftParam,
+        OverrideManifests.TasManifest,
+        OverrideManifests.Vars,
+        OverrideManifests.AutoScaler
+      ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.CustomRemote:
         manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
         break
       case selectedManifest === OverrideManifests.Values && isGitTypeStores:
         manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
+        break
+      case selectedManifest === OverrideManifests.TasManifest && manifestStore === OverrideManifestStores.Harness:
+        manifestDetailStep = <TASWithHarnessStore {...lastStepProps()} />
+        break
+
+      case selectedManifest === OverrideManifests.TasManifest:
+        manifestDetailStep = <TasManifest {...lastStepProps()} />
         break
       default:
         manifestDetailStep = <CommonManifestDetails {...lastStepProps()} />
@@ -201,6 +221,11 @@ function ServiceManifestOverride({
       } ${getString('store')}`
     }
   }
+
+  const allowedOverrideManifestTypes = React.useMemo(() => {
+    return getAllowedOverrideManifests({ TAS_NG })
+  }, [TAS_NG])
+
   const [showModal, hideModal] = useModalHook(() => {
     const onClose = (): void => {
       hideModal()
@@ -211,7 +236,7 @@ function ServiceManifestOverride({
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            types={AllowedManifestOverrideTypes}
+            types={defaultTo(availableManifestTypes, allowedOverrideManifestTypes)}
             manifestStoreTypes={OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]}
             labels={getLabels()}
             selectedManifest={selectedManifest}
@@ -227,6 +252,7 @@ function ServiceManifestOverride({
             }}
             isReadonly={isReadonly}
             handleConnectorViewChange={noop}
+            listOfDisabledManifestTypes={getListOfDisabledManifestTypes(manifestOverrides)}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />

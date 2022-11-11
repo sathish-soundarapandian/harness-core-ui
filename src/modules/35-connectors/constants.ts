@@ -114,7 +114,8 @@ export const Connectors: ConnectorType = {
   CUSTOM_SECRET_MANAGER: 'CustomSecretManager',
   ELK: 'ElasticSearch',
   GcpSecretManager: 'GcpSecretManager',
-  SPOT: 'Spot'
+  SPOT: 'Spot',
+  TAS: 'Tas'
 }
 
 export const ConnectorInfoText = {

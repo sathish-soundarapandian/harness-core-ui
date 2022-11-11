@@ -13,6 +13,13 @@ export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boo
     ManifestDataType.EcsTaskDefinition,
     ManifestDataType.EcsServiceDefinition,
     ManifestDataType.EcsScalableTargetDefinition,
-    ManifestDataType.EcsScalingPolicyDefinition
+    ManifestDataType.EcsScalingPolicyDefinition,
+    ManifestDataType.TasManifest,
+    ManifestDataType.AutoScaler
   ].includes(selectedManifest)
 }
+
+/**
+ * @description List of manifests which are restricted to single addition
+ */
+export const allowedManifestForSingleAddition = [ManifestDataType.TasManifest, ManifestDataType.AutoScaler]
