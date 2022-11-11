@@ -3,35 +3,35 @@
     "name": "Run",
     "description": "Run a script on macOS, Linux, or Windows",
     "pluginIcon": "run-step",
-    "publisherIcon": "ci-main",
+    "publisherIcon": "harness",
     "isInstalled": true
   },
   {
     "name": "Run Tests",
     "description": "Run tests as part of your pipeline",
     "pluginIcon": "run-tests-step",
-    "publisherIcon": "ci-main",
+    "publisherIcon": "harness",
     "isInstalled": true
   },
   {
     "name": "SonarQube",
     "description": "Scan your code using SonarQube",
     "pluginIcon": "SonarQube",
-    "publisherIcon": "ci-main",
+    "publisherIcon": "harness",
     "isInstalled": false
   },
   {
     "name": "Codecov",
     "description": "Pushing test coverage results to Codecove",
     "pluginIcon": "plugin-step",
-    "publisherIcon": "ci-main",
+    "publisherIcon": "harness",
     "isInstalled": false
   },
   {
     "name": "slack-send",
     "description": "Send data into Slack",
     "pluginIcon": "service-slack",
-    "publisherIcon": "github-action",
+    "publisherIcon": "github-actions",
     "isInstalled": false
   },
   {
@@ -45,7 +45,7 @@
     "name": "Unity - Builder",
     "description": "Build Unity projects",
     "pluginIcon": "plugin-step",
-    "publisherIcon": "github-action",
+    "publisherIcon": "github-actions",
     "isInstalled": false
   },
   {

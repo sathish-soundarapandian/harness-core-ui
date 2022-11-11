@@ -47,20 +47,20 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
               size={20}
               padding={{ top: 'xsmall', right: 'small', bottom: 'small', left: isInstalled ? 0 : 'xxxlarge' }}
             />
-            <Layout.Vertical spacing="xsmall">
+            <Layout.Vertical spacing="xsmall" width="100%">
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
                 {name}
               </Text>
-              <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="90%">
+              <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="15vw">
                 {description}
               </Text>
             </Layout.Vertical>
           </Layout.Horizontal>
         </Layout.Horizontal>
-        <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} style={{ flex: 1 }}>
+        <Layout.Horizontal flex={{ justifyContent: 'flex-end', alignItems: 'flex-start' }} style={{ flex: 1 }}>
           <Icon name={publisherIcon as IconName} size={20} />
           <Layout.Horizontal flex spacing="xsmall">
-            <Icon name="main-tick" size={10} color={Color.PRIMARY_7} />
+            <Icon name="main-tick" size={12} color={Color.PRIMARY_7} />
             <Text font={{ variation: FontVariation.TINY }} color={Color.PRIMARY_7}>
               {getString('common.verified').toLowerCase()}
             </Text>
