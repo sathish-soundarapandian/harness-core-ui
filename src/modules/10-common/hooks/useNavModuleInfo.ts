@@ -114,10 +114,10 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.IAC]: {
     icon: 'sto-color-filled',
-    label: 'common.stoText',
+    label: 'iac.iacmTitle',
     getHomePageUrl: (accountId: string) => routes.toIac({ accountId }),
     featureFlagName: FeatureFlag.IACM_ENABLED,
-    color: '--sto-border'
+    color: '--iac-border'
   }
 }
 
@@ -130,7 +130,7 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IAC]
   },
   {
     label: 'common.moduleList.deployChanges',

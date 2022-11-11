@@ -6957,6 +6957,8 @@ export interface StringsMap {
   'ci.titleResources': string
   'ci.titleSettings': string
   'ci.welcome': string
+  'iac.iacm': string
+  'iac.iacmTitle': string
   'iac.stacks': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string

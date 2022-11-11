@@ -33,7 +33,7 @@ const IacStageRemote = lazy(() => import('iac/IacStage'))
 
 const IacSideNavProps: SidebarContext = {
   navComponent: IacSideNav,
-  subtitle: 'Iac',
+  subtitle: 'IACM',
   title: 'Engineering',
   icon: 'chaos-main'
 }
