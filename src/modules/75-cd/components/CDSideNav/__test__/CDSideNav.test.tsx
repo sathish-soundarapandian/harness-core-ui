@@ -9,6 +9,7 @@ import React from 'react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { accountPathProps, pipelineModuleParams, templatePathProps } from '@common/utils/routeUtils'
 import CDSideNav from '../CDSideNav'
 
@@ -25,6 +26,9 @@ jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
 
 describe('Sidenav', () => {
   test('render', () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      GITOPS_ONPREM_ENABLED: true
+    })
     const { container } = render(
       <TestWrapper
         path="/account/:accountId/cd/deployments/orgs/:orgIdentifier/projects/:projectIdentifier"
