@@ -168,6 +168,11 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
           )
         )
       )
+    case Connectors.PCF:
+      return getConnectorDisplaySummaryLabel(
+        'UrlLabel',
+        linkAsTextRenderer(connector?.spec?.credential?.spec?.endpointUrl)
+      )
     default:
       return ''
   }
