@@ -3,4 +3,17 @@
   border-bottom-right-radius: 5px;
   border: 1px solid var(--grey-250);
   border-left: none;
+  width: 100%;
+}
+
+.search {
+  border: 1px solid var(--grey-100);
+  padding: var(--spacing-6) var(--spacing-large) !important;
+}
+
+.mainTabPanel {
+  &:global(.bp3-tab-panel[role='tabpanel']) {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
 }
