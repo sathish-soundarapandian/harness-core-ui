@@ -10,8 +10,10 @@ declare const styles: {
   readonly installedBadge: string
   readonly mainTabPanel: string
   readonly overflow: string
+  readonly padding1: string
+  readonly padding2: string
   readonly plugin: string
-  readonly pluginInfo: string
+  readonly pluginIcon: string
   readonly search: string
   readonly tabs: string
 }

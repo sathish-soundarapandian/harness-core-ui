@@ -1,12 +1,15 @@
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 
+import css from './PluginsPanel.module.scss'
+
 export interface PluginInterface {
   name: string
   description: string
   pluginIcon: IconProps
   publisherIcon: string
   isInstalled: boolean
+  className?: string
 }
 
 export const Plugins: PluginInterface[] = [
@@ -22,14 +25,16 @@ export const Plugins: PluginInterface[] = [
     description: 'Run tests as part of your pipeline',
     pluginIcon: { name: 'test-verification', color: Color.PRIMARY_7 },
     publisherIcon: 'harness',
-    isInstalled: true
+    isInstalled: true,
+    className: css.padding2
   },
   {
     name: 'SonarQube',
     description: 'Scan your code using SonarQube',
     pluginIcon: { name: 'SonarQube' },
     publisherIcon: 'harness',
-    isInstalled: false
+    isInstalled: false,
+    className: css.padding1
   },
   {
     name: 'Codecov',
