@@ -33,6 +33,7 @@ export const useGetConnectorsListHook = (
   const isCustomSMEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
   const isGcpSMEnabled = useFeatureFlag(FeatureFlag.PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG)
   const isSpotElastigroupEnabled = useFeatureFlag(FeatureFlag.SPOT_ELASTIGROUP_NG)
+  const isPcfEnabled = useFeatureFlag(FeatureFlag.PCF_NG)
   // This list will control which categories will be displayed in UI and its order
   const connectorCatalogueOrder: Array<ConnectorCatalogueItem['category']> = [
     'CLOUD_PROVIDER',
@@ -147,6 +148,8 @@ export const useGetConnectorsListHook = (
             return isCustomSMEnabled
           case Connectors.SPOT:
             return isSpotElastigroupEnabled
+          case Connectors.PCF:
+            return isPcfEnabled
           default:
             return true
         }

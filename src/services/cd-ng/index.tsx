@@ -2647,7 +2647,6 @@ export interface CustomScriptBaseSource {
 export interface CustomScriptInfo {
   delegateSelector?: TaskSelectorYaml[]
   inputs?: NGVariable[]
-  runtimeInputYaml?: string
   script: string
 }
 
@@ -9857,6 +9856,28 @@ export interface PaymentIntentDetailDTO {
 
 export interface PaymentMethodCollectionDTO {
   paymentMethods?: CardDTO[]
+}
+
+export type PcfConnector = ConnectorConfigDTO & {
+  credential: PcfCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface PcfCredential {
+  spec?: PcfCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface PcfCredentialSpec {
+  [key: string]: any
+}
+
+export type PcfManualDetails = PcfCredentialSpec & {
+  endpointUrl: string
+  passwordRef: string
+  username?: string
+  usernameRef?: string
 }
 
 export type PdcInfrastructure = Infrastructure & {
