@@ -999,6 +999,10 @@ stoText: Security Testing Orchestration
 # Chaos Module
 chaosText: Chaos
 
+# IACM Module
+iacm: IACM
+iacmText: Infrastructure as Code Management
+
 zipCode: Postal / Zip Code
 countryOrRegion: Country or Region
 billingAddress: Billing Address

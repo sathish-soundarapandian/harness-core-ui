@@ -447,6 +447,8 @@ export interface StringsMap {
   'common.home': string
   'common.hostLabel': string
   'common.hourly': string
+  'common.iacm': string
+  'common.iacmText': string
   'common.ignore': string
   'common.import': string
   'common.importEntityFromGit': string
@@ -6957,7 +6959,6 @@ export interface StringsMap {
   'ci.titleResources': string
   'ci.titleSettings': string
   'ci.welcome': string
-  'iac.iacm': string
   'iac.iacmTitle': string
   'iac.stacks': string
   'cv.CVStepper.StepError': string
