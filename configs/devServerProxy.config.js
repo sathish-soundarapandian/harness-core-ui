@@ -36,9 +36,11 @@ module.exports = {
     target: targetLocalHost ? 'https://localhost:9090' : baseUrl
   },
   '/idp/api': {
+    pathRewrite: { '^/idp/api': '/api' },
     target: targetLocalHost ? 'https://localhost:9090' : baseUrl
   },
   '/idp': {
+    pathRewrite: { '^/idp': '' },
     target: targetLocalHost ? 'https://localhost:9090' : baseUrl
   },
   '/gateway/api': {
@@ -122,14 +124,14 @@ module.exports = {
   //   pathRewrite: { '^/idp/api': '/gateway/idp/api' },
   //   target: process.env.IDP_BE_URL || 'http://localhost:8080'
   // },
-  '/idp/api': {
-    pathRewrite: { '^/idp/api': '/api' },
-    target: process.env.IDP_BE_URL || 'http://localhost:7007'
-  },
-  '/idp': {
-    pathRewrite: { '^/idp': '' },
-    target: process.env.IDP_UI_URL || 'http://localhost:7007'
-  },
+  // '/idp/api': {
+  //   pathRewrite: { '^/idp/api': '/api' },
+  //   target: process.env.IDP_BE_URL || 'http://localhost:8080'
+  // },
+  // '/idp': {
+  //   pathRewrite: { '^/idp': '' },
+  //   target: process.env.IDP_UI_URL || 'http://localhost:7007'
+  // },
   '/sto/api': {
     pathRewrite: { '^/sto': '' },
     target: process.env.STO_API_URL || 'http://localhost:4000'
