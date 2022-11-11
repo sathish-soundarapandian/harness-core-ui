@@ -681,7 +681,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         isOpen={shouldShowErrorPanel}
         onToggleOpen={(isOpen: boolean) => setShouldShowErrorPanel(isOpen)}
         heading={
-          <Layout.Horizontal background={Color.GREY_50} flex={{ alignItems: 'center' }} width={'95%'}>
+          <Layout.Horizontal
+            background={Color.GREY_50}
+            flex={{ alignItems: 'center' }}
+            width={showPluginsPanel ? '90%' : '95%'}
+          >
             <Text
               color={Color.RED_800}
               font={{ variation: FontVariation.BODY2 }}
@@ -790,7 +794,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </div>
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
-      {showPluginsPanel ? <PluginsPanel /> : null}
+      {showPluginsPanel ? <PluginsPanel height={height} /> : null}
     </Layout.Horizontal>
   )
 }

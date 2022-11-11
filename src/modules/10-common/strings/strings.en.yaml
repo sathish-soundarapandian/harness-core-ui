@@ -1102,3 +1102,5 @@ configureNav: Or configure your nav!
 pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions
 plugins: Plugins
+installed: Installed
+verified: Verified

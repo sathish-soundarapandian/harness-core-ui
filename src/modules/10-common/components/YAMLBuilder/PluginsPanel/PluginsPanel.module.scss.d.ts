@@ -7,7 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly installedBadge: string
   readonly mainTabPanel: string
+  readonly overflow: string
+  readonly plugin: string
   readonly search: string
   readonly tabs: string
 }

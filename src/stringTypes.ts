@@ -456,6 +456,7 @@ export interface StringsMap {
   'common.infrastructures': string
   'common.input': string
   'common.inputVariables': string
+  'common.installed': string
   'common.instanceLabel': string
   'common.instanceValidation.maximumCountInstance': string
   'common.instanceValidation.maximumCountPercentage': string
@@ -993,6 +994,7 @@ export interface StringsMap {
   'common.validation.yamlFilePath': string
   'common.valuePlaceholder': string
   'common.variables': string
+  'common.verified': string
   'common.versionLabel': string
   'common.videoNotSupportedError': string
   'common.viewAndExecutePermissions': string

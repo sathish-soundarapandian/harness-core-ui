@@ -2,7 +2,6 @@
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border: 1px solid var(--grey-250);
-  border-left: none;
   width: 100%;
 }
 
@@ -16,4 +15,21 @@
     margin-top: 0 !important;
     margin-bottom: 0 !important;
   }
+}
+
+.installedBadge {
+  height: fit-content;
+  transform: rotate(-90deg);
+  display: flex;
+  align-items: center;
+  background: var(--grey-100) !important;
+  padding: var(--spacing-2) var(--spacing-3) !important;
+}
+
+.plugin {
+  border-bottom: 1px solid var(--grey-100);
+}
+
+.overflow {
+  overflow-y: scroll;
 }
