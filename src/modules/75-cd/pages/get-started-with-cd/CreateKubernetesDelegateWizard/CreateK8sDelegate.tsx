@@ -32,7 +32,7 @@ import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from './StepProcessing'
-import { DelegateSuccessHandler, getUniqueEntityIdentifier } from '../CDOnboardingUtils'
+import { DelegateSuccessHandler, generateDelegateName } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
 import css from './CreateK8sDelegate.module.scss'
@@ -97,7 +97,7 @@ export const CreateK8sDelegate = ({
     } else {
       const existingDelegate = get(delegateData, 'environmentEntities.delegate', null) // delegateName from context
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const delegateName1 = existingDelegate || getUniqueEntityIdentifier('pratyush_sample_delegate')
+      const delegateName1 = existingDelegate || generateDelegateName()
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
 
