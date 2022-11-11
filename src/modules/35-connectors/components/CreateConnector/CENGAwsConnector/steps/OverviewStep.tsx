@@ -111,10 +111,10 @@ const OverviewStep: React.FC<OverviewProps> = props => {
     setIsLoading(true)
     const newspec: CEAwsConnector = {
       crossAccountAccess: { crossAccountRoleArn: '' },
-      isAWSGovCloudAccount: isGovCloudAccount,
       ...get(connectorInfo, 'spec'),
       ...get(prevStepData, 'spec'),
-      ...pick(formData, ['awsAccountId'])
+      ...pick(formData, ['awsAccountId']),
+      isAWSGovCloudAccount: isGovCloudAccount
     }
     const payload: CEAwsConnectorDTO = {
       ...omit(formData, ['awsAccountId']),
