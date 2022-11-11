@@ -41,7 +41,7 @@ const useGetUsageAndLimitReturnMock = {
   }
 }
 
-jest.mock('@common/hooks/useGetUsageandLimit', () => ({
+jest.mock('@common/hooks/useGetUsageAndLimit', () => ({
   useGetUsage: () => useGetUsageAndLimitReturnMock
 }))
 
