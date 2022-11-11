@@ -3,18 +3,10 @@ import cx from 'classnames'
 import { Container, Layout, Tabs, Text, ExpandingSearchInput, Tab, IconName, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-
-import plugins from '../__mocks__/plugins.json'
+import type { PluginInterface } from '../__mocks__/plugins'
+import { Plugins } from '../__mocks__/plugins'
 
 import css from './PluginsPanel.module.scss'
-
-interface Plugin {
-  name: string
-  description: string
-  pluginIcon: string
-  publisherIcon: string
-  isInstalled: boolean
-}
 
 interface PluginsPanelInterface {
   height?: React.CSSProperties['height']
@@ -24,8 +16,14 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const { height } = props
   const { getString } = useStrings()
 
-  const renderPlugin = useCallback((plugin: Plugin): JSX.Element => {
+  const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
     const { name, description, pluginIcon, publisherIcon, isInstalled } = plugin
+    const pluginIconProps = {
+      name: pluginIcon.name as IconName,
+      size: 18,
+      padding: { top: 'xsmall', right: 'small', bottom: 'small', left: isInstalled ? 0 : 'xxxlarge' },
+      ...(pluginIcon.color ? { color: pluginIcon.color } : {})
+    }
     return (
       <Layout.Horizontal
         padding={{ top: 'large', bottom: 'large', right: 'large' }}
@@ -42,11 +40,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Container>
           ) : null}
           <Layout.Horizontal className={cx({ [css.pluginInfo]: isInstalled })}>
-            <Icon
-              name={pluginIcon as IconName}
-              size={20}
-              padding={{ top: 'xsmall', right: 'small', bottom: 'small', left: isInstalled ? 0 : 'xxxlarge' }}
-            />
+            <Icon {...pluginIconProps} />
             <Layout.Vertical spacing="xsmall" width="100%">
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
                 {name}
@@ -96,7 +90,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   height: `calc(${height} - 75px)`
                 }}
               >
-                {plugins.map((item: Plugin) => renderPlugin(item))}
+                {Plugins.map((item: PluginInterface) => renderPlugin(item))}
               </Container>
             </Layout.Vertical>
           }
