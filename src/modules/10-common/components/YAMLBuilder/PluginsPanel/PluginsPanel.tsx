@@ -47,11 +47,11 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
               size={20}
               padding={{ top: 'xsmall', right: 'small', bottom: 'small', left: isInstalled ? 0 : 'xxxlarge' }}
             />
-            <Layout.Vertical spacing="xsmall">
+            <Layout.Vertical spacing="xsmall" width="100%">
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
                 {name}
               </Text>
-              <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="90%">
+              <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="15vw">
                 {description}
               </Text>
             </Layout.Vertical>
