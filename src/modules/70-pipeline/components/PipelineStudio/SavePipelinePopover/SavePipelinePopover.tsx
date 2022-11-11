@@ -213,6 +213,14 @@ function SavePipelinePopover(
     setLoading(true)
     setSchemaErrorView(false)
     const isEdit = pipelineIdentifier !== DefaultNewPipelineId
+
+    let updatedPipeline: PipelineInfoConfig = isEdit
+      ? latestPipeline
+      : {
+          ...latestPipeline,
+          name: `${pipeline.name}_${new Date().getTime().toString()}`
+        }
+
     const response = await savePipeline(
       {
         accountIdentifier: accountId,
@@ -226,7 +234,7 @@ function SavePipelinePopover(
           ? { baseBranch: branch }
           : {})
       },
-      omit(latestPipeline, 'repo', 'branch'),
+      omit(updatedPipeline, 'repo', 'branch'),
       isEdit,
       !!OPA_PIPELINE_GOVERNANCE
     )
@@ -276,7 +284,7 @@ function SavePipelinePopover(
             error: (response as any)?.metadata?.errorNodeSummary,
             originalYaml: yamlStringify(
               sanitize(
-                { pipeline: latestPipeline },
+                { pipeline: updatedPipeline },
                 { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false }
               )
             ),
@@ -372,10 +380,7 @@ function SavePipelinePopover(
   const saveAndPublish = React.useCallback(async () => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))
 
-    let latestPipeline: PipelineInfoConfig = {
-      ...pipeline,
-      name: `${pipeline.name}_${new Date().getTime().toString()}`
-    }
+    let latestPipeline: PipelineInfoConfig = pipeline
 
     if (isYaml && yamlHandler) {
       if (!parse(yamlHandler.getLatestYaml())) {
