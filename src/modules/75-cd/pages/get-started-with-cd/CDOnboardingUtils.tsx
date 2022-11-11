@@ -54,6 +54,7 @@ export const DefaultNewStageName = 'Stage Name'
 export const DefaultNewStageId = 'stage_id'
 export const DefaultNewServiceId = '-1'
 export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
+export const DEFAULT_DELEGATE_NAME = 'sample_delegate'
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
@@ -298,6 +299,12 @@ export const getUniqueEntityIdentifier = (entity = ''): string => {
   const UNIQUE_ENTITY_ID = new Date().getTime().toString()
   const newEntity = StringUtils.getIdentifierFromName(entity)
   return `${newEntity}_${UNIQUE_ENTITY_ID}`
+}
+
+export const generateDelegateName = (): string => {
+  const UNIQUE_ENTITY_ID = new Date().getTime().toString()
+  const newEntity = StringUtils.getIdentifierFromName(DEFAULT_DELEGATE_NAME)
+  return `${newEntity}-${UNIQUE_ENTITY_ID}-ng`.replace(/_/g, '-')
 }
 
 export const getStoreType = (gitProviderType?: ConnectorInfoDTO['type']): ManifestStores | undefined => {

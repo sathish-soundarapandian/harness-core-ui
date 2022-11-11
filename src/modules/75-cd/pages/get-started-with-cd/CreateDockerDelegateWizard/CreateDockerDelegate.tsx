@@ -27,7 +27,7 @@ import { DelegateTypes } from '@delegates/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
-import { DelegateSuccessHandler, getUniqueEntityIdentifier } from '../CDOnboardingUtils'
+import { DelegateSuccessHandler, generateDelegateName } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
@@ -84,7 +84,7 @@ export const CreateDockerDelegate = ({
     } else {
       const existingDelegate = get(delegateData, 'environmentEntities.delegate', null) // delegateName from context
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const delegateName1 = existingDelegate || getUniqueEntityIdentifier('sample_delegate')
+      const delegateName1 = existingDelegate || generateDelegateName()
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
       !existingDelegate &&
