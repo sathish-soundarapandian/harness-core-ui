@@ -17,14 +17,14 @@ export const Plugins: PluginInterface[] = [
     name: 'Bash/ Shell script',
     description: 'Run a script on macOS, Linux, or Windows',
     pluginIcon: { name: 'plugin-step' },
-    publisherIcon: 'harness',
+    publisherIcon: 'ci-main',
     isInstalled: true
   },
   {
     name: 'Test Intelligence',
     description: 'Run tests as part of your pipeline',
     pluginIcon: { name: 'test-verification', color: Color.PRIMARY_7 },
-    publisherIcon: 'harness',
+    publisherIcon: 'ci-main',
     isInstalled: true,
     className: css.padding2
   },
@@ -32,7 +32,7 @@ export const Plugins: PluginInterface[] = [
     name: 'SonarQube',
     description: 'Scan your code using SonarQube',
     pluginIcon: { name: 'SonarQube' },
-    publisherIcon: 'harness',
+    publisherIcon: 'ci-main',
     isInstalled: false,
     className: css.padding1
   },
@@ -40,7 +40,7 @@ export const Plugins: PluginInterface[] = [
     name: 'Codecov',
     description: 'Pushing test coverage results to Codecove',
     pluginIcon: { name: 'plugin-step' },
-    publisherIcon: 'harness',
+    publisherIcon: 'ci-main',
     isInstalled: false
   },
   {
@@ -82,7 +82,7 @@ export const Plugins: PluginInterface[] = [
     name: 'Cache Intelligence',
     description: 'Cache packages and dependancies to run your pipeline faster',
     pluginIcon: { name: 'plugin-step' },
-    publisherIcon: 'harness',
+    publisherIcon: 'ci-main',
     isInstalled: false
   }
 ]
