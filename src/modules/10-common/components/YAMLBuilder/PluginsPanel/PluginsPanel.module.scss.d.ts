@@ -11,6 +11,7 @@ declare const styles: {
   readonly mainTabPanel: string
   readonly overflow: string
   readonly plugin: string
+  readonly pluginInfo: string
   readonly search: string
   readonly tabs: string
 }

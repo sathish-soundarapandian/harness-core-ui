@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import cx from 'classnames'
 import { Container, Layout, Tabs, Text, ExpandingSearchInput, Tab, IconName, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -40,19 +41,21 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
               </Text>
             </Container>
           ) : null}
-          <Icon
-            name={pluginIcon as IconName}
-            size={20}
-            padding={{ top: 'xsmall', right: 'small', bottom: 'small', left: isInstalled ? 0 : 'xxlarge' }}
-          />
-          <Layout.Vertical spacing="xsmall">
-            <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
-              {name}
-            </Text>
-            <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="90%">
-              {description}
-            </Text>
-          </Layout.Vertical>
+          <Layout.Horizontal className={cx({ [css.pluginInfo]: isInstalled })}>
+            <Icon
+              name={pluginIcon as IconName}
+              size={20}
+              padding={{ top: 'xsmall', right: 'small', bottom: 'small', left: isInstalled ? 0 : 'xxxlarge' }}
+            />
+            <Layout.Vertical spacing="xsmall">
+              <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
+                {name}
+              </Text>
+              <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="90%">
+                {description}
+              </Text>
+            </Layout.Vertical>
+          </Layout.Horizontal>
         </Layout.Horizontal>
         <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} style={{ flex: 1 }}>
           <Icon name={publisherIcon as IconName} size={20} />
