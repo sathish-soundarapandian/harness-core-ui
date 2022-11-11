@@ -372,7 +372,10 @@ function SavePipelinePopover(
   const saveAndPublish = React.useCallback(async () => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))
 
-    let latestPipeline: PipelineInfoConfig = pipeline
+    let latestPipeline: PipelineInfoConfig = {
+      ...pipeline,
+      name: `${pipeline.name}_${new Date().getTime().toString()}`
+    }
 
     if (isYaml && yamlHandler) {
       if (!parse(yamlHandler.getLatestYaml())) {
