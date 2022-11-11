@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
-import { Container, Layout, Tabs, Text, ExpandingSearchInput, Tab, IconName, Icon } from '@harness/uicore'
+import { Container, Layout, Tabs, Text, ExpandingSearchInput, Tab, IconName, Icon, IconProps } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { PluginInterface } from '../__mocks__/plugins'
-import { Plugins } from '../__mocks__/plugins'
+import type { PluginInterface } from './plugins'
+import { Plugins } from './plugins'
 
 import css from './PluginsPanel.module.scss'
 
@@ -17,12 +17,13 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const { getString } = useStrings()
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
-    const { name, description, pluginIcon, publisherIcon, isInstalled } = plugin
-    const pluginIconProps = {
+    const { name, description, pluginIcon, publisherIcon, className } = plugin
+    const pluginIconProps: IconProps = {
       name: pluginIcon.name as IconName,
       size: 18,
-      padding: { top: 'xsmall', right: 'small', bottom: 'small', left: isInstalled ? 0 : 'xxxlarge' },
-      ...(pluginIcon.color ? { color: pluginIcon.color } : {})
+      margin: { top: 'xsmall', right: 'small', bottom: 'small', left: 'xxlarge' },
+      ...(pluginIcon.color ? { color: pluginIcon.color } : {}),
+      className: cx(css.pluginIcon, { [className as string]: className })
     }
     return (
       <Layout.Horizontal
@@ -32,14 +33,14 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         flex={{ justifyContent: 'space-between' }}
       >
         <Layout.Horizontal style={{ flex: 2 }}>
-          {isInstalled ? (
+          {/* {isInstalled ? (
             <Container className={css.installedBadge}>
               <Text font={{ variation: FontVariation.TINY }} color={Color.PRIMARY_7}>
                 {getString('common.installed').toUpperCase()}
               </Text>
             </Container>
-          ) : null}
-          <Layout.Horizontal className={cx({ [css.pluginInfo]: isInstalled })}>
+          ) : null} */}
+          <Layout.Horizontal>
             <Icon {...pluginIconProps} />
             <Layout.Vertical spacing="xsmall" width="100%">
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
