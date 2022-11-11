@@ -197,7 +197,7 @@ export const SCMNavItem = () => {
   )
 }
 
-export const IACNavItem = () => {
+export const IACNavItem = (): JSX.Element => {
   const params = useParams<ProjectPathProps>()
 
   return (
@@ -211,7 +211,7 @@ export const IACNavItem = () => {
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="iac.iacm" />
+            <String stringID="common.iacm" />
           </Text>
         </Layout.Vertical>
       </Link>
