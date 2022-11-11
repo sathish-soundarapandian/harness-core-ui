@@ -35,7 +35,7 @@ const IacSideNavProps: SidebarContext = {
   navComponent: IacSideNav,
   subtitle: 'IACM',
   title: 'Engineering',
-  icon: 'chaos-main'
+  icon: 'iacm'
 }
 
 const RedirectToIacProject = (): React.ReactElement => {
