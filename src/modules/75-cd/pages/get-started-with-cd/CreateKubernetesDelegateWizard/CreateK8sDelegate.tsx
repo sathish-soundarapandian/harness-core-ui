@@ -7,7 +7,6 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
