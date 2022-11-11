@@ -34,6 +34,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -82,6 +83,7 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { GITOPS_API_PARAMS_MERGE_PR } = useFeatureFlags()
 
   return (
     <>
@@ -164,16 +166,20 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
                 <FormInput.CheckBox name="spec.deleteSourceBranch" label={getString('cd.deleteSourceBranch')} />
               </div>
 
-              <div className={stepCss.divider} />
-              <Accordion className={stepCss.accordion}>
-                <Accordion.Panel
-                  id="optional-config"
-                  summary={getString('common.optionalConfig')}
-                  details={
-                    <OptionalConfiguration formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
-                  }
-                />
-              </Accordion>
+              {GITOPS_API_PARAMS_MERGE_PR ? (
+                <>
+                  <div className={stepCss.divider} />
+                  <Accordion className={stepCss.accordion}>
+                    <Accordion.Panel
+                      id="optional-config"
+                      summary={getString('common.optionalConfig')}
+                      details={
+                        <OptionalConfiguration formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
+                      }
+                    />
+                  </Accordion>
+                </>
+              ) : null}
             </>
           )
         }}
@@ -221,13 +227,13 @@ export class MergePR extends PipelineStep<MergePRStepData> {
     return (
       <MergePRWidgetWithRef
         initialValues={this.getInitialValues(initialValues)}
-        onUpdate={onUpdate}
+        onUpdate={data => onUpdate?.(this.processFormData(data))}
         isNewStep={defaultTo(isNewStep, true)}
         stepViewType={defaultTo(stepViewType, StepViewType.Edit)}
         ref={formikRef}
         readonly={readonly}
         allowableTypes={allowableTypes}
-        onChange={onChange}
+        onChange={data => onChange?.(this.processFormData(data))}
       />
     )
   }

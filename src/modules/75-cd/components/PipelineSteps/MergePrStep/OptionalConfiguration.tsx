@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
-import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput, SelectOption } from '@wings-software/uicore'
+import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput, SelectOption } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 
 import { get } from 'lodash-es'
@@ -84,7 +84,7 @@ export default function OptionalConfiguration(props: {
                           <Button
                             variation={ButtonVariation.ICON}
                             icon="main-trash"
-                            data-testid={`remove-environmentVar-${i}`}
+                            data-testid={`remove-merge-step-parameter-${i}`}
                             onClick={() => remove(i)}
                             disabled={readonly}
                           />
@@ -94,7 +94,7 @@ export default function OptionalConfiguration(props: {
                     <Button
                       icon="plus"
                       variation={ButtonVariation.LINK}
-                      data-testid="add-environmentVar"
+                      data-testid="add-merge-step-parameter"
                       disabled={readonly}
                       onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
                       className={css.addButton}
