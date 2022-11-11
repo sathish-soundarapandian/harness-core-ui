@@ -113,7 +113,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     color: '--default-module-border'
   },
   [ModuleName.IAC]: {
-    icon: 'sto-color-filled',
+    icon: 'iacm',
     label: 'iac.iacmTitle',
     getHomePageUrl: (accountId: string) => routes.toIac({ accountId }),
     featureFlagName: FeatureFlag.IACM_ENABLED,

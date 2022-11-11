@@ -204,7 +204,7 @@ export const IACNavItem = () => {
     <li className={css.navItem}>
       <Link {...commonLinkProps} to={routes.toIac(params)}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-          <Icon name="sto-color-filled" size={30} />
+          <Icon name="iacm" size={30} />
           <Text
             font={{ weight: 'semi-bold', align: 'center' }}
             padding={{ bottom: 'xsmall' }}
