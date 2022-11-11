@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Text, ButtonVariation, ButtonSize } from '@wings-software/uicore'
+import { Button, Text, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './ArtifactConfigDrawer.module.scss'

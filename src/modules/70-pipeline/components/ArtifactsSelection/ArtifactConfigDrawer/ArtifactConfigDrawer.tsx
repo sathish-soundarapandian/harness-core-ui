@@ -8,7 +8,7 @@
 import React from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
 import { noop } from 'lodash-es'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { DrawerSizes, DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'

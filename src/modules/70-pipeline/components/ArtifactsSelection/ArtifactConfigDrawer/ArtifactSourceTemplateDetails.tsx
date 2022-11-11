@@ -6,23 +6,14 @@
  */
 
 import React from 'react'
-import {
-  Container,
-  Layout,
-  AllowedTypes,
-  Formik,
-  FormikForm,
-  FormInput,
-  PageError,
-  Heading
-} from '@wings-software/uicore'
+import { Container, Layout, AllowedTypes, Formik, FormikForm, FormInput, PageError, Heading } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { produce } from 'immer'
 import { defaultTo, isEmpty, noop, set, get } from 'lodash-es'
-import { Color } from '@wings-software/design-system'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
