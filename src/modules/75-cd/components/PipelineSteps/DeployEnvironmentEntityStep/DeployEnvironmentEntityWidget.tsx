@@ -10,6 +10,7 @@ import { isEmpty, noop, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import produce from 'immer'
 import { RadioGroup } from '@blueprintjs/core'
+import cx from 'classnames'
 
 import {
   AllowedTypes,
@@ -198,10 +199,19 @@ export default function DeployEnvironmentEntityWidget({
     if (formikRef.current) {
       const formValues = formikRef.current.values
       if (checked) {
-        if (formValues.environment) {
-          openSwitchToMultiEnvironmentDialog()
+        // The gitOpsEnabled check is to be removed once multi environments is supported for gitOps
+        if (gitOpsEnabled) {
+          if (formValues.environment) {
+            openSwitchToEnvironmentGroupDialog()
+          } else {
+            handleSwitchToEnvironmentGroupConfirmation(true)
+          }
         } else {
-          handleSwitchToMultiEnvironmentConfirmation(true)
+          if (formValues.environment) {
+            openSwitchToMultiEnvironmentDialog()
+          } else {
+            handleSwitchToMultiEnvironmentConfirmation(true)
+          }
         }
       } else {
         if (!isEmpty(formValues.environments) || !isEmpty(formValues.environmentGroup)) {
@@ -250,13 +260,17 @@ export default function DeployEnvironmentEntityWidget({
           const isMultiEnvironment = values.category === 'multi'
           const isEnvironmentGroup = values.category === 'group'
 
-          const toggleLabel = getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
-            name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
-          })
+          // The first check is to be removed once BE supports multi environments for gitops
+          const toggleLabel = gitOpsEnabled
+            ? getString('cd.pipelineSteps.environmentTab.envGroupToggleText')
+            : getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
+                name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
+              })
 
           return (
             <FormikForm>
-              <div className={css.environmentEntityWidget}>
+              {/* Gitops stage css to be removed once BE supports multi environments for gitops */}
+              <div className={cx(css.environmentEntityWidget, { [css.gitOpsStage]: gitOpsEnabled })}>
                 <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
                   <Layout.Vertical flex={{ alignItems: 'center' }}>
                     <Toggle
@@ -264,7 +278,8 @@ export default function DeployEnvironmentEntityWidget({
                       onToggle={handleMultiEnvironmentToggle}
                       label={toggleLabel}
                     />
-                    {(isMultiEnvironment || isEnvironmentGroup) && (
+                    {/* !gitOpsEnabled check is to be removed once BE supports multi environments for gitops */}
+                    {(isMultiEnvironment || isEnvironmentGroup) && !gitOpsEnabled && (
                       <RadioGroup
                         onChange={handleEnvironmentGroupToggle}
                         options={[
