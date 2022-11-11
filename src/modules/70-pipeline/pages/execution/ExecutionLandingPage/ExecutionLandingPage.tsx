@@ -16,6 +16,7 @@ import { DeprecatedImageInfo, useGetExecutionConfig } from 'services/ci'
 import {
   Failure,
   GovernanceMetadata,
+  GraphLayoutNode,
   ResponsePipelineExecutionDetail,
   useGetExecutionDetailV2
 } from 'services/pipeline-ng'
@@ -180,7 +181,10 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       ...(selectedStageId !== selectedStageExecutionId &&
         !isEmpty(selectedStageExecutionId) && {
           stageNodeExecutionId: selectedStageExecutionId
-        })
+        }),
+      ...(isEmpty(queryParams.childStageNodeId) && {
+        childStageNodeId: queryParams.childStageNodeId
+      })
     },
     debounce: 500
   })
@@ -249,12 +253,25 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     key => graphNodeMap?.[key]?.setupId === selectedStageId
   )
 
-  const pipelineStagesMap = React.useMemo(() => {
+  let pipelineStagesMap = React.useMemo(() => {
     return getPipelineStagesMap(
       data?.data?.pipelineExecutionSummary?.layoutNodeMap,
       data?.data?.pipelineExecutionSummary?.startingNodeId
     )
   }, [data?.data?.pipelineExecutionSummary?.layoutNodeMap, data?.data?.pipelineExecutionSummary?.startingNodeId])
+
+  const childPipelineStagesMap = React.useMemo(() => {
+    return getPipelineStagesMap(
+      data?.data?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
+      data?.data?.childGraph?.pipelineExecutionSummary?.startingNodeId
+    )
+  }, [
+    data?.data?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
+    data?.data?.childGraph?.pipelineExecutionSummary?.startingNodeId
+  ])
+
+  if (childPipelineStagesMap.size)
+    pipelineStagesMap = new Map<string, GraphLayoutNode>([...pipelineStagesMap, ...childPipelineStagesMap])
 
   // combine steps and dependencies(ci stage)
   useDeepCompareEffect(() => {

@@ -41,6 +41,7 @@ export interface PipelineGraphProps {
   fireEvent: (event: any) => void
   getNode: GetNodeMethod
   getDefaultNode: GetNodeMethod
+  childPipelineData?: PipelineGraphState[]
   selectedNodeId?: string
   collapsibleProps?: NodeCollapsibleProps
   readonly?: boolean

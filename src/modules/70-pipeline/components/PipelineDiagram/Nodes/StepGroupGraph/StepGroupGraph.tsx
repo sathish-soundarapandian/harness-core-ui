@@ -46,6 +46,7 @@ interface StepGroupGraphProps {
   hideAdd?: boolean
   setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
   isParentMatrix?: boolean
+  type?: string
 }
 
 const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dimensions): LayoutStyles => {
@@ -132,7 +133,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
 
   const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
   useLayoutEffect(() => {
-    if (props?.data?.length) {
+    if (props?.type === 'Pipeline') setState(props.data as PipelineGraphState[])
+    else if (props?.data?.length) {
       setState(
         getPipelineGraphData({
           data: props.data,

@@ -44,6 +44,7 @@ export interface PipelineGraphState {
   parentStepGroupId?: string
   readonly?: boolean
   stageNodeId?: string
+  childPipelineData?: PipelineGraphState[]
 }
 export interface NodeIds {
   startNode: string

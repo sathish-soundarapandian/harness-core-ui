@@ -11,9 +11,9 @@ import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harnes
 import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
-import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { isExecutionRunning, ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
-import { BaseReactComponentProps, NodeType } from '../../types'
+import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'
@@ -27,7 +27,8 @@ export function StepGroupNode(props: any): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
-  const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
+  const [isNodeCollapsed, setNodeCollapsed] = React.useState(props?.type === 'Pipeline')
+  const [childPipelineData, setChildPipelineData] = React.useState<PipelineGraphState[]>([])
   const { showPrimary } = useToaster()
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
@@ -44,6 +45,17 @@ export function StepGroupNode(props: any): JSX.Element {
   )
 
   React.useEffect(() => {
+    if (props?.type === 'Pipeline') {
+      if (isExecutionRunning(props?.status)) setNodeCollapsed(false)
+      else setNodeCollapsed(true)
+    }
+  }, [props?.status])
+
+  React.useEffect(() => {
+    if (props?.childPipelineData?.length) setChildPipelineData(props?.childPipelineData)
+  }, [props?.childPipelineData])
+
+  React.useEffect(() => {
     props?.updateGraphLinks?.()
     updateDimensions?.({
       [(props?.id || props?.data?.id) as string]: {
@@ -57,7 +69,7 @@ export function StepGroupNode(props: any): JSX.Element {
 
   React.useEffect(() => {
     // collapse stepGroup in execution view till data loads
-    setNodeCollapsed(stepsData?.length === 0 && isExecutionView)
+    if (props?.type !== 'Pipeline') setNodeCollapsed(stepsData?.length === 0 && isExecutionView)
   }, [stepsData])
 
   const debounceHideVisibility = debounce(() => {
@@ -76,7 +88,7 @@ export function StepGroupNode(props: any): JSX.Element {
           }}
           {...props}
           isNodeCollapsed={true}
-          icon="step-group"
+          icon={props?.type === 'Pipeline' ? 'pipeline' : 'step-group'}
         />
       ) : (
         <div style={{ position: 'relative' }}>
@@ -210,11 +222,12 @@ export function StepGroupNode(props: any): JSX.Element {
             <div className={css.stepGroupBody}>
               <StepGroupGraph
                 {...props}
-                data={stepsData}
+                data={props?.type === 'Pipeline' ? childPipelineData : stepsData}
                 isNodeCollapsed={isNodeCollapsed}
                 parentIdentifier={props?.identifier}
                 hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
                 setVisibilityOfAdd={setVisibilityOfAdd}
+                type={props?.type}
               />
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (

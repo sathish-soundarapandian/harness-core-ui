@@ -30,7 +30,8 @@ import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/ty
 import {
   DiagramFactory,
   NodeType as DiagramNodeType,
-  BaseReactComponentProps
+  BaseReactComponentProps,
+  DiagramNodes
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
@@ -48,6 +49,7 @@ diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React
 diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
 diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
+diagram.registerNode('Pipeline', DiagramNodes[DiagramNodeType.StepGroupNode])
 diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, DiagramNodeType.PARALLELISM], MatrixNode)
 diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 
@@ -71,6 +73,11 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     () => processLayoutNodeMapV1(pipelineExecutionDetail?.pipelineExecutionSummary),
     [pipelineExecutionDetail?.pipelineExecutionSummary]
   )
+  const childNodeData = useMemo(
+    () => processLayoutNodeMapV1(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary),
+    [pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary]
+  )
+
   const data: any = useMemo(() => {
     //ExecutionPipeline<GraphLayoutNode> | ExecutionPipeline<PipelineGraphState>
     return {
@@ -81,6 +88,17 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
       allNodes: Object.keys(pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap || {})
     }
   }, [nodeData])
+
+  const _childPipelineData: PipelineGraphState[] = useMemo(() => {
+    return processExecutionDataForGraph(childNodeData as PipelineGraphState[])
+  }, [childNodeData])
+
+  React.useEffect(() => {
+    data?.items?.forEach((obj: PipelineGraphState) => {
+      if (obj.id === selectedStageId) obj.childPipelineData = _childPipelineData
+      else obj.childPipelineData = [] as PipelineGraphState[]
+    })
+  }, [_childPipelineData])
 
   const {
     data: barrierInfoData,

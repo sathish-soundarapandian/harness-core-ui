@@ -27,6 +27,7 @@ export interface ExecutionPageQueryParams {
   step?: string
   retryStep?: string
   stageExecId?: string // strategy nodes require stageExecId + stageID
+  childStageNodeId?: string
 }
 
 export interface ExpressionBlock {
