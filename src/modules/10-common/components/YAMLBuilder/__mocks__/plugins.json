@@ -31,7 +31,7 @@
     "name": "slack-send",
     "description": "Send data into Slack",
     "pluginIcon": "service-slack",
-    "publisherIcon": "github-action",
+    "publisherIcon": "github-actions",
     "isInstalled": false
   },
   {
@@ -45,7 +45,7 @@
     "name": "Unity - Builder",
     "description": "Build Unity projects",
     "pluginIcon": "plugin-step",
-    "publisherIcon": "github-action",
+    "publisherIcon": "github-actions",
     "isInstalled": false
   },
   {
