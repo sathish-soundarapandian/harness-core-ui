@@ -16,7 +16,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import { useStrings } from 'framework/strings'
 
-// ChaosSideNav: Renders sidenav for chaos module
+// IACM Side Nav: Renders sidenav for IACM module
 export default function IacSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
