@@ -456,6 +456,7 @@ export interface StringsMap {
   'common.infrastructures': string
   'common.input': string
   'common.inputVariables': string
+  'common.installed': string
   'common.instanceLabel': string
   'common.instanceValidation.maximumCountInstance': string
   'common.instanceValidation.maximumCountPercentage': string
@@ -580,6 +581,7 @@ export interface StringsMap {
   'common.plans.subscription': string
   'common.plans.title': string
   'common.platformServiceVersions': string
+  'common.plugins': string
   'common.plusAddName': string
   'common.plusNewName': string
   'common.plusNumber': string
@@ -992,6 +994,7 @@ export interface StringsMap {
   'common.validation.yamlFilePath': string
   'common.valuePlaceholder': string
   'common.variables': string
+  'common.verified': string
   'common.versionLabel': string
   'common.videoNotSupportedError': string
   'common.viewAndExecutePermissions': string
@@ -6819,7 +6822,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.harnessCIFeatures': string
   'ci.getStartedWithCI.carousel.labels.integration': string
   'ci.getStartedWithCI.carousel.labels.useCaching': string
-  'ci.getStartedWithCI.carousel.labels.usePlugins': string
   'ci.getStartedWithCI.chooseDiffInfra': string
   'ci.getStartedWithCI.chooseExistingYAML': string
   'ci.getStartedWithCI.chooseExistingYAMLHelptext': string

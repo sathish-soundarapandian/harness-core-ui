@@ -58,7 +58,7 @@ export const CarouselSlides: { label: keyof StringsMap; details: keyof StringsMa
     details: 'ci.getStartedWithCI.carousel.helptext.useCaching'
   },
   {
-    label: 'ci.getStartedWithCI.carousel.labels.usePlugins',
+    label: 'common.plugins',
     details: 'ci.getStartedWithCI.carousel.helptext.usePlugins'
   },
   {

@@ -69,6 +69,7 @@ import { isWindowsOS } from '@common/utils/utils'
 import { carriageReturnRegex } from '@common/utils/StringUtils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { PluginsPanel } from './PluginsPanel/PluginsPanel'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -124,7 +125,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     openDialogProp,
     showCopyIcon = true,
     showErrorPanel = false,
-    comparableYaml
+    comparableYaml,
+    showPluginsPanel = false
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -143,7 +145,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
-  const yamlValidationErrorsRef = useRef<Map<number, string | string[]>>()
+  const yamlValidationErrorsRef = useRef<Map<number, string>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
@@ -261,6 +263,23 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Handle various interactions with the editor */
 
+  const validateYAMLAgainstSchema = useCallback(
+    (updatedYaml: string): void => {
+      if (schema) {
+        validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
+          setSchemaValidationErrors(errors)
+          if (isEmpty(errors)) {
+            setShouldShowErrorPanel(false)
+          }
+        })
+      } else {
+        setSchemaValidationErrors([])
+        setShouldShowErrorPanel(false)
+      }
+    },
+    [schema]
+  )
+
   const onYamlChange = useCallback(
     debounce((editedYaml: string): void => {
       const updatedYaml = isWindowsOS() ? editedYaml.replace(carriageReturnRegex, '\n') : editedYaml
@@ -273,60 +292,54 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         schema,
         errorMessage: yamlError
       })
-      if (updatedYaml) {
-        if (schema) {
-          validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
-            setSchemaValidationErrors(errors)
-            if (isEmpty(errors)) {
-              setShouldShowErrorPanel(false)
-            }
-          })
-        }
-      } else {
-        setSchemaValidationErrors([])
-        setShouldShowErrorPanel(false)
+      if (updatedYaml && schema) {
+        validateYAMLAgainstSchema(updatedYaml)
       }
       onChange?.(!(updatedYaml === ''))
-      const editor = editorRef.current?.editor
-      if (editor) {
-        const currentCursorPosition = editor.getPosition()
-        const { lineNumber, column } = currentCursorPosition || {}
-        if (lineNumber && column) {
-          const editorContent = editor.getModel()?.getValue() || ''
-          const contextKey = editorContent.replace('\n', '')
-          const { autoCompletionYAML } = AutoCompletionMap.get(contextKey) || {}
-          if (AutoCompletionMap.has(contextKey)) {
-            editor.executeEdits('', [
-              {
-                range: {
-                  startLineNumber: lineNumber,
-                  startColumn: column,
-                  endLineNumber: lineNumber,
-                  endColumn: column
-                } as Range,
-                text: autoCompletionYAML || '',
-                forceMoveMarkers: true
-              }
-            ])
-            const lastLineNum = editor.getModel()?.getLineCount()
-            if (lastLineNum) {
-              const lastColumn = editor.getModel()?.getLineMaxColumn(lastLineNum)
-              editor.setSelection(new monaco.Range(0, 0, 0, 0))
-              editor.setPosition({
-                lineNumber: lastLineNum,
-                column: lastColumn
-              } as IPosition)
-              const updatedPosition = editor.getPosition()
-              if (updatedPosition) {
-                setTimeout(() => editor.setPosition({ ...updatedPosition, column: updatedPosition?.column + 1 }), 1000)
-              }
+      autoCompleteYAML()
+    }, 500),
+    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
+  )
+
+  const autoCompleteYAML = useCallback((): void => {
+    const editor = editorRef.current?.editor
+    if (editor) {
+      const currentCursorPosition = editor.getPosition()
+      const { lineNumber, column } = currentCursorPosition || {}
+      if (lineNumber && column) {
+        const editorContent = editor.getModel()?.getValue() || ''
+        const contextKey = editorContent.replace('\n', '')
+        const { autoCompletionYAML } = AutoCompletionMap.get(contextKey) || {}
+        if (AutoCompletionMap.has(contextKey)) {
+          editor.executeEdits('', [
+            {
+              range: {
+                startLineNumber: lineNumber,
+                startColumn: column,
+                endLineNumber: lineNumber,
+                endColumn: column
+              } as Range,
+              text: autoCompletionYAML || '',
+              forceMoveMarkers: true
+            }
+          ])
+          const lastLineNum = editor.getModel()?.getLineCount()
+          if (lastLineNum) {
+            const lastColumn = editor.getModel()?.getLineMaxColumn(lastLineNum)
+            editor.setSelection(new monaco.Range(0, 0, 0, 0))
+            editor.setPosition({
+              lineNumber: lastLineNum,
+              column: lastColumn
+            } as IPosition)
+            const updatedPosition = editor.getPosition()
+            if (updatedPosition) {
+              setTimeout(() => editor.setPosition({ ...updatedPosition, column: updatedPosition?.column + 1 }), 1000)
             }
           }
         }
       }
-    }, 500),
-    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
-  )
+    }
+  }, [editorRef.current?.editor])
 
   const showNoPermissionError = useCallback(
     throttle(() => {
@@ -667,7 +680,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         isOpen={shouldShowErrorPanel}
         onToggleOpen={(isOpen: boolean) => setShouldShowErrorPanel(isOpen)}
         heading={
-          <Layout.Horizontal background={Color.GREY_50} flex={{ alignItems: 'center' }} width={'95%'}>
+          <Layout.Horizontal
+            background={Color.GREY_50}
+            flex={{ alignItems: 'center' }}
+            width={showPluginsPanel ? '90%' : '95%'}
+          >
             <Text
               color={Color.RED_800}
               font={{ variation: FontVariation.BODY2 }}
@@ -759,15 +776,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
   return (
-    <Layout.Vertical>
-      <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' }, { [css.borderWithPanel]: showErrorFooter })}>
-        <div className={css.editor}>
-          {defaultTo(renderCustomHeader, renderHeader)()}
-          {renderEditor()}
+    <Layout.Horizontal>
+      <Layout.Vertical>
+        <div
+          className={cx(
+            css.main,
+            { [css.darkBg]: theme === 'DARK' },
+            { [css.borderWithErrorPanel]: showErrorFooter },
+            { [css.borderWithPluginsPanel]: showPluginsPanel }
+          )}
+        >
+          <div className={css.editor}>
+            {defaultTo(renderCustomHeader, renderHeader)()}
+            {renderEditor()}
+          </div>
         </div>
-      </div>
-      {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
-    </Layout.Vertical>
+        {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
+      </Layout.Vertical>
+      {showPluginsPanel ? <PluginsPanel height={height} /> : null}
+    </Layout.Horizontal>
   )
 }
 

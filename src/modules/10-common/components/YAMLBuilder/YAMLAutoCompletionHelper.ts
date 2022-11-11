@@ -10,14 +10,14 @@ export const AutoCompletionMap = new Map<string, { autoCompletionYAML: string }>
     'name: Java with Maven',
     {
       autoCompletionYAML:
-        '\nversion: 1\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n      clone:\n        disabled: false\n      steps:\n        - name: Build\n          type: script\n          spec:\n            run: echo "Hello world"\n        - name: Run Tests\n          type: run_tests\n          spec:\n            language: Java\n            build_tool: Maven\n            build_args: test\n            strategy:\n              parallelism: 3'
+        '\nversion: 1\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n      steps:\n        - name: Build\n          type: script\n          spec:\n            run: |-\n              echo "Welcome to Harness CI"\n              mvn install -DskipTests\n        - name: Run Tests\n          type: run_tests\n          spec:\n            language: Java\n            build_tool: Maven\n            build_args: test\n            strategy:\n              parallelism: 3'
     }
   ],
   [
     'name: Java with Gradle',
     {
       autoCompletionYAML:
-        '\nversion: 1\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n      clone:\n        disabled: false\n      steps:\n        - name: Build\n          type: script\n          spec:\n            run: echo "Hello world"\n        - name: Run Tests\n          type: run_tests\n          spec:\n            language: Java\n            build_tool: Gradle\n            build_args: test\n            strategy:\n              parallelism: 3'
+        '\nversion: 1\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n      steps:\n        - name: Build\n          type: script\n          spec:\n            run: |-\n              echo "Welcome to Harness CI"\n              gradle build -x test\n        - name: Run Tests\n          type: run_tests\n          spec:\n            language: Java\n            build_tool: Gradle\n            build_args: test\n            strategy:\n              parallelism: 3'
     }
   ]
 ])

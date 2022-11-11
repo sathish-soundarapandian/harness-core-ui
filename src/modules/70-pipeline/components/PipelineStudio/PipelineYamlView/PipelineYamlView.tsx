@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Checkbox, Tag } from '@wings-software/uicore'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -26,10 +26,10 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { useVariablesExpression } from '../PiplineHooks/useVariablesExpression'
+// import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
 
 import schema from './schema.json'
 
-// import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
 import css from './PipelineYamlView.module.scss'
 
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
@@ -101,8 +101,8 @@ function PipelineYamlView(): React.ReactElement {
           try {
             const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
             if (
-              // !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
-              // entityValidityDetails?.valid === false &&
+              (!isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
+                entityValidityDetails?.valid === false) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
               // @ts-ignore
@@ -184,13 +184,14 @@ function PipelineYamlView(): React.ReactElement {
             }}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
             height={'calc(100vh - 215px)'}
-            width="calc(100vw - 400px)"
+            width="50vw"
             invocationMap={stepsFactory.getInvocationMap()}
             schema={schema}
             onEnableEditMode={enableEditMode}
             isEditModeSupported={!isReadonly}
             openDialogProp={onEditButtonClick}
             showErrorPanel={true}
+            showPluginsPanel={true}
             {...yamlOrJsonProp}
           />
         )}
