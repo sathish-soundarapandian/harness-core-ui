@@ -306,6 +306,32 @@ export const buildSpotPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
+export const buildPcfPayload = (formData: FormData) => {
+  const savedData: any = {
+    name: formData.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData.identifier,
+    tags: formData?.tags,
+    type: Connectors.PCF,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
+      credential: {
+        type: CredTypeValues.ManualConfig,
+        spec: {
+          endpointUrl: formData.endpointUrl,
+          [formData.username.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username.value,
+          passwordRef: formData.passwordRef.referenceString
+        }
+      }
+    }
+  }
+
+  return { connector: savedData }
+}
+
 export const buildGithubPayload = (formData: FormData) => {
   const savedData: any = {
     name: formData.name,
@@ -688,6 +714,31 @@ export const setupSpotFormData = async (connectorInfo: ConnectorInfoDTO, account
           }
         : undefined,
     apiTokenRef: await setSecretField(authdata?.apiTokenRef, scopeQueryParams),
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
+    delegate: connectorInfo?.spec?.delegateSelectors || undefined
+  }
+
+  return formData
+}
+
+export const setupPcfFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo?.projectIdentifier,
+    orgIdentifier: connectorInfo?.orgIdentifier
+  }
+
+  const authdata = connectorInfo?.spec?.credential?.spec
+  const formData = {
+    username:
+      authdata?.username || authdata?.usernameRef
+        ? {
+            value: authdata.username || authdata.usernameRef,
+            type: authdata.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+    passwordRef: await setSecretField(authdata?.passwordRef, scopeQueryParams),
+    endpointUrl: authdata.endpointUrl || '',
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
     delegate: connectorInfo?.spec?.delegateSelectors || undefined
   }
@@ -2217,6 +2268,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'gcp-secret-manager'
     case Connectors.SPOT:
       return 'spot'
+    case Connectors.PCF:
+      return 'cog' // TODO:: icon update
     default:
       return 'cog'
   }
@@ -2298,6 +2351,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Spot'
     case Connectors.AZURE_ARTIFACTS:
       return 'Azure Artifacts'
+    case Connectors.PCF:
+      return 'Pcf'
     default:
       return ''
   }
@@ -2401,6 +2456,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.gcpSM')
     case Connectors.SPOT:
       return getString('connectors.testConnectionStep.validationText.spot')
+    case Connectors.PCF:
+      return getString('connectors.testConnectionStep.validationText.pcf')
     default:
       return ''
   }

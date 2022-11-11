@@ -2560,6 +2560,7 @@ export interface StringsMap {
   'connectors.name_labels.Nexus': string
   'connectors.name_labels.OCIHelm': string
   'connectors.name_labels.PDC': string
+  'connectors.name_labels.Pcf': string
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.Spot': string
@@ -2654,6 +2655,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.url.gcr': string
   'connectors.testConnectionStep.url.k8s': string
   'connectors.testConnectionStep.url.nexus': string
+  'connectors.testConnectionStep.url.pcf': string
   'connectors.testConnectionStep.url.splunk': string
   'connectors.testConnectionStep.url.spot': string
   'connectors.testConnectionStep.url.vault': string
@@ -2679,6 +2681,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.k8s': string
   'connectors.testConnectionStep.validationText.nexus': string
   'connectors.testConnectionStep.validationText.pagerduty': string
+  'connectors.testConnectionStep.validationText.pcf': string
   'connectors.testConnectionStep.validationText.serviceNow': string
   'connectors.testConnectionStep.validationText.splunk': string
   'connectors.testConnectionStep.validationText.spot': string
@@ -2717,6 +2720,7 @@ export interface StringsMap {
   'connectors.title.k8sCluster': string
   'connectors.title.nexus': string
   'connectors.title.ociHelmConnector': string
+  'connectors.title.pcf': string
   'connectors.title.pdcConnector': string
   'connectors.title.secretManager': string
   'connectors.title.serviceNow': string
