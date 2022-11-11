@@ -133,12 +133,18 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   useStepLoadTelemetry(CE_AWS_CONNECTOR_CREATION_EVENTS.LOAD_CHOOSE_REQUIREMENTS)
 
   const handleSubmit = () => {
-    const features: Features[] = selectedCards.map(card => card.value)
+    let features: Features[] = selectedCards.map(card => card.value)
+
+    if (!prevStepData?.includeBilling) {
+      features = features.filter(item => item !== Features.BILLING)
+    }
+
     const newspec = {
       crossAccountAccess: { crossAccountRoleArn: '' },
       ...prevStepData?.spec,
       featuresEnabled: features
     }
+
     const payload = prevStepData
     if (payload) payload.spec = newspec
 
@@ -172,6 +178,8 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
     category: Category.CONNECTOR
   })
 
+  const featuresSelectedError = !prevStepData?.includeBilling && selectedCards.length === 1
+
   return (
     <Layout.Vertical className={css.stepContainer}>
       <Text
@@ -201,6 +209,11 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
             cornerSelected={true}
             renderItem={item => <Card {...item} isDefault={defaultSelectedFeature === item.value} />}
           />
+          {featuresSelectedError ? (
+            <Text color={Color.RED_600} padding={{ top: 'medium' }}>
+              {getString('connectors.ceAzure.chooseRequirements.atleastOneError')}
+            </Text>
+          ) : null}
           <Layout.Horizontal className={css.buttonPanel} spacing="small">
             <Button text={getString('previous')} icon="chevron-left" onClick={handleprev}></Button>
             <Button
@@ -209,7 +222,7 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
               text={getString('continue')}
               rightIcon="chevron-right"
               onClick={handleSubmit}
-              disabled={!prevStepData?.includeBilling && selectedCards.length == 0}
+              disabled={featuresSelectedError}
             />
           </Layout.Horizontal>
         </div>

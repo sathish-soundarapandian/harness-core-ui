@@ -46,10 +46,14 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   const handleSubmit = (formData: AwsCurAttributes) => {
     const newspec: CEAwsConnector = {
       crossAccountAccess: { crossAccountRoleArn: '' },
-      ...prevStepData?.spec,
-      curAttributes: formData
+      ...prevStepData?.spec
     }
     const payload = prevStepData
+
+    if (!isExistingCostUsageReport) {
+      newspec.curAttributes = formData
+    }
+
     if (payload) {
       payload.spec = newspec
       payload.includeBilling = !isExistingCostUsageReport
