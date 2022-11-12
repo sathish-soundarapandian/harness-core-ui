@@ -62,6 +62,39 @@ describe('Test MergePrStep', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('should render edit view as edit step with runtime inputs for Variables', () => {
+    const { container } = render(
+      <TestStepWidget
+        initialValues={{
+          type: StepType.MergePR,
+          name: 'Test AB',
+          identifier: 'Test_AB',
+          timeout: RUNTIME_INPUT_VALUE
+        }}
+        type={StepType.MergePR}
+        stepViewType={StepViewType.DeploymentForm}
+        template={{
+          spec: {
+            variables: [
+              {
+                name: 'bypassReason',
+                type: 'String',
+                value: '<+input>'
+              },
+              {
+                name: 'bypassPolicy',
+                type: 'String',
+                value: '<+input>'
+              }
+            ]
+          }
+        }}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+
   test('should render edit view as inputset step', () => {
     const { container } = render(
       <TestStepWidget
