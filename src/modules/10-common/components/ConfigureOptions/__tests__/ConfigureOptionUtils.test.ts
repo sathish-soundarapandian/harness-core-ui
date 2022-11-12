@@ -102,6 +102,12 @@ describe('ConfigureOptionsUtils tests', () => {
         regex: null,
         default: null
       })
+      expect(parseInput('<+input>.allowedValues(true,false).executionInput()')).toEqual({
+        allowedValues: { values: ['true', 'false'], jexlExpression: null },
+        executionInput: true,
+        regex: null,
+        default: null
+      })
 
       expect(parseInput('<+input>.regex(^abc$).executionInput()')).toEqual({
         allowedValues: null,
