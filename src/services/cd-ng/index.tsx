@@ -3270,6 +3270,8 @@ export interface ElastigroupConfiguration {
   store: StoreConfigWrapper
 }
 
+export type ElastigroupCurrentRunningInstances = ElastigroupInstancesSpec & { [key: string]: any }
+
 export type ElastigroupDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   metadata?: string
@@ -3277,10 +3279,25 @@ export type ElastigroupDeployStepInfo = StepSpecType & {
   oldService?: Capacity
 }
 
+export type ElastigroupFixedInstances = ElastigroupInstancesSpec & {
+  desired?: number
+  max?: number
+  min?: number
+}
+
 export type ElastigroupInfrastructure = Infrastructure & {
   configuration: ElastigroupConfiguration
   connectorRef: string
   metadata?: string
+}
+
+export interface ElastigroupInstances {
+  spec?: ElastigroupInstancesSpec
+  type: 'Fixed' | 'CurrentRunning'
+}
+
+export interface ElastigroupInstancesSpec {
+  type?: 'Fixed' | 'CurrentRunning'
 }
 
 export type ElastigroupRollbackStepInfo = StepSpecType & {
@@ -3290,6 +3307,12 @@ export type ElastigroupRollbackStepInfo = StepSpecType & {
 
 export type ElastigroupServiceSpec = ServiceSpec & {
   startupScript?: StartupScriptConfiguration
+}
+
+export type ElastigroupSetupStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  instances: ElastigroupInstances
+  name: string
 }
 
 export interface Element {
@@ -3419,6 +3442,40 @@ export interface EntityDetail {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -3462,6 +3519,8 @@ export interface EntityDetail {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5667,6 +5726,40 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -5710,6 +5803,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5791,6 +5886,40 @@ export interface GitEntityFilterProperties {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -5834,6 +5963,8 @@ export interface GitEntityFilterProperties {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5948,6 +6079,40 @@ export interface GitFullSyncEntityInfoDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -5991,6 +6156,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6080,6 +6247,40 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6123,6 +6324,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6320,6 +6523,40 @@ export interface GitSyncEntityDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6363,6 +6600,8 @@ export interface GitSyncEntityDTO {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6446,6 +6685,40 @@ export interface GitSyncEntityListDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6489,6 +6762,8 @@ export interface GitSyncEntityListDTO {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6589,6 +6864,40 @@ export interface GitSyncErrorDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6632,6 +6941,8 @@ export interface GitSyncErrorDTO {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -6930,6 +7241,10 @@ export type HelmChartManifest = ManifestAttributes & {
   skipResourceVersioning?: boolean
   store?: StoreConfigWrapper
   valuesPaths?: string[]
+}
+
+export interface HelmChartResponseDTO {
+  helmChartVersions?: string[]
 }
 
 export type HelmDeployStepInfo = StepSpecType & {
@@ -9525,6 +9840,40 @@ export interface ReferencedByDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -9568,6 +9917,8 @@ export interface ReferencedByDTO {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
 }
 
 export interface RefreshResponse {
@@ -9589,6 +9940,10 @@ export type RemoteCloudformationTagsFileSpec = CloudformationTagsFileSpec & {
 }
 
 export type RemoteCloudformationTemplateFileSpec = CloudformationTemplateFileSpec & {
+  store: StoreConfigWrapper
+}
+
+export type RemoteTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
   store: StoreConfigWrapper
 }
 
@@ -10329,6 +10684,13 @@ export interface ResponseHealthDeploymentDashboard {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseHelmChartResponseDTO {
+  correlationId?: string
+  data?: HelmChartResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseInfrastructureConfig {
   correlationId?: string
   data?: InfrastructureConfig
@@ -10602,6 +10964,40 @@ export interface ResponseListEntityType {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -10645,6 +11041,8 @@ export interface ResponseListEntityType {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12542,6 +12940,7 @@ export type SamlSettings = SSOSettings & {
   entityIdentifier?: string
   groupMembershipAttr?: string
   logoutUrl?: string
+  metaDataFile?: string
   origin: string
   samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
   settingType?:
@@ -13356,9 +13755,9 @@ export interface ShouldDisableDeploymentFreezeResponseDTO {
 export interface SidecarArtifact {
   identifier: string
   name?: string
-  spec: ArtifactConfig
+  spec?: ArtifactConfig
   template?: TemplateLinkConfig
-  type:
+  type?:
     | 'DockerRegistry'
     | 'Gcr'
     | 'Ecr'
@@ -13615,6 +14014,7 @@ export interface StepData {
     | 'GitOpsUpdateReleaseRepo'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'ElastigroupSetup'
 }
 
 export interface StepElementConfig {
@@ -13901,7 +14301,7 @@ export interface TerraformBackendConfig {
 }
 
 export interface TerraformBackendConfigSpec {
-  [key: string]: any
+  type?: string
 }
 
 export interface TerraformConfigFilesWrapper {
@@ -14659,11 +15059,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -15218,6 +15618,40 @@ export interface ListActivitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15261,6 +15695,8 @@ export interface ListActivitiesQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15336,6 +15772,40 @@ export interface ListActivitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15379,6 +15849,8 @@ export interface ListActivitiesQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -15558,6 +16030,40 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15601,6 +16107,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15676,6 +16184,40 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15719,6 +16261,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -18986,7 +19530,7 @@ export type GetJobDetailsForCustomProps = Omit<
 >
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const GetJobDetailsForCustom = (props: GetJobDetailsForCustomProps) => (
   <Mutate<ResponseListBuildDetails, Failure | Error, GetJobDetailsForCustomQueryParams, CustomScriptInfo, void>
@@ -19003,7 +19547,7 @@ export type UseGetJobDetailsForCustomProps = Omit<
 >
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const useGetJobDetailsForCustom = (props: UseGetJobDetailsForCustomProps) =>
   useMutate<ResponseListBuildDetails, Failure | Error, GetJobDetailsForCustomQueryParams, CustomScriptInfo, void>(
@@ -19013,7 +19557,7 @@ export const useGetJobDetailsForCustom = (props: UseGetJobDetailsForCustomProps)
   )
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const getJobDetailsForCustomPromise = (
   props: MutateUsingFetchProps<
@@ -20131,6 +20675,106 @@ export const getRegionsForGoogleArtifactRegistryPromise = (
     props,
     signal
   )
+
+export interface GetBuildDetailsForGoogleArtifactRegistryV2QueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  package?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  version?: string
+  versionRegex?: string
+  fqnPath: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetBuildDetailsForGoogleArtifactRegistryV2Props = Omit<
+  MutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const GetBuildDetailsForGoogleArtifactRegistryV2 = (props: GetBuildDetailsForGoogleArtifactRegistryV2Props) => (
+  <Mutate<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/gar/v2/getBuildDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBuildDetailsForGoogleArtifactRegistryV2Props = Omit<
+  UseMutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const useGetBuildDetailsForGoogleArtifactRegistryV2 = (
+  props: UseGetBuildDetailsForGoogleArtifactRegistryV2Props
+) =>
+  useMutate<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/gar/v2/getBuildDetails`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const getBuildDetailsForGoogleArtifactRegistryV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/gar/v2/getBuildDetails`, props, signal)
 
 export interface GetBuildDetailsForGcrQueryParams {
   imagePath: string
@@ -26172,6 +26816,7 @@ export interface DeleteConnectorQueryParams {
   filePath?: string
   commitMsg?: string
   lastObjectId?: string
+  forceDelete?: boolean
 }
 
 export type DeleteConnectorProps = Omit<
@@ -29786,6 +30431,40 @@ export interface ListReferredByEntitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -29829,6 +30508,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -29965,6 +30646,40 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -30008,6 +30723,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   searchTerm?: string
 }
 
@@ -32990,6 +33707,40 @@ export interface GetReferencedByQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -33033,6 +33784,8 @@ export interface GetReferencedByQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   searchTerm?: string
 }
 
@@ -33486,7 +34239,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33500,7 +34253,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -33515,7 +34268,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -33529,7 +34282,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -33541,7 +34294,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -33550,7 +34303,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -34056,7 +34809,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34070,7 +34823,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -34085,7 +34838,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34099,7 +34852,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -34111,7 +34864,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -34120,7 +34873,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -35298,6 +36051,40 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -35341,6 +36128,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -35484,6 +36273,40 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'SaveCacheGCS'
       | 'SaveCacheS3'
       | 'Security'
+      | 'AquaTrivy'
+      | 'AWSECR'
+      | 'Bandit'
+      | 'BlackDuck'
+      | 'Brakeman'
+      | 'Burp'
+      | 'Checkmarx'
+      | 'Clair'
+      | 'DataTheorem'
+      | 'DockerContentTrust'
+      | 'External'
+      | 'FortifyOnDemand'
+      | 'Grype'
+      | 'JfrogXray'
+      | 'Mend'
+      | 'Metasploit'
+      | 'Nessus'
+      | 'NexusIQ'
+      | 'Nikto'
+      | 'Nmap'
+      | 'Openvas'
+      | 'Owasp'
+      | 'PrismaCloud'
+      | 'Prowler'
+      | 'Qualys'
+      | 'Reapsaw'
+      | 'ShiftLeft'
+      | 'Sniper'
+      | 'Snyk'
+      | 'Sonarqube'
+      | 'Sysdig'
+      | 'Tenable'
+      | 'Veracode'
+      | 'Zap'
       | 'GitClone'
       | 'ArtifactoryUpload'
       | 'GCSUpload'
@@ -35527,6 +36350,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Chaos'
       | 'ElastigroupDeploy'
       | 'ElastigroupRollback'
+      | 'Action'
+      | 'ElastigroupSetup'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -40600,6 +41425,63 @@ export const getModuleLicenseByIdPromise = (
     GetModuleLicenseByIdPathParams
   >(getConfig('ng/api'), `/licenses/${identifier}`, props, signal)
 
+export interface GetHelmChartVersionDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId?: string
+  fqnPath: string
+  connectorRef?: string
+  chartName?: string
+  region?: string
+  bucketName?: string
+  folderPath?: string
+}
+
+export type GetHelmChartVersionDetailsProps = Omit<
+  GetProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets helm chart version details
+ */
+export const GetHelmChartVersionDetails = (props: GetHelmChartVersionDetailsProps) => (
+  <Get<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>
+    path={`/manifests/helm/chart/version`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetHelmChartVersionDetailsProps = Omit<
+  UseGetProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets helm chart version details
+ */
+export const useGetHelmChartVersionDetails = (props: UseGetHelmChartVersionDetailsProps) =>
+  useGet<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>(
+    `/manifests/helm/chart/version`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets helm chart version details
+ */
+export const getHelmChartVersionDetailsPromise = (
+  props: GetUsingFetchProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>(
+    getConfig('ng/api'),
+    `/manifests/helm/chart/version`,
+    props,
+    signal
+  )
+
 export interface ConfigureOauthQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -41144,6 +42026,40 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -41187,6 +42103,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   yamlGroup?: string
 }
 
@@ -41390,6 +42308,40 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -41433,6 +42385,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -53811,6 +54765,40 @@ export interface GetYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -53854,6 +54842,8 @@ export interface GetYamlSchemaQueryParams {
     | 'Chaos'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
   subtype?:
     | 'K8sCluster'
     | 'Git'
