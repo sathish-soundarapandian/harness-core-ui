@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { queryByAttribute, render } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
@@ -56,6 +57,39 @@ describe('Test MergePrStep', () => {
         }}
         type={StepType.MergePR}
         stepViewType={StepViewType.Edit}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render edit view as edit step with runtime inputs for Variables', () => {
+    const { container } = render(
+      <TestStepWidget
+        initialValues={{
+          type: StepType.MergePR,
+          name: 'Test AB',
+          identifier: 'Test_AB',
+          timeout: RUNTIME_INPUT_VALUE
+        }}
+        type={StepType.MergePR}
+        stepViewType={StepViewType.DeploymentForm}
+        template={{
+          spec: {
+            variables: [
+              {
+                name: 'bypassReason',
+                type: 'String',
+                value: '<+input>'
+              },
+              {
+                name: 'bypassPolicy',
+                type: 'String',
+                value: '<+input>'
+              }
+            ]
+          }
+        }}
       />
     )
 
@@ -135,5 +169,27 @@ describe('Test MergePrStep', () => {
       />
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render Merge Params when FF is true', async () => {
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={{}}
+        type={StepType.MergePR}
+        stepViewType={StepViewType.Edit}
+        testWrapperProps={{ defaultFeatureFlagValues: { GITOPS_API_PARAMS_MERGE_PR: true } }}
+      />
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    await userEvent.click(getByText('common.optionalConfig'))
+    await userEvent.click(getByText('connectors.addParameter'))
+    userEvent.type(queryByNameAttribute('spec.variables[0].name')!, 'bypassPolicy')
+    userEvent.type(queryByNameAttribute('spec.variables[0].value')!, 'true')
+    expect(container).toMatchSnapshot('Merge Params section')
+
+    await userEvent.click(getByText('connectors.addParameter'))
+    userEvent.type(queryByNameAttribute('spec.variables[1].name')!, 'bypassReason')
+    userEvent.type(queryByNameAttribute('spec.variables[1].value')!, 'test bypass reason')
   })
 })

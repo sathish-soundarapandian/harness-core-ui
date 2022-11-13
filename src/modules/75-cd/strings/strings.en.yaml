@@ -592,6 +592,7 @@ useStepTemplatesForYourDeploymentType: Use step templates for your deployment ty
 removeStepTemplate: Remove Step Template
 duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+apiParameters: API Parameters
 artifactSource:
   artifactRepositoryTypeIsRequired: Artifact Repository Type is required
 azureArm:
