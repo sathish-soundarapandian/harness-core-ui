@@ -2352,7 +2352,7 @@ export const getConnectorDisplayName = (type: string): string => {
     case Connectors.AZURE_ARTIFACTS:
       return 'Azure Artifacts'
     case Connectors.PCF:
-      return 'Pcf'
+      return 'Tanzu Application Services'
     default:
       return ''
   }
