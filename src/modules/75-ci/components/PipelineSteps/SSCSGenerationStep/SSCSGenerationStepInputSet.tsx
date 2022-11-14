@@ -7,18 +7,18 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'
-import type { PluginStepProps } from './PluginStep'
+import type { SSCSGenerationStepProps } from './SSCSGenerationStep'
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
+export const SSCSGenerationStepInputSetBasic: React.FC<SSCSGenerationStepProps> = ({
   template,
   path,
   readonly,
@@ -86,5 +86,5 @@ export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
   )
 }
 
-const PluginStepInputSet = connect(PluginStepInputSetBasic)
-export { PluginStepInputSet }
+const SSCSGenerationStepInputSet = connect(SSCSGenerationStepInputSetBasic)
+export { SSCSGenerationStepInputSet }

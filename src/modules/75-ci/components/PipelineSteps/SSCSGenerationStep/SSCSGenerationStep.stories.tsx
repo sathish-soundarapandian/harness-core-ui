@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { Meta, Story } from '@storybook/react'
-import { Card, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Card, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
@@ -16,12 +16,12 @@ import {
   TestStepWidgetProps
 } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { SSCSGenerationStep as PluginStepComponent } from './PluginStep'
+import { SSCSGenerationStep as SSCSGenerationStepComponent } from './SSCSGenerationStep'
 
-factory.registerStep(new PluginStepComponent())
+factory.registerStep(new SSCSGenerationStepComponent())
 
 export default {
-  title: 'Pipelines / Pipeline Steps / PluginStep',
+  title: 'Pipelines / Pipeline Steps / SSCSGenerationStep',
   // eslint-disable-next-line react/display-name
   component: TestStepWidget,
   argTypes: {
@@ -41,7 +41,7 @@ export default {
   }
 } as Meta
 
-export const PluginStep: Story<Omit<TestStepWidgetProps, 'factory'>> = args => {
+export const SSCSGenerationStep: Story<Omit<TestStepWidgetProps, 'factory'>> = args => {
   const [value, setValue] = React.useState({})
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '480px 1fr', columnGap: '20px' }}>
@@ -55,7 +55,7 @@ export const PluginStep: Story<Omit<TestStepWidgetProps, 'factory'>> = args => {
   )
 }
 
-PluginStep.args = {
+SSCSGenerationStep.args = {
   initialValues: {
     identifier: 'Test_A',
     name: 'Test A',

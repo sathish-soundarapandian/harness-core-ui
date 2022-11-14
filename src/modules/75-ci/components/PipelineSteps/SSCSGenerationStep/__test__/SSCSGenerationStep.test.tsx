@@ -7,13 +7,13 @@
 
 import React from 'react'
 import { render, act } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { PluginStep } from '../PluginStep'
+import { SSCSGenerationStep } from '../SSCSGenerationStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -53,7 +53,7 @@ jest.mock('services/cd-ng', () => ({
 
 describe('Plugin Step', () => {
   beforeAll(() => {
-    factory.registerStep(new PluginStep())
+    factory.registerStep(new SSCSGenerationStep())
   })
 
   describe('Edit View', () => {

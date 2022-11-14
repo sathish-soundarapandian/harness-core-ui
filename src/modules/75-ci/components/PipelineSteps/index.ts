@@ -26,7 +26,7 @@ import { Dependency } from './Dependency/Dependency'
 import { RunTestsStep } from './RunTestsStep/RunTestsStep'
 import { SaveCacheHarnessStep } from './SaveCacheHarnessStep/SaveCacheHarnessStep'
 import { RestoreCacheHarnessStep } from './RestoreCacheHarnessStep/RestoreCacheHarnessStep'
-import { SSCSGenerationStep } from './SSCSGenerationStep/PluginStep'
+import { SSCSGenerationStep } from './SSCSGenerationStep/SSCSGenerationStep'
 
 factory.registerStep(new RunStep())
 factory.registerStep(new BackgroundStep())

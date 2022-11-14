@@ -8,18 +8,18 @@
 import React from 'react'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import type { PluginStepData } from './PluginStep'
+import type { SSCSGenerationStepData } from './SSCSGenerationStep'
 import { flatObject } from '../StepsFlatObject'
 
-export interface PluginStepVariablesProps {
-  initialValues: PluginStepData
+export interface SSCSGenerationStepVariablesProps {
+  initialValues: SSCSGenerationStepData
   stageIdentifier: string
-  onUpdate?(data: PluginStepData): void
+  onUpdate?(data: SSCSGenerationStepData): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: PluginStepData
+  variablesData: SSCSGenerationStepData
 }
 
-export const PluginStepVariables: React.FC<PluginStepVariablesProps> = ({
+export const SSCSGenerationStepVariables: React.FC<SSCSGenerationStepVariablesProps> = ({
   variablesData,
   metadataMap,
   initialValues

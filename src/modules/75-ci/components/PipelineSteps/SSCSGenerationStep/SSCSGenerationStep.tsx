@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -24,12 +24,12 @@ import type {
   MultiTypeListType
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { StringsMap } from 'stringTypes'
-import { PluginStepBaseWithRef } from './PluginStepBase'
-import { PluginStepInputSet } from './PluginStepInputSet'
-import { PluginStepVariables, PluginStepVariablesProps } from './PluginStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './PluginStepFunctionConfigs'
+import { SSCSGenerationStepBaseWithRef } from './SSCSGenerationStepBase'
+import { SSCSGenerationStepInputSet } from './SSCSGenerationStepInputSet'
+import { SSCSGenerationStepVariables, SSCSGenerationStepVariablesProps } from './SSCSGenerationStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SSCSGenerationStepFunctionConfigs'
 
-export interface PluginStepSpec {
+export interface SSCSGenerationStepSpec {
   connectorRef: string
   image: string
   privileged?: boolean
@@ -46,17 +46,17 @@ export interface PluginStepSpec {
   resources?: Resources
 }
 
-export interface PluginStepData {
+export interface SSCSGenerationStepData {
   identifier: string
   name?: string
   description?: string
   type: string
   timeout?: string
-  spec: PluginStepSpec
+  spec: SSCSGenerationStepSpec
 }
 
-export interface PluginStepSpecUI
-  extends Omit<PluginStepSpec, 'connectorRef' | 'reports' | 'entrypoint' | 'settings' | 'pull' | 'resources'> {
+export interface SSCSGenerationStepSpecUI
+  extends Omit<SSCSGenerationStepSpec, 'connectorRef' | 'reports' | 'entrypoint' | 'settings' | 'pull' | 'resources'> {
   connectorRef: MultiTypeConnectorRef
   reportPaths?: MultiTypeListUIType
   entrypoint?: MultiTypeListUIType
@@ -69,24 +69,24 @@ export interface PluginStepSpecUI
 }
 
 // Interface for the form
-export interface PluginStepDataUI extends Omit<PluginStepData, 'spec'> {
-  spec: PluginStepSpecUI
+export interface SSCSGenerationStepDataUI extends Omit<SSCSGenerationStepData, 'spec'> {
+  spec: SSCSGenerationStepSpecUI
 }
 
-export interface PluginStepProps {
-  initialValues: PluginStepData
-  template?: PluginStepData
+export interface SSCSGenerationStepProps {
+  initialValues: SSCSGenerationStepData
+  template?: SSCSGenerationStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: PluginStepData) => void
-  onChange?: (data: PluginStepData) => void
+  onUpdate?: (data: SSCSGenerationStepData) => void
+  onChange?: (data: SSCSGenerationStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
+export class SSCSGenerationStep extends PipelineStep<SSCSGenerationStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -100,7 +100,7 @@ export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
 
   protected stepPaletteVisible = false
 
-  protected defaultValues: PluginStepData = {
+  protected defaultValues: SSCSGenerationStepData = {
     identifier: '',
     type: StepType.Plugin as string,
     spec: {
@@ -110,8 +110,8 @@ export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData<T>(data: T): PluginStepData {
-    return getFormValuesInCorrectFormat<T, PluginStepData>(data, transformValuesFieldsConfig)
+  processFormData<T>(data: T): SSCSGenerationStepData {
+    return getFormValuesInCorrectFormat<T, SSCSGenerationStepData>(data, transformValuesFieldsConfig)
   }
 
   validateInputSet({
@@ -119,7 +119,7 @@ export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<PluginStepData>): FormikErrors<PluginStepData> {
+  }: ValidateInputSetProps<SSCSGenerationStepData>): FormikErrors<SSCSGenerationStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(isRequired), { getString }, viewType)
@@ -128,7 +128,7 @@ export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
     return {}
   }
 
-  renderStep(props: StepProps<PluginStepData>): JSX.Element {
+  renderStep(props: StepProps<SSCSGenerationStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -144,7 +144,7 @@ export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <PluginStepInputSet
+        <SSCSGenerationStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
@@ -157,8 +157,8 @@ export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
-        <PluginStepVariables
-          {...(customStepProps as PluginStepVariablesProps)}
+        <SSCSGenerationStepVariables
+          {...(customStepProps as SSCSGenerationStepVariablesProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
         />
@@ -166,7 +166,7 @@ export class SSCSGenerationStep extends PipelineStep<PluginStepData> {
     }
 
     return (
-      <PluginStepBaseWithRef
+      <SSCSGenerationStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}

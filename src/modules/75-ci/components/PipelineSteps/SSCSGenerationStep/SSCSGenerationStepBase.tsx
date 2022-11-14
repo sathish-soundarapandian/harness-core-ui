@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
+import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
@@ -24,16 +24,16 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
-import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './PluginStepFunctionConfigs'
-import type { PluginStepProps, PluginStepData, PluginStepDataUI } from './PluginStep'
+import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './SSCSGenerationStepFunctionConfigs'
+import type { SSCSGenerationStepProps, SSCSGenerationStepData, SSCSGenerationStepDataUI } from './SSCSGenerationStep'
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const PluginStepBase = (
-  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: PluginStepProps,
-  formikRef: StepFormikFowardRef<PluginStepData>
+export const SSCSGenerationStepBase = (
+  { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: SSCSGenerationStepProps,
+  formikRef: StepFormikFowardRef<SSCSGenerationStepData>
 ): JSX.Element => {
   const {
     state: {
@@ -50,14 +50,14 @@ export const PluginStepBase = (
 
   return (
     <Formik
-      initialValues={getInitialValuesInCorrectFormat<PluginStepData, PluginStepDataUI>(
+      initialValues={getInitialValuesInCorrectFormat<SSCSGenerationStepData, SSCSGenerationStepDataUI>(
         initialValues,
         transformValuesFieldsConfig,
         { imagePullPolicyOptions: GetImagePullPolicyOptions() }
       )}
       formName="pluginStep"
       validate={valuesToValidate => {
-        const schemaValues = getFormValuesInCorrectFormat<PluginStepDataUI, PluginStepData>(
+        const schemaValues = getFormValuesInCorrectFormat<SSCSGenerationStepDataUI, SSCSGenerationStepData>(
           valuesToValidate,
           transformValuesFieldsConfig
         )
@@ -74,15 +74,15 @@ export const PluginStepBase = (
           stepViewType
         )
       }}
-      onSubmit={(_values: PluginStepDataUI) => {
-        const schemaValues = getFormValuesInCorrectFormat<PluginStepDataUI, PluginStepData>(
+      onSubmit={(_values: SSCSGenerationStepDataUI) => {
+        const schemaValues = getFormValuesInCorrectFormat<SSCSGenerationStepDataUI, SSCSGenerationStepData>(
           _values,
           transformValuesFieldsConfig
         )
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<PluginStepData>) => {
+      {(formik: FormikProps<SSCSGenerationStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
 
@@ -149,4 +149,4 @@ export const PluginStepBase = (
   )
 }
 
-export const PluginStepBaseWithRef = React.forwardRef(PluginStepBase)
+export const SSCSGenerationStepBaseWithRef = React.forwardRef(SSCSGenerationStepBase)
