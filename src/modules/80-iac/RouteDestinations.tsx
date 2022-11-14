@@ -2,7 +2,7 @@ import React from 'react'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { IacSideNavProps, RedirectToIacProject } from './utils/IacChildAppUtils'
+import { IacSideNavProps, RedirectToIacProject } from '@iac/utils/IacChildAppUtils'
 import { IacApp } from './components/IacApp'
 import '@iac/components/IacStage/index'
 
