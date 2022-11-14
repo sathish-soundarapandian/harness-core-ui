@@ -44,6 +44,7 @@ export enum StepType {
   ServerlessAzure = 'ServerlessAzure',
   Dependency = 'Service',
   Plugin = 'Plugin',
+  SSCSGeneration = 'SSCSGeneration',
   GitClone = 'GitClone',
   Run = 'Run',
   GCR = 'BuildAndPushGCR',

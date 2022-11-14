@@ -1801,6 +1801,11 @@ const routes = {
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
   toCCMMFE: withAccountId(() => `/ce/new`),
+
+
+  toSSCS: withAccountId(() => '/idp'),
+  toSSCSSearch: withAccountId(() => '/idp/search'),
+
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),
   toSTOHome: withAccountId(() => `/sto/home`),

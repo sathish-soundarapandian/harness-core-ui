@@ -43,6 +43,28 @@ export const ChaosNavItem = () => {
   )
 }
 
+export const SSCSNavItem = () => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toSSCS(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="chaos-main" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            SSCS
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}
+
 export const DeploymentsNavItem = () => {
   const params = useParams<ProjectPathProps>()
 

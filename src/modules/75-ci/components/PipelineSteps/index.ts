@@ -26,10 +26,12 @@ import { Dependency } from './Dependency/Dependency'
 import { RunTestsStep } from './RunTestsStep/RunTestsStep'
 import { SaveCacheHarnessStep } from './SaveCacheHarnessStep/SaveCacheHarnessStep'
 import { RestoreCacheHarnessStep } from './RestoreCacheHarnessStep/RestoreCacheHarnessStep'
+import { SSCSGenerationStep } from './SSCSGenerationStep/PluginStep'
 
 factory.registerStep(new RunStep())
 factory.registerStep(new BackgroundStep())
 factory.registerStep(new PluginStep())
+factory.registerStep(new SSCSGenerationStep())
 factory.registerStep(new ACRStep())
 factory.registerStep(new GCRStep())
 factory.registerStep(new ECRStep())

@@ -74,6 +74,10 @@ module.exports = ({
     remotes.tiui = "tiui@[window.getApiBaseUrl('tiui/remoteEntry.js')]"
   }
 
+  if (true /* put feature flag here */) {
+    remotes.sscs = "idp@[window.getApiBaseUrl('sscs/remoteEntry.js')]"
+  }
+
   if (process.env.TARGET_LOCALHOST) {
     remotes.errortracking = 'errortracking@http://localhost:3091/remoteEntry.js'
   } else {

@@ -123,6 +123,14 @@ module.exports = {
     pathRewrite: { '^/sto(/v2)?': '' },
     target: process.env.STO_UI_URL || 'http://localhost:3002'
   },
+   '/sscs/api': {
+    pathRewrite: { '^/sscs/api': '/api' },
+    target: process.env.IDP_BE_URL || 'http://localhost:7007'
+  },
+  '/sscs': {
+    pathRewrite: { '^/sscs': '' },
+    target: process.env.IDP_UI_URL || 'http://localhost:3000'
+  },
   '/gitops': {
     pathRewrite: { '^/gitops': '' },
     target: process.env.GITOPS_URL || 'https://localhost:8183'
