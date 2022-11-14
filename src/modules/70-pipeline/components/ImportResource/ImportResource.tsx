@@ -32,7 +32,7 @@ import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
-import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { ExtraQueryParams, InitialValuesType, ModifiedInitialValuesType } from './useImportResource'
 import css from './ImportResource.module.scss'
 
@@ -279,7 +279,14 @@ export default function ImportResource({
               <PageSpinner message={getString('loading')} />
             ) : (
               <>
-                <NameId />
+                {resourceType === ResourceType.TEMPLATE ? (
+                  <NameIdDescriptionTags
+                    formikProps={formikProps}
+                    tooltipProps={{ dataTooltipId: `create${resourceType}` }}
+                  />
+                ) : (
+                  <NameId />
+                )}
                 {resourceType === ResourceType.TEMPLATE && (
                   <FormInput.Text
                     name="versionLabel"
