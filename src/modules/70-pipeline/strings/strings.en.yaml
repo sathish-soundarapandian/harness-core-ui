@@ -885,6 +885,7 @@ artifactsSelection:
     artifactsArrayPath: Artifact array path is required
     versionPath: Version path is required
     noBuild: No build found with given details
+    noJobname: No job name found with given details
     noPackage: No package found with given details
     noFeeds: No feeds found with given details
     noVersion: No version found with given details

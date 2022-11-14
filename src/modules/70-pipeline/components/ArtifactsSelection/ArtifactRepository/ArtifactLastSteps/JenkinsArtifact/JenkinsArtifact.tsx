@@ -50,6 +50,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
 function FormComponent({
@@ -262,6 +263,13 @@ function FormComponent({
               expressions,
               width: 500,
               selectWithSubmenuProps: {
+                noResults: (
+                  <NoTagResults
+                    tagError={fetchingJobsError}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={getString('pipeline.artifactsSelection.validation.noJobname')}
+                  />
+                ),
                 loading: fetchingJobs,
                 items: jobDetails,
                 interactionKind: PopoverInteractionKind.CLICK,

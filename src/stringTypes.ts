@@ -3165,6 +3165,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.imagePath': string
   'pipeline.artifactsSelection.validation.noBuild': string
   'pipeline.artifactsSelection.validation.noFeeds': string
+  'pipeline.artifactsSelection.validation.noJobname': string
   'pipeline.artifactsSelection.validation.noPackage': string
   'pipeline.artifactsSelection.validation.noVersion': string
   'pipeline.artifactsSelection.validation.packageName': string
