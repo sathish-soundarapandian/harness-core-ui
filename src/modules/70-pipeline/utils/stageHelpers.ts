@@ -220,7 +220,7 @@ export const getHelpeTextForTags = (
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
     invalidFields.push(getString('connector'))
   }
-  if (!feed || getMultiTypeFromValue(feed) === MultiTypeInputType.RUNTIME) {
+  if (feed !== undefined && (!feed || getMultiTypeFromValue(feed) === MultiTypeInputType.RUNTIME)) {
     invalidFields.push(getString('pipeline.artifactsSelection.feed'))
   }
   if (
