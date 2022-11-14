@@ -92,7 +92,8 @@ export const CreateK8sDelegate = ({
       showError(getString('somethingWentWrong'))
     } else {
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const delegateName1 = `sample-${Date.now()}-delegate`
+      const uuidTemp = `${Date.now()}${window.performance.now().toFixed()}`.slice(0, 25)
+      const delegateName1 = `del-${uuidTemp}`
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
       trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
