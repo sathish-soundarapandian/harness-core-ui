@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type routes from '@common/RouteDefinitions'
 import type { ApprovalStageOverview } from '@pipeline/components/CommonPipelineStages/ApprovalStage/ApprovalStageOverview'
 import type { ApprovalStageExecution } from '@pipeline/components/CommonPipelineStages/ApprovalStage/ApprovalStageExecution'
 import type ApprovalAdvancedSpecifications from '@pipeline/components/CommonPipelineStages/ApprovalStage/ApprovalStageAdvanced'
@@ -14,7 +13,7 @@ import type { createTemplate } from '@pipeline/utils/templateUtils'
 import type { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import type { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { getStyles } from './Utils'
+import type { getStyles } from '../utils'
 
 export interface IacCustomMicroFrontendProps {
   customHooks: {
@@ -32,7 +31,4 @@ export interface IacCustomMicroFrontendProps {
     ApprovalAdvancedSpecifications: typeof ApprovalAdvancedSpecifications
     SaveTemplateButton: typeof SaveTemplateButton
   }
-  customRoutes: typeof routes
-  customUtils: unknown
-  customEnums: unknown
 }

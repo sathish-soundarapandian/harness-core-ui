@@ -43,7 +43,7 @@ import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import type { TIUIAppCustomProps } from '@pipeline/pages/execution/ExecutionTestView/interfaces/TIUIApp.types'
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
-import type { IacCustomMicroFrontendProps } from '@iac/IacCustomMicroFrontendProps.types'
+import type { IacCustomMicroFrontendProps } from '@iac/interfaces/IacCustomMicroFrontendProps.types'
 
 export interface Scope {
   accountId?: string
