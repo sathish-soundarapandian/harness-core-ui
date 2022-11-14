@@ -92,7 +92,7 @@ export const CreateK8sDelegate = ({
       showError(getString('somethingWentWrong'))
     } else {
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const uuidTemp = `${Date.now()}${window.performance.now().toFixed()}`.slice(0, 25)
+      const uuidTemp = `${Date.now()}${window.performance.now().toFixed()}`.slice(0, 25) // making sure uuid is  of length 25
       const delegateName1 = `del-${uuidTemp}`
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
