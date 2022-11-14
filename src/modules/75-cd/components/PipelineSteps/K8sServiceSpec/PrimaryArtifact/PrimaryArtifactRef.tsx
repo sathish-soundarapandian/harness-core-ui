@@ -89,13 +89,12 @@ function PrimaryArtifactRef({
         if (idSourceMap) {
           //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
           if (shouldSetDefaultArtifactSource) {
-            formik?.setValues(
-              produce(formik?.values, (draft: any) => {
-                set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
-                isEmpty(serviceInputsFormikValue) &&
-                  set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
-              })
-            )
+            const updatedFormikValues = produce(formik?.values, (draft: any) => {
+              set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
+              isEmpty(serviceInputsFormikValue) &&
+                set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
+            })
+            formik?.resetForm({ ...formik, values: updatedFormikValues })
           }
           updateStageFormTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
         }
