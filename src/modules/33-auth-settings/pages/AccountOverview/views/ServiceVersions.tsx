@@ -107,36 +107,35 @@ const ServiceVersions = () => {
       setLoading(true)
       Promise.allSettled(promiseArr)
         .then(async responses => {
-          setLoading(false)
-          const labelVersionsArr: ServiceData[] = []
-          await responses.map(async (res, index) => {
-            const row = versionAPIs[index]
-            let serviceRow: ServiceData = {
-              label: row.label
-            }
-            if (res.status === 'fulfilled') {
-              const response = await res.value.json()
-
-              if (response.version) {
-                // for NGUI
-                serviceRow['version'] = response.version
-              } else if (response.versionInfo) {
-                // for CF
-                serviceRow['version'] = response.versionInfo
-              } else if (response.resource && response.resource.versionInfo) {
-                serviceRow['version'] = response.resource.versionInfo.version
+          Promise.allSettled(
+            responses.map(response => (response.status === 'fulfilled' ? response.value.json() : response))
+          ).then(resArr => {
+            const labelVersionsArr = resArr.map((response: any, index) => {
+              const row = versionAPIs[index]
+              if (response.status === 'fulfilled') {
+                const serviceRow: ServiceData = {
+                  label: row.label
+                }
+                if (response.value.version) {
+                  // for NGUI
+                  serviceRow['version'] = response.value.version
+                } else if (response.value.versionInfo) {
+                  // for CF
+                  serviceRow['version'] = response.value.versionInfo
+                } else if (response.value.resource && response.value.resource.versionInfo) {
+                  serviceRow['version'] = response.value.resource.versionInfo.version
+                }
+                return serviceRow
+              } else {
+                return {
+                  label: row.label,
+                  version: 'NA'
+                }
               }
-            } else {
-              serviceRow = {
-                label: row.label,
-                version: 'NA'
-              }
-            }
-            labelVersionsArr.push(serviceRow)
-            if (index === promiseArr.length - 1) {
-              setData(labelVersionsArr)
-            }
+            })
+            setData(labelVersionsArr)
           })
+          setLoading(false)
         })
         .catch(() => {
           showError('Error fetching Service Versions')
