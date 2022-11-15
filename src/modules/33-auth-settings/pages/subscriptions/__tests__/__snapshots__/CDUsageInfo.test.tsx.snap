@@ -84,7 +84,7 @@ exports[`CDUsageInfo CDUsageInfo 1`] = `
           >
             0
             % 
-            common.subscribed
+            common.usage
           </p>
         </div>
       </div>

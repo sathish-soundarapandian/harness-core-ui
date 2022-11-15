@@ -958,6 +958,7 @@ export interface StringsMap {
   'common.unsavedChangesLong': string
   'common.updating': string
   'common.upgrade': string
+  'common.usage': string
   'common.useSSL': string
   'common.useTemplate': string
   'common.userGroup': string
@@ -5077,7 +5078,6 @@ export interface StringsMap {
   'cd.updatedSuccessfully': string
   'cd.updating': string
   'cd.updatingGitOpsServer': string
-  'cd.usage': string
   'cd.useConnectorCredentials': string
   'cd.useStepTemplatesForYourDeploymentType': string
   'cd.validation.specifyFilter': string
