@@ -3227,6 +3227,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.artifactId': string
   'pipeline.artifactsSelection.validation.artifactPath': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
+  'pipeline.artifactsSelection.validation.connectorForJobname': string
   'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.group': string
   'pipeline.artifactsSelection.validation.groupId': string

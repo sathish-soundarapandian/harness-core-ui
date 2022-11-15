@@ -894,6 +894,7 @@ artifactsSelection:
   validation:
     noBuild: No build found with given details
     noPackage: No package found with given details
+    connectorForJobname: connector is required to fetch job name
     noFeeds: No feeds found with given details
     noVersion: No version found with given details
     packageType: Package Type is required

@@ -48,6 +48,7 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraAp
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
 function FormComponent({
@@ -87,7 +88,7 @@ function FormComponent({
     loading: fetchingJobs,
     error: fetchingJobsError
   } = useGetJobDetailsForJenkins({
-    lazy: true,
+    lazy: getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
@@ -118,15 +119,6 @@ function FormComponent({
     },
     jobName: encodeURIComponent(encodeURIComponent(initialValues?.spec?.jobName as string))
   })
-
-  useEffect(() => {
-    refetchJobs({
-      queryParams: {
-        ...commonParams,
-        connectorRef: connectorRefValue?.toString()
-      }
-    })
-  }, [prevStepData])
 
   useEffect(() => {
     if (artifactPathsResponse?.data) {
@@ -261,6 +253,15 @@ function FormComponent({
               width: 500,
               selectWithSubmenuProps: {
                 items: jobDetails,
+                noResults:
+                  getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME ? (
+                    <NoTagResults
+                      tagError={fetchingJobsError}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.connectorForJobname')}
+                    />
+                  ) : null,
+                interactionKind: PopoverInteractionKind.CLICK,
                 allowCreatingNewItems: true,
                 onChange: primaryValue => {
                   setJenkinsBuilds([])

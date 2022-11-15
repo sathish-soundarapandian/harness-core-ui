@@ -38,6 +38,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -414,6 +415,14 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 selectWithSubmenuProps: {
                   loading: fetchingJobs,
                   items: jobDetails,
+                  noResults:
+                    connectorRefValue?.length === 0 ? (
+                      <NoTagResults
+                        tagError={fetchingJobsError}
+                        isServerlessDeploymentTypeSelected={false}
+                        defaultErrorText={getString('pipeline.artifactsSelection.validation.connectorForJobname')}
+                      />
+                    ) : null,
                   interactionKind: PopoverInteractionKind.CLICK,
                   allowCreatingNewItems: true,
                   addClearBtn: !readonly,
