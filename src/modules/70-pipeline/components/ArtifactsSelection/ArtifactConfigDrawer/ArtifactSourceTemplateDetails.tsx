@@ -33,7 +33,11 @@ import { getTemplateErrorMessage, replaceDefaultValues } from '@pipeline/utils/t
 // eslint-disable-next-line no-restricted-imports
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import { getsMergedTemplateInputYamlPromise, useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
-import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeBasedProjectPathParams,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -109,7 +113,8 @@ export function ArtifactSourceTemplateDetails(
 
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const scope = getScopeFromValue(artifactSourceTemplate?.templateRef)
+  const scope = getScopeFromValue(artifactSourceTemplate.templateRef)
+  const artifactSourceTemplateIdentifier = getIdentifierFromValue(artifactSourceTemplate.templateRef)
 
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
   const [formValues, setFormValues] = React.useState<TemplateStepNode>(getFormValues(artifactSourceConfigNode))
@@ -121,7 +126,7 @@ export function ArtifactSourceTemplateDetails(
     refetch: refetchArtifactSourceTemplate,
     loading: artifactSourceTemplateLoading
   } = useGetTemplate({
-    templateIdentifier: artifactSourceTemplate.templateRef,
+    templateIdentifier: artifactSourceTemplateIdentifier,
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: artifactSourceTemplate.versionLabel,
@@ -141,7 +146,7 @@ export function ArtifactSourceTemplateDetails(
     refetch: refetchArtifactSourceTemplateInputSet,
     loading: artifactSourceTemplateInputSetLoading
   } = useGetTemplateInputSetYaml({
-    templateIdentifier: artifactSourceTemplate.templateRef,
+    templateIdentifier: artifactSourceTemplateIdentifier,
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: artifactSourceTemplate.versionLabel || '',

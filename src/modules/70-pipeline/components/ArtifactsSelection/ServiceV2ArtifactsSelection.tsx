@@ -45,7 +45,6 @@ import type {
   Values
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { getTemplateInputSetYamlPromise } from 'services/template-ng'
-import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { createTemplate } from '@pipeline/utils/templateUtils'
@@ -89,18 +88,18 @@ const checkDuplicateStep = (
   formikRef: any,
   artifactsList: ArtifactSource[] | SidecarArtifactWrapper[] | undefined,
   artifactContext: ModalViewFor,
-  artifactSourceConfigNode: TemplateStepNode,
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  artifactIndex: number
 ): boolean => {
   const values = formikRef.current?.getValues() as Values
   if (values && formikRef.current?.setFieldError) {
-    const isDuplicate = some(artifactsList, artifactData => {
+    const isDuplicate = some(artifactsList, (artifactData, index: number) => {
       const artifactIdentifier =
         artifactContext === ModalViewFor.PRIMARY
           ? (artifactData as ArtifactSource).identifier
           : (artifactData as SidecarArtifactWrapper)?.sidecar?.identifier
 
-      return artifactIdentifier === values.identifier && values.identifier !== artifactSourceConfigNode.identifier
+      return artifactIdentifier === values.name && index !== artifactIndex
     })
 
     if (isDuplicate) {
@@ -452,7 +451,7 @@ export default function ServiceV2ArtifactsSelection({
       const processNode = createTemplate(
         {
           name: '',
-          identifier: generateRandomString(''),
+          identifier: '',
           template: { templateInputs: artifactSourceTemplateInputs }
         } as StepOrStepGroupOrTemplateStepData,
         template
@@ -496,15 +495,7 @@ export default function ServiceV2ArtifactsSelection({
   }
 
   const handleApplyChanges = async () => {
-    if (
-      checkDuplicateStep(
-        formikRef,
-        artifactsList,
-        artifactContext,
-        artifactSourceConfigNode as TemplateStepNode,
-        getString
-      )
-    ) {
+    if (checkDuplicateStep(formikRef, artifactsList, artifactContext, getString, artifactIndex)) {
       return
     }
     await formikRef?.current?.submitForm()
@@ -515,11 +506,7 @@ export default function ServiceV2ArtifactsSelection({
       const artifactSourceConfigValues = formikRef.current?.getValues() as ArtifactSource | SidecarArtifact
       const updatedArtifactSourceConfigValues = produce(artifactSourceConfigValues, draft => {
         set(draft, 'identifier', artifactSourceConfigValues.name)
-        set(
-          draft,
-          'template.templateInputs',
-          get(artifactSourceConfigValues, 'template.templateInputs.artifacts.primary')
-        )
+        set(draft, 'template', artifactSourceConfigNode?.template)
       })
       if (artifactContext === ModalViewFor.PRIMARY) {
         setPrimaryArtifactData(updatedArtifactSourceConfigValues as ArtifactSource)
@@ -711,14 +698,6 @@ export default function ServiceV2ArtifactsSelection({
         onCloseDrawer={handleCloseDrawer}
         artifactSourceConfigNode={artifactSourceConfigNode}
         isDrawerOpened={isArtifactSourceDrawerOpen}
-        checkDuplicateStep={checkDuplicateStep.bind(
-          null,
-          formikRef as any,
-          artifactsList,
-          artifactContext,
-          artifactSourceConfigNode,
-          getString
-        )}
         isNewStep={true}
         onApplyChanges={handleApplyChanges}
         addOrUpdateTemplate={addOrUpdateArtifactSourceTemplate}

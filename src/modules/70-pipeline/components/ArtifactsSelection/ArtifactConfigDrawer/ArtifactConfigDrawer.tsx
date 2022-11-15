@@ -22,7 +22,6 @@ interface Props {
   artifactSourceConfigNode?: TemplateStepNode
   isDrawerOpened: boolean
   onCloseDrawer: () => void
-  checkDuplicateStep: () => boolean
   isNewStep: boolean
   addOrUpdateTemplate: (selectedTemplate: TemplateSummaryResponse) => void
   formikRef: React.MutableRefObject<StepFormikRef | null>
