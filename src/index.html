@@ -32,7 +32,8 @@
     <!-- apiurl -->
     <script type="text/javascript">
       window.getApiBaseUrl = str => {
-        return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        const url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}` : url
       }
     </script>
     <!-- segmentToken -->
