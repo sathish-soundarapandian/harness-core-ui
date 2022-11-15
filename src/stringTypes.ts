@@ -5077,6 +5077,7 @@ export interface StringsMap {
   'cd.updatedSuccessfully': string
   'cd.updating': string
   'cd.updatingGitOpsServer': string
+  'cd.usage': string
   'cd.useConnectorCredentials': string
   'cd.useStepTemplatesForYourDeploymentType': string
   'cd.validation.specifyFilter': string

@@ -29,7 +29,7 @@ const ActiveInstanceCard: React.FC<{ subscribedIns: number; activeIns: number; d
   const rightHeader = getString('common.subscriptions.usage.last30days')
   const hasBar = true
   const leftFooter = getString('common.subscribed')
-  const rightFooter = getString('common.subscribed')
+  const rightFooter = getString('cd.usage')
   const props = {
     subscribed: subscribedIns,
     usage: activeIns,
@@ -54,7 +54,7 @@ const ActiveServiceCard: React.FC<{ subscribedIns: number; activeIns: number; di
   const rightHeader = getString('common.subscriptions.usage.last30days')
   const hasBar = true
   const leftFooter = getString('common.subscribed')
-  const rightFooter = getString('common.subscribed')
+  const rightFooter = getString('cd.usage')
   const props = {
     subscribed: subscribedIns,
     usage: activeIns,
