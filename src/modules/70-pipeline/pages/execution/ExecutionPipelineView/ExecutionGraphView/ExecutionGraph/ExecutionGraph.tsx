@@ -57,7 +57,7 @@ export const CDPipelineStudioNew = diagram.render()
 const barrierSupportedStageTypes = [StageType.DEPLOY, StageType.APPROVAL]
 
 export interface ExecutionGraphProps {
-  onSelectedStage(stage: string, stageExecId?: string): void
+  onSelectedStage(stage: string, parentStage?: string, stageExecId?: string): void
 }
 
 export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactElement {
@@ -90,7 +90,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   }, [nodeData])
 
   const _childPipelineData: PipelineGraphState[] = useMemo(() => {
-    return processExecutionDataForGraph(childNodeData as PipelineGraphState[])
+    return processExecutionDataForGraph(childNodeData as PipelineGraphState[], selectedStageId)
   }, [childNodeData])
 
   React.useEffect(() => {
@@ -117,7 +117,8 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
           setStageSetupIdId('')
         },
         onMouseEnter: onMouseEnterV1,
-        onStepSelect: (id: string, stageExecId?: string) => props.onSelectedStage(id, stageExecId)
+        onStepSelect: (id: string, parentStageId?: string, stageExecId?: string) =>
+          props.onSelectedStage(id, parentStageId, stageExecId)
       })
     )
   }, [pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap, dynamicPopoverHandler])

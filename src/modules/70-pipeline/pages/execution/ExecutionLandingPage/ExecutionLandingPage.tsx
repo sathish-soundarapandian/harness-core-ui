@@ -60,6 +60,7 @@ const PageTabs = { PIPELINE: 'pipeline' }
 const setStageIds = ({
   queryParams,
   setAutoSelectedStageId,
+  setAutoSelectedChildStageId,
   setAutoSelectedStepId,
   setAutoStageNodeExecutionId,
   setSelectedStepId,
@@ -70,6 +71,7 @@ const setStageIds = ({
 }: {
   queryParams: ExecutionPageQueryParams
   setAutoSelectedStageId: Dispatch<SetStateAction<string>>
+  setAutoSelectedChildStageId: Dispatch<SetStateAction<string>>
   setAutoSelectedStepId: Dispatch<SetStateAction<string>>
   setAutoStageNodeExecutionId: Dispatch<SetStateAction<string>>
   setSelectedStepId: Dispatch<SetStateAction<string>>
@@ -85,6 +87,7 @@ const setStageIds = ({
   // if user has selected a stage/step do not auto-update
   if (queryParams.stage || queryParams.step) {
     setAutoSelectedStageId('')
+    setAutoSelectedChildStageId('')
     setAutoSelectedStepId('')
     return
   }
@@ -92,6 +95,7 @@ const setStageIds = ({
   // if no data is found, reset the stage and step
   if (!data || !data?.data) {
     setAutoSelectedStageId('')
+    setAutoSelectedChildStageId('')
     setAutoSelectedStepId('')
     return
   }
@@ -99,6 +103,11 @@ const setStageIds = ({
   const runningStage = getActiveStageForPipeline(
     data.data.pipelineExecutionSummary,
     data.data?.pipelineExecutionSummary?.status as ExecutionStatus
+  )
+
+  const runningChildStage = getActiveStageForPipeline(
+    data.data?.childGraph?.pipelineExecutionSummary,
+    data.data?.childGraph?.pipelineExecutionSummary?.status as ExecutionStatus
   )
 
   const runningStep = getActiveStep(data.data.executionGraph, data.data.pipelineExecutionSummary)
@@ -121,6 +130,7 @@ const setStageIds = ({
       setSelectedStageExecutionId(nodeExecid)
     } else {
       setAutoSelectedStageId(runningStage)
+      runningChildStage && setAutoSelectedChildStageId(runningChildStage)
       setSelectedStageId(runningStage)
       setAutoStageNodeExecutionId('')
       setSelectedStageExecutionId('')
@@ -145,6 +155,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
 
   /* These are used when auto updating selected stage/step when a pipeline is running */
   const [autoSelectedStageId, setAutoSelectedStageId] = React.useState<string>('')
+  const [autoSelectedChildStageId, setAutoSelectedChildStageId] = React.useState<string>('')
   const [autoSelectedStepId, setAutoSelectedStepId] = React.useState<string>('')
   const [autoStageNodeExecutionId, setAutoStageNodeExecutionId] = React.useState<string>('')
   const [isPipelineInvalid, setIsPipelineInvalid] = React.useState(false)
@@ -182,8 +193,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         !isEmpty(selectedStageExecutionId) && {
           stageNodeExecutionId: selectedStageExecutionId
         }),
-      ...(isEmpty(queryParams.childStageNodeId) && {
-        childStageNodeId: queryParams.childStageNodeId
+      ...(!isEmpty(queryParams.childStage || autoSelectedChildStageId) && {
+        childStageNodeId: queryParams.childStage || autoSelectedChildStageId
       })
     },
     debounce: 500
@@ -298,6 +309,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     setStageIds({
       queryParams,
       setAutoSelectedStageId,
+      setAutoSelectedChildStageId,
       setAutoSelectedStepId,
       setAutoStageNodeExecutionId,
       setSelectedStepId,

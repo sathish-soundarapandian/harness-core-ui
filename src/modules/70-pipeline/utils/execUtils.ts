@@ -886,7 +886,7 @@ interface GetExecutionStageDiagramListenersParams {
   onMouseEnter: ({ data, event }: { data: any; event: any }) => void
   allNodeMap?: any
   onMouseLeave: () => void
-  onStepSelect: (id: string, stageExecId?: string) => void
+  onStepSelect: (id: string, parentStageId?: string, stageExecId?: string) => void
 }
 export const getExecutionStageDiagramListeners = ({
   allNodeMap,
@@ -899,8 +899,8 @@ export const getExecutionStageDiagramListeners = ({
     [Event.ClickNode]: (event: any) => {
       const selectedNodeId = event?.data?.nodeType === NodeType.RUNTIME_INPUT ? event.data.identifier : event.data?.id
       event?.data?.data?.stageNodeId
-        ? onStepSelect(event?.data?.data?.stageNodeId, event?.data?.id)
-        : onStepSelect(selectedNodeId)
+        ? onStepSelect(event?.data?.data?.stageNodeId, event?.data?.parentStageId, event?.data?.id)
+        : onStepSelect(selectedNodeId, event?.data?.parentStageId)
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.MouseEnterNode]: (event: any) => {

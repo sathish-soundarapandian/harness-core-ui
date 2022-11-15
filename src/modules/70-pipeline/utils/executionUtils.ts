@@ -1068,7 +1068,10 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
   return response
 }
 
-export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): PipelineGraphState[] => {
+export const processExecutionDataForGraph = (
+  stages?: PipelineGraphState[],
+  parentStageId?: string
+): PipelineGraphState[] => {
   const items: PipelineGraphState[] = []
   stages?.forEach(currentStage => {
     if (currentStage?.children?.length) {
@@ -1141,6 +1144,7 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
         type: [StageType.LOOP, StageType.PARALLELISM].includes(currentStage?.type as StageType)
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
+        parentStageId,
         data: {
           ...stage,
           conditionalExecutionEnabled: getConditionalExecutionFlag(stage?.nodeRunInfo),
