@@ -1050,6 +1050,7 @@ export interface StringsMap {
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
   'auditTrail.actions.create_token': string
+  'auditTrail.actions.force_deleted': string
   'auditTrail.actions.invite_resent': string
   'auditTrail.actions.invite_revoked': string
   'auditTrail.actions.invited': string

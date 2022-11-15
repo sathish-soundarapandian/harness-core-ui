@@ -6,6 +6,7 @@ actions:
   upserted: Upserted
   restored: Restored
   invited: Invited
+  force_deleted: Force Deleted
   invite_resent: Invite Resent
   invite_revoked: Invite Revoked
   added_collaborator: Added Collaborator

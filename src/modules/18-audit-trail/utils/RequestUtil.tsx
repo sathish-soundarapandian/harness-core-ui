@@ -22,6 +22,7 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   DELETE: 'deleted',
   UPSERT: 'auditTrail.actions.upserted',
   INVITE: 'auditTrail.actions.invited',
+  FORCE_DELETE: 'auditTrail.actions.force_deleted',
   RESEND_INVITE: 'auditTrail.actions.invite_resent',
   REVOKE_INVITE: 'auditTrail.actions.invite_revoked',
   ADD_COLLABORATOR: 'auditTrail.actions.added_collaborator',
