@@ -54,7 +54,7 @@ export enum ServiceDeploymentType {
   awsCodeDeploy = 'awsCodeDeploy',
   WinRm = 'WinRm',
   awsLambda = 'awsLambda',
-  pcf = 'pcf',
+  TAS = 'TAS',
   Pdc = 'Pdc',
   Ssh = 'Ssh',
   CustomDeployment = 'CustomDeployment',

@@ -113,6 +113,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Pcf'
     | 'Spot'
   )[]
 }

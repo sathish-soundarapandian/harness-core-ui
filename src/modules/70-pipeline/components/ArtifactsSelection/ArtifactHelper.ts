@@ -201,7 +201,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Acr
-  ]
+  ],
+  TAS: [ENABLED_ARTIFACT_TYPES.AmazonS3]
 }
 
 export const tagOptions: IOptionProps[] = [

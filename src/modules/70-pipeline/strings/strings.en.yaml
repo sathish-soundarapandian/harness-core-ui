@@ -1264,7 +1264,7 @@ serviceDeploymentTypes:
   awsCodeDeploy: CodeDeploy
   winrm: WinRM
   awsLambda: AWS Lambda
-  pcf: TAS
+  tas: TAS
   ssh: Secure Shell
   deployDifferentLabel: Deploy different service
   serverlessAwsLambda: Serverless Lambda

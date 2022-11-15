@@ -110,7 +110,7 @@ export const ExecutionResponse = {
     Ssh: ['Basic'],
     Helm: ['Basic'],
     Ecs: ['Basic', 'BlueGreen', 'Canary'],
-    Pcf: ['Basic', 'BlueGreen', 'Canary']
+    Pcf: ['Basic', 'BlueGreen', 'Canary'] // TODO:: CHECK
   },
   metaData: null,
   correlationId: '4c1b97ff-bd37-4965-af23-610e4f080d1c'

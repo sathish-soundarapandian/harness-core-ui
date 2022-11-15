@@ -107,7 +107,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.SPOT:
         return getString('connectors.testConnectionStep.url.spot')
       case Connectors.PCF:
-        return getString('connectors.testConnectionStep.url.pcf')
+        return getString('connectors.testConnectionStep.url.tas')
       default:
         return ''
     }
