@@ -89,26 +89,56 @@
     line-height: var(--spacing-large) !important;
   }
 
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: var(--spacing-small);
+  .cardCtn {
+    cursor: pointer;
+    align-items: center;
+    padding: var(--spacing-small);
+    margin-bottom: var(--spacing-medium);
+    background-color: var(--white);
+    border-radius: 4px;
+    width: 329px;
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+    border: 0.5px solid transparent;
 
-    [class*='bp3-card'] {
-      box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16) !important;
-      padding: var(--spacing-large) 0 0 0;
-    }
-
-    .defaultCard {
-      box-shadow: none;
-      background-color: var(--grey-50);
-      opacity: 80%;
-      cursor: not-allowed;
-      &:hover {
-        box-shadow: none !important;
-      }
+    &:hover {
+      box-shadow: var(--elevation-3);
+      border: 0.5px solid var(--primary-7);
     }
   }
+
+  .featureDetailsCtn {
+    padding: var(--spacing-xxxlarge);
+    border-left: 1px solid var(--grey-300);
+    width: 100%;
+    flex-shrink: unset;
+
+    .featurePrefix {
+      font-weight: 600;
+      font-size: 8px;
+      line-height: 10px;
+    }
+  }
+
+  // .cards {
+  //   display: grid;
+  //   grid-template-columns: repeat(3, 1fr);
+  //   column-gap: var(--spacing-small);
+
+  //   [class*='bp3-card'] {
+  //     box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16) !important;
+  //     padding: var(--spacing-large) 0 0 0;
+  //   }
+
+  //   .defaultCard {
+  //     box-shadow: none;
+  //     background-color: var(--grey-50);
+  //     opacity: 80%;
+  //     cursor: not-allowed;
+  //     &:hover {
+  //       box-shadow: none !important;
+  //     }
+  //   }
+  // }
 
   .launchTemplateBut {
     box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
@@ -160,16 +190,16 @@
     font-size: var(--font-size-small);
   }
 
-  .infoCard {
-    background: var(--blue-50);
-    padding: var(--spacing-small) var(--spacing-medium);
-    margin: var(--spacing-xlarge) 0;
-    align-items: center;
+  // .infoCard {
+  //   background: var(--blue-50);
+  //   padding: var(--spacing-small) var(--spacing-medium);
+  //   margin: var(--spacing-xlarge) 0;
+  //   align-items: center;
 
-    .infoIcon {
-      margin-right: var(--spacing-medium);
-    }
-  }
+  //   .infoIcon {
+  //     margin-right: var(--spacing-medium);
+  //   }
+  // }
 
   .arnInstructionList {
     line-height: 20px;

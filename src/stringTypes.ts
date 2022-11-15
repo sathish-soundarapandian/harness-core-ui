@@ -2053,15 +2053,26 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleExtention.step4': string
   'connectors.ceAws.crossAccountRoleExtention.step5': string
   'connectors.ceAws.crossAccountRoleExtention.subHeading': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.footer': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.header': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.header': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.governance.header': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.footer': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.header': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.providedBy': string
   'connectors.ceAws.crossAccountRoleStep1.cost': string
   'connectors.ceAws.crossAccountRoleStep1.default.feat1': string
   'connectors.ceAws.crossAccountRoleStep1.default.footer': string
   'connectors.ceAws.crossAccountRoleStep1.description': string
   'connectors.ceAws.crossAccountRoleStep1.heading': string
+  'connectors.ceAws.crossAccountRoleStep1.hoverOver': string
   'connectors.ceAws.crossAccountRoleStep1.info': string
   'connectors.ceAws.crossAccountRoleStep1.optimization': string
   'connectors.ceAws.crossAccountRoleStep1.optimizationDes': string
   'connectors.ceAws.crossAccountRoleStep1.optimize.feat1': string
+  'connectors.ceAws.crossAccountRoleStep1.optimize.feat2': string
   'connectors.ceAws.crossAccountRoleStep1.optimize.footer': string
   'connectors.ceAws.crossAccountRoleStep1.optimize.prefix': string
   'connectors.ceAws.crossAccountRoleStep1.subHeading': string

@@ -645,8 +645,23 @@ ceAws:
       'Harness uses the secure cross-account role to access your AWS account. The role includes a restricted policy to
       access the cost and usage reports and resources for the sole purpose of cost analysis and cost optimization'
     description: 'Select the Cloud Cost Management features that you would like to enable.'
-    info: 'Cost visibility of the resources for which you added the CUR in the previous step is enabled by default. Select the others as per your requirements.'
+    info: '(Selecting features will add the necessary permissions to the IAM role in the next step. Cost Visibility permissions are required by default)'
     cost: 'Cost'
+    hoverOver: Hover over feature for more info
+    cards:
+      providedBy: 'Provided by:'
+      permissionsInvolved: 'Permissions involved:'
+      costVisibility:
+        header: <b>Cost Visibility</b>
+        footer: <b>Default</b> from the Cost and Usage Report created in the previoue step. <b>This cannot be deselected.</b>
+      inventoryManagement:
+        header: Resource <b>Inventory management</b>
+        footer: Adding <a target="_blank" href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_ecs_and_resource_inventory_management">these permissions</a> to an IAM role in the next step.
+      autoStopping:
+        header: Optimization by <b>AutoStopping</b>
+        footer: Adding <a target="_blank" href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules">these permissions</a> to an IAM role in the next step.
+      governance:
+        header: <b>Cloud Governance</b>
     visibility: '{{ $.common.ce.visibility }}'
     optimization: '{{ $.common.ce.optimization }}'
     visibilityDes: '{{ $.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'
@@ -661,6 +676,7 @@ ceAws:
       heading: Inventory management
     optimize:
       feat1: Orchestrate VMs and ASGs based on idleness
+      feat2: Run on fully orchesterated spot instances
       prefix: AWS OPTIMIZATION BY
       footer: to IAM role
   crossAccountRoleStep2:

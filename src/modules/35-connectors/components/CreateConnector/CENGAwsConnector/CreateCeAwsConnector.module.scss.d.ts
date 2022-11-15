@@ -10,14 +10,15 @@ declare const styles: {
   readonly arnInstructionList: string
   readonly awsConnector: string
   readonly buttonPanel: string
-  readonly cards: string
+  readonly cardCtn: string
   readonly connectorExistBox: string
   readonly dataFields: string
-  readonly defaultCard: string
   readonly existingCurTable: string
   readonly existingReportsWrapper: string
   readonly extention: string
   readonly featureCard: string
+  readonly featureDetailsCtn: string
+  readonly featurePrefix: string
   readonly features: string
   readonly footer: string
   readonly govCloudContainer: string
@@ -26,8 +27,6 @@ declare const styles: {
   readonly header: string
   readonly hintsLineItem: string
   readonly info: string
-  readonly infoCard: string
-  readonly infoIcon: string
   readonly infobox: string
   readonly launchTemplateBut: string
   readonly launchTemplateSection: string
