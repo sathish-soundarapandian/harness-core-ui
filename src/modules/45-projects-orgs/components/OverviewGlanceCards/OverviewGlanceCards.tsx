@@ -42,7 +42,7 @@ const serviceTitleId = 'services'
 const envTitleId = 'environments'
 const pipelineTitleId = 'pipelines'
 
-const getDataForCard = (
+export const getDataForCard = (
   cardType: OverviewGalanceCard,
   countDetails: CountChangeDetails | undefined
 ): RenderGlanceCardData => {
