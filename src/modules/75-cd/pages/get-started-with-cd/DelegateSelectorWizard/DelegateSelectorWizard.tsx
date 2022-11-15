@@ -26,6 +26,7 @@ import { buildKubPayload } from '@connectors/pages/connectors/utils/ConnectorUti
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DelegateTypes } from '@delegates/constants'
 import type { RestResponseDelegateSetupDetails } from 'services/portal'
+import { StringUtils } from '@common/exports'
 import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDelegate'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
 import { GoogleK8sService } from '../HelpTexts/GoogleK8sService'
@@ -374,7 +375,9 @@ export const DelegateSelectorWizard = ({ enableNextBtn, disableNextBtn }: Delega
               {showDelegateOverview && delegateName?.current && (
                 <Layout.Vertical padding={{ bottom: 'xlarge', right: 'large' }}>
                   <DelegateDetailsCard
-                    delegateIdentifier={delegateName.current || (delegateData?.environmentEntities?.delegate as string)}
+                    delegateIdentifier={StringUtils.getIdentifierFromName(
+                      delegateName.current || (delegateData?.environmentEntities?.delegate as string)
+                    )}
                   />
                 </Layout.Vertical>
               )}

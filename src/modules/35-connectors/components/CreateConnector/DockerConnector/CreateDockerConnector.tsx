@@ -35,6 +35,8 @@ interface CreateDockerConnectorProps {
   projectIdentifier: string
   connectivityMode?: ConnectivityModeType
   setConnectivityMode?: (val: ConnectivityModeType) => void
+  context?: number
+  formClassName?: string
 }
 const CreateDockerConnector: React.FC<CreateDockerConnectorProps> = props => {
   const { getString } = useStrings()
@@ -45,7 +47,9 @@ const CreateDockerConnector: React.FC<CreateDockerConnectorProps> = props => {
     'orgIdentifier',
     'projectIdentifier',
     'connectivityMode',
-    'setConnectivityMode'
+    'setConnectivityMode',
+    'context',
+    'formClassName'
   ])
   return (
     <>

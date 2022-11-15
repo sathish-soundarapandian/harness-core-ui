@@ -19,6 +19,7 @@ import {
   PageSpinner
 } from '@harness/uicore'
 import * as Yup from 'yup'
+import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { IOptionProps } from '@blueprintjs/core'
 import { setupDockerFormData, DockerProviderType } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -33,6 +34,7 @@ import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/Tr
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
+import { ModalViewFor } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../CreateDockerConnector.module.scss'
 
@@ -51,9 +53,11 @@ interface DockerAuthenticationProps {
   orgIdentifier: string
   projectIdentifier: string
   helpPanelReferenceId?: string
+  context?: number
+  formClassName?: string
 }
 
-interface DockerFormInterface {
+export interface DockerFormInterface {
   dockerRegistryUrl: string
   authType: string
   dockerProviderType: string
@@ -72,10 +76,10 @@ const defaultInitialFormData: DockerFormInterface = {
 const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps> & DockerAuthenticationProps> =
   props => {
     const { getString } = useStrings()
-    const { prevStepData, nextStep, accountId } = props
+    const { prevStepData, nextStep, accountId, context, formClassName = '' } = props
     const [initialValues, setInitialValues] = useState(defaultInitialFormData)
     const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
-
+    const isOnboardingFlow = context === ModalViewFor.CD_Onboarding
     const authOptions: SelectOption[] = [
       {
         label: getString('usernamePassword'),
@@ -130,6 +134,15 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
       })
       nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepDockerAuthenticationProps)
     }
+
+    const handleValidate = (formData: ConnectorConfigDTO): void => {
+      if (isOnboardingFlow) {
+        handleSubmit({
+          ...formData
+        })
+      }
+    }
+
     useConnectorWizard({
       helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
     })
@@ -150,7 +163,7 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
       <PageSpinner />
     ) : (
       <Layout.Vertical className={css.stepDetails} spacing="small">
-        <Text font={{ variation: FontVariation.H3 }}>{getString('details')}</Text>
+        {!isOnboardingFlow && <Text font={{ variation: FontVariation.H3 }}>{getString('details')}</Text>}
         <Formik
           initialValues={{
             ...initialValues,
@@ -171,11 +184,16 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
               otherwise: Yup.object().nullable()
             })
           })}
+          validate={handleValidate}
           onSubmit={handleSubmit}
         >
           {formikProps => (
             <>
-              <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} className={css.secondStep} width={'64%'}>
+              <Layout.Vertical
+                padding={{ top: 'large', bottom: 'large' }}
+                className={cx(css.secondStep, formClassName)}
+                width={'64%'}
+              >
                 <FormInput.Text
                   name="dockerRegistryUrl"
                   placeholder={getString('UrlLabel')}
@@ -218,22 +236,24 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
                   </>
                 ) : null}
               </Layout.Vertical>
-              <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
-                <Button
-                  text={getString('back')}
-                  icon="chevron-left"
-                  onClick={() => props?.previousStep?.(props?.prevStepData)}
-                  data-name="dockerBackButton"
-                  variation={ButtonVariation.SECONDARY}
-                />
-                <Button
-                  type="submit"
-                  variation={ButtonVariation.PRIMARY}
-                  onClick={formikProps.submitForm}
-                  text={getString('continue')}
-                  rightIcon="chevron-right"
-                />
-              </Layout.Horizontal>
+              {!isOnboardingFlow && (
+                <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
+                  <Button
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => props?.previousStep?.(props?.prevStepData)}
+                    data-name="dockerBackButton"
+                    variation={ButtonVariation.SECONDARY}
+                  />
+                  <Button
+                    type="submit"
+                    variation={ButtonVariation.PRIMARY}
+                    onClick={formikProps.submitForm}
+                    text={getString('continue')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
+              )}
             </>
           )}
         </Formik>

@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { capitalize, get, isEmpty, unset } from 'lodash-es'
 import type { IconName } from '@blueprintjs/core'
-import { Color, Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
+import produce from 'immer'
 import { ArtifactTitleIdByType, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
@@ -21,9 +23,10 @@ import {
   allowedArtifactTypesForOnboiarding,
   ArtifactIconByType,
   BinaryLabels,
-  BinaryOptions
+  BinaryOptions,
+  ServiceDataType
 } from '../../CDOnboardingUtils'
-import DockerArtifactory from './DockerArtifactory'
+import ArtifactoryAuthStep from './ArtifactoryAuthStep'
 import { StepStatus } from '../../DeployProvisioningWizard/Constants'
 import ArtifactImagePath from './ArtifactImagePath'
 import ButtonWrapper from '../../ButtonWrapper/ButtonWrapper'
@@ -43,10 +46,14 @@ const DefaultArtifactStepStatus = new Map<string, StepStatus>([
 
 const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: ArtifactSelectionProps): JSX.Element => {
   const {
-    state: { service: serviceData }
+    state: { service: serviceData },
+    saveServiceData
   } = useCDOnboardingContext()
   const { getString } = useStrings()
   const [artifactStepStatus, setArtifactStepStatus] = React.useState<Map<string, StepStatus>>(DefaultArtifactStepStatus)
+  const [selectedArtifact, setSelectedArtifact] = React.useState<ArtifactType>(
+    formikProps?.values?.artifactType || ENABLED_ARTIFACT_TYPES.DockerRegistry
+  )
 
   const serviceDefinitionType =
     'Kubernetes' || (get(serviceData, 'serviceDefinition.type') as ServiceDefinition['type'])
@@ -63,12 +70,26 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
   )
 
   React.useEffect(() => {
+    selectedArtifact && formikProps?.setFieldValue('artifactType', selectedArtifact)
+    // reset existing artifact Data
+    if (selectedArtifact !== serviceData?.data?.artifactType) {
+      const updatedContextService = produce(serviceData as ServiceDataType, draft => {
+        if (draft) unset(draft, 'data.artifactData')
+      })
+
+      saveServiceData(updatedContextService)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedArtifact])
+
+  React.useEffect(() => {
     if (formikProps?.values?.artifactToDeploy === BinaryLabels.NO) {
       enableNextBtn()
       return
     }
     artifactStepStatus.get('ImagePath') !== StepStatus.ToDo ? enableNextBtn() : disableNextBtn()
-  }, [artifactStepStatus, formikProps?.values])
+  }, [artifactStepStatus, disableNextBtn, enableNextBtn, formikProps?.values])
 
   return (
     <>
@@ -83,6 +104,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
               <ButtonWrapper
                 key={option.label}
                 option={option}
+                label={capitalize(option.label)}
                 onClick={(value: string) => {
                   formikProps?.setFieldValue('artifactToDeploy', value)
                 }}
@@ -108,8 +130,9 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
                   <ButtonWrapper
                     key={option.label}
                     option={option}
+                    label={option.label}
                     onClick={(value: string) => {
-                      formikProps?.setFieldValue('artifactType', value)
+                      setSelectedArtifact(value as ArtifactType)
                     }}
                     intent={formikProps?.values?.artifactType === option.value ? 'primary' : 'none'}
                     margin={{ bottom: 'small' }}
@@ -136,7 +159,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
                     <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'small', bottom: 'small' }}>
                       {getString('common.getStarted.authMethod')}
                     </Text>
-                    <DockerArtifactory
+                    <ArtifactoryAuthStep
                       onSuccess={status => {
                         setArtifactStepStatus(
                           new Map<string, StepStatus>([
@@ -145,6 +168,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
                           ])
                         )
                       }}
+                      selectedArtifact={selectedArtifact}
                     />
                   </li>
 

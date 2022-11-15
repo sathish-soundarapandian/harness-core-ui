@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Button, Formik, FormInput, Text, StepProps, ButtonVariation } from '@harness/uicore'
 import * as Yup from 'yup'
+import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { DelegateTypes, setupAWSFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -23,13 +24,14 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
+import { ModalViewFor } from '../../CreateConnectorUtils'
 import { regionValues } from './StepAuthConstants'
 import css from './StepAWSAuthentication.module.scss'
 interface StepAWSAuthenticationProps extends ConnectorInfoDTO {
   name: string
 }
 
-interface AWSFormInterface {
+export interface AWSFormInterface {
   delegateType: AwsCredential['type']
   accessKey: TextReferenceInterface | void
   secretKeyRef: SecretReferenceInterface | void
@@ -50,11 +52,12 @@ const defaultInitialFormData: AWSFormInterface = {
 }
 
 const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & ConnectorDetailsProps> = props => {
-  const { prevStepData, nextStep } = props
+  const { prevStepData, nextStep, context, formClassName = '' } = props
   const { accountId } = useParams<{ accountId: string }>()
   const { getString } = useStrings()
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
+  const isOnboardingFlow = context === ModalViewFor.CD_Onboarding
   useConnectorWizard({
     helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
   })
@@ -80,6 +83,13 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
     })
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepAWSAuthenticationProps)
   }
+  const handleValidate = (formData: ConnectorConfigDTO): void => {
+    if (isOnboardingFlow) {
+      handleSubmit({
+        ...formData
+      })
+    }
+  }
 
   const { trackEvent } = useTelemetry()
 
@@ -99,7 +109,7 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
     <PageSpinner />
   ) : (
     <Layout.Vertical className={css.formCredentials}>
-      <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>
+      {!isOnboardingFlow && <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>}
       <Formik
         initialValues={{
           ...initialValues,
@@ -123,11 +133,15 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
             then: Yup.string().trim().required(getString('connectors.aws.validation.crossAccountRoleArn'))
           })
         })}
+        validate={handleValidate}
         onSubmit={handleSubmit}
       >
         {formikProps => (
           <>
-            <Layout.Vertical padding={{ top: 'xxlarge', bottom: 'large' }} className={css.formDataAws}>
+            <Layout.Vertical
+              padding={{ top: 'xxlarge', bottom: 'large' }}
+              className={cx(css.formDataAws, formClassName)}
+            >
               <FormInput.RadioGroup
                 name="delegateType"
                 items={[
@@ -187,22 +201,24 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
                 />
               </Layout.Vertical>
             </Layout.Vertical>
-            <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
-              <Button
-                text={getString('back')}
-                icon="chevron-left"
-                variation={ButtonVariation.SECONDARY}
-                onClick={() => props?.previousStep?.(props?.prevStepData)}
-                data-name="awsBackButton"
-              />
-              <Button
-                type="submit"
-                variation={ButtonVariation.PRIMARY}
-                onClick={formikProps.submitForm}
-                text={getString('continue')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isOnboardingFlow && (
+              <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
+                <Button
+                  text={getString('back')}
+                  icon="chevron-left"
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => props?.previousStep?.(props?.prevStepData)}
+                  data-name="awsBackButton"
+                />
+                <Button
+                  type="submit"
+                  variation={ButtonVariation.PRIMARY}
+                  onClick={formikProps.submitForm}
+                  text={getString('continue')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </>
         )}
       </Formik>

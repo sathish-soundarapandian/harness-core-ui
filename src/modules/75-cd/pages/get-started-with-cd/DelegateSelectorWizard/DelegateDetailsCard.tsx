@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, PageError, PageSpinner } from '@wings-software/uicore'
+import { Container, Layout, PageError, PageSpinner } from '@harness/uicore'
 import type {
   ProjectPathProps,
   ModulePathParams,

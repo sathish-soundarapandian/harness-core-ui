@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { Button, Intent, MarginProps, Spacing } from '@harness/uicore'
-import { capitalize, defaultTo } from 'lodash-es'
+import { Button, MarginProps } from '@harness/uicore'
+import { Spacing, Intent } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import css from './ButtonWrapper.module.scss'
 
@@ -16,6 +17,7 @@ interface ButtonWrpperProps {
   intent: Intent
   margin?: Spacing | MarginProps
   className?: string
+  label?: string
   option: {
     label: string
     value: string
@@ -23,12 +25,19 @@ interface ButtonWrpperProps {
   }
 }
 
-export default function ButtonWrapper({ onClick, intent, margin, className, option }: ButtonWrpperProps): JSX.Element {
-  const { label, value, disabled } = option
+export default function ButtonWrapper({
+  onClick,
+  intent,
+  margin,
+  className,
+  option,
+  label = ''
+}: ButtonWrpperProps): JSX.Element {
+  const { value, disabled } = option
   return (
     <Button
       className={cx(css.buttonWrapper, className)}
-      text={capitalize(label)}
+      text={label}
       onClick={_e => {
         onClick(value)
       }}

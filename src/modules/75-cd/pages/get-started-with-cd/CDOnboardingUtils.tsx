@@ -69,15 +69,15 @@ export interface ServiceData {
   manifestStoreType: ManifestStores
   connectorRef?: ConnectorInfoDTO & { gitDetails?: IGitContextFormProps }
   artifactToDeploy?: string
-  artifactData?: DockerFormInterface
+  artifactData?: ArtifactoryGenericFormInterface
 }
 
-export interface DockerFormInterface {
-  dockerRegistryUrl: string
-  authType: string
-  dockerProviderType: string
-  username: TextReferenceInterface | void
-  password: SecretReferenceInterface | void
+export interface ArtifactoryGenericFormInterface {
+  dockerRegistryUrl?: string
+  authType?: string
+  dockerProviderType?: string
+  username?: TextReferenceInterface | void
+  password?: SecretReferenceInterface | void
   name: string
   identifier: string
   connectivityMode: string
@@ -379,13 +379,25 @@ export const getOAuthConnectorPayload = ({
 }
 
 export const allowedArtifactTypesForOnboiarding: Record<string, Array<ArtifactType>> = {
-  Kubernetes: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
-  NativeHelm: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]
+  Kubernetes: [
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Acr
+  ],
+  NativeHelm: [
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Acr
+  ]
 }
 
 export const ArtifactIconByType: Record<string, IconName> = {
   DockerRegistry: 'docker-step',
-  ArtifactoryRegistry: 'service-artifactory'
+  ArtifactoryRegistry: 'service-artifactory',
+  Ecr: 'ecr-step',
+  Acr: 'service-azure'
 }
 
 export enum BinaryLabels {

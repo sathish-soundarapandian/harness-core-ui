@@ -15,11 +15,11 @@ import {
   PageSpinner,
   useConfirmationDialog,
   Text,
-  Color,
-  Intent,
   getErrorInfoFromErrorObject,
   useToaster
 } from '@harness/uicore'
+
+import { Color, Intent } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -54,7 +54,7 @@ const WizardStepOrder = [
 ]
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectDeploymentType } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.ConfigureService } = props
   const { getString } = useStrings()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const [currentWizardStepId, setCurrentWizardStepId] =
