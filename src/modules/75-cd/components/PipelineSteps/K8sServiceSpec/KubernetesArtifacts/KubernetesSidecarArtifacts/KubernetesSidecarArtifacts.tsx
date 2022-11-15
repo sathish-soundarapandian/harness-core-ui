@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 
@@ -23,6 +23,7 @@ import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
 import { fromPipelineInputTriggerTab, getSidecarInitialValues } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
+import produce from 'immer'
 
 const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement | null => {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -95,12 +96,34 @@ export const KubernetesSidecarArtifacts = (props: KubernetesArtifactsProps): Rea
             if (!sidecarObj?.sidecar) {
               return null
             }
+            const artifactTemplate = get(sidecarObj, 'sidecar.template')
+            const isArtifactTemplatePresent = !isEmpty(artifactTemplate)
 
-            const artifactPath = `sidecars[${index}].sidecar`
+            const updatedSidecar = isArtifactTemplatePresent
+              ? {
+                  ...sidecarObj.sidecar,
+                  ...artifactTemplate?.templateInputs
+                }
+              : sidecarObj.sidecar
+
+            const artifactPath = isArtifactTemplatePresent
+              ? `sidecars[${index}].sidecar.template.templateInputs`
+              : `sidecars[${index}].sidecar`
+
+            const updatedInitialValues = isArtifactTemplatePresent
+              ? produce(props.initialValues, draft => {
+                  const identifierValue = get(props.initialValues?.artifacts, `sidecars[${index}].sidecar.identifier`)
+                  if (identifierValue) {
+                    set(draft, `artifacts.${artifactPath}.identifier`, `${identifierValue}.template.templateInputs`)
+                  }
+                })
+              : props.initialValues
+
             return (
               <ArtifactInputField
                 {...props}
-                artifact={sidecarObj.sidecar}
+                artifact={updatedSidecar}
+                initialValues={updatedInitialValues}
                 artifactPath={artifactPath}
                 key={sidecarObj.sidecar?.identifier}
               />
