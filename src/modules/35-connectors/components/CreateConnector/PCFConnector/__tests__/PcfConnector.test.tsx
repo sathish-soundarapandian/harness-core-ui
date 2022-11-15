@@ -44,14 +44,14 @@ describe('<PCFConnector />', () => {
         <PCFConnector {...commonProps} isEditMode={false} connectorInfo={connectorInfoMock} mock={mockResponse} />
       </TestWrapper>
     )
-    expect(getByText('connectors.title.pcf')).toBeInTheDocument()
+    expect(getByText('connectors.title.tas')).toBeInTheDocument()
     expect(getByText('credentials')).toBeInTheDocument()
     expect(getByText('connectors.selectConnectivityMode')).toBeInTheDocument()
 
     // Change connector name
     await act(async () => {
       fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test PCF Connector' }
+        target: { value: 'Test TAS Connector' }
       })
     })
 
@@ -73,7 +73,7 @@ describe('<PCFConnector />', () => {
 
     await act(async () => {
       fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test PCF Connector' }
+        target: { value: 'Test TAS Connector' }
       })
     })
 

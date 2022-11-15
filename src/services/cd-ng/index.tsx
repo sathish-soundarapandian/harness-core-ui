@@ -2647,6 +2647,7 @@ export interface CustomScriptBaseSource {
 export interface CustomScriptInfo {
   delegateSelector?: TaskSelectorYaml[]
   inputs?: NGVariable[]
+  runtimeInputYaml?: string
   script: string
 }
 
@@ -9873,11 +9874,26 @@ export interface PcfCredentialSpec {
   [key: string]: any
 }
 
+export type PcfInfrastructureDetails = InfrastructureDetails & {
+  organization?: string
+  pcfApplicationName?: string
+  space?: string
+}
+
 export type PcfManualDetails = PcfCredentialSpec & {
   endpointUrl: string
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export type PcfNGInstanceInfoDTO = InstanceInfoDTO & {
+  id: string
+  instanceIndex?: string
+  organization: string
+  pcfApplicationGuid?: string
+  pcfApplicationName: string
+  space: string
 }
 
 export type PdcInfrastructure = Infrastructure & {
@@ -14723,6 +14739,7 @@ export interface TaskSelectorYaml {
   delegateSelectors?: string
   origin?: string
 }
+export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
 export interface TechStack {
   category?: string

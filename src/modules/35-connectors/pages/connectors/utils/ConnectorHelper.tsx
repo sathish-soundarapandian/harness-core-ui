@@ -174,7 +174,7 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
     case Connectors.AZURE_ARTIFACTS:
       return 'connectors.title.azureArtifacts'
     case Connectors.PCF:
-      return 'connectors.title.pcf'
+      return 'connectors.title.tas'
     default:
       return 'connector'
   }
@@ -274,7 +274,7 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.SPOT:
       return 'spot'
     case Connectors.PCF:
-      return 'placeholder' //TODO:: icon
+      return 'placeholder' //TODO:: icon - tas
     default:
       return 'placeholder'
   }
