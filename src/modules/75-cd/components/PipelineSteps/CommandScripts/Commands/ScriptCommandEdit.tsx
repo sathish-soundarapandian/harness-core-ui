@@ -77,7 +77,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
           }}
         />
       </Container>
-      <FormInput.RadioGroup
+      dioGroup
         name="spec.source.type"
         label={getString('cd.steps.commands.selectScriptLocation')}
         items={[
