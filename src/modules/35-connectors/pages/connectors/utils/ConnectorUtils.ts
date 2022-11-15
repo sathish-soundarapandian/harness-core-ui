@@ -2269,7 +2269,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.SPOT:
       return 'spot'
     case Connectors.PCF:
-      return 'cog' // TODO:: icon update
+      return 'cog' // TODO:: icon update //tas
     default:
       return 'cog'
   }
@@ -2457,7 +2457,7 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
     case Connectors.SPOT:
       return getString('connectors.testConnectionStep.validationText.spot')
     case Connectors.PCF:
-      return getString('connectors.testConnectionStep.validationText.pcf')
+      return getString('connectors.testConnectionStep.validationText.tas')
     default:
       return ''
   }

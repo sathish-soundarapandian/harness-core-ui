@@ -2559,10 +2559,10 @@ export interface StringsMap {
   'connectors.name_labels.Nexus': string
   'connectors.name_labels.OCIHelm': string
   'connectors.name_labels.PDC': string
-  'connectors.name_labels.Pcf': string
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.Spot': string
+  'connectors.name_labels.TAS': string
   'connectors.name_labels.gcpKms': string
   'connectors.newArtifactRepository': string
   'connectors.newRelic.accountIdFieldLabel': string
@@ -2654,9 +2654,9 @@ export interface StringsMap {
   'connectors.testConnectionStep.url.gcr': string
   'connectors.testConnectionStep.url.k8s': string
   'connectors.testConnectionStep.url.nexus': string
-  'connectors.testConnectionStep.url.pcf': string
   'connectors.testConnectionStep.url.splunk': string
   'connectors.testConnectionStep.url.spot': string
+  'connectors.testConnectionStep.url.tas': string
   'connectors.testConnectionStep.url.vault': string
   'connectors.testConnectionStep.validationText.appD': string
   'connectors.testConnectionStep.validationText.artifactory': string
@@ -2680,11 +2680,11 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.k8s': string
   'connectors.testConnectionStep.validationText.nexus': string
   'connectors.testConnectionStep.validationText.pagerduty': string
-  'connectors.testConnectionStep.validationText.pcf': string
   'connectors.testConnectionStep.validationText.serviceNow': string
   'connectors.testConnectionStep.validationText.splunk': string
   'connectors.testConnectionStep.validationText.spot': string
   'connectors.testConnectionStep.validationText.sumologic': string
+  'connectors.testConnectionStep.validationText.tas': string
   'connectors.testConnectionStep.validationText.testingURLReachability': string
   'connectors.testConnectionStep.validationText.vault': string
   'connectors.testConnectionStep.verificationSuccessful': string
@@ -2719,13 +2719,13 @@ export interface StringsMap {
   'connectors.title.k8sCluster': string
   'connectors.title.nexus': string
   'connectors.title.ociHelmConnector': string
-  'connectors.title.pcf': string
   'connectors.title.pdcConnector': string
   'connectors.title.secretManager': string
   'connectors.title.serviceNow': string
   'connectors.title.splunk': string
   'connectors.title.spot': string
   'connectors.title.sumologic': string
+  'connectors.title.tas': string
   'connectors.unableToCreateConnector': string
   'connectors.unableToUpdateConnector': string
   'connectors.updatedSuccessfully': string
@@ -3994,13 +3994,13 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
   'pipeline.serviceDeploymentTypes.elastigroup': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
-  'pipeline.serviceDeploymentTypes.pcf': string
   'pipeline.serviceDeploymentTypes.serverlessAwsLambda': string
   'pipeline.serviceDeploymentTypes.serverlessAwsType': string
   'pipeline.serviceDeploymentTypes.serverlessAzureFunctions': string
   'pipeline.serviceDeploymentTypes.serverlessGoogleFunctions': string
   'pipeline.serviceDeploymentTypes.spotElastigroup': string
   'pipeline.serviceDeploymentTypes.ssh': string
+  'pipeline.serviceDeploymentTypes.tas': string
   'pipeline.serviceDeploymentTypes.winrm': string
   'pipeline.serviceNowApprovalStep.approvalChangeWindow': string
   'pipeline.serviceNowApprovalStep.connectToServiceNow': string

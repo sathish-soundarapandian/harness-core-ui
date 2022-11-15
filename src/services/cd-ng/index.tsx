@@ -2587,6 +2587,7 @@ export interface CustomScriptBaseSource {
 
 export interface CustomScriptInfo {
   inputs?: NGVariable[]
+  runtimeInputYaml?: string
   script: string
 }
 
@@ -2923,6 +2924,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -7460,6 +7462,7 @@ export interface InfrastructureDefinitionConfig {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7537,6 +7540,7 @@ export interface InfrastructureResponseDTO {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -9543,11 +9547,26 @@ export interface PcfCredentialSpec {
   [key: string]: any
 }
 
+export type PcfInfrastructureDetails = InfrastructureDetails & {
+  organization?: string
+  pcfApplicationName?: string
+  space?: string
+}
+
 export type PcfManualDetails = PcfCredentialSpec & {
   endpointUrl: string
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export type PcfNGInstanceInfoDTO = InstanceInfoDTO & {
+  id: string
+  instanceIndex?: string
+  organization: string
+  pcfApplicationGuid?: string
+  pcfApplicationName: string
+  space: string
 }
 
 export type PdcInfrastructure = Infrastructure & {
@@ -11246,6 +11265,7 @@ export interface ResponseListServiceDefinitionType {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13418,6 +13438,7 @@ export interface ServiceDefinition {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
 }
 
 export interface ServiceDeployment {
@@ -14209,6 +14230,8 @@ export interface TailFilePattern {
   tailFile?: ParameterFieldString
   tailPattern?: ParameterFieldString
 }
+
+export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
 export interface TechStack {
   category?: string
@@ -38498,6 +38521,7 @@ export interface GetInfrastructureListQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -42878,6 +42902,7 @@ export interface GetStepsQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -43024,6 +43049,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -43084,6 +43110,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -46675,6 +46702,7 @@ export interface GetServiceListQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -47238,6 +47266,7 @@ export interface GetServiceAccessListQueryParams {
     | 'CustomDeployment'
     | 'ECS'
     | 'Elastigroup'
+    | 'TAS'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
