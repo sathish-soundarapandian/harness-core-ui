@@ -1044,6 +1044,17 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           />
         </Container>
       )}
+
+      {get(enableFields, 'spec.signed') && (
+        <div className={cx(css.formGroup, css.sm)}>
+          {renderMultiTypeCheckboxField({
+            name: `${prefix}spec.signed`,
+            tooltipId: 'sscsSbomSigned',
+            labelKey: 'ci.sscs.signed',
+            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+          })}
+        </div>
+      )}
     </>
   )
 }

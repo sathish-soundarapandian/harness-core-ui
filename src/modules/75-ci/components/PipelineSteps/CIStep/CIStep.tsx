@@ -633,6 +633,74 @@ export const CIStep: React.FC<CIStepProps> = props => {
             : null}
         </Container>
       ) : null}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.generationType') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.generationType`,
+            tooltipId: 'scssGenerationType',
+            labelKey: 'ci.sscs.generationType',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.generationType'
+          })}
+        </Container>
+      ) : null}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.artifactType') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.artifactType`,
+            tooltipId: 'scssArtifactType',
+            labelKey: 'ci.sscs.artifactType',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.artifactType'
+          })}
+        </Container>
+      ) : null}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.generationType') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.sbomGenerationTool`,
+            tooltipId: 'scssSbomGenerationTool',
+            labelKey: 'ci.sscs.sbomGenerationTool',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.sbomGenerationTool'
+          })}
+        </Container>
+      ) : null}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.sbomFormat') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.generationType`,
+            tooltipId: 'sscsSbomFormat',
+            labelKey: 'ci.sscs.sbomFormat',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.sbomFormat'
+          })}
+        </Container>
+      ) : null}
     </>
   )
 }

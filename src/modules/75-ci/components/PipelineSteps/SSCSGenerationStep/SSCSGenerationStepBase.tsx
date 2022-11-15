@@ -55,7 +55,7 @@ export const SSCSGenerationStepBase = (
         transformValuesFieldsConfig,
         { imagePullPolicyOptions: GetImagePullPolicyOptions() }
       )}
-      formName="pluginStep"
+      formName="sscsGenerationStep"
       validate={valuesToValidate => {
         const schemaValues = getFormValuesInCorrectFormat<SSCSGenerationStepDataUI, SSCSGenerationStepData>(
           valuesToValidate,
@@ -95,14 +95,26 @@ export const SSCSGenerationStepBase = (
               enableFields={{
                 name: {},
                 description: {},
-                'spec.connectorRef': {
-                  label: { labelKey: 'pipelineSteps.connectorLabel' },
-                  type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER]
-                },
-                'spec.image': {
-                  tooltipId: 'pluginImageInfo',
+                'spec.generationType': {
                   multiTextInputProps: {
-                    placeholder: getString('pluginImagePlaceholder'),
+                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+                    disabled: readonly
+                  }
+                },
+                'spec.artifactType': {
+                  multiTextInputProps: {
+                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+                    disabled: readonly
+                  }
+                },
+                'spec.sbomGenerationTool': {
+                  multiTextInputProps: {
+                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
+                    disabled: readonly
+                  }
+                },
+                'spec.sbomFormat': {
+                  multiTextInputProps: {
                     multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
                     disabled: readonly
                   }
@@ -120,23 +132,8 @@ export const SSCSGenerationStepBase = (
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
-                        'spec.privileged': {
-                          shouldHide: [
-                            CIBuildInfrastructureType.Cloud,
-                            CIBuildInfrastructureType.VM,
-                            CIBuildInfrastructureType.KubernetesHosted,
-                            CIBuildInfrastructureType.Docker
-                          ].includes(buildInfrastructureType)
-                        },
-                        'spec.settings': {},
-                        'spec.reportPaths': {},
-                        'spec.entrypoint': {}
+                        'spec.signed': {}
                       }}
-                    />
-                    <StepCommonFields
-                      enableFields={['spec.imagePullPolicy']}
-                      disabled={readonly}
-                      buildInfrastructureType={buildInfrastructureType}
                     />
                   </Container>
                 }

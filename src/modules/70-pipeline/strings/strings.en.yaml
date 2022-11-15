@@ -1092,6 +1092,7 @@ stepDescription:
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
+  SCSSGeneration: Allows you to generate SBOM for your artifacts, repository
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

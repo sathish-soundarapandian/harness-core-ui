@@ -89,6 +89,23 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
     body: { stepPalleteModuleInfos: stepPaletteModuleInfos }
   })
 
+  if (
+    stepsData &&
+    stepsData.data?.stepCategories?.[0]?.stepCategories?.findIndex(stepCategory => stepCategory.name === 'SSCS') === -1
+  ) {
+    stepsData.data?.stepCategories?.[0]?.stepCategories?.push({
+      name: 'SSCS',
+      stepsData: [
+        {
+          name: 'SSCS Generation',
+          type: 'SSCSGeneration',
+          disabled: false,
+          featureRestrictionName: undefined
+        }
+      ],
+      stepCategories: []
+    })
+  }
   const { getString } = useStrings()
   useEffect(() => {
     const fromApi = stepsData?.data?.stepCategories

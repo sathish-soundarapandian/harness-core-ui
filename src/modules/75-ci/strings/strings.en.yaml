@@ -215,3 +215,9 @@ getStartedWithCI:
       useCaching: Use Caching to ensure faster Step execution by reusing data from fetch operations in previous Steps.
       usePlugins: Use Plugins to perform predefined tasks like building and publishing artifacts, sending events and metrics, and more.
       seamlessIntegration: Harness CI seamlessly integrates with other Harness modules like Continuous Delivery, Cloud Cost Management, and Feature Flags.
+sscs:
+  generationType: Generation Type
+  artifactType: Artifact Type
+  sbomGenerationTool: Pick a SBOM Generation tool
+  sbomFormat: SBOM Format
+  signed: Sign this SBOM

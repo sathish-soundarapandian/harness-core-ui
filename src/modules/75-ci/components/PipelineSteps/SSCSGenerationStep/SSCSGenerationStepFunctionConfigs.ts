@@ -18,52 +18,24 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
-    name: 'description',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'spec.connectorRef',
-    type: TransformValuesTypes.ConnectorRef
-  },
-  {
-    name: 'spec.image',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'spec.privileged',
-    type: TransformValuesTypes.Boolean
-  },
-  {
-    name: 'spec.reportPaths',
-    type: TransformValuesTypes.ReportPaths
-  },
-  {
-    name: 'spec.entrypoint',
+    name: 'spec.generationType',
     type: TransformValuesTypes.List
   },
   {
-    name: 'spec.settings',
-    type: TransformValuesTypes.Map
+    name: 'spec.artifactType',
+    type: TransformValuesTypes.List
   },
   {
-    name: 'spec.imagePullPolicy',
-    type: TransformValuesTypes.ImagePullPolicy
+    name: 'spec.sbomGenerationTool',
+    type: TransformValuesTypes.List
   },
   {
-    name: 'spec.runAsUser',
-    type: TransformValuesTypes.Text
+    name: 'spec.sbomFormat',
+    type: TransformValuesTypes.List
   },
   {
-    name: 'spec.limitMemory',
-    type: TransformValuesTypes.LimitMemory
-  },
-  {
-    name: 'spec.limitCPU',
-    type: TransformValuesTypes.LimitCPU
-  },
-  {
-    name: 'timeout',
-    type: TransformValuesTypes.Text
+    name: 'spec.signed',
+    type: TransformValuesTypes.Boolean
   }
 ]
 
@@ -81,46 +53,33 @@ export const editViewValidateFieldsConfig = [
     isRequired: true
   },
   {
-    name: 'spec.connectorRef',
-    type: ValidationFieldTypes.Text,
-    label: 'pipelineSteps.connectorLabel',
+    name: 'spec.generationType',
+    type: ValidationFieldTypes.List,
+    label: 'ci.sscs.generationType',
     isRequired: true
   },
   {
-    name: 'spec.image',
-    type: ValidationFieldTypes.Text,
-    label: 'imageLabel',
+    name: 'spec.artifactType',
+    type: ValidationFieldTypes.List,
+    label: 'ci.sscs.artifactType',
     isRequired: true
   },
   {
-    name: 'spec.privileged',
-    type: ValidationFieldTypes.Boolean
+    name: 'spec.sbomGenerationTool',
+    type: ValidationFieldTypes.List,
+    label: 'ci.sscs.sbomGenerationTool',
+    isRequired: true
   },
   {
-    name: 'spec.settings',
-    type: ValidationFieldTypes.Map
+    name: 'spec.sbomFormat',
+    type: ValidationFieldTypes.List,
+    label: 'ci.sscs.sbomFormat',
+    isRequired: true
   },
   {
-    label: 'entryPointLabel',
-    name: 'spec.entrypoint',
-    type: ValidationFieldTypes.List
-  },
-  {
-    label: 'pipeline.stepCommonFields.runAsUser',
-    name: 'spec.runAsUser',
-    type: ValidationFieldTypes.Numeric
-  },
-  {
-    name: 'spec.limitMemory',
-    type: ValidationFieldTypes.LimitMemory
-  },
-  {
-    name: 'spec.limitCPU',
-    type: ValidationFieldTypes.LimitCPU
-  },
-  {
-    name: 'timeout',
-    type: ValidationFieldTypes.Timeout
+    name: 'spec.signed',
+    type: ValidationFieldTypes.Boolean,
+    label: 'ci.sscs.signed'
   }
 ]
 
@@ -129,48 +88,45 @@ export function getInputSetViewValidateFieldsConfig(
 ): Array<{ name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }> {
   return [
     {
-      name: 'spec.connectorRef',
-      type: ValidationFieldTypes.Text,
-      label: 'pipelineSteps.connectorLabel',
+      name: 'identifier',
+      type: ValidationFieldTypes.Identifier,
+      label: 'identifier',
       isRequired
     },
     {
-      name: 'spec.image',
-      type: ValidationFieldTypes.Text,
-      label: 'imageLabel',
+      name: 'name',
+      type: ValidationFieldTypes.Name,
+      label: 'pipelineSteps.stepNameLabel',
       isRequired
     },
     {
-      name: 'spec.privileged',
-      type: ValidationFieldTypes.Boolean
+      name: 'spec.generationType',
+      type: ValidationFieldTypes.List,
+      label: 'ci.sscs.generationType',
+      isRequired
     },
     {
-      name: 'spec.settings',
-      type: ValidationFieldTypes.Map
+      name: 'spec.artifactType',
+      type: ValidationFieldTypes.List,
+      label: 'ci.sscs.artifactType',
+      isRequired
     },
     {
-      name: 'spec.entrypoint',
-      type: ValidationFieldTypes.List
+      name: 'spec.sbomGenerationTool',
+      type: ValidationFieldTypes.List,
+      label: 'ci.sscs.sbomGenerationTool',
+      isRequired
     },
     {
-      name: 'spec.imagePullPolicy',
-      type: ValidationFieldTypes.ImagePullPolicy
+      name: 'spec.sbomFormat',
+      type: ValidationFieldTypes.List,
+      label: 'ci.sscs.sbomFormat',
+      isRequired
     },
     {
-      name: 'spec.runAsUser',
-      type: ValidationFieldTypes.Numeric
-    },
-    {
-      name: 'spec.resources.limits.memory',
-      type: ValidationFieldTypes.LimitMemory
-    },
-    {
-      name: 'spec.resources.limits.cpu',
-      type: ValidationFieldTypes.LimitCPU
-    },
-    {
-      name: 'timeout',
-      type: ValidationFieldTypes.Timeout
+      name: 'spec.signed',
+      type: ValidationFieldTypes.Boolean,
+      label: 'ci.sscs.signed'
     }
   ]
 }

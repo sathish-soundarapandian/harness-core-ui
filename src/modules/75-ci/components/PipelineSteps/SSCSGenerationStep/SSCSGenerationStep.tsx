@@ -30,42 +30,26 @@ import { SSCSGenerationStepVariables, SSCSGenerationStepVariablesProps } from '.
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SSCSGenerationStepFunctionConfigs'
 
 export interface SSCSGenerationStepSpec {
-  connectorRef: string
-  image: string
-  privileged?: boolean
-  reports?: {
-    type: 'JUnit'
-    spec: {
-      paths: MultiTypeListType
-    }
-  }
-  entrypoint?: MultiTypeListType
-  settings?: MultiTypeMapType
-  imagePullPolicy?: MultiTypeSelectOption
-  runAsUser?: string
-  resources?: Resources
+  generationType: string
+  artifactType: string
+  sbomGenerationTool: string
+  sbomFormat: string
+  signed?: boolean
+  signSecret?: string
 }
 
 export interface SSCSGenerationStepData {
   identifier: string
   name?: string
-  description?: string
   type: string
-  timeout?: string
   spec: SSCSGenerationStepSpec
 }
 
 export interface SSCSGenerationStepSpecUI
-  extends Omit<SSCSGenerationStepSpec, 'connectorRef' | 'reports' | 'entrypoint' | 'settings' | 'pull' | 'resources'> {
-  connectorRef: MultiTypeConnectorRef
-  reportPaths?: MultiTypeListUIType
-  entrypoint?: MultiTypeListUIType
-  settings?: MultiTypeMapUIType
-  // TODO: Right now we do not support Image Pull Policy but will do in the future
-  // pull?: MultiTypeSelectOption
-  runAsUser?: string
-  limitMemory?: string
-  limitCPU?: string
+  extends Omit<SSCSGenerationStepSpec, 'generationType' | 'artifactType' | 'sbomGenerationTool'> {
+  generationType?: MultiTypeListUIType
+  artifactType?: MultiTypeListUIType
+  sbomGenerationTool?: MultiTypeListUIType
 }
 
 // Interface for the form
@@ -93,23 +77,25 @@ export class SSCSGenerationStep extends PipelineStep<SSCSGenerationStepData> {
   }
 
   protected type = StepType.SSCSGeneration
-  protected stepName = 'Configure SSCS Generation step'
+  protected stepName = 'SBOM Generation'
   protected stepIcon: IconName = 'plugin-step'
   protected stepIconColor = '#4F5162'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Plugin'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SCSSGeneration'
 
   protected stepPaletteVisible = false
 
   protected defaultValues: SSCSGenerationStepData = {
     identifier: '',
-    type: StepType.Plugin as string,
+    type: StepType.SSCSGeneration as string,
     spec: {
-      connectorRef: '',
-      image: ''
+      generationType: 'Orchestrated',
+      artifactType: 'Repository',
+      sbomGenerationTool: 'Syft',
+      sbomFormat: 'SPDX v2.2',
+      signed: false
     }
   }
 
-  /* istanbul ignore next */
   processFormData<T>(data: T): SSCSGenerationStepData {
     return getFormValuesInCorrectFormat<T, SSCSGenerationStepData>(data, transformValuesFieldsConfig)
   }
