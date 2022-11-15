@@ -124,7 +124,7 @@ export default function TemplatesPage(): React.ReactElement {
 
   const reset = React.useCallback((): void => {
     searchRef.current.clear()
-    updateQueryParams({ templateType: [] as any })
+    updateQueryParams({ templateType: [] as any, repoName: [] as any })
     setGitFilter(null)
   }, [searchRef.current, updateQueryParams, setGitFilter])
 

@@ -114,7 +114,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
           }
         : {})
     }
-  }, [templateType, selectedChildType, childTypes, selectedTemplateRefs])
+  }, [templateType, selectedChildType, childTypes, selectedTemplateRefs, selectedRepo])
 
   const queryParams = React.useMemo(() => {
     return {
