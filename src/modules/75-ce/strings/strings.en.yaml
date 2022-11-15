@@ -1382,3 +1382,5 @@ k8sQuickCreate:
     retest: Retest Connection
 governance:
   sideNavText: Asset Governance
+currencyPreferences:
+  sideNavText: Currency Preferences

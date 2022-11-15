@@ -5891,6 +5891,7 @@ export interface StringsMap {
   'ce.connector.AWS.title': string
   'ce.connector.AWS.visibility.description': string
   'ce.continuous': string
+  'ce.currencyPreferences.sideNavText': string
   'ce.dashboardPage.description': string
   'ce.dashboardPage.welcome': string
   'ce.enforcementMessage.autoStoppingRules': string

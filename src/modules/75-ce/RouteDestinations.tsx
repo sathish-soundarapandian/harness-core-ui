@@ -157,6 +157,16 @@ RbacFactory.registerResourceTypeHandler(ResourceType.LOADBALANCER, {
   }
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CURRENCYPREFERENCE, {
+  icon: 'ccm-solid',
+  label: 'ce.currencyPreferences.sideNavText',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CURRENCYPREFERENCE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_CURRENCYPREFERENCE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
+  }
+})
+
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
   renderMessage: (_, getString, additionalLicenseProps, usageAndLimitInfo) => {
@@ -678,7 +688,7 @@ const CENonMFERoutes = (
 const CERoutes: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { CCM_MICRO_FRONTEND } = useFeatureFlags()
-  const enableMicroFrontend = CCM_MICRO_FRONTEND
+  const enableMicroFrontend = CCM_MICRO_FRONTEND || true
 
   const urqlClient = React.useMemo(() => {
     const url = getConfig(`ccm/api/graphql?accountIdentifier=${accountId}&routingId=${accountId}`)
@@ -775,7 +785,8 @@ const CERoutes: React.FC = () => {
         routes.toCEGovernanceRules({ ...accountPathProps }),
         routes.toCEGovernanceEnforcements({ ...accountPathProps }),
         routes.toCEGovernanceEvaluations({ ...accountPathProps }),
-        routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' })
+        routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
+        routes.toCECurrencyPreferences({ ...accountPathProps })
       ]
     : []
 
