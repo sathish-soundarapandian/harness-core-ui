@@ -68,7 +68,6 @@ export interface AnomalyFilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
-    | 'PolicyExecution'
   gcpProducts?: string[]
   gcpProjects?: string[]
   gcpSKUDescriptions?: string[]
@@ -272,26 +271,6 @@ export type AwsSecretManagerDTO = ConnectorConfigDTO & {
   secretNamePrefix?: string
 }
 
-export interface AzureArtifactsAuthentication {
-  spec: AzureArtifactsHttpCredentials
-}
-
-export type AzureArtifactsConnector = ConnectorConfigDTO & {
-  auth: AzureArtifactsAuthentication
-  azureArtifactsUrl: string
-  delegateSelectors?: string[]
-  executeOnDelegate?: boolean
-}
-
-export interface AzureArtifactsHttpCredentials {
-  spec: AzureArtifactsUsernameToken
-  type: 'PersonalAccessToken'
-}
-
-export interface AzureArtifactsUsernameToken {
-  tokenRef: string
-}
-
 export interface AzureAuthCredentialDTO {
   [key: string]: any
 }
@@ -482,7 +461,6 @@ export interface Budget {
   actualCost?: number
   alertThresholds?: AlertThreshold[]
   budgetAmount?: number
-  budgetMonthlyBreakdown?: BudgetMonthlyBreakdown
   createdAt?: number
   emailAddresses?: string[]
   endTime?: number
@@ -507,21 +485,12 @@ export interface BudgetCostData {
   budgetVariancePercentage?: number
   budgeted?: number
   endTime?: number
-  forecastCost?: number
   time?: number
 }
 
 export interface BudgetData {
   costData?: BudgetCostData[]
   forecastCost?: number
-}
-
-export interface BudgetMonthlyBreakdown {
-  actualMonthlyCost?: number[]
-  budgetBreakdown?: 'YEARLY' | 'MONTHLY'
-  budgetMonthlyAmount?: number[]
-  forecastMonthlyCost?: number[]
-  yearlyLastPeriodCost?: number[]
 }
 
 export interface BudgetScope {
@@ -732,7 +701,6 @@ export interface CCMRecommendationFilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
-    | 'PolicyExecution'
   k8sRecommendationFilterPropertiesDTO?: K8sRecommendationFilterPropertiesDTO
   limit?: number
   minCost?: number
@@ -912,20 +880,20 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
 }
 
 export interface CELicenseUsageDTO {
@@ -1231,8 +1199,6 @@ export interface ConnectorInfoDTO {
     | 'CustomSecretManager'
     | 'ElasticSearch'
     | 'GcpSecretManager'
-    | 'AzureArtifacts'
-    | 'Spot'
 }
 
 export interface ConnectorResponse {
@@ -1353,13 +1319,6 @@ export interface CostDetailsQueryParamsDTO {
   timeResolution?: 'HOUR' | 'DAY' | 'MONTH' | 'WEEK' | 'QUARTER' | 'YEAR'
 }
 
-export interface CostOverviewDTO {
-  statsLabel?: string
-  statsTrend?: number
-  statsValue?: string
-  value?: number
-}
-
 export interface CostTarget {
   name?: string
   rules?: ViewRule[]
@@ -1368,30 +1327,6 @@ export interface CostTarget {
 export interface CreatePerspectiveFolderDTO {
   ceViewFolder?: CEViewFolder
   perspectiveIds?: string[]
-}
-
-export interface CreatePolicyDTO {
-  policies?: Policy
-}
-
-export interface CreatePolicyEnforcementDTO {
-  policyEnforcement?: PolicyEnforcement
-}
-
-export interface CreatePolicyExecutionDTO {
-  policyExecution?: PolicyExecution
-}
-
-export interface CreatePolicyExecutionFilterDTO {
-  policyExecutionFilter?: PolicyExecutionFilter
-}
-
-export interface CreatePolicyPackDTO {
-  policypack?: PolicyPack
-}
-
-export interface CreatePolicyPackFilterDTO {
-  policyPack?: PolicyPackFilter
 }
 
 export interface CrossAccountAccess {
@@ -1505,26 +1440,6 @@ export interface EmbeddedUser {
   externalUserId?: string
   name?: string
   uuid?: string
-}
-
-export interface EnforcementCount {
-  accountId?: string
-  policyIds?: {
-    [key: string]: string[]
-  }
-  policyPackIds?: {
-    [key: string]: string[]
-  }
-}
-
-export interface EnforcementCountDTO {
-  enforcementCount?: EnforcementCountRequest
-}
-
-export interface EnforcementCountRequest {
-  accountId?: string
-  policyIds?: string[]
-  policyPackIds?: string[]
 }
 
 export interface EntityGitDetails {
@@ -1911,9 +1826,6 @@ export interface Error {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
-    | 'DELEGATE_TASK_VALIDATION_FAILED'
-    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
-    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1936,31 +1848,6 @@ export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   delegateSelectors?: string[]
   url: string
-}
-
-export interface ExecutionDetailDTO {
-  executionDetail?: ExecutionDetailRequest
-}
-
-export interface ExecutionDetailRequest {
-  enforcementIds?: string[]
-}
-
-export interface ExecutionDetails {
-  enforcementIds?: {
-    [key: string]: ExecutionEnforcementDetails
-  }[]
-}
-
-export interface ExecutionEnforcementDetails {
-  enforcementName?: string
-  policyIds?: {
-    [key: string]: string
-  }
-  policyPackIds?: {
-    [key: string]: string
-  }
-  schedule?: string
 }
 
 export interface Failure {
@@ -2308,9 +2195,6 @@ export interface Failure {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
-    | 'DELEGATE_TASK_VALIDATION_FAILED'
-    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
-    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2341,7 +2225,6 @@ export interface FilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
-    | 'PolicyExecution'
   tags?: {
     [key: string]: string
   }
@@ -2364,7 +2247,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -2562,36 +2445,8 @@ export type GitlabUsernameToken = GitlabHttpCredentialsSpecDTO & {
   usernameRef?: string
 }
 
-export interface GovernanceEnqueueResponseDTO {
-  policyExecutionId?: string[]
-}
-
-export interface GovernanceJobEnqueueDTO {
-  externalId?: string
-  isDryRun?: boolean
-  isOOTB?: boolean
-  policy?: string
-  policyCloudProviderType?: 'AWS'
-  policyEnforcementId?: string
-  policyId?: string
-  roleArn?: string
-  targetAccountId?: string
-  targetRegion?: string
-}
-
 export interface GovernanceMetadata {
   [key: string]: any
-}
-
-export interface GovernancePolicyFilter {
-  accountId?: string
-  cloudProvider?: string
-  isOOTB?: boolean
-  isStablePolicy?: boolean
-  orgIdentifier?: string
-  policyIds?: string[]
-  projectIdentifier?: string
-  tags?: string
 }
 
 export interface GraphQLQuery {
@@ -2733,7 +2588,7 @@ export interface K8sRecommendationFilterPropertiesDTO {
   ids?: string[]
   names?: string[]
   namespaces?: string[]
-  resourceTypes?: ('WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE' | 'EC2_INSTANCE')[]
+  resourceTypes?: ('WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE')[]
 }
 
 export interface KubernetesAuthCredentialDTO {
@@ -2797,10 +2652,6 @@ export interface LicenseUsageDTO {
   accountIdentifier?: string
   module?: string
   timestamp?: number
-}
-
-export interface ListDTO {
-  query?: GovernancePolicyFilter
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -2977,118 +2828,6 @@ export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
   hosts?: HostDTO[]
 }
 
-export interface Policy {
-  accountId?: string
-  cloudProvider?: 'AWS'
-  createdAt?: number
-  createdBy?: EmbeddedUser
-  deleted?: boolean
-  description?: string
-  isOOTB?: boolean
-  isStablePolicy?: boolean
-  lastUpdatedAt?: number
-  lastUpdatedBy?: EmbeddedUser
-  name?: string
-  orgIdentifier?: string
-  policyYaml?: string
-  projectIdentifier?: string
-  storeType?: 'INLINE' | 'REMOTE'
-  tags?: string[]
-  uuid?: string
-  versionLabel?: string
-}
-
-export interface PolicyEnforcement {
-  accountId?: string
-  cloudProvider?: 'AWS'
-  createdAt?: number
-  createdBy?: EmbeddedUser
-  deleted?: boolean
-  description?: string
-  executionSchedule?: string
-  executionTimezone?: string
-  isDryRun?: boolean
-  isEnabled?: boolean
-  lastUpdatedAt?: number
-  lastUpdatedBy?: EmbeddedUser
-  name?: string
-  orgIdentifier?: string
-  policyIds?: string[]
-  policyPackIDs?: string[]
-  projectIdentifier?: string
-  tags?: string[]
-  targetAccounts?: string[]
-  targetRegions?: string[]
-  uuid?: string
-}
-
-export interface PolicyExecution {
-  accountId?: string
-  cloudProvider?: 'AWS'
-  createdAt?: number
-  executionCompletedAt?: number
-  executionLogBucketType?: string
-  executionLogPath?: string
-  executionStatus?: 'FAILED' | 'ENQUEUED' | 'SUCCESS'
-  isDryRun?: boolean
-  jobId?: string
-  lastUpdatedAt?: number
-  orgIdentifier?: string
-  policyEnforcementIdentifier?: string
-  policyIdentifier?: string
-  projectIdentifier?: string
-  resourceCount?: number
-  targetAccount?: string
-  targetRegions?: string[]
-  uuid?: string
-}
-
-export interface PolicyExecutionFilter {
-  accountId?: string
-  cloudProvider?: 'AWS'
-  executionStatus?: string
-  limit?: number
-  offset?: number
-  policyEnforcementId?: string[]
-  policyId?: string[]
-  region?: string[]
-  targetAccount?: string
-  time?: CCMTimeFilter[]
-}
-
-export interface PolicyExecutionList {
-  policyExecutions?: PolicyExecution[]
-  totalItems?: number
-}
-
-export interface PolicyPack {
-  accountId?: string
-  cloudProvider?: 'AWS'
-  createdAt?: number
-  createdBy?: EmbeddedUser
-  description?: string
-  isOOTB?: boolean
-  lastUpdatedAt?: number
-  lastUpdatedBy?: EmbeddedUser
-  name?: string
-  orgIdentifier?: string
-  policiesIdentifier?: string[]
-  projectIdentifier?: string
-  tags?: string[]
-  uuid?: string
-}
-
-export interface PolicyPackFilter {
-  accountId?: string
-  cloudProvider?: string
-  isOOTB?: boolean
-  orgIdentifier?: string
-  policiesIdentifier?: string[]
-  policyPackIds?: string[]
-  projectIdentifier?: string
-  tags?: string
-}
-
 export type PrometheusConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   headers?: CustomHealthKeyAndValue[]
@@ -3194,8 +2933,6 @@ export interface RecommendClusterRequest {
   excludes?: string[]
   includes?: string[]
   maxNodes?: number
-  minCpu?: number
-  minMem?: number
   minNodes?: number
   networkPerf?: string[]
   onDemandPct?: number
@@ -3218,7 +2955,7 @@ export interface RecommendationItemDTO {
   namespace?: string
   recommendationDetails?: RecommendationDetailsDTO
   resourceName?: string
-  resourceType: 'WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE' | 'EC2_INSTANCE'
+  resourceType: 'WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE'
 }
 
 export interface RecommendationOverviewStats {
@@ -3351,23 +3088,9 @@ export interface ResponseConnectorValidationResult {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseCostOverviewDTO {
-  correlationId?: string
-  data?: CostOverviewDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseDouble {
   correlationId?: string
   data?: number
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseDoubleArray {
-  correlationId?: string
-  data?: number[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3379,30 +3102,9 @@ export interface ResponseECSRecommendationDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseEnforcementCount {
-  correlationId?: string
-  data?: EnforcementCount
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseExecutionDetails {
-  correlationId?: string
-  data?: ExecutionDetails
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseFilterDTO {
   correlationId?: string
   data?: FilterDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseGovernanceEnqueueResponseDTO {
-  correlationId?: string
-  data?: GovernanceEnqueueResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3501,27 +3203,6 @@ export interface ResponseListFilterStatsDTO {
 export interface ResponseListPerspectiveAnomalyData {
   correlationId?: string
   data?: PerspectiveAnomalyData[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListPolicy {
-  correlationId?: string
-  data?: Policy[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListPolicyEnforcement {
-  correlationId?: string
-  data?: PolicyEnforcement[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListPolicyPack {
-  correlationId?: string
-  data?: PolicyPack[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3887,9 +3568,6 @@ export interface ResponseMessage {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
-    | 'DELEGATE_TASK_VALIDATION_FAILED'
-    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
-    | 'DELEGATE_NOT_REGISTERED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -3901,7 +3579,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'INPUT_TIMEOUT_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -3938,41 +3616,6 @@ export interface ResponsePerspectiveEntityStatsData {
 export interface ResponsePerspectiveTimeSeriesData {
   correlationId?: string
   data?: PerspectiveTimeSeriesData
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePolicy {
-  correlationId?: string
-  data?: Policy
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePolicyEnforcement {
-  correlationId?: string
-  data?: PolicyEnforcement
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePolicyExecution {
-  correlationId?: string
-  data?: PolicyExecution
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePolicyExecutionList {
-  correlationId?: string
-  data?: PolicyExecutionList
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePolicyPack {
-  correlationId?: string
-  data?: PolicyPack
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4115,27 +3758,6 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
   passwordRef: string
   splunkUrl: string
   username?: string
-}
-
-export type SpotConnector = ConnectorConfigDTO & {
-  credential: SpotCredential
-  delegateSelectors?: string[]
-  executeOnDelegate?: boolean
-}
-
-export interface SpotCredential {
-  spec?: SpotCredentialSpec
-  type: 'PermanentTokenConfig'
-}
-
-export interface SpotCredentialSpec {
-  [key: string]: any
-}
-
-export type SpotPermanentTokenConfigSpec = SpotCredentialSpec & {
-  apiTokenRef: string
-  spotAccountId?: string
-  spotAccountIdRef?: string
 }
 
 export interface StackTraceElement {
@@ -4358,89 +3980,11 @@ export type CEViewRequestBody = CEView
 
 export type CostDetailsQueryParamsDTORequestBody = CostDetailsQueryParamsDTO
 
-export type CreatePolicyDTORequestBody = CreatePolicyDTO
-
-export type CreatePolicyEnforcementDTORequestBody = CreatePolicyEnforcementDTO
-
-export type CreatePolicyPackDTORequestBody = CreatePolicyPackDTO
-
 export type FilterDTORequestBody = FilterDTO
 
 export type K8sClusterSetupRequestRequestBody = K8sClusterSetupRequest
 
 export type ViewCustomFieldRequestBody = ViewCustomField
-
-export interface GetActiveSpendQueryParams {
-  accountIdentifier?: string
-  startTime?: number
-  endTime?: number
-}
-
-export type GetActiveSpendProps = Omit<
-  GetProps<ResponseCostOverviewDTO, unknown, GetActiveSpendQueryParams, void>,
-  'path'
->
-
-/**
- * Get Active spend for given time period
- */
-export const GetActiveSpend = (props: GetActiveSpendProps) => (
-  <Get<ResponseCostOverviewDTO, unknown, GetActiveSpendQueryParams, void>
-    path={`/active-spend`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetActiveSpendProps = Omit<
-  UseGetProps<ResponseCostOverviewDTO, unknown, GetActiveSpendQueryParams, void>,
-  'path'
->
-
-/**
- * Get Active spend for given time period
- */
-export const useGetActiveSpend = (props: UseGetActiveSpendProps) =>
-  useGet<ResponseCostOverviewDTO, unknown, GetActiveSpendQueryParams, void>(`/active-spend`, {
-    base: getConfig('ccm/api'),
-    ...props
-  })
-
-export interface GetForecastedSpendQueryParams {
-  accountIdentifier?: string
-  startTime?: number
-  endTime?: number
-}
-
-export type GetForecastedSpendProps = Omit<
-  GetProps<ResponseCostOverviewDTO, unknown, GetForecastedSpendQueryParams, void>,
-  'path'
->
-
-/**
- * Get Forecasted spend for the next time period
- */
-export const GetForecastedSpend = (props: GetForecastedSpendProps) => (
-  <Get<ResponseCostOverviewDTO, unknown, GetForecastedSpendQueryParams, void>
-    path={`/active-spend/forecast`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetForecastedSpendProps = Omit<
-  UseGetProps<ResponseCostOverviewDTO, unknown, GetForecastedSpendQueryParams, void>,
-  'path'
->
-
-/**
- * Get Forecasted spend for the next time period
- */
-export const useGetForecastedSpend = (props: UseGetForecastedSpendProps) =>
-  useGet<ResponseCostOverviewDTO, unknown, GetForecastedSpendQueryParams, void>(`/active-spend/forecast`, {
-    base: getConfig('ccm/api'),
-    ...props
-  })
 
 export interface ListAnomaliesQueryParams {
   accountIdentifier: string
@@ -5674,7 +5218,6 @@ export interface GetFilterListQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
-    | 'PolicyExecution'
 }
 
 export type GetFilterListProps = Omit<
@@ -5796,7 +5339,6 @@ export interface DeleteFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
-    | 'PolicyExecution'
 }
 
 export type DeleteFilterProps = Omit<
@@ -5848,7 +5390,6 @@ export interface GetFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
-    | 'PolicyExecution'
 }
 
 export interface GetFilterPathParams {
@@ -5885,847 +5426,6 @@ export const useGetFilter = ({ identifier, ...props }: UseGetFilterProps) =>
   useGet<ResponseFilterDTO, Failure | Error, GetFilterQueryParams, GetFilterPathParams>(
     (paramsInPath: GetFilterPathParams) => `/filters/${paramsInPath.identifier}`,
     { base: getConfig('ccm/api'), pathParams: { identifier }, ...props }
-  )
-
-export interface AddPolicyEnforcementQueryParams {
-  accountIdentifier: string
-}
-
-export type AddPolicyEnforcementProps = Omit<
-  MutateProps<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    AddPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy Enforcement api
- */
-export const AddPolicyEnforcement = (props: AddPolicyEnforcementProps) => (
-  <Mutate<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    AddPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >
-    verb="POST"
-    path={`/governance/enforcement`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseAddPolicyEnforcementProps = Omit<
-  UseMutateProps<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    AddPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy Enforcement api
- */
-export const useAddPolicyEnforcement = (props: UseAddPolicyEnforcementProps) =>
-  useMutate<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    AddPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >('POST', `/governance/enforcement`, { base: getConfig('ccm/api'), ...props })
-
-export interface UpdateEnforcementQueryParams {
-  accountIdentifier: string
-}
-
-export type UpdateEnforcementProps = Omit<
-  MutateProps<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    UpdateEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Update a Policy enforcement
- */
-export const UpdateEnforcement = (props: UpdateEnforcementProps) => (
-  <Mutate<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    UpdateEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >
-    verb="PUT"
-    path={`/governance/enforcement`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseUpdateEnforcementProps = Omit<
-  UseMutateProps<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    UpdateEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Update a Policy enforcement
- */
-export const useUpdateEnforcement = (props: UseUpdateEnforcementProps) =>
-  useMutate<
-    ResponsePolicyEnforcement,
-    Failure | Error,
-    UpdateEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >('PUT', `/governance/enforcement`, { base: getConfig('ccm/api'), ...props })
-
-export interface GetPolicyEnforcementCountQueryParams {
-  accountIdentifier: string
-}
-
-export type GetPolicyEnforcementCountProps = Omit<
-  MutateProps<
-    ResponseEnforcementCount,
-    Failure | Error,
-    GetPolicyEnforcementCountQueryParams,
-    EnforcementCountDTO,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get enforcement count
- */
-export const GetPolicyEnforcementCount = (props: GetPolicyEnforcementCountProps) => (
-  <Mutate<ResponseEnforcementCount, Failure | Error, GetPolicyEnforcementCountQueryParams, EnforcementCountDTO, void>
-    verb="POST"
-    path={`/governance/enforcement/count`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetPolicyEnforcementCountProps = Omit<
-  UseMutateProps<
-    ResponseEnforcementCount,
-    Failure | Error,
-    GetPolicyEnforcementCountQueryParams,
-    EnforcementCountDTO,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get enforcement count
- */
-export const useGetPolicyEnforcementCount = (props: UseGetPolicyEnforcementCountProps) =>
-  useMutate<ResponseEnforcementCount, Failure | Error, GetPolicyEnforcementCountQueryParams, EnforcementCountDTO, void>(
-    'POST',
-    `/governance/enforcement/count`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface GetPolicyEnforcementQueryParams {
-  accountIdentifier: string
-}
-
-export type GetPolicyEnforcementProps = Omit<
-  MutateProps<
-    ResponseListPolicyEnforcement,
-    Failure | Error,
-    GetPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get enforcement list
- */
-export const GetPolicyEnforcement = (props: GetPolicyEnforcementProps) => (
-  <Mutate<
-    ResponseListPolicyEnforcement,
-    Failure | Error,
-    GetPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >
-    verb="POST"
-    path={`/governance/enforcement/list`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetPolicyEnforcementProps = Omit<
-  UseMutateProps<
-    ResponseListPolicyEnforcement,
-    Failure | Error,
-    GetPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get enforcement list
- */
-export const useGetPolicyEnforcement = (props: UseGetPolicyEnforcementProps) =>
-  useMutate<
-    ResponseListPolicyEnforcement,
-    Failure | Error,
-    GetPolicyEnforcementQueryParams,
-    CreatePolicyEnforcementDTORequestBody,
-    void
-  >('POST', `/governance/enforcement/list`, { base: getConfig('ccm/api'), ...props })
-
-export interface DeletePolicyEnforcementQueryParams {
-  accountIdentifier: string
-}
-
-export type DeletePolicyEnforcementProps = Omit<
-  MutateProps<ResponseBoolean, Failure | Error, DeletePolicyEnforcementQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete a policy
- */
-export const DeletePolicyEnforcement = (props: DeletePolicyEnforcementProps) => (
-  <Mutate<ResponseBoolean, Failure | Error, DeletePolicyEnforcementQueryParams, string, void>
-    verb="DELETE"
-    path={`/governance/enforcement`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseDeletePolicyEnforcementProps = Omit<
-  UseMutateProps<ResponseBoolean, Failure | Error, DeletePolicyEnforcementQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete a policy
- */
-export const useDeletePolicyEnforcement = (props: UseDeletePolicyEnforcementProps) =>
-  useMutate<ResponseBoolean, Failure | Error, DeletePolicyEnforcementQueryParams, string, void>(
-    'DELETE',
-    `/governance/enforcement`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface EnqueueGovernanceJobQueryParams {
-  accountIdentifier?: string
-}
-
-export type EnqueueGovernanceJobProps = Omit<
-  MutateProps<
-    ResponseGovernanceEnqueueResponseDTO,
-    Failure | Error,
-    EnqueueGovernanceJobQueryParams,
-    GovernanceJobEnqueueDTO,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Enqueues job for execution
- */
-export const EnqueueGovernanceJob = (props: EnqueueGovernanceJobProps) => (
-  <Mutate<
-    ResponseGovernanceEnqueueResponseDTO,
-    Failure | Error,
-    EnqueueGovernanceJobQueryParams,
-    GovernanceJobEnqueueDTO,
-    void
-  >
-    verb="POST"
-    path={`/governance/enqueue`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseEnqueueGovernanceJobProps = Omit<
-  UseMutateProps<
-    ResponseGovernanceEnqueueResponseDTO,
-    Failure | Error,
-    EnqueueGovernanceJobQueryParams,
-    GovernanceJobEnqueueDTO,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Enqueues job for execution
- */
-export const useEnqueueGovernanceJob = (props: UseEnqueueGovernanceJobProps) =>
-  useMutate<
-    ResponseGovernanceEnqueueResponseDTO,
-    Failure | Error,
-    EnqueueGovernanceJobQueryParams,
-    GovernanceJobEnqueueDTO,
-    void
-  >('POST', `/governance/enqueue`, { base: getConfig('ccm/api'), ...props })
-
-export interface AddPolicyExecutionQueryParams {
-  accountIdentifier: string
-}
-
-export type AddPolicyExecutionProps = Omit<
-  MutateProps<ResponsePolicyExecution, Failure | Error, AddPolicyExecutionQueryParams, CreatePolicyExecutionDTO, void>,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy execution api
- */
-export const AddPolicyExecution = (props: AddPolicyExecutionProps) => (
-  <Mutate<ResponsePolicyExecution, Failure | Error, AddPolicyExecutionQueryParams, CreatePolicyExecutionDTO, void>
-    verb="POST"
-    path={`/governance/execution`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseAddPolicyExecutionProps = Omit<
-  UseMutateProps<
-    ResponsePolicyExecution,
-    Failure | Error,
-    AddPolicyExecutionQueryParams,
-    CreatePolicyExecutionDTO,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy execution api
- */
-export const useAddPolicyExecution = (props: UseAddPolicyExecutionProps) =>
-  useMutate<ResponsePolicyExecution, Failure | Error, AddPolicyExecutionQueryParams, CreatePolicyExecutionDTO, void>(
-    'POST',
-    `/governance/execution`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface GetExecutionDetailQueryParams {
-  accountIdentifier: string
-}
-
-export type GetExecutionDetailProps = Omit<
-  MutateProps<ResponseExecutionDetails, Failure | Error, GetExecutionDetailQueryParams, ExecutionDetailDTO, void>,
-  'path' | 'verb'
->
-
-/**
- * execution Detail
- */
-export const GetExecutionDetail = (props: GetExecutionDetailProps) => (
-  <Mutate<ResponseExecutionDetails, Failure | Error, GetExecutionDetailQueryParams, ExecutionDetailDTO, void>
-    verb="POST"
-    path={`/governance/execution/details`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetExecutionDetailProps = Omit<
-  UseMutateProps<ResponseExecutionDetails, Failure | Error, GetExecutionDetailQueryParams, ExecutionDetailDTO, void>,
-  'path' | 'verb'
->
-
-/**
- * execution Detail
- */
-export const useGetExecutionDetail = (props: UseGetExecutionDetailProps) =>
-  useMutate<ResponseExecutionDetails, Failure | Error, GetExecutionDetailQueryParams, ExecutionDetailDTO, void>(
-    'POST',
-    `/governance/execution/details`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface GetPolicyExecutionsQueryParams {
-  accountIdentifier: string
-}
-
-export type GetPolicyExecutionsProps = Omit<
-  MutateProps<
-    ResponsePolicyExecutionList,
-    Failure | Error,
-    GetPolicyExecutionsQueryParams,
-    CreatePolicyExecutionFilterDTO,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get execution for account
- */
-export const GetPolicyExecutions = (props: GetPolicyExecutionsProps) => (
-  <Mutate<
-    ResponsePolicyExecutionList,
-    Failure | Error,
-    GetPolicyExecutionsQueryParams,
-    CreatePolicyExecutionFilterDTO,
-    void
-  >
-    verb="POST"
-    path={`/governance/execution/list`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetPolicyExecutionsProps = Omit<
-  UseMutateProps<
-    ResponsePolicyExecutionList,
-    Failure | Error,
-    GetPolicyExecutionsQueryParams,
-    CreatePolicyExecutionFilterDTO,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get execution for account
- */
-export const useGetPolicyExecutions = (props: UseGetPolicyExecutionsProps) =>
-  useMutate<
-    ResponsePolicyExecutionList,
-    Failure | Error,
-    GetPolicyExecutionsQueryParams,
-    CreatePolicyExecutionFilterDTO,
-    void
-  >('POST', `/governance/execution/list`, { base: getConfig('ccm/api'), ...props })
-
-export interface GetPolicyExecutionDetailsQueryParams {
-  accountIdentifier: string
-}
-
-export interface GetPolicyExecutionDetailsPathParams {
-  policyExecutionId: string
-}
-
-export type GetPolicyExecutionDetailsProps = Omit<
-  GetProps<void, Failure | Error, GetPolicyExecutionDetailsQueryParams, GetPolicyExecutionDetailsPathParams>,
-  'path'
-> &
-  GetPolicyExecutionDetailsPathParams
-
-/**
- * Return logs for a policy execution
- */
-export const GetPolicyExecutionDetails = ({ policyExecutionId, ...props }: GetPolicyExecutionDetailsProps) => (
-  <Get<void, Failure | Error, GetPolicyExecutionDetailsQueryParams, GetPolicyExecutionDetailsPathParams>
-    path={`/governance/execution/${policyExecutionId}`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetPolicyExecutionDetailsProps = Omit<
-  UseGetProps<void, Failure | Error, GetPolicyExecutionDetailsQueryParams, GetPolicyExecutionDetailsPathParams>,
-  'path'
-> &
-  GetPolicyExecutionDetailsPathParams
-
-/**
- * Return logs for a policy execution
- */
-export const useGetPolicyExecutionDetails = ({ policyExecutionId, ...props }: UseGetPolicyExecutionDetailsProps) =>
-  useGet<void, Failure | Error, GetPolicyExecutionDetailsQueryParams, GetPolicyExecutionDetailsPathParams>(
-    (paramsInPath: GetPolicyExecutionDetailsPathParams) => `/governance/execution/${paramsInPath.policyExecutionId}`,
-    { base: getConfig('ccm/api'), pathParams: { policyExecutionId }, ...props }
-  )
-
-export interface CreateNewPolicyQueryParams {
-  accountIdentifier: string
-}
-
-export type CreateNewPolicyProps = Omit<
-  MutateProps<ResponsePolicy, Failure | Error, CreateNewPolicyQueryParams, CreatePolicyDTORequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy
- */
-export const CreateNewPolicy = (props: CreateNewPolicyProps) => (
-  <Mutate<ResponsePolicy, Failure | Error, CreateNewPolicyQueryParams, CreatePolicyDTORequestBody, void>
-    verb="POST"
-    path={`/governance/policy`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseCreateNewPolicyProps = Omit<
-  UseMutateProps<ResponsePolicy, Failure | Error, CreateNewPolicyQueryParams, CreatePolicyDTORequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy
- */
-export const useCreateNewPolicy = (props: UseCreateNewPolicyProps) =>
-  useMutate<ResponsePolicy, Failure | Error, CreateNewPolicyQueryParams, CreatePolicyDTORequestBody, void>(
-    'POST',
-    `/governance/policy`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface UpdatePolicyQueryParams {
-  accountIdentifier: string
-}
-
-export type UpdatePolicyProps = Omit<
-  MutateProps<ResponsePolicy, Failure | Error, UpdatePolicyQueryParams, CreatePolicyDTORequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Update a existing Policy
- */
-export const UpdatePolicy = (props: UpdatePolicyProps) => (
-  <Mutate<ResponsePolicy, Failure | Error, UpdatePolicyQueryParams, CreatePolicyDTORequestBody, void>
-    verb="PUT"
-    path={`/governance/policy`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseUpdatePolicyProps = Omit<
-  UseMutateProps<ResponsePolicy, Failure | Error, UpdatePolicyQueryParams, CreatePolicyDTORequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Update a existing Policy
- */
-export const useUpdatePolicy = (props: UseUpdatePolicyProps) =>
-  useMutate<ResponsePolicy, Failure | Error, UpdatePolicyQueryParams, CreatePolicyDTORequestBody, void>(
-    'PUT',
-    `/governance/policy`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface GetPoliciesQueryParams {
-  accountIdentifier: string
-}
-
-export type GetPoliciesProps = Omit<
-  MutateProps<ResponseListPolicy, Failure | Error, GetPoliciesQueryParams, ListDTO, void>,
-  'path' | 'verb'
->
-
-/**
- * Get policies for given account
- */
-export const GetPolicies = (props: GetPoliciesProps) => (
-  <Mutate<ResponseListPolicy, Failure | Error, GetPoliciesQueryParams, ListDTO, void>
-    verb="POST"
-    path={`/governance/policy/list`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetPoliciesProps = Omit<
-  UseMutateProps<ResponseListPolicy, Failure | Error, GetPoliciesQueryParams, ListDTO, void>,
-  'path' | 'verb'
->
-
-/**
- * Get policies for given account
- */
-export const useGetPolicies = (props: UseGetPoliciesProps) =>
-  useMutate<ResponseListPolicy, Failure | Error, GetPoliciesQueryParams, ListDTO, void>(
-    'POST',
-    `/governance/policy/list`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface DeletePolicyQueryParams {
-  accountIdentifier: string
-}
-
-export type DeletePolicyProps = Omit<
-  MutateProps<ResponseBoolean, Failure | Error, DeletePolicyQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete a policy
- */
-export const DeletePolicy = (props: DeletePolicyProps) => (
-  <Mutate<ResponseBoolean, Failure | Error, DeletePolicyQueryParams, string, void>
-    verb="DELETE"
-    path={`/governance/policy`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseDeletePolicyProps = Omit<
-  UseMutateProps<ResponseBoolean, Failure | Error, DeletePolicyQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete a policy
- */
-export const useDeletePolicy = (props: UseDeletePolicyProps) =>
-  useMutate<ResponseBoolean, Failure | Error, DeletePolicyQueryParams, string, void>('DELETE', `/governance/policy`, {
-    base: getConfig('ccm/api'),
-    ...props
-  })
-
-export interface AddPolicyPackQueryParams {
-  accountIdentifier: string
-}
-
-export type AddPolicyPackProps = Omit<
-  MutateProps<ResponsePolicyPack, Failure | Error, AddPolicyPackQueryParams, CreatePolicyPackDTORequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy set
- */
-export const AddPolicyPack = (props: AddPolicyPackProps) => (
-  <Mutate<ResponsePolicyPack, Failure | Error, AddPolicyPackQueryParams, CreatePolicyPackDTORequestBody, void>
-    verb="POST"
-    path={`/governance/policyPack`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseAddPolicyPackProps = Omit<
-  UseMutateProps<ResponsePolicyPack, Failure | Error, AddPolicyPackQueryParams, CreatePolicyPackDTORequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Add a new policy set
- */
-export const useAddPolicyPack = (props: UseAddPolicyPackProps) =>
-  useMutate<ResponsePolicyPack, Failure | Error, AddPolicyPackQueryParams, CreatePolicyPackDTORequestBody, void>(
-    'POST',
-    `/governance/policyPack`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface UpdatePolicyPackQueryParams {
-  accountIdentifier: string
-}
-
-export type UpdatePolicyPackProps = Omit<
-  MutateProps<ResponsePolicyPack, Failure | Error, UpdatePolicyPackQueryParams, CreatePolicyPackDTORequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Update an existing policy pack
- */
-export const UpdatePolicyPack = (props: UpdatePolicyPackProps) => (
-  <Mutate<ResponsePolicyPack, Failure | Error, UpdatePolicyPackQueryParams, CreatePolicyPackDTORequestBody, void>
-    verb="PUT"
-    path={`/governance/policyPack`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseUpdatePolicyPackProps = Omit<
-  UseMutateProps<
-    ResponsePolicyPack,
-    Failure | Error,
-    UpdatePolicyPackQueryParams,
-    CreatePolicyPackDTORequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Update an existing policy pack
- */
-export const useUpdatePolicyPack = (props: UseUpdatePolicyPackProps) =>
-  useMutate<ResponsePolicyPack, Failure | Error, UpdatePolicyPackQueryParams, CreatePolicyPackDTORequestBody, void>(
-    'PUT',
-    `/governance/policyPack`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface ListPolicyPacksQueryParams {
-  accountIdentifier: string
-}
-
-export type ListPolicyPacksProps = Omit<
-  MutateProps<ResponseListPolicyPack, Failure | Error, ListPolicyPacksQueryParams, CreatePolicyPackFilterDTO, void>,
-  'path' | 'verb'
->
-
-/**
- * list all policy packs
- */
-export const ListPolicyPacks = (props: ListPolicyPacksProps) => (
-  <Mutate<ResponseListPolicyPack, Failure | Error, ListPolicyPacksQueryParams, CreatePolicyPackFilterDTO, void>
-    verb="POST"
-    path={`/governance/policyPack/list`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseListPolicyPacksProps = Omit<
-  UseMutateProps<ResponseListPolicyPack, Failure | Error, ListPolicyPacksQueryParams, CreatePolicyPackFilterDTO, void>,
-  'path' | 'verb'
->
-
-/**
- * list all policy packs
- */
-export const useListPolicyPacks = (props: UseListPolicyPacksProps) =>
-  useMutate<ResponseListPolicyPack, Failure | Error, ListPolicyPacksQueryParams, CreatePolicyPackFilterDTO, void>(
-    'POST',
-    `/governance/policyPack/list`,
-    { base: getConfig('ccm/api'), ...props }
-  )
-
-export interface GetPoliyPacksQueryParams {
-  accountIdentifier: string
-}
-
-export interface GetPoliyPacksPathParams {
-  id: string
-}
-
-export type GetPoliyPacksProps = Omit<
-  MutateProps<
-    ResponseListPolicy,
-    Failure | Error,
-    GetPoliyPacksQueryParams,
-    CreatePolicyPackDTORequestBody,
-    GetPoliyPacksPathParams
-  >,
-  'path' | 'verb'
-> &
-  GetPoliyPacksPathParams
-
-/**
- * Get policies for pack
- */
-export const GetPoliyPacks = ({ id, ...props }: GetPoliyPacksProps) => (
-  <Mutate<
-    ResponseListPolicy,
-    Failure | Error,
-    GetPoliyPacksQueryParams,
-    CreatePolicyPackDTORequestBody,
-    GetPoliyPacksPathParams
-  >
-    verb="POST"
-    path={`/governance/policyPack/list/${id}`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseGetPoliyPacksProps = Omit<
-  UseMutateProps<
-    ResponseListPolicy,
-    Failure | Error,
-    GetPoliyPacksQueryParams,
-    CreatePolicyPackDTORequestBody,
-    GetPoliyPacksPathParams
-  >,
-  'path' | 'verb'
-> &
-  GetPoliyPacksPathParams
-
-/**
- * Get policies for pack
- */
-export const useGetPoliyPacks = ({ id, ...props }: UseGetPoliyPacksProps) =>
-  useMutate<
-    ResponseListPolicy,
-    Failure | Error,
-    GetPoliyPacksQueryParams,
-    CreatePolicyPackDTORequestBody,
-    GetPoliyPacksPathParams
-  >('POST', (paramsInPath: GetPoliyPacksPathParams) => `/governance/policyPack/list/${paramsInPath.id}`, {
-    base: getConfig('ccm/api'),
-    pathParams: { id },
-    ...props
-  })
-
-export interface DeletePolicyPackQueryParams {
-  accountIdentifier: string
-}
-
-export type DeletePolicyPackProps = Omit<
-  MutateProps<ResponseBoolean, Failure | Error, DeletePolicyPackQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete a policy set
- */
-export const DeletePolicyPack = (props: DeletePolicyPackProps) => (
-  <Mutate<ResponseBoolean, Failure | Error, DeletePolicyPackQueryParams, string, void>
-    verb="DELETE"
-    path={`/governance/policyPack`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseDeletePolicyPackProps = Omit<
-  UseMutateProps<ResponseBoolean, Failure | Error, DeletePolicyPackQueryParams, string, void>,
-  'path' | 'verb'
->
-
-/**
- * Delete a policy set
- */
-export const useDeletePolicyPack = (props: UseDeletePolicyPackProps) =>
-  useMutate<ResponseBoolean, Failure | Error, DeletePolicyPackQueryParams, string, void>(
-    'DELETE',
-    `/governance/policyPack`,
-    { base: getConfig('ccm/api'), ...props }
   )
 
 export interface Execute1Response {
@@ -7664,45 +6364,6 @@ export type UseGetLastPeriodCostProps = Omit<
  */
 export const useGetLastPeriodCost = (props: UseGetLastPeriodCostProps) =>
   useGet<ResponseDouble, unknown, GetLastPeriodCostQueryParams, void>(`/perspective/lastPeriodCost`, {
-    base: getConfig('ccm/api'),
-    ...props
-  })
-
-export interface LastYearMonthlyCostQueryParams {
-  accountIdentifier: string
-  perspectiveId: string
-  startTime: number
-  period: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY'
-  type: 'SPECIFIED_AMOUNT' | 'PREVIOUS_MONTH_SPEND' | 'PREVIOUS_PERIOD_SPEND'
-  breakdown: 'YEARLY' | 'MONTHLY'
-}
-
-export type LastYearMonthlyCostProps = Omit<
-  GetProps<ResponseDoubleArray, unknown, LastYearMonthlyCostQueryParams, void>,
-  'path'
->
-
-/**
- * Get last twelve month cost for perspective
- */
-export const LastYearMonthlyCost = (props: LastYearMonthlyCostProps) => (
-  <Get<ResponseDoubleArray, unknown, LastYearMonthlyCostQueryParams, void>
-    path={`/perspective/lastYearMonthlyCost`}
-    base={getConfig('ccm/api')}
-    {...props}
-  />
-)
-
-export type UseLastYearMonthlyCostProps = Omit<
-  UseGetProps<ResponseDoubleArray, unknown, LastYearMonthlyCostQueryParams, void>,
-  'path'
->
-
-/**
- * Get last twelve month cost for perspective
- */
-export const useLastYearMonthlyCost = (props: UseLastYearMonthlyCostProps) =>
-  useGet<ResponseDoubleArray, unknown, LastYearMonthlyCostQueryParams, void>(`/perspective/lastYearMonthlyCost`, {
     base: getConfig('ccm/api'),
     ...props
   })

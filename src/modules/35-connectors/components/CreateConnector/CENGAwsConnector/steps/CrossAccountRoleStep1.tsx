@@ -26,8 +26,7 @@ import css from '../CreateCeAwsConnector.module.scss'
 export enum Features {
   VISIBILITY = 'VISIBILITY',
   OPTIMIZATION = 'OPTIMIZATION',
-  BILLING = 'BILLING',
-  GOVERNANCE = 'GOVERNANCE'
+  BILLING = 'BILLING'
 }
 
 interface CardData {
@@ -67,7 +66,7 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
       value: Features.VISIBILITY,
       desc: 'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.header',
       heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
-      prefix: getString('connectors.ceAws.crossAccountRoleStep1.visible.prefix'),
+      prefix: getString('common.aws'),
       features: [
         getString('connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
         getString('connectors.ceAws.crossAccountRoleStep1.visible.feat2')
@@ -172,75 +171,28 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
       <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }}>
         {getString('connectors.ceAws.crossAccountRoleStep1.description')}
       </Text>
-      <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_800} padding={{ top: 'small' }}>
+      <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }} padding={{ top: 'small' }}>
         {getString('connectors.ceAws.crossAccountRoleStep1.info')}
       </Text>
       <Container>
         <Layout.Horizontal margin={{ top: 'large' }}>
           <Container padding={{ top: 'small' }}>
             {FeatureCards.map(card => (
-              <Layout.Horizontal
+              <FeatureCard
                 key={card.value}
-                className={css.cardCtn}
-                onClick={() => {
-                  handleCardSelection(card)
-                }}
-                onMouseEnter={() => setFeatureDetails(card)}
-                spacing="small"
-              >
-                <Checkbox
-                  checked={selectedCards.some(selectedCard => selectedCard.value === card.value)}
-                  disabled={defaultSelectedFeature === card.value}
-                  // onClick={() => handleCardSelection(card)}
-                />
-                <img src={card.icon} height={16} />
-                <Text font={{ variation: FontVariation.SMALL }}>
-                  <String stringID={card.desc} useRichText />
-                </Text>
-              </Layout.Horizontal>
+                feature={card}
+                handleCardSelection={() => handleCardSelection(card)}
+                isDefault={defaultSelectedFeature === card.value}
+                isSelected={selectedCards.some(selectedCard => selectedCard.value === card.value)}
+                setFeatureDetails={() => setFeatureDetails(card)}
+              />
             ))}
           </Container>
           <Layout.Vertical spacing="xlarge" className={css.featureDetailsCtn}>
             {featureDetails ? (
-              <>
-                <Layout.Horizontal spacing={'xsmall'} style={{ alignItems: 'center' }}>
-                  <img src={featureDetails.icon} width={32} />
-                  <Container>
-                    <Text color={Color.GREY_900} className={css.featurePrefix}>
-                      {featureDetails?.prefix}
-                    </Text>
-                    <Text color={Color.GREY_900} style={{ fontWeight: 500 }}>
-                      {featureDetails?.heading}
-                    </Text>
-                  </Container>
-                </Layout.Horizontal>
-                <Container>
-                  <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ bottom: 'xsmall' }}>
-                    {getString('connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved')}
-                  </Text>
-                  {featureDetails?.features.map(feat => (
-                    <Text
-                      key={feat}
-                      font={{ variation: FontVariation.SMALL }}
-                      color={Color.GREY_600}
-                      icon="tick"
-                      iconProps={{ size: 12, color: Color.GREEN_700, margin: { right: 'small' } }}
-                    >
-                      {feat}
-                    </Text>
-                  ))}
-                </Container>
-                <Container>
-                  <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ bottom: 'xsmall' }}>
-                    {getString('connectors.ceAws.crossAccountRoleStep1.cards.providedBy')}
-                  </Text>
-                  <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-                    <String stringID={featureDetails?.footer} useRichText />
-                  </Text>
-                </Container>
-              </>
+              <FeatureDetails feature={featureDetails} />
             ) : (
-              <Layout.Vertical spacing={'medium'} width={320} style={{ alignItems: 'center' }}>
+              <Layout.Vertical spacing="medium" style={{ alignItems: 'center' }}>
                 <img src={EmptyState} width={110} />
                 <Text font={{ variation: FontVariation.TINY, align: 'center' }} width={100}>
                   {getString('connectors.ceAws.crossAccountRoleStep1.hoverOver')}
@@ -266,3 +218,74 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
 }
 
 export default CrossAccountRoleStep1
+
+const FeatureCard: React.FC<{
+  feature: CardData
+  isSelected: boolean
+  isDefault: boolean
+  setFeatureDetails: () => void
+  handleCardSelection: () => void
+}> = ({ feature, isDefault, isSelected, setFeatureDetails, handleCardSelection }) => {
+  return (
+    <Container onMouseEnter={setFeatureDetails}>
+      <Checkbox
+        checked={isSelected}
+        onClick={handleCardSelection}
+        className={css.cardCtn}
+        disabled={isDefault}
+        labelElement={
+          <>
+            <img src={feature.icon} height={16} />
+            <Text inline font={{ variation: FontVariation.SMALL }} margin={{ left: 'xsmall' }}>
+              <String stringID={feature.desc} useRichText />
+            </Text>
+          </>
+        }
+      />
+    </Container>
+  )
+}
+
+const FeatureDetails: React.FC<{ feature: CardData }> = ({ feature }) => {
+  const { getString } = useStrings()
+
+  return (
+    <>
+      <Layout.Horizontal spacing={'xsmall'} style={{ alignItems: 'center' }}>
+        <img src={feature.icon} width={32} />
+        <Container>
+          <Text color={Color.GREY_900} className={css.featurePrefix}>
+            {feature?.prefix}
+          </Text>
+          <Text color={Color.GREY_900} style={{ fontWeight: 500 }}>
+            {feature?.heading}
+          </Text>
+        </Container>
+      </Layout.Horizontal>
+      <Container>
+        <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ bottom: 'xsmall' }}>
+          {getString('connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved')}
+        </Text>
+        {feature?.features.map(feat => (
+          <Text
+            key={feat}
+            font={{ variation: FontVariation.SMALL }}
+            color={Color.GREY_600}
+            icon="tick"
+            iconProps={{ size: 12, color: Color.GREEN_700, margin: { right: 'small' } }}
+          >
+            {feat}
+          </Text>
+        ))}
+      </Container>
+      <Container>
+        <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ bottom: 'xsmall' }}>
+          {getString('connectors.ceAws.crossAccountRoleStep1.cards.providedBy')}
+        </Text>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+          <String stringID={feature?.footer} useRichText />
+        </Text>
+      </Container>
+    </>
+  )
+}

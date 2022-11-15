@@ -2057,7 +2057,6 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.header': string
   'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer': string
   'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.header': string
-  'connectors.ceAws.crossAccountRoleStep1.cards.governance.header': string
   'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.footer': string
   'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.header': string
   'connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved': string

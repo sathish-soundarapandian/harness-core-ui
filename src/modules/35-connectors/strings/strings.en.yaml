@@ -660,8 +660,6 @@ ceAws:
       autoStopping:
         header: Optimization by <b>AutoStopping</b>
         footer: Adding <a target="_blank" href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules">these permissions</a> to an IAM role in the next step.
-      governance:
-        header: <b>Cloud Governance</b>
     visibility: '{{ $.common.ce.visibility }}'
     optimization: '{{ $.common.ce.optimization }}'
     visibilityDes: '{{ $.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'
