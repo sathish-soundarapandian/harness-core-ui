@@ -1,0 +1,6 @@
+.tile {
+  margin-right: var(--margin-form-field) !important;
+  &:last-child {
+    margin-right: 0;
+  }
+}

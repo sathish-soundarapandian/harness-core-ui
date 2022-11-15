@@ -78,6 +78,7 @@ import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
+import OverviewDashboard from './pages/OverviewDashboardPage/OverviewDashboardPage'
 
 export const ProjectDetailsSideNavProps: SidebarContext = {
   navComponent: ProjectDetailsSideNav,
@@ -195,6 +196,8 @@ const MainDashboardRedirect = (): React.ReactElement => {
       />
     )
   }
+
+  return <OverviewDashboard />
 
   return <LandingDashboardPage />
 }
