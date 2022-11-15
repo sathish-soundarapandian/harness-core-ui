@@ -7,40 +7,48 @@
 
 import React, { useRef, useState } from 'react'
 import { uniq } from 'lodash-es'
-import cx from 'classnames'
-import { Button, Layout, StepProps, CardSelect, Icon, IconName, Container, Text } from '@harness/uicore'
+import { Button, Layout, StepProps, Container, Text, Checkbox } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { String, StringKeys, useStrings } from 'framework/strings'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { CEAwsConnectorDTO } from './OverviewStep'
+
+import VisibilityIcon from '../images/ce-visibility.svg'
+import InventoryIcon from '../images/ce-visibility-plus.svg'
+import OptimizationIcon from '../images/ce-settings.svg'
+import EmptyState from '../images/empty-state.svg'
+
 import css from '../CreateCeAwsConnector.module.scss'
 
 export enum Features {
   VISIBILITY = 'VISIBILITY',
   OPTIMIZATION = 'OPTIMIZATION',
-  BILLING = 'BILLING'
+  BILLING = 'BILLING',
+  GOVERNANCE = 'GOVERNANCE'
 }
 
 interface CardData {
-  icon: IconName
+  icon: string
   text: string
   value: Features
   heading: string
+  desc: StringKeys
   prefix: string
   features: string[]
-  footer: React.ReactNode
+  footer: StringKeys
 }
 
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
   const FeatureCards = useRef<CardData[]>([
     {
-      icon: 'ce-visibility',
+      icon: VisibilityIcon,
       text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
       value: Features.BILLING,
+      desc: 'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.header',
       heading: getString('connectors.costVisibility'),
       prefix: getString('common.aws'),
       features: [
@@ -50,59 +58,52 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
         getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
         getString('connectors.ceAzure.chooseRequirements.billing.feat5')
       ],
-      footer: getString('connectors.ceAws.crossAccountRoleStep1.default.footer')
+      footer: 'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer'
     },
     {
-      icon: 'ce-visibility',
+      icon: InventoryIcon,
       text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
       value: Features.VISIBILITY,
+      desc: 'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.header',
       heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
       prefix: getString('connectors.ceAws.crossAccountRoleStep1.visible.prefix'),
       features: [
         getString('connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
         getString('connectors.ceAws.crossAccountRoleStep1.visible.feat2')
       ],
-      footer: (
-        <>
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_ecs_and_resource_inventory_management"
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('connectors.ceAws.crossAccountRoleStep1.optimize.footer')}
-        </>
-      )
+      footer: 'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.footer'
     },
     {
-      icon: 'nav-settings',
+      icon: OptimizationIcon,
       text: getString('connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
       value: Features.OPTIMIZATION,
+      desc: 'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.header',
       heading: getString('common.ce.autostopping'),
       prefix: getString('connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
       features: [
         getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat1'),
+        getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat2'),
         getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
         getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
         getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
       ],
-      footer: (
-        <>
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules"
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('connectors.ceAws.crossAccountRoleStep1.optimize.footer')}
-        </>
-      )
+      footer: 'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.footer'
+    },
+    {
+      icon: VisibilityIcon,
+      text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+      value: Features.GOVERNANCE,
+      desc: 'connectors.ceAws.crossAccountRoleStep1.cards.governance.header',
+      heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
+      prefix: getString('connectors.ceAws.crossAccountRoleStep1.visible.prefix'),
+      features: [
+        getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat5')
+      ],
+      footer: 'connectors.ceAws.crossAccountRoleStep1.default.footer'
     }
   ]).current
 
@@ -172,99 +173,107 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
     category: Category.CONNECTOR
   })
 
+  const [featureDetails, setFeatureDetails] = useState<CardData>()
+
   return (
     <Layout.Vertical className={css.stepContainer}>
       <Text
-        font={{ variation: FontVariation.H3 }}
+        font={{ variation: FontVariation.H4 }}
         tooltipProps={{ dataTooltipId: 'awsConnectorRequirements' }}
         margin={{ bottom: 'large' }}
       >
         {getString('connectors.ceAws.crossAccountRoleStep1.heading')}
       </Text>
-      <Text color="grey800">{getString('connectors.ceAws.crossAccountRoleStep1.description')}</Text>
+      <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }}>
+        {getString('connectors.ceAws.crossAccountRoleStep1.description')}
+      </Text>
+      <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_800} padding={{ top: 'small' }}>
+        {getString('connectors.ceAws.crossAccountRoleStep1.info')}
+      </Text>
       <Container>
-        <Layout.Horizontal className={css.infoCard}>
-          <Icon name="info-messaging" size={20} className={css.infoIcon} />
-          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
-            {getString('connectors.ceAws.crossAccountRoleStep1.info')}
-          </Text>
+        <Layout.Horizontal margin={{ top: 'large' }}>
+          <Container padding={{ top: 'small' }}>
+            {FeatureCards.map(card => (
+              <Container key={card.value} onMouseEnter={() => setFeatureDetails(card)}>
+                <Checkbox
+                  checked={selectedCards.some(selectedCard => selectedCard.value === card.value)}
+                  onClick={() => handleCardSelection(card)}
+                  className={css.cardCtn}
+                  disabled={defaultSelectedFeature === card.value}
+                  labelElement={
+                    <>
+                      <img src={card.icon} height={16} />
+                      <Text inline font={{ variation: FontVariation.SMALL }} margin={{ left: 'xsmall' }}>
+                        <String stringID={card.desc} useRichText />
+                      </Text>
+                    </>
+                  }
+                />
+              </Container>
+            ))}
+          </Container>
+          <Layout.Vertical spacing="xlarge" className={css.featureDetailsCtn}>
+            {featureDetails ? (
+              <>
+                <Layout.Horizontal spacing={'xsmall'} style={{ alignItems: 'center' }}>
+                  <img src={featureDetails.icon} width={32} />
+                  <Container>
+                    <Text color={Color.GREY_900} className={css.featurePrefix}>
+                      {featureDetails?.prefix}
+                    </Text>
+                    <Text color={Color.GREY_900} style={{ fontWeight: 500 }}>
+                      {featureDetails?.heading}
+                    </Text>
+                  </Container>
+                </Layout.Horizontal>
+                <Container>
+                  <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ bottom: 'xsmall' }}>
+                    {getString('connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved')}
+                  </Text>
+                  {featureDetails?.features.map(feat => (
+                    <Text
+                      key={feat}
+                      font={{ variation: FontVariation.SMALL }}
+                      color={Color.GREY_600}
+                      icon="tick"
+                      iconProps={{ size: 12, color: Color.GREEN_700, margin: { right: 'small' } }}
+                    >
+                      {feat}
+                    </Text>
+                  ))}
+                </Container>
+                <Container>
+                  <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ bottom: 'xsmall' }}>
+                    {getString('connectors.ceAws.crossAccountRoleStep1.cards.providedBy')}
+                  </Text>
+                  <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+                    <String stringID={featureDetails?.footer} useRichText />
+                  </Text>
+                </Container>
+              </>
+            ) : (
+              <Layout.Vertical spacing={'medium'} width={320} style={{ alignItems: 'center' }}>
+                <img src={EmptyState} width={110} />
+                <Text font={{ variation: FontVariation.TINY, align: 'center' }} width={100}>
+                  {getString('connectors.ceAws.crossAccountRoleStep1.hoverOver')}
+                </Text>
+              </Layout.Vertical>
+            )}
+          </Layout.Vertical>
         </Layout.Horizontal>
-        <div style={{ flex: 1 }}>
-          <CardSelect
-            data={FeatureCards}
-            selected={selectedCards}
-            multi={true}
-            className={css.cards}
-            onChange={item => {
-              handleCardSelection(item)
-            }}
-            cornerSelected={true}
-            renderItem={item => <Card {...item} isDefault={defaultSelectedFeature === item.value} />}
+        <Layout.Horizontal className={css.buttonPanel} spacing="small">
+          <Button text={getString('previous')} icon="chevron-left" onClick={handleprev}></Button>
+          <Button
+            type="submit"
+            intent="primary"
+            text={getString('continue')}
+            rightIcon="chevron-right"
+            onClick={handleSubmit}
+            disabled={!prevStepData?.includeBilling && selectedCards.length == 0}
           />
-          <Layout.Horizontal className={css.buttonPanel} spacing="small">
-            <Button text={getString('previous')} icon="chevron-left" onClick={handleprev}></Button>
-            <Button
-              type="submit"
-              intent="primary"
-              text={getString('continue')}
-              rightIcon="chevron-right"
-              onClick={handleSubmit}
-              disabled={!prevStepData?.includeBilling && selectedCards.length == 0}
-            />
-          </Layout.Horizontal>
-        </div>
+        </Layout.Horizontal>
       </Container>
     </Layout.Vertical>
-  )
-}
-
-interface CardProps extends CardData {
-  isDefault: boolean
-}
-
-const Card = (props: CardProps) => {
-  const { prefix, icon, heading, features, footer, isDefault } = props
-  return (
-    <Container
-      className={cx(css.featureCard, {
-        [css.defaultCard]: isDefault
-      })}
-    >
-      <Layout.Vertical spacing="medium" padding={{ left: 'large', right: 'large' }}>
-        <Layout.Horizontal spacing="small">
-          <Icon name={icon} size={32} />
-          <Container>
-            <Text color="grey900" style={{ fontSize: 9, fontWeight: 500 }}>
-              {prefix.toUpperCase()}
-            </Text>
-            <Text color="grey900" style={{ fontSize: 16, fontWeight: 500 }}>
-              {heading}
-            </Text>
-          </Container>
-        </Layout.Horizontal>
-        <ul className={css.features}>
-          {features.map((feat, idx) => {
-            return (
-              <li key={idx}>
-                <Text
-                  icon="main-tick"
-                  iconProps={{ color: 'green600', size: 12, padding: { right: 'small' } }}
-                  font="small"
-                  style={{ lineHeight: '20px' }}
-                >
-                  {feat}
-                </Text>
-              </li>
-            )
-          })}
-        </ul>
-      </Layout.Vertical>
-      <Container className={css.footer}>
-        <Text font={{ size: 'small', italic: true }} color="grey400">
-          {footer}
-        </Text>
-      </Container>
-    </Container>
   )
 }
 

@@ -19,6 +19,9 @@
       "name": "business-mapping"
     },
     {
+      "name": "active-spend"
+    },
+    {
       "name": "testconnection"
     },
     {
@@ -53,6 +56,9 @@
     },
     {
       "name": "costdetails"
+    },
+    {
+      "name": "governance"
     },
     {
       "name": "perspective-custom-field"
@@ -797,6 +803,86 @@
         }
       }
     },
+    "/active-spend": {
+      "get": {
+        "tags": ["active-spend"],
+        "summary": "Get Active spend for given time period",
+        "description": "",
+        "operationId": "getActiveSpend",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCostOverviewDTO"
+            }
+          }
+        }
+      }
+    },
+    "/active-spend/forecast": {
+      "get": {
+        "tags": ["active-spend"],
+        "summary": "Get Forecasted spend for the next time period",
+        "description": "",
+        "operationId": "getForecastedSpend",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCostOverviewDTO"
+            }
+          }
+        }
+      }
+    },
     "/testconnection": {
       "post": {
         "tags": ["testconnection"],
@@ -1331,31 +1417,6 @@
         }
       }
     },
-    "/connector/gcpserviceaccount": {
-      "get": {
-        "tags": ["connector"],
-        "summary": "Provision and Get GCP Service Account",
-        "description": "",
-        "operationId": "gcpserviceaccount",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseString"
-            }
-          }
-        }
-      }
-    },
     "/connector/awsaccountconnectiondetail": {
       "get": {
         "tags": ["connector"],
@@ -1382,6 +1443,31 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseAwsAccountConnectionDetail"
+            }
+          }
+        }
+      }
+    },
+    "/connector/gcpserviceaccount": {
+      "get": {
+        "tags": ["connector"],
+        "summary": "Provision and Get GCP Service Account",
+        "description": "",
+        "operationId": "gcpserviceaccount",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseString"
             }
           }
         }
@@ -1690,6 +1776,866 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseStatsInfo"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement/list": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get enforcement list",
+        "description": "",
+        "operationId": "getPolicyEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyEnforcementDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListPolicyEnforcement"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement/count": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get enforcement count",
+        "description": "",
+        "operationId": "getPolicyEnforcementCount",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/EnforcementCountDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseEnforcementCount"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution/details": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "execution Detail",
+        "description": "",
+        "operationId": "getExecutionDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ExecutionDetailDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseExecutionDetails"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new policy Enforcement api",
+        "description": "",
+        "operationId": "addPolicyEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json", "text/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyEnforcementDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicyEnforcement"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["governance"],
+        "summary": "Update a Policy enforcement",
+        "description": "",
+        "operationId": "updateEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json", "text/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyEnforcementDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicyEnforcement"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enforcement/{enforcementID}": {
+      "delete": {
+        "tags": ["governance"],
+        "summary": "Delete a policy",
+        "description": "",
+        "operationId": "deletePolicyEnforcement",
+        "consumes": ["application/json"],
+        "produces": ["application/json", "text/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "enforcementID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution/list": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get execution for account",
+        "description": "",
+        "operationId": "getPolicyExecutions",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyExecutionFilterDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicyExecutionList"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution/{policyExecutionId}": {
+      "get": {
+        "tags": ["governance"],
+        "summary": "Return logs for a policy execution",
+        "description": "",
+        "operationId": "getPolicyExecutionDetails",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "policyExecutionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/execution": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new policy execution api",
+        "description": "",
+        "operationId": "addPolicyExecution",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyExecutionDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicyExecution"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/policyPack": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new policy set",
+        "description": "",
+        "operationId": "addPolicyPack",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyPackDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicyPack"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["governance"],
+        "summary": "Update an existing policy pack",
+        "description": "",
+        "operationId": "updatePolicyPack",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyPackDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicyPack"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/policyPack/list/{id}": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get policies for pack",
+        "description": "",
+        "operationId": "getPoliyPacks",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyPackDTO"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListPolicy"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/policyPack/list": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "list all policy packs",
+        "description": "",
+        "operationId": "listPolicyPacks",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyPackFilterDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListPolicyPack"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/policyPack/{policyPackId}": {
+      "delete": {
+        "tags": ["governance"],
+        "summary": "Delete a policy set",
+        "description": "",
+        "operationId": "deletePolicyPack",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "policyPackId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/policy": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Add a new policy ",
+        "description": "",
+        "operationId": "CreateNewPolicy",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicy"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["governance"],
+        "summary": "Update a existing Policy",
+        "description": "",
+        "operationId": "updatePolicy",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CreatePolicyDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePolicy"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/policy/list": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Get policies for given account",
+        "description": "",
+        "operationId": "getPolicies",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ListDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListPolicy"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/policy/{policyID}": {
+      "delete": {
+        "tags": ["governance"],
+        "summary": "Delete a policy",
+        "description": "",
+        "operationId": "deletePolicy",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "policyID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/governance/enqueue": {
+      "post": {
+        "tags": ["governance"],
+        "summary": "Enqueues job for execution",
+        "description": "",
+        "operationId": "enqueueGovernanceJob",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/GovernanceJobEnqueueDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseGovernanceEnqueueResponseDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -2290,6 +3236,66 @@
         }
       }
     },
+    "/perspective/lastYearMonthlyCost": {
+      "get": {
+        "tags": ["perspective"],
+        "summary": "Get last twelve month cost for perspective",
+        "description": "",
+        "operationId": "lastYearMonthlyCost",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "perspectiveId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"]
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["SPECIFIED_AMOUNT", "PREVIOUS_MONTH_SPEND", "PREVIOUS_PERIOD_SPEND"]
+          },
+          {
+            "name": "breakdown",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": ["YEARLY", "MONTHLY"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseDouble[]"
+            }
+          }
+        }
+      }
+    },
     "/perspective/lastMonthCost": {
       "get": {
         "tags": ["perspective"],
@@ -2852,7 +3858,8 @@
               "FileStore",
               "CCMRecommendation",
               "Anomaly",
-              "Environment"
+              "Environment",
+              "PolicyExecution"
             ]
           }
         ],
@@ -2927,7 +3934,8 @@
               "FileStore",
               "CCMRecommendation",
               "Anomaly",
-              "Environment"
+              "Environment",
+              "PolicyExecution"
             ]
           }
         ],
@@ -3014,7 +4022,8 @@
               "FileStore",
               "CCMRecommendation",
               "Anomaly",
-              "Environment"
+              "Environment",
+              "PolicyExecution"
             ]
           }
         ],
@@ -3583,7 +4592,8 @@
             "FileStore",
             "CCMRecommendation",
             "Anomaly",
-            "Environment"
+            "Environment",
+            "PolicyExecution"
           ]
         }
       }
@@ -4250,6 +5260,10 @@
           "type": "number",
           "format": "double"
         },
+        "forecastCost": {
+          "type": "number",
+          "format": "double"
+        },
         "budgeted": {
           "type": "number",
           "format": "double"
@@ -4379,6 +5393,9 @@
           "type": "string",
           "enum": ["SPECIFIED_AMOUNT", "PREVIOUS_MONTH_SPEND", "PREVIOUS_PERIOD_SPEND"]
         },
+        "budgetMonthlyBreakdown": {
+          "$ref": "#/definitions/BudgetMonthlyBreakdown"
+        },
         "budgetAmount": {
           "type": "number",
           "format": "double"
@@ -4442,6 +5459,43 @@
         },
         "ngBudget": {
           "type": "boolean"
+        }
+      }
+    },
+    "BudgetMonthlyBreakdown": {
+      "type": "object",
+      "properties": {
+        "budgetBreakdown": {
+          "type": "string",
+          "enum": ["YEARLY", "MONTHLY"]
+        },
+        "budgetMonthlyAmount": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "actualMonthlyCost": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "forecastMonthlyCost": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "yearlyLastPeriodCost": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
         }
       }
     },
@@ -4990,7 +6044,10 @@
             "AWS_ECS_CLIENT_ERROR",
             "AWS_STS_ERROR",
             "FREEZE_EXCEPTION",
-            "DELEGATE_TASK_EXPIRED"
+            "DELEGATE_TASK_EXPIRED",
+            "DELEGATE_TASK_VALIDATION_FAILED",
+            "MONGO_EXECUTION_TIMEOUT_EXCEPTION",
+            "DELEGATE_NOT_REGISTERED"
           ]
         },
         "level": {
@@ -5017,7 +6074,7 @@
               "AUTHORIZATION_ERROR",
               "TIMEOUT_ERROR",
               "POLICY_EVALUATION_FAILURE",
-              "EXECUTION_INPUT_TIMEOUT_FAILURE"
+              "INPUT_TIMEOUT_FAILURE"
             ]
           }
         }
@@ -5280,6 +6337,43 @@
           "items": {
             "$ref": "#/definitions/ResponseMessage"
           }
+        }
+      }
+    },
+    "CostOverviewDTO": {
+      "type": "object",
+      "properties": {
+        "statsLabel": {
+          "type": "string"
+        },
+        "statsValue": {
+          "type": "string"
+        },
+        "statsTrend": {
+          "type": "number",
+          "format": "double"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ResponseCostOverviewDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CostOverviewDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },
@@ -5850,6 +6944,66 @@
         }
       ]
     },
+    "AzureArtifactsAuthentication": {
+      "type": "object",
+      "required": ["spec"],
+      "properties": {
+        "spec": {
+          "$ref": "#/definitions/AzureArtifactsHttpCredentials"
+        }
+      }
+    },
+    "AzureArtifactsConnector": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["auth", "azureArtifactsUrl"],
+          "properties": {
+            "azureArtifactsUrl": {
+              "type": "string"
+            },
+            "auth": {
+              "$ref": "#/definitions/AzureArtifactsAuthentication"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "AzureArtifactsHttpCredentials": {
+      "type": "object",
+      "required": ["spec", "type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["PersonalAccessToken"]
+        },
+        "spec": {
+          "$ref": "#/definitions/AzureArtifactsUsernameToken"
+        }
+      }
+    },
+    "AzureArtifactsUsernameToken": {
+      "type": "object",
+      "required": ["tokenRef"],
+      "properties": {
+        "tokenRef": {
+          "type": "string"
+        }
+      }
+    },
     "AzureAuthCredentialDTO": {
       "type": "object"
     },
@@ -6404,7 +7558,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY", "GOVERNANCE"]
               }
             }
           }
@@ -6424,7 +7578,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY", "GOVERNANCE"]
               }
             },
             "tenantId": {
@@ -6456,7 +7610,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY", "GOVERNANCE"]
               }
             }
           }
@@ -6574,8 +7728,10 @@
             "Jenkins",
             "OciHelmRepo",
             "CustomSecretManager",
-            "ELK",
-            "GcpSecretManager"
+            "ElasticSearch",
+            "GcpSecretManager",
+            "AzureArtifacts",
+            "Spot"
           ]
         },
         "spec": {
@@ -6989,7 +8145,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY"]
+                "enum": ["BILLING", "OPTIMIZATION", "VISIBILITY", "GOVERNANCE"]
               }
             },
             "projectId": {
@@ -8336,6 +9492,70 @@
         }
       ]
     },
+    "SpotConnector": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["credential"],
+          "properties": {
+            "credential": {
+              "$ref": "#/definitions/SpotCredential"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "SpotCredential": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["PermanentTokenConfig"]
+        },
+        "spec": {
+          "$ref": "#/definitions/SpotCredentialSpec"
+        }
+      }
+    },
+    "SpotCredentialSpec": {
+      "type": "object"
+    },
+    "SpotPermanentTokenConfigSpec": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SpotCredentialSpec"
+        },
+        {
+          "type": "object",
+          "required": ["apiTokenRef"],
+          "properties": {
+            "spotAccountId": {
+              "type": "string"
+            },
+            "spotAccountIdRef": {
+              "type": "string"
+            },
+            "apiTokenRef": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "SumoLogicConnectorDTO": {
       "allOf": [
         {
@@ -9233,7 +10453,10 @@
             "AWS_ECS_CLIENT_ERROR",
             "AWS_STS_ERROR",
             "FREEZE_EXCEPTION",
-            "DELEGATE_TASK_EXPIRED"
+            "DELEGATE_TASK_EXPIRED",
+            "DELEGATE_TASK_VALIDATION_FAILED",
+            "MONGO_EXECUTION_TIMEOUT_EXCEPTION",
+            "DELEGATE_NOT_REGISTERED"
           ]
         },
         "message": {
@@ -9613,7 +10836,10 @@
             "AWS_ECS_CLIENT_ERROR",
             "AWS_STS_ERROR",
             "FREEZE_EXCEPTION",
-            "DELEGATE_TASK_EXPIRED"
+            "DELEGATE_TASK_EXPIRED",
+            "DELEGATE_TASK_VALIDATION_FAILED",
+            "MONGO_EXECUTION_TIMEOUT_EXCEPTION",
+            "DELEGATE_NOT_REGISTERED"
           ]
         },
         "message": {
@@ -10768,6 +11994,843 @@
         }
       }
     },
+    "PolicyEnforcement": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "policyIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "policyPackIDs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "executionSchedule": {
+          "type": "string"
+        },
+        "executionTimezone": {
+          "type": "string"
+        },
+        "targetAccounts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "targetRegions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isDryRun": {
+          "type": "boolean"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        },
+        "lastUpdatedBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        }
+      }
+    },
+    "ResponseListPolicyEnforcement": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyEnforcement"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatePolicyEnforcementDTO": {
+      "type": "object",
+      "properties": {
+        "policyEnforcement": {
+          "readOnly": true,
+          "$ref": "#/definitions/PolicyEnforcement"
+        }
+      }
+    },
+    "EnforcementCount": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "policyIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "policyPackIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "ResponseEnforcementCount": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/EnforcementCount"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "EnforcementCountDTO": {
+      "type": "object",
+      "properties": {
+        "enforcementCount": {
+          "readOnly": true,
+          "$ref": "#/definitions/EnforcementCountRequest"
+        }
+      }
+    },
+    "EnforcementCountRequest": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "policyIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "policyPackIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ExecutionDetails": {
+      "type": "object",
+      "properties": {
+        "enforcementIds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/definitions/ExecutionEnforcementDetails"
+            }
+          }
+        }
+      }
+    },
+    "ExecutionEnforcementDetails": {
+      "type": "object",
+      "properties": {
+        "enforcementName": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": "string"
+        },
+        "policyIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "policyPackIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponseExecutionDetails": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/ExecutionDetails"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ExecutionDetailDTO": {
+      "type": "object",
+      "properties": {
+        "executionDetail": {
+          "readOnly": true,
+          "$ref": "#/definitions/ExecutionDetailRequest"
+        }
+      }
+    },
+    "ExecutionDetailRequest": {
+      "type": "object",
+      "properties": {
+        "enforcementIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponsePolicyEnforcement": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PolicyEnforcement"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "PolicyExecution": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "jobId": {
+          "type": "string"
+        },
+        "policyEnforcementIdentifier": {
+          "type": "string"
+        },
+        "policyIdentifier": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "isDryRun": {
+          "type": "boolean"
+        },
+        "targetAccount": {
+          "type": "string"
+        },
+        "targetRegions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "executionLogPath": {
+          "type": "string"
+        },
+        "resourceCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "executionLogBucketType": {
+          "type": "string"
+        },
+        "executionStatus": {
+          "type": "string",
+          "enum": ["FAILED", "ENQUEUED", "SUCCESS"]
+        },
+        "executionCompletedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "PolicyExecutionList": {
+      "type": "object",
+      "properties": {
+        "totalItems": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "policyExecutions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyExecution"
+          }
+        }
+      }
+    },
+    "ResponsePolicyExecutionList": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PolicyExecutionList"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatePolicyExecutionFilterDTO": {
+      "type": "object",
+      "properties": {
+        "policyExecutionFilter": {
+          "readOnly": true,
+          "$ref": "#/definitions/PolicyExecutionFilter"
+        }
+      }
+    },
+    "PolicyExecutionFilter": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "targetAccount": {
+          "type": "string"
+        },
+        "executionStatus": {
+          "type": "string"
+        },
+        "region": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "policyId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "policyEnforcementId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "time": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CCMTimeFilter"
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ResponsePolicyExecution": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PolicyExecution"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatePolicyExecutionDTO": {
+      "type": "object",
+      "properties": {
+        "policyExecution": {
+          "readOnly": true,
+          "$ref": "#/definitions/PolicyExecution"
+        }
+      }
+    },
+    "PolicyPack": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "policiesIdentifier": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isOOTB": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        },
+        "lastUpdatedBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        }
+      }
+    },
+    "ResponsePolicyPack": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PolicyPack"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatePolicyPackDTO": {
+      "type": "object",
+      "properties": {
+        "policypack": {
+          "readOnly": true,
+          "$ref": "#/definitions/PolicyPack"
+        }
+      }
+    },
+    "Policy": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "policyYaml": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "versionLabel": {
+          "type": "string"
+        },
+        "isStablePolicy": {
+          "type": "boolean"
+        },
+        "storeType": {
+          "type": "string",
+          "enum": ["INLINE", "REMOTE"]
+        },
+        "isOOTB": {
+          "type": "boolean"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        },
+        "lastUpdatedBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        }
+      }
+    },
+    "ResponseListPolicy": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Policy"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseListPolicyPack": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyPack"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatePolicyPackFilterDTO": {
+      "type": "object",
+      "properties": {
+        "policyPack": {
+          "readOnly": true,
+          "$ref": "#/definitions/PolicyPackFilter"
+        }
+      }
+    },
+    "PolicyPackFilter": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "isOOTB": {
+          "type": "boolean"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string"
+        },
+        "policyPackIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "policiesIdentifier": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponsePolicy": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/Policy"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatePolicyDTO": {
+      "type": "object",
+      "properties": {
+        "policies": {
+          "readOnly": true,
+          "$ref": "#/definitions/Policy"
+        }
+      }
+    },
+    "GovernancePolicyFilter": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "isOOTB": {
+          "type": "boolean"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string"
+        },
+        "policyIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isStablePolicy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ListDTO": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "readOnly": true,
+          "$ref": "#/definitions/GovernancePolicyFilter"
+        }
+      }
+    },
+    "GovernanceEnqueueResponseDTO": {
+      "type": "object",
+      "properties": {
+        "policyExecutionId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResponseGovernanceEnqueueResponseDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/GovernanceEnqueueResponseDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "GovernanceJobEnqueueDTO": {
+      "type": "object",
+      "properties": {
+        "policyEnforcementId": {
+          "type": "string"
+        },
+        "roleArn": {
+          "type": "string"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "policyCloudProviderType": {
+          "type": "string",
+          "enum": ["AWS"]
+        },
+        "policyId": {
+          "type": "string"
+        },
+        "policy": {
+          "type": "string"
+        },
+        "targetAccountId": {
+          "type": "string"
+        },
+        "targetRegion": {
+          "type": "string"
+        },
+        "isDryRun": {
+          "type": "boolean"
+        },
+        "isOOTB": {
+          "type": "boolean"
+        }
+      }
+    },
     "RestResponseViewCustomField": {
       "type": "object",
       "properties": {
@@ -11268,6 +13331,28 @@
         }
       }
     },
+    "ResponseDouble[]": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
     "ResponseCEView": {
       "type": "object",
       "properties": {
@@ -11448,6 +13533,14 @@
         },
         "zone": {
           "type": "string"
+        },
+        "minCpu": {
+          "type": "number",
+          "format": "double"
+        },
+        "minMem": {
+          "type": "number",
+          "format": "double"
         }
       }
     },
@@ -11886,7 +13979,8 @@
             "FileStore",
             "CCMRecommendation",
             "Anomaly",
-            "Environment"
+            "Environment",
+            "PolicyExecution"
           ]
         }
       }
@@ -11922,7 +14016,7 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE"]
+            "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE", "EC2_INSTANCE"]
           }
         }
       }
@@ -11989,7 +14083,7 @@
         },
         "resourceType": {
           "type": "string",
-          "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE"]
+          "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE", "EC2_INSTANCE"]
         },
         "recommendationDetails": {
           "$ref": "#/definitions/RecommendationDetailsDTO"
@@ -12082,7 +14176,8 @@
             "FileStore",
             "CCMRecommendation",
             "Anomaly",
-            "Environment"
+            "Environment",
+            "PolicyExecution"
           ]
         }
       }
