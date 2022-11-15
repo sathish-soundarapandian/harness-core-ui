@@ -28,6 +28,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
 import { DelegateSuccessHandler, generateDelegateName } from '../CDOnboardingUtils'
+import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
@@ -224,22 +225,23 @@ export const CreateDockerDelegate = ({
                   outlined
                 />
               </Layout.Horizontal>
-              <Layout.Vertical width="568px">
-                {isYamlVisible ? (
-                  <div className={css.collapseDiv}>
-                    <YamlBuilder
-                      entityType="Delegates"
-                      fileName={dockerFileName}
-                      isReadOnlyMode={true}
-                      isEditModeSupported={false}
-                      hideErrorMesageOnReadOnlyMode={true}
-                      existingYaml={yaml}
-                      height="462px"
-                      theme="DARK"
-                    />
-                  </div>
-                ) : null}
-              </Layout.Vertical>
+              {isYamlVisible ? (
+                <>
+                  <RightDrawer isOpen={isYamlVisible} setIsOpen={setYamlVisible}>
+                    <div className={css.collapseDiv}>
+                      <YamlBuilder
+                        entityType="Delegates"
+                        fileName={dockerFileName}
+                        isReadOnlyMode={true}
+                        isEditModeSupported={false}
+                        hideErrorMesageOnReadOnlyMode={true}
+                        existingYaml={yaml}
+                        height="100vh"
+                      />
+                    </div>
+                  </RightDrawer>
+                </>
+              ) : null}
               <div className={css.spacing} />
             </Layout.Vertical>
           </li>

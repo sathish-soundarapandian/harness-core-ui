@@ -18,6 +18,10 @@ export const ConnectorSecretScope: { [scope: string]: string } = {
   [Scope.ACCOUNT]: 'account.'
 }
 
+export enum ModalViewFor {
+  CD_Onboarding = 1
+}
+
 export function getScopingStringFromSecretRef(connecterConfig: ConnectorConfigDTO): string | undefined {
   return connecterConfig &&
     connecterConfig.passwordRefSecret &&

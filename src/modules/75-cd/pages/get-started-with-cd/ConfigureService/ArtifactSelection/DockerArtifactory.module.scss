@@ -22,7 +22,8 @@
   }
 }
 
-.connectorFormOverride {
+.connectorFormOverride,
+.artifactAuthFormOverride {
   min-height: unset !important;
   height: auto !important;
   margin-bottom: 0 !important;

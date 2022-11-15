@@ -10,7 +10,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import {
   Text,
-  FontVariation,
   Layout,
   CardSelect,
   Icon,
@@ -18,13 +17,13 @@ import {
   Formik,
   FormikForm as Form,
   FormError,
-  Color,
   useConfirmationDialog,
-  Intent,
   HarnessDocTooltip
 } from '@harness/uicore'
+
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
-import { defaultTo, get, isEqual, set } from 'lodash-es'
+import { capitalize, defaultTo, get, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 import * as Yup from 'yup'
 import { useHistory, useParams } from 'react-router-dom'
@@ -162,6 +161,7 @@ const SelectDeploymentTypeRef = (
             <ButtonWrapper
               key={option.label}
               option={option}
+              label={capitalize(option.label)}
               onClick={(value: string) => {
                 if (value === BinaryLabels.YES) {
                   showGitopsRedirection()
