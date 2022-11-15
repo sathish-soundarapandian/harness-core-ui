@@ -200,16 +200,7 @@ export function parseInput(input: string): ParsedInput | null {
       const jexlMatch = fnArgs.match(JEXL_REGEXP)
 
       parsedInput[InpuSetFunction.ALLOWED_VALUES] = {
-        // map is required to retain original type of value
-        values: jexlMatch
-          ? null
-          : fnArgs.split(',').map(fnArg => {
-              const value = yamlParse(fnArg)
-              if (typeof value === 'number') {
-                return value as unknown as string
-              }
-              return fnArg
-            }),
+        values: jexlMatch ? null : fnArgs.split(','),
         jexlExpression: jexlMatch ? jexlMatch[1] : null
       }
     } else if (fn.startsWith(InpuSetFunction.REGEX)) {
