@@ -2206,6 +2206,7 @@ export interface GraphLayoutNode {
   failureInfo?: ExecutionErrorInfo
   failureInfoDTO?: FailureInfoDTO
   hidden?: boolean
+  isRollbackStageNode?: boolean
   module?: string
   moduleInfo?: {
     [key: string]: {
@@ -3202,6 +3203,7 @@ export interface PipelineExecutionSummary {
   executionTriggerInfo?: ExecutionTriggerInfo
   failedStagesCount?: number
   failureInfo?: FailureInfoDTO
+  firstRollbackStageGraphId?: string
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   layoutNodeMap?: {
@@ -3214,6 +3216,7 @@ export interface PipelineExecutionSummary {
   }
   modules?: string[]
   name?: string
+  parentStageInfo?: PipelineStageInfo
   pipelineIdentifier?: string
   planExecutionId?: string
   runSequence?: number
@@ -5276,7 +5279,7 @@ export interface TriggerCatalogItem {
     | 'AmazonS3'
     | 'Nexus'
     | 'HelmChart'
-    | 'Scheduled'
+    | 'Cron'
   )[]
 }
 
@@ -14434,6 +14437,40 @@ export interface GetSchemaYamlQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -14660,6 +14697,40 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'

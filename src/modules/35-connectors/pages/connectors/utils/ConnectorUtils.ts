@@ -2269,7 +2269,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.SPOT:
       return 'spot'
     case Connectors.TAS:
-      return 'tas'
+      return 'cog' //TODO:: icon change
     default:
       return 'cog'
   }

@@ -243,11 +243,12 @@ function ManifestListView({
       name: manifestTypeIcons[selectedManifest as ManifestTypes]
     }
     if (
+      selectedManifest &&
       [
         ManifestDataType.HelmChart,
-        ManifestDataType.TASManifest,
-        ManifestDataType.VarsYAML,
-        ManifestDataType.Autoscaler
+        ManifestDataType.TasManifest,
+        ManifestDataType.Vars,
+        ManifestDataType.AutoScaler
       ].includes(selectedManifest)
     ) {
       iconProps.color = Color.WHITE

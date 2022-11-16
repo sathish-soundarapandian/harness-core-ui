@@ -29,6 +29,9 @@ export type ManifestTypes =
   | 'EcsServiceDefinition'
   | 'EcsScalableTargetDefinition'
   | 'EcsScalingPolicyDefinition'
+  | 'TasManifest'
+  | 'Vars'
+  | 'AutoScaler'
 
 export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
 

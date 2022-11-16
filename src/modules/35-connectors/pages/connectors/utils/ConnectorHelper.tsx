@@ -274,7 +274,7 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.SPOT:
       return 'spot'
     case Connectors.TAS:
-      return 'tas'
+      return 'cog' //TODO:: icon change-->'tas'
     default:
       return 'placeholder'
   }
