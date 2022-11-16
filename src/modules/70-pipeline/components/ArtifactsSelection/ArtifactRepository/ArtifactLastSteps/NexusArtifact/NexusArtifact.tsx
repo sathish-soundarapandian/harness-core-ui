@@ -50,7 +50,8 @@ import {
   isSSHWinRMDeploymentType,
   k8sRepositoryFormatTypes,
   nexus2RepositoryFormatTypes,
-  RepositoryFormatTypes
+  RepositoryFormatTypes,
+  ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -106,6 +107,10 @@ export function Nexus3Artifact({
     repoIdentifier,
     branch
   }
+
+  React.useEffect(() => {
+    console.log('selectedDeploymenttype', selectedDeploymentType)
+  }, [selectedDeploymentType])
 
   const schemaObject = {
     tagType: Yup.string(),
@@ -467,7 +472,8 @@ export function Nexus3Artifact({
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
                   items={
-                    isSSHWinRMDeploymentType(selectedDeploymentType)
+                    isSSHWinRMDeploymentType(selectedDeploymentType) ||
+                    selectedDeploymentType === ServiceDeploymentType.AzureWebApp
                       ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
                       : k8sRepositoryFormatTypes
                   }
