@@ -27,7 +27,7 @@ export const deploymentIconMap: Record<ServiceDeploymentType, IconName> = {
   [ServiceDeploymentType.amazonAmi]: 'main-service-ami',
   [ServiceDeploymentType.awsCodeDeploy]: 'app-aws-code-deploy',
   [ServiceDeploymentType.awsLambda]: 'service-aws-lamda',
-  [ServiceDeploymentType.TAS]: 'tas',
+  [ServiceDeploymentType.TAS]: 'cog', //TODO:: icon change 'tas',
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
   [ServiceDeploymentType.Elastigroup]: 'elastigroup'
 }
