@@ -42,7 +42,6 @@ declare const styles: {
   readonly header: string
   readonly headingContainer: string
   readonly indirect: string
-  readonly isUngroupedList: string
   readonly leftContainer: string
   readonly line: string
   readonly linesWrapper: string
@@ -97,6 +96,7 @@ declare const styles: {
   readonly timeSaved: string
   readonly type: string
   readonly unchanged: string
+  readonly ungroupedList: string
   readonly upgradeRequiredWrapper: string
   readonly viewCallgraph: string
   readonly widget: string

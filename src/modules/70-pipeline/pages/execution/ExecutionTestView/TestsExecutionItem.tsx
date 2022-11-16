@@ -61,6 +61,7 @@ export interface TestExecutionEntryProps {
   onShowCallGraphForClass?: (classname: string) => void
   isUngroupedList: boolean
   testCaseSearchTerm?: string
+  refetchCallgraph: (classname: string) => void
 }
 
 const getServerSort = ({
@@ -218,24 +219,6 @@ const getColumnText = ({
   }
 }
 
-// const renderResult = (status?: TestCaseStatus): JSX.Element | string => {
-//   if (!status) {
-//     return ''
-//   }
-
-//   const failed = ['error', 'failed'].includes(status)
-//   const success = ['passed'].includes(status)
-//   const skipped = ['skipped'].includes(status)
-//   if (failed) {
-//     return <ExecutionStatusLabel status={'Failed'} />
-//   } else if (success) {
-//     return <ExecutionStatusLabel status={'Success'} />
-//   } else if (skipped) {
-//     return <ExecutionStatusLabel status={'Skipped'} />
-//   }
-//   return ''
-// }
-
 function ColumnText({
   failed,
   col,
@@ -285,7 +268,8 @@ export function TestsExecutionItem({
   stepId,
   onShowCallGraphForClass,
   isUngroupedList,
-  testCaseSearchTerm = ''
+  testCaseSearchTerm = '',
+  refetchCallgraph
 }: TestExecutionEntryProps): React.ReactElement {
   const containerRef = useRef<HTMLElement>(null)
   const rightSideContainerRef = useRef<HTMLElement>(null)
@@ -302,7 +286,7 @@ export function TestsExecutionItem({
   }>()
   const [pageIndex, setPageIndex] = useState(0)
   const { openErrorModal, hideErrorModal } = useExpandErrorModal({})
-
+  const isGroupedList = !isUngroupedList
   const queryParams = useMemo(() => {
     const optionalKeys = getOptionalQueryParamKeys({ stageId, stepId })
 
@@ -350,18 +334,23 @@ export function TestsExecutionItem({
     }
   })
   const classNameSplitData = useMemo(() => getClassNameSplitData(data?.content), [data])
-  const [accordionClassNames, setAccordionClassNames] = useState({})
+  const [accordionClassNames, setAccordionClassNames] = useState<{ [key: string]: boolean }>({})
   useEffect(() => {
     if (classNameSplitData) {
-      const newAccordionClassNames = {}
+      const newAccordionClassNames: { [key: string]: boolean } = {}
       classNameSplitData.forEach(className => {
-        newAccordionClassNames[`${Object.keys(className)[0]}`] = true
+        const accordionClassName: string = Object.keys(className)[0]
+        if (accordionClassName) {
+          // default expand each class name accordion
+          newAccordionClassNames[accordionClassName] = true
+        }
       })
       setAccordionClassNames(newAccordionClassNames)
     }
   }, [classNameSplitData])
+
   const isMounted = useIsMounted()
-  const [selectedRow, setSelectedRow] = useState<TestCase>()
+  const [selectedRow, setSelectedRow] = useState<TestCase>() // only applicable for ungrouped list
   const refetchData = useCallback(
     (params: TestCaseSummaryQueryParams) => {
       setTimeout(() => {
@@ -372,6 +361,7 @@ export function TestsExecutionItem({
     },
     [isMounted, refetch]
   )
+
   const renderColumn = useMemo(
     () =>
       ({
@@ -421,17 +411,14 @@ export function TestsExecutionItem({
     // When window is resized, tableWidth is defined
     const ungroupedNameClassNameWidth = tableWidth ? tableWidth * 0.5 - 185 : UNGROUPED_SAFETY_TABLE_WIDTH
     const groupedNameClassNameWidth = tableWidth ? tableWidth - 185 : GROUPED_TABLE_WIDTH
-
-    return [
-      isUngroupedList
-        ? {
-            Header: '#',
-            accessor: ORDER as keyof TestCase,
-            width: 50,
-            Cell: renderColumn({ col: ORDER }),
-            disableSortBy: true
-          }
-        : undefined,
+    const columnsResult = [
+      {
+        Header: '#',
+        accessor: ORDER as keyof TestCase,
+        width: 50,
+        Cell: renderColumn({ col: ORDER }),
+        disableSortBy: true
+      },
       {
         Header: getString('pipeline.testsReports.testCaseName').toUpperCase(),
         accessor: TestCaseColumns.NAME,
@@ -452,23 +439,21 @@ export function TestsExecutionItem({
           setSortByObj
         })
       },
-      isUngroupedList
-        ? {
-            Header: getString('pipeline.testsReports.className').toUpperCase(),
-            accessor: TestCaseColumns.CLASS_NAME,
-            width: ungroupedNameClassNameWidth,
-            Cell: renderColumn({ col: TestCaseColumns.CLASS_NAME }),
-            disableSortBy: data?.content?.length === 1,
-            serverSortProps: getServerSortProps({
-              enableServerSort: isUngroupedList,
-              accessor: TestCaseColumns.CLASS_NAME,
-              sortByObj,
-              queryParams,
-              refetchData,
-              setSortByObj
-            })
-          }
-        : undefined,
+      {
+        Header: getString('pipeline.testsReports.className').toUpperCase(),
+        accessor: TestCaseColumns.CLASS_NAME,
+        width: ungroupedNameClassNameWidth,
+        Cell: renderColumn({ col: TestCaseColumns.CLASS_NAME }),
+        disableSortBy: data?.content?.length === 1,
+        serverSortProps: getServerSortProps({
+          enableServerSort: isUngroupedList,
+          accessor: TestCaseColumns.CLASS_NAME,
+          sortByObj,
+          queryParams,
+          refetchData,
+          setSortByObj
+        })
+      },
       {
         Header: getString('pipeline.testsReports.result'),
         accessor: TestCaseColumns.RESULT,
@@ -499,7 +484,15 @@ export function TestsExecutionItem({
           setSortByObj
         })
       }
-    ].filter(x => !!x)
+    ]
+
+    if (isGroupedList) {
+      return columnsResult.filter(
+        x => x.accessor !== (ORDER as keyof TestCase) && x.accessor !== TestCaseColumns.CLASS_NAME
+      )
+    } else {
+      return columnsResult
+    }
   }, [getString, renderColumn, data?.content?.length])
   const failureRate = (executionSummary.failed_tests || 0) / (executionSummary.total_tests || 1)
 
@@ -566,7 +559,7 @@ export function TestsExecutionItem({
         css.widget,
         css.testSuite,
         expanded && css.expanded,
-        isUngroupedList ? css.isUngroupedList : css.groupedList
+        isUngroupedList ? css.ungroupedList : css.groupedList
       )}
       padding="medium"
       ref={containerRef}
@@ -577,7 +570,7 @@ export function TestsExecutionItem({
           color={Color.GREY_500}
           style={{ flexGrow: 1, textAlign: 'left', justifyContent: 'flex-start' }}
         >
-          {!isUngroupedList && (
+          {isGroupedList && (
             <>
               <Button minimal large icon={expanded ? 'chevron-down' : 'chevron-right'} />
               <Layout.Horizontal>
@@ -657,7 +650,7 @@ export function TestsExecutionItem({
               </Text>
             </Container>
           )}
-          {!loading && !error && isUngroupedList ? (
+          {!loading && !error && isUngroupedList && (
             <Container ref={tableRef}>
               <TableV2<TestCase>
                 className={cx(css.testSuiteTable, !!onShowCallGraphForClass && css.clickable)}
@@ -693,7 +686,8 @@ export function TestsExecutionItem({
                 }
               />
             </Container>
-          ) : (
+          )}
+          {!loading && !error && isGroupedList && (
             <Container ref={tableRef}>
               {classNameSplitData.map(cnsd => {
                 const cnsdEntries = Object.entries(cnsd)[0]
@@ -707,7 +701,7 @@ export function TestsExecutionItem({
                         minimal
                         className={css.classNameTitle}
                         icon={isExpanded ? 'accordion-expanded' : 'accordion-collapsed'}
-                        text={`Class name: ${className}`}
+                        text={`${getString('pipeline.testsReports.className')}: ${className}`}
                         onClick={() => {
                           setAccordionClassNames({
                             ...accordionClassNames,
@@ -722,9 +716,8 @@ export function TestsExecutionItem({
                         className={css.viewCallgraph}
                         onClick={
                           onShowCallGraphForClass
-                            ? row => {
-                                // setSelectedRow(row)
-                                onShowCallGraphForClass(row.class_name as string)
+                            ? () => {
+                                refetchCallgraph(className)
                               }
                             : undefined
                         }
@@ -732,7 +725,7 @@ export function TestsExecutionItem({
                     </Layout.Horizontal>
                     {isExpanded && (
                       <TableV2<TestCase>
-                        className={cx(css.testSuiteTable, !!onShowCallGraphForClass && css.clickable)}
+                        className={cx(css.testSuiteTable, !!onShowCallGraphForClass)}
                         columns={columns}
                         data={tableData}
                         getRowClassName={row => (row.original === selectedRow ? css.rowSelected : '')}
@@ -741,28 +734,27 @@ export function TestsExecutionItem({
                         onRowClick={
                           onShowCallGraphForClass
                             ? row => {
-                                setSelectedRow(row)
                                 onShowCallGraphForClass(row.class_name as string)
                               }
                             : undefined
                         }
-                        pagination={
-                          (data?.data?.totalItems || 0) > PAGE_SIZE
-                            ? {
-                                itemCount: data?.data?.totalItems || 0,
-                                pageSize: data?.data?.pageSize || 0,
-                                pageCount: data?.data?.totalPages || 0,
-                                pageIndex,
-                                gotoPage: pageIdx => {
-                                  setPageIndex(pageIdx)
-                                  refetchData({
-                                    ...queryParams,
-                                    pageIndex: pageIdx
-                                  })
-                                }
-                              }
-                            : undefined
-                        }
+                        // pagination={
+                        //   (data?.data?.totalItems || 0) > PAGE_SIZE
+                        //     ? {
+                        //         itemCount: data?.data?.totalItems || 0,
+                        //         pageSize: data?.data?.pageSize || 0,
+                        //         pageCount: data?.data?.totalPages || 0,
+                        //         pageIndex,
+                        //         gotoPage: pageIdx => {
+                        //           setPageIndex(pageIdx)
+                        //           refetchData({
+                        //             ...queryParams,
+                        //             pageIndex: pageIdx
+                        //           })
+                        //         }
+                        //       }
+                        //     : undefined
+                        // }
                       />
                     )}
                   </>

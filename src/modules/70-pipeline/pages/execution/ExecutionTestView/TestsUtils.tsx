@@ -340,7 +340,7 @@ export const getClassNameSplitData = (testCases?: TestCase[]): ClassNameSplitDat
   testCases?.forEach(d => {
     if (typeof d?.class_name !== 'undefined') {
       const matchIndex = classNameSplitData.findIndex(cnsd => Object.keys(cnsd).includes(d.class_name!))
-      if (matchIndex && matchIndex > -1) {
+      if (typeof matchIndex === 'number' && matchIndex > -1) {
         classNameSplitData[matchIndex][d.class_name].push(d)
       } else {
         classNameSplitData.push({ [d.class_name]: [d] })

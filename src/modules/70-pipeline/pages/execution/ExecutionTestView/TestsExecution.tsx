@@ -100,7 +100,7 @@ export function TestsExecution({
   const context = useExecutionContext()
   const { getString } = useStrings()
   const status = (context?.pipelineExecutionDetail?.pipelineExecutionSummary?.status || '').toUpperCase()
-  const [showAllTests, setShowAllTests] = useState(false)
+  const [showAllTests, setShowAllTests] = useState(true) //!change before merge
   const [showGroupedView, setShowGroupedView] = useState(true)
   const [expandedIndex, setExpandedIndex] = useState<number | undefined>(0)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<{
@@ -504,6 +504,18 @@ export function TestsExecution({
                         onShowCallGraphForClass={showCallGraph ? onClassSelected : undefined}
                         isUngroupedList={false}
                         testCaseSearchTerm={testCaseSearchTerm}
+                        refetchCallgraph={className => {
+                          fetchCallGraph({
+                            queryParams: Object.assign(
+                              {},
+                              omit(queryParams, ['report', 'pageIndex', 'sort', 'pageSize', 'order']),
+                              {
+                                limit: CALL_GRAPH_API_LIMIT,
+                                class: className
+                              }
+                            )
+                          })
+                        }}
                       />
                     ))
                   ) : (
