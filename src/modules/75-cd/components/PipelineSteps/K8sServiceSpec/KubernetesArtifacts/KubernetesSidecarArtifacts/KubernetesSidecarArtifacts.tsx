@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import produce from 'immer'
 
 import { Text } from '@harness/uicore'
 
@@ -23,7 +24,6 @@ import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
 import { fromPipelineInputTriggerTab, getSidecarInitialValues } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
-import produce from 'immer'
 
 const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement | null => {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
