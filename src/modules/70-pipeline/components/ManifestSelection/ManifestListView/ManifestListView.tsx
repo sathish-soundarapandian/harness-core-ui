@@ -242,7 +242,14 @@ function ManifestListView({
     const iconProps: IconProps = {
       name: manifestTypeIcons[selectedManifest as ManifestTypes]
     }
-    if (selectedManifest === ManifestDataType.HelmChart) {
+    if (
+      [
+        ManifestDataType.HelmChart,
+        ManifestDataType.TASManifest,
+        ManifestDataType.VarsYAML,
+        ManifestDataType.Autoscaler
+      ].includes(selectedManifest)
+    ) {
       iconProps.color = Color.WHITE
     }
     return iconProps
@@ -253,7 +260,9 @@ function ManifestListView({
     let manifestDetailStep = null
     const isGitTypeStores = isGitTypeManifestStore(manifestStore as ManifestStores)
 
-    switch (true) {
+    switch (
+      true //TODO:: CHECK CHANES NEEDED HERE
+    ) {
       case selectedManifest === ManifestDataType.HelmChart && isGitTypeStores:
         manifestDetailStep = <HelmWithGIT {...lastStepProps()} />
         break

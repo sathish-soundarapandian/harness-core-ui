@@ -306,7 +306,7 @@ export const buildSpotPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
-export const buildPcfPayload = (formData: FormData) => {
+export const buildTasPayload = (formData: FormData) => {
   const savedData: any = {
     name: formData.name,
     description: formData?.description,
@@ -314,7 +314,7 @@ export const buildPcfPayload = (formData: FormData) => {
     orgIdentifier: formData?.orgIdentifier,
     identifier: formData.identifier,
     tags: formData?.tags,
-    type: Connectors.PCF,
+    type: Connectors.TAS,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
@@ -721,7 +721,7 @@ export const setupSpotFormData = async (connectorInfo: ConnectorInfoDTO, account
   return formData
 }
 
-export const setupPcfFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+export const setupTasFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const scopeQueryParams: GetSecretV2QueryParams = {
     accountIdentifier: accountId,
     projectIdentifier: connectorInfo?.projectIdentifier,
@@ -2268,8 +2268,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'gcp-secret-manager'
     case Connectors.SPOT:
       return 'spot'
-    case Connectors.PCF:
-      return 'cog' // TODO:: icon update //tas
+    case Connectors.TAS:
+      return 'tas'
     default:
       return 'cog'
   }
@@ -2351,8 +2351,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Spot'
     case Connectors.AZURE_ARTIFACTS:
       return 'Azure Artifacts'
-    case Connectors.PCF:
-      return 'Tanzu Application Services'
+    case Connectors.TAS:
+      return 'TAS'
     default:
       return ''
   }
@@ -2456,7 +2456,7 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.gcpSM')
     case Connectors.SPOT:
       return getString('connectors.testConnectionStep.validationText.spot')
-    case Connectors.PCF:
+    case Connectors.TAS:
       return getString('connectors.testConnectionStep.validationText.tas')
     default:
       return ''

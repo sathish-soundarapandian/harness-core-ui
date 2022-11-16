@@ -9859,35 +9859,35 @@ export interface PaymentMethodCollectionDTO {
   paymentMethods?: CardDTO[]
 }
 
-export type PcfConnector = ConnectorConfigDTO & {
-  credential: PcfCredential
+export type TasConnector = ConnectorConfigDTO & {
+  credential: TasCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
 }
 
-export interface PcfCredential {
-  spec?: PcfCredentialSpec
+export interface TasCredential {
+  spec?: TasCredentialSpec
   type: 'ManualConfig'
 }
 
-export interface PcfCredentialSpec {
+export interface TasCredentialSpec {
   [key: string]: any
 }
 
-export type PcfInfrastructureDetails = InfrastructureDetails & {
+export type TasInfrastructureDetails = InfrastructureDetails & {
   organization?: string
   pcfApplicationName?: string
   space?: string
 }
 
-export type PcfManualDetails = PcfCredentialSpec & {
+export type TasManualDetails = TasCredentialSpec & {
   endpointUrl: string
   passwordRef: string
   username?: string
   usernameRef?: string
 }
 
-export type PcfNGInstanceInfoDTO = InstanceInfoDTO & {
+export type TasNGInstanceInfoDTO = InstanceInfoDTO & {
   id: string
   instanceIndex?: string
   organization: string

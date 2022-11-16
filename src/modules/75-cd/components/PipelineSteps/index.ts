@@ -84,6 +84,7 @@ import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/Elastigrou
 import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
 import { EmailStep } from './EmailStep/EmailStep'
 import { ElastigroupRollbackStep } from './ElastigroupRollbackStep/ElastigroupRollbackStep'
+import { TasServiceSpec } from './TasServiceSpec/TasServiceSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -162,3 +163,4 @@ factory.registerStep(new ShellScriptProvisionStep())
 factory.registerStep(new ElastigroupInfrastructureSpec())
 factory.registerStep(new ElastigroupServiceSpec())
 factory.registerStep(new ElastigroupRollbackStep())
+factory.registerStep(new TasServiceSpec())

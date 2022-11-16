@@ -10,7 +10,7 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import StepPcfAuthentication from '../StepPcfAuthentication'
+import StepTasAuthentication from '../StepTasAuthentication'
 import { commonProps, connectorInfoMock, mockSecret, mockSecretList } from '../../__tests__/mocks'
 
 jest.mock('services/cd-ng', () => ({
@@ -18,12 +18,12 @@ jest.mock('services/cd-ng', () => ({
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret))
 }))
 
-describe('<StepPcfAuthentication />', () => {
+describe('<StepTasAuthentication />', () => {
   test('nextStep coverage and called with inputs', async () => {
     const nextStep = jest.fn()
     const { getByText, container } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <StepPcfAuthentication
+        <StepTasAuthentication
           {...commonProps}
           name={'credentials'}
           identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
@@ -37,7 +37,7 @@ describe('<StepPcfAuthentication />', () => {
     // Change Master URL
     await act(async () => {
       fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
-        target: { value: 'http://sample_url_pcf.com/' }
+        target: { value: 'http://sample_url_tas.com/' }
       })
     })
 
@@ -56,7 +56,7 @@ describe('<StepPcfAuthentication />', () => {
     await waitFor(() => getByText('common.entityReferenceTitle'))
 
     act(() => {
-      fireEvent.click(getByText('PcfToken')!)
+      fireEvent.click(getByText('TasToken')!)
     })
 
     act(() => {
@@ -68,26 +68,26 @@ describe('<StepPcfAuthentication />', () => {
     })
 
     expect(getByText('secrets.secret.configureSecret')).toBeInTheDocument()
-    expect(getByText('<PcfToken>')).toBeInTheDocument()
+    expect(getByText('<TasToken>')).toBeInTheDocument()
 
     expect(nextStep).toBeCalledWith({
       passwordRef: {
-        identifier: 'PcfToken',
-        name: 'PcfToken',
-        referenceString: 'account.PcfToken',
+        identifier: 'TasToken',
+        name: 'TasToken',
+        referenceString: 'account.TasToken',
         type: 'SecretText'
       },
       description: 'test description',
-      endpointUrl: 'http://sample_url_pcf.com/',
-      identifier: 'pcfConnector',
-      name: 'pcfConnector',
+      endpointUrl: 'http://sample_url_tas.com/',
+      identifier: 'tasConnector',
+      name: 'tasConnector',
       orgIdentifier: 'default',
       projectIdentifier: 'defaultproject',
       spec: {
         credential: {
           spec: {
             endpointUrl: 'http://sample_url.com/',
-            passwordRef: 'pcfToken',
+            passwordRef: 'tasToken',
             username: 'admin',
             usernameRef: null
           },
@@ -97,7 +97,7 @@ describe('<StepPcfAuthentication />', () => {
         executeOnDelegate: true
       },
       tags: { tag1: '', tag2: '', tag3: '' },
-      type: 'Pcf',
+      type: 'Tas',
       username: { type: 'TEXT', value: 'AdminUser' },
       usernamefieldType: 'TEXT',
       usernametextField: 'AdminUser'

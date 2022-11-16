@@ -30,13 +30,13 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
-import { setupPcfFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupTasFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-import { URLValidationSchema } from '@common/utils/Validation'
+//import { URLValidationSchema } from '@common/utils/Validation'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../GithubConnector/StepAuth/StepGithubAuthentication.module.scss'
 
-interface PcfAuthenticationProps {
+interface TasAuthenticationProps {
   name: string
   isEditMode: boolean
   setIsEditMode: (val: boolean) => void
@@ -54,17 +54,17 @@ interface StepConfigureProps extends ConnectorConfigDTO {
   onSuccess?: () => void
 }
 
-interface PcfFormInterface {
+interface TasFormInterface {
   endpointUrl: string
   username: TextReferenceInterface | void
   passwordRef: SecretReferenceInterface | void
 }
 
-const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthenticationProps> = props => {
+const StepTasAuthentication: React.FC<StepProps<StepConfigureProps> & TasAuthenticationProps> = props => {
   const { prevStepData, nextStep, accountId } = props
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const [initialValues, setInitialValues] = useState<PcfFormInterface>({
+  const [initialValues, setInitialValues] = useState<TasFormInterface>({
     endpointUrl: '',
     username: undefined,
     passwordRef: undefined
@@ -81,9 +81,9 @@ const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthent
 
   useEffect(() => {
     if (loadingConnectorSecrets && props.isEditMode && props.connectorInfo) {
-      setupPcfFormData(props.connectorInfo, accountId)
+      setupTasFormData(props.connectorInfo, accountId)
         .then(data => {
-          setInitialValues(data as PcfFormInterface)
+          setInitialValues(data as TasFormInterface)
         })
         .finally(() => {
           setLoadingConnectorSecrets(false)
@@ -97,13 +97,13 @@ const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthent
 
   useTrackEvent(ConnectorActions.AuthenticationStepLoad, {
     category: Category.CONNECTOR,
-    connector_type: Connectors.PCF
+    connector_type: Connectors.TAS
   })
 
   const handleSubmit = (formData: ConnectorConfigDTO): void => {
     trackEvent(ConnectorActions.AuthenticationStepSubmit, {
       category: Category.CONNECTOR,
-      connector_type: Connectors.PCF
+      connector_type: Connectors.TAS
     })
 
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData })
@@ -115,7 +115,7 @@ const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthent
 
   return (
     <Layout.Vertical className={classNames(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}>
-      <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'pcfAuthenticationDetails' }}>
+      <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'tasAuthenticationDetails' }}>
         {getString('details')}
       </Text>
       <Formik
@@ -123,9 +123,10 @@ const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthent
           ...initialValues,
           ...prevStepData
         }}
-        formName="stepPcfAuthForm"
+        formName="stepTasAuthForm"
         validationSchema={Yup.object().shape({
-          endpointUrl: URLValidationSchema({ requiredMessage: getString('validation.masterUrl') }),
+          endpointUrl: Yup.string().trim().required(getString('validation.endpointUrl')),
+          //  URLValidationSchema({ requiredMessage: getString('validation.masterUrl') }),
           username: Yup.string().trim().required(getString('username')),
           passwordRef: Yup.string().trim().required(getString('password'))
         })}
@@ -138,11 +139,11 @@ const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthent
                 name="endpointUrl"
                 label={getString('connectors.k8.masterUrlLabel')}
                 placeholder={getString('UrlLabel')}
-                tooltipProps={{ dataTooltipId: `pcf_master_url` }}
+                tooltipProps={{ dataTooltipId: `tas_master_url` }}
               />
 
               <Container className={css.authHeaderRow} flex={{ alignItems: 'baseline' }}>
-                <Text font={{ variation: FontVariation.H6 }} tooltipProps={{ dataTooltipId: 'pcfAuthentication' }}>
+                <Text font={{ variation: FontVariation.H6 }} tooltipProps={{ dataTooltipId: 'tasAuthentication' }}>
                   {getString('authentication')}
                 </Text>
               </Container>
@@ -161,7 +162,7 @@ const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthent
                 icon="chevron-left"
                 variation={ButtonVariation.SECONDARY}
                 onClick={() => props?.previousStep?.(prevStepData)}
-                data-name="pcfBackButton"
+                data-name="tasBackButton"
               />
               <Button
                 type="submit"
@@ -177,4 +178,4 @@ const StepPcfAuthentication: React.FC<StepProps<StepConfigureProps> & PcfAuthent
   )
 }
 
-export default StepPcfAuthentication
+export default StepTasAuthentication

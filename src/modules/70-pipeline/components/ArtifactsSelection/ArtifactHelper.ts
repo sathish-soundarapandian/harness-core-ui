@@ -38,7 +38,8 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.Ssh ||
       deploymentType === ServiceDeploymentType.AzureWebApp ||
       deploymentType === ServiceDeploymentType.Elastigroup ||
-      deploymentType === ServiceDeploymentType.CustomDeployment
+      deploymentType === ServiceDeploymentType.CustomDeployment ||
+      deploymentType === ServiceDeploymentType.TAS
     )
   )
 }
