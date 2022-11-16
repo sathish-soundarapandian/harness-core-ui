@@ -14,8 +14,8 @@ import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+// import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+// import { FeatureFlag } from '@common/featureFlags'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 
 import VisibilityIcon from '../images/ce-visibility.svg'
@@ -45,7 +45,7 @@ interface CardData {
 
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
-  const governanceEnabled = useFeatureFlag(FeatureFlag.CLOUD_COST_GOVERNANCE_UI)
+  // const governanceEnabled = useFeatureFlag(FeatureFlag.CLOUD_COST_GOVERNANCE_UI)
 
   const FeatureCards = useMemo(() => {
     const cards = [
@@ -93,11 +93,8 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
           getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
         ],
         footer: 'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.footer'
-      }
-    ]
-
-    if (governanceEnabled) {
-      cards.push({
+      },
+      {
         icon: OptimizationIcon,
         text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
         value: Features.GOVERNANCE,
@@ -112,11 +109,11 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
           getString('connectors.ceAzure.chooseRequirements.billing.feat5')
         ],
         footer: 'connectors.ceAws.crossAccountRoleStep1.default.footer'
-      })
-    }
+      }
+    ]
 
     return cards as CardData[]
-  }, [governanceEnabled])
+  }, [])
 
   const [selectedCards, setSelectedCards] = useState<CardData[]>(() => {
     const initialSelectedCards = []
