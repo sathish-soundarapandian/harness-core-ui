@@ -14,28 +14,21 @@ import type { FormikProps, FormikErrors } from 'formik'
 import { produce } from 'immer'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  getsMergedTemplateInputYamlPromise,
-  useGetTemplateInputSetYaml,
-  useGetYamlWithTemplateRefsResolved
-} from 'services/template-ng'
+import { getsMergedTemplateInputYamlPromise, useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
+import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
-  getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { PageSpinner } from '@common/components'
 import { PipelineInputSetFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
-import { useMutateAsGet } from '@common/hooks'
-import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { Pipeline } from '@pipeline/utils/types'
+import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplatePipelineSpecifications.module.scss'
 
@@ -51,8 +44,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
-  const pipelineScope = getScopeFromDTO(pipeline)
-  const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>()
+  const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>(pipeline)
   const [allValues, setAllValues] = React.useState<PipelineInfoConfig>()
   const [templateInputs, setTemplateInputs] = React.useState<PipelineInfoConfig | undefined>()
   const { getString } = useStrings()
@@ -71,25 +63,27 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   )
 
   const {
-    data: pipelineResponse,
-    error: pipelineError,
-    refetch: refetchPipeline,
-    loading: pipelineLoading
-  } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
+    data: pipelineTemplateResponse,
+    error: pipelineTemplateError,
+    refetch: refetchPipelineTemplate,
+    loading: pipelineTemplateLoading
+  } = useGetTemplate({
+    templateIdentifier: getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, '')),
     queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, pipelineScope),
-      pipelineIdentifier: pipeline.identifier,
+      ...getScopeBasedProjectPathParams(queryParams, templateScope),
+      versionLabel: defaultTo(pipeline.template?.versionLabel, ''),
       ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
-    },
-    body: {
-      originalEntityYaml: yamlStringify({ pipeline: formValues })
-    },
-    lazy: true
+    }
   })
 
   React.useEffect(() => {
-    setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
-  }, [pipelineResponse?.data?.mergedPipelineYaml])
+    setAllValues({
+      ...parse<{ template: { spec: StageElementWrapperConfig[] } }>(defaultTo(pipelineTemplateResponse?.data?.yaml, ''))
+        ?.template.spec,
+      name: defaultTo(pipeline?.name, ''),
+      identifier: defaultTo(pipeline?.identifier, '')
+    })
+  }, [pipelineTemplateResponse?.data?.yaml])
 
   const {
     data: templateInputSetYaml,
@@ -116,12 +110,6 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     setFormValues(updatedPipeline)
     updatePipeline(updatedPipeline)
   }
-
-  React.useEffect(() => {
-    if (!isEmpty(formValues)) {
-      refetchPipeline()
-    }
-  }, [formValues])
 
   const retainInputsAndUpdateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     if (isEmpty(newTemplateInputs)) {
@@ -197,13 +185,13 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   }
 
   const refetch = () => {
-    refetchPipeline()
+    refetchPipelineTemplate()
     refetchTemplateInputSet()
   }
 
-  const isLoading = pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs
+  const isLoading = pipelineTemplateLoading || templateInputSetLoading || loadingMergedTemplateInputs
 
-  const error = defaultTo(templateInputSetError, pipelineError)
+  const error = defaultTo(templateInputSetError, pipelineTemplateError)
 
   /**
    * This effect disables/enables Save button on Pipeline and Template Studio
@@ -233,6 +221,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
             formName="templateStageOverview"
             onSubmit={noop}
             validate={validateForm}
+            enableReinitialize={true}
           >
             {(formik: FormikProps<PipelineInfoConfig>) => {
               formikRef.current = formik as FormikProps<unknown> | null
