@@ -107,8 +107,8 @@ const getLabelByType = (type: string): string => {
       return 'connectors.name_labels.SecretManager'
     case Connectors.SPOT:
       return 'connectors.name_labels.Spot'
-    case Connectors.PCF:
-      return 'connectors.name_labels.Pcf'
+    case Connectors.TAS:
+      return 'connectors.name_labels.TAS'
     default:
       return 'connector'
   }
@@ -363,7 +363,7 @@ const getSpotSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInt
   ]
 }
 
-const getPcfSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+const getTasSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
       label: 'connectors.k8.masterUrlLabel',
@@ -930,8 +930,8 @@ const getSchemaByType = (
       return getGcpSMSchema(connector)
     case Connectors.SPOT:
       return getSpotSchema(connector)
-    case Connectors.PCF:
-      return getPcfSchema(connector)
+    case Connectors.TAS:
+      return getTasSchema(connector)
     default:
       return []
   }

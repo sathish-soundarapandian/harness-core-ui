@@ -370,6 +370,10 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isTASDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.TAS
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -377,7 +381,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
   [ServiceDeploymentType.WinRm]: 'WinRM',
-  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details' //todospt
+  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details', //todospt
+  [ServiceDeploymentType.TAS]: 'Tanzu Application Services Details' //CHECK NAME INFRA
 }
 
 export const getSelectedDeploymentType = (
@@ -628,6 +633,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.CustomDeploymentServiceSpec
     case ServiceDeploymentType.Elastigroup:
       return StepType.ElastigroupService
+    case ServiceDeploymentType.TAS:
+      return StepType.TasService
     default:
       return StepType.K8sServiceSpec
   }

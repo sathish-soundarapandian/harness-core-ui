@@ -64,7 +64,10 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   EcsTaskDefinition: 'EcsTaskDefinition',
   EcsServiceDefinition: 'EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition',
+  TASManifest: 'TASManifest',
+  VarsYAML: 'VarsYAML',
+  Autoscaler: 'Autoscaler'
 }
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
@@ -122,7 +125,8 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
   ],
-  CustomDeployment: []
+  CustomDeployment: [],
+  TAS: [ManifestDataType.TASManifest, ManifestDataType.VarsYAML, ManifestDataType.Autoscaler]
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -164,7 +168,10 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
   EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
   EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
+  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType,
+  TASManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  VarsYAML: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  Autoscaler: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -179,7 +186,10 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsTaskDefinition: 'service-amazon-ecs',
   EcsServiceDefinition: 'service-amazon-ecs',
   EcsScalingPolicyDefinition: 'service-amazon-ecs',
-  EcsScalableTargetDefinition: 'service-amazon-ecs'
+  EcsScalableTargetDefinition: 'service-amazon-ecs',
+  TASManifest: 'tas-manifest',
+  VarsYAML: 'list-vars',
+  Autoscaler: 'autoScaler'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -194,7 +204,10 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   EcsTaskDefinition: 'pipeline.manifestTypeLabels.EcsTaskDefinition',
   EcsServiceDefinition: 'pipeline.manifestTypeLabels.EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
+  TASManifest: 'pipeline.manifestTypeLabels.TASManifest',
+  VarsYAML: 'pipeline.manifestTypeLabels.VarsYAML',
+  Autoscaler: 'pipeline.manifestTypeLabels.Autoscaler'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [

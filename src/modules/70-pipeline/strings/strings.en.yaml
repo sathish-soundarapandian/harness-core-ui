@@ -399,6 +399,9 @@ manifestTypeLabels:
   EcsScalingPolicyDefinition: 'ECS Scaling Policy'
   EcsScalableTargetDefinition: 'ECS Scalable Target'
   ReleaseRepo: Release Repo Manifest
+  TASManifest: TAS Manifest
+  VarsYAML: Vars YAML
+  Autoscaler: AutoScaler
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:

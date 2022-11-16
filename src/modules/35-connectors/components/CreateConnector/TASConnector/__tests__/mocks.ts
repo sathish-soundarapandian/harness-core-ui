@@ -25,13 +25,13 @@ export const mockResponse: ResponseBoolean = {
 }
 
 export const connectorInfoMock: ConnectorInfoDTO = {
-  name: 'pcfConnector',
-  identifier: 'pcfConnector',
+  name: 'tasConnector',
+  identifier: 'tasConnector',
   description: 'test description',
   orgIdentifier: 'default',
   projectIdentifier: 'defaultproject',
   tags: { tag1: '', tag2: '', tag3: '' },
-  type: 'Pcf',
+  type: 'Tas',
   spec: {
     credential: {
       type: 'ManualConfig',
@@ -39,7 +39,7 @@ export const connectorInfoMock: ConnectorInfoDTO = {
         username: 'admin',
         endpointUrl: 'http://sample_url.com/',
         usernameRef: null,
-        passwordRef: 'pcfToken'
+        passwordRef: 'tasToken'
       }
     },
     delegateSelectors: ['account-delegate-1668077546'],
@@ -59,8 +59,8 @@ export const mockSecretList = {
       {
         secret: {
           type: 'SecretText',
-          name: 'PcfToken',
-          identifier: 'PcfToken',
+          name: 'TasToken',
+          identifier: 'TasToken',
           tags: {},
           description: '',
           spec: {
@@ -86,8 +86,8 @@ export const mockSecret = {
   data: {
     secret: {
       type: 'SecretText',
-      name: 'PcfToken',
-      identifier: 'PcfToken',
+      name: 'TasToken',
+      identifier: 'TasToken',
       tags: {},
       description: '',
       spec: { secretManagerIdentifier: 'harnessSecretManager', valueType: 'Inline', value: null }
