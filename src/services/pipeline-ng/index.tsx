@@ -384,7 +384,7 @@ export interface CcmConnectorFilter {
   awsAccountId?: string
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
 }
@@ -1026,7 +1026,6 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
-    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1383,7 +1382,6 @@ export interface ErrorMetadata {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
-    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   errorMessage?: string
 }
 
@@ -1935,7 +1933,6 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
-    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2141,7 +2138,6 @@ export interface GraphLayoutNode {
   failureInfo?: ExecutionErrorInfo
   failureInfoDTO?: FailureInfoDTO
   hidden?: boolean
-  isRollbackStageNode?: boolean
   module?: string
   moduleInfo?: {
     [key: string]: {
@@ -3057,7 +3053,6 @@ export interface PipelineExecutionSummary {
   executionTriggerInfo?: ExecutionTriggerInfo
   failedStagesCount?: number
   failureInfo?: FailureInfoDTO
-  firstRollbackStageGraphId?: string
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   layoutNodeMap?: {
@@ -3070,7 +3065,6 @@ export interface PipelineExecutionSummary {
   }
   modules?: string[]
   name?: string
-  parentStageInfo?: PipelineStageInfo
   pipelineIdentifier?: string
   planExecutionId?: string
   runSequence?: number
@@ -3196,10 +3190,6 @@ export type PipelineStageConfig = StageInfoConfig & {
   pipeline: string
   pipelineInputs?: JsonNode
   project: string
-}
-
-export interface PipelineStageInfo {
-  [key: string]: any
 }
 
 export interface PipelineWrapperResponse {
@@ -4138,7 +4128,6 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
-    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5098,7 +5087,7 @@ export interface TriggerCatalogItem {
     | 'AmazonS3'
     | 'Nexus'
     | 'HelmChart'
-    | 'Cron'
+    | 'Scheduled'
   )[]
 }
 
@@ -14186,40 +14175,6 @@ export interface GetSchemaYamlQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
-    | 'AquaTrivy'
-    | 'AWSECR'
-    | 'Bandit'
-    | 'BlackDuck'
-    | 'Brakeman'
-    | 'Burp'
-    | 'Checkmarx'
-    | 'Clair'
-    | 'DataTheorem'
-    | 'DockerContentTrust'
-    | 'External'
-    | 'FortifyOnDemand'
-    | 'Grype'
-    | 'JfrogXray'
-    | 'Mend'
-    | 'Metasploit'
-    | 'Nessus'
-    | 'NexusIQ'
-    | 'Nikto'
-    | 'Nmap'
-    | 'Openvas'
-    | 'Owasp'
-    | 'PrismaCloud'
-    | 'Prowler'
-    | 'Qualys'
-    | 'Reapsaw'
-    | 'ShiftLeft'
-    | 'Sniper'
-    | 'Snyk'
-    | 'Sonarqube'
-    | 'Sysdig'
-    | 'Tenable'
-    | 'Veracode'
-    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -14438,40 +14393,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
-    | 'AquaTrivy'
-    | 'AWSECR'
-    | 'Bandit'
-    | 'BlackDuck'
-    | 'Brakeman'
-    | 'Burp'
-    | 'Checkmarx'
-    | 'Clair'
-    | 'DataTheorem'
-    | 'DockerContentTrust'
-    | 'External'
-    | 'FortifyOnDemand'
-    | 'Grype'
-    | 'JfrogXray'
-    | 'Mend'
-    | 'Metasploit'
-    | 'Nessus'
-    | 'NexusIQ'
-    | 'Nikto'
-    | 'Nmap'
-    | 'Openvas'
-    | 'Owasp'
-    | 'PrismaCloud'
-    | 'Prowler'
-    | 'Qualys'
-    | 'Reapsaw'
-    | 'ShiftLeft'
-    | 'Sniper'
-    | 'Snyk'
-    | 'Sonarqube'
-    | 'Sysdig'
-    | 'Tenable'
-    | 'Veracode'
-    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
