@@ -1,10 +1,18 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { get } from 'lodash-es'
 import { parse } from 'mustache'
 import React from 'react'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { IconName } from '@harness/icons'
+import type { FormikErrors } from 'formik'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import { Step, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { allowedArtifactTypes, ArtifactToConnectorMap } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -29,10 +37,13 @@ const ArtifactsPrimaryRegex = /^.+artifacts\.primary\.sources\.spec\.connectorRe
 const tasAllowedArtifactTypes: Array<ArtifactType> = allowedArtifactTypes.TAS
 
 export class TasServiceSpec extends Step<ServiceSpec> {
+  validateInputSet(_args: ValidateInputSetProps<ServiceSpec>): FormikErrors<ServiceSpec> {
+    throw new Error('Method not implemented.')
+  }
   protected type = StepType.TasService
   protected defaultValues: ServiceSpec = {}
 
-  protected stepIcon: IconName = 'tas'
+  protected stepIcon: IconName = 'cog' //TODO::  icon change to 'tas'
   protected stepName = 'Specify Tanzu Application Services'
   protected stepPaletteVisible = false
   protected _hasStepVariables = true
