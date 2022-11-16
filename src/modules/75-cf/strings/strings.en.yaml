@@ -564,86 +564,121 @@ onboarding:
     getStarted: Get started with SDKs
   readme:
     java: |
-      # Setup
+      # Quickstart
 
-      Add the following snippet to your project's `pom.xml` file (version >= 1.0.4):
+      To follow along with our test code sample, make sure you've:
 
-      ```xml
-      <dependency>
-        <groupId>io.harness.cf</groupId>
-        <artifactId>cf-client-sdk-java</artifactId>
-        <version>1.0.4</version>
-      </dependency>
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
+
+      # Install
+
+      To use this SDK, make sure you have:
+      - Installed <a href="https://openjdk.java.net/install/">JDK 8</a> or a newer version
+      - Installed Maven, Gradle or an alternative build automation tool for your application
+
+      # Usage
+
+      Create a java project with a package called 'examples'.
+
+      Maven - add the following Maven dependency in your project's 'pom.xml' file:
+      ```
+      <dependencies>
+        <dependency>
+            <groupId>io.harness</groupId>
+            <artifactId>ff-java-server-sdk</artifactId>
+            <version>1.1.6</version>
+        </dependency>
+      </dependencies>
       ```
 
-      After dependency has been added, the SDK elements, primarily CfClient should be accessible in the main application.
+      Gradle
+      ```
+      implementation group: 'io.harness', name: 'ff-java-server-sdk', version: '1.1.6'
+      ```
 
-      # Initialization
+      Create a class called 'GettingStarted' in your project, copy and paste the code below into that class. 
+      After installing the SDK, enter the SDK keys that you created for your environment. 
+      The SDK keys authorize your application to connect to the FF client.
 
-      `CfClient` is a base class that provides all features of SDK.
+      ```
+      package io.harness.ff.examples;
 
-      ```java
-      /**
-      * Put the API Key here from your environment
-      */
-      String apiKey = '{{apiKey}}';
+      import io.harness.cf.client.api.*;
+      import io.harness.cf.client.dto.Target;
 
-      CfClient cfClient = new CfClient(apiKey, Config.builder().build());
+      import java.util.concurrent.Executors;
+      import java.util.concurrent.ScheduledExecutorService;
+      import java.util.concurrent.TimeUnit;
 
-      /**
-      * Define you target on which you would like to evaluate
-      * the featureFlag
-      */
-      Target target = Target.builder()
-                          .name("User1")
-                          .attributes(new HashMap<String, Object>())
-                          .identifier("user1@example.com")
+      public class GettingStarted {
+          // API Key - set this as an env variable
+          private static String apiKey = getEnvOrDefault("FF_API_KEY", "");
+
+          // Flag Identifier
+          private static String flagName = getEnvOrDefault("FF_FLAG_NAME", "harnessappdemodarkmode");
+
+          private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+          public static void main(String[] args) {
+              System.out.println("Harness SDK Getting Started");
+
+              try {
+                  //Create a Feature Flag Client
+                  CfClient cfClient = new CfClient(apiKey);
+                  cfClient.waitForInitialization();
+
+                  // Create a target (different targets can get different results based on rules.  This includes a custom attribute 'location')
+                  final Target target = Target.builder()
+                          .identifier("javasdk")
+                          .name("JavaSDK")
+                          .attribute("location", "emea")
                           .build();
+
+                  // Loop forever reporting the state of the flag
+                  scheduler.scheduleAtFixedRate(
+                          () -> {
+                              boolean result = cfClient.boolVariation(flagName, target, false);
+                              System.out.println("Boolean variation is " + result);
+                          },
+                          0,
+                          10,
+                          TimeUnit.SECONDS);
+
+              } catch (Exception e) {
+                  e.printStackTrace();
+              } finally {
+                  // Close the SDK
+                  CfClient.getInstance().close();
+              }
+          }
+
+          // Get the value from the environment or return the default
+          private static String getEnvOrDefault(String key, String defaultValue) {
+              String value = System.getenv(key);
+              if (value == null || value.isEmpty()) {
+                  return defaultValue;
+              }
+              return value;
+          }
+      }
       ```
-
-      `target` represents the desired target for which we want features to be evaluated.
-
-      Your Harness SDK is now initialized. Congratulations!
-
-      # Public API Methods
-
-      The Public API exposes a few methods that you can utilize:
-
-      ```
-      public boolean boolVariation(String key, Target target, boolean defaultValue)
-
-      public String stringVariation(String key, Target target, String defaultValue)
-
-      public double numberVariation(String key, Target target, int defaultValue)
-
-      public JsonObject jsonVariation(String key, Target target, JsonObject defaultValue)
-
-      public void destroy()
-      ```
-
-      # Fetch evaluation's value
-
-      It is possible to fetch a value for a given evaluation. Evaluation is performed based on a different type. In case there is no evaluation with provided id, the default value is returned.
-
-      Use the appropriate method to fetch the desired Evaluation of a certain type.
-
-      # Bool variation
-
-      ```java
-      boolean result = cfClient.boolVariation("sample_boolean_flag", target, false);
-      ```
-
-      # Number variation
-
-      ```java
-      boolean result = cfClient.numberVariation("sample_number_flag", target, 0);
+      # Test your application 
 
       ```
+      export FF_API_KEY=<your key here>
+      cd examples
 
-      # String variation
+      mvn clean package
+      mvn exec:java -Dexec.mainClass="io.harness.ff.examples.GettingStarted"
+      ```
 
-      ```java
-      boolean result = cfClient.stringVariation("sample_string_flag", target, "");
+      If you don't have the right version of java installed locally, or don't want to install the dependencies you can use docker to get started.
+
+      ```
+      docker run -v $(PWD)/examples:/app -v "$HOME/.m2":/root/.m2 -w /app maven:3.3-jdk-8 mvn clean package
+
+      docker run -e FF_API_KEY=$FF_API_KEY -v $(PWD)/examples:/app -v "$HOME/.m2":/root/.m2 -w /app maven:3.3-jdk-8 mvn exec:java -Dexec.mainClass="io.harness.ff.examples.GettingStarted"
       ```
 
     javascript: |
