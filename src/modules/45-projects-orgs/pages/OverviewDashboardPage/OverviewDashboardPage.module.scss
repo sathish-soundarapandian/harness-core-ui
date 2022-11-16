@@ -1,0 +1,10 @@
+.container {
+  .left {
+    width: 598px;
+    margin-right: var(--spacing-huge);
+  }
+  .right {
+    margin-left: var(--spacing-huge);
+    width: 475px;
+  }
+}
