@@ -23,7 +23,7 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './SSCSGenerationStepFunctionConfigs'
 import type { SSCSGenerationStepProps, SSCSGenerationStepData, SSCSGenerationStepDataUI } from './SSCSGenerationStep'
 import { CIStep } from '../CIStep/CIStep'
@@ -95,30 +95,11 @@ export const SSCSGenerationStepBase = (
               enableFields={{
                 name: {},
                 description: {},
-                'spec.generationType': {
-                  multiTextInputProps: {
-                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
-                    disabled: readonly
-                  }
-                },
-                'spec.artifactType': {
-                  multiTextInputProps: {
-                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
-                    disabled: readonly
-                  }
-                },
-                'spec.sbomGenerationTool': {
-                  multiTextInputProps: {
-                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
-                    disabled: readonly
-                  }
-                },
-                'spec.sbomFormat': {
-                  multiTextInputProps: {
-                    multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
-                    disabled: readonly
-                  }
-                }
+                'spec.generationType': {},
+                'spec.artifactType': {},
+                'spec.source': {},
+                'spec.sbomGenerationTool': {},
+                'spec.sbomFormat': {}
               }}
               formik={formik}
             />
