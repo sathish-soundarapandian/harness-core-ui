@@ -31,7 +31,8 @@ module.exports = ({
   enableSCM,
   enableFFUI,
   enableCIUI,
-  enableTIUI
+  enableTIUI,
+  enableIACM
 }) => {
   const remotes = {}
 
@@ -74,7 +75,9 @@ module.exports = ({
     remotes.tiui = "tiui@[window.getApiBaseUrl('tiui/remoteEntry.js')]"
   }
 
-  remotes.iac = "iac@[window.getApiBaseUrl('iac/remoteEntry.js')]"
+  if (enableIACM) {
+    remotes.iac = "iac@[window.getApiBaseUrl('iac/remoteEntry.js')]"
+  }
 
   if (process.env.TARGET_LOCALHOST) {
     remotes.errortracking = 'errortracking@http://localhost:3091/remoteEntry.js'

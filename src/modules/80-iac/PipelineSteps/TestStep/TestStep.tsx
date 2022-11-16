@@ -14,8 +14,6 @@ import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { IacStepUtils, StepVariableView, TestInputStep } from '@iac/RouteDestinations'
 import { TestComponent } from '.'
-const TestStepRef = forwardRef(TestComponent)
-const TestStepConnect = connect(TestInputStep)
 
 export class TestStep extends PipelineStep<any> {
   constructor() {
@@ -24,6 +22,9 @@ export class TestStep extends PipelineStep<any> {
     this._hasDelegateSelectionVisible = true
     this.setValidate()
   }
+
+  TestStepRef = forwardRef(TestComponent)
+  TestStepConnect = connect(TestInputStep)
 
   protected type = StepType.CreateAzureARMResource
   protected stepIcon: IconName = 'lab-test'
@@ -72,6 +73,7 @@ export class TestStep extends PipelineStep<any> {
     inputSetData,
     customStepProps
   }: StepProps<any>): JSX.Element {
+    const { TestStepConnect, TestStepRef } = this
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
         <Suspense fallback={<div>Loading ... </div>}>

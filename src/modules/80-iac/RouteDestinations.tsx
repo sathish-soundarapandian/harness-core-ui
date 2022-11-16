@@ -17,10 +17,16 @@ import ApprovalAdvancedSpecifications from '@pipeline/components/CommonPipelineS
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { StageType } from '@pipeline/utils/stageHelpers'
+import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
+import { iacmStageConfiguration } from '@iac/PipelineStages'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import IacSideNav from './components/IacSideNav'
-import '@iac/PipelineStages'
 import { getStyles } from './Utils'
 import type { IacCustomMicroFrontendProps } from './IacCustomMicroFrontendProps.types'
+import { TestStep } from './PipelineSteps/TestStep/TestStep'
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteIacApp = lazy(() => import('iac/MicroFrontendApp'))
@@ -114,19 +120,31 @@ export const IacStage = (props: any): React.ReactElement => (
   </ChildAppMounter>
 )
 
-export default (
-  <>
-    <RouteWithLayout sidebarProps={IacSideNavProps} path={routes.toIac({ ...accountPathProps })} exact>
-      <RedirectToIacProject />
-    </RouteWithLayout>
-    <RouteWithLayout
-      sidebarProps={IacSideNavProps}
-      path={[
-        routes.toIacMicroFrontend({ ...projectPathProps, ...accountPathProps, ...orgPathProps }),
-        routes.toIac({ ...accountPathProps })
-      ]}
-    >
-      <IacApp />
-    </RouteWithLayout>
-  </>
-)
+function IacmRoutes(): JSX.Element {
+  const iacmEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
+  const { getStageAttributes, getStageEditorImplementation } = iacmStageConfiguration
+
+  if (iacmEnabled) {
+    stagesCollection.registerStageFactory(StageType.IAC, getStageAttributes, getStageEditorImplementation)
+    factory.registerStep(new TestStep())
+  }
+
+  return (
+    <>
+      <RouteWithLayout sidebarProps={IacSideNavProps} path={routes.toIac({ ...accountPathProps })} exact>
+        <RedirectToIacProject />
+      </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={IacSideNavProps}
+        path={[
+          routes.toIacMicroFrontend({ ...projectPathProps, ...accountPathProps, ...orgPathProps }),
+          routes.toIac({ ...accountPathProps })
+        ]}
+      >
+        <IacApp />
+      </RouteWithLayout>
+    </>
+  )
+}
+
+export default IacmRoutes
