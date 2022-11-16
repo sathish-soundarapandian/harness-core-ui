@@ -389,11 +389,15 @@ const SelectGitProviderRef = (
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernameToken')
           updatedConnectorPayload = set(
             updatedConnectorPayload,
-            'spec.authentication.spec.spec.tokenRef',
-            `${secretId}`
+            '${ACCOUNT_SCOPE_PREFIX}$spec.authentication.spec.spec.tokenRef',
+            `${ACCOUNT_SCOPE_PREFIX}$${secretId}`
           )
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
-          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.spec.tokenRef', `${secretId}`)
+          updatedConnectorPayload = set(
+            updatedConnectorPayload,
+            'spec.apiAccess.spec.tokenRef',
+            `${ACCOUNT_SCOPE_PREFIX}$${secretId}`
+          )
           return updatedConnectorPayload
         case Connectors.BITBUCKET:
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernamePassword')
