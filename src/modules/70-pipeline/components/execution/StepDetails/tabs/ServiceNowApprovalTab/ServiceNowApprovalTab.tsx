@@ -39,7 +39,6 @@ export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
   const serviceNowKey = approvalData?.details.ticket.key
   const serviceNowUrl = approvalData?.details.ticket.url
-  const shouldShowExecutionTimeInfo = !isWaiting && approvalData?.status !== ApprovalStatus.WAITING
 
   return (
     <React.Fragment>
@@ -101,12 +100,10 @@ export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.
           ) : null}
         </div>
       )}
-      {shouldShowExecutionTimeInfo && (
-        <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-          <StepDetails step={{ startTs, endTs, stepParameters }} />
-        </Container>
-      )}
-      <div className={cx(css.serviceNowApproval, { [css.applyTopPadding]: !shouldShowExecutionTimeInfo })}>
+      <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
+        <StepDetails step={{ startTs, endTs, stepParameters }} />
+      </Container>
+      <div className={cx(css.serviceNowApproval, css.applyTopPadding)}>
         {approvalData?.details?.approvalCriteria ? (
           <ServiceNowCriteria type="approval" criteria={approvalData.details.approvalCriteria} />
         ) : null}

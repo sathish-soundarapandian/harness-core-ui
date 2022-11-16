@@ -2,6 +2,26 @@
 
 exports[`<HarnessApprovalTab /> tests Non-Waiting Status form is not shown 1`] = `
 <div>
+  <div
+    class="info"
+    data-type="harness"
+  >
+    <div
+      class="infoHeader"
+    >
+      <div
+        class="statusMsg"
+      >
+        pipeline.approvalStep.execution.statusMsg
+      </div>
+    </div>
+    <p
+      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--intent-warning StyledProps--font-align-left"
+      style="word-break: break-word; white-space: pre-wrap; --text-line-clamp: 3; width: 500px;"
+    >
+      Please review the following information and approve the pipeline progression
+    </p>
+  </div>
   <table
     class="detailsTable"
   >
@@ -252,6 +272,38 @@ exports[`<HarnessApprovalTab /> tests Waiting Status does not shows form if user
       Please review the following information and approve the pipeline progression
     </p>
   </div>
+  <table
+    class="detailsTable"
+  >
+    <tbody>
+      <tr>
+        <th>
+          startedAt:
+        </th>
+        <td>
+          DUMMY DATE
+        </td>
+      </tr>
+      <tr>
+        <th>
+          endedAt:
+        </th>
+        <td>
+          DUMMY DATE
+        </td>
+      </tr>
+      <tr>
+        <th>
+          pipeline.duration:
+        </th>
+        <td>
+          <div>
+            MOCK DURATION
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   <div
     class="harnessApproval"
   >
@@ -479,6 +531,38 @@ exports[`<HarnessApprovalTab /> tests Waiting Status shows form if user is autho
       Please review the following information and approve the pipeline progression
     </p>
   </div>
+  <table
+    class="detailsTable"
+  >
+    <tbody>
+      <tr>
+        <th>
+          startedAt:
+        </th>
+        <td>
+          DUMMY DATE
+        </td>
+      </tr>
+      <tr>
+        <th>
+          endedAt:
+        </th>
+        <td>
+          DUMMY DATE
+        </td>
+      </tr>
+      <tr>
+        <th>
+          pipeline.duration:
+        </th>
+        <td>
+          <div>
+            MOCK DURATION
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   <div
     class="harnessApproval"
   >

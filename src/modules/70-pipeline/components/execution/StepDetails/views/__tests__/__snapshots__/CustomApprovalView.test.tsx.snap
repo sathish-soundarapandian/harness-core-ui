@@ -156,6 +156,45 @@ exports[`SUCCESS show tabs when data is present and authorized: jira approval ex
         </div>
       </div>
       <div
+        class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+      >
+        <table
+          class="detailsTable"
+        >
+          <tbody>
+            <tr>
+              <th>
+                startedAt:
+              </th>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <th>
+                endedAt:
+              </th>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <th>
+                pipeline.duration:
+              </th>
+              <td>
+                <span
+                  class="StyledProps--font StyledProps--main timer StyledProps--inline"
+                >
+                  
+                  0s
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
         class="customApproval applyTopPadding"
       />
     </div>
