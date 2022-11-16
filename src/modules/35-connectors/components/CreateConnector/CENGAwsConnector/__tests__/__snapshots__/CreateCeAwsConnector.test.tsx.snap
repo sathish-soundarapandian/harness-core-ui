@@ -1204,18 +1204,177 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                   class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main featureDetailsCtn"
                 >
                   <div
-                    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                     style="align-items: center;"
                   >
                     <img
                       src="test-file-stub"
-                      width="110"
+                      width="32"
                     />
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--font-align-center"
-                      style="width: 100px;"
+                    <div
+                      class="StyledProps--font StyledProps--main"
                     >
-                      connectors.ceAws.crossAccountRoleStep1.hoverOver
+                      <p
+                        class="StyledProps--font StyledProps--main featurePrefix StyledProps--color StyledProps--color-grey900"
+                      >
+                        common.aws
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
+                        style="font-weight: 500;"
+                      >
+                        connectors.costVisibility
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--margin-bottom-xsmall"
+                    >
+                      connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green700 StyledProps--margin-right-small"
+                        icon="tick"
+                      >
+                        <svg
+                          data-icon="tick"
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                        >
+                          <desc>
+                            tick
+                          </desc>
+                          <path
+                            d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      connectors.ceAws.crossAccountRoleStep1.default.feat1
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green700 StyledProps--margin-right-small"
+                        icon="tick"
+                      >
+                        <svg
+                          data-icon="tick"
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                        >
+                          <desc>
+                            tick
+                          </desc>
+                          <path
+                            d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      connectors.ceAzure.chooseRequirements.billing.feat2
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green700 StyledProps--margin-right-small"
+                        icon="tick"
+                      >
+                        <svg
+                          data-icon="tick"
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                        >
+                          <desc>
+                            tick
+                          </desc>
+                          <path
+                            d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      connectors.ceAzure.chooseRequirements.billing.feat3
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green700 StyledProps--margin-right-small"
+                        icon="tick"
+                      >
+                        <svg
+                          data-icon="tick"
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                        >
+                          <desc>
+                            tick
+                          </desc>
+                          <path
+                            d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      connectors.ceAzure.chooseRequirements.billing.feat4
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green700 StyledProps--margin-right-small"
+                        icon="tick"
+                      >
+                        <svg
+                          data-icon="tick"
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                        >
+                          <desc>
+                            tick
+                          </desc>
+                          <path
+                            d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      connectors.ceAzure.chooseRequirements.billing.feat5
+                    </p>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--margin-bottom-xsmall"
+                    >
+                      connectors.ceAws.crossAccountRoleStep1.cards.providedBy
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+                    >
+                      <span>
+                        connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer
+                      </span>
                     </p>
                   </div>
                 </div>
