@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Container, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -13,7 +13,9 @@ import { useParams } from 'react-router-dom'
 import type { UseGetReturn } from 'restful-react'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { Failure, GetRepositoryListQueryParams, UseGetRepositoryListProps } from 'services/pipeline-ng'
+import type { Failure } from 'services/template-ng'
+
+import { Scope } from '@common/interfaces/SecretsInterface'
 import BranchFilter from '../BranchFilter/BranchFilter'
 import css from './RepoFilter.module.scss'
 
@@ -25,9 +27,9 @@ export interface RepoFilterProps {
   selectedBranch?: string
   onBranchChange?: (selected: SelectOption) => void
   disabled?: boolean
-  getRepoListPromise: (
-    props: UseGetRepositoryListProps
-  ) => UseGetReturn<any, Failure | Error, GetRepositoryListQueryParams, unknown>
+
+  selectedScope?: string
+  getRepoListPromise: (props: any) => UseGetReturn<any, Failure | Error, any, unknown>
 }
 
 export function RepoFilter({
@@ -36,10 +38,43 @@ export function RepoFilter({
   getRepoListPromise,
   showBranchFilter,
   onBranchChange,
-  selectedBranch
+  selectedBranch,
+  selectedScope
 }: RepoFilterProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+
+  const queryParams = useMemo(() => {
+    switch (selectedScope) {
+      case 'all':
+        return {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          includeAllTemplatesAvailableAtScope: true
+        }
+      case Scope.ACCOUNT:
+        return {
+          accountIdentifier: accountId
+        }
+      case Scope.ORG:
+        return {
+          accountIdentifier: accountId,
+          orgIdentifier
+        }
+      case Scope.PROJECT:
+        return {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        }
+    }
+    return {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  }, [selectedScope, accountId, orgIdentifier, projectIdentifier])
 
   const {
     data: repoListData,
@@ -47,11 +82,7 @@ export function RepoFilter({
     loading,
     refetch
   } = getRepoListPromise({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier
-    }
+    queryParams: queryParams
   })
 
   const dropDownItems = React.useMemo(

@@ -235,6 +235,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                     value={selectedRepo}
                     onChange={repoName => setSelectedRepo(repoName)}
                     getRepoListPromise={useGetRepositoryList}
+                    selectedScope={selectedScope.value.toString()}
                   />
                 )}
                 <ExpandingSearchInput
