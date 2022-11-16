@@ -2209,6 +2209,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'microsoft-azure'
     case Connectors.JENKINS:
       return 'service-jenkins'
+    case Connectors.AZURE_ARTIFACTS:
+      return 'service-azure-artifact-connector'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
     case Connectors.GcpSecretManager:

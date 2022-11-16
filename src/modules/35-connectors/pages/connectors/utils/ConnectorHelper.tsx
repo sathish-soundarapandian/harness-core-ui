@@ -240,7 +240,7 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.AZURE_REPO:
       return 'service-azure'
     case Connectors.AZURE_ARTIFACTS:
-      return 'service-azure'
+      return 'service-azure-artifact-connector'
     case Connectors.DATADOG:
       return 'service-datadog'
     case Connectors.AZURE_KEY_VAULT:
