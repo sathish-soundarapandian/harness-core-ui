@@ -15,7 +15,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import IacSideNav from '@iac/components/IacSideNav'
 import routes from '@common/RouteDefinitions'
-import { getStyles } from './getStyles'
+import { getStyles } from '@iac/utils'
 
 const customComponents = {
   FormMultiTypeConnectorField,
