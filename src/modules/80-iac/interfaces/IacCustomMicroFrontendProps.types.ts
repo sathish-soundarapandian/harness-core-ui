@@ -13,7 +13,7 @@ import type { createTemplate } from '@pipeline/utils/templateUtils'
 import type { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import type { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { getStyles } from '@iac/utils'
+import type { getStyles } from '@iac/Utils'
 
 export interface IacCustomMicroFrontendProps {
   customHooks: {

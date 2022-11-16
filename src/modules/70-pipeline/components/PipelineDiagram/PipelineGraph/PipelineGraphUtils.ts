@@ -446,7 +446,8 @@ const NodeTypeToNodeMap: Record<string, string> = {
   SecurityTests: NodeType.Default,
   Pipeline: NodeType.Default,
   Custom: NodeType.Default,
-  Approval: NodeType.Default
+  Approval: NodeType.Default,
+  IAC: NodeType.Default
 }
 interface GetPipelineGraphDataParams {
   data: StageElementWrapperConfig[] | ExecutionWrapperConfig[]
