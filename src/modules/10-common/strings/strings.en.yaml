@@ -463,6 +463,7 @@ submittingRequest: Submitting request and pushing changes to Git
 submittingRequestToGitViaDelegate: Submitting request and pushing changes to Git from Delegate
 local: Local
 subscribed: Subscribed
+usage: Usage
 overSubscribed: Oversubscribed
 unlimited: Unlimited
 billing: Billing

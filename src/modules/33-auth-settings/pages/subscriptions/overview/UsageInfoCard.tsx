@@ -60,15 +60,7 @@ const PercentageSubscribedLabel: React.FC<{
   percentage: number
   color: string
   label: string
-}> = ({ overPercentage, percentage, color, label }) => {
-  const { getString } = useStrings()
-  if (overPercentage) {
-    return (
-      <Text font={{ size: 'xsmall' }} color={color}>
-        {overPercentage}% {getString('common.overSubscribed')}
-      </Text>
-    )
-  }
+}> = ({ percentage, label }) => {
   return (
     <Text font={{ size: 'xsmall' }} color={percentage > 90 ? Color.ORANGE_500 : ''}>
       {percentage}% {label}

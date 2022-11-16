@@ -963,6 +963,7 @@ export interface StringsMap {
   'common.unsavedChangesLong': string
   'common.updating': string
   'common.upgrade': string
+  'common.usage': string
   'common.useSSL': string
   'common.useTemplate': string
   'common.userGroup': string
