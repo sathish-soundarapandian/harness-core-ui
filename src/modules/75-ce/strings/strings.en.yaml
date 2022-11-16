@@ -1380,3 +1380,5 @@ k8sQuickCreate:
       troubleshoot2: Troubleshoot Delegate creation
       troubleshoot3: Retry Test connection once the steps are completed.
     retest: Retest Connection
+governance:
+  sideNavText: Asset Governance

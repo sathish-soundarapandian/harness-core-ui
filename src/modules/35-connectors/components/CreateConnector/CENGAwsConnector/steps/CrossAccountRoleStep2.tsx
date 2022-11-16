@@ -78,6 +78,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   const curStatus = featuresEnabled.includes(Features.BILLING)
   const visibiltyStatus = featuresEnabled.includes(Features.VISIBILITY)
   const optimizationStatus = featuresEnabled.includes(Features.OPTIMIZATION)
+  const governanceEnabled = featuresEnabled.includes(Features.GOVERNANCE)
 
   const getRoleName = (roleArn: string) => {
     if (roleArn == undefined) return
@@ -91,7 +92,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
     const roleName = prevStepData?.isEditMode
       ? getRoleName(prevStepData?.spec.crossAccountAccess.crossAccountRoleArn)
       : `HarnessCERole-${rand}`
-    const url = `${baseurl}&param_ExternalId=${externalId}&param_BucketName=${bucketName}&param_BillingEnabled=${curStatus}&param_EventsEnabled=${visibiltyStatus}&param_OptimizationEnabled=${optimizationStatus}&param_RoleName=${roleName}`
+    const url = `${baseurl}&param_ExternalId=${externalId}&param_BucketName=${bucketName}&param_BillingEnabled=${curStatus}&param_EventsEnabled=${visibiltyStatus}&param_OptimizationEnabled=${optimizationStatus}&param_GovernanceEnabled=${governanceEnabled}&param_RoleName=${roleName}`
     window.open(url)
   }
 

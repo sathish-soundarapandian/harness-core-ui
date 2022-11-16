@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { uniq } from 'lodash-es'
 import { Button, Layout, StepProps, Container, Text, Checkbox } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -14,6 +14,8 @@ import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 
 import VisibilityIcon from '../images/ce-visibility.svg'
@@ -26,7 +28,8 @@ import css from '../CreateCeAwsConnector.module.scss'
 export enum Features {
   VISIBILITY = 'VISIBILITY',
   OPTIMIZATION = 'OPTIMIZATION',
-  BILLING = 'BILLING'
+  BILLING = 'BILLING',
+  GOVERNANCE = 'GOVERNANCE'
 }
 
 interface CardData {
@@ -42,54 +45,78 @@ interface CardData {
 
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
+  const governanceEnabled = useFeatureFlag(FeatureFlag.CLOUD_COST_GOVERNANCE_UI)
 
-  const FeatureCards = useRef<CardData[]>([
-    {
-      icon: VisibilityIcon,
-      text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-      value: Features.BILLING,
-      desc: 'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.header',
-      heading: getString('connectors.costVisibility'),
-      prefix: getString('common.aws'),
-      features: [
-        getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat5')
-      ],
-      footer: 'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer'
-    },
-    {
-      icon: InventoryIcon,
-      text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-      value: Features.VISIBILITY,
-      desc: 'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.header',
-      heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
-      prefix: getString('common.aws'),
-      features: [
-        getString('connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
-        getString('connectors.ceAws.crossAccountRoleStep1.visible.feat2')
-      ],
-      footer: 'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.footer'
-    },
-    {
-      icon: OptimizationIcon,
-      text: getString('connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
-      value: Features.OPTIMIZATION,
-      desc: 'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.header',
-      heading: getString('common.ce.autostopping'),
-      prefix: getString('connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
-      features: [
-        getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat1'),
-        getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
-      ],
-      footer: 'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.footer'
+  const FeatureCards = useMemo(() => {
+    const cards = [
+      {
+        icon: VisibilityIcon,
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.BILLING,
+        desc: 'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.header',
+        heading: getString('connectors.costVisibility'),
+        prefix: getString('common.aws'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat5')
+        ],
+        footer: 'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer'
+      },
+      {
+        icon: InventoryIcon,
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.VISIBILITY,
+        desc: 'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.header',
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
+        prefix: getString('common.aws'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.visible.feat2')
+        ],
+        footer: 'connectors.ceAws.crossAccountRoleStep1.cards.inventoryManagement.footer'
+      },
+      {
+        icon: OptimizationIcon,
+        text: getString('connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
+        value: Features.OPTIMIZATION,
+        desc: 'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.header',
+        heading: getString('common.ce.autostopping'),
+        prefix: getString('connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
+        ],
+        footer: 'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.footer'
+      }
+    ]
+
+    if (governanceEnabled) {
+      cards.push({
+        icon: OptimizationIcon,
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.GOVERNANCE,
+        desc: 'connectors.ceAws.crossAccountRoleStep1.cards.governance.headerBold',
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.header'),
+        prefix: getString('connectors.ceAws.crossAccountRoleStep1.visible.prefix'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat5')
+        ],
+        footer: 'connectors.ceAws.crossAccountRoleStep1.default.footer'
+      })
     }
-  ]).current
+
+    return cards as CardData[]
+  }, [governanceEnabled])
 
   const [selectedCards, setSelectedCards] = useState<CardData[]>(() => {
     const initialSelectedCards = []

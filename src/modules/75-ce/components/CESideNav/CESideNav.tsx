@@ -20,8 +20,7 @@ import { returnLaunchUrl } from '@common/utils/routeUtils'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { featureNames } from '@ce/constants'
 import css from './CESideNav.module.scss'
 
@@ -134,7 +133,7 @@ const SideNavItems = () => {
   const { accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const showCO = useFeatureFlag(FeatureFlag.CCM_COMMORCH)
+  const { CLOUD_COST_GOVERNANCE_UI, CCM_COMMORCH: showCO } = useFeatureFlags()
 
   return (
     <Layout.Vertical spacing="small">
@@ -201,13 +200,15 @@ const SideNavItems = () => {
             trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.BI_DASHBOARD_FEATURE })
           }}
         />
-        <SidebarLink
-          label={getString('common.governance')}
-          to={routes.toCEGovernance({ accountId })}
-          onClick={() => {
-            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.GOVERNANCE })
-          }}
-        />
+        {CLOUD_COST_GOVERNANCE_UI && (
+          <SidebarLink
+            label={getString('ce.governance.sideNavText')}
+            to={routes.toCEGovernance({ accountId })}
+            onClick={() => {
+              trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.GOVERNANCE })
+            }}
+          />
+        )}
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
             <SidebarLink

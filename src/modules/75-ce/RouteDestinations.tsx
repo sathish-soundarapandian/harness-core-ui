@@ -359,9 +359,9 @@ const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
   )
 }
 
-const RedirectToGovernancePolicies = (): React.ReactElement => {
+const RedirectToGovernanceRules = (): React.ReactElement => {
   const params = useParams<AccountPathProps>()
-  return <Redirect to={routes.toCEGovernancePolicies(params)} />
+  return <Redirect to={routes.toCEGovernanceRules(params)} />
 }
 
 const licenseRedirectData: LicenseRedirectProps = {
@@ -772,10 +772,10 @@ const CERoutes: React.FC = () => {
         routes.toCECORules({ ...accountPathProps, params: '' }),
         routes.toCommitmentOrchestration({ ...accountPathProps }),
         routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
-        routes.toCEGovernancePolicies({ ...accountPathProps }),
+        routes.toCEGovernanceRules({ ...accountPathProps }),
         routes.toCEGovernanceEnforcements({ ...accountPathProps }),
         routes.toCEGovernanceEvaluations({ ...accountPathProps }),
-        routes.toCEGovernancePolicyEditor({ ...accountPathProps, policyId: ':policyId' })
+        routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' })
       ]
     : []
 
@@ -845,7 +845,7 @@ const CERoutes: React.FC = () => {
           path={routes.toCEGovernance({ ...accountPathProps })}
           exact
         >
-          <RedirectToGovernancePolicies />
+          <RedirectToGovernanceRules />
         </RouteWithLayout>
         {enableMicroFrontend ? (
           <RouteWithLayout path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]} sidebarProps={CESideNavProps}>

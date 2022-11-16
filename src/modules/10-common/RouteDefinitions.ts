@@ -1801,11 +1801,11 @@ const routes = {
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
   toCEGovernance: withAccountId(() => `/ce/governance/`),
-  toCEGovernancePolicies: withAccountId(() => `/ce/governance/policies/`),
+  toCEGovernanceRules: withAccountId(() => `/ce/governance/rules/`),
   toCEGovernanceEnforcements: withAccountId(() => `/ce/governance/enforcements/`),
   toCEGovernanceEvaluations: withAccountId(() => `/ce/governance/evaluations/`),
-  toCEGovernancePolicyEditor: withAccountId(
-    ({ policyId }: { policyId: string }) => `/ce/governance/policies/${policyId}/policy-editor/`
+  toCEGovernanceRuleEditor: withAccountId(
+    ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
   ),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
