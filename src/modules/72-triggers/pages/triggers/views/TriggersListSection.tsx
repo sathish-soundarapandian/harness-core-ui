@@ -332,13 +332,12 @@ const RenderColumnLastActivation: Renderer<CellProps<NGTriggerDetailsResponse>> 
 const RenderWebhookIcon = ({
   type,
   webhookSourceRepo,
-  webhookSecret,
   webhookUrl,
-  column
+  column,
+  curlCommand
 }: {
   type?: string
   webhookSourceRepo?: string
-  webhookSecret?: string
   webhookUrl?: string
   column: {
     accountId: string
@@ -347,6 +346,7 @@ const RenderWebhookIcon = ({
     getString: UseStringsReturn['getString']
     isTriggerRbacDisabled: boolean
   }
+  curlCommand?: string
 }): JSX.Element => {
   const [optionsOpen, setOptionsOpen] = React.useState(false)
   if (!type || type !== TriggerTypes.WEBHOOK || !webhookUrl) {
@@ -354,10 +354,6 @@ const RenderWebhookIcon = ({
   }
 
   if (webhookSourceRepo?.toLowerCase() === GitSourceProviders.CUSTOM.value.toLowerCase()) {
-    const curlCommand = `curl -X POST ${
-      (webhookSecret && `-H 'X-Harness-Webhook-Token: ${webhookSecret}'`) || ''
-    } -H 'content-type: application/json' --url '${webhookUrl}' -d '{"sample_key": "sample_value"}'`
-
     return (
       <Popover
         isOpen={optionsOpen}
@@ -389,16 +385,20 @@ const RenderWebhookIcon = ({
               setOptionsOpen(false)
             }}
           />
-          <Menu.Divider />
-          <Menu.Item
-            text={column.getString('triggers.copyAsCurl')}
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation()
-              copy(curlCommand)
-              ;(column as any).showSuccess(column.getString('triggers.toast.webhookCurlCopied'))
-              setOptionsOpen(false)
-            }}
-          />
+          {curlCommand && (
+            <>
+              <Menu.Divider />
+              <Menu.Item
+                text={column.getString('triggers.copyAsCurl')}
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation()
+                  copy(curlCommand)
+                  ;(column as any).showSuccess(column.getString('triggers.toast.webhookCurlCopied'))
+                  setOptionsOpen(false)
+                }}
+              />
+            </>
+          )}
         </Menu>
       </Popover>
     )
@@ -440,7 +440,7 @@ const RenderColumnWebhook: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
         type: data?.type,
         webhookSourceRepo: data?.webhookDetails?.webhookSourceRepo,
         webhookUrl: data?.webhookUrl,
-        webhookSecret: data?.webhookDetails?.webhookSecret,
+        curlCommand: data?.webhookCurlCommand,
         column
       })}
     </div>

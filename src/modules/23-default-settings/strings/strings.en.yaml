@@ -4,3 +4,4 @@ noSettingToDisplay: No Settings to Display
 harnessDefault: Harness Default
 inheritedFrom: Inherited from {{source}}
 mandateWebhookSecretsGithubTriggers: Mandate Webhook Secrets for Github Triggers
+mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom Webhook Triggers

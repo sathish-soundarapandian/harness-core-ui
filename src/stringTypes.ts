@@ -1349,6 +1349,7 @@ export interface StringsMap {
   'defaultSettings.allowOverrides': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
+  'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
   'defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
