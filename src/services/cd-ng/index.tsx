@@ -20,32 +20,7 @@ export interface ACLAggregateFilter {
 export type AMIArtifactConfig = ArtifactConfig & {
   connectorRef: string
   filters?: AMIFilter[]
-  region:
-    | 'us-east-1'
-    | 'us-east-2'
-    | 'us-west-1'
-    | 'us-west-2'
-    | 'af-south-1'
-    | 'ap-east-1'
-    | 'ap-south-east-3'
-    | 'ap-south-east-2'
-    | 'ap-south-east-1'
-    | 'ap-south-1'
-    | 'ap-northeast-3'
-    | 'ap-north-east-2'
-    | 'ap-north-east-1'
-    | 'ca-central-1'
-    | 'eu-central-1'
-    | 'eu-west-1'
-    | 'eu-west-2'
-    | 'eu-west-3'
-    | 'eu-south-1'
-    | 'eu-north-1'
-    | 'me-south-1'
-    | 'me-central-1'
-    | 'sa-east-1'
-    | 'us-gov-east-1'
-    | 'us-gov-west-1'
+  region: string
   tags?: AMITag[]
   version?: string
   versionRegex?: string
@@ -421,6 +396,7 @@ export interface AccessControlCheckError {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -573,6 +549,7 @@ export interface AccountPermissions {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'ACCESS_NEXTGEN'
   )[]
 }
 
@@ -846,6 +823,7 @@ export interface AppPermission {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'ACCESS_NEXTGEN'
 }
 
 export interface ApplicationSettingsConfiguration {
@@ -1778,20 +1756,20 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
 }
 
 export type CELicenseSummaryDTO = LicensesWithSummaryDTO & {
@@ -1854,7 +1832,7 @@ export interface CcmConnectorFilter {
   awsAccountId?: string
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
 }
@@ -3269,11 +3247,19 @@ export interface ElastigroupConfiguration {
   store: StoreConfigWrapper
 }
 
+export type ElastigroupCurrentRunningInstances = ElastigroupInstancesSpec & { [key: string]: any }
+
 export type ElastigroupDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   metadata?: string
   newService?: Capacity
   oldService?: Capacity
+}
+
+export type ElastigroupFixedInstances = ElastigroupInstancesSpec & {
+  desired?: number
+  max?: number
+  min?: number
 }
 
 export type ElastigroupInfrastructure = Infrastructure & {
@@ -3282,8 +3268,28 @@ export type ElastigroupInfrastructure = Infrastructure & {
   metadata?: string
 }
 
+export interface ElastigroupInstances {
+  spec?: ElastigroupInstancesSpec
+  type: 'Fixed' | 'CurrentRunning'
+}
+
+export interface ElastigroupInstancesSpec {
+  type?: 'Fixed' | 'CurrentRunning'
+}
+
+export type ElastigroupRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  metadata?: string
+}
+
 export type ElastigroupServiceSpec = ServiceSpec & {
   startupScript?: StartupScriptConfiguration
+}
+
+export type ElastigroupSetupStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  instances: ElastigroupInstances
+  name: string
 }
 
 export interface Element {
@@ -3489,6 +3495,10 @@ export interface EntityDetail {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4098,6 +4108,7 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4460,6 +4471,7 @@ export interface ErrorMetadata {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   errorMessage?: string
 }
 
@@ -4873,6 +4885,7 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5480,7 +5493,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -5772,6 +5785,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5931,6 +5946,8 @@ export interface GitEntityFilterProperties {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -6123,6 +6140,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6290,6 +6309,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6565,6 +6586,8 @@ export interface GitSyncEntityDTO {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6726,6 +6749,8 @@ export interface GitSyncEntityListDTO {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6904,6 +6929,8 @@ export interface GitSyncErrorDTO {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8428,6 +8455,7 @@ export interface Member {
 export type MergePRStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteSourceBranch: boolean
+  variables?: NGVariable[]
 }
 
 export type MicrosoftTeamsConfig = NotificationSettingConfig & {
@@ -9875,6 +9903,10 @@ export interface ReferencedByDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export interface RefreshResponse {
@@ -10996,6 +11028,10 @@ export interface ResponseListEntityType {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11656,6 +11692,7 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -13948,6 +13985,8 @@ export interface StepData {
     | 'EcsBlueGreenRollback'
     | 'GitOpsUpdateReleaseRepo'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'ElastigroupSetup'
 }
 
 export interface StepElementConfig {
@@ -14964,9 +15003,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -15683,6 +15722,10 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15834,6 +15877,10 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -16089,6 +16136,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -16240,6 +16291,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -20846,6 +20901,7 @@ export const getBuildDetailsForGoogleArtifactRegistryV2Promise = (
     ListTagsForAMIArtifactBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/gar/v2/getBuildDetails`, props, signal)
+
 export interface GetBuildDetailsForGcrQueryParams {
   imagePath: string
   registryHostname: string
@@ -30577,6 +30633,10 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -30789,6 +30849,10 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   searchTerm?: string
 }
 
@@ -33847,6 +33911,10 @@ export interface GetReferencedByQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   searchTerm?: string
 }
 
@@ -36188,6 +36256,10 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -36407,6 +36479,10 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsRunTask'
       | 'Chaos'
       | 'ElastigroupDeploy'
+      | 'ElastigroupRollback'
+      | 'Action'
+      | 'ElastigroupSetup'
+      | 'Bitrise'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41486,6 +41562,11 @@ export interface GetHelmChartVersionDetailsQueryParams {
   projectIdentifier: string
   serviceId?: string
   fqnPath: string
+  connectorRef?: string
+  chartName?: string
+  region?: string
+  bucketName?: string
+  folderPath?: string
 }
 
 export type GetHelmChartVersionDetailsProps = Omit<
@@ -42152,6 +42233,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   yamlGroup?: string
 }
 
@@ -42431,6 +42516,10 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -53349,7 +53438,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -53359,7 +53448,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -53372,7 +53461,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -53386,7 +53475,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -53398,7 +53487,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -53407,7 +53496,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -53800,7 +53889,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -53814,7 +53903,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -53829,7 +53918,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -53843,7 +53932,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -53855,7 +53944,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -53864,7 +53953,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -53999,7 +54088,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -54014,7 +54103,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -54029,7 +54118,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -54044,7 +54133,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -54063,7 +54152,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -54072,7 +54161,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -54091,7 +54180,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -54106,7 +54195,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -54121,7 +54210,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -54136,7 +54225,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -54155,7 +54244,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -54164,7 +54253,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -54828,6 +54917,10 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   subtype?:
     | 'K8sCluster'
     | 'Git'

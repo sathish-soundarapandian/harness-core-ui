@@ -25,13 +25,12 @@ import { Link, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorInfoDTO,
-  GcpCloudCostConnector,
   ConnectorFilterProperties,
   useGetConnectorListV2,
   GetConnectorListV2QueryParams,
-  Failure,
-  GcpBillingExportSpec
+  Failure
 } from 'services/cd-ng'
+import type { GcpBillingExportSpec, GcpCloudCostConnector } from 'services/ce'
 import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'

@@ -30,9 +30,9 @@ import {
   GetConnectorListV2QueryParams,
   useGetConnectorListV2,
   ConnectorFilterProperties,
-  ConnectorResponse,
-  CEAzureConnector
+  ConnectorResponse
 } from 'services/cd-ng'
+import type { CEAzureConnector } from 'services/ce'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'

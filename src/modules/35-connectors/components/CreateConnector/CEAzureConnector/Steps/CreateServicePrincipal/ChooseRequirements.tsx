@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { CEAzureConnector } from 'services/cd-ng'
+import type { CEAzureConnector } from 'services/ce'
 import { CE_AZURE_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
