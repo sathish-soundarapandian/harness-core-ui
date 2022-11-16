@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import React, { lazy } from 'react'
-import { customComponents, customFunctions, customHooks } from '@iac/utils/IacChildAppUtils'
+import { customComponents, customFunctions, customHooks } from '@iac/Utils/IacChildAppUtils'
 import type { IacCustomMicroFrontendProps } from '@iac/interfaces/IacCustomMicroFrontendProps.types'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 

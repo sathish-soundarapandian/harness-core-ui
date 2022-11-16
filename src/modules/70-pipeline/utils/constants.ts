@@ -51,7 +51,8 @@ export const stageTypeToIconMap: Record<string, IconName> = {
   Pipeline: 'pipeline',
   Custom: 'custom-stage-icon',
   Approval: 'approval-stage-icon',
-  FeatureFlag: 'cf-main'
+  FeatureFlag: 'cf-main',
+  IAC: 'iacm'
 }
 
 export const getPrCloneStrategyOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
