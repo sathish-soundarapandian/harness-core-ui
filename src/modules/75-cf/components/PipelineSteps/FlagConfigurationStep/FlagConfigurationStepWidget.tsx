@@ -202,7 +202,9 @@ const FlagConfigurationStepWidget = forwardRef(
           spec: Yup.object().shape({
             environment: Yup.string().required(getString('cf.pipeline.flagConfiguration.environmentRequired')),
             feature: Yup.mixed().required(getString('cf.pipeline.flagConfiguration.flagRequired')),
-            instructions: flagChangesValidationSchema(getString)
+            instructions: Yup.lazy(val =>
+              val === RUNTIME_INPUT_VALUE ? Yup.string() : flagChangesValidationSchema(getString)
+            )
           })
         })}
       >
