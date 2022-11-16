@@ -1,0 +1,61 @@
+{
+  "envGroup": {
+    "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+    "orgIdentifier": "default",
+    "projectIdentifier": "dummyProject",
+    "identifier": "New_env_group",
+    "name": "New_env_group",
+    "description": "test",
+    "color": "#0063F7",
+    "deleted": false,
+    "tags": {},
+    "envIdentifiers": ["Env_1", "Env_3"],
+    "envResponse": [
+      {
+        "environment": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "orgIdentifier": "default",
+          "projectIdentifier": "dummyProject",
+          "identifier": "Env_1",
+          "name": "Env 1",
+          "description": "test",
+          "color": "#0063F7",
+          "type": "Production",
+          "deleted": false,
+          "tags": {},
+          "yaml": "environment:\n    name: Env 1\n    identifier: Env_1\n    description: test\n    tags: {}\n    type: Production\n    orgIdentifier: default\n    projectIdentifier: dummyProject\n"
+        },
+        "createdAt": 1658638805579,
+        "lastModifiedAt": 1659202339456
+      },
+      {
+        "environment": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "orgIdentifier": "default",
+          "projectIdentifier": "dummyProject",
+          "identifier": "Env_3",
+          "name": "Env 3",
+          "description": "test",
+          "color": "#0063F7",
+          "type": "Production",
+          "deleted": false,
+          "tags": {},
+          "yaml": "environment:\n  name: Env 3\n  identifier: Env_3\n  description: test\n  tags: {}\n  type: Production\n  orgIdentifier: default\n  projectIdentifier: dummyProject\n"
+        },
+        "createdAt": 1658889856304,
+        "lastModifiedAt": 1663675242659
+      }
+    ],
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null,
+      "commitId": null,
+      "fileUrl": null,
+      "repoUrl": null
+    }
+  }
+}

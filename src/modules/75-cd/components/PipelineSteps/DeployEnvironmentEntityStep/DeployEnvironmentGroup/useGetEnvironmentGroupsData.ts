@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isNil } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
@@ -50,10 +50,11 @@ export function useGetEnvironmentGroupsData(scope?: Scope): UseGetEnvironmentGro
       orgIdentifier
     },
     body: { filterType: 'EnvironmentGroup' },
-    lazy: scope !== Scope.PROJECT
+    lazy: !isNil(scope) && scope !== Scope.PROJECT
   })
 
   useEffect(() => {
+    /* istanbul ignore else */
     if (!loadingEnvironmentGroupsList) {
       let _environmentGroupsList: EnvironmentGroupData[] = []
 
