@@ -9,7 +9,7 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
-import PCFConnector from '../PCFConnector'
+import PCFConnector from '../TASConnector'
 import { commonProps, connectorInfoMock, mockResponse, mockSecret, mockSecretList } from './mocks'
 
 const updateConnector = jest.fn()

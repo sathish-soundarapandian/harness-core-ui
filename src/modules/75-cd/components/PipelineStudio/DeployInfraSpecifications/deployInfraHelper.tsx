@@ -20,7 +20,8 @@ import {
   isServerlessDeploymentType,
   isSSHWinRMDeploymentType,
   ServiceDeploymentType,
-  isElastigroupDeploymentType
+  isElastigroupDeploymentType,
+  isTASDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
@@ -206,6 +207,15 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.TAS: {
+      const { connectorRef, organization, space } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        organization,
+        space,
+        allowSimultaneousDeployments
+      }
+    }
     default: {
       return {}
     }
@@ -291,6 +301,12 @@ export const getInfraGroups = (
       ]
     }
   ]
+  const tasInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: '',
+      items: []
+    }
+  ]
 
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
@@ -316,6 +332,8 @@ export const getInfraGroups = (
       return elastigroupInfraGroups
     case isCustomDeploymentType(deploymentType):
       return customDeploymentInfraGroups
+    case isTASDeploymentType(deploymentType):
+      return tasInfraGroups
     default:
       return kuberntesInfraGroups
   }
@@ -385,6 +403,11 @@ const infraGroupItems: {
     label: 'pipeline.serviceDeploymentTypes.elastigroup',
     icon: 'elastigroup',
     value: InfraDeploymentType.Elastigroup
+  },
+  [InfraDeploymentType.TAS]: {
+    label: 'pipeline.serviceDeploymentTypes.tas',
+    icon: 'tas',
+    value: InfraDeploymentType.TAS
   }
 }
 
@@ -418,6 +441,9 @@ export const isElastigroupInfrastructureType = (infrastructureType?: string): bo
 
 export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.CustomDeployment
+}
+export const isTASInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.TAS
 }
 
 export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {

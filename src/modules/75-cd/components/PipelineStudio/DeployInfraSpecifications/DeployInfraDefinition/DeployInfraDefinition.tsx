@@ -89,7 +89,8 @@ import {
   isAzureWebAppInfrastructureType,
   isCustomDeploymentInfrastructureType,
   isElastigroupInfrastructureType,
-  isServerlessInfrastructureType
+  isServerlessInfrastructureType,
+  isTASInfrastructureType
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -101,7 +102,6 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   awsCodeDeploy: InfraDeploymentType.KubernetesDirect,
   WinRm: InfraDeploymentType.KubernetesDirect,
   awsLambda: InfraDeploymentType.KubernetesDirect,
-  pcf: InfraDeploymentType.KubernetesDirect,
   Ssh: InfraDeploymentType.KubernetesDirect,
   ServerlessAwsLambda: InfraDeploymentType.ServerlessAwsLambda,
   ServerlessAzureFunctions: InfraDeploymentType.ServerlessAzureFunctions,
@@ -111,7 +111,8 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   AzureWebApp: InfraDeploymentType.AzureWebApp,
   ECS: InfraDeploymentType.ECS,
   CustomDeployment: InfraDeploymentType.CustomDeployment,
-  Elastigroup: InfraDeploymentType.Elastigroup
+  Elastigroup: InfraDeploymentType.Elastigroup,
+  TAS: InfraDeploymentType.TAS
 }
 
 type InfraTypes =
@@ -766,7 +767,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         isAzureWebAppInfrastructureType(selectedInfrastructureType) ||
         isElastigroupDeploymentType(selectedDeploymentType) ||
         isElastigroupInfrastructureType(selectedInfrastructureType) ||
-        isCustomDeploymentInfrastructureType(selectedInfrastructureType)
+        isCustomDeploymentInfrastructureType(selectedInfrastructureType) ||
+        isTASInfrastructureType(selectedInfrastructureType)
       ) && (
         <Card className={stageCss.sectionCard}>
           {!(

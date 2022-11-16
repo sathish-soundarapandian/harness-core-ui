@@ -46,7 +46,7 @@ interface CommonManifestDetailsProps {
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
-  return !!(selectedManifest && [ManifestDataType.K8sManifest].includes(selectedManifest))
+  return !!(selectedManifest && [ManifestDataType.K8sManifest].includes(selectedManifest)) //TODO:: CHECK for TAS if needed
 }
 
 const getConnectorRef = (prevStepData: ConnectorConfigDTO): string => {

@@ -106,7 +106,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
         return getString('connectors.azureArtifacts.azureArtifactsUrl')
       case Connectors.SPOT:
         return getString('connectors.testConnectionStep.url.spot')
-      case Connectors.PCF:
+      case Connectors.TAS:
         return getString('connectors.testConnectionStep.url.tas')
       default:
         return ''
@@ -256,7 +256,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
           return 'https://docs.harness.io/article/9epdx5m9ae'
         case Connectors.SPOT:
           return '' //TODO
-        case Connectors.PCF:
+        case Connectors.TAS:
           return '' //TODO
         default:
           return ''

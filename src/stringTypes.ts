@@ -3811,6 +3811,7 @@ export interface StringsMap {
   'pipeline.manifestType.specifyManifestRepoType': string
   'pipeline.manifestType.specifyManifestStore': string
   'pipeline.manifestType.valuesYamlPath': string
+  'pipeline.manifestTypeLabels.Autoscaler': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
@@ -3827,7 +3828,9 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ServerlessAwsLambda': string
   'pipeline.manifestTypeLabels.ServerlessAzure': string
   'pipeline.manifestTypeLabels.ServerlessGCP': string
+  'pipeline.manifestTypeLabels.TASManifest': string
   'pipeline.manifestTypeLabels.ValuesYaml': string
+  'pipeline.manifestTypeLabels.VarsYAML': string
   'pipeline.mostRecentDirection': string
   'pipeline.moveStage.description': string
   'pipeline.moveStage.title': string
@@ -11482,6 +11485,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'validation.encryptedKey': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  'validation.endpointUrl': string
   /**
    * @deprecated migrate this string to module level file
    */
