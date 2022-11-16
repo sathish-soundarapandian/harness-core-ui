@@ -398,6 +398,52 @@
     }
   }
 
+  [role='cell'] {
+    padding-left: var(--spacing-3) !important;
+  }
+  [role='columnheader'] {
+    padding-left: var(--spacing-3) !important;
+    color: var(--grey-600) !important;
+  }
+
+  &.groupedList {
+    margin-top: var(--spacing-4) !important;
+    [class*='testSuiteTable'] {
+      margin-top: 0 !important;
+      margin-left: var(--spacing-xlarge);
+
+      [role='row'] {
+        padding-top: var(--spacing-4) !important;
+        padding-left: 28px !important;
+      }
+    }
+    [class*='clickable'] {
+      [role='row']:not([class*='header']) {
+        &:hover,
+        &.rowSelected {
+          background-color: transparent !important;
+          border-color: transparent !important;
+          border-bottom-color: rgba(143, 144, 166, 0.1) !important;
+        }
+      }
+    }
+  }
+  &.isUngroupedList {
+    [class*='testSuiteTable'] {
+      margin-left: var(--spacing-xxxlarge) !important;
+      box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+
+      &.clickable {
+        [role='row']:not([class*='header']) {
+          &:hover,
+          &.rowSelected {
+            background-color: var(--primary-1);
+          }
+        }
+      }
+    }
+  }
+
   .headingContainer {
     cursor: pointer;
     margin-left: -15px !important;
@@ -450,19 +496,8 @@
 
   .testSuiteTable {
     border-radius: 4px;
-    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
     margin: var(--spacing-medium);
-    margin-left: var(--spacing-xxxlarge);
     overflow: hidden;
-
-    &.clickable {
-      [role='row']:not([class*='header']) {
-        &:hover,
-        &.rowSelected {
-          background-color: var(--primary-1);
-        }
-      }
-    }
 
     [role='row'] {
       border-bottom: 1px solid rgba(143, 144, 166, 0.1);
@@ -498,6 +533,26 @@
 
   .testSuiteName {
     word-break: break-all;
+  }
+  .classNameTitle {
+    padding-left: 22px !important;
+    padding-top: var(--spacing-4) !important;
+    margin-bottom: var(--spacing-3) !important;
+    &:hover {
+      box-shadow: none !important;
+    }
+
+    span,
+    span svg {
+      color: var(--grey-600) !important;
+    }
+
+    span[class*='bp3-button-text'] {
+      padding-left: var(--spacing-5) !important;
+    }
+  }
+  .viewCallgraph {
+    margin: var(--spacing-3) 0 !important;
   }
 }
 

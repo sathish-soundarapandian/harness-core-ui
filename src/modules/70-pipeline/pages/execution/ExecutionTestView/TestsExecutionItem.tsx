@@ -13,20 +13,28 @@ import { Button, Icon, Container, Text, useIsMounted, Layout, TableV2, ButtonVar
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import type { orderType, sortType, serverSortProps } from '@common/components/Table/react-table-config'
-import { TestSuite, useTestCaseSummary, TestCase, TestCaseSummaryQueryParams } from 'services/ti-service'
+import {
+  TestSuite,
+  useTestCaseSummary,
+  TestCase,
+  TestCaseSummaryQueryParams,
+  TestCaseStatus
+} from 'services/ti-service'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import { Duration } from '@common/exports'
 import useExpandErrorModal from '@pipeline/components/ExpandErrorModal/useExpandErrorModal'
-import { getOptionalQueryParamKeys, renderFailureRate } from './TestsUtils'
+import { getOptionalQueryParamKeys, renderFailureRate, getClassNameSplitData, renderResult } from './TestsUtils'
 import { PopoverSection } from './TestsFailedPopover'
 import css from './BuildTests.module.scss'
 
 const NOW = Date.now()
 const PAGE_SIZE = 10
 const COPY_CLIPBOARD_ICON_WIDTH = 16
-const SAFETY_TABLE_WIDTH = 216
+const UNGROUPED_SAFETY_TABLE_WIDTH = 423
+const GROUPED_TABLE_WIDTH = 846
 const ORDER = 'order'
 const STATUS = 'status'
 
@@ -210,6 +218,24 @@ const getColumnText = ({
   }
 }
 
+// const renderResult = (status?: TestCaseStatus): JSX.Element | string => {
+//   if (!status) {
+//     return ''
+//   }
+
+//   const failed = ['error', 'failed'].includes(status)
+//   const success = ['passed'].includes(status)
+//   const skipped = ['skipped'].includes(status)
+//   if (failed) {
+//     return <ExecutionStatusLabel status={'Failed'} />
+//   } else if (success) {
+//     return <ExecutionStatusLabel status={'Success'} />
+//   } else if (skipped) {
+//     return <ExecutionStatusLabel status={'Skipped'} />
+//   }
+//   return ''
+// }
+
 function ColumnText({
   failed,
   col,
@@ -323,6 +349,17 @@ export function TestsExecutionItem({
       }
     }
   })
+  const classNameSplitData = useMemo(() => getClassNameSplitData(data?.content), [data])
+  const [accordionClassNames, setAccordionClassNames] = useState({})
+  useEffect(() => {
+    if (classNameSplitData) {
+      const newAccordionClassNames = {}
+      classNameSplitData.forEach(className => {
+        newAccordionClassNames[`${Object.keys(className)[0]}`] = true
+      })
+      setAccordionClassNames(newAccordionClassNames)
+    }
+  }, [classNameSplitData])
   const isMounted = useIsMounted()
   const [selectedRow, setSelectedRow] = useState<TestCase>()
   const refetchData = useCallback(
@@ -350,15 +387,18 @@ export function TestsExecutionItem({
         return (props => {
           const { row, rows } = props
           const failed = ['error', 'failed'].includes(row.original?.result?.status || '')
-
           itemOrderNumber++
 
           if (itemOrderNumber > rows.length) {
             itemOrderNumber = 1
           }
 
+          if (col === TestCaseColumns.RESULT) {
+            return renderResult(row.original?.result?.status)
+          }
+
           return (
-            <Container width="90%" className={css.testCell}>
+            <Container width="95%" className={css.testCell}>
               <ColumnText
                 failed={failed}
                 col={col}
@@ -378,19 +418,24 @@ export function TestsExecutionItem({
   )
 
   const columns: Column<TestCase>[] = useMemo(() => {
-    const nameClassNameWidth = tableWidth ? tableWidth * 0.5 - 185 : SAFETY_TABLE_WIDTH
+    // When window is resized, tableWidth is defined
+    const ungroupedNameClassNameWidth = tableWidth ? tableWidth * 0.5 - 185 : UNGROUPED_SAFETY_TABLE_WIDTH
+    const groupedNameClassNameWidth = tableWidth ? tableWidth - 185 : GROUPED_TABLE_WIDTH
+
     return [
-      {
-        Header: '#',
-        accessor: ORDER as keyof TestCase,
-        width: 50,
-        Cell: renderColumn({ col: ORDER }),
-        disableSortBy: true
-      },
+      isUngroupedList
+        ? {
+            Header: '#',
+            accessor: ORDER as keyof TestCase,
+            width: 50,
+            Cell: renderColumn({ col: ORDER }),
+            disableSortBy: true
+          }
+        : undefined,
       {
         Header: getString('pipeline.testsReports.testCaseName').toUpperCase(),
         accessor: TestCaseColumns.NAME,
-        width: nameClassNameWidth,
+        width: isUngroupedList ? ungroupedNameClassNameWidth : groupedNameClassNameWidth,
         Cell: renderColumn({
           col: TestCaseColumns.NAME,
           openTestsFailedModal: openErrorModal,
@@ -407,21 +452,23 @@ export function TestsExecutionItem({
           setSortByObj
         })
       },
-      {
-        Header: getString('pipeline.testsReports.className').toUpperCase(),
-        accessor: TestCaseColumns.CLASS_NAME,
-        width: nameClassNameWidth,
-        Cell: renderColumn({ col: TestCaseColumns.CLASS_NAME }),
-        disableSortBy: data?.content?.length === 1,
-        serverSortProps: getServerSortProps({
-          enableServerSort: isUngroupedList,
-          accessor: TestCaseColumns.CLASS_NAME,
-          sortByObj,
-          queryParams,
-          refetchData,
-          setSortByObj
-        })
-      },
+      isUngroupedList
+        ? {
+            Header: getString('pipeline.testsReports.className').toUpperCase(),
+            accessor: TestCaseColumns.CLASS_NAME,
+            width: ungroupedNameClassNameWidth,
+            Cell: renderColumn({ col: TestCaseColumns.CLASS_NAME }),
+            disableSortBy: data?.content?.length === 1,
+            serverSortProps: getServerSortProps({
+              enableServerSort: isUngroupedList,
+              accessor: TestCaseColumns.CLASS_NAME,
+              sortByObj,
+              queryParams,
+              refetchData,
+              setSortByObj
+            })
+          }
+        : undefined,
       {
         Header: getString('pipeline.testsReports.result'),
         accessor: TestCaseColumns.RESULT,
@@ -452,7 +499,7 @@ export function TestsExecutionItem({
           setSortByObj
         })
       }
-    ]
+    ].filter(x => !!x)
   }, [getString, renderColumn, data?.content?.length])
   const failureRate = (executionSummary.failed_tests || 0) / (executionSummary.total_tests || 1)
 
@@ -515,7 +562,12 @@ export function TestsExecutionItem({
   return (
     <Container
       data-testid={expanded && 'expanded'}
-      className={cx(css.widget, css.testSuite, expanded && css.expanded)}
+      className={cx(
+        css.widget,
+        css.testSuite,
+        expanded && css.expanded,
+        isUngroupedList ? css.isUngroupedList : css.groupedList
+      )}
       padding="medium"
       ref={containerRef}
     >
@@ -605,7 +657,7 @@ export function TestsExecutionItem({
               </Text>
             </Container>
           )}
-          {!loading && !error && (
+          {!loading && !error && isUngroupedList ? (
             <Container ref={tableRef}>
               <TableV2<TestCase>
                 className={cx(css.testSuiteTable, !!onShowCallGraphForClass && css.clickable)}
@@ -640,6 +692,82 @@ export function TestsExecutionItem({
                     : undefined
                 }
               />
+            </Container>
+          ) : (
+            <Container ref={tableRef}>
+              {classNameSplitData.map(cnsd => {
+                const cnsdEntries = Object.entries(cnsd)[0]
+                const className = cnsdEntries[0]
+                const isExpanded = !!accordionClassNames[className]
+                const tableData = cnsdEntries[1]
+                return (
+                  <>
+                    <Layout.Horizontal style={{ alignItems: 'center' }}>
+                      <Button
+                        minimal
+                        className={css.classNameTitle}
+                        icon={isExpanded ? 'accordion-expanded' : 'accordion-collapsed'}
+                        text={`Class name: ${className}`}
+                        onClick={() => {
+                          setAccordionClassNames({
+                            ...accordionClassNames,
+                            [className]: !isExpanded
+                          })
+                        }}
+                      />
+                      <Button
+                        minimal
+                        icon={'ti-callgraph'}
+                        text={getString('pipeline.testsReports.viewCallgraph')}
+                        className={css.viewCallgraph}
+                        onClick={
+                          onShowCallGraphForClass
+                            ? row => {
+                                // setSelectedRow(row)
+                                onShowCallGraphForClass(row.class_name as string)
+                              }
+                            : undefined
+                        }
+                      />
+                    </Layout.Horizontal>
+                    {isExpanded && (
+                      <TableV2<TestCase>
+                        className={cx(css.testSuiteTable, !!onShowCallGraphForClass && css.clickable)}
+                        columns={columns}
+                        data={tableData}
+                        getRowClassName={row => (row.original === selectedRow ? css.rowSelected : '')}
+                        sortable
+                        resizable={true}
+                        onRowClick={
+                          onShowCallGraphForClass
+                            ? row => {
+                                setSelectedRow(row)
+                                onShowCallGraphForClass(row.class_name as string)
+                              }
+                            : undefined
+                        }
+                        pagination={
+                          (data?.data?.totalItems || 0) > PAGE_SIZE
+                            ? {
+                                itemCount: data?.data?.totalItems || 0,
+                                pageSize: data?.data?.pageSize || 0,
+                                pageCount: data?.data?.totalPages || 0,
+                                pageIndex,
+                                gotoPage: pageIdx => {
+                                  setPageIndex(pageIdx)
+                                  refetchData({
+                                    ...queryParams,
+                                    pageIndex: pageIdx
+                                  })
+                                }
+                              }
+                            : undefined
+                        }
+                      />
+                    )}
+                  </>
+                )
+              })}
             </Container>
           )}
         </>

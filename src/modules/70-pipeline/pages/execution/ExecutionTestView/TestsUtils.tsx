@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SetStateAction, Dispatch } from 'react'
+import React, { SetStateAction, Dispatch } from 'react'
 import type { GetDataError } from 'restful-react'
 import type { SelectOption } from '@harness/uicore'
 import { uniqWith, isEqual, orderBy } from 'lodash-es'
-import type { StepInfo, Error } from 'services/ti-service'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import type { StepInfo, Error, TestCase, TestCaseStatus } from 'services/ti-service'
 import type { GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
 
 export const StepTypes = {
@@ -329,3 +330,42 @@ export const getError = ({
   (testInfoData && testInfoData?.length > 0 && testOverviewError) ||
   reportInfoError ||
   testInfoError
+
+interface ClassNameSplitData {
+  [key: string]: TestCase[]
+}
+
+export const getClassNameSplitData = (testCases?: TestCase[]): ClassNameSplitData[] => {
+  const classNameSplitData: ClassNameSplitData[] = []
+  testCases?.forEach(d => {
+    if (typeof d?.class_name !== 'undefined') {
+      const matchIndex = classNameSplitData.findIndex(cnsd => Object.keys(cnsd).includes(d.class_name!))
+      if (matchIndex && matchIndex > -1) {
+        classNameSplitData[matchIndex][d.class_name].push(d)
+      } else {
+        classNameSplitData.push({ [d.class_name]: [d] })
+      }
+    }
+  })
+
+  return classNameSplitData
+}
+
+export const renderResult = (status?: TestCaseStatus): JSX.Element | string => {
+  if (!status) {
+    return ''
+  }
+
+  const failed = ['error', 'failed'].includes(status)
+  const success = ['passed'].includes(status)
+  const skipped = ['skipped'].includes(status)
+
+  if (failed) {
+    return <ExecutionStatusLabel status={'Failed'} />
+  } else if (success) {
+    return <ExecutionStatusLabel status={'Success'} />
+  } else if (skipped) {
+    return <ExecutionStatusLabel status={'Skipped'} />
+  }
+  return ''
+}

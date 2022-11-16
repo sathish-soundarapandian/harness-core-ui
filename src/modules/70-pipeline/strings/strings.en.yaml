@@ -699,7 +699,7 @@ testsReports:
     params: Params
     file: '{{ $.common.file }}'
     type: '{{ $.typeLabel }}'
-  viewCallgraph: View Callgraph
+  viewCallgraph: View Call Graph
   testMethods: Test methods
   changedTestMethods: Changed/New Test methods
   changedSourceMethods: Changed/New Source methods
@@ -735,7 +735,7 @@ testsReports:
   consoleOutput: Console Output
   testSuite: 'Test Suite:'
   totalTests: Total Tests
-  testCaseName: Test Name
+  testCaseName: Test Case Name
   className: Class Name
   result: RESULT
   testCasesExecution: Tests Execution

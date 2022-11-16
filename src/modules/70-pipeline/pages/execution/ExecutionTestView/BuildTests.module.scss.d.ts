@@ -16,6 +16,7 @@ declare const styles: {
   readonly callgraphModal: string
   readonly callgraphTooltip: string
   readonly changed: string
+  readonly classNameTitle: string
   readonly clickable: string
   readonly columnNames: string
   readonly commitHash: string
@@ -37,9 +38,11 @@ declare const styles: {
   readonly graphLabel: string
   readonly graphTitle: string
   readonly graphWrapper: string
+  readonly groupedList: string
   readonly header: string
   readonly headingContainer: string
   readonly indirect: string
+  readonly isUngroupedList: string
   readonly leftContainer: string
   readonly line: string
   readonly linesWrapper: string
