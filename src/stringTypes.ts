@@ -2731,6 +2731,7 @@ export interface StringsMap {
   'connectors.updatedSuccessfully': string
   'connectors.updating': string
   'connectors.validation.connectorIsRequired': string
+  'connectors.validation.endpointUrl': string
   'connectors.validation.personalAccessToken': string
   'connectors.validation.serviceNowUrl': string
   'connectors.validationPath': string
@@ -11475,10 +11476,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'validation.encryptedKey': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'validation.endpointUrl': string
   /**
    * @deprecated migrate this string to module level file
    */

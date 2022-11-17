@@ -988,7 +988,6 @@ validation:
   privateKey: 'GitHub private key is required'
   accessToken: Access token is required
   dockerRegistryUrl: 'Docker Registry URL is required'
-  endpointUrl: Endpoint URL is required
   helmRepoUrl: 'Helm Repo URL is required.'
   jiraUrl: 'Jira URL is required.'
   registryHostname: 'GCR Registry URL is required'
