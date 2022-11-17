@@ -26,7 +26,8 @@ import type {
   AzureKeyVaultConnectorDTO,
   GcpKmsConnectorDTO,
   ErrorTrackingConnectorDTO,
-  ELKConnectorDTO
+  ELKConnectorDTO,
+  TasConnector
 } from 'services/cd-ng'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -306,8 +307,8 @@ export const buildSpotPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
-export const buildTasPayload = (formData: FormData) => {
-  const savedData: any = {
+export const buildTasPayload = (formData: FormData): ConnectorRequestBody => {
+  const savedData: ConnectorInfoDTO = {
     name: formData.name,
     description: formData?.description,
     projectIdentifier: formData?.projectIdentifier,
@@ -326,7 +327,7 @@ export const buildTasPayload = (formData: FormData) => {
           passwordRef: formData.passwordRef.referenceString
         }
       }
-    }
+    } as TasConnector
   }
 
   return { connector: savedData }
@@ -740,7 +741,7 @@ export const setupTasFormData = async (connectorInfo: ConnectorInfoDTO, accountI
     passwordRef: await setSecretField(authdata?.passwordRef, scopeQueryParams),
     endpointUrl: authdata.endpointUrl || '',
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
-    delegate: connectorInfo?.spec?.delegateSelectors || undefined
+    delegate: connectorInfo?.spec?.delegateSelectors
   }
 
   return formData
