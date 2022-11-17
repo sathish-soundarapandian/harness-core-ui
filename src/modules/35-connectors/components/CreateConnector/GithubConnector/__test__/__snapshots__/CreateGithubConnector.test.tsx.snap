@@ -4505,6 +4505,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                            style="flex-grow: 1;"
                           >
                             <button
                               class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -5320,6 +5321,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                            style="flex-grow: 1;"
                           >
                             <button
                               class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
