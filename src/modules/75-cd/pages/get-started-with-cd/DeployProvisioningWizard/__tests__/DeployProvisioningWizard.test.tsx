@@ -11,6 +11,7 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
+import { responseGetFoldersNodesMock } from '@filestore/components/FileStoreContext/__tests__/mock'
 import {
   connectionTestResult,
   contextValues,
@@ -94,7 +95,11 @@ jest.mock('services/cd-ng', () => ({
       }
     })
   })),
-
+  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetFolderNodes: jest.fn().mockImplementation(() => ({
+    loading: false,
+    mutate: jest.fn().mockImplementation(() => Promise.resolve(responseGetFoldersNodesMock))
+  })),
   useCreateInfrastructure: jest.fn().mockImplementation(() => ({
     mutate: updatedInfra
   })),

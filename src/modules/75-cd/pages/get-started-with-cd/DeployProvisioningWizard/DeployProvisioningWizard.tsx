@@ -443,7 +443,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
 
       {/* footer */}
       <Layout.Vertical padding={{ left: 'huge' }} className={css.footer}>
-        <Layout.Horizontal spacing="medium" padding={{ top: 'large', bottom: 'xlarge' }} width="100%">
+        <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
           {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType && (
             <Button
               variation={ButtonVariation.SECONDARY}

@@ -4801,7 +4801,6 @@ export interface StringsMap {
   'cd.deletedSuccessfully': string
   'cd.deploymentSteps': string
   'cd.deploymentTemplates': string
-  'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.duplicateStep': string
@@ -4855,6 +4854,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.artifactToDeploy': string
   'cd.getStartedWithCD.awsElasticK8s': string
   'cd.getStartedWithCD.azureK8s': string
+  'cd.getStartedWithCD.checkDelegateInstalled': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
   'cd.getStartedWithCD.codeRepos': string
@@ -4867,7 +4867,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.delegateNotConnected': string
   'cd.getStartedWithCD.delegateRequiredWarning': string
   'cd.getStartedWithCD.delegateRunAs': string
+  'cd.getStartedWithCD.delegateSuccess': string
   'cd.getStartedWithCD.deployToGitops': string
+  'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
@@ -4875,6 +4877,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.googleK8s': string
+  'cd.getStartedWithCD.harnessFileStore': string
   'cd.getStartedWithCD.helm': string
   'cd.getStartedWithCD.hideDelegateDetails': string
   'cd.getStartedWithCD.inHarnessFileStore': string
@@ -4885,6 +4888,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.manifestStorage': string
   'cd.getStartedWithCD.manifestStoreLabel': string
   'cd.getStartedWithCD.manifestTypeSelection': string
+  'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.reposubheading': string
@@ -4894,9 +4898,11 @@ export interface StringsMap {
   'cd.getStartedWithCD.serviceConfiguration': string
   'cd.getStartedWithCD.serviceDeploy': string
   'cd.getStartedWithCD.serviceHeading': string
+  'cd.getStartedWithCD.serviceName': string
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.successFull': string
+  'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.workloadDeploy': string
   'cd.gitFetchTypeRequired': string

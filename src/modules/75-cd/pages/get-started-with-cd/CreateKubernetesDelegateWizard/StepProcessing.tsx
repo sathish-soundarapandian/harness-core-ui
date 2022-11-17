@@ -125,6 +125,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
                 className={css.textPadding}
                 onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
                 color={Color.BLUE_700}
+                style={{ cursor: 'pointer', width: 'fit-content' }}
               >
                 {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
               </Text>
@@ -152,7 +153,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
         <div className={css.spacing} />
 
         <Layout.Vertical className={css.success}>
-          <Layout.Horizontal width={'100%'}>
+          <Layout.Horizontal width={'100%'} flex={{ justifyContent: 'center', alignItems: 'center' }}>
             <img
               className={css.buildImg}
               title={getString('common.getStarted.buildPipeline')}
@@ -160,10 +161,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
             />
             <Layout.Vertical width={'83%'}>
               <Text className={css.successPadding} color={Color.GREEN_900}>
-                {getString('cd.delegateSuccess')}
-              </Text>
-              <Text className={css.textPadding} color={Color.GREEN_900}>
-                {getString('cd.pipelineCreation')}
+                {getString('cd.getStartedWithCD.delegateSuccess')}
               </Text>
             </Layout.Vertical>
           </Layout.Horizontal>
@@ -175,7 +173,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
     <Layout.Vertical>
       <Layout.Horizontal>
         <Icon size={16} name="steps-spinner" style={{ marginRight: '12px' }} />
-        <Text font="small">{getString('delegate.successVerification.checkDelegateInstalled')}</Text>
+        <Text font="small">{getString('cd.getStartedWithCD.checkDelegateInstalled')}</Text>
       </Layout.Horizontal>
     </Layout.Vertical>
   )
