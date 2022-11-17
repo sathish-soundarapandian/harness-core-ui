@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, Container, FontVariation, Icon, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
+import { Container, Icon, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
@@ -49,19 +50,20 @@ const InHarnessFileStore = ({
     setDrawerData
   } = useCDOnboardingContext()
   const { showError } = useToaster()
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const folderIdentifier = React.useMemo(() => StringUtils.getIdentifierFromName(SAMPLE_MANIFEST_FOLDER), [])
 
   const { mutate: createFolder, loading: createLoading } = useCreate({
-    queryParams: { accountIdentifier: accountId }
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
   const { mutate: createNode, loading: fileCreationLoading } = useCreate({
-    queryParams: { accountIdentifier: accountId }
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
   const { mutate: getRootNodes, loading: fileFetching } = useGetFolderNodes({
     queryParams: {
       accountIdentifier: accountId,
-
+      orgIdentifier,
+      projectIdentifier,
       fileUsage: FileUsage.MANIFEST_FILE
     }
   })
