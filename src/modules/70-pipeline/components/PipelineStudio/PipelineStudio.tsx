@@ -86,6 +86,7 @@ export default function PipelineStudio(): React.ReactElement {
   const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
   const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
   const isPipelineChainingEnabled = useFeatureFlag(FeatureFlag.PIPELINE_CHAINING)
+  const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
   const { getString } = useStrings()
 
   return (
@@ -112,7 +113,8 @@ export default function PipelineStudio(): React.ReactElement {
           isCFEnabled: licenseInformation['CF'] && isCFEnabled,
           isSTOEnabled,
           isApprovalStageEnabled: true,
-          isPipelineChainingEnabled
+          isPipelineChainingEnabled,
+          isIACMEnabled
         })
       }
       stepsFactory={factory}
