@@ -34,7 +34,7 @@ import { useQueryParams } from '@common/hooks'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
-import { DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
+import { DelegateSelectorRefInstance, DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
 import { ConfigureService } from '../ConfigureService/ConfigureService'
 import {
   DEFAULT_PIPELINE_NAME,
@@ -70,6 +70,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const SelectDeploymentTypeRef = React.useRef<SelectDeploymentTypeRefInstance | null>(null)
+  const delegateSelectorRef = React.useRef<DelegateSelectorRefInstance | null>(null)
   const configureServiceRef = React.useRef<SelectInfrastructureRefInstance | null>(null)
 
   const [showPageLoader, setShowPageLoader] = useState<boolean>(false)
@@ -129,6 +130,18 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     }
   })
 
+  const moveToConfigureService = (): void => {
+    setDisableBtn(true)
+    setSelectedSectionId(DeployProvisiongWizardStepId.ConfigureService)
+    setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
+    updateStepStatus(
+      [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.DelegateSelector],
+      StepStatus.Success
+    )
+    updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.InProgress)
+    updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+  }
+
   const { openDialog: showDelegateRequiredWarning } = useConfirmationDialog({
     contentText: deletionContentText,
     titleText: getString('cd.getStartedWithCD.delegateNotConnected'),
@@ -137,15 +150,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     intent: Intent.WARNING,
     onCloseDialog: async (isConfirmed: boolean) => {
       if (isConfirmed) {
-        setDisableBtn(true)
-        setSelectedSectionId(DeployProvisiongWizardStepId.ConfigureService)
-        setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
-        updateStepStatus(
-          [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.DelegateSelector],
-          StepStatus.Success
-        )
-        updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.InProgress)
-        updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+        moveToConfigureService()
       }
     }
   })
@@ -269,6 +274,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             <DelegateSelectorWizard
               disableNextBtn={() => setDisableBtn(true)}
               enableNextBtn={() => setDisableBtn(false)}
+              ref={delegateSelectorRef}
             />
           </>
         ),
@@ -278,7 +284,8 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.ToDo)
         },
         onClickNext: async () => {
-          showDelegateRequiredWarning()
+          const { isDelegateInstalled } = delegateSelectorRef.current || {}
+          isDelegateInstalled ? moveToConfigureService() : showDelegateRequiredWarning()
         },
 
         stepFooterLabel: 'cd.getStartedWithCD.configureService'

@@ -45,6 +45,13 @@ import { useCDOnboardingContext } from '../CDOnboardingStore'
 import DelegateDetailsCard from './DelegateDetailsCard'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
+export interface DelegateSelectorRefInstance {
+  isDelegateInstalled?: boolean
+}
+export type DelegateSelectorForwardRef =
+  | ((instance: DelegateSelectorRefInstance | null) => void)
+  | React.MutableRefObject<DelegateSelectorRefInstance | null>
+  | null
 export interface DelegateTypeSelectorProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
@@ -59,7 +66,10 @@ const INFRASTRUCTURE_ID = 'dev-cluster'
 const INFRASTRUCTURE_TYPE = 'KubernetesDirect'
 const NAMESPACE = 'default'
 
-export const DelegateSelectorWizard = ({ enableNextBtn, disableNextBtn }: DelegateTypeSelectorProps): JSX.Element => {
+const DelegateSelectorWizardRef = (
+  { enableNextBtn, disableNextBtn }: DelegateTypeSelectorProps,
+  forwardRef: DelegateSelectorForwardRef
+): JSX.Element => {
   const {
     saveEnvironmentData,
     saveInfrastructureData,
@@ -86,6 +96,18 @@ export const DelegateSelectorWizard = ({ enableNextBtn, disableNextBtn }: Delega
   const [environmentEntities, setEnvironmentEntities] = React.useState<EnvironmentEntities>(
     defaultTo(delegateData?.environmentEntities, {})
   )
+
+  useEffect(() => {
+    if (isDelegateInstalled) {
+      if (!forwardRef) {
+        return
+      }
+      if (typeof forwardRef === 'function') {
+        return
+      }
+      forwardRef.current = { isDelegateInstalled }
+    }
+  }, [isDelegateInstalled, forwardRef])
 
   const onSuccessHandler = React.useCallback(
     ({ delegateCreated, delegateInstalled, delegateYamlResponse }: DelegateSuccessHandler): void => {
@@ -382,7 +404,7 @@ export const DelegateSelectorWizard = ({ enableNextBtn, disableNextBtn }: Delega
                 </Layout.Vertical>
               )}
               <Container className={css.borderBottomClass} />
-              {!isEmpty(environmentEntities?.connector) && !isDelegateInstalled ? environmentEntitiesData : null}
+              {!isEmpty(environmentEntities?.connector) ? environmentEntitiesData : null}
             </>
           )}
         </Layout.Vertical>
@@ -413,3 +435,5 @@ export const DelegateSelectorWizard = ({ enableNextBtn, disableNextBtn }: Delega
     </Layout.Vertical>
   )
 }
+
+export const DelegateSelectorWizard = React.forwardRef(DelegateSelectorWizardRef)
