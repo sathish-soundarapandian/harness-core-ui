@@ -25,7 +25,9 @@ import { FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, memoize, merge } from 'lodash-es'
+import { Menu } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import {
   AcrBuildDetailsDTO,
   ConnectorConfigDTO,
@@ -478,6 +480,22 @@ export function ACRArtifact({
     }
   }, [formikRef?.current?.values?.tag])
 
+  const getItemRenderer = memoize((item: SelectOption, { handleClick }: IItemRendererProps, disabled: boolean) => {
+    return (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={disabled}
+          onClick={handleClick}
+        />
+      </div>
+    )
+  })
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!isTemplateContext && (
@@ -550,6 +568,7 @@ export function ACRArtifact({
                       selectProps: {
                         defaultSelectedItem: formik.values.subscriptionId as SelectOption,
                         items: subscriptions,
+                        itemRenderer: (item, props) => getItemRenderer(item, props, loadingSubscriptions),
                         allowCreatingNewItems: true,
                         addClearBtn: !(loadingSubscriptions || isReadonly),
                         noResults: (
@@ -637,6 +656,7 @@ export function ACRArtifact({
                       selectProps: {
                         defaultSelectedItem: formik.values.registry as SelectOption,
                         items: registries,
+                        itemRenderer: (item, props) => getItemRenderer(item, props, loadingRegistries),
                         allowCreatingNewItems: true,
                         addClearBtn: !(loadingRegistries || isReadonly),
                         noResults: (
@@ -718,6 +738,7 @@ export function ACRArtifact({
                       selectProps: {
                         items: repositories,
                         allowCreatingNewItems: true,
+                        itemRenderer: (item, props) => getItemRenderer(item, props, loadingRepositories),
                         defaultSelectedItem: formik.values.repository as SelectOption,
                         addClearBtn: !(loadingRepositories || isReadonly),
                         noResults: (
