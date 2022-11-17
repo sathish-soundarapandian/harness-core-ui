@@ -280,7 +280,6 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
       type: ResourceType.CONNECTOR,
       name: defaultTo(data.connector?.name, '')
     },
-    titleText: getString('connectors.cantDeleteConnector'),
     redirectToReferencedBy: redirectToReferencedBy,
     forceDeleteCallback: isForceDeleteSupported ? () => deleteHandler(true) : undefined
   })

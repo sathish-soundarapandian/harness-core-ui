@@ -11,6 +11,7 @@ import { render, act, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
+import { accountPathProps } from '@common/utils/routeUtils'
 import { ContentText, CustomButtonContainer } from '../useEntityDeleteErrorHandlerDialog'
 
 const commonProp = {
@@ -36,7 +37,7 @@ describe('useEntityDeleteErrorHandlerDialog test', () => {
     const { queryByText } = render(
       <TestWrapper
         path={routes.toConnectors({
-          accountId: ':accountId'
+          ...accountPathProps
         })}
         pathParams={{ accountId: 'account' }}
       >
@@ -55,7 +56,7 @@ describe('useEntityDeleteErrorHandlerDialog test', () => {
     const { container, queryByText } = render(
       <TestWrapper
         path={routes.toConnectors({
-          accountId: ':accountId'
+          ...accountPathProps
         })}
         pathParams={{ accountId: 'account' }}
       >
@@ -74,7 +75,7 @@ describe('useEntityDeleteErrorHandlerDialog test', () => {
     expect(setForcedDeleteEnabledMock).toBeCalledTimes(0)
 
     act(() => {
-      setFieldValue({ container, type: InputTypes.CHECKBOX, fieldId: 'forcedDelete', value: 'true' })
+      setFieldValue({ container, type: InputTypes.CHECKBOX, fieldId: 'forcedDelete-connector', value: 'true' })
     })
     expect(setForcedDeleteEnabledMock).toBeCalledTimes(1)
   })
@@ -83,7 +84,7 @@ describe('useEntityDeleteErrorHandlerDialog test', () => {
     const { queryByText } = render(
       <TestWrapper
         path={routes.toConnectors({
-          accountId: ':accountId'
+          ...accountPathProps
         })}
         pathParams={{ accountId: 'account' }}
       >
@@ -107,7 +108,7 @@ describe('useEntityDeleteErrorHandlerDialog test', () => {
     const { container, queryByText } = render(
       <TestWrapper
         path={routes.toConnectors({
-          accountId: ':accountId'
+          ...accountPathProps
         })}
         pathParams={{ accountId: 'account' }}
       >
@@ -133,7 +134,7 @@ describe('useEntityDeleteErrorHandlerDialog test', () => {
     const { queryByText } = render(
       <TestWrapper
         path={routes.toConnectors({
-          accountId: ':accountId'
+          ...accountPathProps
         })}
         pathParams={{ accountId: 'account' }}
       >

@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { useParams, useHistory, useLocation } from 'react-router-dom'
+import { useParams, useHistory, useLocation, useRouteMatch } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import { Menu, Position, Classes, Intent } from '@blueprintjs/core'
 import type { Column, Renderer, CellProps } from 'react-table'
@@ -22,6 +22,7 @@ import {
   TableV2
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import { SecretResponseWrapper, useDeleteSecretV2 } from 'services/cd-ng'
 import type { PageSecretResponseWrapper, SecretTextSpecDTO, SecretDTOV2 } from 'services/cd-ng'
@@ -32,11 +33,15 @@ import { useVerifyModal as useVerifyModalSSH } from '@secrets/modals/CreateSSHCr
 import { useVerifyModal as useVerifyModalWinRM } from '@secrets/modals/CreateWinRmCredModal/useVerifyModal'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
+import { FeatureFlag } from '@common/featureFlags'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import routes from '@common/RouteDefinitions'
 import css from './SecretsList.module.scss'
 
 interface SecretsListProps {
@@ -135,13 +140,21 @@ interface SecretMenuItemProps {
   secret: SecretDTOV2
   onSuccessfulEdit: any
   onSuccessfulDelete: any
+  setIsReference?: (isReferenceTab: boolean) => void
 }
 
-export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({ secret, onSuccessfulEdit, onSuccessfulDelete }) => {
+export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({
+  secret,
+  onSuccessfulEdit,
+  onSuccessfulDelete,
+  setIsReference
+}) => {
   const data = secret
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
+  const history = useHistory()
+  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
   const [menuOpen, setMenuOpen] = useState(false)
   const { mutate: deleteSecret } = useDeleteSecretV2({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
@@ -163,6 +176,56 @@ export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({ secret, onSucces
     }
   }
 
+  const deleteHandler = async (forceDelete?: boolean): Promise<void> => {
+    try {
+      await deleteSecret(data.identifier, {
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          forceDelete: Boolean(forceDelete)
+        }
+      })
+      showSuccess(`Secret ${data.name} deleted`)
+      onSuccessfulDelete()
+    } catch (err) {
+      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(err))
+      }
+    }
+  }
+
+  const isListPage = useRouteMatch(routes.toSecrets({ accountId, projectIdentifier, orgIdentifier, module }))
+
+  const redirectToReferencedBy = (): void => {
+    if (isListPage?.isExact) {
+      history.push({
+        pathname: routes.toSecretDetailsReferences({
+          accountId,
+          projectIdentifier,
+          orgIdentifier,
+          secretId: data.identifier,
+          module
+        })
+      })
+    } else {
+      //We do not need to change routes for Overview and referencedBy page
+      closeDialog()
+      setIsReference?.(true)
+    }
+  }
+
+  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.SECRET,
+      name: defaultTo(data?.name, '')
+    },
+    redirectToReferencedBy: redirectToReferencedBy,
+    forceDeleteCallback: isForceDeleteSupported ? () => deleteHandler(true) : undefined
+  })
+
   const { openDialog } = useConfirmationDialog({
     contentText: <String stringID="secrets.confirmDelete" vars={{ name: data.name }} />,
     titleText: <String stringID="secrets.confirmDeleteTitle" />,
@@ -172,13 +235,7 @@ export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({ secret, onSucces
     buttonIntent: Intent.DANGER,
     onCloseDialog: async didConfirm => {
       if (didConfirm && data.identifier) {
-        try {
-          await deleteSecret(data.identifier)
-          showSuccess(`Secret ${data.name} deleted`)
-          onSuccessfulDelete()
-        } catch (err) {
-          showError(getRBACErrorMessage(err))
-        }
+        deleteHandler(false)
       }
     }
   })

@@ -57,43 +57,18 @@ exports[`useEntityDeleteErrorHandlerDialog test should render error with forcedD
     >
       common.referenceTextWarning
     </p>
-    <div
-      class="OverlaySpinner--overlaySpinner"
+    <label
+      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
     >
-      <form
-        action="#"
-        class="FormikForm--main"
-      >
-        <div>
-          <div
-            class="bp3-form-group"
-            data-id="forcedDelete-0"
-          >
-            <div
-              class="bp3-form-content"
-            >
-              <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
-              >
-                <input
-                  name="forcedDelete"
-                  type="checkbox"
-                />
-                <span
-                  class="bp3-control-indicator"
-                />
-                <span
-                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                  data-tooltip-id="forcedDelete_forcedDelete"
-                >
-                  common.forcedDeleteLabel
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
+      <input
+        name="forcedDelete-connector"
+        type="checkbox"
+      />
+      <span
+        class="bp3-control-indicator"
+      />
+      common.forcedDeleteLabel
+    </label>
   </div>
 </div>
 `;

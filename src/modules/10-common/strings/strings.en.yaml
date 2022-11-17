@@ -75,6 +75,7 @@ successfullCreate: '{{entity}} {{name}} created successfully'
 successfullUpdate: '{{entity}} {{name}} updated successfully'
 dataSubmitSuccess: 'Data has been submitted successfully'
 entityType: Entity Type
+cantDeleteEntity: Can't delete {{entity}}
 approve: Approve
 reject: Reject
 disable: Disable

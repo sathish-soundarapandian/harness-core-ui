@@ -1006,6 +1006,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'UPDATE'
     | 'RESTORE'
     | 'DELETE'
+    | 'FORCE_DELETE'
     | 'UPSERT'
     | 'INVITE'
     | 'RESEND_INVITE'
@@ -1749,6 +1750,7 @@ export interface CDStageModuleInfo {
   freezeExecutionSummary?: FreezeExecutionSummary
   infraExecutionSummary?: InfraExecutionSummary
   nodeExecutionId?: string
+  rollbackDuration?: number
   serviceInfo?: ServiceExecutionSummary
 }
 
@@ -1795,6 +1797,7 @@ export type CILicenseSummaryDTO = LicensesWithSummaryDTO & {
 }
 
 export type CIModuleLicenseDTO = ModuleLicenseDTO & {
+  hostingCredits?: number
   numberOfCommitters?: number
 }
 
@@ -5954,6 +5957,10 @@ export interface GitEntityFilterProperties {
   searchTerm?: string
 }
 
+export type GitErrorMetadataDTO = ErrorMetadataDTO & {
+  branch?: string
+}
+
 export interface GitFileContent {
   content?: string
   objectId?: string
@@ -8138,7 +8145,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -8146,6 +8153,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -8802,9 +8810,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -12151,6 +12160,13 @@ export interface ResponseScmConnectorResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseScmListFilesResponseDTO {
+  correlationId?: string
+  data?: ScmListFilesResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseSecretManagerMetadataDTO {
   correlationId?: string
   data?: SecretManagerMetadataDTO
@@ -12431,6 +12447,13 @@ export interface ResponseUserGroupAggregateDTO {
 export interface ResponseUserGroupDTO {
   correlationId?: string
   data?: UserGroupDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseUserGroupResponseV2DTO {
+  correlationId?: string
+  data?: UserGroupResponseV2DTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13050,6 +13073,17 @@ export interface ScmConnectorResponse {
 
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
+}
+
+export interface ScmFileGitDetailsDTO {
+  blobId?: string
+  commitId?: string
+  contentType?: 'INVALID_CONTENT_TYPE' | 'UNKNOWN_CONTENT' | 'FILE' | 'DIRECTORY' | 'SYMLINK' | 'GITLINK'
+  path?: string
+}
+
+export interface ScmListFilesResponseDTO {
+  fileGitDetailsDTOList?: ScmFileGitDetailsDTO[]
 }
 
 export interface Scope {
@@ -14618,6 +14652,50 @@ export interface UserGroupFilterDTO {
   userIdentifierFilter?: string[]
 }
 
+export interface UserGroupRequestV2DTO {
+  accountIdentifier?: string
+  description?: string
+  externallyManaged?: boolean
+  harnessManaged?: boolean
+  identifier: string
+  linkedSsoDisplayName?: string
+  linkedSsoId?: string
+  linkedSsoType?: string
+  name: string
+  notificationConfigs?: NotificationSettingConfigDTO[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  ssoGroupId?: string
+  ssoGroupName?: string
+  ssoLinked?: boolean
+  tags?: {
+    [key: string]: string
+  }
+  users?: string[]
+}
+
+export interface UserGroupResponseV2DTO {
+  accountIdentifier?: string
+  description?: string
+  externallyManaged?: boolean
+  harnessManaged?: boolean
+  identifier: string
+  linkedSsoDisplayName?: string
+  linkedSsoId?: string
+  linkedSsoType?: string
+  name: string
+  notificationConfigs?: NotificationSettingConfigDTO[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  ssoGroupId?: string
+  ssoGroupName?: string
+  ssoLinked?: boolean
+  tags?: {
+    [key: string]: string
+  }
+  users?: UserInfo[]
+}
+
 export interface UserInfo {
   accounts?: GatewayAccountRequestDTO[]
   admin?: boolean
@@ -15026,6 +15104,8 @@ export type TokenDTORequestBody = TokenDTO
 export type UserFilterRequestBody = UserFilter
 
 export type UserGroupDTORequestBody = UserGroupDTO
+
+export type UserGroupRequestV2DTORequestBody = UserGroupRequestV2DTO
 
 export type VariableRequestDTORequestBody = VariableRequestDTO
 
@@ -18614,7 +18694,7 @@ export interface GetImagePathsForArtifactoryV2QueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   pipelineIdentifier: string
-  repository: string
+  repository?: string
   fqnPath?: string
   serviceId?: string
   branch?: string
@@ -44244,7 +44324,7 @@ export interface SearchScimUserPathParams {
 }
 
 export type SearchScimUserProps = Omit<
-  GetProps<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>,
+  GetProps<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>,
   'path'
 > &
   SearchScimUserPathParams
@@ -44253,7 +44333,7 @@ export type SearchScimUserProps = Omit<
  * Search users by their email address. Supports pagination. If nothing is passed in filter, all results will be returned.
  */
 export const SearchScimUser = ({ accountIdentifier, ...props }: SearchScimUserProps) => (
-  <Get<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>
+  <Get<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>
     path={`/scim/account/${accountIdentifier}/Users`}
     base={getConfig('ng/api')}
     {...props}
@@ -44261,7 +44341,7 @@ export const SearchScimUser = ({ accountIdentifier, ...props }: SearchScimUserPr
 )
 
 export type UseSearchScimUserProps = Omit<
-  UseGetProps<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>,
+  UseGetProps<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>,
   'path'
 > &
   SearchScimUserPathParams
@@ -44270,7 +44350,7 @@ export type UseSearchScimUserProps = Omit<
  * Search users by their email address. Supports pagination. If nothing is passed in filter, all results will be returned.
  */
 export const useSearchScimUser = ({ accountIdentifier, ...props }: UseSearchScimUserProps) =>
-  useGet<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>(
+  useGet<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>(
     (paramsInPath: SearchScimUserPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/Users`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
   )
@@ -44282,12 +44362,12 @@ export const searchScimUserPromise = (
   {
     accountIdentifier,
     ...props
-  }: GetUsingFetchProps<void, void, SearchScimUserQueryParams, SearchScimUserPathParams> & {
+  }: GetUsingFetchProps<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams> & {
     accountIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<void, void, SearchScimUserQueryParams, SearchScimUserPathParams>(
+  getUsingFetch<void, Failure | Error, SearchScimUserQueryParams, SearchScimUserPathParams>(
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users`,
     props,
@@ -44299,7 +44379,7 @@ export interface CreateScimUserPathParams {
 }
 
 export type CreateScimUserProps = Omit<
-  MutateProps<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>,
+  MutateProps<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>,
   'path' | 'verb'
 > &
   CreateScimUserPathParams
@@ -44308,7 +44388,7 @@ export type CreateScimUserProps = Omit<
  * Create a new user
  */
 export const CreateScimUser = ({ accountIdentifier, ...props }: CreateScimUserProps) => (
-  <Mutate<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>
+  <Mutate<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>
     verb="POST"
     path={`/scim/account/${accountIdentifier}/Users`}
     base={getConfig('ng/api')}
@@ -44317,7 +44397,7 @@ export const CreateScimUser = ({ accountIdentifier, ...props }: CreateScimUserPr
 )
 
 export type UseCreateScimUserProps = Omit<
-  UseMutateProps<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>,
+  UseMutateProps<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>,
   'path' | 'verb'
 > &
   CreateScimUserPathParams
@@ -44326,7 +44406,7 @@ export type UseCreateScimUserProps = Omit<
  * Create a new user
  */
 export const useCreateScimUser = ({ accountIdentifier, ...props }: UseCreateScimUserProps) =>
-  useMutate<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>(
+  useMutate<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>(
     'POST',
     (paramsInPath: CreateScimUserPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/Users`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
@@ -44339,12 +44419,12 @@ export const createScimUserPromise = (
   {
     accountIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, ScimUserRequestBody, CreateScimUserPathParams> & {
+  }: MutateUsingFetchProps<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams> & {
     accountIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, ScimUserRequestBody, CreateScimUserPathParams>(
+  mutateUsingFetch<void, Failure | Error, void, ScimUserRequestBody, CreateScimUserPathParams>(
     'POST',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users`,
@@ -44357,7 +44437,7 @@ export interface DeleteScimUserPathParams {
 }
 
 export type DeleteScimUserProps = Omit<
-  MutateProps<void, void, void, string, DeleteScimUserPathParams>,
+  MutateProps<void, Failure | Error, void, string, DeleteScimUserPathParams>,
   'path' | 'verb'
 > &
   DeleteScimUserPathParams
@@ -44366,7 +44446,7 @@ export type DeleteScimUserProps = Omit<
  * Delete an user by uuid
  */
 export const DeleteScimUser = ({ accountIdentifier, ...props }: DeleteScimUserProps) => (
-  <Mutate<void, void, void, string, DeleteScimUserPathParams>
+  <Mutate<void, Failure | Error, void, string, DeleteScimUserPathParams>
     verb="DELETE"
     path={`/scim/account/${accountIdentifier}/Users`}
     base={getConfig('ng/api')}
@@ -44375,7 +44455,7 @@ export const DeleteScimUser = ({ accountIdentifier, ...props }: DeleteScimUserPr
 )
 
 export type UseDeleteScimUserProps = Omit<
-  UseMutateProps<void, void, void, string, DeleteScimUserPathParams>,
+  UseMutateProps<void, Failure | Error, void, string, DeleteScimUserPathParams>,
   'path' | 'verb'
 > &
   DeleteScimUserPathParams
@@ -44384,7 +44464,7 @@ export type UseDeleteScimUserProps = Omit<
  * Delete an user by uuid
  */
 export const useDeleteScimUser = ({ accountIdentifier, ...props }: UseDeleteScimUserProps) =>
-  useMutate<void, void, void, string, DeleteScimUserPathParams>(
+  useMutate<void, Failure | Error, void, string, DeleteScimUserPathParams>(
     'DELETE',
     (paramsInPath: DeleteScimUserPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/Users`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
@@ -44397,10 +44477,12 @@ export const deleteScimUserPromise = (
   {
     accountIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, string, DeleteScimUserPathParams> & { accountIdentifier: string },
+  }: MutateUsingFetchProps<void, Failure | Error, void, string, DeleteScimUserPathParams> & {
+    accountIdentifier: string
+  },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, string, DeleteScimUserPathParams>(
+  mutateUsingFetch<void, Failure | Error, void, string, DeleteScimUserPathParams>(
     'DELETE',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users`,
@@ -44413,27 +44495,28 @@ export interface GetScimUserPathParams {
   userIdentifier: string
 }
 
-export type GetScimUserProps = Omit<GetProps<void, void, void, GetScimUserPathParams>, 'path'> & GetScimUserPathParams
+export type GetScimUserProps = Omit<GetProps<void, Failure | Error, void, GetScimUserPathParams>, 'path'> &
+  GetScimUserPathParams
 
 /**
  * Get an existing user by uuid
  */
 export const GetScimUser = ({ accountIdentifier, userIdentifier, ...props }: GetScimUserProps) => (
-  <Get<void, void, void, GetScimUserPathParams>
+  <Get<void, Failure | Error, void, GetScimUserPathParams>
     path={`/scim/account/${accountIdentifier}/Users/${userIdentifier}`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseGetScimUserProps = Omit<UseGetProps<void, void, void, GetScimUserPathParams>, 'path'> &
+export type UseGetScimUserProps = Omit<UseGetProps<void, Failure | Error, void, GetScimUserPathParams>, 'path'> &
   GetScimUserPathParams
 
 /**
  * Get an existing user by uuid
  */
 export const useGetScimUser = ({ accountIdentifier, userIdentifier, ...props }: UseGetScimUserProps) =>
-  useGet<void, void, void, GetScimUserPathParams>(
+  useGet<void, Failure | Error, void, GetScimUserPathParams>(
     (paramsInPath: GetScimUserPathParams) =>
       `/scim/account/${paramsInPath.accountIdentifier}/Users/${paramsInPath.userIdentifier}`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier, userIdentifier }, ...props }
@@ -44447,13 +44530,13 @@ export const getScimUserPromise = (
     accountIdentifier,
     userIdentifier,
     ...props
-  }: GetUsingFetchProps<void, void, void, GetScimUserPathParams> & {
+  }: GetUsingFetchProps<void, Failure | Error, void, GetScimUserPathParams> & {
     accountIdentifier: string
     userIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<void, void, void, GetScimUserPathParams>(
+  getUsingFetch<void, Failure | Error, void, GetScimUserPathParams>(
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users/${userIdentifier}`,
     props,
@@ -44466,7 +44549,7 @@ export interface PatchScimUserPathParams {
 }
 
 export type PatchScimUserProps = Omit<
-  MutateProps<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>,
+  MutateProps<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>,
   'path' | 'verb'
 > &
   PatchScimUserPathParams
@@ -44475,7 +44558,7 @@ export type PatchScimUserProps = Omit<
  * Update some fields of a user by uuid
  */
 export const PatchScimUser = ({ accountIdentifier, userIdentifier, ...props }: PatchScimUserProps) => (
-  <Mutate<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>
+  <Mutate<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>
     verb="PATCH"
     path={`/scim/account/${accountIdentifier}/Users/${userIdentifier}`}
     base={getConfig('ng/api')}
@@ -44484,7 +44567,7 @@ export const PatchScimUser = ({ accountIdentifier, userIdentifier, ...props }: P
 )
 
 export type UsePatchScimUserProps = Omit<
-  UseMutateProps<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>,
+  UseMutateProps<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>,
   'path' | 'verb'
 > &
   PatchScimUserPathParams
@@ -44493,7 +44576,7 @@ export type UsePatchScimUserProps = Omit<
  * Update some fields of a user by uuid
  */
 export const usePatchScimUser = ({ accountIdentifier, userIdentifier, ...props }: UsePatchScimUserProps) =>
-  useMutate<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>(
+  useMutate<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>(
     'PATCH',
     (paramsInPath: PatchScimUserPathParams) =>
       `/scim/account/${paramsInPath.accountIdentifier}/Users/${paramsInPath.userIdentifier}`,
@@ -44508,13 +44591,13 @@ export const patchScimUserPromise = (
     accountIdentifier,
     userIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams> & {
+  }: MutateUsingFetchProps<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams> & {
     accountIdentifier: string
     userIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, PatchRequestRequestBody, PatchScimUserPathParams>(
+  mutateUsingFetch<ScimUser, Failure | Error, void, PatchRequestRequestBody, PatchScimUserPathParams>(
     'PATCH',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users/${userIdentifier}`,
@@ -44528,7 +44611,7 @@ export interface UpdateScimUserPathParams {
 }
 
 export type UpdateScimUserProps = Omit<
-  MutateProps<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>,
+  MutateProps<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>,
   'path' | 'verb'
 > &
   UpdateScimUserPathParams
@@ -44537,7 +44620,7 @@ export type UpdateScimUserProps = Omit<
  * Update an existing user by uuid
  */
 export const UpdateScimUser = ({ accountIdentifier, userIdentifier, ...props }: UpdateScimUserProps) => (
-  <Mutate<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>
+  <Mutate<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>
     verb="PUT"
     path={`/scim/account/${accountIdentifier}/Users/${userIdentifier}`}
     base={getConfig('ng/api')}
@@ -44546,7 +44629,7 @@ export const UpdateScimUser = ({ accountIdentifier, userIdentifier, ...props }: 
 )
 
 export type UseUpdateScimUserProps = Omit<
-  UseMutateProps<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>,
+  UseMutateProps<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>,
   'path' | 'verb'
 > &
   UpdateScimUserPathParams
@@ -44555,7 +44638,7 @@ export type UseUpdateScimUserProps = Omit<
  * Update an existing user by uuid
  */
 export const useUpdateScimUser = ({ accountIdentifier, userIdentifier, ...props }: UseUpdateScimUserProps) =>
-  useMutate<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>(
+  useMutate<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>(
     'PUT',
     (paramsInPath: UpdateScimUserPathParams) =>
       `/scim/account/${paramsInPath.accountIdentifier}/Users/${paramsInPath.userIdentifier}`,
@@ -44570,13 +44653,13 @@ export const updateScimUserPromise = (
     accountIdentifier,
     userIdentifier,
     ...props
-  }: MutateUsingFetchProps<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams> & {
+  }: MutateUsingFetchProps<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams> & {
     accountIdentifier: string
     userIdentifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<void, void, void, ScimUserRequestBody, UpdateScimUserPathParams>(
+  mutateUsingFetch<void, Failure | Error, void, ScimUserRequestBody, UpdateScimUserPathParams>(
     'PUT',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Users/${userIdentifier}`,
@@ -44950,6 +45033,60 @@ export const getListOfBranchesByRefConnectorV2Promise = (
   getUsingFetch<ResponseGitBranchesResponseDTO, Failure | Error, GetListOfBranchesByRefConnectorV2QueryParams, void>(
     getConfig('ng/api'),
     `/scm/list-branches`,
+    props,
+    signal
+  )
+
+export interface ListFilesQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repoName?: string
+  connectorRef?: string
+  branch?: string
+  filePath?: string
+}
+
+export type ListFilesProps = Omit<
+  GetProps<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>,
+  'path'
+>
+
+/**
+ * List files
+ */
+export const ListFiles = (props: ListFilesProps) => (
+  <Get<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>
+    path={`/scm/list-files`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListFilesProps = Omit<
+  UseGetProps<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>,
+  'path'
+>
+
+/**
+ * List files
+ */
+export const useListFiles = (props: UseListFilesProps) =>
+  useGet<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>(`/scm/list-files`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * List files
+ */
+export const listFilesPromise = (
+  props: GetUsingFetchProps<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseScmListFilesResponseDTO, Failure | Error, ListFilesQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/list-files`,
     props,
     signal
   )
@@ -53961,6 +54098,7 @@ export interface DeleteSecretV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  forceDelete?: boolean
 }
 
 export type DeleteSecretV2Props = Omit<
@@ -54256,6 +54394,164 @@ export const putSecretViaYamlPromise = (
     SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
+
+export interface PostUserGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type PostUserGroupV2Props = Omit<
+  MutateProps<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PostUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create a User Group
+ */
+export const PostUserGroupV2 = (props: PostUserGroupV2Props) => (
+  <Mutate<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PostUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/v2/user-groups`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePostUserGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PostUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create a User Group
+ */
+export const usePostUserGroupV2 = (props: UsePostUserGroupV2Props) =>
+  useMutate<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PostUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >('POST', `/v2/user-groups`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Create a User Group
+ */
+export const postUserGroupV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PostUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PostUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/v2/user-groups`, props, signal)
+
+export interface PutUserGroupV2QueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type PutUserGroupV2Props = Omit<
+  MutateProps<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PutUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update a User Group
+ */
+export const PutUserGroupV2 = (props: PutUserGroupV2Props) => (
+  <Mutate<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PutUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >
+    verb="PUT"
+    path={`/v2/user-groups`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePutUserGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PutUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update a User Group
+ */
+export const usePutUserGroupV2 = (props: UsePutUserGroupV2Props) =>
+  useMutate<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PutUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >('PUT', `/v2/user-groups`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Update a User Group
+ */
+export const putUserGroupV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PutUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseUserGroupResponseV2DTO,
+    Failure | AccessControlCheckError | Error,
+    PutUserGroupV2QueryParams,
+    UserGroupRequestV2DTORequestBody,
+    void
+  >('PUT', getConfig('ng/api'), `/v2/user-groups`, props, signal)
 
 export interface UpdateTagsForDelegateGroupQueryParams {
   accountIdentifier?: string

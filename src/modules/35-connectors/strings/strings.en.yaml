@@ -924,8 +924,6 @@ pdc:
   editHosts: 'Edit hosts'
   testConnection:
     step1: 'Validating the PDC hosts connectivity'
-connectorReferenceText: "can't be deleted as it is being referenced by other entities. To see the list of entities referencing this connector,"
-cantDeleteConnector: "Can't Delete Connector"
 policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings

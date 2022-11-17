@@ -13,14 +13,11 @@ import {
   Button,
   ButtonVariation,
   Layout,
-  FormInput,
   Container,
-  FormikForm,
-  Formik
+  Checkbox
 } from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { Callout } from '@blueprintjs/core'
-import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import css from './EntityDeleteErrorHandlerDialog.module.scss'
 
@@ -43,7 +40,7 @@ interface CustomButtonContainerProps extends Omit<ContentTextProps, 'setForcedDe
 
 export interface UseEntityDeleteErrorHandlerDialogProps
   extends Omit<ContentTextProps, 'forcedDeleteEnabled' | 'setForcedDeleteEnabled'> {
-  titleText: React.ReactNode
+  titleText?: React.ReactNode
   redirectToReferencedBy: () => void
 }
 
@@ -66,15 +63,11 @@ export const ContentText = (props: ContentTextProps): JSX.Element => {
         })}
       </Text>
       {props.forceDeleteCallback ? (
-        <Formik onSubmit={noop} formName={'forcedDelete'} initialValues={{ forcedDelete: false }}>
-          <FormikForm>
-            <FormInput.CheckBox
-              name="forcedDelete"
-              label={getString('common.forcedDeleteLabel', { type: typeLabelText })}
-              onClick={() => toggleForcedDelete()}
-            />
-          </FormikForm>
-        </Formik>
+        <Checkbox
+          name={`forcedDelete-${type}`}
+          label={getString('common.forcedDeleteLabel', { type: typeLabelText })}
+          onClick={() => toggleForcedDelete()}
+        />
       ) : null}
       {forcedDeleteEnabled ? (
         <Callout className={css.forcedDeleteWarning} intent="warning">
@@ -119,7 +112,15 @@ export const CustomButtonContainer = (props: CustomButtonContainerProps): JSX.El
 export const useEntityDeleteErrorHandlerDialog = (
   props: UseEntityDeleteErrorHandlerDialogProps
 ): UseConfirmationDialogReturn => {
-  const { entity, titleText, redirectToReferencedBy, forceDeleteCallback } = props
+  const { getString } = useStrings()
+  const {
+    entity,
+    titleText = getString('common.cantDeleteEntity', {
+      entity: entity.type.toLowerCase()
+    }),
+    redirectToReferencedBy,
+    forceDeleteCallback
+  } = props
   const [forcedDeleteEnabled, setForcedDeleteEnabled] = useState<boolean>(false)
   const onClose = (): void => {
     setForcedDeleteEnabled(false)
