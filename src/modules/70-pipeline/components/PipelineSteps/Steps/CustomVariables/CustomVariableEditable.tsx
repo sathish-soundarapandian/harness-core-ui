@@ -16,7 +16,7 @@ import {
   ButtonVariation,
   ButtonSize,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'

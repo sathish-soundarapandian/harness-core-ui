@@ -8,7 +8,7 @@
 import React from 'react'
 import type { FormikErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -32,9 +32,9 @@ interface ElastigroupRollbackVariableStepProps {
 
 export class ElastigroupRollbackStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.ElastigroupRollback
-  protected stepName = 'Elastigroup Rollback' //todoelsroll
-  protected stepIcon: IconName = 'undo' //todoelsroll
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ElastigroupRollback' //todoelsroll
+  protected stepName = 'Elastigroup Rollback'
+  protected stepIcon: IconName = 'undo'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ElastigroupRollback'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ChangeSummaryDTO } from 'services/cv'

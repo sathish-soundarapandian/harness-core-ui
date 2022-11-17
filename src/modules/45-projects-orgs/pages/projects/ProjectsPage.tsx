@@ -18,7 +18,7 @@ import {
   DropDown,
   Page,
   ButtonSize
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { useQueryParams } from '@common/hooks'
 import { useGetOrganizationList, useGetProjectAggregateDTOList } from 'services/cd-ng'

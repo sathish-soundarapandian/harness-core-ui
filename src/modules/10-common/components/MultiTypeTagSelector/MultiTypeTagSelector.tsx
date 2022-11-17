@@ -19,7 +19,7 @@ import {
   SelectOption,
   DataTooltipInterface,
   EXPRESSION_INPUT_PLACEHOLDER
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'

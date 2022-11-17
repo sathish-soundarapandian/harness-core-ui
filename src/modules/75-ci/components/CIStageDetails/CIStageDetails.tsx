@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { Container, Button, Text, Layout } from '@wings-software/uicore'
+import { Container, Button, Text, Layout } from '@harness/uicore'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { useReportSummary, useGetToken } from 'services/ti-service'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'

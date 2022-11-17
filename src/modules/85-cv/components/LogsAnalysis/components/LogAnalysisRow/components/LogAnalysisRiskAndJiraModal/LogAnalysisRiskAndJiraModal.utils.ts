@@ -1,4 +1,5 @@
-import { Utils, Color } from '@harness/uicore'
+import { Utils } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 
 const getChartCategories = (series?: Highcharts.SeriesOptionsType[]): string[] => {

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { render, act, fireEvent, Matcher, waitFor } from '@testing-library/react'
 import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'

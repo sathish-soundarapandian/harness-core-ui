@@ -28,7 +28,7 @@ import {
   shouldShowError,
   useToaster,
   Page
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { PageSpinner } from '@common/components'

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Popover, PopoverInteractionKind } from '@blueprintjs/core'
 import cx from 'classnames'

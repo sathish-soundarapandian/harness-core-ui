@@ -8,7 +8,7 @@
 import React, { ReactNode } from 'react'
 import type { CellProps } from 'react-table'
 import moment from 'moment'
-import { CircularPercentageChart, Text } from '@wings-software/uicore'
+import { CircularPercentageChart, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import formatCost from '@ce/utils/formatCost'

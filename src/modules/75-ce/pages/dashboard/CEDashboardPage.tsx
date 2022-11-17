@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Heading, Text, Icon, Layout } from '@wings-software/uicore'
+import { Container, Heading, Text, Icon, Layout } from '@harness/uicore'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 

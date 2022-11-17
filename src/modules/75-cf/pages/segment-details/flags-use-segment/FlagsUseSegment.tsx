@@ -7,8 +7,8 @@
 
 import React, { ReactElement, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, FlexExpander, Heading, Layout, Text, PageError, useToaster } from '@wings-software/uicore'
-import type { HeadingProps } from '@wings-software/uicore/dist/components/Heading/Heading'
+import { Container, FlexExpander, Heading, Layout, Text, PageError, useToaster } from '@harness/uicore'
+import type { HeadingProps } from '@harness/uicore/dist/components/Heading/Heading'
 import { useStrings } from 'framework/strings'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import {

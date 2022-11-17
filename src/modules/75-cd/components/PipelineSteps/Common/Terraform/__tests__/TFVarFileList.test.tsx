@@ -8,7 +8,7 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { MultiTypeInputType, Formik } from '@wings-software/uicore'
+import { MultiTypeInputType, Formik } from '@harness/uicore'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import TfVarFileList from '../Editview/TFVarFileList'
 

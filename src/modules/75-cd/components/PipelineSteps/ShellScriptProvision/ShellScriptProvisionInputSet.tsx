@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  FormikForm,
-  AllowedTypes,
-  FormInput,
-  Text
-} from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes, FormInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { isArray, isEmpty, defaultTo } from 'lodash-es'

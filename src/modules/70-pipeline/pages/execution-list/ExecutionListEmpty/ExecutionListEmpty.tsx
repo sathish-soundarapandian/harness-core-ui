@@ -6,7 +6,7 @@
  */
 
 import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'

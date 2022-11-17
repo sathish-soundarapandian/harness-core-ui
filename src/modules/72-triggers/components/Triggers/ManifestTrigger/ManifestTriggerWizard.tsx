@@ -21,7 +21,7 @@ import {
   Text,
   useConfirmationDialog,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import Wizard from '@common/components/Wizard/Wizard'

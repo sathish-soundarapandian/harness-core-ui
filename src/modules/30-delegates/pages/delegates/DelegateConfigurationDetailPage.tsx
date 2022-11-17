@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, PageError, SimpleTagInput, TextInput, useToggle } from '@wings-software/uicore'
+import { Container, Layout, PageError, SimpleTagInput, TextInput, useToggle } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import {
   SectionContainer,

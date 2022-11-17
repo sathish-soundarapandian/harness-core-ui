@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikValues } from 'formik'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { RbacThumbnailItem, RbacThumbnailSelect } from '@rbac/components/RbacThumbnailSelect/RbacThumbnailSelect'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

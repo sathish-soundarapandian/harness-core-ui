@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard } from '@wings-software/uicore'
+import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { SecretDTOV2 } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'

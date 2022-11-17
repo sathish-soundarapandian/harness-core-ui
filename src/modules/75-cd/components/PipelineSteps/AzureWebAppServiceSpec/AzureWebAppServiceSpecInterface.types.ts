@@ -6,7 +6,7 @@
  */
 
 import type { AllowedTypes } from '@harness/uicore'
-import type { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
+import type { ApplicationConfigBaseFactory } from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
@@ -40,7 +40,7 @@ export interface AzureWebAppServiceSpecFormProps {
   allowableTypes: AllowedTypes
 }
 
-export enum AzureWebAppConfigType {
+export enum ApplicationConfigType {
   applicationSettings = 'applicationSettings',
   connectionStrings = 'connectionStrings',
   startupCommand = 'startupCommand',
@@ -51,7 +51,7 @@ export interface ApplicationConfigProps {
   template: AzureWebAppServiceSpec
   path?: string
   stepViewType?: StepViewType
-  azureWebAppConfigBaseFactory: AzureWebAppConfigBaseFactory
+  applicationConfigBaseFactory: ApplicationConfigBaseFactory
   initialValues: AzureWebAppServiceStep
   readonly: boolean
   stageIdentifier: string
@@ -59,9 +59,9 @@ export interface ApplicationConfigProps {
   formik?: any
   fromTrigger?: boolean
   allowableTypes: AllowedTypes
-  azureWebAppConfig?: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
-  azureWebAppConfigPath?: string
-  type?: AzureWebAppConfigType
+  applicationConfig?: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+  applicationConfigPath?: string
+  type?: ApplicationConfigType
   pathLabel?: string
 }
 

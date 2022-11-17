@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Container, HarnessDocTooltip, Layout } from '@wings-software/uicore'
+import { Card, Container, HarnessDocTooltip, Layout } from '@harness/uicore'
 import { produce } from 'immer'
 import { set, isEmpty, unset, get } from 'lodash-es'
 import cx from 'classnames'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { NodeRiskCountDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import ModuleInfoCards from '../ModuleInfoCards'

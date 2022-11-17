@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, Container, FontVariation, FormInput, Layout, Text } from '@harness/uicore'
+import { Button, Container, FormInput, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import React, { ReactElement } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'

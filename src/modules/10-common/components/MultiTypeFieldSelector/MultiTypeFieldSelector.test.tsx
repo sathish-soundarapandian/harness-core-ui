@@ -9,7 +9,7 @@ import React from 'react'
 import { render, findByText, fireEvent, waitFor } from '@testing-library/react'
 import { Formik, Form } from 'formik'
 
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import MultiTypeFieldSelector, { MultiTypeFieldSelectorProps } from './MultiTypeFieldSelector'

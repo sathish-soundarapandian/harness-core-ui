@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, PageError } from '@wings-software/uicore'
+import { Layout, PageError } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'

@@ -91,3 +91,8 @@
 .overridesAccordionDetails {
   padding-bottom: 0 !important;
 }
+.variableListMenu {
+  :global(.bp3-menu) {
+    max-height: 214px !important;
+  }
+}

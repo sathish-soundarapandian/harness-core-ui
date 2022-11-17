@@ -18,7 +18,7 @@ import {
   NoDataCard,
   TableV2,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'
 import type { ProjectPathProps, UserGroupPathProps } from '@common/interfaces/RouteInterfaces'

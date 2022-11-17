@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container, Layout } from '@wings-software/uicore'
+import { Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { NodeRiskCount } from 'services/cv'
 import { RiskValues } from '@cv/utils/CommonUtils'

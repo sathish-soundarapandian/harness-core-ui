@@ -11,7 +11,6 @@
  * Use the command `yarn strings` to regenerate this file.
  */
 import common from '@common/strings/strings.en.yaml'
-import notifications from '@notifications/strings/strings.en.yaml'
 import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
 import defaultSettings from '@default-settings/strings/strings.en.yaml'
@@ -44,7 +43,6 @@ import gitops from '@gitops/strings/strings.en.yaml'
 export default function languageLoader() {
   return {
     common,
-    notifications,
     auditTrail,
     rbac,
     defaultSettings,

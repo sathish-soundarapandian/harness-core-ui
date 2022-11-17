@@ -18,7 +18,7 @@ import {
   PageSpinner,
   useToaster,
   ExpandingSearchInput
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Menu, MenuItem, Popover, Position } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { useParams, useHistory } from 'react-router-dom'

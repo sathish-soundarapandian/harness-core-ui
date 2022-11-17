@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import {
   calculateStartAndEndTimes,
   getDimensionsAsPerContainerWidth,

@@ -6,7 +6,7 @@
  */
 
 import { Classes } from '@blueprintjs/core'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import React, { useMemo } from 'react'
 import { NUM_OF_LOADING_BLOCKS_TO_SHOW } from './ChangesSourceLoading.constants'
 import css from './ChangesSourceLoading.module.scss'

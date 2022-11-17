@@ -17,7 +17,7 @@ import {
   ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

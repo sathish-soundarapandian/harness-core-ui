@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, FormInput, Layout, TextInput, Text } from '@wings-software/uicore'
+import { Button, FormInput, Layout, TextInput, Text } from '@harness/uicore'
 import { Formik } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
@@ -79,44 +79,41 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
   return (
     <React.Fragment>
       {showBannerInfo ? (
-        isWaitingAll ? (
-          <React.Fragment>
-            <div className={css.info} data-type="harness">
-              <div className={css.infoHeader}>
-                <String
-                  tagName="div"
-                  className={css.statusMsg}
-                  stringID="pipeline.approvalStep.execution.statusMsg"
-                  vars={{
-                    count: approvalData?.details?.approvalActivities?.length || 0,
-                    total: approvalData?.details?.approvers?.minimumCount || 1
-                  }}
-                />
-                {isWaiting ? (
-                  <div className={css.timer}>
-                    <Duration
-                      className={css.duration}
-                      durationText=""
-                      icon="hourglass"
-                      startTime={approvalData?.deadline}
-                      iconProps={{ size: 12 }}
-                    />
-                    <String stringID="pipeline.timeRemainingSuffix" />
-                  </div>
-                ) : null}
-              </div>
-              <Text
-                intent="warning"
-                font={{ align: 'left' }}
-                style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
-                lineClamp={3}
-                width={500}
-              >
-                {approvalData?.details?.approvalMessage}
-              </Text>
+        <React.Fragment>
+          <div className={css.info} data-type="harness">
+            <div className={css.infoHeader}>
+              <String
+                tagName="div"
+                className={css.statusMsg}
+                stringID="pipeline.approvalStep.execution.statusMsg"
+                vars={{
+                  count: approvalData?.details?.approvalActivities?.length || 0,
+                  total: approvalData?.details?.approvers?.minimumCount || 1
+                }}
+              />
+              {isWaiting ? (
+                <div className={css.timer}>
+                  <Duration
+                    className={css.duration}
+                    durationText=""
+                    icon="hourglass"
+                    startTime={approvalData?.deadline}
+                    iconProps={{ size: 12 }}
+                  />
+                  <String stringID="pipeline.timeRemainingSuffix" />
+                </div>
+              ) : null}
             </div>
-          </React.Fragment>
-        ) : (
+            <Text
+              intent="warning"
+              font={{ align: 'left' }}
+              style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+              lineClamp={3}
+              width={500}
+            >
+              {approvalData?.details?.approvalMessage}
+            </Text>
+          </div>
           <StepDetails
             step={{
               startTs: startTs,
@@ -124,7 +121,7 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
               stepParameters: props.stepParameters
             }}
           />
-        )
+        </React.Fragment>
       ) : null}
       <div className={cx(css.harnessApproval, approvalBoxClassName, { [css.completed]: !isWaitingAll })}>
         {Array.isArray(approvalData?.details?.approvalActivities) &&

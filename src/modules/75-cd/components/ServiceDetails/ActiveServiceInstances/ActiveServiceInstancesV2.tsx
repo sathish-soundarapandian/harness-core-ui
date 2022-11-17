@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout, Tab, Tabs, Text } from '@wings-software/uicore'
+import { Card, Layout, Tab, Tabs, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {

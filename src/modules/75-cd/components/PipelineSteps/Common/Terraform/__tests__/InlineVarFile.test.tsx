@@ -9,7 +9,7 @@ import React from 'react'
 
 import { render, waitFor, getByText as getByTextBody } from '@testing-library/react'
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import InlineVarFile from '../Editview/InlineVarFile'
 

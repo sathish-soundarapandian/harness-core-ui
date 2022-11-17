@@ -32,7 +32,7 @@ exports[`Service Configuration handle switch from visual to yaml 1`] = `
     <div
       class="yamlBuilder"
     >
-      dummy
+      <div />
       <div
         class="buttonsWrapper"
       >
@@ -554,7 +554,7 @@ exports[`Service Configuration test the rbac functionality to update readonly co
     <div
       class="yamlBuilder"
     >
-      dummy
+      <div />
       <div
         class="buttonsWrapper"
       >

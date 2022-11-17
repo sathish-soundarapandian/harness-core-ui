@@ -17,7 +17,7 @@ import {
   FormikForm as Form,
   StepProps,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'

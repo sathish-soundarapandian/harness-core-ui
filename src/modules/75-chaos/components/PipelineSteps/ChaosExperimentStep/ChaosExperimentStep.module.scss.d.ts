@@ -9,6 +9,6 @@
 declare const styles: {
   readonly chaosExperimentReferenceField: string
   readonly chaosExperimentStep: string
-  readonly expectedResilienceScoreField: string
+  readonly nameIdDescriptionField: string
 }
 export default styles

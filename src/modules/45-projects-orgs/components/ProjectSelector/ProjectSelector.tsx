@@ -19,7 +19,7 @@ import {
   ButtonVariation,
   ExpandingSearchInput,
   NoDataCard
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { Project, useGetProjectAggregateDTOList } from 'services/cd-ng'

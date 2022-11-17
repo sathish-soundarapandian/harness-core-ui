@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Avatar, Card, ButtonVariation, PageError } from '@wings-software/uicore'
+import { Text, Layout, Avatar, Card, ButtonVariation, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'

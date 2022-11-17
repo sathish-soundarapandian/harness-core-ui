@@ -6,8 +6,7 @@
  */
 
 import { cloneDeep, defaultTo, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
-import type { IconName, SelectOption } from '@harness/uicore'
-import type { AllowedTypes, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, MultiTypeInputType, IconName, SelectOption } from '@harness/uicore'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

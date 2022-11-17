@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion } from '@wings-software/uicore'
+import { Accordion } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import type { K8sChangeEventYAMLProps } from './K8sChangeEventYAML.types'

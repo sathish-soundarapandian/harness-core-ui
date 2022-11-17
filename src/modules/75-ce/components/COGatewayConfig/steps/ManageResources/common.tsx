@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import type { CellProps } from 'react-table'
 import { Color } from '@harness/design-system'
 import type { InstanceDetails } from '@ce/components/COCreateGateway/models'

@@ -83,6 +83,7 @@ import EnvironmentAttributeRenderer from './components/RbacResourceTables/Enviro
 RbacFactory.registerResourceTypeHandler(ResourceType.PIPELINE, {
   icon: 'pipeline-deployment',
   label: 'pipelines',
+  labelSingular: 'common.pipeline',
   permissionLabels: {
     [PermissionIdentifier.VIEW_PIPELINE]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_PIPELINE]: <String stringID="rbac.permissionLabels.createEdit" />,
@@ -98,6 +99,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.PIPELINE, {
 RbacFactory.registerResourceTypeHandler(ResourceType.SERVICE, {
   icon: 'service-deployment',
   label: 'services',
+  labelSingular: 'service',
   permissionLabels: {
     [PermissionIdentifier.VIEW_SERVICE]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_SERVICE]: <String stringID="rbac.permissionLabels.createEdit" />,
@@ -128,6 +130,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT, {
 RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT_GROUP, {
   icon: 'environment-group',
   label: 'common.environmentGroups.label',
+  labelSingular: 'common.environmentGroup.label',
   permissionLabels: {
     [PermissionIdentifier.VIEW_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.createEdit" />,

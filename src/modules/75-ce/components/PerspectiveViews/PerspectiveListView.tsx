@@ -19,7 +19,7 @@ import {
   IconName,
   TableV2,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Menu, Position, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Icon, IconName } from '@wings-software/uicore'
+import { Icon, IconName } from '@harness/uicore'
 
 import { StringKeys, useStrings } from 'framework/strings'
 

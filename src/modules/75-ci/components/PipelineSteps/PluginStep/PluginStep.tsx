@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -94,9 +94,10 @@ export class PluginStep extends PipelineStep<PluginStepData> {
 
   protected type = StepType.Plugin
   protected stepName = 'Configure Plugin Step'
-  protected stepIcon: IconName = 'plugin-step'
+  protected stepIcon: IconName = 'plugin-ci-step'
   protected stepIconColor = '#4F5162'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Plugin'
+  protected stepIconSize = 34
 
   protected stepPaletteVisible = false
 

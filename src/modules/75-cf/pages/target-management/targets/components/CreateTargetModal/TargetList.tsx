@@ -6,7 +6,8 @@
  */
 
 import React, { ChangeEvent, FC, Fragment, useCallback } from 'react'
-import { Button, FontVariation, Text, TextInput } from '@harness/uicore'
+import { Button, Text, TextInput } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { TargetData } from './types'
 import css from './TargetList.module.scss'

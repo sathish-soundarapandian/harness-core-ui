@@ -1,6 +1,7 @@
 import React, { MouseEventHandler, useCallback } from 'react'
 import { Icon } from '@harness/icons'
-import { Intent, useConfirmationDialog } from '@harness/uicore'
+import { useConfirmationDialog } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { DeleteWithPromptProps } from './DeleteWithPrompt.types'
 

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, FormInput, Layout, Text } from '@wings-software/uicore'
+import { Button, Formik, FormikForm, FormInput, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { AccessPoint } from 'services/lw'
 import { VALID_DOMAIN_REGEX } from '@ce/constants'

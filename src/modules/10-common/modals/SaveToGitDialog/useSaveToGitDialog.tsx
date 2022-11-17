@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, getErrorInfoFromErrorObject } from '@wings-software/uicore'
+import { Button, getErrorInfoFromErrorObject } from '@harness/uicore'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { defaultTo, noop } from 'lodash-es'

@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment, TargetAttributesResponse, Variation } from 'services/cf'
 import PercentageRollout, { PercentageRolloutProps } from '@cf/components/PercentageRollout/PercentageRollout'

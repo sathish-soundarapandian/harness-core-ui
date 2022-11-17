@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import type { ServiceNowFieldValueNG } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import css from './ServiceNowCreate.module.scss'

@@ -9,7 +9,7 @@ import React from 'react'
 import { fireEvent, getAllByRole, getByPlaceholderText, getByText, render } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'

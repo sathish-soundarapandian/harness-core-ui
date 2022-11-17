@@ -7,7 +7,8 @@
 
 import React from 'react'
 
-import { Color, FontVariation, Layout, Switch, Text, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import { Layout, Switch, Text, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 

@@ -32,7 +32,8 @@ noEnvironment:
   message: Environments are the different places you run your application where you can configure chaos infrastrutures
 pipelineStep:
   experimentRefLabel: Experiment Reference
-  expectedResiliencyScoreLabel: Expected Resiliency Score
+  expectedResilienceScoreLabel: Expected Resilience Score
+  expectedResilienceScorePlaceholder: Enter expected resilience score
   description: Enter a description for the chaos step
 viewDetailedExecution: View Detailed Execution
 selectChaosExperiment: Select Chaos Experiment

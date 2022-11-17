@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Icon, Layout } from '@wings-software/uicore'
+import { Icon, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import css from './AddStageView.module.scss'

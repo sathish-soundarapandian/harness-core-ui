@@ -6,15 +6,16 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import type { UserGroupDTO } from 'services/cd-ng'
 import UserGroupForm from '@rbac/modals/UserGroupModal/views/UserGroupForm'
 import { useStrings } from 'framework/strings'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 
 export interface UseUserGroupModalProps {
-  onSuccess: () => void
+  onSuccess: (data?: ScopeAndIdentifier) => void
   onCloseModal?: () => void
 }
 
@@ -44,8 +45,8 @@ export const useUserGroupModal = ({ onSuccess }: UseUserGroupModalProps): UseUse
           data={userGroupData}
           isEdit={!!userGroupData && !isAddMember}
           isAddMember={isAddMember}
-          onSubmit={() => {
-            onSuccess()
+          onSubmit={data => {
+            onSuccess(data)
             hideModal()
           }}
           onCancel={hideModal}

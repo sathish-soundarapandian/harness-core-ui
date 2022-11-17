@@ -6,8 +6,8 @@
  */
 
 import type { IOptionProps } from '@blueprintjs/core'
-import type { SelectOption } from '@wings-software/uicore'
-import type { RadioButtonProps } from '@wings-software/uicore/dist/components/RadioButton/RadioButton'
+import type { SelectOption } from '@harness/uicore'
+import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import {

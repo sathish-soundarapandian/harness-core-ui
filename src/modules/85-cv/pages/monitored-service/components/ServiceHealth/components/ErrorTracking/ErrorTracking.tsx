@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Card, NoDataCard } from '@wings-software/uicore'
+import { Container, Card, NoDataCard } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
 import { useStrings } from 'framework/strings'

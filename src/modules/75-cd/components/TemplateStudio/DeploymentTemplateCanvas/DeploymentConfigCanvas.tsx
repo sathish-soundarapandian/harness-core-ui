@@ -20,6 +20,7 @@ import {
 } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { DeploymentConfigStepDrawer } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/DeploymentConfigStepDrawer/DeploymentConfigStepDrawer'
+import { DeployStageErrorProvider } from '@pipeline/context/StageErrorContext'
 import { DeploymentConfigFormWithRef } from './DeploymentTemplateForm/DeploymentConfigForm'
 
 function useSaveStepTemplateListener(): void {
@@ -64,15 +65,16 @@ function useSaveStepTemplateListener(): void {
   })
 }
 
+// eslint-disable-next-line react/display-name
 export const DeploymentConfigCanvasWithRef = React.forwardRef(
   (_props: unknown, formikRef: TemplateFormRef): JSX.Element => {
     useSaveStepTemplateListener()
 
     return (
-      <>
+      <DeployStageErrorProvider>
         <DeploymentConfigFormWithRef ref={formikRef} />
         <DeploymentConfigStepDrawer />
-      </>
+      </DeployStageErrorProvider>
     )
   }
 )

@@ -10,9 +10,8 @@ import cx from 'classnames'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Classes, Menu, Position } from '@blueprintjs/core'
-
-import { Layout, TagsPopover, Text, Checkbox, useConfirmationDialog, Intent, Popover, Button } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Layout, TagsPopover, Text, Checkbox, useConfirmationDialog, Popover, Button } from '@harness/uicore'
+import { Intent, Color } from '@harness/design-system'
 
 import type { EnvironmentResponse, EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

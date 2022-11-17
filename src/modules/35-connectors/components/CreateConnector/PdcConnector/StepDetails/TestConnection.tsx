@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Button, Text, ButtonVariation, StepProps, StepsProgress } from '@wings-software/uicore'
+import { Layout, Button, Text, ButtonVariation, StepProps, StepsProgress } from '@harness/uicore'
 import { Intent, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ResponseMessage, useGetTestConnectionResult } from 'services/cd-ng'

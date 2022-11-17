@@ -8,7 +8,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
   Text,
-  FontVariation,
   Layout,
   CardSelect,
   Icon,
@@ -20,6 +19,7 @@ import {
   useToaster,
   PageSpinner
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { cloneDeep, defaultTo, get, isEmpty, isEqual, omit, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'

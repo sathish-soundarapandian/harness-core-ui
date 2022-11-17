@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { CardSelect, CardSelectType, Text } from '@wings-software/uicore'
+import { CardSelect, CardSelectType, Text } from '@harness/uicore'
 import React from 'react'
 import { FontVariation, Color } from '@harness/design-system'
 import type { FilterCardProps } from './FilterCard.types'

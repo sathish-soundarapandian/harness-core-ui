@@ -6,7 +6,7 @@
  */
 
 import { get } from 'lodash-es'
-import { Utils, Views, SelectOption, MultiSelectOption } from '@wings-software/uicore'
+import { Utils, Views, SelectOption, MultiSelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ResponseListEnvironmentResponse, EnvironmentResponse } from 'services/cd-ng'

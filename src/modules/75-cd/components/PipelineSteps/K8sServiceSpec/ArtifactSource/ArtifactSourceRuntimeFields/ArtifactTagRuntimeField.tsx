@@ -9,14 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
-import {
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  SelectOption,
-  Text,
-  useToaster
-} from '@wings-software/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text, useToaster } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { DockerBuildDetailsDTO, Failure, Error, ArtifactoryBuildDetailsDTO } from 'services/cd-ng'

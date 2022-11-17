@@ -41,6 +41,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_
   yupValidation: Yup.boolean(),
   settingCategory: 'CORE'
 })
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION, {
+  label: 'defaultSettings.mandateAuthorizationForCustomWebhookTriggers',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CORE'
+})
+
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'
@@ -60,6 +67,7 @@ AuditTrailFactory.registerResourceHandler('SETTING', {
 RbacFactory.registerResourceTypeHandler(ResourceType.SETTING, {
   icon: 'nav-settings',
   label: 'common.defaultSettings',
+  labelSingular: 'common.singularLabels.defaultSetting',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CORE_SETTING]: <String stringID="rbac.permissionLabels.view" />,

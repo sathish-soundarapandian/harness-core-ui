@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard, Icon, AllowedTypes } from '@wings-software/uicore'
+import { StepWizard, Icon, AllowedTypes } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
@@ -87,7 +87,7 @@ function ArtifactWizard({
   const [connectivityMode, setConnectivityMode] = React.useState<ConnectivityModeType>()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
-    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 3) {
+    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
       handleViewChange(false)
     }
   }

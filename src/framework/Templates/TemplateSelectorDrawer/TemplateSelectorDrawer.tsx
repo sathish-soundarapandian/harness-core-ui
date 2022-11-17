@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { TemplateSelector } from '@templates-library/components/TemplateSelector/TemplateSelector'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import css from './TemplateSelectorDrawer.module.scss'

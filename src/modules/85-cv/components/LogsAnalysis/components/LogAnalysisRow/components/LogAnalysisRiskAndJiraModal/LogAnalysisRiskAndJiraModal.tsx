@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react'
 import { isEmpty } from 'lodash-es'
-import { Container, Heading, Button, Text, Icon, PageError } from '@wings-software/uicore'
+import { Container, Heading, Button, Text, Icon, PageError } from '@harness/uicore'
 import { Drawer } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
@@ -48,7 +48,7 @@ export function LogAnalysisRiskAndJiraModal(props: LogAnalysisRiskAndJiraModalPr
   }, [onHide])
 
   /* ===============================================
-     COMMENTED CODES WILL BE ADDED IN NEXT SPRINT 
+     COMMENTED CODES WILL BE ADDED IN NEXT SPRINT
     ============================================== */
 
   // const { openEventPreferenceEditModal, closeEventPreferenceEditModal } = useEventPreferenceUpdateModal({

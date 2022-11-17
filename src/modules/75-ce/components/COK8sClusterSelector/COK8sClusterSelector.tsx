@@ -10,16 +10,7 @@ import type { CellProps, Renderer } from 'react-table'
 import { isEmpty as _isEmpty } from 'lodash-es'
 import classNames from 'classnames'
 import ReactTimeago from 'react-timeago'
-import {
-  Button,
-  Container,
-  ExpandingSearchInput,
-  Icon,
-  ButtonVariation,
-  Layout,
-  Radio,
-  Text
-} from '@wings-software/uicore'
+import { Button, Container, ExpandingSearchInput, Icon, ButtonVariation, Layout, Radio, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Table, TagsPopover } from '@common/components'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'

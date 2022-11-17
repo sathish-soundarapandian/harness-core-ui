@@ -5,21 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@harness/uicore'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSettingValue } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { getErrorMessage } from '../utils'
 
 const useIsGithubWebhookAuthenticationEnabled = (): {
   isGithubWebhookAuthenticationEnabled: boolean
   isGithubWebhookAuthenticationDataLoading: boolean
 } => {
   const { showError } = useToaster()
-  const isSpgNgGithubWebhookAuthenticationEnabled = useFeatureFlag(FeatureFlag.SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION)
+  const { NG_SETTINGS } = useFeatureFlags()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const {
@@ -32,16 +32,22 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
       accountIdentifier,
       orgIdentifier,
       projectIdentifier
-    }
+    },
+    lazy: !NG_SETTINGS
   })
 
-  if (projectSettingDataError) {
-    showError(projectSettingDataError.message)
-  }
+  useEffect(() => {
+    if (projectSettingDataError) {
+      showError(getErrorMessage(projectSettingDataError))
+    }
 
-  const isGithubWebhookAuthenticationEnabled = useMemo(() => {
-    return isSpgNgGithubWebhookAuthenticationEnabled && projectSettingData?.data?.value === 'true'
-  }, [projectSettingData, isSpgNgGithubWebhookAuthenticationEnabled])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectSettingDataError])
+
+  const isGithubWebhookAuthenticationEnabled = useMemo(
+    () => projectSettingData?.data?.value === 'true',
+    [projectSettingData]
+  )
 
   return { isGithubWebhookAuthenticationEnabled, isGithubWebhookAuthenticationDataLoading }
 }

@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { StepWizard, SelectOption, ModalErrorHandlerBinding } from '@wings-software/uicore'
+import { StepWizard, SelectOption, ModalErrorHandlerBinding } from '@harness/uicore'
 import {
   useCreateFeatureFlag,
   FeatureFlagRequestRequestBody,

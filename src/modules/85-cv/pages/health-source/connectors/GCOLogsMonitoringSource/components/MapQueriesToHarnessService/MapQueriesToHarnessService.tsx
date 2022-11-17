@@ -13,7 +13,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Utils
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { useStrings } from 'framework/strings'

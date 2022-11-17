@@ -16,7 +16,7 @@ import {
   ButtonVariation,
   PageError,
   shouldShowError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'

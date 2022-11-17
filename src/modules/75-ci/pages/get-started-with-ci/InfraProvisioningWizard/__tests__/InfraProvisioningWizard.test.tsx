@@ -125,7 +125,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByText('next: ci.getStartedWithCI.selectRepo'))
+      fireEvent.click(getByText('next: common.selectRepository'))
     })
 
     await act(async () => {
@@ -179,7 +179,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByText('next: ci.getStartedWithCI.selectRepo'))
+      fireEvent.click(getByText('next: common.selectRepository'))
     })
 
     await act(async () => {

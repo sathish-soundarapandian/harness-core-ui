@@ -7,17 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import { Switch } from '@blueprintjs/core'
-import {
-  Text,
-  Icon,
-  Layout,
-  Button,
-  Card,
-  IconName,
-  ButtonVariation,
-  Container,
-  PageError
-} from '@wings-software/uicore'
+import { Text, Icon, Layout, Button, Card, IconName, ButtonVariation, Container, PageError } from '@harness/uicore'
 import { defaultTo, isEmpty, set, startCase } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'

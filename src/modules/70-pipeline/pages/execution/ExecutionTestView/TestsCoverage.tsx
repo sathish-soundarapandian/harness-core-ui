@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Container, Heading, Button, Text, Switch } from '@wings-software/uicore'
+import { Container, Heading, Button, Text, Switch } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TestsCoverageItem } from './TestsCoverageItem'

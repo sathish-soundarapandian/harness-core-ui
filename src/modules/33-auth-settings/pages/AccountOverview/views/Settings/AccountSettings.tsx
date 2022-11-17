@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Text, PageError, PageSpinner, Collapse, getErrorInfoFromErrorObject } from '@wings-software/uicore'
+import { Container, Text, PageError, PageSpinner, Collapse, getErrorInfoFromErrorObject } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { IconProps } from '@harness/icons'

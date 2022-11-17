@@ -2,7 +2,7 @@
 import React, { FC } from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment } from 'services/cf'
 import useEditTargetGroupCriteriaDialog from '../useEditTargetGroupCriteriaDialog'

@@ -191,7 +191,7 @@ describe('CVSLOsListingPage', () => {
     const { container } = render(<ComponentWrapper />)
 
     expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
-    expect(container.querySelectorAll('.TableV2--body [role="row"]').length).toEqual(1)
+    expect(container.querySelectorAll('.TableV2--body [role="row"]').length).toEqual(2)
   })
 
   test('page retry should trigger both dashboard widget and user journey APIs when both returned error response', () => {

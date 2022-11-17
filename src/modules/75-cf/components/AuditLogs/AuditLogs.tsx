@@ -7,7 +7,7 @@
 
 import cx from 'classnames'
 import React, { useState } from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import type { Feature } from 'services/cf'
 import { AuditLogsToolbar } from './AuditLogsToolbar'
 import { AuditLogsList } from './AuditLogsList'

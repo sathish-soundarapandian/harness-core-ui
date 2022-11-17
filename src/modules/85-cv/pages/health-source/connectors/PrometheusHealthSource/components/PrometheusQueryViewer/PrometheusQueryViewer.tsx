@@ -18,7 +18,7 @@ import {
   useConfirmationDialog,
   MultiTypeInputType,
   getMultiTypeFromValue
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { GetMetricNamesQueryParams, ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'

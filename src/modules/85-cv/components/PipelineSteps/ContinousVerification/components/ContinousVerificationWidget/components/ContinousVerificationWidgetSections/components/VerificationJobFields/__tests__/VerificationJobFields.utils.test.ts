@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypesWithRunTime } from '@wings-software/uicore'
+import type { AllowedTypesWithRunTime } from '@harness/uicore'
 import { getMultiTypeInputProps } from '../VerificationJobFields.utils'
 
 describe('Test for VerificationJobFields Utils', () => {

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { merge } from 'lodash-es'
-import { Tabs, Tab } from '@wings-software/uicore'
+import { Tabs, Tab } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { isExecutionWaitingForInput, isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'

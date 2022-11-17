@@ -8,7 +8,7 @@
 import React from 'react'
 import { isEmpty as _isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { FixedScheduleClient } from '@ce/components/COCreateGateway/models'
 import {

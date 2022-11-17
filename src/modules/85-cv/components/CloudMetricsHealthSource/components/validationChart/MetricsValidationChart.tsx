@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { Container, Icon, NoDataCard, PageError, Text } from '@wings-software/uicore'
+import { Container, Icon, NoDataCard, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import HighchartsReact from 'highcharts-react-official'

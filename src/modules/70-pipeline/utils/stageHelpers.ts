@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, pick, set } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import type {
   GraphLayoutNode,
   PipelineExecutionSummary,
@@ -220,7 +220,7 @@ export const getHelpeTextForTags = (
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
     invalidFields.push(getString('connector'))
   }
-  if (!feed || getMultiTypeFromValue(feed) === MultiTypeInputType.RUNTIME) {
+  if (feed !== undefined && (!feed || getMultiTypeFromValue(feed) === MultiTypeInputType.RUNTIME)) {
     invalidFields.push(getString('pipeline.artifactsSelection.feed'))
   }
   if (
@@ -586,11 +586,12 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
 }
 export const deleteServiceData = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
-    const serviceSpec = stage?.spec?.serviceConfig?.serviceDefinition?.spec as Partial<CustomDeploymentServiceSpec>
-    delete serviceSpec?.artifacts
-    delete serviceSpec?.manifests
-    delete serviceSpec?.configFiles
-    delete serviceSpec?.customDeploymentRef
+    // delete all properties except variables
+    set(
+      stage,
+      'spec.serviceConfig.serviceDefinition.spec',
+      pick(get(stage, 'spec.serviceConfig.serviceDefinition.spec'), ['variables'])
+    )
   }
 }
 //This is to delete stage data in case of new service/ env entity

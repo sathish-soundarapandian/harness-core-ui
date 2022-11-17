@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { debounce } from 'lodash-es'
-import { TextInput, Container } from '@wings-software/uicore'
+import { TextInput, Container } from '@harness/uicore'
 import cx from 'classnames'
 import css from './TableFilter.module.scss'
 

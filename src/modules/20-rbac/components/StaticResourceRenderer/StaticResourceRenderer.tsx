@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Button, TableV2 } from '@wings-software/uicore'
+import { Button, TableV2 } from '@harness/uicore'
 import type { CellProps, Column } from 'react-table'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ResourceHandlerTableData } from '../ResourceHandlerTable/ResourceHandlerTable'

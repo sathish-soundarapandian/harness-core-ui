@@ -8,7 +8,7 @@
 import React from 'react'
 import { get } from 'lodash-es'
 import { useParams, useHistory } from 'react-router-dom'
-import { Text, Select, Container } from '@wings-software/uicore'
+import { Text, Select, Container } from '@harness/uicore'
 import qs from 'qs'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { ExecutionNode, PipelineExecutionSummary, ExecutionGraph } from 'services/pipeline-ng'

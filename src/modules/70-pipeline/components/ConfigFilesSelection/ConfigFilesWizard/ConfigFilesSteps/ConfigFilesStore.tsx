@@ -67,7 +67,6 @@ function ConfigFileStore({
   initialValues,
   expressions,
   allowableTypes,
-  previousStep,
   prevStepData,
   nextStep
 }: StepProps<ConnectorConfigDTO> & ConfigFileStorePropType): React.ReactElement {
@@ -240,15 +239,6 @@ function ConfigFileStore({
               </Layout.Vertical>
 
               <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-                {!isEmpty(prevStepData) && (
-                  <Button
-                    text={getString('back')}
-                    icon="chevron-left"
-                    variation={ButtonVariation.SECONDARY}
-                    onClick={() => previousStep?.({ ...prevStepData })}
-                    margin={{ right: 'medium' }}
-                  />
-                )}
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"

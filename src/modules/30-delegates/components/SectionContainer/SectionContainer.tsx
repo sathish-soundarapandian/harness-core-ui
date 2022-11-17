@@ -7,9 +7,9 @@
 
 import React, { ReactNode } from 'react'
 import cx from 'classnames'
-import { Container, Text, TextProps, HarnessDocTooltip } from '@wings-software/uicore'
+import { Container, Text, TextProps, HarnessDocTooltip } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import type { ContainerProps } from '@wings-software/uicore/dist/components/Container/Container'
+import type { ContainerProps } from '@harness/uicore/dist/components/Container/Container'
 import css from './SectionContainer.module.scss'
 
 export const SectionContainer: React.FC<ContainerProps> = ({ children, style, ...props }) => {

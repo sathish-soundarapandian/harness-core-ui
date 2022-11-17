@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Layout
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import SelectHealthSourceServices from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices'
 import GroupName from '@cv/components/GroupName/GroupName'

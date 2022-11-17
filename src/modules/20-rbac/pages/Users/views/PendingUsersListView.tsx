@@ -17,7 +17,7 @@ import {
   useToaster,
   Page,
   TableV2
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Tag, Intent } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'

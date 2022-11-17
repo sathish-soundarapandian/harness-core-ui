@@ -11,8 +11,6 @@ import { useToaster } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useQueryParams } from '@common/hooks'
@@ -20,16 +18,16 @@ import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes
 import { ResponseModuleLicenseDTO, useStartFreeLicense, useStartTrialLicense } from 'services/cd-ng'
 import useChaosTrialModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
+import { isOnPrem } from '@common/utils/utils'
 import bgImageURL from '../../images/chaos.svg'
 
 const ChaosTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
-
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isFreeEnabled = !isOnPrem()
   const module = 'chaos'
   const moduleType = 'CHAOS'
 

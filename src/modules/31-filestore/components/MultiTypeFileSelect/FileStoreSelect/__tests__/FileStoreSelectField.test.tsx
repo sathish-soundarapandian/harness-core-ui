@@ -8,7 +8,7 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, fireEvent, waitFor, queryByText, queryAllByText } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 
 import { TestWrapper } from '@common/utils/testUtils'

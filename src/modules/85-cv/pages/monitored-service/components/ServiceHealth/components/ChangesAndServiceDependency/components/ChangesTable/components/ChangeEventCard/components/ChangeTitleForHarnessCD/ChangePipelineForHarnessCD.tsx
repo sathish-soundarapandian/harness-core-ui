@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useCallback } from 'react'
-import { Text, Container, Layout, Button, ButtonVariation, ButtonSize } from '@wings-software/uicore'
+import { Text, Container, Layout, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import VerificationStatusCard from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'

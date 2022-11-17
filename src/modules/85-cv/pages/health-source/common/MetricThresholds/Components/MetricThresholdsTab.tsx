@@ -1,5 +1,6 @@
 import React from 'react'
-import { Color, Container, Tabs, Text } from '@harness/uicore'
+import { Container, Tabs, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { CommonFormTypesForMetricThresholds, MetricThresholdsTabProps } from '../MetricThresholds.types'

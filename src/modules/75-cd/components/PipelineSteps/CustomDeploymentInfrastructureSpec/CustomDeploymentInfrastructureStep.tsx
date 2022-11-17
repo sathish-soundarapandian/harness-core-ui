@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 

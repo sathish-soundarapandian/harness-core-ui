@@ -31,7 +31,8 @@ export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
   WinRm: 'command-winrm',
   AzureWebApp: 'azurewebapp',
   KubernetesGitOps: 'gitops-green', //type specific to gitops
-  ECS: 'service-amazon-ecs'
+  ECS: 'service-amazon-ecs',
+  Elastigroup: 'elastigroup'
 }
 
 // this is added for card names in execution strategies

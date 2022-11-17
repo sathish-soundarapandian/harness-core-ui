@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Card, Container, Icon, Layout, Text } from '@harness/uicore'
 import { useHistory } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { getModuleIcon } from '@common/utils/utils'

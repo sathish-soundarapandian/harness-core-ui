@@ -20,16 +20,24 @@ import {
   MultiTypeInputType,
   StepProps,
   AllowedTypes as MultiTypeAllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { Form } from 'formik'
+import { get } from 'lodash-es'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { AllowedTypes, tfVarIcons, ConnectorMap, ConnectorLabelMap, ConnectorTypes } from './TerraformConfigFormHelper'
+import {
+  AllowedTypes,
+  tfVarIcons,
+  ConnectorMap,
+  ConnectorLabelMap,
+  ConnectorTypes,
+  getPath
+} from './TerraformConfigFormHelper'
 
 import css from './TerraformConfigForm.module.scss'
 
@@ -42,6 +50,7 @@ interface TerraformConfigStepOneProps {
   setConnectorView: (val: boolean) => void
   setSelectedConnector: (val: ConnectorTypes) => void
   isTerraformPlan?: boolean
+  isBackendConfig?: boolean
 }
 
 export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigStepOneProps> = ({
@@ -52,7 +61,8 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
   setConnectorView,
   selectedConnector,
   setSelectedConnector,
-  isTerraformPlan = false
+  isTerraformPlan = false,
+  isBackendConfig = false
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -62,17 +72,35 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
     accountId: string
   }>()
 
+  const storeTypes = isBackendConfig ? [...AllowedTypes, 'Harness'] : AllowedTypes
+  const path = getPath(isTerraformPlan, isBackendConfig)
+
   useEffect(() => {
-    const selectedStore = isTerraformPlan
-      ? data?.spec?.configuration?.configFiles?.store?.type
-      : data?.spec?.configuration?.spec?.configFiles?.store?.type
-    setSelectedConnector(selectedStore)
-  }, [data, isTerraformPlan])
+    let selectedStore: ConnectorTypes
+    if (isBackendConfig) {
+      selectedStore = isTerraformPlan
+        ? data?.spec?.configuration?.backendConfig?.spec?.store?.type
+        : data?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type
+    } else {
+      selectedStore = isTerraformPlan
+        ? data?.spec?.configuration?.configFiles?.store?.type
+        : data?.spec?.configuration?.spec?.configFiles?.store?.type
+    }
+
+    selectedStore && setSelectedConnector(selectedStore)
+  }, [data, isTerraformPlan, isBackendConfig, setSelectedConnector])
+
+  const isHarness = (store?: string): boolean => {
+    return store === 'Harness'
+  }
 
   const newConnectorLabel = `${getString('newLabel')} ${
-    !!selectedConnector && getString(ConnectorLabelMap[selectedConnector as ConnectorTypes])
+    !!selectedConnector &&
+    !isHarness(selectedConnector) &&
+    getString(ConnectorLabelMap[selectedConnector as ConnectorTypes])
   } ${getString('connector')}`
   const connectorError = getString('pipelineSteps.build.create.connectorRequiredError')
+
   const configSchema = {
     configFiles: Yup.object().shape({
       store: Yup.object().shape({
@@ -82,50 +110,87 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
       })
     })
   }
-  const validationSchema = isTerraformPlan
-    ? Yup.object().shape({
-        spec: Yup.object().shape({
-          configuration: Yup.object().shape({
-            ...configSchema
+
+  const backendConfigSchema = {
+    backendConfig: Yup.object().shape({
+      spec: Yup.object().shape({
+        store: Yup.object().shape({
+          spec: Yup.object().shape({
+            connectorRef: Yup.string().required(connectorError)
           })
         })
       })
-    : Yup.object().shape({
-        spec: Yup.object().shape({
-          configuration: Yup.object().shape({
+    })
+  }
+
+  const getValidationSchema = (isBeConfig: boolean, isTfPlan: boolean): Yup.ObjectSchema | void => {
+    if (isHarness(selectedConnector)) {
+      return
+    }
+    if (isBeConfig) {
+      return isTfPlan
+        ? Yup.object().shape({
             spec: Yup.object().shape({
-              ...configSchema
+              configuration: Yup.object().shape({
+                ...backendConfigSchema
+              })
             })
           })
-        })
-      })
+        : Yup.object().shape({
+            spec: Yup.object().shape({
+              configuration: Yup.object().shape({
+                spec: Yup.object().shape({
+                  ...backendConfigSchema
+                })
+              })
+            })
+          })
+    } else {
+      return isTfPlan
+        ? Yup.object().shape({
+            spec: Yup.object().shape({
+              configuration: Yup.object().shape({
+                ...configSchema
+              })
+            })
+          })
+        : Yup.object().shape({
+            spec: Yup.object().shape({
+              configuration: Yup.object().shape({
+                spec: Yup.object().shape({
+                  ...configSchema
+                })
+              })
+            })
+          })
+    }
+  }
 
   return (
-    <Layout.Vertical padding="small" className={css.tfConfigForm}>
+    <Layout.Vertical className={css.tfConfigForm}>
       <Heading level={2} style={{ color: Color.BLACK, fontSize: 24, fontWeight: 'bold' }} margin={{ bottom: 'xlarge' }}>
-        {getString('cd.configFileStore')}
+        {isBackendConfig ? getString('cd.backendConfigFileStore') : getString('cd.configFileStore')}
       </Heading>
       <Formik
-        formName="tfPlanConfigForm"
+        formName={isBackendConfig ? 'tfPlanBackendConfigForm' : 'tfPlanConfigForm'}
         enableReinitialize={true}
         onSubmit={values => {
           /* istanbul ignore next */
           nextStep?.({ formValues: values, selectedType: selectedConnector })
         }}
         initialValues={data}
-        validationSchema={validationSchema}
+        validationSchema={getValidationSchema(isBackendConfig, isTerraformPlan)}
       >
         {formik => {
-          const config = formik?.values?.spec?.configuration
-          const connectorRef = isTerraformPlan
-            ? config?.configFiles?.store?.spec?.connectorRef
-            : config?.spec?.configFiles?.store?.spec?.connectorRef
+          const connectorRef = get(formik?.values, `${path}.store.spec.connectorRef`)
           const isFixedValue = getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED
-          const disabled = !selectedConnector || (isFixedValue && !(connectorRef as ConnectorSelectedValue)?.connector)
+          const disabled =
+            !isHarness(selectedConnector) &&
+            (!selectedConnector || (isFixedValue && !(connectorRef as ConnectorSelectedValue)?.connector))
           return (
             <>
               <Layout.Horizontal className={css.horizontalFlex} margin={{ top: 'xlarge', bottom: 'xlarge' }}>
-                {AllowedTypes.map(item => (
+                {storeTypes.map(item => (
                   <div key={item} className={css.squareCardContainer}>
                     <Card
                       className={css.connectorIcon}
@@ -134,12 +199,7 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
                       onClick={() => {
                         setSelectedConnector(item as ConnectorTypes)
                         if (isFixedValue) {
-                          formik?.setFieldValue(
-                            isTerraformPlan
-                              ? 'spec.configuration.configFiles.store.spec.connectorRef'
-                              : 'spec.configuration.spec.configFiles.store.spec.connectorRef',
-                            ''
-                          )
+                          formik?.setFieldValue(`${path}.store.spec.connectorRef`, '')
                         }
                       }}
                     >
@@ -149,9 +209,9 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
                   </div>
                 ))}
               </Layout.Horizontal>
-              <Form className={css.formComponent}>
+              <Form>
                 <div className={css.formContainerStepOne}>
-                  {selectedConnector && (
+                  {selectedConnector && !isHarness(selectedConnector) && (
                     <Layout.Horizontal className={css.horizontalFlex} spacing={'medium'}>
                       <FormMultiTypeConnectorField
                         label={
@@ -167,11 +227,7 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
                         }
                         type={ConnectorMap[selectedConnector]}
                         width={400}
-                        name={
-                          isTerraformPlan
-                            ? 'spec.configuration.configFiles.store.spec.connectorRef'
-                            : 'spec.configuration.spec.configFiles.store.spec.connectorRef'
-                        }
+                        name={`${path}.store.spec.connectorRef`}
                         placeholder={getString('select')}
                         accountIdentifier={accountId}
                         projectIdentifier={projectIdentifier}
@@ -179,22 +235,25 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
                         style={{ marginBottom: 10 }}
                         multiTypeProps={{ expressions, allowableTypes }}
                       />
-                      <Button
-                        className={css.newConnectorButton}
-                        variation={ButtonVariation.LINK}
-                        size={ButtonSize.SMALL}
-                        disabled={isReadonly}
-                        id="new-config-connector"
-                        text={newConnectorLabel}
-                        icon="plus"
-                        iconProps={{ size: 12 }}
-                        onClick={() => {
-                          /* istanbul ignore next */
-                          setConnectorView(true)
-                          /* istanbul ignore next */
-                          nextStep?.({ formValues: data, selectedType: selectedConnector })
-                        }}
-                      />
+                      {getMultiTypeFromValue(get(formik.values, `${path}.store.spec.connectorRef`)) !==
+                      MultiTypeInputType.RUNTIME ? (
+                        <Button
+                          className={css.newConnectorButton}
+                          variation={ButtonVariation.LINK}
+                          size={ButtonSize.SMALL}
+                          disabled={isReadonly}
+                          id="new-config-connector"
+                          text={newConnectorLabel}
+                          icon="plus"
+                          iconProps={{ size: 12 }}
+                          onClick={() => {
+                            /* istanbul ignore next */
+                            setConnectorView(true)
+                            /* istanbul ignore next */
+                            nextStep?.({ formValues: data, selectedType: selectedConnector })
+                          }}
+                        />
+                      ) : null}
                     </Layout.Horizontal>
                   )}
                 </div>

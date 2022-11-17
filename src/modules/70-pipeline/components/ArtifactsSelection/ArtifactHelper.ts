@@ -6,7 +6,7 @@
  */
 
 import type { Schema } from 'yup'
-import type { IconName, SelectOption } from '@wings-software/uicore'
+import type { IconName, SelectOption } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
 import { NameSchema } from '@common/utils/Validation'
@@ -65,7 +65,7 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
   GithubPackageRegistry: 'service-github-package',
-  AzureArtifacts: 'microsoft-azure',
+  AzureArtifacts: 'service-azure-artifacts',
   AmazonMachineImage: 'service-ami'
 }
 

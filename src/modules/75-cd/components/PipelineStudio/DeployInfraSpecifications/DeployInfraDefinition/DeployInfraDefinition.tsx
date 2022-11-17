@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'

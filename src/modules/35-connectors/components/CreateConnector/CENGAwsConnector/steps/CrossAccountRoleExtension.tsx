@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Heading } from '@wings-software/uicore'
+import { Container, Heading } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from '../CreateCeAwsConnector.module.scss'
 

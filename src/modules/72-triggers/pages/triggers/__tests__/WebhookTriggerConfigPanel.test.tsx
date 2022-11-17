@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor, queryByText } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 import { InputTypes, setFieldValue, fillAtForm } from '@common/utils/JestFormHelper'
 import * as pipelineNg from 'services/pipeline-ng'

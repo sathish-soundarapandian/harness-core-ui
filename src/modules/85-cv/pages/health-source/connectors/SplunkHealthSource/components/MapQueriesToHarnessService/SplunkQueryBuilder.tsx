@@ -6,14 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Formik,
-  FormikForm,
-  Utils,
-  useToaster,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@wings-software/uicore'
+import { Formik, FormikForm, Utils, useToaster, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { useStrings } from 'framework/strings'

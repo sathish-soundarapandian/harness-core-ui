@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Container, Text, IconName, CardSelect, Layout, Icon } from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Container, Text, IconName, CardSelect, Layout, Icon } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { StoreType } from '@common/constants/GitSyncTypes'
 

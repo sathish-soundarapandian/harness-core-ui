@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { set } from 'lodash-es'
-import { Button, Layout, StepProps, Heading, Text } from '@wings-software/uicore'
+import { Button, Layout, StepProps, Heading, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useGenerateKubernetesYaml, DelegateSetupDetails, GenerateKubernetesYamlQueryParams } from 'services/portal'

@@ -2970,18 +2970,20 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main StyledProps--padding-right-small StyledProps--color"
-                                          data-icon="run-step"
+                                          data-icon="run-ci-step"
                                           style="color: rgb(79, 81, 98);"
                                         >
                                           <svg
                                             height="16"
-                                            viewBox="0 0 32 29"
+                                            viewBox="0 0 40 41"
                                             width="16"
                                             xmlns="http://www.w3.org/2000/svg"
                                           >
                                             <path
-                                              d="M5.053 0h21.894A5.046 5.046 0 0132 5.053v18.526a5.046 5.046 0 01-5.053 5.053H5.053A5.046 5.046 0 010 23.579V5.053A5.046 5.046 0 015.053 0zm0 1.684a3.378 3.378 0 00-3.369 3.369h28.632a3.378 3.378 0 00-3.369-3.369H5.053zM1.684 23.58a3.378 3.378 0 003.369 3.368h21.894a3.378 3.378 0 003.369-3.368V6.737H1.684v16.842zm23.58 0h-8.422v-1.684h8.421v1.684zM6.736 10.947l1.196-1.195 7.073 7.09-7.073 7.09-1.196-1.195 5.895-5.895-5.895-5.895z"
-                                              fill="currentColor"
+                                              clip-rule="evenodd"
+                                              d="M4 7.755a1 1 0 00-1 1v25a1 1 0 001 1h32a1 1 0 001-1v-25a1 1 0 00-1-1H4zm0 3.77v-2.77h32v2.77H4zm0 1h32v21.23H4v-21.23zm6.755 3.3a.5.5 0 10-.51.86l7.645 4.522-7.643 4.491a.5.5 0 00.506.863l7.644-4.492a1 1 0 00.003-1.723l-7.645-4.521zm11.14 9.93a.5.5 0 000 1H29.5a.5.5 0 100-1h-7.606z"
+                                              fill="#4F5162"
+                                              fill-rule="evenodd"
                                             />
                                           </svg>
                                         </span>

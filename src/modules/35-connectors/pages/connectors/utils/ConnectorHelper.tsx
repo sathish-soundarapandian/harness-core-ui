@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { Connectors } from '@connectors/constants'
 import { StringUtils } from '@common/exports'
@@ -170,7 +170,7 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
     case Connectors.GcpSecretManager:
       return 'connectors.title.gcpSecretManager'
     case Connectors.SPOT:
-      return 'connectors.title.spot'
+      return 'cd.steps.elastigroup.connectorSpot'
     case Connectors.AZURE_ARTIFACTS:
       return 'connectors.title.azureArtifacts'
     default:
@@ -240,7 +240,7 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.AZURE_REPO:
       return 'service-azure'
     case Connectors.AZURE_ARTIFACTS:
-      return 'service-azure'
+      return 'service-azure-artifact-connector'
     case Connectors.DATADOG:
       return 'service-datadog'
     case Connectors.AZURE_KEY_VAULT:
@@ -269,6 +269,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'custom-sm'
     case Connectors.GcpSecretManager:
       return 'gcp-secret-manager'
+    case Connectors.SPOT:
+      return 'spot'
     default:
       return 'placeholder'
   }

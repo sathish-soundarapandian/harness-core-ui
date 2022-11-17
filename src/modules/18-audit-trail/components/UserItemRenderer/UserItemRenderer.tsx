@@ -6,7 +6,7 @@
  */
 
 import React, { MouseEventHandler } from 'react'
-import { Layout, Text, Avatar, MultiSelectOption } from '@wings-software/uicore'
+import { Layout, Text, Avatar, MultiSelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 

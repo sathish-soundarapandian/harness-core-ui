@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, AllowedTypes } from '@wings-software/uicore'
+import type { IconName, AllowedTypes } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepViewType, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import type { ExecutionElementConfig } from 'services/cd-ng'

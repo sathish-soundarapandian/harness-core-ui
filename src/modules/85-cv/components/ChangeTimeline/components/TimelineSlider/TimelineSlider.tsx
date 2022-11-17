@@ -6,7 +6,7 @@
  */
 import React, { useLayoutEffect, useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import { defaultTo } from 'lodash-es'
-import { Button, ButtonSize, ButtonVariation, Container, Layout } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Layout } from '@harness/uicore'
 import Draggable from 'react-draggable'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

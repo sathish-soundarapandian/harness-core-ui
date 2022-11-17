@@ -10,7 +10,7 @@ import moment from 'moment'
 import cx from 'classnames'
 import { Position } from '@blueprintjs/core'
 import { DateRange, DateRangePicker, IDateRangeShortcut } from '@blueprintjs/datetime'
-import { Button, Popover } from '@wings-software/uicore'
+import { Button, Popover } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from './TimeRangeSelector.module.scss'
 

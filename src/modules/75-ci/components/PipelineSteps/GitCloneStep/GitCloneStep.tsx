@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { IconName, MultiTypeInputType } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -86,9 +86,10 @@ export class GitCloneStep extends PipelineStep<GitCloneStepData> {
 
   protected type = StepType.GitClone
   protected stepName = 'Configure Git Clone Step'
-  protected stepIcon: IconName = 'git-clone-step'
+  protected stepIcon: IconName = 'git-clone-ci-step'
+  protected stepIconColor = '#4F5162'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.GitClone'
-
+  protected stepIconSize = 34
   protected stepPaletteVisible = false
 
   protected defaultValues: GitCloneStepData = {

@@ -14,4 +14,5 @@ export interface StepTitleInterface {
   isCurrent: boolean
   stepStatus: StepStatusType
   onClick: (index: number) => void
+  isOptional?: boolean
 }

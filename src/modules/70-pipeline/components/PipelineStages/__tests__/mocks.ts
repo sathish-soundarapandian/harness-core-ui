@@ -54,14 +54,14 @@ export const stageMockData: Array<PipelineStageProps> = [
     isApproval: false
   },
   {
-    name: 'Chained Pipeline',
+    name: 'Pipeline',
     type: StageType.PIPELINE,
     icon: 'chained-pipeline',
     hoverIcon: 'chained-pipeline',
     isDisabled: true,
-    isComingSoon: true,
-    title: 'Chained Pipeline',
-    description: 'pipeline.pipelineSteps.chainedPipeline',
+    isComingSoon: false,
+    title: 'Pipeline',
+    description: 'pipeline.pipelineSteps.chainedPipelineDescription',
     isHidden: false,
     isApproval: false
   },

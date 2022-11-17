@@ -6,16 +6,7 @@
  */
 
 import React from 'react'
-import {
-  Container,
-  Formik,
-  FormikForm,
-  FormInput,
-  Layout,
-  AllowedTypes,
-  Heading,
-  PageError
-} from '@wings-software/uicore'
+import { Container, Formik, FormikForm, FormInput, Layout, AllowedTypes, Heading, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'

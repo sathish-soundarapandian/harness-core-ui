@@ -11,14 +11,13 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
-  Color,
   Container,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
   Icon
 } from '@harness/uicore'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
-
+import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { ErrorList, extractInfo } from '@common/components/ErrorHandler/ErrorHandler'

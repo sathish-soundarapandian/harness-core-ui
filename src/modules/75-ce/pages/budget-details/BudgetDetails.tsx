@@ -19,7 +19,7 @@ import {
   Container,
   Heading,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

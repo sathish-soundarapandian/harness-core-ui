@@ -5,16 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  Accordion,
-  Card,
-  getErrorInfoFromErrorObject,
-  useToaster,
-  Text,
-  FontVariation,
-  Container,
-  Icon
-} from '@harness/uicore'
+import { Accordion, Card, getErrorInfoFromErrorObject, useToaster, Text, Container, Icon } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'

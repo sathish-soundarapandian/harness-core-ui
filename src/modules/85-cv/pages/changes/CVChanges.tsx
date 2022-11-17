@@ -15,7 +15,7 @@ import {
   MultiSelectOption,
   Select,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Column } from 'react-table'

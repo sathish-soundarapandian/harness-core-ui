@@ -21063,6 +21063,32 @@
         }
       ]
     },
+    "ErrorTrackingConditionSpec": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationRuleConditionSpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "errorTrackingEventTypes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["Exceptions", "LogErrors", "HttpErrors", "CustomErrors", "TimeoutErrors"]
+              }
+            },
+            "errorTrackingEventStatus": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["NewEvents"]
+              }
+            }
+          }
+        }
+      ]
+    },
     "HealthScoreConditionSpec": {
       "allOf": [
         {
@@ -21096,7 +21122,8 @@
             "ErrorBudgetBurnRate",
             "ChangeImpact",
             "HealthScore",
-            "ChangeObserved"
+            "ChangeObserved",
+            "CodeErrors"
           ]
         },
         "spec": {

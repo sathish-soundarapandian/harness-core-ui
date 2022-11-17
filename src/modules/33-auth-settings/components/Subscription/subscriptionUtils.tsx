@@ -126,9 +126,18 @@ export function getCostCalculatorBodyByModule({
             usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
             toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
             setNumberOfDevelopers={(value: number) => {
-              updateQuantities({
-                devs: value || subscriptionDetails?.quantities?.featureFlag?.numberOfDevelopers || 1
-              })
+              if (subscriptionDetails.edition === 'ENTERPRISE' && value === 25) {
+                value = 0
+              }
+              if (value > 0) {
+                updateQuantities({
+                  devs: value
+                })
+              } else {
+                updateQuantities({
+                  devs: subscriptionDetails?.quantities?.featureFlag?.numberOfDevelopers || 1
+                })
+              }
             }}
           />
           <FFMAUCard
@@ -149,9 +158,21 @@ export function getCostCalculatorBodyByModule({
               sampleData.minValue
             )}
             setNumberOfMAUs={(value: number) => {
-              updateQuantities({
-                maus: value || subscriptionDetails?.quantities?.featureFlag?.numberOfMau || sampleData.minValue
-              })
+              if (
+                (subscriptionDetails.edition === 'TEAM' && value === 100) ||
+                (subscriptionDetails.edition === 'ENTERPRISE' && value === 1)
+              ) {
+                value = 0
+              }
+              if (value > 0) {
+                updateQuantities({
+                  maus: value
+                })
+              } else {
+                updateQuantities({
+                  maus: subscriptionDetails?.quantities?.featureFlag?.numberOfMau || sampleData.minValue
+                })
+              }
             }}
           />
         </Layout.Vertical>

@@ -118,6 +118,7 @@ export interface StringsMap {
   'common.branchName': string
   'common.by': string
   'common.byType': string
+  'common.cantDeleteEntity': string
   'common.capsAll': string
   'common.cardNumber': string
   'common.cdAndGitops': string
@@ -266,6 +267,7 @@ export interface StringsMap {
   'common.errorHandler.tryTheseSuggestions': string
   'common.execute': string
   'common.executedBy': string
+  'common.executionTab.stepsCount': string
   'common.expiration': string
   'common.expiryDate': string
   'common.exploreAllPlans': string
@@ -306,8 +308,11 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
-  'common.freezeActiveBannerText': string
-  'common.freezeListActiveBannerExpandedText': string
+  'common.forcedDeleteLabel': string
+  'common.forcedDeleteWarning': string
+  'common.freezeActiveBannerTextPrefix': string
+  'common.freezeActiveBannerTimeframe': string
+  'common.freezeListActiveBannerExpandedTextPrefix': string
   'common.freezeListActiveBannerText': string
   'common.freezeWindows': string
   'common.frequency': string
@@ -396,7 +401,6 @@ export interface StringsMap {
   'common.git.validation.targetBranch': string
   'common.gitDetailsTitle': string
   'common.gitOps': string
-  'common.gitSync.allBranches': string
   'common.gitSync.allRepositories': string
   'common.gitSync.branchFetchFailed': string
   'common.gitSync.branchSyncNotAllowed': string
@@ -413,6 +417,7 @@ export interface StringsMap {
   'common.gitSync.resourceLabel': string
   'common.gitSync.rootFolderLabel': string
   'common.gitSync.savingInProgress': string
+  'common.gitSync.selectBranch': string
   'common.gitSync.selectBranchLabel': string
   'common.gitSync.settingUpNewBranch': string
   'common.gitSync.sync': string
@@ -675,6 +680,8 @@ export interface StringsMap {
   'common.readOnly': string
   'common.readonlyPermissions': string
   'common.recommended': string
+  'common.referenceButtonText': string
+  'common.referenceTextWarning': string
   'common.references': string
   'common.refresh': string
   'common.refreshDelegateLogs': string
@@ -783,6 +790,7 @@ export interface StringsMap {
   'common.selectDefaultExperience': string
   'common.selectModules': string
   'common.selectName': string
+  'common.selectRepository': string
   'common.selectService': string
   'common.selectServices': string
   'common.selectTimeFrame': string
@@ -811,6 +819,17 @@ export interface StringsMap {
   'common.showMore': string
   'common.showSelected': string
   'common.sidecarArtifactsText': string
+  'common.singularLabels.accountSetting': string
+  'common.singularLabels.authenticationSetting': string
+  'common.singularLabels.autoStoppingRule': string
+  'common.singularLabels.defaultSetting': string
+  'common.singularLabels.gnupgKey': string
+  'common.singularLabels.governancePolicy': string
+  'common.singularLabels.governancePolicySet': string
+  'common.singularLabels.issue': string
+  'common.singularLabels.repositoryCertificate': string
+  'common.singularLabels.scan': string
+  'common.singularLabels.testTarget': string
   'common.skip': string
   'common.slack': string
   'common.smtp.configured': string
@@ -947,6 +966,7 @@ export interface StringsMap {
   'common.unsavedChangesLong': string
   'common.updating': string
   'common.upgrade': string
+  'common.usage': string
   'common.useSSL': string
   'common.useTemplate': string
   'common.userGroup': string
@@ -1011,54 +1031,6 @@ export interface StringsMap {
   'common.without': string
   'common.yearly': string
   'common.zipCode': string
-  'notifications.buttonSend': string
-  'notifications.configureConditions': string
-  'notifications.emailOrAlias': string
-  'notifications.emailRecipients': string
-  'notifications.emailTestSuccess': string
-  'notifications.enterMicrosoftTeamsUrl': string
-  'notifications.errors.invalidUrl': string
-  'notifications.errors.msTeamUrlRequired': string
-  'notifications.eventRequired': string
-  'notifications.helpMSTeams': string
-  'notifications.helpPagerDuty': string
-  'notifications.helpSlack': string
-  'notifications.infoPagerDuty': string
-  'notifications.infoSlack': string
-  'notifications.invalidPagerDutyKey': string
-  'notifications.invalidWebhookURL': string
-  'notifications.labelEmailUserGroups': string
-  'notifications.labelMS': string
-  'notifications.labelMSTeam': string
-  'notifications.labelMSTeamsUserGroups': string
-  'notifications.labelPDKey': string
-  'notifications.labelPDUserGroups': string
-  'notifications.labelPagerDuty': string
-  'notifications.labelSlackUserGroups': string
-  'notifications.labelWebhookUrl': string
-  'notifications.msTestSuccess': string
-  'notifications.name': string
-  'notifications.nameOftheRule': string
-  'notifications.notificationMethod': string
-  'notifications.notificationName': string
-  'notifications.pagerDutyTestSuccess': string
-  'notifications.pagerDutykey': string
-  'notifications.pagerDutyuserGroups': string
-  'notifications.pipelineEvents': string
-  'notifications.pipelineName': string
-  'notifications.placeholderMSKeys': string
-  'notifications.selectPipelineEvents': string
-  'notifications.selectStagesPlaceholder': string
-  'notifications.slackTestSuccess': string
-  'notifications.slackuserGroups': string
-  'notifications.slackwebhookUrl': string
-  'notifications.stageRequired': string
-  'notifications.titleEmail': string
-  'notifications.titlePagerDuty': string
-  'notifications.titleSlack': string
-  'notifications.userGroupsPlaceholder': string
-  'notifications.validationPDKey': string
-  'notifications.validationWebhook': string
   'auditTrail.Platform': string
   'auditTrail.actions.added_collaborator': string
   'auditTrail.actions.added_membership': string
@@ -1134,6 +1106,54 @@ export interface StringsMap {
   'rbac.manageSCIMText': string
   'rbac.myApiKeys': string
   'rbac.noRoleBinding': string
+  'rbac.notifications.buttonSend': string
+  'rbac.notifications.configureConditions': string
+  'rbac.notifications.emailOrAlias': string
+  'rbac.notifications.emailRecipients': string
+  'rbac.notifications.emailTestSuccess': string
+  'rbac.notifications.enterMicrosoftTeamsUrl': string
+  'rbac.notifications.errors.invalidUrl': string
+  'rbac.notifications.errors.msTeamUrlRequired': string
+  'rbac.notifications.eventRequired': string
+  'rbac.notifications.helpMSTeams': string
+  'rbac.notifications.helpPagerDuty': string
+  'rbac.notifications.helpSlack': string
+  'rbac.notifications.infoPagerDuty': string
+  'rbac.notifications.infoSlack': string
+  'rbac.notifications.invalidPagerDutyKey': string
+  'rbac.notifications.invalidWebhookURL': string
+  'rbac.notifications.labelEmailUserGroups': string
+  'rbac.notifications.labelMS': string
+  'rbac.notifications.labelMSTeam': string
+  'rbac.notifications.labelMSTeamsUserGroups': string
+  'rbac.notifications.labelPDKey': string
+  'rbac.notifications.labelPDUserGroups': string
+  'rbac.notifications.labelPagerDuty': string
+  'rbac.notifications.labelSlackUserGroups': string
+  'rbac.notifications.labelWebhookUrl': string
+  'rbac.notifications.msTestSuccess': string
+  'rbac.notifications.name': string
+  'rbac.notifications.nameOftheRule': string
+  'rbac.notifications.notificationMethod': string
+  'rbac.notifications.notificationName': string
+  'rbac.notifications.pagerDutyTestSuccess': string
+  'rbac.notifications.pagerDutykey': string
+  'rbac.notifications.pagerDutyuserGroups': string
+  'rbac.notifications.pipelineEvents': string
+  'rbac.notifications.pipelineName': string
+  'rbac.notifications.placeholderMSKeys': string
+  'rbac.notifications.selectPipelineEvents': string
+  'rbac.notifications.selectStagesPlaceholder': string
+  'rbac.notifications.slackTestSuccess': string
+  'rbac.notifications.slackuserGroups': string
+  'rbac.notifications.slackwebhookUrl': string
+  'rbac.notifications.stageRequired': string
+  'rbac.notifications.titleEmail': string
+  'rbac.notifications.titlePagerDuty': string
+  'rbac.notifications.titleSlack': string
+  'rbac.notifications.userGroupsPlaceholder': string
+  'rbac.notifications.validationPDKey': string
+  'rbac.notifications.validationWebhook': string
   'rbac.org': string
   'rbac.pendingUsers': string
   'rbac.permissionLabels.access': string
@@ -1298,7 +1318,6 @@ export interface StringsMap {
   'rbac.userGroupPage.userList.deleteTitle': string
   'rbac.userGroupRequired': string
   'rbac.userRequired': string
-  'rbac.userUpperLimit': string
   'rbac.usersPage.deleteConfirmation': string
   'rbac.usersPage.deleteLastAdminError': string
   'rbac.usersPage.deleteLastAdminOrgConfirmation': string
@@ -1335,6 +1354,7 @@ export interface StringsMap {
   'defaultSettings.allowOverrides': string
   'defaultSettings.harnessDefault': string
   'defaultSettings.inheritedFrom': string
+  'defaultSettings.mandateAuthorizationForCustomWebhookTriggers': string
   'defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
@@ -1589,7 +1609,6 @@ export interface StringsMap {
   'filestore.noFilesInFolderTitle': string
   'filestore.noFilesInStore': string
   'filestore.noFilesTitle': string
-  'filestore.referenceButtonText': string
   'filestore.searchResult': string
   'filestore.uploadFileFolder': string
   'filestore.view.fileName': string
@@ -1972,7 +1991,6 @@ export interface StringsMap {
   'connectors.azureKeyVault.validation.vaultName': string
   'connectors.baseURL': string
   'connectors.bearerToken': string
-  'connectors.cantDeleteConnector': string
   'connectors.cdng.artifactTag': string
   'connectors.cdng.baseline': string
   'connectors.cdng.baselineDefaultLabel.lastSuccess': string
@@ -2043,15 +2061,22 @@ export interface StringsMap {
   'connectors.ceAws.crossAccountRoleExtention.step4': string
   'connectors.ceAws.crossAccountRoleExtention.step5': string
   'connectors.ceAws.crossAccountRoleExtention.subHeading': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer2': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.permissionsInvolved': string
+  'connectors.ceAws.crossAccountRoleStep1.cards.providedBy': string
   'connectors.ceAws.crossAccountRoleStep1.cost': string
   'connectors.ceAws.crossAccountRoleStep1.default.feat1': string
   'connectors.ceAws.crossAccountRoleStep1.default.footer': string
   'connectors.ceAws.crossAccountRoleStep1.description': string
   'connectors.ceAws.crossAccountRoleStep1.heading': string
+  'connectors.ceAws.crossAccountRoleStep1.hoverOver': string
   'connectors.ceAws.crossAccountRoleStep1.info': string
   'connectors.ceAws.crossAccountRoleStep1.optimization': string
   'connectors.ceAws.crossAccountRoleStep1.optimizationDes': string
   'connectors.ceAws.crossAccountRoleStep1.optimize.feat1': string
+  'connectors.ceAws.crossAccountRoleStep1.optimize.feat2': string
   'connectors.ceAws.crossAccountRoleStep1.optimize.footer': string
   'connectors.ceAws.crossAccountRoleStep1.optimize.prefix': string
   'connectors.ceAws.crossAccountRoleStep1.subHeading': string
@@ -2363,7 +2388,6 @@ export interface StringsMap {
   'connectors.connectorDetailsHeader': string
   'connectors.connectorEmptyState': string
   'connectors.connectorNotFound': string
-  'connectors.connectorReferenceText': string
   'connectors.connectorsTitle': string
   'connectors.costVisibility': string
   'connectors.createConnector': string
@@ -2625,6 +2649,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.url.k8s': string
   'connectors.testConnectionStep.url.nexus': string
   'connectors.testConnectionStep.url.splunk': string
+  'connectors.testConnectionStep.url.spot': string
   'connectors.testConnectionStep.url.vault': string
   'connectors.testConnectionStep.validationText.appD': string
   'connectors.testConnectionStep.validationText.artifactory': string
@@ -2650,6 +2675,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.pagerduty': string
   'connectors.testConnectionStep.validationText.serviceNow': string
   'connectors.testConnectionStep.validationText.splunk': string
+  'connectors.testConnectionStep.validationText.spot': string
   'connectors.testConnectionStep.validationText.sumologic': string
   'connectors.testConnectionStep.validationText.testingURLReachability': string
   'connectors.testConnectionStep.validationText.vault': string
@@ -3175,6 +3201,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.versionPlaceholder': string
   'pipeline.artifactsSelection.versionRegex': string
   'pipeline.artifactsSelection.versionRegexPlaceholder': string
+  'pipeline.azureWebApp.name': string
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
@@ -3805,6 +3832,7 @@ export interface StringsMap {
   'pipeline.noPipelinesText': string
   'pipeline.noRegions': string
   'pipeline.noRunsLabel': string
+  'pipeline.noRunsSimpleText': string
   'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
@@ -3856,7 +3884,6 @@ export interface StringsMap {
   'pipeline.pipelineInputPanel.selectedExisitingOrProvide': string
   'pipeline.pipelineInputPanel.whatAreInputsets': string
   'pipeline.pipelineSteps.approvalStageDescription': string
-  'pipeline.pipelineSteps.chainedPipeline': string
   'pipeline.pipelineSteps.chainedPipelineDescription': string
   'pipeline.pipelineSteps.customStage': string
   'pipeline.pipelineSteps.customStageDescription': string
@@ -4519,6 +4546,7 @@ export interface StringsMap {
   'cd.allowSimultaneousDeployments': string
   'cd.amazonElasticCmd': string
   'cd.amazonElasticK8sService': string
+  'cd.apiParameters': string
   'cd.argoAdapterURL': string
   'cd.artifactFormErrors.artifactFilePath': string
   'cd.artifactFormErrors.artifactName': string
@@ -4563,6 +4591,12 @@ export interface StringsMap {
   'cd.azureWebAppRollbackDescription': string
   'cd.azureWebAppSwapSlotDescription': string
   'cd.backEndConfig': string
+  'cd.backendConfigFileDetails': string
+  'cd.backendConfigFilePlaceHolder': string
+  'cd.backendConfigFileStepOne': string
+  'cd.backendConfigFileStore': string
+  'cd.backendConfigFileStoreTitle': string
+  'cd.backendConfigurationFile': string
   'cd.cdLaunchText': string
   'cd.cdSwitchToFirstGen.description1': string
   'cd.cdSwitchToFirstGen.description2': string
@@ -4826,7 +4860,6 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructures': string
   'cd.pipelineSteps.environmentTab.viewEnvironmentInputs': string
   'cd.pipelineSteps.environmentTab.viewInfrastructureInputs': string
-  'cd.pipelineSteps.executionTab.stepsCount': string
   'cd.pipelineSteps.infraTab.clusterError': string
   'cd.pipelineSteps.infraTab.deploymentType': string
   'cd.pipelineSteps.infraTab.stageIsRequired': string
@@ -6510,14 +6543,16 @@ export interface StringsMap {
   'cf.noEnvironment.title': string
   'cf.noResultMatch': string
   'cf.onboarding.android': string
-  'cf.onboarding.backToStart': string
   'cf.onboarding.clientKey': string
+  'cf.onboarding.complete': string
   'cf.onboarding.createAFlag': string
   'cf.onboarding.createEnv': string
   'cf.onboarding.createEnvAndSdk': string
   'cf.onboarding.createFlag': string
+  'cf.onboarding.createSdkKey': string
   'cf.onboarding.createdAndValidated': string
   'cf.onboarding.envCreated': string
+  'cf.onboarding.environmentDescription': string
   'cf.onboarding.errorReceivingEvent': string
   'cf.onboarding.eventWeReceived': string
   'cf.onboarding.flagInputLabel': string
@@ -6530,6 +6565,7 @@ export interface StringsMap {
   'cf.onboarding.ios': string
   'cf.onboarding.keyDescriptionClient': string
   'cf.onboarding.keyDescriptionServer': string
+  'cf.onboarding.keyGeneratedBelow': string
   'cf.onboarding.letsGetStarted': string
   'cf.onboarding.listenToEvent': string
   'cf.onboarding.oneCreateAFlag': string
@@ -6548,15 +6584,16 @@ export interface StringsMap {
   'cf.onboarding.readme.ruby': string
   'cf.onboarding.readme.xamarinAndroid': string
   'cf.onboarding.readme.xamarinIOS': string
-  'cf.onboarding.sdkKeyLabel': string
+  'cf.onboarding.sdkKeyDescription': string
   'cf.onboarding.secret': string
+  'cf.onboarding.selectEnvAndSdk': string
   'cf.onboarding.selectLanguage': string
+  'cf.onboarding.selectOrCreateEnvironment': string
   'cf.onboarding.selectOrCreateFlag': string
-  'cf.onboarding.selectYourEnvironment': string
+  'cf.onboarding.selectedLanguageAndEnv': string
   'cf.onboarding.setUpApp': string
   'cf.onboarding.setUpYourCode': string
   'cf.onboarding.setupCode': string
-  'cf.onboarding.setupLabel': string
   'cf.onboarding.simpliestFlag': string
   'cf.onboarding.simpliestFlagDescription': string
   'cf.onboarding.subTitle': string
@@ -6568,6 +6605,7 @@ export interface StringsMap {
   'cf.onboarding.validatingYourFlag': string
   'cf.onboarding.youCreated': string
   'cf.onboarding.youreUsing': string
+  'cf.onboarding.youveSelected': string
   'cf.percentageRollout.bucketBy': string
   'cf.percentageRollout.invalidTotalError': string
   'cf.percentageRollout.toTargetGroup': string
@@ -6762,7 +6800,8 @@ export interface StringsMap {
   'chaos.noEnvironment.message': string
   'chaos.noEnvironment.title': string
   'chaos.pipelineStep.description': string
-  'chaos.pipelineStep.expectedResiliencyScoreLabel': string
+  'chaos.pipelineStep.expectedResilienceScoreLabel': string
+  'chaos.pipelineStep.expectedResilienceScorePlaceholder': string
   'chaos.pipelineStep.experimentRefLabel': string
   'chaos.selectChaosExperiment': string
   'chaos.trial.modal.description': string
@@ -6870,7 +6909,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.security': string
   'ci.getStartedWithCI.securityHelpText': string
   'ci.getStartedWithCI.selectInfra': string
-  'ci.getStartedWithCI.selectRepo': string
   'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.settingUpCIPipeline': string
   'ci.getStartedWithCI.startProvisioning': string
@@ -6938,8 +6976,12 @@ export interface StringsMap {
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
+  'cv.CompositeSLO.CreateMessage': string
+  'cv.CompositeSLO.CreateTitle': string
   'cv.CompositeSLO.DefineSLO': string
   'cv.CompositeSLO.ErrorBudgetPolicy': string
+  'cv.CompositeSLO.MatchingSLO': string
+  'cv.CompositeSLO.NoSloFound': string
   'cv.CompositeSLO.PeriodChangeWarning.message': string
   'cv.CompositeSLO.PeriodChangeWarning.title': string
   'cv.CompositeSLO.SetTarget': string
@@ -7575,6 +7617,8 @@ export interface StringsMap {
   'cv.notifications.sloDescription': string
   'cv.notifications.thresholdBelow': string
   'cv.notifications.validations.conditionIsRequired': string
+  'cv.notifications.validations.eventStatusIsRequired': string
+  'cv.notifications.validations.eventTypeIsRequired': string
   'cv.objectiveValue': string
   'cv.onboarding.activitySources.addMoreSources': string
   'cv.onboarding.activitySources.addedStatus': string

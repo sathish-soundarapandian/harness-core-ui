@@ -20,7 +20,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   getErrorInfoFromErrorObject
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'

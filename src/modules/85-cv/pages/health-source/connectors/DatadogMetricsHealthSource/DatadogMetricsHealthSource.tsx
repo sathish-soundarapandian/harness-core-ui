@@ -14,7 +14,7 @@ import {
   useToaster,
   Utils,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { debounce, noop, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'

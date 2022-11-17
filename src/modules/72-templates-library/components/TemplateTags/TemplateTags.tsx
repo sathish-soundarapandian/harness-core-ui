@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import TagsRenderer, { ListTagsProps } from '@common/components/TagsRenderer/TagsRenderer'
 import css from './TemplateTags.module.scss'
 

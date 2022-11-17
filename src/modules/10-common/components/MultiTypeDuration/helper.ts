@@ -12,7 +12,7 @@ import {
   MultiTypeInputType,
   parseStringToTime,
   timeToDisplayText
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 export interface GetDurationValidationSchemaProps {
   minimum?: string

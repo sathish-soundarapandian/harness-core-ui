@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Button } from '@wings-software/uicore'
-import type { PopoverProps } from '@wings-software/uicore/dist/components/Popover/Popover'
+import { Button } from '@harness/uicore'
+import type { PopoverProps } from '@harness/uicore/dist/components/Popover/Popover'
 import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'

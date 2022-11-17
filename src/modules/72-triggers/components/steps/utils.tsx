@@ -7,7 +7,7 @@
 
 import React, { SetStateAction, Dispatch } from 'react'
 import cx from 'classnames'
-import { FormInput, SelectOption, Text, Container } from '@wings-software/uicore'
+import { FormInput, SelectOption, Text, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, isUndefined, sortBy } from 'lodash-es'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'

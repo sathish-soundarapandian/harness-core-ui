@@ -14,7 +14,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'

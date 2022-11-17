@@ -11,8 +11,8 @@ import { useParams } from 'react-router-dom'
 import { get, omit, pick } from 'lodash-es'
 import produce from 'immer'
 import * as Yup from 'yup'
-import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@wings-software/uicore'
-import { FontVariation } from '@wings-software/design-system'
+import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
@@ -64,6 +64,7 @@ export interface PipelineCreateProps {
   initialValues?: CreatePipelinesValue
   closeModal?: () => void
   gitDetails?: IGitContextFormProps
+  primaryButtonText: string
 }
 
 export default function CreatePipelines({
@@ -80,7 +81,8 @@ export default function CreatePipelines({
     connectorRef: ''
   },
   closeModal,
-  gitDetails
+  gitDetails,
+  primaryButtonText
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
@@ -247,7 +249,7 @@ export default function CreatePipelines({
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
-                text={isEdit ? getString('continue') : getString('start')}
+                text={primaryButtonText}
                 disabled={gitDetails?.remoteFetchFailed}
               />
               &nbsp; &nbsp;

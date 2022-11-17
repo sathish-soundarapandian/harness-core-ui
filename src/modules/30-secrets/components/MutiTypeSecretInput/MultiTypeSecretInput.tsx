@@ -22,7 +22,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Layout
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { defaultTo, get, pick } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'

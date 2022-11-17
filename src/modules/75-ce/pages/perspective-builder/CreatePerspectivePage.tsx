@@ -7,18 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  Layout,
-  Tabs,
-  Tab,
-  Icon,
-  Text,
-  HarnessDocTooltip,
-  PageHeader,
-  PageBody,
-  PageSpinner
-} from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Layout, Tabs, Tab, Icon, Text, HarnessDocTooltip, PageHeader, PageBody, PageSpinner } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'

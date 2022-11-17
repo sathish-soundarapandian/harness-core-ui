@@ -9,7 +9,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { Color, Container, FontVariation, Icon, Layout, PageBody, Tab, Tabs, Text, Utils } from '@harness/uicore'
+import { Container, Icon, Layout, PageBody, Tab, Tabs, Text, Utils } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   Service,

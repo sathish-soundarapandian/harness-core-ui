@@ -64,8 +64,8 @@ const saveSettings = jest.fn(data => {
 
   return Promise.resolve(response)
 })
-jest.mock('@wings-software/uicore', () => ({
-  ...jest.requireActual('@wings-software/uicore'),
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
   useToaster: jest.fn(() => ({
     showSuccess: jest.fn(),
     showError: jest.fn().mockImplementation(() => {

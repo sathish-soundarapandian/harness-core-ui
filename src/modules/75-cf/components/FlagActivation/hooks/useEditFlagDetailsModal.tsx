@@ -15,7 +15,7 @@ import {
   FormInput,
   Layout,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Divider } from '@blueprintjs/core'
 import * as yup from 'yup'

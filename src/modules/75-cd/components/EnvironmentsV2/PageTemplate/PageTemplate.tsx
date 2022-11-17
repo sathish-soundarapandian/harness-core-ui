@@ -11,7 +11,6 @@ import { defaultTo } from 'lodash-es'
 
 import {
   Page,
-  FontVariation,
   Heading,
   HarnessDocTooltip,
   getErrorInfoFromErrorObject,
@@ -25,7 +24,7 @@ import {
   Text,
   DropDown
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { FilterProperties, GetFilterListQueryParams, useGetFilterList } from 'services/cd-ng'

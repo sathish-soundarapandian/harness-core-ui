@@ -19,7 +19,7 @@ import {
   ButtonVariation,
   Utils,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem } from '@blueprintjs/core'
 import { useToaster } from '@common/components'

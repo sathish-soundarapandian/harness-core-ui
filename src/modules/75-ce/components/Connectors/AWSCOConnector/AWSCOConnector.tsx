@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard } from '@wings-software/uicore'
+import { StepWizard } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'

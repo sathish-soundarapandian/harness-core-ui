@@ -12,7 +12,7 @@ dashboard:
 steps:
   common:
     clusterDetails: Cluster Details
-    selectOrEnterClusterPlaceholder: Select or add Cluster
+    selectOrEnterClusterPlaceholder: Select or Enter Cluster
     releaseNamePlaceholder: Enter Release Name
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
@@ -65,7 +65,7 @@ steps:
     resourceGroupError: 'No resource groups found with given Subscription'
     clusterError: 'No cluster found with given Resource Group'
   azureWebAppInfra:
-    azureWebApp: 'Azure Web App'
+    azureWebApp: '{{ $.pipeline.azureWebApp.name }}'
     subscription: '{{ $.common.subscriptionId }}'
     subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
     webAppPlaceholder: 'Select or add Web App Name'
@@ -153,6 +153,7 @@ setUpProvisionerBtnText: Set Up Provisioner
 filePathRequired: Atleast one file path is required
 pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
+backendConfigFilePlaceHolder: 'Specify Backend Config File...'
 
 configIdentifer: Configuration Identifier
 addInline: Add Inline
@@ -169,6 +170,7 @@ enterTragets: Enter Targets
 exportTerraformPlanJson: Export JSON representation of Terraform Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
+backendConfigurationFile: 'Backend Configuration File Repository (optional)'
 terraformVarFiles: 'Terraform Var Files'
 secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
@@ -209,11 +211,11 @@ pipelineSteps:
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy environments in parallel?
     environmentGroupDialogTitleText: Deploy to environment group?
-    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group?. If you choose to proceed, your existing environments will be lost.
+    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
-    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures?. If you choose to proceed, your existing environment will be migrated automatically.
+    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures? If you choose to proceed, your existing environment will be migrated automatically.
     singleEnvironmentDialogTitleText: Deploy to single environment?
-    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment?. If you choose to proceed, your existing environments will be lost.
+    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment? If you choose to proceed, your existing environments will be lost.
     deleteEnvironmentFromListDialogTitleText: Remove Environment from list?
     deleteEnvironmentFromListConfirmationText: Are you sure you want to remove Environment - {{name}} from the list?
     deleteInfrastructureFromListDialogTitleText: Remove Infrastructure from list?
@@ -256,8 +258,6 @@ pipelineSteps:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector
     stageIsRequired: Stage is required
-  executionTab:
-    stepsCount: At least one step is required
 cdLaunchText: Launch CD First Generation
 serviceDashboard:
   activeServiceInstancesLabel: '{{$.common.subscriptions.usage.srvcInst}}'
@@ -385,6 +385,10 @@ configFileDetails: 'Config File Details'
 configFileStore: 'Specify Terraform Config File Store'
 configFileStepOne: 'Terraform Config Store'
 configFileStoreTitle: 'Config File'
+backendConfigFileDetails: 'Backend Config File Details'
+backendConfigFileStore: 'Specify Terraform Backend Config File Store'
+backendConfigFileStepOne: 'Terraform Backend Config Store'
+backendConfigFileStoreTitle: 'Backend Config File'
 selectRepository: Select a repository
 selectArtifact: Select an artifact
 artifactName: Artifact Name
@@ -592,6 +596,7 @@ useStepTemplatesForYourDeploymentType: Use step templates for your deployment ty
 removeStepTemplate: Remove Step Template
 duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+apiParameters: API Parameters
 artifactSource:
   artifactRepositoryTypeIsRequired: Artifact Repository Type is required
 azureArm:

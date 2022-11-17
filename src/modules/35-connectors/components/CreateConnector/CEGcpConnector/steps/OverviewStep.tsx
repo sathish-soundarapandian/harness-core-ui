@@ -18,20 +18,19 @@ import {
   StepProps,
   Icon,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { pick, omit, isEmpty, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorInfoDTO,
-  GcpCloudCostConnector,
   ConnectorFilterProperties,
   useGetConnectorListV2,
   GetConnectorListV2QueryParams,
-  Failure,
-  GcpBillingExportSpec
+  Failure
 } from 'services/cd-ng'
+import type { GcpBillingExportSpec, GcpCloudCostConnector } from 'services/ce'
 import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'

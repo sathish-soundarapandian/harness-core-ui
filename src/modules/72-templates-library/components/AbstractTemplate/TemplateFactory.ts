@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type React from 'react'
 import type { Template } from '@templates-library/components/AbstractTemplate/Template'
 import type { Scope } from '@common/interfaces/SecretsInterface'

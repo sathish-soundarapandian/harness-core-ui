@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor, act } from '@testing-library/react'
-import { Formik, FormInput } from '@wings-software/uicore'
+import { Formik, FormInput } from '@harness/uicore'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'

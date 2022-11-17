@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import css from './TimelineRowLoading.module.scss'
 
 interface TimelineRowLoadingProps {

@@ -19,7 +19,7 @@ import {
   SelectOption,
   Text,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import produce from 'immer'
 import { debounce, defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'

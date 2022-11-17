@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { Text, Color, Container, Layout } from '@harness/uicore'
+import { Text, Container, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
@@ -19,12 +20,12 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import {
   ConnectorLabelMap,
   ConnectorTypes,
   ConnectorMap
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './Template.module.scss'
 

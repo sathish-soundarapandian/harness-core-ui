@@ -17,7 +17,7 @@ import {
   Container,
   ButtonVariation,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'

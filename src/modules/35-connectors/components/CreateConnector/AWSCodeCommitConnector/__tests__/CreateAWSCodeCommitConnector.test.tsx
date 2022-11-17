@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, FormInput } from '@wings-software/uicore'
+import { Container, FormInput } from '@harness/uicore'
 import { render, fireEvent } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { noop } from 'lodash-es'

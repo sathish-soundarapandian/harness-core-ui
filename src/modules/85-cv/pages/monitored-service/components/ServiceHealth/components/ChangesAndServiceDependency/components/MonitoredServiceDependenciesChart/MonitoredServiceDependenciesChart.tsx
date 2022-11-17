@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Icon, PageError, NoDataCard } from '@wings-software/uicore'
+import { Container, Icon, PageError, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { DependencyGraph } from '@cv/components/DependencyGraph/DependencyGraph'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

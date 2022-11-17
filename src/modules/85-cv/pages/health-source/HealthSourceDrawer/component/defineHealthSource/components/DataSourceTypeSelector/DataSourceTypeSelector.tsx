@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useFormikContext } from 'formik'
-import { Container, FontVariation, GroupedThumbnailSelect, Text } from '@harness/uicore'
+import { Container, GroupedThumbnailSelect, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getDataGroupSelectorItems } from './DataSourceTypeSelectorUtils'
 import { ConnectorRefFieldName, DataSourceTypeFieldNames } from '../../DefineHealthSource.constant'

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Layout, Container, CardSelect, Text, CardBody, FormError } from '@wings-software/uicore'
+import { Layout, Container, CardSelect, Text, CardBody, FormError } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { IconName } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { get } from 'lodash-es'
 
 import routes from '@common/RouteDefinitions'

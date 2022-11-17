@@ -6,7 +6,7 @@
  */
 
 import React, { SyntheticEvent } from 'react'
-import { Button, Container } from '@wings-software/uicore'
+import { Button, Container } from '@harness/uicore'
 import { isEmpty, merge, defaultTo } from 'lodash-es'
 import { Drawer, Position } from '@blueprintjs/core'
 import type { StepElementConfig } from 'services/cd-ng'

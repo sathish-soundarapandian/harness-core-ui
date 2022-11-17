@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react'
-import { Container, Tab, Tabs, PageError, Views } from '@wings-software/uicore'
+import { Container, Tab, Tabs, PageError, Views } from '@harness/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
 import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'

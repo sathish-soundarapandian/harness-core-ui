@@ -20,7 +20,7 @@ import {
   NoDataCard,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

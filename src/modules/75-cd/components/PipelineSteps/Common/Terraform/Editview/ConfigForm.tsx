@@ -20,7 +20,7 @@ import {
   Container,
   ButtonVariation,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import cx from 'classnames'
 

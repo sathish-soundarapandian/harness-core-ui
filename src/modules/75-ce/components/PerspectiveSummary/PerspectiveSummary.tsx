@@ -18,7 +18,7 @@ import {
   Link,
   ButtonSize,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'

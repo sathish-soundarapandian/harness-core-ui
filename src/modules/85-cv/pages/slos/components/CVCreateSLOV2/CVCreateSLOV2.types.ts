@@ -49,6 +49,7 @@ export interface SLOObjective extends Partial<SLOHealthListView> {
   projectIdentifier?: string
   serviceLevelObjectiveRef: string
   weightagePercentage: number
+  isManuallyUpdated?: boolean
 }
 
 export interface SLOV2Form {

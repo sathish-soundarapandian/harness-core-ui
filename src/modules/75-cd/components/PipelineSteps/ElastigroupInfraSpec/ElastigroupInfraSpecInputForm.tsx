@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { connect } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
+import { Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 
 import type { ElastigroupInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

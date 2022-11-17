@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
-import { Button, ButtonVariation, FormikForm, FormInput, AllowedTypes } from '@wings-software/uicore'
+import { Button, ButtonVariation, FormikForm, FormInput, AllowedTypes } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import type { IOptionProps } from '@blueprintjs/core'
 

@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Color, Container, FontVariation, Heading, Layout, Text } from '@harness/uicore'
+import { Container, Heading, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { HeaderTitleProps } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 

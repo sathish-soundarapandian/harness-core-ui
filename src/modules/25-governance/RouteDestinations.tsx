@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
@@ -33,6 +33,7 @@ export const AccountSideNavProps: SidebarContext = {
 RbacFactory.registerResourceTypeHandler(ResourceType.GOVERNANCE_POLICY, {
   icon: 'nav-settings',
   label: 'governance.permissions.governancePolicies',
+  labelSingular: 'common.singularLabels.governancePolicy',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.GOV_VIEW_POLICY]: <String stringID="rbac.permissionLabels.view" />,
@@ -44,6 +45,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GOVERNANCE_POLICY, {
 RbacFactory.registerResourceTypeHandler(ResourceType.GOVERNANCE_POLICYSETS, {
   icon: 'nav-settings',
   label: 'governance.permissions.governancePolicySets',
+  labelSingular: 'common.singularLabels.governancePolicySet',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.GOV_VIEW_POLICYSET]: <String stringID="rbac.permissionLabels.view" />,

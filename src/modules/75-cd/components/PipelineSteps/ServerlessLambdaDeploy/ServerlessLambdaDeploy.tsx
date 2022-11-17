@@ -14,7 +14,7 @@ import {
   MultiTypeInputType,
   AllowedTypes,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 

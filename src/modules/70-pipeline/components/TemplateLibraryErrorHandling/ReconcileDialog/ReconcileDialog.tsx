@@ -6,12 +6,10 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Text, useToaster } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
-import { Color } from '@wings-software/design-system'
+import { Button, ButtonVariation, Container, Layout, Text, useToaster, PageSpinner } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { PageSpinner } from '@harness/uicore'
 import {
   refreshAllPromise as refreshAllTemplatePromise,
   ErrorNodeSummary,

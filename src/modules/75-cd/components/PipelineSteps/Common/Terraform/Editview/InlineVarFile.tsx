@@ -18,7 +18,7 @@ import {
   FormikForm,
   ButtonVariation,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 
 import { Classes, Dialog } from '@blueprintjs/core'

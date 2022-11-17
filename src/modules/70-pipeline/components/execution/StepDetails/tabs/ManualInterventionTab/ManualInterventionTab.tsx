@@ -8,7 +8,7 @@
 import React from 'react'
 import { chunk } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Thumbnail, useToaster } from '@wings-software/uicore'
+import { Thumbnail, useToaster } from '@harness/uicore'
 import cx from 'classnames'
 
 import { String, useStrings } from 'framework/strings'

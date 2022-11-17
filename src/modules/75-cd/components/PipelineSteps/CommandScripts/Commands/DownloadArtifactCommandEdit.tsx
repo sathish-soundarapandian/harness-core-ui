@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, Container, AllowedTypes, Text } from '@harness/uicore'
+import { Container, AllowedTypes, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'

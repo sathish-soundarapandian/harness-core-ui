@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Position } from '@blueprintjs/core'
-import { Popover, Layout, Text, Container, Button, ButtonVariation } from '@wings-software/uicore'
+import { Popover, Layout, Text, Container, Button, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ErrorTooltipProps } from './ErrorTooltip.types'

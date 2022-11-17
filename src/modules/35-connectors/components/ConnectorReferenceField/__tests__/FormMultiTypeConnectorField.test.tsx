@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, queryByText, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { catalogueData } from '@connectors/pages/connectors/__tests__/mockData'
 import { FormMultiTypeConnectorField } from '../FormMultiTypeConnectorField'

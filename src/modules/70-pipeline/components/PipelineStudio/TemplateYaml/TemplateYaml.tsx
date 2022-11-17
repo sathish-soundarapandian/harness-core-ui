@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text, Layout } from '@wings-software/uicore'
+import { Container, Text, Layout } from '@harness/uicore'
 import { defaultTo, merge, isEmpty } from 'lodash-es'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 import { Color } from '@harness/design-system'

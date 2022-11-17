@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import css from './ChangeTimelineError.module.scss'
 

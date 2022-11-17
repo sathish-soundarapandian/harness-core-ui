@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonVariation, Color, Layout, Page, PageSpinner, Text, useToaster } from '@harness/uicore'
+import { Button, ButtonVariation, Layout, Page, PageSpinner, Text, useToaster } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import React, { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'

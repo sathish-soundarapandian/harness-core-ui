@@ -8,7 +8,7 @@
 import React, { useState, useCallback } from 'react'
 import { isEqual } from 'lodash-es'
 import cx from 'classnames'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { DeploymentNodes } from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes'
 import type { DeploymentNodeAnalysisResult } from '../../../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'

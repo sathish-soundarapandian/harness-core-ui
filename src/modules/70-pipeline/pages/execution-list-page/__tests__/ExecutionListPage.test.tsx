@@ -10,7 +10,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import { useGetListOfExecutions } from 'services/pipeline-ng'
+import { useGetExecutionRepositoriesList, useGetListOfExecutions } from 'services/pipeline-ng'
 import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
 import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
@@ -24,12 +24,41 @@ jest.mock('@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExe
 
 const mockGetCallFunction = jest.fn()
 
+const mockRepositories = {
+  status: 'SUCCESS',
+  data: {
+    repositories: ['main', 'main-patch', 'main-patch1', 'main-patch2']
+  },
+  metaData: null,
+  correlationId: 'cc779876-d3af-44e5-8991-916dfecb4548'
+}
+
+const fetchRepositories = jest.fn(() => {
+  return Object.create(mockRepositories)
+})
+
+const mockBranches = {
+  status: 'SUCCESS',
+  data: { branches: ['15sept', 'main', 'main-patch-8nov'] },
+  metaData: null,
+  correlationId: 'a48d56f0-2d6f-4b4b-8b13-d8eba153005f'
+}
+const fetchBranches = jest.fn(() => {
+  return Object.create(mockBranches)
+})
+
 jest.mock('services/pipeline-ng', () => ({
   useGetListOfExecutions: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve({})),
     loading: false,
     cancel: jest.fn()
   })),
+  useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  }),
+  useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches, error: null, loading: false }
+  }),
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve({})), cancel: jest.fn(), loading: false }
@@ -103,6 +132,8 @@ describe('ExecutionListPage', () => {
         <ExecutionListPage />
       </TestWrapper>
     )
+    expect(useGetExecutionRepositoriesList).toBeCalled()
+
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     const noRunsLabel = await screen.findByText('pipeline.noRunsText')
     expect(noRunsLabel).toBeInTheDocument()
@@ -117,6 +148,8 @@ describe('ExecutionListPage', () => {
         <ExecutionListPage />
       </TestWrapper>
     )
+    expect(useGetExecutionRepositoriesList).toBeCalled()
+
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     const noRunsText = await screen.findByText('pipeline.noRunsText')
     expect(noRunsText).toBeInTheDocument()
@@ -131,6 +164,8 @@ describe('ExecutionListPage', () => {
         <ExecutionListPage />
       </TestWrapper>
     )
+    expect(useGetExecutionRepositoriesList).toBeCalled()
+
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     const noScansText = await screen.findByText('pipeline.noRunsText')
     expect(noScansText).toBeInTheDocument()

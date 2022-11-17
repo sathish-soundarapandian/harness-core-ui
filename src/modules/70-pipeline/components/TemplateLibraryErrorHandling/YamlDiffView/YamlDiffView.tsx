@@ -6,13 +6,21 @@
  */
 
 import React, { useRef } from 'react'
-import { Button, ButtonSize, ButtonVariation, Container, Layout, Text, useIsMounted } from '@wings-software/uicore'
-import { Color } from '@wings-software/design-system'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
+  Layout,
+  Text,
+  useIsMounted,
+  PageError,
+  PageSpinner
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { MonacoDiffEditor } from 'react-monaco-editor'
-import { PageError, PageSpinner } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
 import {
   ErrorNodeSummary,
   getRefreshedYamlPromise,

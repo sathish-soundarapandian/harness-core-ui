@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { SeriesColumnOptions, SeriesLineOptions } from 'highcharts/highcharts'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { CCM_CHART_TYPES } from '@ce/constants'
 import type { BudgetData, BudgetCostData, BudgetPeriod } from 'services/ce/services'

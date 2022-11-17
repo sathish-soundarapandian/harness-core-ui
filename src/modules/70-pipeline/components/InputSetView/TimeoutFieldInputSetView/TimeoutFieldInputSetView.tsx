@@ -6,9 +6,8 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { MultiTypeInputType, Container, getMultiTypeFromValue, Layout } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
-import { Container, getMultiTypeFromValue, Layout } from '@wings-software/uicore'
 import {
   FormMultiTypeDurationField,
   FormMultiTypeDurationProps

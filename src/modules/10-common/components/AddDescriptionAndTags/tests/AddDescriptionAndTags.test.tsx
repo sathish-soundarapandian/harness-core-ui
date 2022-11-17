@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { AddDescriptionAndTagsWithIdentifier } from '../AddDescriptionAndTags'
 import i18n from '../AddDescriptionAndTags.i18n'
 

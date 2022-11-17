@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Tabs, Tab, Icon, IconName } from '@wings-software/uicore'
+import { Tabs, Tab, Icon, IconName } from '@harness/uicore'
 import ContentEditable from 'react-contenteditable'
 import cx from 'classnames'
 import type { OnClickHandlerParams } from '@cv/hooks/CVTabsHook/useCVTabsHook'

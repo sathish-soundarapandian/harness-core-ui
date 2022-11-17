@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Text } from '@wings-software/uicore'
+import { get } from 'lodash-es'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { TerraformData, TerraformVariableStepProps, TerraformStoreTypes } from './TerraformInterfaces'
@@ -29,13 +30,13 @@ export function TerraformVariableStep(props: TerraformVariableStepProps): React.
           className={pipelineVariableCss.variablePaddingL3}
         />
         <ConfigVariables {...props} />
-
-        {variablesData?.spec?.configuration?.spec?.backendConfig?.spec && (
+        {(get(variablesData?.spec, 'configuration.spec.backendConfig.spec.content') ||
+          get(variablesData?.spec, 'configuration.spec.backendConfig.spec.store.spec')) && (
           <>
             <Text className={css.stepTitle}>{getString('pipelineSteps.backendConfig')}</Text>
             <VariablesListTable
-              data={variablesData.spec?.configuration?.spec?.backendConfig?.spec}
-              originalData={initialValues.spec?.configuration?.spec?.backendConfig?.spec}
+              data={get(variablesData?.spec, 'configuration.spec.backendConfig.spec')}
+              originalData={get(initialValues.spec, 'configuration.spec.backendConfig.spec')}
               metadataMap={metadataMap}
               className={pipelineVariableCss.variablePaddingL4}
             />

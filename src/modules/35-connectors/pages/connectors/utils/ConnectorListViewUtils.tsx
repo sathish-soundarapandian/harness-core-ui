@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import classNames from 'classnames'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'

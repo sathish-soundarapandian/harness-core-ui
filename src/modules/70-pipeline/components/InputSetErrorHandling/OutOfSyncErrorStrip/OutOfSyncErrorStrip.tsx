@@ -14,11 +14,10 @@ import {
   Layout,
   Text,
   useConfirmationDialog,
-  useToaster
-} from '@wings-software/uicore'
-import { Intent } from '@blueprintjs/core'
-import { Color, FontVariation } from '@wings-software/design-system'
-import { Button } from '@harness/uicore'
+  useToaster,
+  Button
+} from '@harness/uicore'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isNil, pick } from 'lodash-es'
@@ -263,7 +262,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           <Button
             variation={ButtonVariation.TERTIARY}
             style={{ marginLeft: 'var(--spacing-8)' }}
-            text={getString('pipeline.inputSetErrorStrip.updateRuntimeFields')} 
+            text={getString('pipeline.inputSetErrorStrip.updateRuntimeFields')}
             onClick={() => {
               const omittedInputSet = omit(
                 inputSet,

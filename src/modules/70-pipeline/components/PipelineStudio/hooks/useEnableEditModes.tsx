@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Checkbox, Container, Layout, Text, useConfirmationDialog } from '@wings-software/uicore'
+import { Checkbox, Container, Layout, Text, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 

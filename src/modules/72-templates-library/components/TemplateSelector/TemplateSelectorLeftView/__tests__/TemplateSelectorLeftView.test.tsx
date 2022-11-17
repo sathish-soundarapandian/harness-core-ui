@@ -20,6 +20,7 @@ import {
   mockApiFetchingResponse
 } from '@templates-library/components/TemplateActivityLog/__tests__/TemplateActivityLogTestHelper'
 import { templateSelectorContextMock } from 'framework/Templates/TemplateSelectorContext/stateMocks'
+import { useGetRepositoryList } from 'services/template-ng'
 import { TemplateSelectorLeftView, TemplateSelectorLeftViewProps } from '../TemplateSelectorLeftView'
 
 const TEST_PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
@@ -73,6 +74,24 @@ const mockEmptySuccessResponse = {
     }
   }
 }
+const mockRepositories = {
+  status: 'SUCCESS',
+  data: {
+    repositories: ['main', 'main-patch', 'main-patch1', 'main-patch2']
+  },
+  metaData: null,
+  correlationId: 'cc779876-d3af-44e5-8991-916dfecb4548'
+}
+
+const fetchRepositories = jest.fn(() => {
+  return Object.create(mockRepositories)
+})
+
+jest.mock('services/template-ng', () => ({
+  useGetRepositoryList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  })
+}))
 
 describe('<TemplateSelectorLeftView> tests', () => {
   beforeEach(() => jest.clearAllMocks())
@@ -84,8 +103,10 @@ describe('<TemplateSelectorLeftView> tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+    expect(useGetRepositoryList).toBeCalled()
+
     expect(templateListCallMock).toBeCalledWith(
-      expect.anything(),
+      undefined,
       expect.objectContaining({
         queryParams: defaultQueryParams
       })
@@ -117,7 +138,7 @@ describe('<TemplateSelectorLeftView> tests', () => {
 
     expect(templateListCallMock).toHaveBeenNthCalledWith(
       2,
-      expect.anything(),
+      undefined,
       expect.objectContaining({
         queryParams: {
           ...defaultQueryParams,
@@ -153,7 +174,7 @@ describe('<TemplateSelectorLeftView> tests', () => {
 
     expect(templateListCallMock).toHaveBeenNthCalledWith(
       2,
-      expect.anything(),
+      undefined,
       expect.objectContaining({
         body: {
           childTypes: ['ShellScript'],
@@ -230,7 +251,7 @@ describe('<TemplateSelectorLeftView> tests', () => {
 
     expect(templateListCallMock).toHaveBeenNthCalledWith(
       3,
-      expect.anything(),
+      undefined,
       expect.objectContaining({
         body: {
           childTypes: ['HarnessApproval', 'ShellScript'],

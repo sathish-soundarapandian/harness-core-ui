@@ -6,18 +6,8 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import {
-  ButtonSize,
-  ButtonVariation,
-  Button,
-  Color,
-  Container,
-  FontVariation,
-  Layout,
-  PageSpinner,
-  TableV2,
-  Text
-} from '@harness/uicore'
+import { ButtonSize, ButtonVariation, Button, Container, Layout, PageSpinner, TableV2, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { defaultTo } from 'lodash-es'

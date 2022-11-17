@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   Icon,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, defaultTo } from 'lodash-es'
 import cx from 'classnames'

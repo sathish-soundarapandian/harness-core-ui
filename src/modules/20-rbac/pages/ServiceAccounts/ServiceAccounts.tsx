@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout } from '@wings-software/uicore'
+import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'

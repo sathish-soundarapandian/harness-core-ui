@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import type { UseGetReturn } from 'restful-react'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'

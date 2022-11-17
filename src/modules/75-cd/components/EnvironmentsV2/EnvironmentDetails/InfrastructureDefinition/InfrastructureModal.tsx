@@ -411,6 +411,10 @@ function BootstrapDeployInfraDefinition({
         infraDefinition.infrastructureDefinition.spec = infrastructureDefinitionConfig.spec
       }
 
+      if (infrastructureDefinitionConfig.type) {
+        infraDefinition.infrastructureDefinition.type = infrastructureDefinitionConfig.type
+      }
+
       if (isBoolean(infrastructureDefinitionConfig.allowSimultaneousDeployments)) {
         infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
       }
@@ -419,6 +423,10 @@ function BootstrapDeployInfraDefinition({
 
       if (infrastructureDefinitionConfig.deploymentType) {
         serviceDefinition.type = infrastructureDefinitionConfig.deploymentType
+
+        if (selectedDeploymentType !== infrastructureDefinitionConfig.deploymentType) {
+          setSelectedDeploymentType(infrastructureDefinitionConfig.deploymentType as ServiceDeploymentType)
+        }
       }
     })
     updateStage(stageData?.stage as StageElementConfig)

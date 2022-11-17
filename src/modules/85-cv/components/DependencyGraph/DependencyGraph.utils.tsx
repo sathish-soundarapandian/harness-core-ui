@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { HarnessIcons, Utils } from '@wings-software/uicore'
+import { HarnessIcons, Utils } from '@harness/uicore'
 import {
   infrastructureIconDetails,
   infrastructureIcon,

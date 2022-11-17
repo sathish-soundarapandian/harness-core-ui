@@ -7,10 +7,15 @@
 
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
-import { MultiTypeInputType } from '@harness/uicore'
-
-import { Container, DataTooltipInterface, FormInput, getMultiTypeFromValue, Layout } from '@wings-software/uicore'
-import type { FormMultiTextTypeInputProps } from '@wings-software/uicore/dist/components/FormikForm/FormikForm'
+import {
+  MultiTypeInputType,
+  Container,
+  DataTooltipInterface,
+  FormInput,
+  getMultiTypeFromValue,
+  Layout
+} from '@harness/uicore'
+import type { FormMultiTextTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { FormikContextType } from 'formik'
 import { connect } from 'formik'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'

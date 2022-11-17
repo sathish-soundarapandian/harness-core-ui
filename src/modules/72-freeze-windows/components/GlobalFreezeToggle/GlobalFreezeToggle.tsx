@@ -7,17 +7,9 @@
 
 import React, { FC } from 'react'
 import { Classes, Intent, Spinner, Switch } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
-import {
-  Dialog,
-  OverlaySpinner,
-  useConfirmationDialog,
-  useToaster,
-  Text,
-  Layout,
-  FontVariation,
-  Icon
-} from '@harness/uicore'
+import { defaultTo, isEmpty } from 'lodash-es'
+import { Dialog, OverlaySpinner, useConfirmationDialog, useToaster, Text, Layout, Icon } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -70,6 +62,9 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
     }
   })
 
+  const isGlobalFreezeEnabled =
+    getGlobalFreezeData?.data?.status === 'Enabled' && !isEmpty(getGlobalFreezeData?.data.currentOrUpcomingWindow)
+
   const { mutate: updateGlobalFreeze, loading: updateGlobalFreezeLoading } = useGlobalFreeze({
     queryParams: {
       accountIdentifier: accountId,
@@ -80,7 +75,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   })
 
   const freeze = yamlParse<any>(defaultTo(getGlobalFreezeData?.data?.yaml, ''))?.freeze || {}
-  const freezeWindow = freeze?.windows?.[0] || ({} as FreezeWindow)
+  const freezeWindow = isGlobalFreezeEnabled ? defaultTo(freeze?.windows?.[0], {}) : ({} as FreezeWindow)
   const { endTime, timeZone, startTime, duration } = freezeWindow
 
   const { openDialog: openDisableFreezeDialog } = useConfirmationDialog({
@@ -93,7 +88,8 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
       if (isConfirmed) {
         handleDisableGlobalFreeze()
       }
-    }
+    },
+    className: css.confirmDisable
   })
 
   const [openEnableFreezeDialog, hideEnableFreezeDialog] = useModalHook(
@@ -157,8 +153,6 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   if (freezeListLoading && getGlobalFreezeLoading) {
     return null // avoid showing double loader
   }
-
-  const isGlobalFreezeEnabled = getGlobalFreezeData?.data?.status === 'Enabled'
 
   return (
     <OverlaySpinner show={updateGlobalFreezeLoading || getGlobalFreezeLoading} size={Spinner.SIZE_SMALL}>

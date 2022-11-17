@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import React from 'react'
 
 const GitSyncActivities: React.FC = () => {

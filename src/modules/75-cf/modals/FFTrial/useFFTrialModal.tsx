@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 

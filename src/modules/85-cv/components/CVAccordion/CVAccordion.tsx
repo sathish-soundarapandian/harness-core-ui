@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Accordion, Container } from '@wings-software/uicore'
+import { Accordion, Container } from '@harness/uicore'
 import css from './CVAccordion.module.scss'
 
 export function CVAccordion(props: React.PropsWithChildren<{ className?: string }>): JSX.Element {

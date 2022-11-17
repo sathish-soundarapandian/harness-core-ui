@@ -54,7 +54,7 @@ describe('Freeze Window Studio Wrapper', () => {
     expect(within(tablist).getByText('overview')).toBeInTheDocument()
 
     // Notifications
-    expect(getByText('notifications.pipelineName')).toBeDefined()
+    expect(getByText('rbac.notifications.pipelineName')).toBeDefined()
     expect(container).toMatchSnapshot('Freeze Studio Wrapper Snapshot')
   })
 })

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
-import { Icon, Layout, Table, Select, SelectOption, TextInput, Text } from '@wings-software/uicore'
+import { Icon, Layout, Table, Select, SelectOption, TextInput, Text } from '@harness/uicore'
 import type { CellProps } from 'react-table'
 import type { Service, ServiceDep } from 'services/lw'
 import { useStrings } from 'framework/strings'

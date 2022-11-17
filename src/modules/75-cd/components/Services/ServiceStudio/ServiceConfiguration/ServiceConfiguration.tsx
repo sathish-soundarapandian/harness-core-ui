@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { NGServiceConfig, useGetEntityYamlSchema } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -62,6 +62,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
+
   const { data: serviceSchema } = useGetEntityYamlSchema({
     queryParams: {
       entityType: 'Service',
@@ -101,7 +102,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
   )
 
   const handleModeSwitch = useCallback(
-    (view: SelectedView) => {
+    (view: SelectedView): void => {
       if (view === SelectedView.VISUAL) {
         const newServiceData = getUpdatedPipelineYaml()
         newServiceData && updatePipeline(newServiceData, view)
@@ -133,7 +134,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         </>
       ) : (
         <div className={css.yamlBuilder}>
-          <YAMLBuilder
+          <YamlBuilderMemo
             {...yamlBuilderReadOnlyModeProps}
             key={isYamlEditable.toString()}
             isReadOnlyMode={isReadonly || !isYamlEditable}

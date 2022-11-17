@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon, PageError, NoDataCard, FlexExpander } from '@wings-software/uicore'
+import { Container, Icon, PageError, NoDataCard, FlexExpander } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import noDataImage from '@cv/assets/noData.svg'

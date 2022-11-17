@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Text, Color, Checkbox } from '@harness/uicore'
+import { Layout, Text, Checkbox } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
 import type { ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 import css from './SLOList.module.scss'
@@ -57,7 +58,6 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
     <Layout.Vertical padding={{ left: 'small' }}>
       <>
         <Text
-          color={Color.PRIMARY_7}
           className={css.titleInSloTable}
           title={serviceName}
           font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
@@ -66,7 +66,7 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
         </Text>
       </>
       <>
-        <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
+        <Text title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
           {environmentIdentifier}
         </Text>
       </>
@@ -158,25 +158,4 @@ export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos }: RenderC
       }}
     />
   )
-}
-
-export const resetSLOWeightage = (
-  selectedSlos: ServiceLevelObjectiveDetailsDTO[],
-  accountId: string,
-  orgIdentifier: string,
-  projectIdentifier: string
-): ServiceLevelObjectiveDetailsDTO[] => {
-  const selectedSlosLength = selectedSlos.length
-  const weight = Number(100 / selectedSlosLength).toFixed(1)
-  const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
-  const updatedSLOObjective = selectedSlos.map((item, index) => {
-    return {
-      ...item,
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
-    }
-  })
-  return updatedSLOObjective
 }

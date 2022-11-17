@@ -7,7 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import { matchPath, useHistory } from 'react-router-dom'
-import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { NavigationCheck } from '@common/components'
 import routes from '@common/RouteDefinitions'
 import { useStrings, StringKeys } from 'framework/strings'

@@ -11,9 +11,10 @@ import {
   NestedAccordionProvider,
   PageError,
   useToggleOpen,
-  ConfirmationDialog,
-  Intent
+  ConfirmationDialog
 } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
+
 import { get, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 

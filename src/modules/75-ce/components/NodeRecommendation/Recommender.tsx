@@ -9,7 +9,7 @@ import React, { useCallback, useMemo } from 'react'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
 
-import { Container, Icon, Text } from '@wings-software/uicore'
+import { Container, Icon, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'

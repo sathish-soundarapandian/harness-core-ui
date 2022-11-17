@@ -8,12 +8,11 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column, CellProps, Renderer } from 'react-table'
-import { Layout, Text, TableV2 } from '@wings-software/uicore'
+import { Layout, Text, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { formatDatetoLocale } from '@common/utils/dateUtils'
+import ReactTimeago from 'react-timeago'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
-
 import routes from '@common/RouteDefinitions'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import GitDetailsColumn from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
@@ -89,12 +88,12 @@ export default function RunPipelineListView({ data, refetch, gotoPage }: Pipelin
   // eslint-disable-next-line react/function-component-definition
   const RenderLastRunDate: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
     const rowdata = row.original
+    const lastRunStartTs = rowdata.recentExecutionsInfo?.[0]?.startTs
+
     return (
       <Layout.Vertical spacing="xsmall">
         <Text color={Color.GREY_400}>
-          {rowdata.executionSummaryInfo?.lastExecutionTs
-            ? formatDatetoLocale(rowdata.executionSummaryInfo?.lastExecutionTs)
-            : getString('pipelineSteps.pullNeverLabel')}
+          {lastRunStartTs ? <ReactTimeago date={lastRunStartTs} /> : getString('pipelineSteps.pullNeverLabel')}
         </Text>
       </Layout.Vertical>
     )

@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Draggable from 'react-draggable'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { colors } from '@common/components/HeatMap/ColorUtils'
 import css from './CVRiskScoreSlider.module.scss'
 

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { ButtonGroup, Button, Text } from '@wings-software/uicore'
+import { ButtonGroup, Button, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { StepsType } from '../Constants'

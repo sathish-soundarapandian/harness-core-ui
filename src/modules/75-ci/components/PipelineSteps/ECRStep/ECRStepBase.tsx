@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
+import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
 import { Connectors } from '@connectors/constants'

@@ -6,7 +6,7 @@
  */
 
 import type { Schema } from 'yup'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'

@@ -22,7 +22,7 @@ export interface PipelineOutOfSyncErrorStripProps {
 
 export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfSyncErrorStripProps) {
   const {
-    state: { pipeline, originalPipeline, gitDetails, storeMetadata },
+    state: { originalPipeline, gitDetails, storeMetadata, pipelineIdentifier },
     isReadonly,
     fetchPipeline
   } = usePipelineContext()
@@ -35,7 +35,7 @@ export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfS
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      identifier: pipeline.identifier,
+      identifier: pipelineIdentifier,
       ...getGitQueryParamsWithParentScope(storeMetadata, params)
     },
     lazy: isCommunity

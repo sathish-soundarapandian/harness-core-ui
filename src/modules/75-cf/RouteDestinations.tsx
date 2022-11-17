@@ -126,6 +126,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.FEATUREFLAG_FUNCTIONS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.FEATUREFLAG, {
   icon: 'nav-cf',
   label: 'cf.rbac.featureflag.label',
+  labelSingular: 'common.moduleTitles.cf',
   category: ResourceCategory.FEATUREFLAG_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]: <String stringID="cf.rbac.featureflag.toggle" />,

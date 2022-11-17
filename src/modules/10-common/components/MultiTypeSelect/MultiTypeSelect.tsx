@@ -14,7 +14,7 @@ import {
   MultiTypeInputType,
   MultiTypeInputProps,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'

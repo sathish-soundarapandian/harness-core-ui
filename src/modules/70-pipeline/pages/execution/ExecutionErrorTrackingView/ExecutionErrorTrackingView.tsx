@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'

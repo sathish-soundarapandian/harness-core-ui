@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Button, Formik, FormInput, Text, StepProps, ButtonVariation } from '@wings-software/uicore'
+import { Layout, Button, Formik, FormInput, Text, StepProps, ButtonVariation } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

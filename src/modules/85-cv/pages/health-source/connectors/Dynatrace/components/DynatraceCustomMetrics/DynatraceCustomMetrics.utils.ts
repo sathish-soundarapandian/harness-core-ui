@@ -6,7 +6,7 @@
  */
 import { isEmpty } from 'lodash-es'
 import type { Options } from 'highcharts'
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { DynatraceMetricInfo } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
 import type {
   CreatedMetricsWithSelectedIndex,

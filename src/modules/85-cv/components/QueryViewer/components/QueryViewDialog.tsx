@@ -6,7 +6,7 @@
  */
 
 import { Drawer } from '@blueprintjs/core'
-import { Button, Container, FormInput } from '@wings-software/uicore'
+import { Button, Container, FormInput } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import React from 'react'
 import { useStrings } from 'framework/strings'

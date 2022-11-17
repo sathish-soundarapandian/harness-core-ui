@@ -24,7 +24,7 @@ export const connectorsList = `/ng/api/connectors?accountIdentifier=${accountId}
 
 // CE connector
 export const ceConnectorOverviewSave = `ng/api/connectors/listV2?routingId=${accountId}&pageIndex=0&pageSize=10&accountIdentifier=${accountId}&getDistinctFromBranches=false`
-export const ceAWSConnectionData = `ccm/api/connector/awsaccountconnectiondetail?routingId=${accountId}&accountIdentifier=${accountId}`
+export const ceAWSConnectionData = `ccm/api/connector/awsaccountconnectiondetail?routingId=${accountId}&accountIdentifier=${accountId}&is_gov=false`
 export const getGcpPermissions = `ccm/api/connector/gcpserviceaccount?routingId=${accountId}&accountIdentifier=${accountId}`
 export const connectorsListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/connectors`
 export const accountConnectorsListRoute = `#/account/${accountId}/settings/resources/connectors`

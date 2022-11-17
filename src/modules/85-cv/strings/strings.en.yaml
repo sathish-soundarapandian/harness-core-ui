@@ -577,6 +577,8 @@ notifications:
   thresholdBelow: Threshold is below
   validations:
     conditionIsRequired: Condition is required
+    eventStatusIsRequired: Events is required
+    eventTypeIsRequired: Event Type is required
 changeSource:
   alertText: Alert
   incident: Incident
@@ -821,6 +823,8 @@ slos:
       calendarBasedDefinition: Compliance periods can be set to calendar periods like a weekly, monthly or quarterly. At the end of a calendar period, you are given a performance score. The performance score, which is calculated against the performance threshold, tells you whether your service was compliant or not. Even though you may view the performance throughout the period when you use a calendar period, you only get a compliance rating for every compliance period.
       calendarBasedDefinition2: Calendar windows are more closely aligned with business planning and project work.
 CompositeSLO:
+  CreateTitle: Create a Composite Service Level Objective (SLO)
+  CreateMessage: Combines multiple SLOs to measure the services for a specific time frame that contribute to a single budget.
   DefineSLO: Define SLO Identification
   SetTimeWindow: Set SLO Time Window
   AddSLO: Add SLOs
@@ -831,6 +835,8 @@ CompositeSLO:
   PeriodChangeWarning:
     title: Review Period Type Change
     message: Updating period type will reset selected SLOs, Do you want to continue ?
+  MatchingSLO: SLOs matching the time window.
+  NoSloFound: There are no SLOs available for selected filter
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

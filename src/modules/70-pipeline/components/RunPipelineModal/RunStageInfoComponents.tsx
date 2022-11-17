@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { defaultTo, keyBy } from 'lodash-es'
 import { Tooltip } from '@blueprintjs/core'

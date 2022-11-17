@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { defaultTo, isArray, noop, some } from 'lodash-es'
-import { SimpleTagInput, Text, Icon, Layout, Container } from '@wings-software/uicore'
+import { SimpleTagInput, Text, Icon, Layout, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { MultiSelect } from '@blueprintjs/select'

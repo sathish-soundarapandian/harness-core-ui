@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Classes } from '@blueprintjs/core'
 import type { SourceCodeManagerDTO } from 'services/cd-ng'

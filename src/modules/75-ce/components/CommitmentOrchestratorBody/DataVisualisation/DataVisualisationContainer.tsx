@@ -7,7 +7,8 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
-import { Container, FontVariation, Layout, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import Savings from './Savings'
 import Utilisation from './Utilisation'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { LogTypes } from '../../useLogContentHook.types'
 import { getInfoText } from '../../useLogContentHook.utils'

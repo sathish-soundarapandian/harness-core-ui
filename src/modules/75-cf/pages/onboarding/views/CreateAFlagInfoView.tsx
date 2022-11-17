@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Heading, Layout, Link, Text } from '@wings-software/uicore'
+import { Container, Heading, Layout, Link, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import img from './create-a-flag.svg'
 

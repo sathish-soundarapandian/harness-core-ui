@@ -7,7 +7,7 @@
 
 import type { SetStateAction, Dispatch } from 'react'
 import type { GetDataError } from 'restful-react'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { uniqWith, isEqual, orderBy } from 'lodash-es'
 import type { StepInfo, Error } from 'services/ti-service'
 import type { GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'

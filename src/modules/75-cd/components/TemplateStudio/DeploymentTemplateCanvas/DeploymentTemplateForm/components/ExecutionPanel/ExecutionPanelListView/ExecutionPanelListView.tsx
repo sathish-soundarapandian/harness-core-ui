@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Layout, TableV2 } from '@wings-software/uicore'
+import { Layout, TableV2 } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { TemplateSummaryResponse } from 'services/template-ng'

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Text, Container, Layout, Icon, Button, SelectOption } from '@wings-software/uicore'
+import { Text, Container, Layout, Icon, Button, SelectOption } from '@harness/uicore'
 import cx from 'classnames'
 import { TimeSelect } from '@common/components'
 import { useStrings } from 'framework/strings'

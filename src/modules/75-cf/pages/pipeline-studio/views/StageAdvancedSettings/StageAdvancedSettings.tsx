@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import React from 'react'
 
 export default function StageAdvancedSettings(_props: React.PropsWithChildren<unknown>): JSX.Element {

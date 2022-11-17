@@ -11,7 +11,7 @@ import cx from 'classnames'
 import { get, isPlainObject } from 'lodash-es'
 import { FormikContextType, connect } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
-import { FormInput, Layout, Container, FormikTooltipContext, DataTooltipInterface } from '@wings-software/uicore'
+import { FormInput, Layout, Container, FormikTooltipContext, DataTooltipInterface } from '@harness/uicore'
 import type { StringsMap } from 'stringTypes'
 
 import { useStrings } from 'framework/strings'

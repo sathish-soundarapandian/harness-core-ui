@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Card, Text, Layout, CardBody, Container } from '@wings-software/uicore'
+import { Card, Text, Layout, CardBody, Container } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'

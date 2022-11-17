@@ -6,7 +6,7 @@
  */
 
 import type React from 'react'
-import type { tagsType } from '@wings-software/uicore'
+import type { tagsType } from '@harness/uicore'
 import type { CustomStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 

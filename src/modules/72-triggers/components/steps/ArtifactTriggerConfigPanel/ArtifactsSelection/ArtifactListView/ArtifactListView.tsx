@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Button, ButtonSize, ButtonVariation, Label, HarnessDocTooltip } from '@wings-software/uicore'
+import { Layout, Text, Button, ButtonSize, ButtonVariation, Label, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'

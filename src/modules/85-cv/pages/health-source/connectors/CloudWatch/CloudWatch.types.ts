@@ -45,7 +45,7 @@ export interface CloudWatchSetupSource {
   sourceType?: string
   healthSourceName: string
   product: SelectOption
-  connectorRef?: string
+  connectorRef?: string | { value: string }
   healthSourceList: HealthSourceListData[]
 }
 
@@ -58,6 +58,8 @@ export interface CreatePayloadUtilParams {
 export interface CloudWatchProps {
   data: CloudWatchSetupSource
   onSubmit: (data: CloudWatchSetupSource, healthSourceList: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export interface MetricSamplePointsResult {

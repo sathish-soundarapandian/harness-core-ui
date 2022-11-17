@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import {
   K8sRecommendationFilterDtoInput,

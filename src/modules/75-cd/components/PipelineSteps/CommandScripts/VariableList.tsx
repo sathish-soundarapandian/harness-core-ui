@@ -9,7 +9,7 @@ import React from 'react'
 import { get } from 'lodash-es'
 import { FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { Button, ButtonVariation, FormInput, AllowedTypes } from '@wings-software/uicore'
+import { Button, ButtonVariation, FormInput, AllowedTypes } from '@harness/uicore'
 
 import type { NGVariable } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

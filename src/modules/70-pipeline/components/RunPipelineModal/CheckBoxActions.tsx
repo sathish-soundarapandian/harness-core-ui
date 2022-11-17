@@ -7,7 +7,8 @@
 
 import React, { Dispatch, SetStateAction } from 'react'
 
-import { Checkbox, Layout, Color } from '@harness/uicore'
+import { Checkbox, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { StoreType } from '@common/constants/GitSyncTypes'
 

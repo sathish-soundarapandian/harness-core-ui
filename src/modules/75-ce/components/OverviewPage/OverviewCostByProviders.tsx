@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import moment from 'moment'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
 import { CCM_CHART_TYPES } from '@ce/constants'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'

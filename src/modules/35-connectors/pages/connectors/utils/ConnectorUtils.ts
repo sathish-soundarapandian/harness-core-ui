@@ -6,7 +6,7 @@
  */
 
 import { pick, isString, get } from 'lodash-es'
-import type { IconName, StepProps } from '@wings-software/uicore'
+import type { IconName, StepProps } from '@harness/uicore'
 import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
 import type {
   ConnectorInfoDTO,
@@ -2209,10 +2209,14 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'microsoft-azure'
     case Connectors.JENKINS:
       return 'service-jenkins'
+    case Connectors.AZURE_ARTIFACTS:
+      return 'service-azure-artifact-connector'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
     case Connectors.GcpSecretManager:
       return 'gcp-secret-manager'
+    case Connectors.SPOT:
+      return 'spot'
     default:
       return 'cog'
   }
@@ -2395,6 +2399,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.customSM')
     case Connectors.GcpSecretManager:
       return getString('connectors.testConnectionStep.validationText.gcpSM')
+    case Connectors.SPOT:
+      return getString('connectors.testConnectionStep.validationText.spot')
     default:
       return ''
   }

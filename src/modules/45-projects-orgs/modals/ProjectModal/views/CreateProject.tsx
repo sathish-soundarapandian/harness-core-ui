@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { StepProps, SelectOption, ModalErrorHandlerBinding, useToaster } from '@wings-software/uicore'
+import { StepProps, SelectOption, ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import { useGetOrganizationList, usePostProject } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'

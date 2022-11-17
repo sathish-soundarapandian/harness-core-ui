@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { useToaster } from '@wings-software/uicore'
+import { useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'

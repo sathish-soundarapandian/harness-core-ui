@@ -62,7 +62,7 @@ describe('BranchFilter test', () => {
     )
 
     await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
-    expect(getByText('common.gitSync.allBranches')).toBeInTheDocument()
+    expect(getByText('common.gitSync.selectBranch')).toBeInTheDocument()
   })
 
   test('default rendering BranchFilter - loading true', async () => {

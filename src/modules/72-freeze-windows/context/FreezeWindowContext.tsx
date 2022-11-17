@@ -9,7 +9,7 @@ import React, { useContext } from 'react'
 import { noop } from 'lodash-es'
 import { parse } from 'yaml'
 
-import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'

@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Text, Button, Table, ButtonVariation, useConfirmationDialog } from '@wings-software/uicore'
+import { Layout, Text, Button, Table, ButtonVariation, useConfirmationDialog } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { Classes, Menu, Popover, Position } from '@blueprintjs/core'
 import type { CellProps, Column, Renderer } from 'react-table'

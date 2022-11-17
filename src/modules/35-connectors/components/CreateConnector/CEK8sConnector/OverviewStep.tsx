@@ -22,7 +22,7 @@ import {
   ModalErrorHandlerBinding,
   SelectOption,
   StepProps
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { NameIdDescriptionTags } from '@common/components'
 import { StringUtils, useToaster } from '@common/exports'
 import { getHeadingIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'

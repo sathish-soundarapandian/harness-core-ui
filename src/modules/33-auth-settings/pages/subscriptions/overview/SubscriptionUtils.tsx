@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { capitalize } from 'lodash-es'
-import { Text, Layout, Icon } from '@wings-software/uicore'
+import { Text, Layout, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'
@@ -262,6 +262,11 @@ export const NoSubscriptionDetailsCardInfo = ({ accountName }: { accountName?: s
       </React.Fragment>
     </div>
   )
+}
+
+export const enum Hosting {
+  SaaS = 'SAAS',
+  OnPrem = 'ON_PREM'
 }
 
 export const CommunitySubscriptionDetailsCardInfo = ({ accountName }: { accountName?: string }): React.ReactElement => {

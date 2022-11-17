@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Container, Heading, Layout, Text, Select } from '@harness/uicore'
+import React, { useEffect, useState } from 'react'
+import { Container, Layout, Text, Select } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
@@ -26,14 +26,9 @@ import { OnboardingSelectedFlag } from '../OnboardingSelectedFlag'
 export interface CreateAFlagViewProps {
   selectedFlag?: Feature
   setSelectedFlag: (flag?: Feature) => void
-  setCreateFlagError: Dispatch<SetStateAction<boolean>>
 }
 
-export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({
-  selectedFlag,
-  setSelectedFlag,
-  setCreateFlagError
-}) => {
+export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, setSelectedFlag }) => {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -99,7 +94,6 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({
       })
       .catch(error => {
         showError(getErrorMessage(error), undefined, 'cf.create.ff.error')
-        setCreateFlagError(true)
       })
   }
 
@@ -114,52 +108,45 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({
 
   return (
     <Container height="100%">
-      <Container padding="xlarge">
-        <Heading font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
-          {getString('cf.onboarding.letsGetStarted')}
-        </Heading>
-        <Layout.Vertical spacing="medium">
-          <Text font={{ variation: FontVariation.H5 }}>{getString('cf.onboarding.createFlag')}</Text>
+      <Layout.Vertical spacing="medium">
+        <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+          {getString('cf.featureFlags.flagsDescription')}
+        </Text>
+        <Container width="max-content">
           <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-            {getString('cf.featureFlags.flagsDescription')}
+            {getString('cf.onboarding.flagInputLabel')}
           </Text>
-          <div>
-            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-              {getString('cf.onboarding.flagInputLabel')}
-            </Text>
-            <Select
-              value={selectedFlag && { label: selectedFlag.name, value: selectedFlag.identifier }}
-              disabled={flagCreated}
-              items={
-                allFeatureFlags?.features?.map((flag: Feature) => {
-                  return {
-                    label: flag.name,
-                    value: flag.identifier
-                  }
-                }) || []
-              }
-              allowCreatingNewItems
-              onQueryChange={(query: string) => setSearchTerm(query)}
-              onChange={option => onChangeSelect(option.value as string)}
-              inputProps={{
-                placeholder: getString('cf.onboarding.selectOrCreateFlag'),
-                id: 'selectOrCreateFlag',
-                style: { width: '350px' }
-              }}
-            />
-          </div>
-        </Layout.Vertical>
-        {isLoadingCreateFeatureFlag && (
-          <Layout.Horizontal padding={{ top: 'medium', bottom: 'medium' }}>
-            <Spinner size={24} />
-          </Layout.Horizontal>
-        )}
-        {selectedFlag && (
-          <Layout.Horizontal margin={{ top: 'medium' }}>
-            <OnboardingSelectedFlag flagCreated={flagCreated} selectedFlag={selectedFlag} />
-          </Layout.Horizontal>
-        )}
-      </Container>
+          <Select
+            value={selectedFlag && { label: selectedFlag.name, value: selectedFlag.identifier }}
+            disabled={flagCreated}
+            items={
+              allFeatureFlags?.features?.map((flag: Feature) => {
+                return {
+                  label: flag.name,
+                  value: flag.identifier
+                }
+              }) || []
+            }
+            allowCreatingNewItems
+            onQueryChange={(query: string) => setSearchTerm(query)}
+            onChange={option => onChangeSelect(option.value as string)}
+            inputProps={{
+              placeholder: getString('cf.onboarding.selectOrCreateFlag'),
+              id: 'selectOrCreateFlag'
+            }}
+          />
+        </Container>
+      </Layout.Vertical>
+      {isLoadingCreateFeatureFlag && (
+        <Layout.Horizontal padding={{ top: 'medium', bottom: 'medium' }}>
+          <Spinner size={24} />
+        </Layout.Horizontal>
+      )}
+      {selectedFlag && (
+        <Layout.Horizontal margin={{ top: 'medium' }}>
+          <OnboardingSelectedFlag flagCreated={flagCreated} selectedFlag={selectedFlag} />
+        </Layout.Horizontal>
+      )}
     </Container>
   )
 }

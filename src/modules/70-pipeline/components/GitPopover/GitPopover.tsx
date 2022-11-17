@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo } from 'lodash-es'
 import { IPopoverProps, PopoverInteractionKind } from '@blueprintjs/core'
-import { Icon, Layout, Popover, Text } from '@wings-software/uicore'
+import { Icon, Layout, Popover, Text } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { getRepoDetailsByIndentifier } from '@common/utils/gitSyncUtils'

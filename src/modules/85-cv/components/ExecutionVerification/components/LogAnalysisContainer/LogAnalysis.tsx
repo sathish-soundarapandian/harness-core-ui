@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { Container, Icon, NoDataCard, PageError } from '@wings-software/uicore'
+import { Container, Icon, NoDataCard, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import noDataImage from '@cv/assets/noData.svg'

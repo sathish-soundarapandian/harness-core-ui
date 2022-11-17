@@ -8,7 +8,8 @@
 import React from 'react'
 import moment from 'moment'
 import { Classes } from '@blueprintjs/core'
-import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { HeaderToolbarProps } from '../CVSLODetailsPage.types'
 

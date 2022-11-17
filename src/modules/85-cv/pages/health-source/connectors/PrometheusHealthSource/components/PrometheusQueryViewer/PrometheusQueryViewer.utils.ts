@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiSelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption } from '@harness/uicore'
 import type Highcharts from 'highcharts'
 import { isNumber } from 'lodash-es'
 import type { PrometheusSampleData } from 'services/cv'

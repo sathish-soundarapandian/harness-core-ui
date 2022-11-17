@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { IFormGroupProps, IInputGroupProps, HTMLInputProps, Popover, Menu } from '@blueprintjs/core'
-import { FormInput, Button, Icon, Utils, TextInput } from '@wings-software/uicore'
+import { FormInput, Button, Icon, Utils, TextInput } from '@harness/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'

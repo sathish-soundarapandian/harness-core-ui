@@ -7,10 +7,9 @@
 
 import React from 'react'
 import { debounce } from 'lodash-es'
-import { Layout } from '@wings-software/uicore'
+import { Layout, Container } from '@harness/uicore'
 import cx from 'classnames'
 import SplitPane from 'react-split-pane'
-import { Container } from '@harness/uicore'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
   DefaultSplitPaneSize,

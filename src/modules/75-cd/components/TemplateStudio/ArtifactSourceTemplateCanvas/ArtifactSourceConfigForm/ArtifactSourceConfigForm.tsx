@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo, noop } from 'lodash-es'
-import { Container, Formik } from '@wings-software/uicore'
+import { Container, Formik } from '@harness/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { useStrings } from 'framework/strings'
 import type {

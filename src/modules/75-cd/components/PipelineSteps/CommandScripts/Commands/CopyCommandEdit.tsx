@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Color, Container, FormInput, AllowedTypes, Text } from '@harness/uicore'
+import { Container, FormInput, AllowedTypes, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'

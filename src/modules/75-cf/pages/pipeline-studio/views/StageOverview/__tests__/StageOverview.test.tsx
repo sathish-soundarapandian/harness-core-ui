@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { useParams } from 'react-router-dom'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { useMutateAsGet } from '@common/hooks'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -67,8 +67,8 @@ jest.mock('@common/hooks', () => ({
   useMutateAsGet: jest.fn()
 }))
 
-jest.mock('@wings-software/uicore', () => ({
-  ...jest.requireActual('@wings-software/uicore'),
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
   useToaster: jest.fn(() => ({ showError, showSuccess, clear: toasterClear }))
 }))
 

@@ -14,7 +14,7 @@ import {
   HarnessDocTooltip,
   Layout,
   Views
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
@@ -23,7 +23,12 @@ import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { Sort, SortFields, TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateDetailsDrawer } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
-import { TemplateSummaryResponse, useGetTemplateList, useGetTemplateMetadataList } from 'services/template-ng'
+import {
+  TemplateSummaryResponse,
+  useGetRepositoryList,
+  useGetTemplateList,
+  useGetTemplateMetadataList
+} from 'services/template-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { NewTemplatePopover } from '@templates-library/pages/TemplatesPage/views/NewTemplatePopover/NewTemplatePopover'
@@ -46,13 +51,14 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
-  const { templateType } = useQueryParams<{ templateType?: TemplateType }>()
-  const { updateQueryParams } = useUpdateQueryParams<{ templateType?: TemplateType }>()
+  const { templateType, repoName } = useQueryParams<{ templateType?: TemplateType; repoName?: string }>()
+  const { updateQueryParams } = useUpdateQueryParams<{ templateType?: TemplateType; repoName?: string }>()
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [sort, setSort] = useState<string[]>([SortFields.LastUpdatedAt, Sort.DESC])
@@ -94,6 +100,7 @@ export default function TemplatesPage(): React.ReactElement {
   } = useMutateAsGet(supportingTemplatesGitx ? useGetTemplateMetadataList : useGetTemplateList, {
     body: {
       filterType: 'Template',
+      repoName,
       ...(templateType && { templateEntityTypes: [templateType] })
     },
     queryParams: {
@@ -117,7 +124,7 @@ export default function TemplatesPage(): React.ReactElement {
 
   const reset = React.useCallback((): void => {
     searchRef.current.clear()
-    updateQueryParams({ templateType: [] as any })
+    updateQueryParams({ templateType: [] as any, repoName: [] as any })
     setGitFilter(null)
   }, [searchRef.current, updateQueryParams, setGitFilter])
 
@@ -181,6 +188,10 @@ export default function TemplatesPage(): React.ReactElement {
     reloadTemplates()
   }, [reloadTemplates])
 
+  const onChangeRepo = (_repoName: string): void => {
+    updateQueryParams({ repoName: (_repoName || []) as string })
+  }
+
   return (
     <>
       <Page.Header
@@ -211,7 +222,7 @@ export default function TemplatesPage(): React.ReactElement {
             placeholder={getString('all')}
             popoverClassName={css.dropdownPopover}
           />
-          {isGitSyncEnabled && (
+          {isGitSyncEnabled ? (
             <GitSyncStoreProvider>
               <GitFilters
                 onChange={filter => {
@@ -222,6 +233,8 @@ export default function TemplatesPage(): React.ReactElement {
                 defaultValue={gitFilter || undefined}
               />
             </GitSyncStoreProvider>
+          ) : (
+            <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>

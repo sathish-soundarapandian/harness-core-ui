@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 
 import * as Yup from 'yup'
 import type { FormikErrors, FormikProps } from 'formik'

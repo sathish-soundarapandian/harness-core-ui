@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { HarnessDocTooltip, Icon, Tabs } from '@wings-software/uicore'
+import { HarnessDocTooltip, Icon, Tabs } from '@harness/uicore'
 import { Switch } from '@blueprintjs/core'
 import { NavLink, useParams, useLocation, matchPath } from 'react-router-dom'
 

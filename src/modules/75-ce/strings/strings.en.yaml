@@ -1159,7 +1159,7 @@ anomalyDetection:
     updateAlertSuccessMsg: Alert notification updated successfully!
     slackChannelLabel: Slack webhook url
     emailChannelLabel: '{{ $.email }}'
-    microsoftTeamChannelLabel: '{{ $.notifications.labelMS }}'
+    microsoftTeamChannelLabel: '{{ $.rbac.notifications.labelMS }}'
     channelSelectionRequiredMsg: Please select a channel
     channelUrlRequiredMsg: Please enter a valid webhook url or email address
   perspectiveCreateAnomalyAlertTitle: '{{ $.ce.anomalyDetection.notificationAlerts.heading}} ({{ count }})'

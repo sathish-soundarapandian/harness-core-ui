@@ -16,7 +16,7 @@ import {
   Accordion,
   Container,
   Layout
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { isEmpty, get } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
@@ -89,7 +89,7 @@ export const BackgroundStepBase = (
       )}
       formName="ciBackgroundStep"
       validate={valuesToValidate => {
-        /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM. 
+        /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM.
         For the latter case, even though Container Registry and Image are optional for AWS VMs infra, they both need to be specified for container to be spawned properly */
         const vmConnectorRefImageDependencyError = validateConnectorRefAndImageDepdendency(
           get(valuesToValidate, 'spec.connectorRef', ''),

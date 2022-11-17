@@ -131,6 +131,10 @@ describe('Create Secret Manager Wizard', () => {
 
     //Cross Account Role Step 1
     expect(getAllByText(container, 'connectors.ceAws.crossAccountRoleStep1.heading')[0]).toBeDefined()
+
+    fireEvent.mouseOver(getByText(container, 'connectors.costVisibility'))
+    expect(getByText(container, 'connectors.ceAws.crossAccountRoleStep1.default.feat1')).toBeDefined()
+
     expect(container).toMatchSnapshot()
 
     await act(async () => {

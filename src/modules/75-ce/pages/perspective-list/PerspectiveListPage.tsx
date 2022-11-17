@@ -20,7 +20,7 @@ import {
   IconName,
   ExpandingSearchInputHandle,
   Checkbox
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'

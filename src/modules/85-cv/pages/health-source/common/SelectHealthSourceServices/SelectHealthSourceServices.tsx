@@ -13,7 +13,7 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { HealthSourceServices } from './SelectHealthSourceServices.constant'
@@ -35,7 +35,8 @@ export default function SelectHealthSourceServices({
   isConnectorRuntimeOrExpression,
   customServiceInstanceName,
   fieldNames = {},
-  riskProfileResponse
+  riskProfileResponse,
+  hideServiceInstanceMetricPathTemplate
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
 
@@ -76,27 +77,30 @@ export default function SelectHealthSourceServices({
         {!hideCV ? (
           <FormInput.CheckBox label={getString('cv.monitoredServices.continuousVerification')} name={cvFieldName} />
         ) : null}
-        {isTemplate && values.continuousVerification && Boolean(labelNamesResponse) === false && (
-          <FormInput.MultiTextInput
-            key={metricPathMultiType}
-            name={defaultTo(customServiceInstanceName, 'serviceInstanceMetricPath')}
-            label={getString('cv.monitoringSources.appD.serviceInstanceMetricPath')}
-            onChange={(_value, _valueType, multiType) => {
-              if (multiType !== metricPathMultiType) {
-                setMetricPathMultiType(multiType)
-              }
-            }}
-            multiTextInputProps={{
-              expressions,
-              value: values.serviceInstanceMetricPath,
-              multitypeInputValue: metricPathMultiType,
-              defaultValue: RUNTIME_INPUT_VALUE,
-              allowableTypes: isConnectorRuntimeOrExpression
-                ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-                : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-            }}
-          />
-        )}
+        {isTemplate &&
+          values.continuousVerification &&
+          Boolean(labelNamesResponse) === false &&
+          !hideServiceInstanceMetricPathTemplate && (
+            <FormInput.MultiTextInput
+              key={metricPathMultiType}
+              name={defaultTo(customServiceInstanceName, 'serviceInstanceMetricPath')}
+              label={getString('cv.monitoringSources.appD.serviceInstanceMetricPath')}
+              onChange={(_value, _valueType, multiType) => {
+                if (multiType !== metricPathMultiType) {
+                  setMetricPathMultiType(multiType)
+                }
+              }}
+              multiTextInputProps={{
+                expressions,
+                value: values.serviceInstanceMetricPath,
+                multitypeInputValue: metricPathMultiType,
+                defaultValue: RUNTIME_INPUT_VALUE,
+                allowableTypes: isConnectorRuntimeOrExpression
+                  ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                  : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+              }}
+            />
+          )}
       </Container>
       {(continuousVerification || healthScore) && (
         <RiskProfile

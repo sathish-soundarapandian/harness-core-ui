@@ -8,7 +8,7 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type {
   KeyValueCriteriaSpec,

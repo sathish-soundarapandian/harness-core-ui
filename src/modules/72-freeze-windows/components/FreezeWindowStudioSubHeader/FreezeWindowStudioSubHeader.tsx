@@ -16,7 +16,7 @@ import {
   Text,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

@@ -9,7 +9,7 @@ import React, { useCallback, useMemo } from 'react'
 import { defaultTo, get, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
-import { Card, HarnessDocTooltip } from '@wings-software/uicore'
+import { Card, HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type {

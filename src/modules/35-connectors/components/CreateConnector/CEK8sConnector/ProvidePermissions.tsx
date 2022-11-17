@@ -15,7 +15,7 @@ import {
   ModalErrorHandlerBinding,
   StepProps,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { omit as _omit, defaultTo as _defaultTo } from 'lodash-es'

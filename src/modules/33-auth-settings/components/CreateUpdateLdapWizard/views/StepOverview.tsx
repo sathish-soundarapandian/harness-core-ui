@@ -12,12 +12,12 @@ import {
   Text,
   Layout,
   StepProps,
-  FontVariation,
   Container,
   Formik,
   FormikForm,
   FormInput
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly confirmDisable: string
   readonly dialog: string
   readonly switch: string
   readonly toggleContainer: string

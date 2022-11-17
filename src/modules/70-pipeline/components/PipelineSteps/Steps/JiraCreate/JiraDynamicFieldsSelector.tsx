@@ -18,7 +18,7 @@ import {
   Radio,
   Select,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'

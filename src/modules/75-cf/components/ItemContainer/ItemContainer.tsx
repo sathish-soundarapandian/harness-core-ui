@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import css from './ItemContainer.module.scss'
 
 export interface ItemContainerProps extends React.ComponentProps<typeof Container> {

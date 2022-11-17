@@ -5,17 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Checkbox,
-  Color,
-  Container,
-  FontVariation,
-  Layout,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Checkbox, Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useFormikContext } from 'formik'
 import cx from 'classnames'

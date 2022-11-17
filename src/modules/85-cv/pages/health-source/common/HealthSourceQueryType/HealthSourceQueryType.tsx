@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { generateQueryTypeRadioButtonOptions } from './HealthSourceQueryType.utils'

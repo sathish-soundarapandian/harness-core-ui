@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import ArtifactsSelection from './ArtifactsSelection/ArtifactsSelection'

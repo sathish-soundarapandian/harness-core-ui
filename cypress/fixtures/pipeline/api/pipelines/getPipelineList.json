@@ -11,13 +11,6 @@
         "createdAt": 1651205219105,
         "lastUpdatedAt": 1658832561590,
         "modules": ["ci", "pms"],
-        "executionSummaryInfo": {
-          "numOfErrors": [4, 5, 7, 1, 1, 6, 2],
-          "deployments": [10, 23, 29, 3, 2, 17, 5],
-          "lastExecutionTs": 1660018359961,
-          "lastExecutionStatus": "Expired",
-          "lastExecutionId": "uBrIkDHwTU2lv4o7ri7iCQ"
-        },
         "recentExecutionsInfo": [
           {
             "executorInfo": {
@@ -158,13 +151,6 @@
         "createdAt": 1622694239113,
         "lastUpdatedAt": 1658999091443,
         "modules": ["ci", "pms"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 2, 0, 0, 1, 0],
-          "deployments": [9, 7, 11, 0, 0, 7, 0],
-          "lastExecutionTs": 1659988014634,
-          "lastExecutionStatus": "Success",
-          "lastExecutionId": "yrfNWoyERfu6wOzdI3A3KQ"
-        },
         "recentExecutionsInfo": [
           {
             "executorInfo": {
@@ -303,13 +289,6 @@
         "createdAt": 1655843514970,
         "lastUpdatedAt": 1658585512911,
         "modules": ["ci", "pms"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [0, 0, 1, 0, 0, 0, 0],
-          "lastExecutionTs": 1659693488924,
-          "lastExecutionStatus": "Success",
-          "lastExecutionId": "xgGsoK7MTr2LKua1QcR7iA"
-        },
         "recentExecutionsInfo": [
           {
             "executorInfo": {
@@ -348,13 +327,6 @@
         "createdAt": 1658411394681,
         "lastUpdatedAt": 1658424604926,
         "modules": ["ci", "pms"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [0, 0, 0, 0, 0, 0, 0],
-          "lastExecutionTs": 1658424457416,
-          "lastExecutionStatus": "Success",
-          "lastExecutionId": "Ns15O7gwTwe8kISu0QJWsg"
-        },
         "recentExecutionsInfo": [],
         "filters": {
           "ci": {
@@ -381,13 +353,6 @@
         "createdAt": 1648619837536,
         "lastUpdatedAt": 1658397966203,
         "modules": ["ci", "pms"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [1, 1, 1, 1, 0, 1, 0],
-          "lastExecutionTs": 1659932295410,
-          "lastExecutionStatus": "Success",
-          "lastExecutionId": "oUFj-rzTTo-oCR7DLF7lww"
-        },
         "recentExecutionsInfo": [
           {
             "executorInfo": {
@@ -478,13 +443,6 @@
         "createdAt": 1659331589938,
         "lastUpdatedAt": 1660650243884,
         "modules": ["pms"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [0, 0, 0, 0, 0, 0, 0],
-          "lastExecutionTs": 1659955480362,
-          "lastExecutionStatus": "Aborted",
-          "lastExecutionId": "1prhxqpIRLqYwR4zqyUylA"
-        },
         "recentExecutionsInfo": [
           {
             "executorInfo": {

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, Container } from '@wings-software/uicore'
+import { Button, Container } from '@harness/uicore'
 import React from 'react'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'

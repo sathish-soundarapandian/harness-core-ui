@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Text, Layout, FlexExpander, Icon } from '@wings-software/uicore'
+import { Container, Text, Layout, FlexExpander, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { Menu, MenuItem, Popover, Position, Drawer } from '@blueprintjs/core'

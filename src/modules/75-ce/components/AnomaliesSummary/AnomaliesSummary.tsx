@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Layout, Text, Card } from '@wings-software/uicore'
+import { Container, Layout, Text, Card } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

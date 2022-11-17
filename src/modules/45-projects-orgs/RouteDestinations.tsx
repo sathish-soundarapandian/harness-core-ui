@@ -88,6 +88,7 @@ export const ProjectDetailsSideNavProps: SidebarContext = {
 RbacFactory.registerResourceTypeHandler(ResourceType.PROJECT, {
   icon: 'nav-project',
   label: 'projectsText',
+  labelSingular: 'projectLabel',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_PROJECT]: <String stringID="rbac.permissionLabels.view" />,
@@ -102,6 +103,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.PROJECT, {
 RbacFactory.registerResourceTypeHandler(ResourceType.ORGANIZATION, {
   icon: 'settings',
   label: 'orgsText',
+  labelSingular: 'orgLabel',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_ORG]: <String stringID="rbac.permissionLabels.view" />,

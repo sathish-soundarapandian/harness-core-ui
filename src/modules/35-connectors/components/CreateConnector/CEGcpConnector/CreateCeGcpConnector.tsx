@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard } from '@wings-software/uicore'
+import { StepWizard } from '@harness/uicore'
 import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
 import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'

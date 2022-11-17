@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -125,5 +125,56 @@ describe('Test terraform input set', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render backend config when it is Remote type', () => {
+    const beConfigInitialVallues = {
+      ...initialValues,
+      spec: {
+        configuration: {
+          backendConfig: {
+            spec: {
+              store: {
+                spec: {
+                  branch: RUNTIME_INPUT_VALUE,
+                  folderPath: RUNTIME_INPUT_VALUE,
+                  connectorRef: {
+                    label: 'test',
+                    Scope: 'Account',
+                    value: 'test',
+                    connector: {
+                      type: 'GIT',
+                      spec: {
+                        val: 'test'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    const { getByText } = render(
+      <TestWrapper>
+        <Formik initialValues={{}} onSubmit={() => undefined} formName="wrapperComponentTestForm">
+          <FormikForm>
+            <TerraformInputStep
+              initialValues={beConfigInitialVallues as any}
+              stepType={StepType.TerraformApply}
+              stepViewType={StepViewType.InputSet}
+              inputSetData={{
+                template
+              }}
+              path="test"
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
+            />
+          </FormikForm>
+        </Formik>
+      </TestWrapper>
+    )
+
+    expect(getByText('pipelineSteps.backendConfig')).toBeInTheDocument()
   })
 })

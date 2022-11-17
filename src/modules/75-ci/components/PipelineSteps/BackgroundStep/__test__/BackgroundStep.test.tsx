@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'

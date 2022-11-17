@@ -20,7 +20,7 @@ import type {
 } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 import type { MonitoredServiceForm } from '../../Service.types'
-import { createOpenHealthSourceTableProps } from './HealthSourceTableContainer.utils'
+import { createOpenHealthSourceTableProps, getIsNotDeleteOrCreate } from './HealthSourceTableContainer.utils'
 
 export default function HealthSourceTableContainer({
   serviceFormFormik,
@@ -47,11 +47,13 @@ export default function HealthSourceTableContainer({
   })
 
   const updateHealthSource = useCallback(
-    (data: any, formik: FormikContextType<MonitoredServiceForm>): void => {
-      formik.setFieldValue('sources', {
-        ...formik.values?.sources,
-        healthSources: data
-      })
+    (data: any, formik: FormikContextType<MonitoredServiceForm>, isDelete?: boolean): void => {
+      if (getIsNotDeleteOrCreate(isDelete, identifier)) {
+        formik.setFieldValue('sources', {
+          ...formik.values?.sources,
+          healthSources: data
+        })
+      }
       if (identifier) {
         onSave(data)
       }
@@ -130,7 +132,7 @@ export default function HealthSourceTableContainer({
         })
       }
       value={serviceFormFormik?.values?.sources?.healthSources || []}
-      onSuccess={value => updateHealthSource(value, serviceFormFormik)}
+      onSuccess={value => updateHealthSource(value, serviceFormFormik, true)}
     />
   )
 }

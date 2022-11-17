@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import type { MultiSelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption } from '@harness/uicore'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import { FilterDTO, usePostAuditFilter, useUpdateAuditFilter, useDeleteAuditFilter } from 'services/audit'
 import type { FilterDataInterface } from '@common/components/Filter/Constants'

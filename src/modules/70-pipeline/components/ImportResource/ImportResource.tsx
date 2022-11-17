@@ -19,7 +19,7 @@ import {
   PageSpinner,
   useConfirmationDialog,
   FormInput
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import type { HideModal } from '@harness/use-modal'
 

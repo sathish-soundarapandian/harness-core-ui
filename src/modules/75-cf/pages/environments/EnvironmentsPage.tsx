@@ -9,8 +9,8 @@ import React, { useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { get } from 'lodash-es'
-import { Container, Layout, Pagination, Text, TableV2, FontVariation, Color } from '@harness/uicore'
-import { Intent } from '@harness/design-system'
+import { Container, Layout, Pagination, Text, TableV2 } from '@harness/uicore'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import {
   EnvironmentResponseDTO,
   GetEnvironmentListForProjectQueryParams,

@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, fireEvent, act, waitFor } from '@testing-library/react'
 import { Form } from 'formik'
-import { Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { MultiTypeExecutionCondition } from '../MultiTypeExecutionCondition'
 

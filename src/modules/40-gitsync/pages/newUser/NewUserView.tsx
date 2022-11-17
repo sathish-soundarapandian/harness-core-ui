@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Text, Container, Icon } from '@wings-software/uicore'
+import { Text, Container, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { Callout } from '@blueprintjs/core'

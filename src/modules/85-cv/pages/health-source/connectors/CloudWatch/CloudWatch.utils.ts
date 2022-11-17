@@ -16,7 +16,7 @@ import {
   updateFormikValuesForPayload,
   isAssignSectionValid
 } from '../../common/CustomMetricV2/CustomMetric.utils'
-import { getCurrentHealthSourceData } from '../../common/utils/HealthSource.utils'
+import { getConnectorRef, getCurrentHealthSourceData } from '../../common/utils/HealthSource.utils'
 import { HealthSourceTypes } from '../../types'
 import type {
   CloudWatchFormCustomMetricType,
@@ -164,7 +164,7 @@ const getCloudWatchSpec = (params: CreatePayloadUtilParams): CloudWatchMetricsHe
   const { customMetrics, region } = formikValues
   return {
     region,
-    connectorRef: setupSourceData.connectorRef,
+    connectorRef: getConnectorRef(setupSourceData.connectorRef),
     feature: CloudWatchProductNames.METRICS,
     metricDefinitions: updateFormikValuesForPayload(customMetrics) as CloudWatchMetricDefinition[],
     metricPacks: getCloudWatchMetricThresholds(formikValues, isMetricThresholdEnabled)

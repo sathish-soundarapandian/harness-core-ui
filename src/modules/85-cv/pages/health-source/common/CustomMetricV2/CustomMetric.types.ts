@@ -45,6 +45,9 @@ export interface GroupedCreatedMetrics {
 export interface CustomMetricsV2HelperContextType {
   groupedCreatedMetrics: GroupedCreatedMetrics
   riskProfileResponse: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
+  isTemplate?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
 }
 
 export interface FilterMetricThresholdsParamsType {

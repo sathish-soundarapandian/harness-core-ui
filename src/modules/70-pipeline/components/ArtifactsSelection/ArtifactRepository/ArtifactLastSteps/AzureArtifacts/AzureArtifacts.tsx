@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   FormInput,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'

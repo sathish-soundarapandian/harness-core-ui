@@ -11,6 +11,7 @@ import AddCustomMetricButton from '../AddCustomMetricsButton'
 import { getCurrentSelectedMetricName, getGroupedCustomMetrics } from '../../CustomMetric.utils'
 import type { CommonCustomMetricPropertyType } from '../../CustomMetric.types'
 import { selectedIndexFormikPropertyName } from '../../CustomMetricV2.constants'
+import useCustomMetricV2HelperContext from '../../hooks/useCustomMetricV2HelperContext'
 import css from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/SelectedAppsSideNav.module.scss'
 import customCSS from '../../CustomMetricV2.module.scss'
 
@@ -24,7 +25,9 @@ export default function CustomMetricSideNav<T extends CommonCustomMetricProperty
 ): JSX.Element {
   const { onAddMetric, onDeleteMetric } = props
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+  const { isTemplate } = useCustomMetricV2HelperContext()
+
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const { getString } = useStrings()
 

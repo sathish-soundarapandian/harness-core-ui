@@ -9,9 +9,8 @@ import React from 'react'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Classes, Menu, Position } from '@blueprintjs/core'
-
-import { Layout, TagsPopover, Text, useConfirmationDialog, Intent, Popover, Button } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Layout, TagsPopover, Text, useConfirmationDialog, Popover, Button } from '@harness/uicore'
+import { Intent, Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { InfrastructureResponse, InfrastructureResponseDTO } from 'services/cd-ng'

@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Accordion
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FormikProps, FormikErrors, yupToFormErrors } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -72,7 +72,8 @@ import {
   getValidationSchema,
   subscriptionLabel,
   clusterLabel,
-  resourceGroupLabel
+  resourceGroupLabel,
+  K8sAzureInfrastructureUI
 } from './AzureInfrastructureInterface'
 import css from './AzureInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -138,23 +139,21 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
         resetInitialValuesField('subscriptionId')
         resetInitialValuesField('resourceGroup')
         resetInitialValuesField('cluster')
-        onUpdate?.(initialValues)
         break
       case 'subscriptionId':
         resetInitialValuesField('resourceGroup')
         resetInitialValuesField('cluster')
-        onUpdate?.(initialValues)
         break
       case 'resourceGroup':
         resetInitialValuesField('cluster')
-        onUpdate?.(initialValues)
         break
     }
   }
 
   const resetInitialValuesField = (field: string): void => {
-    if (initialValues[field]) {
+    if (initialValues[field] && template?.[field]) {
       initialValues[field] = ''
+      onUpdate?.(initialValues)
     }
   }
 
@@ -286,19 +285,22 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
   }, [resourceGroupValue])
 
   useEffect(() => {
-    if (connector && !initialValues.connectorRef) {
+    if (connector && !initialValues.connectorRef && template?.connectorRef) {
       set(initialValues, 'connectorRef', connector)
+      onUpdate?.(initialValues)
     }
-    if (subscriptionId && !initialValues.subscriptionId) {
+    if (subscriptionId && !initialValues.subscriptionId && template?.subscriptionId) {
       set(initialValues, 'subscriptionId', subscriptionId)
+      onUpdate?.(initialValues)
     }
-    if (resourceGroupValue && !initialValues.resourceGroup) {
+    if (resourceGroupValue && !initialValues.resourceGroup && template?.resourceGroup) {
       set(initialValues, 'resourceGroup', resourceGroupValue)
+      onUpdate?.(initialValues)
     }
-    if (clusterValue && !initialValues.cluster) {
+    if (clusterValue && !initialValues.cluster && template?.cluster) {
       set(initialValues, 'cluster', clusterValue)
+      onUpdate?.(initialValues)
     }
-    onUpdate?.(initialValues)
   }, [])
 
   return (
@@ -702,12 +704,12 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
     error: resourceGroupsError
   } = useGetAzureResourceGroupsBySubscription({
     queryParams: {
-      connectorRef: initialValues?.connectorRef,
+      connectorRef: initialValues?.connectorRef as string,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
     },
-    subscriptionId: initialValues?.subscriptionId,
+    subscriptionId: initialValues?.subscriptionId as string,
     lazy: true
   })
 
@@ -725,13 +727,13 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
     error: clustersError
   } = useGetAzureClusters({
     queryParams: {
-      connectorRef: initialValues?.connectorRef,
+      connectorRef: initialValues?.connectorRef as string,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
     },
-    subscriptionId: initialValues?.subscriptionId,
-    resourceGroup: initialValues?.resourceGroup,
+    subscriptionId: initialValues?.subscriptionId as string,
+    resourceGroup: initialValues?.resourceGroup as string,
     lazy: true
   })
 
@@ -1197,7 +1199,7 @@ const AzureInfrastructureSpecVariablesForm: React.FC<AzureInfrastructureSpecEdit
   ) : null
 }
 
-interface AzureInfrastructureSpecStep extends K8sAzureInfrastructure {
+interface AzureInfrastructureSpecStep extends K8sAzureInfrastructureUI {
   name?: string
   identifier?: string
 }
@@ -1211,13 +1213,13 @@ const AzureType = 'KubernetesAzure'
 export class AzureInfrastructureSpec extends PipelineStep<AzureInfrastructureSpecStep> {
   lastFetched: number
   protected type = StepType.KubernetesAzure
-  protected defaultValues: K8sAzureInfrastructure = {
-    connectorRef: '',
-    subscriptionId: '',
-    cluster: '',
-    resourceGroup: '',
-    namespace: '',
-    releaseName: ''
+  protected defaultValues: K8sAzureInfrastructureUI = {
+    connectorRef: undefined,
+    subscriptionId: undefined,
+    cluster: undefined,
+    resourceGroup: undefined,
+    namespace: undefined,
+    releaseName: undefined
   }
 
   protected stepIcon: IconName = 'microsoft-azure'
@@ -1501,7 +1503,7 @@ export class AzureInfrastructureSpec extends PipelineStep<AzureInfrastructureSpe
     return errors
   }
 
-  renderStep(props: StepProps<K8sAzureInfrastructure>): JSX.Element {
+  renderStep(props: StepProps<K8sAzureInfrastructureUI>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes } = props
     if (this.isTemplatizedView(stepViewType)) {
       if (initialValues?.deploymentType) {

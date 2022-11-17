@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   SelectOption,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import * as Yup from 'yup'

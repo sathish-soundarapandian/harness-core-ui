@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { isEmpty } from 'lodash-es'
-import { Card, Text, FormInput, MultiTypeInputType, FontVariation, Color } from '@harness/uicore'
+import { Card, Text, FormInput, MultiTypeInputType } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import css from '../../MonitoredServiceInputSetsTemplate.module.scss'

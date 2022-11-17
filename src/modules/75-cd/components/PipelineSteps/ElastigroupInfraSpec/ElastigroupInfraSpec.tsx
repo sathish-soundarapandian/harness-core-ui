@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
 import { parse } from 'yaml'
@@ -50,8 +50,8 @@ export class ElastigroupInfrastructureSpec extends PipelineStep<ElastigroupInfra
     }
   }
 
-  protected stepIcon: IconName = 'service-elastigroup' //todospt
-  protected stepName = 'Specify Spot Elastigroup' //todospt
+  protected stepIcon: IconName = 'elastigroup'
+  protected stepName = 'Specify Spot Elastigroup'
   protected stepPaletteVisible = false
   protected invocationMap: Map<
     RegExp,

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Layout, ModalDialog, MultiTypeInputType } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, ModalDialog, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { TriggerFormType } from '@pipeline/factories/ArtifactTriggerInputFactory/types'

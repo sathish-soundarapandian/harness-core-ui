@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import { Checkbox, Intent, useConfirmationDialog } from '@harness/uicore'
+import { Checkbox, useConfirmationDialog } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { CheckboxWithPromptProps } from './CheckboxWithPrompt.types'
 

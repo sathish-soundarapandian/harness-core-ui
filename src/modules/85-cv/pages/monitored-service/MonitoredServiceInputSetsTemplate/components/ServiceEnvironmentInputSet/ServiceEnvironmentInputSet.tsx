@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Card, Color, FontVariation, SelectOption, Text } from '@harness/uicore'
+import { Card, SelectOption, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   useGetHarnessServices,

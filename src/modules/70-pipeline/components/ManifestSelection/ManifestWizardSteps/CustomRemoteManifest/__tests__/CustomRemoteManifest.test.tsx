@@ -16,7 +16,7 @@ import {
   getByText as getElementByText,
   queryByText
 } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { omit } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'

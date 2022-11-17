@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useEffect, useState } from 'react'
-import { Container, Icon } from '@wings-software/uicore'
+import { Container, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Column, Row } from 'react-table'
 import { isEqual } from 'lodash-es'

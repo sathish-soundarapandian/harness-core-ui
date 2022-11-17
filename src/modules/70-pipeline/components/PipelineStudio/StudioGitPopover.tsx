@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { GitSyncEntityDTO } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'

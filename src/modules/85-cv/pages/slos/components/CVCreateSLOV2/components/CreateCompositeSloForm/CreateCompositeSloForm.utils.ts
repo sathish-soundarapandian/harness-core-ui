@@ -11,6 +11,7 @@ import type { SLOTargetFilterDTO } from 'services/cv'
 import { PeriodLengthTypes, PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
 import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
+import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight } from './CreateCompositeSloForm.constant'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 
 export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): boolean => {
@@ -53,25 +54,23 @@ export const validateSetSLOTimeWindow = (formikProps: FormikProps<SLOV2Form>): b
 
 export const validateAddSLO = (formikProps: FormikProps<SLOV2Form>): boolean => {
   const { serviceLevelObjectivesDetails } = formikProps.values
-  let hasInvalidValue = false
+  const sumOfSLOweight = serviceLevelObjectivesDetails?.reduce((total, num) => {
+    return num.weightagePercentage + total
+  }, 0)
   if (!serviceLevelObjectivesDetails?.length) {
     return false
+  } else if (Math.floor(defaultTo(sumOfSLOweight, 0)) !== 100) {
+    return false
+  } else if (serviceLevelObjectivesDetails?.length < MinNumberOfSLO) {
+    return false
+  } else if (serviceLevelObjectivesDetails?.length > MaxNumberOfSLO) {
+    return false
   } else {
-    if (serviceLevelObjectivesDetails?.length < 2) {
-      return false
-    }
-    for (let index = 0; index < defaultTo(serviceLevelObjectivesDetails?.length, 0); index++) {
-      if (
-        serviceLevelObjectivesDetails?.[index].weightagePercentage > 99 ||
-        serviceLevelObjectivesDetails?.[index].weightagePercentage < 1
-      ) {
-        hasInvalidValue = true
-        break
-      }
-    }
-    return !hasInvalidValue
+    const hasInValidValue = serviceLevelObjectivesDetails.some(
+      slo => slo.weightagePercentage > SLOWeight.MAX || slo.weightagePercentage < SLOWeight.MIN
+    )
+    return !hasInValidValue
   }
-  return true
 }
 
 export const validateSetSLOTarget = (formikProps: FormikProps<SLOV2Form>): boolean => {

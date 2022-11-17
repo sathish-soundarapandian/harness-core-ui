@@ -7,7 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import { Menu } from '@blueprintjs/core'
-import { Select, SelectOption } from '@wings-software/uicore'
+import { Select, SelectOption } from '@harness/uicore'
 import { isAssignmentFieldDisabled } from '@rbac/utils/utils'
 import type { ResourceGroupOption, RoleOption } from '@rbac/modals/RoleAssignmentModal/views/UserRoleAssigment'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

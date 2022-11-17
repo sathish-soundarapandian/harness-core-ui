@@ -18,7 +18,7 @@ import {
   Formik,
   Text,
   MultiSelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'

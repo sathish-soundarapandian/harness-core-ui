@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Views } from '@wings-software/uicore'
+import { Views } from '@harness/uicore'
 import { TemplatesGridView } from '@templates-library/pages/TemplatesPage/views/TemplatesGridView/TemplatesGridView'
 import type { PageTemplateSummaryResponse, TemplateSummaryResponse } from 'services/template-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'

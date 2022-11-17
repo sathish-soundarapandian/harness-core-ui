@@ -8,7 +8,7 @@
 import React, { useRef } from 'react'
 import { defaultTo, get, identity, merge } from 'lodash-es'
 import { Spinner, Tabs } from '@blueprintjs/core'
-import { Layout, Button, PageError } from '@wings-software/uicore'
+import { Layout, Button, PageError } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { ApprovalInstanceResponse, ExecutionNode } from 'services/pipeline-ng'

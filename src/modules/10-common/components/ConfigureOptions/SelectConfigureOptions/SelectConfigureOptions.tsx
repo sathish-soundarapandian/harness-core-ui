@@ -8,7 +8,8 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import { FormInput, Intent, MultiSelectProps, SelectOption, Text } from '@harness/uicore'
+import { FormInput, MultiSelectProps, SelectOption, Text } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import type { Failure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Formik, IconName } from '@wings-software/uicore'
+import { AllowedTypes, Formik, IconName } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'

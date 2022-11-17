@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import type QueryString from 'qs'
+import { isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { Row } from 'react-table'
 import {
@@ -17,8 +18,11 @@ import {
   Container,
   ButtonVariation,
   ExpandingSearchInput,
-  NoDataCard
+  NoDataCard,
+  Layout,
+  Checkbox
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useMutateAsGet } from '@common/hooks'
 import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -40,6 +44,7 @@ import {
   RenderTarget,
   RenderUserJourney
 } from './SLOList.utils'
+import { MinNumberOfSLO, MaxNumberOfSLO } from '../../../CreateCompositeSloForm.constant'
 
 interface SLODashboardWidgetsParams {
   queryParams: GetSLOHealthListViewQueryParams
@@ -57,6 +62,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [pageNumber, setPageNumber] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('')
   const [selectedSlos, setSelectedSlos] = useState<SLOHealthListView[]>([])
 
   const sloDashboardWidgetsParams: SLODashboardWidgetsParams = {
@@ -73,11 +79,11 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     error: dashboardWidgetsError
   } = useMutateAsGet(useGetSLOHealthListViewV2, {
     queryParams: { ...sloDashboardWidgetsParams.queryParams },
-    body: { ...filter }
+    body: { ...filter, searchFilter: searchTerm }
   })
 
   const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = dashboardWidgetsResponse?.data ?? {}
-
+  const isDisabled = selectedSlos?.length < MinNumberOfSLO || selectedSlos?.length > MaxNumberOfSLO
   useEffect(() => {
     // load selected SLOs when we get data from API
     if (dashboardWidgetsResponse?.data?.content) {
@@ -94,12 +100,45 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     hideDrawer()
   }
 
+  const isSelectAllChecked = () => {
+    const l1 = selectedSlos.map(item => item.sloIdentifier)
+    const l2 = dashboardWidgetsResponse?.data?.content?.map(item => item.sloIdentifier)
+    return isEqual(l1.sort(), l2?.sort())
+  }
+
+  const onSelectAll = (checked: boolean) => {
+    let clonedSelectedSlos = [...selectedSlos]
+    if (checked) {
+      clonedSelectedSlos = dashboardWidgetsResponse?.data?.content || []
+    } else {
+      clonedSelectedSlos = []
+    }
+    setSelectedSlos(clonedSelectedSlos)
+  }
+
   return (
     <>
-      <Page.Header
-        title={<Text>SLOs matching the time window.</Text>}
-        toolbar={<ExpandingSearchInput alwaysExpanded width={250} />}
-      />
+      <Text margin={'medium'} font={{ variation: FontVariation.FORM_TITLE }}>
+        {getString('cv.CompositeSLO.AddSLO')}
+      </Text>
+      <Layout.Vertical margin={'medium'} border={{ bottom: true }} padding={{ bottom: 'small' }}>
+        <Text font={{ variation: FontVariation.FORM_LABEL, weight: 'light' }}>
+          {getString('cv.CompositeSLO.MatchingSLO')}
+        </Text>
+        <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }} width="97%">
+          <Text font={{ variation: FontVariation.FORM_LABEL, weight: 'bold' }}>
+            {selectedSlos.length}/20 {getString('cd.selectedLabel')}
+          </Text>
+          <ExpandingSearchInput
+            alwaysExpanded
+            width={250}
+            onChange={text => {
+              setPageNumber(0)
+              setSearchTerm(text.trim())
+            }}
+          />
+        </Layout.Horizontal>
+      </Layout.Vertical>
       <Container margin={'medium'}>
         <Page.Body
           loading={dashboardWidgetsLoading}
@@ -108,10 +147,17 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
         >
           {content?.length ? (
             <TableV2
-              sortable={false}
+              sortable
               columns={[
                 {
-                  Header: '',
+                  Header: (
+                    <Checkbox
+                      checked={isSelectAllChecked()}
+                      onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        onSelectAll(event.currentTarget.checked)
+                      }}
+                    />
+                  ),
                   id: 'selectSlo',
                   width: '50px',
                   Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
@@ -161,12 +207,12 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
               }}
             />
           ) : (
-            <NoDataCard icon={'join-table'} message={getString('cv.healthSource.noData')} />
+            <NoDataCard icon={'join-table'} message={getString('cv.CompositeSLO.NoSloFound')} />
           )}
           <Button
             width={150}
             data-testid={'addSloButton'}
-            disabled={selectedSlos.length < 2}
+            disabled={isDisabled}
             variation={ButtonVariation.PRIMARY}
             text={getString('add')}
             onClick={addSLos}

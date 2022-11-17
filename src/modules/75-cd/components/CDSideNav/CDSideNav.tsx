@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { compile } from 'path-to-regexp'
 
 import routes from '@common/RouteDefinitions'
@@ -32,7 +32,7 @@ import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMe
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { useGetCommunity, isOnPrem } from '@common/utils/utils'
+import { isOnPrem, useGetCommunity } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import type { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -66,11 +66,12 @@ export default function CDSideNav(): React.ReactElement {
   const location = useLocation()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
+  const { CD_ONBOARDING_ENABLED, GITOPS_ONPREM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
   const { showGetStartedCDTabInMainMenu, setShowGetStartedCDTabInMainMenu } = useSideNavContext()
+  const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const isOverviewPage = !!matchPath(location.pathname, {
     path: routes.toProjectOverview({ ...params, module })
   })
@@ -106,6 +107,7 @@ export default function CDSideNav(): React.ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchPipelinesData])
 
+  const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
@@ -220,7 +222,7 @@ export default function CDSideNav(): React.ReactElement {
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label="Services" to={routes.toServices({ ...params, module })} />
           <SidebarLink label="Environments" to={routes.toEnvironment({ ...params, module })} />
-          {!isCommunity && !isOnPrem() ? (
+          {!isCommunity && !hideGitopsOnPrem ? (
             <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />
           ) : null}
           <ProjectSetupMenu module={module} />

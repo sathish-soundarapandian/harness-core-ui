@@ -6,7 +6,7 @@
  */
 
 import type { CSSProperties } from 'react'
-import type { IconName, SelectOption } from '@wings-software/uicore'
+import type { IconName, SelectOption } from '@harness/uicore'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import type { NodeRunInfo } from 'services/pipeline-ng'
 

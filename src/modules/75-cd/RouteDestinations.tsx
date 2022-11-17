@@ -94,6 +94,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
   icon: 'gitops-agents-blue-circle',
   label: 'common.agents',
+  labelSingular: 'common.agent',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_GITOPS_AGENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -105,6 +106,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
   icon: 'gitops-applications-blue-circle',
   label: 'applications',
+  labelSingular: 'common.application',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_GITOPS_APPLICATION]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -118,6 +120,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
   icon: 'gitops-repository-certificates-blue-circle',
   label: 'common.repositoryCertificates',
+  labelSingular: 'common.singularLabels.repositoryCertificate',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_GITOPS_CERT]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -129,6 +132,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
   icon: 'gitops-clusters-blue-circle',
   label: 'common.clusters',
+  labelSingular: 'common.cluster',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_GITOPS_CLUSTER]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -140,6 +144,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
   icon: 'gitops-gnupg-key-blue-circle',
   label: 'common.gnupgKeys',
+  labelSingular: 'common.singularLabels.gnupgKey',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_GITOPS_GPGKEY]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -151,6 +156,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_REPOSITORY, {
   icon: 'gitops-repository-blue-circle',
   label: 'repositories',
+  labelSingular: 'repository',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_GITOPS_REPOSITORY]: <LocaleString stringID="rbac.permissionLabels.view" />,

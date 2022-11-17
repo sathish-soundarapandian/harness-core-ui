@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'

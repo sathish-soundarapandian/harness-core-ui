@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Button, ButtonVariation, Card, Container, Heading, Layout } from '@wings-software/uicore'
+import { Button, ButtonVariation, Card, Container, Heading, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'

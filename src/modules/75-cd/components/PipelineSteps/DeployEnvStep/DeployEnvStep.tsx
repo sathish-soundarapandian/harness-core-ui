@@ -27,7 +27,7 @@ import {
   Container,
   PageSpinner,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
 import { defaultTo, get, isEmpty, isNil, noop, omit, isEqual } from 'lodash-es'

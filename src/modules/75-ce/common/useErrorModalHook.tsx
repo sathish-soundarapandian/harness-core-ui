@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Container, Text } from '@wings-software/uicore'
+import { Button, Container, Text } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'

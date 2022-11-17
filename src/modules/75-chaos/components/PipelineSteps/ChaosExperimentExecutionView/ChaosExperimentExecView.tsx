@@ -6,11 +6,10 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Popover } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout, Popover, useToaster } from '@harness/uicore'
 import { chunk } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { useToaster } from '@wings-software/uicore'
 import { IconName, Menu, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import {
@@ -154,7 +153,7 @@ export function ChaosExperimentExecView(props: StepDetailProps): React.ReactElem
         {
           <ChildAppMounter<ChaosStepExecutionProps>
             ChildApp={ChaosStepExecution}
-            notifyID={step.executableResponses?.[0].async.callbackIds[0]}
+            notifyID={step.executableResponses?.[0]?.async?.callbackIds?.[0] ?? ''}
             expectedResilienceScore={step.stepParameters?.spec?.expectedResilienceScore ?? 50}
             actionButtons={
               <ActionButtons

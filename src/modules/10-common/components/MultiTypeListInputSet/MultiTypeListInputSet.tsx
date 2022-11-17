@@ -15,7 +15,7 @@ import {
   MultiTypeInputType,
   MultiTextInputProps,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { connect, FormikContextType } from 'formik'
 import { get, isEmpty } from 'lodash-es'

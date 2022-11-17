@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { Text, Container } from '@wings-software/uicore'
+import { Text, Container } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
-import type { TextProps } from '@wings-software/uicore/dist/components/Text/Text'
+import type { TextProps } from '@harness/uicore/dist/components/Text/Text'
 import { isNumber } from 'highcharts'
 import { getColorStyle } from '@common/components/HeatMap/ColorUtils'
 import css from './RiskScoreTile.module.scss'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, SelectOption, Container, Layout, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
+import { Text, SelectOption, Container, Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { connect } from 'formik'

@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Color, Container, FontVariation, Layout, Text, Utils } from '@harness/uicore'
+import { Container, Layout, Text, Utils } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import css from './SimpleBar.module.scss'
 
 interface SimpleBarProps {

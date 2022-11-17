@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, Icon, TextInput, Text } from '@wings-software/uicore'
+import { Container, Layout, Icon, TextInput, Text } from '@harness/uicore'
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import {

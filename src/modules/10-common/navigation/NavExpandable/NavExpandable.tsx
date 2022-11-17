@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { useLocation, matchPath } from 'react-router-dom'
-import { IconName, Layout, Text } from '@wings-software/uicore'
+import { IconName, Layout, Text } from '@harness/uicore'
 import css from './NavExpandable.module.scss'
 
 interface NavExpandableProps {

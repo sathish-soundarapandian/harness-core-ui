@@ -23,7 +23,7 @@ import {
   Container,
   ModalErrorHandler,
   FlexExpander
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { Color } from '@harness/design-system'
 import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'

@@ -17,7 +17,7 @@ import {
   SelectOption,
   ButtonVariation,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { setupAzureArtifactsFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'

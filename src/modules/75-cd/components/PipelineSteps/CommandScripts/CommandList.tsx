@@ -13,8 +13,6 @@ import {
   AllowedTypes,
   Button,
   ButtonVariation,
-  Color,
-  FontVariation,
   FormikTooltipContext,
   HarnessDocTooltip,
   Icon,
@@ -22,6 +20,7 @@ import {
   Layout,
   Text
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'

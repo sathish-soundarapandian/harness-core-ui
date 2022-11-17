@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
-import { Card, Container, Layout } from '@wings-software/uicore'
+import { Card, Container, Layout } from '@harness/uicore'
 import { ActiveServiceInstances } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances'
 import { ActiveServiceInstancesV2 } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesV2'
 import {

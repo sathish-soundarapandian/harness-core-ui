@@ -16,7 +16,7 @@ import {
   Layout,
   ButtonVariation,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'

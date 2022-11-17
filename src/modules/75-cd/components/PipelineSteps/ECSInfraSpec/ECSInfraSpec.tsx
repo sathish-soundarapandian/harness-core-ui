@@ -11,7 +11,7 @@ import { FormikErrors, yupToFormErrors } from 'formik'
 import { isEmpty, get, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { EcsInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'

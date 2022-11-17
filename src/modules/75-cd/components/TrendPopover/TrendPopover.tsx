@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Icon, Layout, Popover, Text } from '@wings-software/uicore'
+import { Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { SparklineChart, SparklineChartProps } from '@common/components/SparklineChart/SparklineChart'
 import { numberFormatter } from '@cd/components/Services/common'

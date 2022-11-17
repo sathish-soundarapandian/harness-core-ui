@@ -7,7 +7,8 @@
 
 import React, { useCallback } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Card, Container, Heading, ButtonVariation, Button, Layout, Color } from '@harness/uicore'
+import { Card, Container, Heading, ButtonVariation, Button, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { FreezeWindow } from 'services/cd-ng'

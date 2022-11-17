@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { Pagination, Layout, Text, Container, Heading, TableV2 } from '@wings-software/uicore'
+import { Pagination, Layout, Text, Container, Heading, TableV2 } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'

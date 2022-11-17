@@ -18,7 +18,7 @@ import {
   useConfirmationDialog,
   useToaster,
   VisualYamlToggle
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import {
   SecretTextSpecDTO,

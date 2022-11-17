@@ -35,7 +35,12 @@ jest.mock('services/cd-ng', () => ({
     mutate: jest.fn().mockImplementation(() => ({
       resource: []
     }))
-  }))
+  })),
+  useIsImmutableDelegateEnabled: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
 }))
 describe('Create DelegateSetup Step', () => {
   test('render data', () => {

@@ -21,7 +21,7 @@ import {
   renderTrend,
   IconName,
   Popover
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo, isEqual } from 'lodash-es'

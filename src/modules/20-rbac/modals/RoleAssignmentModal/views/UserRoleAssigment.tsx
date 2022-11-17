@@ -18,7 +18,7 @@ import {
   ModalErrorHandler,
   ButtonVariation,
   MultiSelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
@@ -37,7 +37,7 @@ import {
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
+import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { useGetCommunity } from '@common/utils/utils'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
@@ -236,7 +236,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
       }}
       formName="userRoleAssignementForm"
       validationSchema={Yup.object().shape({
-        users: Yup.array().min(1, getString('rbac.userRequired')).max(15, getString('rbac.userUpperLimit')),
+        users: Yup.array().min(1, getString('rbac.userRequired')),
         ...(isCommunity
           ? {}
           : {

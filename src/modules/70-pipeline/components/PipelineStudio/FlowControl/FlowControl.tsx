@@ -20,7 +20,7 @@ import {
   ButtonSize,
   useToggleOpen,
   ConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { set, debounce, cloneDeep, isEqual } from 'lodash-es'
 import { FieldArray } from 'formik'

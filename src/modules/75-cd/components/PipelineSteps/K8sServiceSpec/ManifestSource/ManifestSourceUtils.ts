@@ -114,3 +114,7 @@ export const getManifestTriggerSetValues = (
 export function getFqnPath(stageIdentifier: string, manifestPath: string): string {
   return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.${manifestPath}.spec.store.spec.bucketName`
 }
+
+export function getFqnPathForChart(stageIdentifier: string, manifestIdentifier: string): string {
+  return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.manifests.${manifestIdentifier}`
+}

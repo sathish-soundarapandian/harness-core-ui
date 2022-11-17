@@ -19,7 +19,7 @@ import {
   SelectOption,
   MultiSelectOption,
   Dialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'

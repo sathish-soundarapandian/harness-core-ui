@@ -20,12 +20,13 @@ import {
   Table,
   ButtonSize,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { get } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
-import type { GcpBillingExportSpec, GcpCloudCostConnector } from 'services/cd-ng'
+import type { GcpBillingExportSpec } from 'services/cd-ng'
+import type { GcpCloudCostConnector } from 'services/ce'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'

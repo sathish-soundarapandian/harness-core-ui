@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import { Container, FormInput, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
 import { MapGCPLogsToServiceFieldNames } from '../../constants'

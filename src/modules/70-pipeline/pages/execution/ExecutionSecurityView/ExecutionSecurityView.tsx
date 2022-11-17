@@ -6,7 +6,7 @@
  */
 
 import React, { lazy } from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'

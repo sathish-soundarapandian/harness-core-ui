@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Container, Layout, PageError } from '@wings-software/uicore'
+import { Container, Layout, PageError } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { useStrings, String } from 'framework/strings'
 import { DeleteSegmentQueryParams, GetSegmentQueryParams, useDeleteSegment, useGetSegment } from 'services/cf'

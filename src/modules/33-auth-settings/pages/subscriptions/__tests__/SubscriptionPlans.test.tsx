@@ -86,7 +86,7 @@ describe('Subscription Plans', () => {
         return {
           data: {
             data: {
-              edition: 'ENTERPRISE',
+              edition: 'FREE',
               licenseType: 'TRIAL'
             },
             status: 'SUCCESS'
@@ -95,14 +95,14 @@ describe('Subscription Plans', () => {
           loading: false
         }
       })
-      const { container, getByText } = render(
+      const { container } = render(
         <TestWrapper>
           <Provider value={responseState as any}>
             <SubscriptionPlans module={ModuleName.CI} />
           </Provider>
         </TestWrapper>
       )
-      expect(getByText('common.plans.currentPlan (common.plans.freeTrial)')).toBeInTheDocument()
+
       expect(container).toMatchSnapshot()
     })
   })

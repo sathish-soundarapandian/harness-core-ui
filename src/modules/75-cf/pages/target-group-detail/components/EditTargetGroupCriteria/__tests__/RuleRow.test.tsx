@@ -8,7 +8,7 @@
 import React from 'react'
 import { getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfConstants from '@cf/constants'
 import type { OperatorOption } from '@cf/constants'

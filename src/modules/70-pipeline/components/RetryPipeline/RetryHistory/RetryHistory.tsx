@@ -6,16 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import {
-  Text,
-  Button,
-  Card,
-  Layout,
-  PageSpinner,
-  ButtonVariation,
-  useToaster,
-  ButtonSize
-} from '@wings-software/uicore'
+import { Text, Button, Card, Layout, PageSpinner, ButtonVariation, useToaster, ButtonSize } from '@harness/uicore'
 import { Classes, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'

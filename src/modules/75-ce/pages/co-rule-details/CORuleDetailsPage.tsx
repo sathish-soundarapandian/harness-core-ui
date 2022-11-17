@@ -11,9 +11,7 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import {
   Button,
   ButtonVariation,
-  Color,
   Container,
-  FontVariation,
   Icon,
   IconName,
   Layout,
@@ -23,6 +21,7 @@ import {
   Text,
   useToaster
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Service, useRouteDetails } from 'services/lw'

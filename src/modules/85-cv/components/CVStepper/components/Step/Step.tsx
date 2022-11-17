@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react'
-import { Container, Layout, Card, Text } from '@harness/uicore'
+import cx from 'classnames'
+import { Container, Card, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StepPropsInterface, StepStatusType } from './Step.types'
 import { StepTitle } from './components/StepTitle/StepTitle'
@@ -23,7 +24,8 @@ const Step = ({
   index,
   onStepChange,
   setSelectedStepId,
-  runValidationOnMount
+  runValidationOnMount,
+  isOptional
 }: StepPropsInterface): JSX.Element => {
   const { getString } = useStrings()
   const selectedStepIndex = stepList.map(item => item.id).indexOf(selectedStepId || '')
@@ -64,37 +66,43 @@ const Step = ({
 
   return (
     <>
-      <Layout.Vertical key={`${step.id}_vertical`} spacing="medium">
+      <Container className={css.stepContainer}>
         <StepTitle
           step={step}
           index={index}
           isCurrent={isCurrentStep}
           stepStatus={stepTitleStatus}
           onClick={onTitleClick}
+          isOptional={isOptional}
         />
-        {isPreviewVisible && (
-          <Container data-testid={`preview_${step.id}`} className={css.alignContainerRight}>
-            <>{step.preview}</>
-          </Container>
-        )}
-        {(isCurrentStep || isErrorMessageVisible) && (
-          <Container className={css.alignContainerRight}>
-            {isErrorMessageVisible && (
-              <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
-                {getString('cv.CVStepper.StepError')}
-              </Text>
-            )}
-            {isCurrentStep && (
-              <>
-                <Card data-testid={`panel_${step.id}`} className={css.card}>
-                  {step.panel}
-                </Card>
-                <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
-              </>
-            )}
-          </Container>
-        )}
-      </Layout.Vertical>
+        <Container
+          data-testid={`preview_${step.id}`}
+          className={cx(css.alignContainerRight, (index !== stepList.length - 1 || isLastStep) && css.borderLeft)}
+        >
+          {isPreviewVisible && (
+            <Container data-testid={`preview_${step.id}`}>
+              <>{step.preview}</>
+            </Container>
+          )}
+          {(isCurrentStep || isErrorMessageVisible) && (
+            <Container>
+              {isErrorMessageVisible && (
+                <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
+                  {getString('cv.CVStepper.StepError')}
+                </Text>
+              )}
+              {isCurrentStep && (
+                <>
+                  <Card data-testid={`panel_${step.id}`} className={css.card}>
+                    {step.panel}
+                  </Card>
+                  <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
+                </>
+              )}
+            </Container>
+          )}
+        </Container>
+      </Container>
     </>
   )
 }

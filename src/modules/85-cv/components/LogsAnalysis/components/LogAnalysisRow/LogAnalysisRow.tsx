@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
-import { Container, Text, Icon, Layout, Pagination } from '@wings-software/uicore'
+import { Container, Text, Icon, Layout, Pagination } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

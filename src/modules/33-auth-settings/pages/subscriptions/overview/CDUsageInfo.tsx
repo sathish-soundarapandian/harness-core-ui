@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, PageError } from '@wings-software/uicore'
+import { Layout, PageError } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -29,7 +29,7 @@ const ActiveInstanceCard: React.FC<{ subscribedIns: number; activeIns: number; d
   const rightHeader = getString('common.subscriptions.usage.last30days')
   const hasBar = true
   const leftFooter = getString('common.subscribed')
-  const rightFooter = getString('common.subscribed')
+  const rightFooter = getString('common.usage')
   const props = {
     subscribed: subscribedIns,
     usage: activeIns,
@@ -54,7 +54,7 @@ const ActiveServiceCard: React.FC<{ subscribedIns: number; activeIns: number; di
   const rightHeader = getString('common.subscriptions.usage.last30days')
   const hasBar = true
   const leftFooter = getString('common.subscribed')
-  const rightFooter = getString('common.subscribed')
+  const rightFooter = getString('common.usage')
   const props = {
     subscribed: subscribedIns,
     usage: activeIns,

@@ -18,7 +18,7 @@ import {
   getPropsForMinimalStageWithTemplateUsed
 } from './CustomStageHelper'
 
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
+jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
 }))
 jest.mock('@common/components/MonacoEditor/MonacoEditor')

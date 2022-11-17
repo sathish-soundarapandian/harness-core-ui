@@ -9,7 +9,7 @@ import React, { forwardRef, useMemo } from 'react'
 import type Highcharts from 'highcharts/highcharts'
 import { isEqual, pick } from 'lodash-es'
 import cx from 'classnames'
-import { Container, Icon } from '@wings-software/uicore'
+import { Container, Icon } from '@harness/uicore'
 import type {
   PerspectiveTimeSeriesData,
   TimeSeriesDataPoints,

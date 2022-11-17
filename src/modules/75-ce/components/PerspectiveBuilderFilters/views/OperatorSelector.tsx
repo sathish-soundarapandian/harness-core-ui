@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon } from '@wings-software/uicore'
+import { Container, Icon } from '@harness/uicore'
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { QlceViewFilterOperator } from 'services/ce/services'

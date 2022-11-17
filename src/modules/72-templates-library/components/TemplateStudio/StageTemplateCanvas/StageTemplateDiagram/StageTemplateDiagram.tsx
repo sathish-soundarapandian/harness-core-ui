@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'

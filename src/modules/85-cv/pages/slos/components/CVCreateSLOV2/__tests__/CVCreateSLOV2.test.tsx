@@ -65,6 +65,10 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('CVCreateSloV2', () => {
+  beforeEach(() => {
+    jest.setTimeout(30000)
+  })
+
   test('CVCreateSLOV2 when isComposite is false', async () => {
     const { container } = render(
       <TestWrapper>

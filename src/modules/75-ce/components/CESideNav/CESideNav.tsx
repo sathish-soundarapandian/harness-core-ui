@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Checkbox, Layout, Popover, Text } from '@wings-software/uicore'
+import { Button, Checkbox, Layout, Popover, Text } from '@harness/uicore'
 import { Tabs, Tab } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useTelemetry } from '@common/hooks/useTelemetry'

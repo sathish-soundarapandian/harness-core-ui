@@ -7,17 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  Container,
-  Icon,
-  Pagination,
-  Select,
-  Heading,
-  NoDataCard,
-  Layout,
-  PageError,
-  Card
-} from '@wings-software/uicore'
+import { Container, Icon, Pagination, Select, Heading, NoDataCard, Layout, PageError, Card } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetAllErrorTrackingClusterData, useGetAllErrorTrackingData } from 'services/cv'

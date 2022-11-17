@@ -9,19 +9,20 @@ import React from 'react'
 import cx from 'classnames'
 
 import {
+  Accordion,
   AllowedTypes,
   Formik,
   FormInput,
   getMultiTypeFromValue,
   IconName,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 
 import { defaultTo, get } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
-
+import { v4 as uuid } from 'uuid'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -33,6 +34,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -43,6 +45,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MergePRVariableStepProps, MergePRVariableView } from './MergePrVariableView'
 import MergePRInputStep from './MergePrInputStep'
+import OptionalConfiguration from './OptionalConfiguration'
 import { validateStepForm } from '../DeployInfrastructureStep/utils'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -62,9 +65,17 @@ interface MergePrProps {
   }
 }
 
+export interface Variable {
+  value?: number | string
+  id?: string
+  name?: string
+  type: 'String' | 'Number'
+}
+
 export interface MergePRStepData extends StepElementConfig {
   spec: {
     deleteSourceBranch: boolean
+    variables?: Array<Variable>
   }
 }
 
@@ -72,6 +83,7 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { GITOPS_API_PARAMS_MERGE_PR } = useFeatureFlags()
 
   return (
     <>
@@ -153,6 +165,21 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
               <div className={cx(stepCss.formGroup, stepCss.sm)}>
                 <FormInput.CheckBox name="spec.deleteSourceBranch" label={getString('cd.deleteSourceBranch')} />
               </div>
+
+              {GITOPS_API_PARAMS_MERGE_PR ? (
+                <>
+                  <div className={stepCss.divider} />
+                  <Accordion className={stepCss.accordion}>
+                    <Accordion.Panel
+                      id="optional-config"
+                      summary={getString('common.optionalConfig')}
+                      details={
+                        <OptionalConfiguration formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
+                      }
+                    />
+                  </Accordion>
+                </>
+              ) : null}
             </>
           )
         }}
@@ -199,14 +226,14 @@ export class MergePR extends PipelineStep<MergePRStepData> {
     }
     return (
       <MergePRWidgetWithRef
-        initialValues={initialValues}
-        onUpdate={onUpdate}
+        initialValues={this.getInitialValues(initialValues)}
+        onUpdate={data => onUpdate?.(this.processFormData(data))}
         isNewStep={defaultTo(isNewStep, true)}
         stepViewType={defaultTo(stepViewType, StepViewType.Edit)}
         ref={formikRef}
         readonly={readonly}
         allowableTypes={allowableTypes}
-        onChange={onChange}
+        onChange={data => onChange?.(this.processFormData(data))}
       />
     )
   }
@@ -234,6 +261,36 @@ export class MergePR extends PipelineStep<MergePRStepData> {
     timeout: '10m',
     spec: {
       deleteSourceBranch: false
+    }
+  }
+
+  private getInitialValues(initialValues: MergePRStepData): MergePRStepData {
+    const variables = get(initialValues, 'spec.variables', [])
+    return {
+      ...initialValues,
+      spec: {
+        ...initialValues.spec,
+
+        variables: Array.isArray(variables)
+          ? variables.map(variable => ({
+              ...variable,
+              id: uuid()
+            }))
+          : /*istanbul ignore next*/ []
+      }
+    }
+  }
+
+  processFormData(data: MergePRStepData): MergePRStepData {
+    const variables = get(data, 'spec.variables', [])
+    return {
+      ...data,
+      spec: {
+        ...data.spec,
+        variables: Array.isArray(variables)
+          ? variables.filter(variable => variable.value).map(({ id, ...variable }) => variable)
+          : /*istanbul ignore next*/ undefined
+      }
     }
   }
 }

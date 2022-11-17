@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@wings-software/uicore'
+import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -47,6 +47,13 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
                   infra.infraName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
                 (infra.lastPipelineExecutionName !== null &&
                   infra.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
+            ).length ||
+            i.instanceGroupedByClusterList?.filter(
+              cluster =>
+                (cluster.clusterIdentifier !== null &&
+                  cluster.clusterIdentifier?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
+                (cluster.lastPipelineExecutionName !== null &&
+                  cluster.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
             ).length
         ).length
     )

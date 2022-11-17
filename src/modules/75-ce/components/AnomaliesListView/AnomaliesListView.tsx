@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Text, Icon, TableV2, Layout, Button, Container } from '@wings-software/uicore'
+import { Text, Icon, TableV2, Layout, Button, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import qs from 'qs'
 import { Link, useParams } from 'react-router-dom'

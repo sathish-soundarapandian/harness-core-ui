@@ -7,19 +7,8 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { isEmpty, defaultTo, get } from 'lodash-es'
-import {
-  Accordion,
-  Color,
-  Container,
-  FontVariation,
-  Icon,
-  IconName,
-  Layout,
-  Table,
-  Text,
-  TextProps,
-  useToaster
-} from '@harness/uicore'
+import { Accordion, Container, Icon, IconName, Layout, Table, Text, TextProps, useToaster } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { AccessPoint, Opts, Resource, Service, ServiceDep, useRouteDetails, useSaveService } from 'services/lw'

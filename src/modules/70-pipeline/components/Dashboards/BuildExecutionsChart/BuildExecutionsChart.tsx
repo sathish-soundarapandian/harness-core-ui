@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
 import { noop, merge } from 'lodash-es'
-import { Container, Text, Layout } from '@wings-software/uicore'
+import { Container, Text, Layout } from '@harness/uicore'
 import HighchartsReact from 'highcharts-react-official'
 import { FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
@@ -206,8 +206,8 @@ export function ExecutionsChart({
         (failedCount && successCount && abortedCount && expiredCount) ? (
         <Container className={styles.emptyView}>
           <Container className={styles.emptyViewCard}>
-            <img src={module === 'ci' ? NoBuilds : NoDeployments} />
-            <Text> {getString('pipeline.noRunsText', { moduleRunType: getModuleRunType(module) })}</Text>
+            <img src={module === 'ci' ? NoBuilds : NoDeployments} height="96px" />
+            <Text> {getString('pipeline.noRunsSimpleText', { moduleRunType: getModuleRunType(module) })}</Text>
           </Container>
         </Container>
       ) : (

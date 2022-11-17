@@ -14,7 +14,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'

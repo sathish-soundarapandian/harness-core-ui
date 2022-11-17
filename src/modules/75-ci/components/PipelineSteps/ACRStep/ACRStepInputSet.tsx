@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import type { ACRStepProps } from './ACRStep'
@@ -37,6 +37,9 @@ export const ACRStepInputSetBasic: React.FC<ACRStepProps> = ({
           }),
           ...(getMultiTypeFromValue(template?.spec?.repository) === MultiTypeInputType.RUNTIME && {
             'spec.repository': {}
+          }),
+          ...(getMultiTypeFromValue(template?.spec?.subscriptionId) === MultiTypeInputType.RUNTIME && {
+            'spec.subscriptionId': {}
           })
         }}
         path={path || ''}

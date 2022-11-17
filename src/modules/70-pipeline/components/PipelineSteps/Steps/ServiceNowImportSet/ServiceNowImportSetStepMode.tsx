@@ -6,7 +6,7 @@
  */
 
 import React, { forwardRef, Fragment, useEffect, useRef, useState } from 'react'
-import { Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'

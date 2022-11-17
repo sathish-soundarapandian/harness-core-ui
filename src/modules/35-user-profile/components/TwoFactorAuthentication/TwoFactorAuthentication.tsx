@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Layout, Text, shouldShowError, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, Layout, Text, shouldShowError, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useDisableTwoFactorAuth } from 'services/cd-ng'

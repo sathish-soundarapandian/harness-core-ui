@@ -9,7 +9,7 @@ exports[`Notification Table test render 1`] = `
       class="Layout--horizontal StyledProps--main headerActions StyledProps--flex"
     >
       <button
-        aria-label="notifications.name"
+        aria-label="rbac.notifications.name"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
         id="newNotificationBtn"
         type="button"
@@ -36,7 +36,7 @@ exports[`Notification Table test render 1`] = `
         <span
           class="bp3-button-text"
         >
-          notifications.name
+          rbac.notifications.name
         </span>
       </button>
       <div
@@ -115,7 +115,7 @@ exports[`Notification Table test render 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
-            NOTIFICATIONS.NAMEOFTHERULE
+            RBAC.NOTIFICATIONS.NAMEOFTHERULE
           </p>
         </div>
         <div
@@ -127,7 +127,7 @@ exports[`Notification Table test render 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
-            NOTIFICATIONS.PIPELINEEVENTS
+            RBAC.NOTIFICATIONS.PIPELINEEVENTS
           </p>
         </div>
         <div
@@ -139,7 +139,7 @@ exports[`Notification Table test render 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
-            NOTIFICATIONS.NOTIFICATIONMETHOD
+            RBAC.NOTIFICATIONS.NOTIFICATIONMETHOD
           </p>
         </div>
         <div
@@ -727,7 +727,7 @@ exports[`testing notification method selecting slack as notification method from
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
     >
-      notifications.notificationMethod
+      rbac.notifications.notificationMethod
     </p>
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
@@ -738,12 +738,12 @@ exports[`testing notification method selecting slack as notification method from
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="notifications.notificationMethod"
+          data-tooltip-id="rbac.notificationMethod"
         >
           <p
             class="StyledProps--font StyledProps--main"
           >
-            notifications.notificationMethod
+            rbac.notifications.notificationMethod
           </p>
         </div>
         <div
@@ -834,12 +834,12 @@ exports[`testing notification method selecting slack as notification method from
           <p
             class="StyledProps--font StyledProps--main"
           >
-            notifications.helpSlack
+            rbac.notifications.helpSlack
           </p>
           <p
             class="StyledProps--font StyledProps--main"
           >
-            notifications.infoSlack
+            rbac.notifications.infoSlack
           </p>
           <div
             class="OverlaySpinner--overlaySpinner"
@@ -861,7 +861,7 @@ exports[`testing notification method selecting slack as notification method from
                       class="Tooltip--acenter"
                       data-tooltip-id="configureSlackNotifications_webhookUrl"
                     >
-                      notifications.slackwebhookUrl
+                      rbac.notifications.slackwebhookUrl
                     </span>
                      
                     <span
@@ -922,7 +922,7 @@ exports[`testing notification method selecting slack as notification method from
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
                         >
-                          notifications.labelSlackUserGroups
+                          rbac.notifications.labelSlackUserGroups
                         </p>
                       </div>
                       <div

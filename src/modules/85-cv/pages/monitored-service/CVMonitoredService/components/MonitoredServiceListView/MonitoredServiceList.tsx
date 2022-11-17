@@ -8,7 +8,7 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { Page, useToaster } from '@wings-software/uicore'
+import { Page, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useListMonitoredService, useSetHealthMonitoringFlag, useDeleteMonitoredService } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

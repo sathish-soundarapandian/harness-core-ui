@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import type { AccessPoint } from 'services/lw'

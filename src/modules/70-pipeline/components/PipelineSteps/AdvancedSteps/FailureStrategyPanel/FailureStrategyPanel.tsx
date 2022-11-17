@@ -5,14 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { Button } from '@wings-software/uicore'
+import { Button, Text } from '@harness/uicore'
 import { FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { defaultTo, flatMap, get, isEmpty, uniq } from 'lodash-es'
 import cx from 'classnames'
-
 import { Color } from '@harness/design-system'
-import { Text } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepMode as Modes } from '@pipeline/utils/stepUtils'

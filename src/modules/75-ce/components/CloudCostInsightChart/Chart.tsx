@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import type { OptionsStackingValue } from 'highcharts'
 import moment from 'moment'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import qs from 'qs'

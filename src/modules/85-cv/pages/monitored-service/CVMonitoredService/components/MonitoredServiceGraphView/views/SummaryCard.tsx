@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
-import { Container, Icon, PageError } from '@wings-software/uicore'
+import { Container, Icon, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useGetMonitoredServiceDetailsWithServiceId } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

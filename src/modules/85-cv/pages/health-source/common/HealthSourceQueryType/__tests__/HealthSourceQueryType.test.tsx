@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import * as Yup from 'yup'
 import { TestWrapper } from '@common/utils/testUtils'
 import { HealthSourceQueryType } from '../HealthSourceQueryType'

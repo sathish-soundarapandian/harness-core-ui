@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { Text, TextInput, Card, Button, MultiTypeInputType, MultiTextInput } from '@wings-software/uicore'
+import { Text, TextInput, Card, Button, MultiTypeInputType, MultiTextInput } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'
 import { connect, FormikContextType } from 'formik'

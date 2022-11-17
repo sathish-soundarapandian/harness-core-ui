@@ -9,7 +9,13 @@ import React, { FC, lazy } from 'react'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 import * as ffServices from 'services/cf'
-import { useGetEnvironment as useCDGetEnvironment } from 'services/cd-ng'
+import {
+  useGetEnvironment as useCDGetEnvironment,
+  useGetEnvironmentListForProject as useCDGetEnvironmentListForProject,
+  useDeleteEnvironmentV2 as useCDDeleteEnvironment,
+  useCreateEnvironment as useCDCreateEnvironment
+} from 'services/cd-ng'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useConfirmAction } from '@common/hooks'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
@@ -17,7 +23,8 @@ import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOp
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import routes from '@common/RouteDefinitions'
 import SectionNoData from '@cf/components/NoData/SectionNoData/SectionNoData'
-import { NameSchema } from '@common/utils/Validation'
+import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { EnvironmentSDKKeyType } from '@cf/utils/CFUtils'
 import * as trackingConstants from '@common/constants/TrackingConstants'
@@ -28,12 +35,18 @@ const FFUIMFEApp = lazy(() => import('ffui/MicroFrontendApp'))
 const FFUIApp: FC = () => (
   <ChildAppMounter<FFCustomMicroFrontendProps>
     ChildApp={FFUIMFEApp}
-    ffServices={{ ...ffServices, useCDGetEnvironment }}
-    customHooks={{ useConfirmAction, useActiveEnvironment, useSyncedEnvironment }}
+    ffServices={{
+      ...ffServices,
+      useCDGetEnvironmentListForProject,
+      useCDGetEnvironment,
+      useCDDeleteEnvironment,
+      useCDCreateEnvironment
+    }}
+    customHooks={{ useConfirmAction, useActiveEnvironment, useLicenseStore, useSyncedEnvironment }}
     customComponents={{ RbacOptionsMenuButton, ContainerSpinner, SectionNoData }}
     customRoutes={routes}
-    customUtils={{ NameSchema, getIdentifierFromName }}
-    customEnums={{ EnvironmentSDKKeyType, trackingConstants }}
+    customUtils={{ NameSchema, getIdentifierFromName, IdentifierSchema }}
+    customEnums={{ EnvironmentSDKKeyType, FeatureIdentifier, trackingConstants }}
   />
 )
 

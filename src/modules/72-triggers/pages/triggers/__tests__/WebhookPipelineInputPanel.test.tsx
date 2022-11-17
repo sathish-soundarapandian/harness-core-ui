@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor, queryByAttribute } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 import type { UseMutateReturn } from 'restful-react'
 import * as pipelineNg from 'services/pipeline-ng'

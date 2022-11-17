@@ -196,7 +196,7 @@ describe('StartTrialTemplate snapshot test', () => {
   test('should call the start button click handler if it exists', async () => {
     const showModalMock = jest.fn()
     useStartTrialModalMock.mockImplementation(() => ({ showModal: showModalMock, hideModal: jest.fn() }))
-
+    window.deploymentType = 'SAAS'
     useStartTrialMock.mockImplementation(() => {
       return {
         cancel: jest.fn(),
@@ -243,6 +243,7 @@ describe('StartTrialTemplate snapshot test', () => {
   })
 
   test('should display error msg when api call fails', async () => {
+    window.deploymentType = 'ON_PREM'
     useStartTrialModalMock.mockImplementation(() => ({ showModal: jest.fn(), hideModal: jest.fn() }))
     useStartTrialMock.mockImplementation(() => {
       return {

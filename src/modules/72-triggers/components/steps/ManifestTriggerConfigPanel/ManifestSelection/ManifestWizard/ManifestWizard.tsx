@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@wings-software/uicore'
+import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

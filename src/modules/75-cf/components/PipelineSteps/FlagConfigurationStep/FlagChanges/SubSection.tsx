@@ -7,8 +7,8 @@
 
 import React, { FC, ReactElement } from 'react'
 import { omit } from 'lodash-es'
-import { Layout } from '@wings-software/uicore'
-import type { LayoutProps } from '@wings-software/uicore/dist/layouts/Layout'
+import { Layout } from '@harness/uicore'
+import type { LayoutProps } from '@harness/uicore/dist/layouts/Layout'
 import type { SubSectionComponentProps } from './FlagChangesForm'
 import css from './SubSection.module.scss'
 

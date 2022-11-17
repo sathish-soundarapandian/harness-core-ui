@@ -14,7 +14,7 @@ import {
   MultiTypeInputType,
   AllowedTypes,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'

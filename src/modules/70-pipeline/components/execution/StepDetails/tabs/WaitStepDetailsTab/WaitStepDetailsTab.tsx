@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Thumbnail, Container } from '@wings-software/uicore'
+import { Thumbnail, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'

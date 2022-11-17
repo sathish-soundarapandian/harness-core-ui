@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { Container, Button } from '@wings-software/uicore'
+import { Container, Button } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'

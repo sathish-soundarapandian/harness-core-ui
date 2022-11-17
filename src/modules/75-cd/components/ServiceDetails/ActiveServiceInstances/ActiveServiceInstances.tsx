@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { Card, Layout, Tab, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ActiveServiceInstancesHeader } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesHeader'
 import {

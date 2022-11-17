@@ -20,7 +20,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { listenerRulesPromise, ResponseListString, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

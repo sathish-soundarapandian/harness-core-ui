@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 
 import type { ResponseMapServiceDefinitionTypeListExecutionStrategyType, ResponseString } from 'services/cd-ng'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'

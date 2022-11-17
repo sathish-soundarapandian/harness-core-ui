@@ -15,7 +15,7 @@ import {
   Container,
   Layout,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, startCase } from 'lodash-es'
 import cx from 'classnames'

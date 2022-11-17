@@ -1,0 +1,198 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useGetEnvironmentGroupsData hook default case - hook returns list of environment group 1`] = `
+Array [
+  Object {
+    "createdAt": 1658999980176,
+    "envGroup": Object {
+      "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+      "color": "#0063F7",
+      "deleted": false,
+      "description": "",
+      "envIdentifiers": Array [
+        "Env_2",
+        "Env_4",
+      ],
+      "envResponse": Array [
+        Object {
+          "createdAt": 1658638852331,
+          "environment": Object {
+            "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+            "color": "#0063F7",
+            "deleted": false,
+            "description": "Test Description",
+            "identifier": "Env_2",
+            "name": "Env 2",
+            "orgIdentifier": "default",
+            "projectIdentifier": "dummyProject",
+            "tags": Object {
+              "Pre-Prod": "",
+            },
+            "type": "PreProduction",
+            "yaml": "environment:
+    name: Env 2
+    identifier: Env_2
+    description: Test Description
+    tags:
+        Pre-Prod: \\"\\"
+    type: PreProduction
+    orgIdentifier: default
+    projectIdentifier: dummyProject
+    variables:
+        - name: var1
+          type: String
+          value: test_value
+",
+          },
+          "lastModifiedAt": 1658638887726,
+        },
+        Object {
+          "createdAt": 1658999393136,
+          "environment": Object {
+            "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+            "color": "#0063F7",
+            "deleted": false,
+            "description": "Test Descri",
+            "identifier": "Env_4",
+            "name": "Env 4",
+            "orgIdentifier": "default",
+            "projectIdentifier": "dummyProject",
+            "tags": Object {
+              "Pre-Prod": "",
+            },
+            "type": "PreProduction",
+            "yaml": "environment:
+    name: Env 4
+    identifier: Env_4
+    description: Test Descri
+    tags:
+        Pre-Prod: \\"\\"
+    type: PreProduction
+    orgIdentifier: default
+    projectIdentifier: dummyProject
+    variables:
+        - name: var1
+          type: String
+          value: test
+        - name: var2
+          type: String
+          value: <+input>
+",
+          },
+          "lastModifiedAt": 1659073522263,
+        },
+      ],
+      "gitDetails": Object {
+        "branch": null,
+        "commitId": null,
+        "filePath": null,
+        "fileUrl": null,
+        "objectId": null,
+        "repoIdentifier": null,
+        "repoName": null,
+        "repoUrl": null,
+        "rootFolder": null,
+      },
+      "identifier": "PreProd",
+      "name": "Pre-Prod",
+      "orgIdentifier": "default",
+      "projectIdentifier": "dummyProject",
+      "tags": Object {},
+    },
+    "lastModifiedAt": 1658999980176,
+  },
+  Object {
+    "createdAt": 1658999943638,
+    "envGroup": Object {
+      "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+      "color": "#0063F7",
+      "deleted": false,
+      "description": "",
+      "envIdentifiers": Array [
+        "Env_1",
+        "Env_3",
+      ],
+      "envResponse": Array [
+        Object {
+          "createdAt": 1658638805579,
+          "environment": Object {
+            "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+            "color": "#0063F7",
+            "deleted": false,
+            "description": null,
+            "identifier": "Env_1",
+            "name": "Env 1",
+            "orgIdentifier": "default",
+            "projectIdentifier": "dummyProject",
+            "tags": Object {},
+            "type": "Production",
+            "yaml": "environment:
+    name: Env 1
+    identifier: Env_1
+    description: null
+    tags: {}
+    type: Production
+    orgIdentifier: default
+    projectIdentifier: dummyProject
+    variables:
+        - name: test
+          type: String
+          value: <+input>
+        - name: test2
+          type: String
+          value: <+input>
+",
+          },
+          "lastModifiedAt": 1659202339456,
+        },
+        Object {
+          "createdAt": 1658889856304,
+          "environment": Object {
+            "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+            "color": "#0063F7",
+            "deleted": false,
+            "description": null,
+            "identifier": "Env_3",
+            "name": "Env 3",
+            "orgIdentifier": "default",
+            "projectIdentifier": "dummyProject",
+            "tags": Object {
+              "prod": "",
+            },
+            "type": "Production",
+            "yaml": "environment:
+  name: Env 3
+  identifier: Env_3
+  description: null
+  tags:
+    prod: \\"\\"
+  type: Production
+  orgIdentifier: default
+  projectIdentifier: dummyProject
+  variables: []
+",
+          },
+          "lastModifiedAt": 1663675242659,
+        },
+      ],
+      "gitDetails": Object {
+        "branch": null,
+        "commitId": null,
+        "filePath": null,
+        "fileUrl": null,
+        "objectId": null,
+        "repoIdentifier": null,
+        "repoName": null,
+        "repoUrl": null,
+        "rootFolder": null,
+      },
+      "identifier": "Prod",
+      "name": "Prod",
+      "orgIdentifier": "default",
+      "projectIdentifier": "dummyProject",
+      "tags": Object {},
+    },
+    "lastModifiedAt": 1658999943638,
+  },
+]
+`;

@@ -17,7 +17,7 @@ import {
   StepProps,
   ButtonVariation,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'

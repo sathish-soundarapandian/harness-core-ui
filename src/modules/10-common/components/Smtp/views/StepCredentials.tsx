@@ -18,7 +18,7 @@ import {
   ButtonVariation,
   getErrorInfoFromErrorObject,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { NgSmtpDTO, SmtpConfigDTO, useCreateSmtpConfig, useUpdateSmtp } from 'services/cd-ng'

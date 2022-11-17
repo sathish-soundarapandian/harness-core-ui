@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-commented-out-tests */
 /*
  * Copyright 2021 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -16,7 +15,8 @@ import mockImport from 'framework/utils/mockImport'
 import { SetUpYourApplicationView, SetUpYourApplicationViewProps } from '../views/SetUpYourApplicationView'
 
 const setApiKey = jest.fn()
-const setEnvironmentIdentifier = jest.fn()
+const setLanguage = jest.fn()
+const setSelectedEnvironment = jest.fn()
 
 const renderComponent = (props?: Partial<SetUpYourApplicationViewProps>): RenderResult => {
   return render(
@@ -25,23 +25,8 @@ const renderComponent = (props?: Partial<SetUpYourApplicationViewProps>): Render
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
       <SetUpYourApplicationView
-        flagInfo={{
-          project: 'dummy',
-          createdAt: 1662647079713,
-          name: 'hello world',
-          identifier: 'hello_world',
-          kind: 'boolean',
-          archived: false,
-          variations: [
-            { identifier: 'true', name: 'True', value: 'true' },
-            { identifier: 'false', name: 'False', value: 'false' }
-          ],
-          defaultOnVariation: 'true',
-          defaultOffVariation: 'false',
-          permanent: false
-        }}
         language={undefined}
-        setLanguage={jest.fn()}
+        setLanguage={setLanguage}
         apiKey={{
           name: 'xxx-xxx-xxx',
           apiKey: 'xxx-xxx-xxx',
@@ -49,7 +34,7 @@ const renderComponent = (props?: Partial<SetUpYourApplicationViewProps>): Render
           type: 'server'
         }}
         setApiKey={setApiKey}
-        setEnvironmentIdentifier={setEnvironmentIdentifier}
+        setSelectedEnvironment={setSelectedEnvironment}
         {...props}
       />
     </TestWrapper>
@@ -89,63 +74,46 @@ describe('SetUpYourApplicationView', () => {
   test('It should render correctly when language is undefined', () => {
     renderComponent()
 
-    expect(screen.getByTestId('ffOnboardingSelectedFlag')).toBeVisible()
-    expect(screen.getByTestId('ffOnboardingSelectedFlag').textContent).toMatch(
-      /cf\.onboarding\.youreUsinghello world.+hello_world.+/g
-    )
-    expect(screen.getByText('cf.onboarding.setupLabel')).toBeVisible()
     expect(screen.getByText('cf.onboarding.selectLanguage')).toBeVisible()
     expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(13)
 
     // should not show until environment selected
-    expect(screen.queryByText('cf.onboarding.selectYourEnvironment')).not.toBeInTheDocument()
+    expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).not.toBeInTheDocument()
+  })
+
+  test('It should set the language when button is clicked', () => {
+    renderComponent()
+
+    expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'JavaScript' })).toBeVisible()
+
+    userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
+
+    expect(setLanguage).toBeCalled()
   })
 
   test('It should render correctly when a language has been selected', () => {
     renderComponent({ language: SupportPlatforms[1] })
 
-    expect(screen.getByTestId('ffOnboardingSelectedFlag')).toBeVisible()
-    expect(screen.getByTestId('ffOnboardingSelectedFlag').textContent).toMatch(
-      /cf\.onboarding\.youreUsinghello world.+hello_world.+/g
-    )
-    expect(screen.getByText('cf.onboarding.setupLabel')).toBeVisible()
     expect(screen.getByText('cf.onboarding.selectLanguage')).toBeVisible()
     expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(13)
 
-    expect(screen.getByText('cf.onboarding.selectYourEnvironment')).toBeVisible()
+    expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
     expect(document.querySelector('input[name="environmentSelectEl"]')).toBeVisible()
-    expect(document.querySelector('input[name="environmentSelectEl"]')).toHaveValue('foobar')
-  })
+    expect(document.querySelector('input[name="environmentSelectEl"]')).toHaveValue('')
 
-  test('It should allow user select a language, then show dropdown to select an environment', () => {
-    renderComponent()
-
-    expect(screen.queryByText('cf.onboarding.selectYourEnvironment')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'JavaScript' })).toBeVisible()
-
-    userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
-
-    expect(screen.getByText('cf.onboarding.selectYourEnvironment')).toBeVisible()
-    expect(setApiKey).toBeCalled()
-    expect(document.querySelector('input[name="environmentSelectEl"]')).toBeVisible()
-    expect(document.querySelector('input[name="environmentSelectEl"]')).toHaveValue('foobar')
+    // Should not be able to create SDK key until environment selected or created
+    expect(screen.queryByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' })).not.toBeInTheDocument()
   })
 
   test('It should select an environment', () => {
-    renderComponent()
+    renderComponent({ language: SupportPlatforms[1], selectedEnvironment: undefined })
 
-    expect(screen.queryByText('cf.onboarding.selectYourEnvironment')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'JavaScript' })).toBeVisible()
-
-    userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
-
-    expect(screen.getByText('cf.onboarding.selectYourEnvironment')).toBeVisible()
-    expect(setApiKey).toBeCalled()
-    expect(setEnvironmentIdentifier).toBeCalledWith('foobar')
+    expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).toBeInTheDocument()
 
     const envInput = document.querySelector('input[name="environmentSelectEl"]') as TargetElement
     expect(envInput).toBeVisible()
-    expect(envInput).toHaveValue('foobar')
+    expect(envInput).toHaveValue('')
 
     userEvent.click(envInput)
 
@@ -153,7 +121,26 @@ describe('SetUpYourApplicationView', () => {
     expect(dropdownOptions).toHaveLength(16)
 
     userEvent.click(dropdownOptions[1])
-    expect(setEnvironmentIdentifier).toBeCalledWith('QB')
+    expect(setSelectedEnvironment).toBeCalledWith({
+      accountId: 'zEaak-FLS425IEO7OLzMUg',
+      color: '#0063F7',
+      deleted: false,
+      description: 'Harness QB environment',
+      identifier: 'QB',
+      name: 'QB',
+      orgIdentifier: 'Harness',
+      projectIdentifier: 'TNHUFF_PROJECT',
+      tags: {
+        dev: 'dev',
+        fun: 'fun',
+        'no-restricted': 'no-restricted',
+        'not-production': 'not-production',
+        qb: 'qb',
+        testing: 'testing'
+      },
+      type: 'PreProduction',
+      version: 0
+    })
     expect(document.querySelector('input[name="environmentSelectEl"]')).toHaveValue('QB')
   })
 })

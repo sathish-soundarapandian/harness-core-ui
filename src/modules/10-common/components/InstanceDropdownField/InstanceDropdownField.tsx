@@ -16,7 +16,7 @@ import {
   Layout,
   MultiTextInput,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import {
   FormGroup,
   HTMLInputProps,

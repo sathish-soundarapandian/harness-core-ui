@@ -7,16 +7,8 @@
 
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import {
-  ButtonVariation,
-  Color,
-  Intent,
-  Text,
-  Layout,
-  useConfirmationDialog,
-  useToaster,
-  ButtonSize
-} from '@harness/uicore'
+import { ButtonVariation, Text, Layout, useConfirmationDialog, useToaster, ButtonSize } from '@harness/uicore'
+import { Color, Intent } from '@harness/design-system'
 import type { SLOErrorBudgetResetDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'

@@ -9,7 +9,7 @@ import React, { useEffect, useCallback, ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { noop } from 'lodash-es'
-import { PageSpinner } from '@wings-software/uicore'
+import { PageSpinner } from '@harness/uicore'
 import { GitSyncConfig, SourceCodeManagerDTO, useGetSourceCodeManagers, useListGitSync } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 

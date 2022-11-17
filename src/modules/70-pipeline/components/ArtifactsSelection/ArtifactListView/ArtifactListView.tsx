@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Button, ButtonSize, ButtonVariation } from '@wings-software/uicore'
+import { Layout, Text, Button, ButtonSize, ButtonVariation } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

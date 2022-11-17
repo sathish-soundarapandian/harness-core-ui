@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, IconName, Layout, Text } from '@wings-software/uicore'
+import { Icon, IconName, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 export interface GitPopoverInfoProps {
   heading: string

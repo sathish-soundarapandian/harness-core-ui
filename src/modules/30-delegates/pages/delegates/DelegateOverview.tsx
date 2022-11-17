@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, NavLink } from 'react-router-dom'
-import { Container, Text, FlexExpander } from '@wings-software/uicore'
+import { Container, Text, FlexExpander, Layout } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { delegateTypeToIcon } from '@common/utils/delegateUtils'
 import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
@@ -25,15 +25,20 @@ import {
   SectionContainerTitle,
   SectionLabelValuePair
 } from '@delegates/components/SectionContainer/SectionContainer'
-
+import DelegateConnectivityStatus from './DelegateConnectivityStatus'
 import css from './DelegateDetails.module.scss'
 
 interface DelegateOverviewProps {
   delegate: DelegateGroupDetails
   delegateProfile?: DelegateProfileDetails
+  showConnectivityStatus?: boolean
 }
 
-export const DelegateOverview: React.FC<DelegateOverviewProps> = ({ delegate, delegateProfile }) => {
+export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
+  delegate,
+  delegateProfile,
+  showConnectivityStatus
+}) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<
     Partial<DelegateConfigProps & ProjectPathProps & ModulePathParams> & AccountPathProps
@@ -117,6 +122,14 @@ export const DelegateOverview: React.FC<DelegateOverviewProps> = ({ delegate, de
           )}
           <TagsViewer tags={delegateProfile?.selectors} />
         </Container>
+      )}
+      {showConnectivityStatus && (
+        <Layout.Vertical>
+          <Text className={css.tagTitle} font={{ variation: FontVariation.BODY }}>
+            {getString('connectivityStatus')}
+          </Text>
+          <DelegateConnectivityStatus delegate={delegate} />
+        </Layout.Vertical>
       )}
     </SectionContainer>
   )

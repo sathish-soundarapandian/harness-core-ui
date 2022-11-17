@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Heading, Layout } from '@wings-software/uicore'
+import { Button, Heading, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityConfig, EntityType, EnvironmentType, FIELD_KEYS, ResourcesInterface } from '@freeze-windows/types'

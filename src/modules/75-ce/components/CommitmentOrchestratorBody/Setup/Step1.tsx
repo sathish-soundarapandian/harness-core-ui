@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import RangeSlider from '@ce/common/RangeSlider/RangeSlider'
 import { useStrings } from 'framework/strings'
 import { useSetupContext } from './SetupContext'

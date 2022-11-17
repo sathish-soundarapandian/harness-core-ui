@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'

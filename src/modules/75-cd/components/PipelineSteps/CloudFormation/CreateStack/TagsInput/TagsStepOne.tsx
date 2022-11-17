@@ -16,7 +16,6 @@ import {
   Card,
   Icon,
   Text,
-  Color,
   Button,
   ButtonVariation,
   ButtonSize,
@@ -27,6 +26,7 @@ import {
   MultiSelectOption,
   AllowedTypes as MultiTypeAllowedTypes
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

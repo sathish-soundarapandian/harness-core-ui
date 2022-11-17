@@ -10,7 +10,7 @@ import { set, get, isEmpty, isString } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -44,7 +44,7 @@ export class ElastigroupServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.ElastigroupService
   protected defaultValues: ServiceSpec = {}
 
-  protected stepIcon: IconName = 'service-elastigroup'
+  protected stepIcon: IconName = 'elastigroup'
   protected stepName = 'Specify Spot Elastigroup'
   protected stepPaletteVisible = false
   protected _hasStepVariables = true

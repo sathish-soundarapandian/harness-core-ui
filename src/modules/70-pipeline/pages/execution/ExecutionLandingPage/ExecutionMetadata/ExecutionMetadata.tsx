@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Icon, Tag, Popover } from '@wings-software/uicore'
+import { Text, Icon, Tag, Popover } from '@harness/uicore'
 import { HTMLTable, Position } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 import { useStrings, String } from 'framework/strings'

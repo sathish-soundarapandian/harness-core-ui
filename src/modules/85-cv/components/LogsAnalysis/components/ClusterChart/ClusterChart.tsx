@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { chartOptions, mapRisk } from './ClusterChart.utils'
 import type { ClusterChartProps } from './ClusterChart.types'

@@ -5,11 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.identifier-container {
-  display: flex;
-  width: fit-content;
-  background-color: #effbff !important;
-  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+.container-border {
   border-radius: var(--spacing-xsmall);
   border: 1px solid var(--grey-200);
 }

@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm, Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { noop } from 'lodash-es'
-import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -16,14 +15,15 @@ import type { CustomMetricsV2HelperContextType } from '../../common/CustomMetric
 import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import { getGroupedCustomMetrics } from '../../common/CustomMetricV2/CustomMetric.utils'
 import { getCustomMetricGroupNames } from '../../common/MetricThresholds/MetricThresholds.utils'
+import { getConnectorRef } from '../../common/utils/HealthSource.utils'
 import css from './CloudWatch.module.scss'
 
-export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Element | null {
+export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: CloudWatchProps): JSX.Element | null {
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
 
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const { getString } = useStrings()
 
@@ -31,13 +31,19 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
 
   const initialValues = getFormikInitialValue(data, isMetricThresholdEnabled)
 
+  const connectorIdentifier = getConnectorRef(data?.connectorRef)
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+
   const customMetricHelperContextValue = useMemo(() => {
     const value: CustomMetricsV2HelperContextType = {
       riskProfileResponse,
-      groupedCreatedMetrics: {}
+      groupedCreatedMetrics: {},
+      isTemplate,
+      expressions,
+      isConnectorRuntimeOrExpression
     }
     return value
-  }, [riskProfileResponse])
+  }, [expressions, isConnectorRuntimeOrExpression, isTemplate, riskProfileResponse])
 
   if (!isCloudWatchEnabled) {
     return null

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { render, fireEvent, act } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -16,8 +23,8 @@ jest.mock('services/cd-ng', () => ({
 
 const showSuccess = jest.fn()
 
-jest.mock('@wings-software/uicore', () => ({
-  ...jest.requireActual('@wings-software/uicore'),
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
   useToaster: jest.fn(() => ({ showSuccess }))
 }))
 
@@ -104,9 +111,9 @@ describe('Notification list tests', () => {
       </TestWrapper>
     )
 
-    expect(queryByText('notifications.emailOrAlias')).not.toBeNull()
+    expect(queryByText('rbac.notifications.emailOrAlias')).not.toBeNull()
     expect(queryByText('common.slack')).not.toBeNull()
-    expect(queryByText('notifications.labelMS')).not.toBeNull()
+    expect(queryByText('rbac.notifications.labelMS')).not.toBeNull()
     expect(queryByText('common.pagerDuty')).not.toBeNull()
   })
 

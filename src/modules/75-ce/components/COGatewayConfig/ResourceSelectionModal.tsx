@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 
 interface ResourceSelectionModalProps {
   onClose?: () => void

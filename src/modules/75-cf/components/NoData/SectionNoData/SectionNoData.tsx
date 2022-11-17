@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Text, FontVariation, Color } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { FC, PropsWithChildren } from 'react'
 import GetStartedWithFF from '@cf/components/GetStartedWithFF/GetStartedWithFF'
 import { NoData, NoDataProps } from '../NoData'

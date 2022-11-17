@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Icon, Container, Layout, Text } from '@wings-software/uicore'
+import { Icon, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import type { CEView } from 'services/ce'

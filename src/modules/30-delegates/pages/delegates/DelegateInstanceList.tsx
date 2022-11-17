@@ -7,22 +7,26 @@
 
 import React, { Fragment, ReactElement } from 'react'
 import type { Row } from 'react-table'
-import { Color, Layout, Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 import { killEvent } from '@common/utils/eventUtils'
 import type { DelegateGroupDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getInstanceStatus } from './utils/DelegateHelper'
 import css from './DelegatesPage.module.scss'
 
-export function DelegateInstanceList({ row }: { row: Row<DelegateGroupDetails> }): ReactElement {
+export function DelegateInstanceList({
+  row,
+  canUseImmutableDelegate
+}: {
+  row: Row<DelegateGroupDetails>
+  canUseImmutableDelegate: boolean
+}): ReactElement {
   const data = row.original
   const { getString } = useStrings()
 
-  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
-
-  const columnWidths = USE_IMMUTABLE_DELEGATE
+  const columnWidths = canUseImmutableDelegate
     ? /*istanbul ignore next */ {
         icon: '5%',
         name: '24%',
@@ -62,7 +66,7 @@ export function DelegateInstanceList({ row }: { row: Row<DelegateGroupDetails> }
                     <Layout.Horizontal width={columnWidths.version}>
                       <Text>{del.version}</Text>
                     </Layout.Horizontal>
-                    {USE_IMMUTABLE_DELEGATE && (
+                    {canUseImmutableDelegate && (
                       <Layout.Horizontal width={columnWidths?.instanceStatus}>
                         {getInstanceStatus(data)}
                       </Layout.Horizontal>

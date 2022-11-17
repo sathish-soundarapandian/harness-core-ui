@@ -53,7 +53,7 @@ export const dashboardWidgetsContentData = {
   serviceName: 'serviceName',
   noOfActiveAlerts: 0,
   userJourneys: [{ name: 'userJourney', identifier: 'userJourney' }],
-  sloType: 'Composite'
+  sloType: 'Simple'
 }
 
 export const dashboardWidgetsContent: SLODashboardWidget = {
@@ -91,12 +91,15 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
 
 export const dashboardWidgetsResponse: ResponsePageSLOHealthListView = {
   data: {
-    totalItems: 1,
-    totalPages: 1,
+    totalItems: 2,
+    totalPages: 2,
     pageIndex: 0,
-    pageItemCount: 1,
+    pageItemCount: 2,
     pageSize: 4,
-    content: [dashboardWidgetsContentData as unknown as SLOHealthListView]
+    content: [
+      dashboardWidgetsContentData as unknown as SLOHealthListView,
+      { dashboardWidgetsContentData, sloType: 'Composite' } as unknown as SLOHealthListView
+    ]
   }
 }
 

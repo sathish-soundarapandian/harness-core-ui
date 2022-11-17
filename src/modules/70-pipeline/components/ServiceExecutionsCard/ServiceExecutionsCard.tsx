@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { HTMLTable, Popover, Position } from '@blueprintjs/core'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'

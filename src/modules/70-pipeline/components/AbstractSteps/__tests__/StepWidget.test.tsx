@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { AbstractStepFactory } from '../AbstractStepFactory'
 import { Step, StepProps } from '../Step'

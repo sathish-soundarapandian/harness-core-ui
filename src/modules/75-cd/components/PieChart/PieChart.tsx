@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { merge } from 'lodash-es'
 

@@ -19,7 +19,7 @@ import {
   Page,
   TableV2,
   ButtonSize
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Intent, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'

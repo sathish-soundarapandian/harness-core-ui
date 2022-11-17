@@ -6,8 +6,9 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
-import { debounce, defaultTo, get, set } from 'lodash-es'
+import { Layout, useConfirmationDialog } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
+import { debounce, defaultTo, get, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 import type { ServiceDefinition, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
@@ -87,6 +88,7 @@ function DeployServiceDefinition(): React.ReactElement {
   const [customDeploymentData, setCustomDeploymentData] = useState<TemplateLinkConfig | undefined>(
     customDeploymentDataFromYaml
   )
+  const shouldDeleteServiceData = useRef(false)
 
   useDeepCompareEffect(() => {
     setCustomDeploymentData(customDeploymentDataFromYaml)
@@ -148,6 +150,7 @@ function DeployServiceDefinition(): React.ReactElement {
         } else if (
           currStageData?.spec?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.CustomDeployment
         ) {
+          shouldDeleteServiceData.current = true
           onCustomDeploymentSelection()
         } else {
           await debounceUpdateStage(currStageData)
@@ -207,17 +210,28 @@ function DeployServiceDefinition(): React.ReactElement {
   }
 
   useEffect(() => {
+    const previousState = [
+      get(stage, 'stage.spec.serviceConfig.serviceDefinition.type'),
+      get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.customDeploymentRef')
+    ]
+    const newState = [ServiceDeploymentType.CustomDeployment, customDeploymentData]
+
+    if (isEqual(previousState, newState)) return
+
     if (customDeploymentData) {
       const stageData = produce(stage, draft => {
         if (draft) {
           set(draft, 'stage.spec.serviceConfig.serviceDefinition.type', ServiceDeploymentType.CustomDeployment)
+
+          if (shouldDeleteServiceData.current) {
+            deleteServiceData(draft.stage)
+          }
           set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.customDeploymentRef', customDeploymentData)
         }
       })
       updateStage(stageData?.stage as StageElementConfig)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customDeploymentData])
+  }, [customDeploymentData, stage, updateStage])
 
   const handleDeploymentTypeChange = (deploymentType: ServiceDeploymentType): void => {
     if (deploymentType !== selectedDeploymentType) {
@@ -236,6 +250,7 @@ function DeployServiceDefinition(): React.ReactElement {
         } else {
           updateStage(stageData?.stage as StageElementConfig)
           if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+            shouldDeleteServiceData.current = false
             onCustomDeploymentSelection()
           }
         }
@@ -251,6 +266,7 @@ function DeployServiceDefinition(): React.ReactElement {
     fromTemplateSelectorRef.current = fromTemplateSelector
 
     if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
+      shouldDeleteServiceData.current = false
       onCustomDeploymentSelection()
     } else {
       handleDeploymentTypeChange(ServiceDeploymentType.CustomDeployment)

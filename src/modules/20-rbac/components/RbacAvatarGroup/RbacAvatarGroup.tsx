@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { AvatarGroup, AvatarGroupProps } from '@wings-software/uicore'
+import { AvatarGroup, AvatarGroupProps } from '@harness/uicore'
 import { usePermission, PermissionsRequest } from '@rbac/hooks/usePermission'
 import { useFeature } from '@common/hooks/useFeatures'
 import type { FeatureProps } from 'framework/featureStore/featureStoreUtil'

@@ -6,17 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import {
-  ExpandingSearchInput,
-  Text,
-  Icon,
-  Layout,
-  Button,
-  IconName,
-  Heading,
-  Container,
-  Card
-} from '@wings-software/uicore'
+import { ExpandingSearchInput, Text, Icon, Layout, Button, IconName, Heading, Container, Card } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { cloneDeep, noop, uniqBy } from 'lodash-es'
 import { Drawer, IDrawerProps, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'

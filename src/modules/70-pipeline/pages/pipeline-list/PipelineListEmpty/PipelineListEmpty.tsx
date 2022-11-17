@@ -6,7 +6,7 @@
  */
 
 import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import React, { ReactElement, ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Module } from '@common/interfaces/RouteInterfaces'

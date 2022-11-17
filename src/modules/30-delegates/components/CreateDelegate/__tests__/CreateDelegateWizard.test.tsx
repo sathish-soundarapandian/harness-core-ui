@@ -27,6 +27,13 @@ jest.mock('services/portal', () => ({
     }
   })
 }))
+jest.mock('services/cd-ng', () => ({
+  useIsImmutableDelegateEnabled: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
+}))
 describe('Create Delegate Wizard', () => {
   test('render data', () => {
     const { container } = render(

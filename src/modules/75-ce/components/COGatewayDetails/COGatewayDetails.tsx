@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { defaultTo, get, isBoolean } from 'lodash-es'
-import { Layout, Tabs, Tab, Button, Container, Icon } from '@wings-software/uicore'
+import { Layout, Tabs, Tab, Button, Container, Icon } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { useToaster } from '@common/exports'
 import COGatewayConfig from '@ce/components/COGatewayConfig/COGatewayConfig'

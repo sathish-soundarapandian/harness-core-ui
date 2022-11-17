@@ -7,16 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { FieldArray, FormikProps } from 'formik'
-import {
-  Button,
-  Formik,
-  FormInput,
-  HarnessDocTooltip,
-  MultiTypeInputType,
-  Radio,
-  Select,
-  Text
-} from '@wings-software/uicore'
+import { Button, Formik, FormInput, HarnessDocTooltip, MultiTypeInputType, Radio, Select, Text } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

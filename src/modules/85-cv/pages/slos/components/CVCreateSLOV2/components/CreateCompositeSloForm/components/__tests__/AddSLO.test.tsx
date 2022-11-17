@@ -37,7 +37,12 @@ const serviceLevelObjectivesDetails = [
 
 describe('Validate  AddSLO', () => {
   test('should validate getDistribution', () => {
-    const updatedServiceLevelObjectivesDetails = getDistribution(30, 1, serviceLevelObjectivesDetails)
+    const updatedServiceLevelObjectivesDetails = getDistribution({
+      weight: 30,
+      currentIndex: 1,
+      manuallyUpdatedSlos: [],
+      sloList: serviceLevelObjectivesDetails
+    })
     const clonedServiceLevelObjectivesDetails = [...serviceLevelObjectivesDetails]
     clonedServiceLevelObjectivesDetails[0].weightagePercentage = 70
     clonedServiceLevelObjectivesDetails[1].weightagePercentage = 30
@@ -89,14 +94,28 @@ describe('Validate  AddSLO', () => {
     })
     await waitFor(() => expect(document.querySelector('.bp3-drawer')).toBeInTheDocument())
 
+    // check select all
     act(() => {
       fireEvent.click(document.querySelectorAll('[type="checkbox"]')[0]!)
     })
+    const addSloButton = document.querySelector('[data-testid="addSloButton"]')
+    expect(document.querySelector('[data-testid="addSloButton"]')).not.toBeDisabled()
+
+    // uncheck select all
+    act(() => {
+      fireEvent.click(document.querySelectorAll('[type="checkbox"]')[0]!)
+    })
+    expect(document.querySelector('[data-testid="addSloButton"]')).toBeDisabled()
+
+    // select two slos
     act(() => {
       fireEvent.click(document.querySelectorAll('[type="checkbox"]')[1]!)
     })
-    const addSloButton = document.querySelector('[data-testid="addSloButton"]')
-    expect(addSloButton).not.toBeDisabled()
+    act(() => {
+      fireEvent.click(document.querySelectorAll('[type="checkbox"]')[2]!)
+    })
+    expect(document.querySelector('[data-testid="addSloButton"]')).not.toBeDisabled()
+
     act(() => {
       fireEvent.click(addSloButton!)
     })
@@ -160,7 +179,7 @@ describe('Validate  AddSLO', () => {
         { ...serviceLevelObjectivesDetails[1], weightagePercentage: 30 }
       ]
     }
-    const { container, getByText } = render(
+    const { container, getAllByText } = render(
       <TestWrapper>
         <Formik initialValues={init} onSubmit={jest.fn()}>
           {() => <AddSLOs />}
@@ -169,9 +188,9 @@ describe('Validate  AddSLO', () => {
     )
     expect(container.querySelector('input[value="70"]')).toBeInTheDocument()
     expect(container.querySelector('input[value="30"]')).toBeInTheDocument()
-    expect(getByText('reset')).toBeInTheDocument()
+    expect(getAllByText('reset')[0]).toBeInTheDocument()
     act(() => {
-      fireEvent.click(getByText('reset'))
+      fireEvent.click(getAllByText('reset')[0])
     })
     expect(container.querySelector('input[value="50"]')).toBeInTheDocument()
   })

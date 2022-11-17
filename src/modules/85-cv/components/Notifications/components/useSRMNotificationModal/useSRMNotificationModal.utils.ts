@@ -8,7 +8,12 @@
 import type { CVNGNotificationChannel, NotificationRuleCondition, NotificationRuleDTORequestBody } from 'services/cv'
 import { defaultOption } from '../../NotificationsContainer.constants'
 import type { NotificationConditionRow, SRMNotification } from '../../NotificationsContainer.types'
-import type { ChangeType } from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
+import {
+  allEventsTypeOption,
+  ChangeType,
+  EventStatus,
+  EventType
+} from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
 
 export const createNotificationsPayload = (
   orgIdentifier: string,
@@ -43,6 +48,16 @@ export function getNotificationConditions(conditions?: NotificationConditionRow[
           ...(el.changeType &&
             el.changeType !== defaultOption && {
               changeEventTypes: el.changeType.map((element: { value: ChangeType }) => element.value)
+            }),
+          ...(el.eventStatus &&
+            el.eventStatus !== defaultOption && {
+              errorTrackingEventStatus: el.eventStatus.map((element: { value: EventStatus }) => element.value)
+            }),
+          ...(el.eventType &&
+            el.eventType !== defaultOption && {
+              errorTrackingEventTypes: el.eventType
+                .filter((element: { value: EventType }) => element !== allEventsTypeOption)
+                .map((element: { value: EventType }) => element.value)
             })
         }
       }

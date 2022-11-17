@@ -14,7 +14,7 @@ import {
   Pagination,
   PageHeader,
   PageBody
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

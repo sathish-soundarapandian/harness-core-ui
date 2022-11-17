@@ -16,7 +16,7 @@ import {
   Container,
   ModalErrorHandler,
   ModalErrorHandlerBinding
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useCreateConnector, useUpdateConnector, Failure } from 'services/cd-ng'

@@ -462,7 +462,7 @@ exports[`Test TerraformDestroy with inline var file and expand the varfiles sect
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -695,7 +695,7 @@ exports[`Test TerraformDestroy with inline var file and expand the varfiles sect
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"

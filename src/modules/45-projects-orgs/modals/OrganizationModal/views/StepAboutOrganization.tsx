@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { StepProps } from '@wings-software/uicore'
+import type { StepProps } from '@harness/uicore'
 import type { Organization } from 'services/cd-ng'
 import CreateOrganization from './CreateOrganization'
 import EditOrganization from './EditOrganization'

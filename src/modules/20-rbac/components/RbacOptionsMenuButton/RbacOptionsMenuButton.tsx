@@ -7,7 +7,7 @@
 
 import React, { AnchorHTMLAttributes, ReactElement, Fragment } from 'react'
 import { Classes, Menu } from '@blueprintjs/core'
-import { Button, ButtonProps, Icon, IconName } from '@wings-software/uicore'
+import { Button, ButtonProps, Icon, IconName } from '@harness/uicore'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Icon, Checkbox, Text } from '@wings-software/uicore'
+import { Container, Icon, Checkbox, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { Virtuoso } from 'react-virtuoso'

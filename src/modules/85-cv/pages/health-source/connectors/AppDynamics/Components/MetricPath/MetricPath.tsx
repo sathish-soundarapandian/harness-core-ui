@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { FormInput, Text } from '@wings-software/uicore'
+import { FormInput, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { MetaPathInterface } from './MetricPath.types'
 import MetricPathDropdown from './Components/MetricPathDropdown/MetricPathDropdown'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import classNames from 'classnames'
-import { Button, Icon } from '@wings-software/uicore'
+import { Button, Icon } from '@harness/uicore'
 import css from './RightBar.module.scss'
 
 export interface RightBarProps {

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { UseConfirmationDialogReturn, useToaster } from '@wings-software/uicore'
+import { UseConfirmationDialogReturn, useToaster } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { Target, useDeleteTarget } from 'services/cf'
 import { String, useStrings } from 'framework/strings'

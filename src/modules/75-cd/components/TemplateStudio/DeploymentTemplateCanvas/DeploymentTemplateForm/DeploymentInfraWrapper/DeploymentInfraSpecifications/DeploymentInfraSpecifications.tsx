@@ -21,7 +21,7 @@ import {
   AllowedTypesWithRunTime,
   ButtonSize,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'

@@ -8,7 +8,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { Layout, Text, Switch, Collapse, Button, ButtonVariation, useConfirmationDialog } from '@wings-software/uicore'
+import { Layout, Text, Switch, Collapse, Button, ButtonVariation, useConfirmationDialog } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import type { LoginSettings } from 'services/cd-ng'
 import { useToaster } from '@common/components'

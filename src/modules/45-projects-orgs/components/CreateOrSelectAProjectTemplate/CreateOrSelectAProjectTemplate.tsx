@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { Text, Layout, Button } from '@wings-software/uicore'
+import { Text, Layout, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'

@@ -16,7 +16,7 @@ import {
   ButtonVariation,
   FormikForm,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import classNames from 'classnames'
 import * as Yup from 'yup'

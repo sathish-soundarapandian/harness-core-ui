@@ -6,13 +6,10 @@
  */
 
 import React, { useState } from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption, FormInput, AllowedTypes } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-
-import { SelectOption, FormInput, AllowedTypes } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'

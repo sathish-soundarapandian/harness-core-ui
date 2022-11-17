@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Icon, IconName } from '@wings-software/uicore'
+import { Icon, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import SVGMarker from '../SVGMarker'
 import css from '../Nodes.module.scss'

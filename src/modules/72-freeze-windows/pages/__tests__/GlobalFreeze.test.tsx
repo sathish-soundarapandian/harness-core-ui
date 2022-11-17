@@ -102,7 +102,7 @@ describe('Global Freeze - Org Level', () => {
       })
     ).toBeInTheDocument()
 
-    expect(screen.getAllByText('common.freezeListActiveBannerExpandedText')).toHaveLength(2)
+    expect(screen.getAllByText('common.freezeListActiveBannerExpandedTextPrefix')).toHaveLength(2)
   })
 
   test('enable global freeze default values', async () => {

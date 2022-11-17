@@ -17,7 +17,7 @@ import {
   Button,
   ButtonVariation,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import type { LoginSettings } from 'services/cd-ng'
 import { usePasswordExpirationModal } from '@auth-settings/modals/PasswordExpiration/usePasswordExpiration'

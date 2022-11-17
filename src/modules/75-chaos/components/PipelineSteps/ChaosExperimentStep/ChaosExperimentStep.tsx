@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
-import type { FormikErrors } from 'formik'
+import type { AllowedTypes, IconName } from '@harness/uicore'
+import type { FormikErrors, FormikProps } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -22,6 +22,7 @@ import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from
 export interface ChaosExperimentStepSpec {
   experimentRef: string
   expectedResilienceScore: number
+  assertion?: string
 }
 
 export interface ChaosExperimentStepData {
@@ -52,7 +53,7 @@ export interface ChaosExperimentStepProps {
   onUpdate?: (data: ChaosExperimentStepData) => void
   onChange?: (data: ChaosExperimentStepData) => void
   allowableTypes: AllowedTypes
-  formik?: any
+  formik?: FormikProps<ChaosExperimentStepData>
 }
 
 export class ChaosExperimentStep extends PipelineStep<ChaosExperimentStepData> {

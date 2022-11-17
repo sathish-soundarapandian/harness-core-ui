@@ -8,7 +8,7 @@
 import React, { useEffect, useCallback } from 'react'
 import { debounce } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetAppdynamicsMetricDataByPathV2 } from 'services/cv'

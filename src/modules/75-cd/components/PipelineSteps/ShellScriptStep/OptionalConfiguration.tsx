@@ -17,7 +17,7 @@ import {
   Layout,
   MultiTypeInputType,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
 import { Radio, RadioGroup } from '@blueprintjs/core'

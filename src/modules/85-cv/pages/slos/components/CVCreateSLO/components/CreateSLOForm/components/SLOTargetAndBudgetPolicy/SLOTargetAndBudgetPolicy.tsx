@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, FormInput, Heading, Icon, Layout, Text, Container } from '@wings-software/uicore'
+import { Card, FormInput, Heading, Icon, Layout, Text, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -25,7 +25,8 @@ import {
   SLOTargetAndBudgetPolicyProps,
   PeriodTypes,
   PeriodLengthTypes,
-  SLOFormFields
+  SLOFormFields,
+  ErrorBudgetInterface
 } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SLOTargetContextualHelpText from './components/SLOTargetContextualHelpText'
@@ -88,11 +89,35 @@ export const SloPeriodLength = ({
   )
 }
 
+export const ErrorBudgetCard = (props: ErrorBudgetInterface): JSX.Element => {
+  const { getString } = useStrings()
+  return (
+    <Container height={180} background={Color.GREY_100} padding="medium" className={css.errorBudget}>
+      <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_600}>
+        {getString('cv.errorBudget')}
+      </Text>
+      <Heading inline level={1} font={{ variation: FontVariation.DISPLAY2 }}>
+        {getErrorBudget({ ...props })}
+      </Heading>
+      <Text inline font={{ variation: FontVariation.FORM_SUB_SECTION }}>
+        {getString('cv.mins')}
+      </Text>
+    </Container>
+  )
+}
+
 const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ children, formikProps, ...rest }) => {
   const { getString } = useStrings()
   const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
 
-  const { periodType, periodLengthType, notificationRuleRefs } = formikProps.values || {}
+  const {
+    periodType,
+    periodLengthType,
+    notificationRuleRefs,
+    periodLength = '',
+    SLOTargetPercentage
+  } = formikProps.values || {}
+  const errorBudgetCardProps = { periodType, periodLength, periodLengthType, SLOTargetPercentage }
 
   return (
     <>
@@ -126,7 +151,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
               <Layout.Horizontal spacing="xxxlarge" flex={{ alignItems: flexStart, justifyContent: flexStart }}>
                 <Container width={450}>
                   <SLOTargetChartWrapper
-                    customChartOptions={getCustomOptionsForSLOTargetChart(formikProps.values)}
+                    customChartOptions={getCustomOptionsForSLOTargetChart(formikProps.values.SLOTargetPercentage)}
                     monitoredServiceIdentifier={formikProps.values.monitoredServiceRef}
                     serviceLevelIndicator={convertSLOFormDataToServiceLevelIndicatorDTO(formikProps.values)}
                     {...rest}
@@ -143,18 +168,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
                     }
                   />
                 </Container>
-
-                <Container height={180} background={Color.GREY_100} padding="medium" className={css.errorBudget}>
-                  <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_600}>
-                    {getString('cv.errorBudget')}
-                  </Text>
-                  <Heading inline level={1} font={{ variation: FontVariation.DISPLAY2 }}>
-                    {getErrorBudget(formikProps.values)}
-                  </Heading>
-                  <Text inline font={{ variation: FontVariation.FORM_SUB_SECTION }}>
-                    {getString('cv.mins')}
-                  </Text>
-                </Container>
+                <ErrorBudgetCard {...errorBudgetCardProps} />
               </Layout.Horizontal>
             </Layout.Vertical>
           </Container>

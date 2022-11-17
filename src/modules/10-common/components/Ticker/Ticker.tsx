@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 

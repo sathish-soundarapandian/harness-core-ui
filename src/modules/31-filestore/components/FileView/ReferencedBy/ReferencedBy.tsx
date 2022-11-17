@@ -17,10 +17,10 @@ import {
   Text,
   FormInput,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Color } from '@wings-software/design-system'
+import { Color } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'

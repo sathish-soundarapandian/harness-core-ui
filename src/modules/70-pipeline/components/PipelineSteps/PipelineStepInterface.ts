@@ -55,6 +55,8 @@ export enum StepType {
   RestoreCacheGCS = 'RestoreCacheGCS',
   SaveCacheS3 = 'SaveCacheS3',
   RestoreCacheS3 = 'RestoreCacheS3',
+  SaveCacheHarness = 'SaveCacheHarness',
+  RestoreCacheHarness = 'RestoreCacheHarness',
   DockerHub = 'BuildAndPushDockerRegistry',
   GCS = 'GCSUpload',
   S3 = 'S3Upload',

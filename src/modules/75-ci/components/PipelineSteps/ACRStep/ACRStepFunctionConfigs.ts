@@ -26,6 +26,10 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
+    name: 'spec.subscriptionId',
+    type: TransformValuesTypes.Text
+  },
+  {
     name: 'spec.tags',
     type: TransformValuesTypes.List
   },
@@ -106,6 +110,11 @@ export const editViewValidateFieldsConfig = [
     isRequired: true
   },
   {
+    name: 'spec.subscriptionId',
+    type: ValidationFieldTypes.Text,
+    label: 'subscriptionId'
+  },
+  {
     name: 'spec.tags',
     type: ValidationFieldTypes.List,
     label: 'tagsLabel',
@@ -161,6 +170,11 @@ export function getInputSetViewValidateFieldsConfig(
       type: ValidationFieldTypes.Text,
       label: 'repository',
       isRequired
+    },
+    {
+      name: 'spec.subscriptionId',
+      type: ValidationFieldTypes.Text,
+      label: 'subscriptionId'
     },
     {
       name: 'spec.tags',

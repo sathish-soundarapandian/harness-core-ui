@@ -23,7 +23,7 @@ import {
   IconName,
   Select,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { TagInput } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -385,7 +385,7 @@ const Threshold = (props: ThresholdProps): JSX.Element => {
         icon: { name: 'email-inline' }
       },
       {
-        label: getString('notifications.slackwebhookUrl'),
+        label: getString('rbac.notifications.slackwebhookUrl'),
         value: BudgetAlertChannels.SLACK,
         icon: { name: 'service-slack' }
       }

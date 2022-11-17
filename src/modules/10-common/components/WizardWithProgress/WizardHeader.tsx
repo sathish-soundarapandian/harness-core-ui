@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text, Icon } from '@wings-software/uicore'
+import { Container, Text, Icon } from '@harness/uicore'
 import step from './Icons/Step.svg'
 import { Status } from './WizardHelper'
 import inprogress from './Icons/InProgressStep.svg'

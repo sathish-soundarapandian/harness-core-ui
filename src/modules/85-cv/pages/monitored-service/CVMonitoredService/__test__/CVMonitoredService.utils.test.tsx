@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { TableV2 } from '@wings-software/uicore'
+import { TableV2 } from '@harness/uicore'
 
 import type { RiskData } from 'services/cv'
 import { RiskValues, getRiskColorValue, getRiskLabelStringId } from '@cv/utils/CommonUtils'

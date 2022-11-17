@@ -8,16 +8,19 @@
 import React from 'react'
 import moment from 'moment'
 import { Link, useParams } from 'react-router-dom'
-import { Card, Color, Container, FontVariation, Heading, Layout, Text } from '@harness/uicore'
+import { Card, Container, Heading, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import { PeriodTypeEnum } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
 import { SLITypeEnum } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLI/SLI.constants'
 import type { KeyValuePairProps, ServiceDetailsProps } from '../DetailsPanel.types'
 import css from '../DetailsPanel.module.scss'
 
-const KeyValuePair: React.FC<KeyValuePairProps> = ({ keyText, value }) => {
+export const KeyValuePair: React.FC<KeyValuePairProps> = ({ keyText, value }) => {
   return (
     <Container>
       <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
@@ -33,6 +36,8 @@ const KeyValuePair: React.FC<KeyValuePairProps> = ({ keyText, value }) => {
 const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { sloType } = useQueryParams<{ sloType?: string }>()
+  const isCompositeSLO = sloType === SLOType.COMPOSITE
   const getDate = (time: number): string => moment(new Date(time)).format('lll')
   const monitoredServicePathname = routes.toCVAddMonitoringServicesEdit({
     accountId,
@@ -47,19 +52,21 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
         {getString('cv.serviceDetails')}
       </Text>
       <Layout.Horizontal spacing="xlarge">
-        <Container>
-          <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
-            {getString('connectors.cdng.monitoredService.label')}
-          </Text>
-          <Link to={monitoredServicePathname}>
-            <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.PRIMARY_7}>
-              {sloDashboardWidget.serviceName}
-              <Text tag="span" color={Color.GREY_800} padding={{ left: 'xsmall' }}>
-                /{sloDashboardWidget.environmentName}
-              </Text>
+        {!isCompositeSLO && (
+          <Container>
+            <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
+              {getString('connectors.cdng.monitoredService.label')}
             </Text>
-          </Link>
-        </Container>
+            <Link to={monitoredServicePathname}>
+              <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.PRIMARY_7}>
+                {sloDashboardWidget.serviceName}
+                <Text tag="span" color={Color.GREY_800} padding={{ left: 'xsmall' }}>
+                  /{sloDashboardWidget.environmentName}
+                </Text>
+              </Text>
+            </Link>
+          </Container>
+        )}
 
         <KeyValuePair
           keyText={getString('cv.slos.sliType')}
@@ -69,10 +76,12 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
               : 'cv.slos.slis.type.latency'
           )}
         />
-        <KeyValuePair
-          keyText={getString('pipeline.verification.healthSourceLabel')}
-          value={sloDashboardWidget.healthSourceName}
-        />
+        {!isCompositeSLO && (
+          <KeyValuePair
+            keyText={getString('pipeline.verification.healthSourceLabel')}
+            value={sloDashboardWidget.healthSourceName}
+          />
+        )}
         <KeyValuePair
           keyText={getString('cv.slos.sloTargetAndBudget.periodType')}
           value={getString(

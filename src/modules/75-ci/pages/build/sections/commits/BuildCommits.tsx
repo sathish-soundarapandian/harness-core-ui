@@ -8,7 +8,7 @@
 import React from 'react'
 import moment from 'moment'
 import { get } from 'lodash-es'
-import { Card, Layout, Text, Icon, Accordion, Container } from '@wings-software/uicore'
+import { Card, Layout, Text, Icon, Accordion, Container } from '@harness/uicore'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { CIBuildCommit, CIPipelineModuleInfo } from 'services/ci'
 import { UserLabel, TimeAgoPopover } from '@common/exports'

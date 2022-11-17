@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Button, Container, Formik, FormikForm as Form, Heading, Layout } from '@wings-software/uicore'
+import { Button, Container, Formik, FormikForm as Form, Heading, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { NameSchema } from '@common/utils/Validation'
 import { NameIdDescriptionTags } from '@common/components'

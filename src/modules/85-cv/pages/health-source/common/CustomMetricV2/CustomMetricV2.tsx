@@ -18,6 +18,7 @@ import {
 } from './CustomMetric.utils'
 import { defaultNewCustomMetricIdentifier, defaultNewCustomMetricName } from './CustomMetricV2.constants'
 import AddCustomMetricButton from './components/AddCustomMetricsButton'
+import useCustomMetricV2HelperContext from './hooks/useCustomMetricV2HelperContext'
 import css from './CustomMetricV2.module.scss'
 
 export interface CustomMetricV2Props {
@@ -33,7 +34,9 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
   const { headingText, subHeading, newCustomMetricDefaultValues, children } = props
   const { values: formikValues, setValues } = useFormikContext<T>()
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+  const { isTemplate } = useCustomMetricV2HelperContext()
+
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const { getString } = useStrings()
 

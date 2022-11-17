@@ -10,7 +10,7 @@ import { Intent } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
 import { get, isEmpty, pickBy } from 'lodash-es'
-import { Text, Icon, PageError, PageSpinner, Layout } from '@wings-software/uicore'
+import { Text, Icon, PageError, PageSpinner, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { DeprecatedImageInfo, useGetExecutionConfig } from 'services/ci'
 import {

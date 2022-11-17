@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Color, Icon, Layout, Text } from '@harness/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams, NavLink as Link, NavLinkProps } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'

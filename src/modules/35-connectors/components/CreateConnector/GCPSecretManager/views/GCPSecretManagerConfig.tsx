@@ -17,7 +17,7 @@ import {
   Layout,
   Button,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { setupGCPSecretManagerFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'

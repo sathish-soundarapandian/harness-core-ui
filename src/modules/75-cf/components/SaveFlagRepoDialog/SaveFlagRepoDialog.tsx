@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement } from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

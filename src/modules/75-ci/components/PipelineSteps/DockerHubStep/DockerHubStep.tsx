@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import { parse } from 'yaml'
 import { get } from 'lodash-es'
 import type { FormikErrors } from 'formik'
@@ -102,7 +102,7 @@ export class DockerHubStep extends PipelineStep<DockerHubStepData> {
 
   protected type = StepType.DockerHub
   protected stepName = 'Build and Push an image to Docker Registry'
-  protected stepIcon: IconName = 'docker-step'
+  protected stepIcon: IconName = 'docker-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.DockerHub'
   protected stepAdditionalInfo: keyof StringsMap = 'pipeline.linuxOnly'
   protected stepPaletteVisible = false

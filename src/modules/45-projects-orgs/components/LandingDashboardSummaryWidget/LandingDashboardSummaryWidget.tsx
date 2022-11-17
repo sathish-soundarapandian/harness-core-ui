@@ -16,7 +16,7 @@ import {
   StackedSummaryInterface,
   StackedSummaryTable,
   getStackedSummaryBarCount
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'

@@ -14,7 +14,7 @@ import {
   HarnessDocTooltip,
   Container,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { get, compact } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

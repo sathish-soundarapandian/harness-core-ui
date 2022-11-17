@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { FormInput, Layout } from '@wings-software/uicore'
+import { FormInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'

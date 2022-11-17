@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Text, Card, Popover, Container } from '@wings-software/uicore'
+import { Layout, Text, Card, Popover, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'

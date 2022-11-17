@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, FontVariation, Layout, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Layout, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { ArtifactSource, PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, Icon, IconName, Popover, PopoverProps } from '@harness/uicore'
+import { Icon, IconName, Popover, PopoverProps } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import React, { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'

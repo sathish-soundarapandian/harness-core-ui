@@ -8,9 +8,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
-  Color,
   Container,
-  Intent,
   Layout,
   PageSpinner,
   TableV2,
@@ -18,6 +16,8 @@ import {
   Text,
   useToaster
 } from '@harness/uicore'
+import { Color, Intent } from '@harness/design-system'
+
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'

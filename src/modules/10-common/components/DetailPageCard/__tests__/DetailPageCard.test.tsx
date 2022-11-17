@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'

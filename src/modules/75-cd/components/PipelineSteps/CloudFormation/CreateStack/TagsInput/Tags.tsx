@@ -13,12 +13,12 @@ import {
   MultiTypeInputType,
   Layout,
   Label,
-  Color,
   Button,
   FormInput,
   MultiSelectOption,
   AllowedTypes
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

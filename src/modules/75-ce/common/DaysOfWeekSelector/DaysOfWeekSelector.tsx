@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { isEmpty as _isEmpty, isEqual as _isEqual, sortBy as _sortBy } from 'lodash-es'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { DaysOfWeek } from '@ce/constants'
 import css from './DaysOfWeekSelector.module.scss'

@@ -18,11 +18,11 @@ import {
   useToaster,
   Tabs,
   Text,
-  FontVariation,
   IconName,
-  ExpandingSearchInput,
-  Color
+  ExpandingSearchInput
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
+
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps, Tab } from '@blueprintjs/core'
 

@@ -7,16 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import {
-  Icon,
-  Text,
-  Layout,
-  Container,
-  Card,
-  FlexExpander,
-  CardBody,
-  useConfirmationDialog
-} from '@wings-software/uicore'
+import { Icon, Text, Layout, Container, Card, FlexExpander, CardBody, useConfirmationDialog } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Menu, Classes, Intent } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'

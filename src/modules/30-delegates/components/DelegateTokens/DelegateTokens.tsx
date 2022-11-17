@@ -24,7 +24,7 @@ import {
   ButtonVariation,
   Icon,
   NoDataCard
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { PageSpinner } from '@common/components'
 

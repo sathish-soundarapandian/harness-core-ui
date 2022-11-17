@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { IconName, Text } from '@wings-software/uicore'
+import { IconName, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 interface TrendProps {

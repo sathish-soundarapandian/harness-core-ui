@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Card, Text, Layout, Container, Icon, Button, ButtonVariation, TableV2, IconName } from '@wings-software/uicore'
+import { Card, Text, Layout, Container, Icon, Button, ButtonVariation, TableV2, IconName } from '@harness/uicore'
 import { useHistory, useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import qs from 'qs'

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonVariation, Layout } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout } from '@harness/uicore'
 import React from 'react'
 import { CreateSLOEnum, TabsOrder } from '../CreateSLOForm/CreateSLO.constants'
 import type { NavButtonsProps } from './NavButtons.types'

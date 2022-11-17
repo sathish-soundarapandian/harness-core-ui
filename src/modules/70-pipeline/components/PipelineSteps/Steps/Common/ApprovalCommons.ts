@@ -7,7 +7,7 @@
 
 // Common helpers and types for approval forms
 import { flatMap, omit } from 'lodash-es'
-import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import {
   ApprovalRejectionCriteria,
   ApprovalRejectionCriteriaCondition,

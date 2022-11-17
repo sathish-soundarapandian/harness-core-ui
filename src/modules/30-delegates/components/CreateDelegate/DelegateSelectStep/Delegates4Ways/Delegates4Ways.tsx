@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { CardSelect, Container, Text, Layout, Icon } from '@wings-software/uicore'
+import { CardSelect, Container, Text, Layout, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { DelegateTypes } from '@delegates/constants'

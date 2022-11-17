@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
-import { ButtonVariation, Checkbox, Container, Tag } from '@wings-software/uicore'
+import { ButtonVariation, Checkbox, Container, Tag } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'

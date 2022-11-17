@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import moment from 'moment'
 import cx from 'classnames'
 import type { DeploymentVerificationJobInstanceSummary } from 'services/cv'

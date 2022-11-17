@@ -49,7 +49,7 @@ describe('<MultiLogLine /> tests', () => {
         text={{
           level: 'info',
           time: '20/08/2021 11:12:18',
-          out: '+ echo @wings-software:registry=https://npm.pkg.github.com'
+          out: '+ echo @harness:registry=https://npm.pkg.github.com'
         }}
         searchIndices={{
           out: [0]

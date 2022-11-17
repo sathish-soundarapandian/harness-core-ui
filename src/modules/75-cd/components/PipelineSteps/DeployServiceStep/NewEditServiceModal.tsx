@@ -16,7 +16,7 @@ import {
   VisualYamlToggle,
   getErrorInfoFromErrorObject,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { defaultTo, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'

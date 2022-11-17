@@ -22,7 +22,7 @@ import {
   MultiTypeInputType,
   MultiTypeInput,
   FormError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { defaultTo, noop } from 'lodash-es'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'

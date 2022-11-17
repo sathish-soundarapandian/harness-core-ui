@@ -9,7 +9,7 @@ import React from 'react'
 import { render, fireEvent, findByText, waitFor, getAllByText, findAllByText } from '@testing-library/react'
 
 import { act } from 'react-test-renderer'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

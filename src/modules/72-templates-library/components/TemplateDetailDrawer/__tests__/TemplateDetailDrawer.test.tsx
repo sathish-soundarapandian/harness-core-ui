@@ -12,7 +12,7 @@ import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { TemplateDetailsDrawer } from '../TemplateDetailDrawer'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
+jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
 }))
 

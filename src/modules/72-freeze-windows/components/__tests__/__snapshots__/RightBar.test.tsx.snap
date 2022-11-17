@@ -5,7 +5,7 @@ exports[`Freeze Window Studio - Right Bar it should render in closed state: clos
   class="rightBar"
 >
   <button
-    aria-label="notifications.pipelineName"
+    aria-label="rbac.notifications.pipelineName"
     class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
     type="button"
   >
@@ -30,7 +30,7 @@ exports[`Freeze Window Studio - Right Bar it should render in closed state: clos
     <span
       class="bp3-button-text"
     >
-      notifications.pipelineName
+      rbac.notifications.pipelineName
     </span>
   </button>
 </div>
@@ -41,7 +41,7 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
   class="rightBar"
 >
   <button
-    aria-label="notifications.pipelineName"
+    aria-label="rbac.notifications.pipelineName"
     class="bp3-button Button--button StyledProps--font StyledProps--main iconButton selected StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
     type="button"
   >
@@ -66,7 +66,7 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
     <span
       class="bp3-button-text"
     >
-      notifications.pipelineName
+      rbac.notifications.pipelineName
     </span>
   </button>
 </div>
@@ -117,7 +117,7 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
         <p
           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-medium"
         >
-          undefined : notifications.name
+          undefined : rbac.notifications.name
         </p>
         <div
           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
@@ -160,7 +160,7 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
             class="Layout--horizontal StyledProps--main headerActions StyledProps--flex"
           >
             <button
-              aria-label="notifications.name"
+              aria-label="rbac.notifications.name"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
               id="newNotificationBtn"
               type="button"
@@ -187,7 +187,7 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
               <span
                 class="bp3-button-text"
               >
-                notifications.name
+                rbac.notifications.name
               </span>
             </button>
             <div
@@ -266,7 +266,7 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
-                  NOTIFICATIONS.NAMEOFTHERULE
+                  RBAC.NOTIFICATIONS.NAMEOFTHERULE
                 </p>
               </div>
               <div
@@ -290,7 +290,7 @@ exports[`Freeze Window Studio - Right Bar it should render in open state of Noti
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
-                  NOTIFICATIONS.NOTIFICATIONMETHOD
+                  RBAC.NOTIFICATIONS.NOTIFICATIONMETHOD
                 </p>
               </div>
               <div

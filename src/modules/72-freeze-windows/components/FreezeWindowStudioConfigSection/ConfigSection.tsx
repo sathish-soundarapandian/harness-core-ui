@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { isEmpty, noop } from 'lodash-es'
-import { Button, Formik } from '@wings-software/uicore'
+import { Button, Formik } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { EntityConfig, FreezeObj, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
 import {

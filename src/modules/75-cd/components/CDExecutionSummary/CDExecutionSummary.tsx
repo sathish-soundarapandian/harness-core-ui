@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import { identity, uniqBy } from 'lodash-es'
 import type { CDPipelineModuleInfo, CDStageModuleInfo, ServiceExecutionSummary } from 'services/cd-ng'
 import type { ExecutionSummaryProps } from '@pipeline/factories/ExecutionFactory/types'

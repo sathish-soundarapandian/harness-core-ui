@@ -22,7 +22,7 @@ import {
   Text,
   PageSpinner,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { ALLOWED_VALUES_TYPE, VALIDATORS, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'

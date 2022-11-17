@@ -1,3 +1,4 @@
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { CloudWatchSetupSource } from '../CloudWatch.types'
 
 export const mockData: CloudWatchSetupSource = {
@@ -52,6 +53,48 @@ export const mockData: CloudWatchSetupSource = {
     label: 'CloudWatch Metrics',
     value: 'CloudWatch Metrics'
   }
+}
+
+export const mockDataTemplate: CloudWatchSetupSource = {
+  ...mockData,
+  healthSourceList: [
+    {
+      ...mockData.healthSourceList[0],
+      spec: {
+        ...mockData.healthSourceList[0].spec,
+        metricDefinitions: [
+          {
+            identifier: 'CustomMetric 1',
+            metricName: 'CustomMetric 1',
+            riskProfile: {
+              riskCategory: 'Infrastructure',
+              thresholdTypes: ['ACT_WHEN_HIGHER']
+            },
+            analysis: {
+              liveMonitoring: {
+                enabled: true
+              },
+              deploymentVerification: {
+                enabled: true
+              },
+              riskProfile: {
+                riskCategory: 'Infrastructure',
+                thresholdTypes: ['ACT_WHEN_HIGHER']
+              }
+            },
+            sli: {
+              enabled: true
+            },
+            groupName: 'G2',
+            responseMapping: {
+              serviceInstanceJsonPath: RUNTIME_INPUT_VALUE
+            },
+            expression: '<+monitoredService.name>'
+          }
+        ]
+      }
+    }
+  ]
 }
 
 export const emptyHealthSource: CloudWatchSetupSource = {

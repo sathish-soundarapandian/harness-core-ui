@@ -8,7 +8,7 @@
 import React from 'react'
 import moment from 'moment'
 import { partition } from 'lodash-es'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { isExecutionComplete, isExecutionSkipped } from '@pipeline/utils/statusHelpers'

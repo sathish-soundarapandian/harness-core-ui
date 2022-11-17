@@ -19,7 +19,7 @@ import {
   Container,
   ModalErrorHandler,
   ModalErrorHandlerBinding
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { ConnectorInfoDTO, ConnectorConfigDTO } from 'services/cd-ng'
 import { validateTheIdentifierIsUniquePromise, Failure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

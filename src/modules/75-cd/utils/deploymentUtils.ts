@@ -29,7 +29,7 @@ export const deploymentIconMap: Record<ServiceDeploymentType, IconName> = {
   [ServiceDeploymentType.awsLambda]: 'service-aws-lamda',
   [ServiceDeploymentType.pcf]: 'service-pivotal',
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
-  [ServiceDeploymentType.Elastigroup]: 'service-elastigroup'
+  [ServiceDeploymentType.Elastigroup]: 'elastigroup'
 }
 
 export interface DeploymentTypeItem {

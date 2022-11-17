@@ -20,6 +20,14 @@ jest.mock('services/portal', () => ({
     mutate: jest.fn()
   })
 }))
+
+jest.mock('services/cd-ng', () => ({
+  useIsImmutableDelegateEnabled: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
+}))
 const routesToDelegateDetails = jest.spyOn(routes, 'toDelegatesDetails')
 describe('Delegates Listing With Groups', () => {
   test('render data', () => {

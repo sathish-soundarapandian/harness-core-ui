@@ -9,13 +9,13 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 import cx from 'classnames'
 import {
   Heading,
-  Color,
   HarnessDocTooltip,
   MultiSelectDropDown,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   SelectOption
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 
 import type { FormikErrors } from 'formik'

@@ -12,13 +12,13 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  AllowedTypes
-} from '@wings-software/uicore'
+  AllowedTypes,
+  Accordion
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'

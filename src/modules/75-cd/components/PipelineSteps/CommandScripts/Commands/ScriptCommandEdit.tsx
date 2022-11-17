@@ -10,7 +10,6 @@ import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import {
   AllowedTypes,
-  Color,
   Container,
   FormInput,
   getMultiTypeFromValue,
@@ -18,7 +17,7 @@ import {
   SelectOption,
   Text
 } from '@harness/uicore'
-
+import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'

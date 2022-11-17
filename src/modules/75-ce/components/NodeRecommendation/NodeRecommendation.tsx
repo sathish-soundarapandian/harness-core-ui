@@ -16,7 +16,7 @@ import {
   Icon,
   Tabs,
   getErrorInfoFromErrorObject
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Dialog, Position, Toaster } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'

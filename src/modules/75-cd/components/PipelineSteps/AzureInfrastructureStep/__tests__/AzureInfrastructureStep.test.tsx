@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, getByText, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType, MultiTypeInputValue, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { MultiTypeInputType, MultiTypeInputValue, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

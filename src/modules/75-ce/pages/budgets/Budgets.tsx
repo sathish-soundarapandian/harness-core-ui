@@ -17,7 +17,7 @@ import {
   TableV2,
   useConfirmationDialog,
   useToaster
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Classes, Menu, Position, Intent } from '@blueprintjs/core'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { FontVariation, Color } from '@harness/design-system'

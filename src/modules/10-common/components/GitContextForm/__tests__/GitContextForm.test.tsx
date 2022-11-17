@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor, RenderResult } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import * as cdng from 'services/cd-ng'
 import mockBranches from './branchStatusMock.json'

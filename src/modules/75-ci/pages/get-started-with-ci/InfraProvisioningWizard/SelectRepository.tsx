@@ -12,12 +12,10 @@ import { debounce } from 'lodash-es'
 import type { Column, CellProps } from 'react-table'
 import {
   Text,
-  FontVariation,
   Layout,
   TableV2,
   Container,
   RadioButton,
-  Color,
   TextInput,
   FormError,
   Icon,
@@ -26,6 +24,7 @@ import {
   IconProps,
   IconName
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { ConnectorInfoDTO, useGetListOfAllReposByRefConnector, UserRepoResponse, Error } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'

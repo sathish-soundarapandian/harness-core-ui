@@ -8,13 +8,7 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import {
-  AllowedTypes,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption
-} from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'

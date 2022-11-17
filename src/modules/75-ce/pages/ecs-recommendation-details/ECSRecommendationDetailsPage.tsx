@@ -20,7 +20,7 @@ import {
   Button,
   ButtonVariation,
   ButtonSize
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text, Button, Icon, FlexExpander } from '@wings-software/uicore'
+import { Container, Text, Button, Icon, FlexExpander } from '@harness/uicore'
 import cx from 'classnames'
 import { Menu, MenuItem, Popover, Position } from '@blueprintjs/core'
 import { QlceViewTimeGroupType, QlceViewFilterInput } from 'services/ce/services'

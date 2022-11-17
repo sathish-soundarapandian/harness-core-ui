@@ -24,7 +24,7 @@ import { Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions, parse } from 'yaml'
-import { Tag, Icon, Container, useConfirmationDialog } from '@wings-software/uicore'
+import { Tag, Icon, Container, useConfirmationDialog } from '@harness/uicore'
 import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
@@ -567,44 +567,46 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
 
-      const yamlPathForAllowedValues = getMetaDataForKeyboardEventProcessing({
-        editor,
-        onErrorCallback
-      })?.parentToCurrentPropertyPath
+      if (code === KEY_CODE_FOR_SPACE || code === KEY_CODE_FOR_SEMI_COLON) {
+        const yamlPathForAllowedValues = getMetaDataForKeyboardEventProcessing({
+          editor,
+          onErrorCallback
+        })?.parentToCurrentPropertyPath
 
-      //currently working with Pipelines and InputSets entityTypes only as these are the only ones which support runtime inputs
-      const currentPathWithoutEntityType =
-        //for runPipelineForm we don't need to remove the entityType as it already starts from 'pipeline.[something]'
-        entityType === 'Pipelines'
-          ? defaultTo(yamlPathForAllowedValues, '')
-          : entityType === 'InputSets'
-          ? defaultTo(yamlPathForAllowedValues?.split('inputSet.').pop(), '')
-          : ''
-      const currentPathValue = get(comparableYamlJson, currentPathWithoutEntityType)
+        //currently working with Pipelines and InputSets entityTypes only as these are the only ones which support runtime inputs
+        const currentPathWithoutEntityType =
+          //for runPipelineForm we don't need to remove the entityType as it already starts from 'pipeline.[something]'
+          entityType === 'Pipelines'
+            ? defaultTo(yamlPathForAllowedValues, '')
+            : entityType === 'InputSets'
+            ? defaultTo(yamlPathForAllowedValues?.split('inputSet.').pop(), '')
+            : ''
+        const currentPathValue = get(comparableYamlJson, currentPathWithoutEntityType)
 
-      //disposing values
-      if (isAllowedValues(currentPathValue)) {
-        runTimeCompletionDisposer?.dispose()
-        expressionCompletionDisposer?.dispose()
-      } else {
-        allowedValuesCompletionDisposer?.dispose()
-      }
+        //disposing values
+        if (isAllowedValues(currentPathValue)) {
+          runTimeCompletionDisposer?.dispose()
+          expressionCompletionDisposer?.dispose()
+        } else {
+          allowedValuesCompletionDisposer?.dispose()
+        }
 
-      // this is to invoke allowedValues inputs as suggestions
-      if (isAllowedValues(currentPathValue)) {
-        registerCompletionItemProviderForAllowedValues(editor, currentPathValue)
-      }
+        // this is to invoke allowedValues inputs as suggestions
+        if (isAllowedValues(currentPathValue)) {
+          registerCompletionItemProviderForAllowedValues(editor, currentPathValue)
+        }
 
-      // this is to invoke run-time inputs as suggestions
-      // also these are restricted to specific keystrokes as these action make api calls
-      if ((ctrlKey && code === KEY_CODE_FOR_SPACE) || (shiftKey && code === KEY_CODE_FOR_SEMI_COLON)) {
-        if (invocationMap && invocationMap.size > 0 && !isAllowedValues(currentPathValue)) {
-          const yamlPathForNonAllowedValued = getMetaDataForKeyboardEventProcessing({
-            editor,
-            onErrorCallback,
-            shouldAddPlaceholder: true
-          })?.parentToCurrentPropertyPath
-          invokeCallBackForMatchingYAMLPaths(editor, yamlPathForNonAllowedValued)
+        // this is to invoke run-time inputs as suggestions
+        // also these are restricted to specific keystrokes as these action make api calls
+        if ((ctrlKey && code === KEY_CODE_FOR_SPACE) || (shiftKey && code === KEY_CODE_FOR_SEMI_COLON)) {
+          if (invocationMap && invocationMap.size > 0 && !isAllowedValues(currentPathValue)) {
+            const yamlPathForNonAllowedValued = getMetaDataForKeyboardEventProcessing({
+              editor,
+              onErrorCallback,
+              shouldAddPlaceholder: true
+            })?.parentToCurrentPropertyPath
+            invokeCallBackForMatchingYAMLPaths(editor, yamlPathForNonAllowedValued)
+          }
         }
       }
 

@@ -26,7 +26,7 @@ import {
   Icon,
   Accordion,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'

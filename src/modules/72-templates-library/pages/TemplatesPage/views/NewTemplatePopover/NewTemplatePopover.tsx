@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Position } from '@blueprintjs/core'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { merge, noop } from 'lodash-es'
 import cx from 'classnames'

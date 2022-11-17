@@ -35,12 +35,38 @@ jest.mock('react-monaco-editor', () => ({
   MonacoDiffEditor: MonacoEditor
 }))
 
+const mockRepositories = {
+  status: 'SUCCESS',
+  data: {
+    repositories: ['main', 'main-patch', 'main-patch1', 'main-patch2']
+  },
+  metaData: null,
+  correlationId: 'cc779876-d3af-44e5-8991-916dfecb4548'
+}
+
+const fetchRepositories = jest.fn(() => {
+  return Object.create(mockRepositories)
+})
+
+const mockBranches = {
+  status: 'SUCCESS',
+  data: { branches: ['15sept', 'main', 'main-patch-8nov'] },
+  metaData: null,
+  correlationId: 'a48d56f0-2d6f-4b4b-8b13-d8eba153005f'
+}
+const fetchBranches = jest.fn(() => {
+  return Object.create(mockBranches)
+})
+
 jest.mock('services/pipeline-ng', () => ({
   useGetListOfExecutions: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve(executionList)),
     loading: false,
     cancel: jest.fn()
   })),
+  useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  }),
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
@@ -53,6 +79,9 @@ jest.mock('services/pipeline-ng', () => ({
   useHandleStageInterrupt: jest.fn(() => ({})),
   useGetFilterList: jest.fn().mockImplementation(() => {
     return { mutate: jest.fn(() => Promise.resolve(filters)), loading: false }
+  }),
+  useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches, error: null, loading: false }
   }),
   usePostFilter: jest.fn(() => ({
     mutate: jest.fn(),
@@ -104,6 +133,7 @@ const commonRequest = (): any =>
     queryParams: {
       accountIdentifier: 'accountId',
       module: 'cd',
+      branch: undefined,
       filterIdentifier: undefined,
       orgIdentifier: 'orgIdentifier',
       projectIdentifier: 'projectIdentifier',
@@ -113,6 +143,7 @@ const commonRequest = (): any =>
       searchTerm: undefined,
       status: undefined,
       repoIdentifier: undefined,
+      repoName: undefined,
       pipelineIdentifier: undefined,
       myDeployments: undefined
     }
@@ -151,6 +182,7 @@ describe('Execution List', () => {
 
   test('should have relevant navigation links for CD execution', async () => {
     renderExecutionPage()
+
     const rows = await screen.findAllByRole('row')
     const cdExecutionRow = rows[4]
 
@@ -266,7 +298,7 @@ describe('Execution List', () => {
     renderExecutionPage()
     expect(useGetListOfExecutions).toHaveBeenCalledWith(commonRequest())
     await screen.findByText('filters.executions.pipelineName')
-    jest.advanceTimersByTime(20000) // simulate 20 seconds poll interval
+    jest.advanceTimersByTime(5000) // simulate 5 seconds poll interval
     expect(useGetListOfExecutions).toHaveBeenCalledWith(commonRequest())
   })
 

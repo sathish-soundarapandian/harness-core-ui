@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiSelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption } from '@harness/uicore'
 import { uniqBy } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 import type { AuditTrailFormType, ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'

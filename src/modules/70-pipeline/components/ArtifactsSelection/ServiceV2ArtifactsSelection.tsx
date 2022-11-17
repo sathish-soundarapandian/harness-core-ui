@@ -55,7 +55,8 @@ import type {
   GoogleArtifactRegistryInitialValuesType,
   CustomArtifactSource,
   GithubPackageRegistryInitialValuesType,
-  Nexus2InitialValuesType
+  Nexus2InitialValuesType,
+  AzureArtifactsInitialValues
 } from './ArtifactInterface'
 import {
   ENABLED_ARTIFACT_TYPES,
@@ -408,7 +409,8 @@ export default function ServiceV2ArtifactsSelection({
       GoogleArtifactRegistryInitialValuesType &
       CustomArtifactSource &
       GithubPackageRegistryInitialValuesType &
-      Nexus2InitialValuesType
+      Nexus2InitialValuesType &
+      AzureArtifactsInitialValues
   > => {
     return {
       key: getString('connectors.stepFourName'),

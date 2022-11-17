@@ -7,8 +7,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, Text, Icon, TextInput, ExpandingSearchInput } from '@wings-software/uicore'
-import { Color } from '@wings-software/design-system'
+import { Container, Layout, Text, Icon, TextInput, ExpandingSearchInput } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

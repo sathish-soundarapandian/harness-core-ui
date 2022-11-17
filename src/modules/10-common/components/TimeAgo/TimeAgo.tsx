@@ -7,7 +7,7 @@
 
 import React from 'react'
 import ReactTimeago from 'react-timeago'
-import { Text, TextProps } from '@wings-software/uicore'
+import { Text, TextProps } from '@harness/uicore'
 
 export interface TimeAgoProps extends TextProps, React.ComponentProps<typeof ReactTimeago> {
   time: number

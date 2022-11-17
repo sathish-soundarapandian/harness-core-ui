@@ -161,6 +161,7 @@ testConnectionStep:
     vault: 'Vault URL : '
     bitbucket: 'URL : '
     gcr: 'GCR URL : '
+    spot: 'SPOT URL : '
   validationText:
     k8s: Validating the reachability of provided URL
     docker: Validating Docker Registry authentication and permissions
@@ -189,6 +190,7 @@ testConnectionStep:
     gcpKms: Validating GCP Key Management Service authentication and permissions
     testingURLReachability: Testing reachability to the URL
     customSM: Validating Custom Secret Manager authentication and permissions
+    spot: Validating the Spot connector authentication and permissions
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
@@ -643,8 +645,17 @@ ceAws:
       'Harness uses the secure cross-account role to access your AWS account. The role includes a restricted policy to
       access the cost and usage reports and resources for the sole purpose of cost analysis and cost optimization'
     description: 'Select the Cloud Cost Management features that you would like to enable.'
-    info: 'Cost visibility of the resources for which you added the CUR in the previous step is enabled by default. Select the others as per your requirements.'
+    info: '(Selecting features will add the necessary permissions to the IAM role in the next step. Cost Visibility permissions are required by default)'
     cost: 'Cost'
+    hoverOver: Hover over feature for more info
+    cards:
+      providedBy: 'Provided by:'
+      permissionsInvolved: 'Permissions involved:'
+      costVisibility:
+        footer2: from the Cost and Usage Report created in the previoue step.
+        footer3: This cannot be deselected.
+      autoStopping:
+        prefix: Optimization by
     visibility: '{{ $.common.ce.visibility }}'
     optimization: '{{ $.common.ce.optimization }}'
     visibilityDes: '{{ $.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'
@@ -659,6 +670,7 @@ ceAws:
       heading: Inventory management
     optimize:
       feat1: Orchestrate VMs and ASGs based on idleness
+      feat2: Run on fully orchesterated spot instances
       prefix: AWS OPTIMIZATION BY
       footer: to IAM role
   crossAccountRoleStep2:
@@ -922,8 +934,6 @@ pdc:
   editHosts: 'Edit hosts'
   testConnection:
     step1: 'Validating the PDC hosts connectivity'
-connectorReferenceText: "can't be deleted as it is being referenced by other entities. To see the list of entities referencing this connector,"
-cantDeleteConnector: "Can't Delete Connector"
 policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings

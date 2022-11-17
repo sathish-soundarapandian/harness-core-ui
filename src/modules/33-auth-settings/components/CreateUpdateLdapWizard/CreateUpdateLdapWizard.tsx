@@ -7,7 +7,7 @@
 
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, StepWizard } from '@wings-software/uicore'
+import { Layout, StepWizard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

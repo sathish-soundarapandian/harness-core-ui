@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Icon, IconName, Card } from '@wings-software/uicore'
+import { Layout, Text, Icon, IconName, Card } from '@harness/uicore'
 import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { Connectors } from '@connectors/constants'

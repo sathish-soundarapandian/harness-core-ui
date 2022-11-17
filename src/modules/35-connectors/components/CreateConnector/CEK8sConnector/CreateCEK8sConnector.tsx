@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { StepWizard } from '@wings-software/uicore'
+import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { Connectors, CreateConnectorModalProps } from '@connectors/constants'

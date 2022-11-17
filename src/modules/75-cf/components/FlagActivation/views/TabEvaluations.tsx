@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Icon, Layout, Text, PageError, NoDataCard } from '@wings-software/uicore'
+import { Container, Icon, Layout, Text, PageError, NoDataCard } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'

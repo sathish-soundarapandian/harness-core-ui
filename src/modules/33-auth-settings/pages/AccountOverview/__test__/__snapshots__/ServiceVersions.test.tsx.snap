@@ -201,6 +201,52 @@ exports[`Service versions open accordion 1`] = `
                         role="cell"
                         style="width: 30%;"
                       >
+                        Security Tests
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        5.0.0
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        Security Tests Manager
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
+                        4.0.0
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cells"
+                    >
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 30%;"
+                      >
                         Continuous Verification
                       </div>
                       <div
@@ -339,7 +385,7 @@ exports[`Service versions open accordion 1`] = `
                         role="cell"
                         style="width: 30%;"
                       >
-                        PMS
+                        Pipelines
                       </div>
                       <div
                         class="TableV2--cell"

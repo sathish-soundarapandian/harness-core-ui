@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { pick } from 'lodash-es'
-import { PageError, PageSpinner } from '@wings-software/uicore'
+import { PageError, PageSpinner } from '@harness/uicore'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
@@ -35,7 +35,8 @@ const CEHomePage: React.FC = () => {
 
   const { data, error, refetch, loading } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier: accountId
+    accountIdentifier: accountId,
+    lazy: true
   })
 
   const expiryTime = data?.data?.maxExpiryTime

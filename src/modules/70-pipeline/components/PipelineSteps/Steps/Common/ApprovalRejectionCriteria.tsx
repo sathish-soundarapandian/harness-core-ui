@@ -19,7 +19,7 @@ import {
   Radio,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { JiraFieldNG } from 'services/cd-ng'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'

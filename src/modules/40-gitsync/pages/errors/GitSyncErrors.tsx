@@ -17,7 +17,7 @@ import {
   Tab,
   Tabs,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetGitSyncErrorsCount } from 'services/cd-ng'

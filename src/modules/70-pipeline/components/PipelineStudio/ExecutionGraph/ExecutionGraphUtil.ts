@@ -7,7 +7,7 @@
 
 import { v4 as nameSpace, v5 as uuid, version } from 'uuid'
 import { defaultTo, isNil } from 'lodash-es'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type {
   ExecutionElementConfig,
   ExecutionWrapperConfig,

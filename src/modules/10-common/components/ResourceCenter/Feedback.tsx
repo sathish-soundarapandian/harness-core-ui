@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import _refiner from 'refiner-js'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './ResourceCenter.module.scss'

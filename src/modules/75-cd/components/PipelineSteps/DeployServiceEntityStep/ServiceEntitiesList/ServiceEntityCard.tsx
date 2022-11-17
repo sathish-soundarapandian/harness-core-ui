@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Card, Icon, Text, Color, AllowedTypes, ButtonSize, Layout } from '@harness/uicore'
+import { Button, ButtonVariation, Card, Icon, Text, AllowedTypes, ButtonSize, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, set } from 'lodash-es'

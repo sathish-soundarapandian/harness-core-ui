@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getBreakdownValues } from '../utils'
 import ExpressionBreakdown, { ActiveInputs } from '../ExpressionBreakdown/ExpressionBreakdown'

@@ -7,8 +7,14 @@
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { KVPair } from '../types'
+import { dragPlaceholderImageBase64 } from './assets/dragImageBase64'
+import { dragStagePlaceholderImageBase64 } from './assets/dragStageImageBase64'
 import type { Dimension } from './NodeDimensionStore'
 
+export enum NodeEntity {
+  STAGE = 'STAGE',
+  STEP = 'STEP'
+}
 export interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
   marginLeft?: string
 }
@@ -81,5 +87,14 @@ export const getMatrixHeight = (
     return (
       (Math.floor(maxChildLength / parallelism) + Math.ceil((maxChildLength % parallelism) / parallelism)) * nodeHeight
     )
+  }
+}
+
+export const attachDragImageToEventHandler = (event: React.DragEvent<HTMLDivElement>, type?: NodeEntity): void => {
+  // set drag image preview to custom icon in case of safari browser, as safari blocks image preview if dom tree have transform property on any parent
+  if (navigator.userAgent.search('Safari') >= 0 && navigator.userAgent.search('Chrome') < 0) {
+    const dragIcon = document.createElement('img')
+    dragIcon.src = type === NodeEntity.STAGE ? dragStagePlaceholderImageBase64 : dragPlaceholderImageBase64
+    event.dataTransfer.setDragImage(dragIcon, 25, 25)
   }
 }

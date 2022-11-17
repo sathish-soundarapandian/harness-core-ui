@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Icon, Text, Button, ButtonVariation, Color, ButtonSize } from '@harness/uicore'
+import { Layout, Icon, Text, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ProvisioningStatus } from './Constants'
 

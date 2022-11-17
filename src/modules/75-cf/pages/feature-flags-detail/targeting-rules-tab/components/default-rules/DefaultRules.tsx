@@ -6,7 +6,8 @@
  */
 
 import React, { ReactElement } from 'react'
-import { FontVariation, FormInput, Heading, SelectOption } from '@harness/uicore'
+import { FormInput, Heading, SelectOption } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { Variation } from 'services/cf'
 import { CFVariationColors } from '@cf/constants'
 import { useStrings } from 'framework/strings'

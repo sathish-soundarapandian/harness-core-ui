@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
-import { Popover, Layout, TextInput, Text, ButtonVariation, useToaster } from '@wings-software/uicore'
+import { Popover, Layout, TextInput, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { Menu, MenuItem, Position } from '@blueprintjs/core'

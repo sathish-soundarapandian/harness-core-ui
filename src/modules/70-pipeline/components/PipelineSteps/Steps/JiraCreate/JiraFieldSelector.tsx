@@ -7,7 +7,7 @@
 
 import { isEmpty } from 'lodash-es'
 import React, { useState } from 'react'
-import { Button, Checkbox } from '@wings-software/uicore'
+import { Button, Checkbox } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { JiraFieldNG } from 'services/cd-ng'
 import type { JiraFieldSelectorProps } from './types'

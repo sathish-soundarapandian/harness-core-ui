@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Layout, AllowedTypes } from '@wings-software/uicore'
+import { Layout, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'

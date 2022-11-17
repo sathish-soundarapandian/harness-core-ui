@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Layout, useToaster, useConfirmationDialog } from '@wings-software/uicore'
+import { Layout, useToaster, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, debounce, isNil } from 'lodash-es'

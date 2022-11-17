@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { FormikForm } from '@wings-software/uicore'
+import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockedElkIndicesData } from '@cv/pages/health-source/connectors/ElkHealthSource/__tests__/ElkHealthSource.mock'

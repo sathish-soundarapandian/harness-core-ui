@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { Drawer, Intent } from '@blueprintjs/core'
-import { Button, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, useConfirmationDialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import { getDefaultDrawerProps, getParsedDrawerOptions } from './useDrawerHook.utils'

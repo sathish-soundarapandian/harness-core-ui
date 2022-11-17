@@ -6,17 +6,8 @@
  */
 
 import React from 'react'
-import {
-  Button,
-  ButtonVariation,
-  Container,
-  HarnessDocTooltip,
-  Heading,
-  Icon,
-  Layout,
-  Text
-} from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Button, ButtonVariation, Container, HarnessDocTooltip, Heading, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Intent } from '@blueprintjs/core'
 import { matchPath, useHistory, useLocation, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'

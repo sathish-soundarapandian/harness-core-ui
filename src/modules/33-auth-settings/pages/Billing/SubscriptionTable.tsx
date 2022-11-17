@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { ButtonVariation, Card, Color, FontVariation, Icon, IconName, Layout, Text } from '@harness/uicore'
+import { ButtonVariation, Card, Icon, IconName, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, lowerCase } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'

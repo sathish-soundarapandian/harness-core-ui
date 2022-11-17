@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, Card, Container, Icon, Layout, Text, ButtonVariation, useToaster } from '@wings-software/uicore'
+import { Button, Card, Container, Icon, Layout, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
@@ -124,7 +124,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED, CD_ONBOARDING_ENABLED } = useFeatureFlags()
+  const FREE_PLAN_ENABLED = !isOnPrem()
+  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()

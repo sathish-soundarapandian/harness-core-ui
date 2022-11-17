@@ -6,13 +6,12 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, Popover, Text, TextInput, ButtonVariation, PageSpinner, Container } from '@wings-software/uicore'
+import { Layout, Popover, Text, TextInput, ButtonVariation, PageSpinner, Container, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
 import cx from 'classnames'
 import { Classes, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { Button } from '@harness/uicore'
 import {
   EntityGitDetails,
   InputSetErrorWrapper,

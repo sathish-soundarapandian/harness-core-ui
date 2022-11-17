@@ -11,7 +11,8 @@ export type SettingCategory = SettingDTO['category']
 export enum SettingType {
   TEST_SETTING_ID = 'test_setting_id',
   DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER = 'disable_harness_built_in_secret_manager',
-  WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION = 'mandate_webhook_secrets_for_github_triggers'
+  WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION = 'mandate_webhook_secrets_for_github_triggers',
+  MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION = 'mandate_custom_webhook_authorization'
 }
 export enum SettingGroups {
   test_group_2 = 'test_group_2'

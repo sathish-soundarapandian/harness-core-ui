@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { transformAnalysisDataToChartSeries } from '@cv/components/TimeseriesRow/TimeSeriesRowUtils'

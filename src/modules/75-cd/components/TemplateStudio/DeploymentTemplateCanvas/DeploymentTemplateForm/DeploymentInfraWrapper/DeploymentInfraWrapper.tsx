@@ -15,8 +15,14 @@ import DeploymentInfraSpecifications from '@cd/components/TemplateStudio/Deploym
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import type { DeploymentInfra } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { getValidationSchema } from './DeploymentInfraUtils'
 import css from '../DeploymentConfigForm.module.scss'
+
+export enum DeploymentConfigFormTabs {
+  Infrastructure = 'Infrastructure',
+  Execution = 'Execution'
+}
 
 export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unknown>, formikRef: any): JSX.Element => {
   const ref = React.useRef<any | null>()
@@ -49,6 +55,9 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
     },
     getErrors() {
       return defaultTo(ref?.current.errors, {})
+    },
+    validateForm() {
+      return ref?.current?.validateForm()
     }
   }))
   /* istanbul ignore next */
@@ -79,8 +88,16 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
     [updateDeploymentConfig]
   )
 
+  const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+  React.useEffect(() => {
+    subscribeForm({ tab: DeploymentConfigFormTabs.Infrastructure, form: formikRef })
+    return () => unSubscribeForm({ tab: DeploymentConfigFormTabs.Infrastructure, form: formikRef })
+  }, [])
+
+  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+
   return (
-    <Container className={css.infraWidgetWrapper}>
+    <Container className={css.infraWidgetWrapper} ref={scrollRef}>
       <Formik
         formName="DeploymentConfigInfraForm"
         onSubmit={noop}
@@ -90,6 +107,9 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
       >
         {formik => {
           ref.current = formik
+          window.dispatchEvent(
+            new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeploymentConfigFormTabs.Infrastructure })
+          )
           return <DeploymentInfraSpecifications formik={formik} />
         }}
       </Formik>

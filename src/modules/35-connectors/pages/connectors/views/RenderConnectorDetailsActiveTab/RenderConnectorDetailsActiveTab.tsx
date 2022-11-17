@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { NoDataCard } from '@wings-software/uicore'
+import { NoDataCard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ConnectorResponse } from 'services/cd-ng'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'

@@ -8,7 +8,8 @@
 import React from 'react'
 import { capitalize, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { FontVariation, Text, Card, Layout, Color, OverlaySpinner, ButtonVariation, Button } from '@harness/uicore'
+import { Text, Card, Layout, OverlaySpinner, ButtonVariation, Button } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useListPaymentMethods } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -61,7 +62,7 @@ function PaymentMethods(): JSX.Element {
             </div>
             <Layout.Vertical>
               <Text color={Color.BLACK} padding={{ bottom: 'xsmall' }}>
-                {`${capitalize(data?.data?.paymentMethods?.[0]?.brand)} 
+                {`${capitalize(data?.data?.paymentMethods?.[0]?.brand)}
             ${getString('authSettings.billingInfo.endingIn')} ${data?.data?.paymentMethods?.[0]?.last4}
             `}
               </Text>

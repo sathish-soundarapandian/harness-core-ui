@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { Container, Text, Icon, Layout } from '@wings-software/uicore'
+import { Container, Text, Icon, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import moment from 'moment'
 import HighchartsReact from 'highcharts-react-official'

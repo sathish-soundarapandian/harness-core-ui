@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { Menu } from '@blueprintjs/core'
-import { SelectOption, Layout, Text, Button, Avatar, Container, ButtonVariation } from '@wings-software/uicore'
+import { SelectOption, Layout, Text, Button, Avatar, Container, ButtonVariation } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'

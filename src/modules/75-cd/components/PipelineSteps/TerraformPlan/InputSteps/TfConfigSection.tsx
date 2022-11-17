@@ -10,7 +10,7 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, Label, SelectOption, useToaster } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, Label, SelectOption, useToaster, Layout } from '@harness/uicore'
 import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
@@ -24,17 +24,22 @@ import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
+import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
+import { getPath } from '../../Common/Terraform/Editview/TerraformConfigFormHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType } = props
+  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
 
+  const configPath = getPath(true, isBackendConfig)
   const config = inputSetData?.template?.spec?.configuration
-  const store = config?.configFiles?.store
+  const configSpec = get(inputSetData?.template, configPath)
+  const store = configSpec?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -43,20 +48,19 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
-  let connectorVal = get(formik.values, `${path}.spec.configuration.configFiles.store.spec.connectorRef`)
+  let connectorVal = get(formik.values, `${path}.${configPath}.store.spec.connectorRef`)
   if (!connectorVal) {
-    connectorVal = props?.allValues?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+    connectorVal = get(props?.allValues, `${configPath}.store.spec.connectorRef`)
   }
-  let repoName = get(formik.values, `${path}.spec.configuration.configFiles.store.spec.repositoryName`)
+  let repoName = get(formik.values, `${path}.${configPath}.store.spec.repositoryName`)
   if (!repoName) {
-    repoName = get(props?.allValues, `spec.configuration.configFiles.store.spec.repositoryName`)
+    repoName = get(props?.allValues, `${configPath}.store.spec.repositoryName`)
   }
-  let storeType = get(formik?.values, `${path}.spec.configuration.configFiles.store.type`)
+  let storeType = get(formik?.values, `${path}.${configPath}.store.type`)
   if (!storeType) {
-    storeType = get(props?.allValues, `spec.configuration.configFiles.store.type`)
+    storeType = get(props?.allValues, `${configPath}.store.type`)
   }
-  const reposRequired =
-    getMultiTypeFromValue(config?.configFiles?.store?.spec?.repositoryName) === MultiTypeInputType.RUNTIME
+  const reposRequired = getMultiTypeFromValue(configSpec?.store?.spec?.repositoryName) === MultiTypeInputType.RUNTIME
   const {
     data: ArtifactRepoData,
     loading: ArtifactRepoLoading,
@@ -96,13 +100,9 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
 
   return (
     <>
-      {(config?.configFiles?.store?.spec?.connectorRef ||
-        config?.workspace ||
-        config?.configFiles?.store?.spec?.branch ||
-        config?.configFiles?.store?.spec?.commitId ||
-        config?.configFiles?.store?.spec?.folderPath) && (
+      {(configSpec?.store?.spec || config?.workspace) && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
-          {getString('cd.configurationFile')}
+          {isBackendConfig ? getString('pipelineSteps.backendConfig') : getString('cd.configurationFile')}
         </Label>
       )}
       {getMultiTypeFromValue(config?.workspace) === MultiTypeInputType.RUNTIME && (
@@ -120,15 +120,15 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
-            fieldPath={'spec.configuration.workspace'}
+            fieldPath={`${path}.spec.configuration.workspace`}
           />
         </div>
       )}
-      {getMultiTypeFromValue(config?.configFiles?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(configSpec?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField
             accountIdentifier={accountId}
-            selected={get(initialValues, 'spec.configuration.configFiles.store.spec.connectorRef', '')}
+            selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             multiTypeProps={{ allowableTypes, expressions }}
@@ -141,7 +141,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
                 ? [Connectors.ARTIFACTORY]
                 : [Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET]
             }
-            name={`${path}.spec.configuration.configFiles.store.spec.connectorRef`}
+            name={`${path}.${configPath}.store.spec.connectorRef`}
             label={getString('connector')}
             placeholder={getString('select')}
             disabled={readonly}
@@ -151,11 +151,11 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
         </div>
       )}
 
-      {getMultiTypeFromValue(config?.configFiles?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(configSpec?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             label={getString('pipelineSteps.deploy.inputSet.branch')}
-            name={`${path}.spec.configuration.configFiles.store.spec.branch`}
+            name={`${path}.${configPath}.store.spec.branch`}
             placeholder={getString('pipeline.manifestType.branchPlaceholder')}
             disabled={readonly}
             multiTextInputProps={{
@@ -166,16 +166,16 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
-            fieldPath={'spec.configuration.configFiles.store.spec.branch'}
+            fieldPath={`${path}.${configPath}.store.spec.branch`}
           />
         </div>
       )}
 
-      {getMultiTypeFromValue(config?.configFiles?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(configSpec?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             label={getString('pipeline.manifestType.commitId')}
-            name={`${path}.spec.configuration.configFiles.store.spec.commitId`}
+            name={`${path}.${configPath}.store.spec.commitId`}
             placeholder={getString('pipeline.manifestType.commitPlaceholder')}
             disabled={readonly}
             multiTextInputProps={{
@@ -186,16 +186,16 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
-            fieldPath={'spec.configuration.configFiles.store.spec.commitId'}
+            fieldPath={`${path}.${configPath}.store.spec.commitId`}
           />
         </div>
       )}
 
-      {getMultiTypeFromValue(config?.configFiles?.store?.spec?.folderPath) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(configSpec?.store?.spec?.folderPath) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             label={getString('common.git.folderPath')}
-            name={`${path}.spec.configuration.configFiles.store.spec.folderPath`}
+            name={`${path}.${configPath}.store.spec.folderPath`}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
             disabled={readonly}
             multiTextInputProps={{
@@ -206,7 +206,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
-            fieldPath={'spec.configuration.configFiles.store.spec.folderPath'}
+            fieldPath={`${path}.${configPath}.store.spec.folderPath`}
           />
         </div>
       )}
@@ -215,7 +215,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <SelectInputSetView
             label={getString('pipelineSteps.repoName')}
-            name={`${path}.spec.configuration.configFiles.store.spec.repositoryName`}
+            name={`${path}.${configPath}.store.spec.repositoryName`}
             placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
             disabled={readonly}
             selectItems={connectorRepos ? connectorRepos : []}
@@ -232,17 +232,17 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
-            fieldPath={'spec.configuration.configFiles.store.spec.repositoryName'}
+            fieldPath={`${path}.${configPath}.store.spec.repositoryName`}
           />
         </div>
       )}
 
       {store?.type === Connectors.ARTIFACTORY &&
-        getMultiTypeFromValue(config?.configFiles?.store?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
+        getMultiTypeFromValue(configSpec?.store?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             <TextFieldInputSetView
               label={getString('pipeline.artifactPathLabel')}
-              name={`${path}.spec.configuration.configFiles.store.spec.artifactPaths`}
+              name={`${path}.${configPath}.store.spec.artifactPaths`}
               placeholder={getString('pipeline.manifestType.pathPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
@@ -253,12 +253,34 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               template={inputSetData?.template}
-              fieldPath={'spec.configuration.configFiles.store.spec.folderPath'}
-              onChange={value =>
-                formik?.setFieldValue(`${path}.spec.configuration.configFiles.store.spec.artifactPaths`, [value])
-              }
+              fieldPath={`${path}.${configPath}.store.spec.artifactPaths`}
+              onChange={value => formik?.setFieldValue(`${path}.${configPath}.store.spec.artifactPaths`, [value])}
             />
           </div>
+        )}
+
+      {store?.type === 'Harness' &&
+        getMultiTypeFromValue(configSpec?.store?.spec?.files) === MultiTypeInputType.RUNTIME && (
+          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
+            <FileStoreList
+              name={`${path}.${configPath}.store.spec.files`}
+              type={fileTypes.FILE_STORE}
+              allowOnlyOne={true}
+              formik={formik}
+            />
+          </Layout.Vertical>
+        )}
+
+      {store?.type === 'Harness' &&
+        getMultiTypeFromValue(configSpec?.store?.spec?.secretFiles) === MultiTypeInputType.RUNTIME && (
+          <Layout.Vertical className={cx(stepCss.inputWidth, stepCss.layoutVerticalSpacing)}>
+            <FileStoreList
+              name={`${path}.${configPath}.store.spec.secretFiles`}
+              type={fileTypes.ENCRYPTED}
+              allowOnlyOne={true}
+              formik={formik}
+            />
+          </Layout.Vertical>
         )}
     </>
   )

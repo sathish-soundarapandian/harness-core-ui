@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'

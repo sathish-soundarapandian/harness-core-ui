@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import { Layout, Icon, Text, Button } from '@wings-software/uicore'
+import { Layout, Icon, Text, Button } from '@harness/uicore'
 import { Popover, Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { DialogExtensionContext, ExtentionWindow } from './DialogExtention'
 import css from './TextInputWithToolTip.module.scss'

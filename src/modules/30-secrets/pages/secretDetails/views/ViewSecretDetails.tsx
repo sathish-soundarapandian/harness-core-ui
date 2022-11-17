@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { ButtonVariation, Container, Layout, VisualYamlToggle } from '@wings-software/uicore'
+import { ButtonVariation, Container, Layout, VisualYamlToggle } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore/dist/components/VisualYamlToggle/VisualYamlToggle'
+import type { VisualYamlSelectedView as SelectedView } from '@harness/uicore/dist/components/VisualYamlToggle/VisualYamlToggle'
 import { get } from 'lodash-es'
 import type {
   KerberosConfigDTO,

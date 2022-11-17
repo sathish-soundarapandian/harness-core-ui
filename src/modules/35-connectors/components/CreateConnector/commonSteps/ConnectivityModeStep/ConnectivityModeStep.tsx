@@ -16,7 +16,7 @@ import {
   ModalErrorHandlerBinding,
   StepProps,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

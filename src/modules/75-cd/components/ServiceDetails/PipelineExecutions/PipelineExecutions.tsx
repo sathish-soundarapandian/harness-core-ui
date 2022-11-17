@@ -8,7 +8,7 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import { useParams } from 'react-router-dom'
-import { Card, Container, ExpandingSearchInput, Layout, Text, PageError, NoDataCard } from '@wings-software/uicore'
+import { Card, Container, ExpandingSearchInput, Layout, Text, PageError, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useGetDeploymentsByServiceId, GetDeploymentsByServiceIdQueryParams } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'

@@ -9,11 +9,12 @@ import React from 'react'
 import { connect } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { FormGroup, Dialog, Icon, Spinner } from '@blueprintjs/core'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import classnames from 'classnames'
 import JsonSelector from './JsonSelector'
+import type { JsonRawSelectedPathType } from './JsonSelectorType'
 import css from './JsonSelectorFormInput.module.scss'
 
 interface JsonSelectorFormInputProps {
@@ -44,10 +45,13 @@ const JsonSelectorFormInput = (props: JsonSelectorFormInputProps & { formik?: an
   const { value, valueColor } = getPlaceholderAndTextColor(loading, json, placeholder, get(formik.values, name))
   const validationError = get(formik.touched, name) ? get(formik.errors, name) : undefined
 
-  const onPathSelect = (path: string): void => {
+  const onPathSelect = (path: JsonRawSelectedPathType): void => {
     hideModal()
-    formik.setFieldValue(name, path)
-    formik.setFieldTouched(name, true)
+    if (path && Array.isArray(path.path)) {
+      const fullPath = [...path.path, path.key]
+      formik.setFieldValue(name, fullPath.join('.'))
+      formik.setFieldTouched(name, true)
+    }
   }
 
   const onOpenModal = (): void => {

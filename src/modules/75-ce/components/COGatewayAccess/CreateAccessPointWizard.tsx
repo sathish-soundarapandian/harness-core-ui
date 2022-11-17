@@ -20,7 +20,7 @@ import {
   StepProps,
   SelectOption,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { AccessPoint, useAllHostedZones, useCreateAccessPoint, useGetAccessPoint } from 'services/lw'
 import { useStrings } from 'framework/strings'

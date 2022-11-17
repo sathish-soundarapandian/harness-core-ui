@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo } from 'react'
-import { Text, Layout, Icon, Button, Popover, TagsPopover, TableV2 } from '@wings-software/uicore'
+import { Text, Layout, Icon, Button, Popover, TagsPopover, TableV2 } from '@harness/uicore'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Color } from '@harness/design-system'
 import { Classes, Position } from '@blueprintjs/core'

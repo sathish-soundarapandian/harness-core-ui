@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Avatar, Container, Layout, Text } from '@wings-software/uicore'
+import { Avatar, Container, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { DISABLE_AVATAR_PROPS } from '@cf/utils/CFUtils'
 import { ItemContainer, ItemContainerProps } from '@cf/components/ItemContainer/ItemContainer'

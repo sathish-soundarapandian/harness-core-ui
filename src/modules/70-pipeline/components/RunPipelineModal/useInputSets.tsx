@@ -103,7 +103,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    lazy: executionInputSetTemplateYaml
+    lazy: executionInputSetTemplateYaml || executionView
   })
 
   // Reason for sending repoIdentifier and pipelineRepoID both as same values

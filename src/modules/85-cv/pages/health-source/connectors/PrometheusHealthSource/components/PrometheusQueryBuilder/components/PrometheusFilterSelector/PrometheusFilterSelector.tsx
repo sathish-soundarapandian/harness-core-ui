@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Container, FormInput, MultiSelectOption, Popover, Text, Utils, PageError } from '@wings-software/uicore'
+import { Container, FormInput, MultiSelectOption, Popover, Text, Utils, PageError } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { ITagInputProps, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

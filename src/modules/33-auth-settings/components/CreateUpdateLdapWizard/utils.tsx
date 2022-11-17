@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { FontVariation, Text, Icon, Color, Layout } from '@harness/uicore'
+import { Text, Icon, Layout } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { ReactElement } from 'react'
 import { useStrings } from 'framework/strings'
 import type { LdapConnectionSettings, ResponseMessage } from 'services/cd-ng'

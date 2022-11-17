@@ -8,7 +8,7 @@
 import React, { CSSProperties } from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
@@ -19,7 +19,7 @@ import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
-import { getPositionOfAddIcon } from '../../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
@@ -186,6 +186,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             target: event.target,
             data: { ...props }
           })
+          attachDragImageToEventHandler(event, NodeEntity.STAGE)
         }}
         onDragEnd={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           event.preventDefault()

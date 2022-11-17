@@ -11,10 +11,9 @@ import { set, defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'
-
+import { FontVariation, Color } from '@harness/design-system'
 import {
   Text,
-  FontVariation,
   Layout,
   CardSelect,
   Icon,
@@ -25,7 +24,6 @@ import {
   FormInput,
   ButtonVariation,
   ButtonSize,
-  Color,
   FormError,
   PageSpinner,
   useToaster

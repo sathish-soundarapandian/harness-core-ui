@@ -243,6 +243,7 @@ export enum FeatureActions {
   CreateAFlagView = 'Create a Flag View Loaded',
   SetUpYourApplicationView = 'Set Up Your Application View Loaded',
   SetUpYourApplicationVerify = 'Set Up Your Application Verify Clicked',
+  SetUpYourCodeView = 'Set Up Your Code View Clicked',
   TestYourFlagBack = 'Test Your Flag Back to Quick Start Guide Clicked',
   GetStartedPrevious = 'Get Started Previous Clicked',
   GetStartedNext = 'Get Started Next Clicked',
@@ -278,4 +279,9 @@ export enum CDOnboardingActions {
   DownloadOnboardingYAML = 'Download Onboarding YAML File',
   HeartbeatVerifiedOnboardingYAML = 'HeartBeat Verified Onboarding YAML',
   HeartBeatFailedOnboardingYAML = 'HeartBeat Failed Onboarding YAML'
+}
+
+export enum CFOverviewActions {
+  OverviewStartFreePlan = 'FF Overview - Start a free plan',
+  InviteCollaboratorsClick = 'Clicked Invite Collaborators'
 }

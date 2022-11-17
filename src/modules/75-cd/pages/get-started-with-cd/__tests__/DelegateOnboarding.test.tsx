@@ -22,6 +22,7 @@ import {
   validateKubernetesYamlResponse
 } from './mocks'
 
+jest.mock('nanoid', () => ({ nanoid: () => 'hjhj87878' }))
 jest.useFakeTimers()
 const mockGetCallFunction = jest.fn()
 jest.mock('services/cd-ng', () => ({

@@ -250,11 +250,11 @@ describe('Connectors List Test', () => {
     })
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Edit and delete methods should be called with correct data', async () => {
+  test('Edit and delete methods should be disabled without permission', async () => {
     jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [false])
     const { container } = setup()
-    const menuIcon = getMenuIcon(container.querySelectorAll('div[role="row"]')[1])
+    // 1st row is table header, first 2 connectors have mockdata for old gitSync connectors
+    const menuIcon = getMenuIcon(container.querySelectorAll('div[role="row"]')[3])
     act(() => {
       fireEvent.click(menuIcon!)
     })

@@ -52,6 +52,11 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn().mockImplementation(() => ({
       resource: [{ name: 'Token1' }]
     }))
+  }),
+  useIsImmutableDelegateEnabled: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
   })
 }))
 jest.mock('@common/exports', () => ({

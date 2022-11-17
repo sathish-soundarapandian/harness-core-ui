@@ -19,7 +19,7 @@ import {
   Text,
   ButtonVariation,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'

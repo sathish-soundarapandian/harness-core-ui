@@ -8,7 +8,7 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { noop } from 'lodash-es'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'

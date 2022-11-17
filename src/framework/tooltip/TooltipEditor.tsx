@@ -7,7 +7,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { tooltipDictionary, TooltipEditor } from '@wings-software/ng-tooltip'
+import { tooltipDictionary, TooltipEditor } from '@harness/ng-tooltip'
 
 interface NGTooltipEditorPortalInterface {
   onEditorClose: () => void

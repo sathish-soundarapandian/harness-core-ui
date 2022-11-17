@@ -8,7 +8,7 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, fireEvent } from '@testing-library/react'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { FileStoreContext, FileStoreContextProvider } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import { FILE_STORE_ROOT } from '@filestore/utils/constants'

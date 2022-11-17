@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Text, Container } from '@wings-software/uicore'
+import { Button, Text, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import EmptyView from '@ce/images/empty-state.svg'
 import css from './EmptyPage.module.scss'

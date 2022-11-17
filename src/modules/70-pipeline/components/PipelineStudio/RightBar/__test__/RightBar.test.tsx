@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -204,7 +204,7 @@ describe('RightBar', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const notificationsBtn = getByText('notifications.pipelineName')
+    const notificationsBtn = getByText('rbac.notifications.pipelineName')
     act(() => {
       fireEvent.click(notificationsBtn)
     })

@@ -18,7 +18,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

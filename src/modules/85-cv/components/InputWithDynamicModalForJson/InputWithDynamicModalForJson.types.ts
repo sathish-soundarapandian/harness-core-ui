@@ -36,3 +36,10 @@ export const DialogProps: IDialogProps = {
 export type NoRecordForm = {
   name: string
 }
+
+export interface CanReplaceAllNumberParams {
+  lastNumberIndex: number
+  index: number
+  filteredNumbers: Array<string>
+  replaceAllNumbers?: boolean
+}

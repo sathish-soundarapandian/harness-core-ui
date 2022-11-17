@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import type { IconName } from '@blueprintjs/core'

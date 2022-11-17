@@ -8,7 +8,7 @@
 import React, { useRef, useState, useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { isEqual } from 'lodash-es'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'

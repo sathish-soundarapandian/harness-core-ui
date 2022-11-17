@@ -23,7 +23,7 @@ import {
   Text,
   ButtonSize,
   AllowedTypes as MultiTypeAllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Form } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

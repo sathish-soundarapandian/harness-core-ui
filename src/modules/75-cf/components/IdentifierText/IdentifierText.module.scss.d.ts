@@ -7,7 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly containerBorder: string
   readonly copyButton: string
-  readonly identifierContainer: string
 }
 export default styles

@@ -7,7 +7,7 @@
 
 import React, { useImperativeHandle } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, IconName, Text } from '@harness/uicore'
+import { IconName, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { EvaluationStatus } from '../EvaluationStatusLabel/EvaluationStatusLabel'
 
 interface IconValues {

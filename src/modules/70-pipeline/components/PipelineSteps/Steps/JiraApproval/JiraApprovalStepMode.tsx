@@ -19,7 +19,7 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

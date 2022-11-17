@@ -13,8 +13,8 @@ import {
   DateRangePickerButtonProps,
   FlexExpander,
   Layout
-} from '@wings-software/uicore'
-import type { ContainerProps } from '@wings-software/uicore/dist/components/Container/Container'
+} from '@harness/uicore'
+import type { ContainerProps } from '@harness/uicore/dist/components/Container/Container'
 import { useStrings } from 'framework/strings'
 
 export interface MetricsToolbarProps extends ContainerProps {

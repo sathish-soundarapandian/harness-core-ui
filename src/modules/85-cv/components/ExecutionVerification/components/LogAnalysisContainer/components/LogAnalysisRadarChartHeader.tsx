@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Text, Layout, FontVariation, Container } from '@harness/uicore'
+import { Text, Layout, Container } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { LogAnalysisRadarChartHeaderProps } from './LogAnalysisRadarChart.types'

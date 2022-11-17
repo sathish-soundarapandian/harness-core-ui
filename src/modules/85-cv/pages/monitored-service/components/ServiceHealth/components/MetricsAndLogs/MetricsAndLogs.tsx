@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container, Layout, Card, NoDataCard, Tabs, Tab, Button, ButtonVariation } from '@wings-software/uicore'
+import { Container, Layout, Card, NoDataCard, Tabs, Tab, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
 import { useStrings } from 'framework/strings'

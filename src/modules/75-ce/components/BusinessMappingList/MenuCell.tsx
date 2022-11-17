@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Text, Popover, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, Text, Popover, useConfirmationDialog } from '@harness/uicore'
 import { Classes, Menu, Position, Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'

@@ -10,7 +10,7 @@ import React, { Dispatch, MouseEventHandler, SetStateAction } from 'react'
 import cx from 'classnames'
 
 import type { IconProps } from '@harness/icons'
-import { Collapse, Pagination, PaginationProps } from '@wings-software/uicore'
+import { Collapse, Pagination, PaginationProps } from '@harness/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
 import {

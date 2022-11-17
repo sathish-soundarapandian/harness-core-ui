@@ -8,7 +8,7 @@
 import React from 'react'
 
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import { CompletionItemKind } from 'vscode-languageserver-types'

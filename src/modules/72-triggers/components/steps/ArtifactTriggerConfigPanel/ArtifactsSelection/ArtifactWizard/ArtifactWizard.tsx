@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard, Icon } from '@wings-software/uicore'
+import { StepWizard, Icon } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import type { ArtifactTriggerConfig } from 'services/pipeline-ng'

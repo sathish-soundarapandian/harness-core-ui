@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import cx from 'classnames'
 
 import { defaultTo } from 'lodash-es'
@@ -20,15 +20,15 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { CustomVariableInputSetExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import azureWebAppConfigBaseFactory from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
+import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
+import { RuntimeApplicationConfig } from '@pipeline/components/RuntimeApplicationConfig/RuntimeApplicationConfig'
 import type { ElastigroupInputSetFormProps } from './ElastigroupServiceSpecInterface'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import { KubernetesArtifacts } from '../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
-import { ApplicationConfig } from '../AzureWebAppServiceSpec/RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
 import { ConfigFiles } from '../SshServiceSpec/SshConfigFiles/ConfigFiles'
-import { AzureWebAppConfigType } from '../AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
+import { ApplicationConfigType } from '../AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const ElastigroupServiceSpecInputSetModeFormikForm = (props: ElastigroupInputSetFormProps): React.ReactElement => {
@@ -79,11 +79,11 @@ const ElastigroupServiceSpecInputSetModeFormikForm = (props: ElastigroupInputSet
       )}
 
       {!!template?.startupScript && (
-        <ApplicationConfig
-          type={AzureWebAppConfigType.startupScript}
+        <RuntimeApplicationConfig
+          type={ApplicationConfigType.startupScript}
           template={template}
-          azureWebAppConfig={allValues?.startupScript}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
+          applicationConfig={allValues?.startupScript}
+          applicationConfigBaseFactory={applicationConfigBaseFactory}
           stageIdentifier={stageIdentifier}
           {...commonProps}
         />

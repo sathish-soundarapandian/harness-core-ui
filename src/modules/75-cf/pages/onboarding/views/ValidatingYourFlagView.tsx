@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Text, Heading, Layout, Icon } from '@harness/uicore'
+import { Container, Text, Layout, Icon } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import { Classes, Switch } from '@blueprintjs/core'
@@ -96,14 +96,6 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = props => {
 
   return (
     <Container height="100%" className={css.listenToEventContainer}>
-      <Heading
-        level={2}
-        className={css.listenToEventHeading}
-        font={{ variation: FontVariation.H3 }}
-        color={Color.GREY_800}
-      >
-        {getString('cf.onboarding.validatingYourFlag')}
-      </Heading>
       <Container
         className={css.listenToEventInfo}
         width="480px"

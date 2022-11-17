@@ -22,6 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import TemplateResourceModal from './components/RbacResourceModals/TemplateResourceModal'
 import TemplateResourceRenderer from './components/RbacResourceModals/TemplateResourceRenderer'
 import './components/PipelineSteps'
@@ -34,6 +35,7 @@ import './components/Templates'
 RbacFactory.registerResourceTypeHandler(ResourceType.TEMPLATE, {
   icon: 'pipeline-deployment',
   label: 'common.templates',
+  labelSingular: 'common.template.label',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_TEMPLATE]: <String stringID="rbac.permissionLabels.view" />,
@@ -134,8 +136,26 @@ export const TemplateRouteDestinations: React.FC<{
     <RouteWithLayout
       exact
       licenseRedirectData={licenseRedirectData}
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toTemplates({ ...accountPathProps, ...projectPathProps })}
+      pageName={PAGE_NAME.TemplatesPage}
+    >
+      <TemplatesPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...moduleParams })}
+      pageName={templateStudioPageName}
+    >
+      <TemplateStudioWrapper />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps })}
       pageName={templateStudioPageName}
     >
       <TemplateStudioWrapper />

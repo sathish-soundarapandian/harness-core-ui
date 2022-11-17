@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Layout, StepProps, StepsProgress, Heading } from '@wings-software/uicore'
+import { Button, Layout, StepProps, StepsProgress, Heading } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'

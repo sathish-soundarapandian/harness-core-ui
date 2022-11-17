@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import type { ModalErrorHandlerBinding } from '@wings-software/uicore'
+import type { ModalErrorHandlerBinding } from '@harness/uicore'
 import { defaultTo, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@common/components'

@@ -17,7 +17,7 @@ import {
   MultiSelectOption,
   FormInput,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { pick, cloneDeep } from 'lodash-es'
@@ -30,13 +30,15 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import UserItemRenderer, { UserItem } from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
+import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference.types'
 import css from '@rbac/modals/UserGroupModal/useUserGroupModal.module.scss'
 
 interface UserGroupModalData {
   data?: UserGroupDTO
   isEdit?: boolean
   isAddMember?: boolean
-  onSubmit?: () => void
+  onSubmit?: (data?: ScopeAndIdentifier) => void
   onCancel?: () => void
 }
 
@@ -116,7 +118,10 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
       const created = await createUserGroup(dataToSubmit)
       /* istanbul ignore else */ if (created) {
         showSuccess(getString('rbac.userGroupForm.createSuccess', { name: created.data?.name }))
-        onSubmit?.()
+        onSubmit?.({
+          identifier: created?.data?.identifier || '',
+          scope: getScopeFromDTO(created.data as ScopedObjectDTO)
+        })
       }
     } catch (e) {
       /* istanbul ignore next */

@@ -7,7 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, FontVariation, Button, Text, Card, OverlaySpinner, Color } from '@harness/uicore'
+import { ButtonVariation, Button, Text, Card, OverlaySpinner } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ResponsePageUserAggregate, useGetAggregatedUsers, UserAggregate } from 'services/cd-ng'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Container, Layout, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Layout, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { TemplateSummaryResponse } from 'services/template-ng'

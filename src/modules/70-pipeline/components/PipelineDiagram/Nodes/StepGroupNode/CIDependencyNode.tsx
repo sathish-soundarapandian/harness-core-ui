@@ -7,7 +7,7 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { NodeType } from '../../DiagramFactory'

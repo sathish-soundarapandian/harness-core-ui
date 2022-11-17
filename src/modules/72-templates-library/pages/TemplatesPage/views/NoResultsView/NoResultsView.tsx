@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import templateIllustration from '@templates-library/pages/TemplatesPage/images/templates-illustration.svg'
 import noTemplatesFoundIllustration from '@templates-library/pages/TemplatesPage/images/no-templates-found.svg'

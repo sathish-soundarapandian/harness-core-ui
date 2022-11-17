@@ -17,7 +17,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGcpserviceaccount } from 'services/ce'
 import { useCreateConnector, useUpdateConnector, Failure } from 'services/cd-ng'

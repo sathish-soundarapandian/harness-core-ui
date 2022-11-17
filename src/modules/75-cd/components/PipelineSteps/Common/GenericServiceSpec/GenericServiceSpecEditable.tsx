@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Card, HarnessDocTooltip } from '@wings-software/uicore'
+import { Card, HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'

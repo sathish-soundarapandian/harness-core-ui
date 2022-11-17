@@ -25,6 +25,7 @@ import SLOTarget from './components/SLOTarget/SLOTarget'
 import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningModal'
 import PeriodLength from './components/PeriodLength/PeriodLength'
 import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
+import { CompositeSLOContext } from './CompositeSLOContext'
 import css from './CreateCompositeSloForm.module.scss'
 
 export const CreateCompositeSloForm = ({
@@ -119,12 +120,15 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Error_Budget_Policy,
               title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
+              isOptional: true,
               panel: (
-                <SLOTargetNotificationsContainer
-                  identifier={identifier}
-                  setFieldValue={formikProps?.setFieldValue}
-                  notificationRuleRefs={formikProps.values?.notificationRuleRefs}
-                />
+                <CompositeSLOContext.Provider value={{ renderInsideCompositeSLO: true }}>
+                  <SLOTargetNotificationsContainer
+                    identifier={identifier}
+                    setFieldValue={formikProps?.setFieldValue}
+                    notificationRuleRefs={formikProps.values?.notificationRuleRefs}
+                  />
+                </CompositeSLOContext.Provider>
               )
             }
           ]}

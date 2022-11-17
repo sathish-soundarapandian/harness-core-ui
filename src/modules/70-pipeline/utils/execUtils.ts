@@ -131,10 +131,10 @@ export const processLiteEngineTask = (
       ...nodeData,
       when: nodeData?.nodeRunInfo,
       ...iconData,
-      icon: 'initialize-step',
+      icon: 'initialize-ci-step',
       conditionalExecutionEnabled: getConditionalExecutionFlag(nodeData?.nodeRunInfo)
     },
-    icon: 'initialize-step'
+    icon: 'initialize-ci-step'
   }
 
   rootNodes.unshift(stepItem)

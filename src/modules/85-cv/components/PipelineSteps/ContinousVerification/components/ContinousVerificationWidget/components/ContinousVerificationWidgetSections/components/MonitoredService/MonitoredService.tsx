@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { ButtonVariation, Container, FormInput, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { ButtonVariation, Container, FormInput, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'

@@ -48,6 +48,7 @@ import type {
 RbacFactory.registerResourceTypeHandler(ResourceType.DELEGATE, {
   icon: 'res-delegates',
   label: 'delegate.delegates',
+  labelSingular: 'delegate.DelegateName',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_DELEGATE]: <String stringID="rbac.permissionLabels.view" />,
@@ -63,6 +64,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DELEGATE, {
 RbacFactory.registerResourceTypeHandler(ResourceType.DELEGATECONFIGURATION, {
   icon: 'res-delegates',
   label: 'delegate.delegateConfigurations',
+  labelSingular: 'delegate.delegateConfiguration',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_DELEGATE_CONFIGURATION]: <String stringID="rbac.permissionLabels.view" />,

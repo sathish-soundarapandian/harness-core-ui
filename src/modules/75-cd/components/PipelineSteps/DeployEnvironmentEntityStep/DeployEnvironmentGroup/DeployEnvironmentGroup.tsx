@@ -26,6 +26,8 @@ import {
 import { useStrings } from 'framework/strings'
 import type { EnvironmentGroupResponseDTO } from 'services/cd-ng'
 
+import type { Scope } from '@common/interfaces/SecretsInterface'
+
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -48,6 +50,7 @@ interface DeployEnvironmentGroupProps extends Required<DeployEnvironmentEntityCu
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
   allowableTypes: AllowedTypes
+  scope: Scope
 }
 
 export function getAllFixedEnvironmentGroups(data: DeployEnvironmentEntityFormState): string[] {
@@ -73,7 +76,8 @@ export default function DeployEnvironmentGroup({
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
-  gitOpsEnabled
+  gitOpsEnabled,
+  scope
 }: DeployEnvironmentGroupProps): JSX.Element {
   const { values, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
@@ -95,7 +99,7 @@ export default function DeployEnvironmentGroup({
     updatingEnvironmentGroupsList,
     refetchEnvironmentGroupsList,
     prependEnvironmentGroupToEnvironmentGroupsList
-  } = useGetEnvironmentGroupsData()
+  } = useGetEnvironmentGroupsData(scope)
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */

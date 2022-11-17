@@ -106,8 +106,8 @@ const showError = jest.fn()
 const showSuccess = jest.fn()
 const toasterClear = jest.fn()
 
-jest.mock('@wings-software/uicore', () => ({
-  ...jest.requireActual('@wings-software/uicore'),
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
   useToaster: jest.fn(() => ({ showError, showSuccess, clear: toasterClear }))
 }))
 

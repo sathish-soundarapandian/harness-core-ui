@@ -6,7 +6,8 @@
  */
 
 import React, { ReactNode, useMemo, FC } from 'react'
-import { Breadcrumb, Page, FontVariation, Heading, HarnessDocTooltip } from '@harness/uicore'
+import { Breadcrumb, Page, Heading, HarnessDocTooltip } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'

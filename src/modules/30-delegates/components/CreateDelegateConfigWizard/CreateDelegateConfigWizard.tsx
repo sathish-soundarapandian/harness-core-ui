@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { StepWizard, useToaster, tagsType } from '@wings-software/uicore'
+import { StepWizard, useToaster, tagsType } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { DelegateProfileDetailsNg, UseAddDelegateProfileNgV2Props } from 'services/cd-ng'
 import { useAddDelegateProfileNgV2 } from 'services/cd-ng'

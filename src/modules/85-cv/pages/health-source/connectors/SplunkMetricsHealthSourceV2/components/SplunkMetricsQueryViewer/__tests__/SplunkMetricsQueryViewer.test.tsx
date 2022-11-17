@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import { Formik, FormikForm, Utils } from '@wings-software/uicore'
+import { Formik, FormikForm, Utils } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
 import { splunkQueryPropsMock } from './SplunkMetricQueryViewer.mock'

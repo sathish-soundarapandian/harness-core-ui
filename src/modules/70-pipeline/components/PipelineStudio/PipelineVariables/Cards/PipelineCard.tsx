@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { Card, AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, lowerCase } from 'lodash-es'

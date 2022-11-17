@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Text, Button } from '@wings-software/uicore'
+import { Container, Layout, Text, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'

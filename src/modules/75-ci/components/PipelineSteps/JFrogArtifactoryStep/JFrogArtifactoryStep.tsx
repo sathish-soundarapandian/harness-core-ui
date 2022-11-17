@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import { parse } from 'yaml'
 import { get } from 'lodash-es'
 import type { FormikErrors } from 'formik'
@@ -85,7 +85,7 @@ export class JFrogArtifactoryStep extends PipelineStep<JFrogArtifactoryStepData>
 
   protected type = StepType.JFrogArtifactory
   protected stepName = 'Upload Artifacts to JFrog Artifactory'
-  protected stepIcon: IconName = 'service-artifactory'
+  protected stepIcon: IconName = 'service-artifactory-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.JFrogArtifactory'
   protected stepPaletteVisible = false
 

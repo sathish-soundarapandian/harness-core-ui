@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Button, ButtonSize, Color } from '@harness/uicore'
+import { Container, Button, ButtonSize } from '@harness/uicore'
+import type { Color } from '@harness/design-system'
 import { FieldArray } from 'formik'
 
 import React from 'react'

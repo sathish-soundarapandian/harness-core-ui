@@ -16,7 +16,7 @@ import {
   Popover,
   Text,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 import { Classes, Menu, Position } from '@blueprintjs/core'

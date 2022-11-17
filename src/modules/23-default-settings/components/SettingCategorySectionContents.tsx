@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, FontVariation, Text } from '@harness/uicore'
+import { Container, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { SettingCategory, SettingGroups, SettingType } from '@default-settings/interfaces/SettingType.types'
 
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'

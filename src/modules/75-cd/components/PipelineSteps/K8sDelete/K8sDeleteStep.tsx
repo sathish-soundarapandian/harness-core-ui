@@ -19,7 +19,7 @@ import {
   Text,
   Icon,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { FieldArray, FormikErrors, FormikProps, yupToFormErrors } from 'formik'

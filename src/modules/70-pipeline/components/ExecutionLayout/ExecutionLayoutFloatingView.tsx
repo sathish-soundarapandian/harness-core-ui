@@ -8,7 +8,7 @@
 import React from 'react'
 import Draggable, { DraggableData } from 'react-draggable'
 import { usePopper } from 'react-popper'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 
 import { String } from 'framework/strings'
 import { useLocalStorage } from '@common/hooks'

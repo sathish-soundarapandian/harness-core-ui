@@ -17,7 +17,7 @@ import {
   Dialog,
   ButtonVariation,
   useToaster
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useModalHook } from '@harness/use-modal'

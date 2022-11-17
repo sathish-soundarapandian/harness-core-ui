@@ -16,6 +16,7 @@ export interface StepPropsInterface {
   onStepChange?: (id: string) => void
   isStepValid?: (selectedTabId: string) => boolean
   runValidationOnMount?: boolean
+  isOptional?: boolean
   setSelectedStepId: (id: string) => void
 }
 export type StepStatusType = keyof typeof StepStatus

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Button } from '@wings-software/uicore'
+import { Container, Button } from '@harness/uicore'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'

@@ -3810,7 +3810,7 @@ exports[`RightBar renders correctly 1`] = `
       </span>
     </button>
     <button
-      aria-label="notifications.pipelineName"
+      aria-label="rbac.notifications.pipelineName"
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -3835,7 +3835,7 @@ exports[`RightBar renders correctly 1`] = `
       <span
         class="bp3-button-text"
       >
-        notifications.pipelineName
+        rbac.notifications.pipelineName
       </span>
     </button>
     <button

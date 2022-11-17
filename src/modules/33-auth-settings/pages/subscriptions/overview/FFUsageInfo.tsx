@@ -7,7 +7,7 @@
 
 import React from 'react'
 import moment from 'moment'
-import { Layout, PageError } from '@wings-software/uicore'
+import { Layout, PageError } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ModuleName } from 'framework/types/ModuleName'

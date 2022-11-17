@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, Text, IconName } from '@wings-software/uicore'
+import { Container, Layout, Text, IconName } from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'

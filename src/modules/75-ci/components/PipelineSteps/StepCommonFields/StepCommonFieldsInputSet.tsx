@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  Text,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  Container,
-  Layout,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { Text, getMultiTypeFromValue, MultiTypeInputType, Container, Layout, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'

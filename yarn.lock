@@ -1771,10 +1771,10 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@^1.78.0":
-  version "1.78.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.78.0/836d64e59698abd47f135258ce8a57e5d62d52d1#836d64e59698abd47f135258ce8a57e5d62d52d1"
-  integrity sha512-fJNIeli4BhIYSVursL2An/sFTaNALek06OUErjC245Uoyh+znXgsOYQPWvvHrxwuNH3v8LDozs9EdpF2qohCrA==
+"@harness/icons@1.84.0":
+  version "1.84.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.84.0/81d531bfb30e0fd130f3daceefcf30a73f2b33c7#81d531bfb30e0fd130f3daceefcf30a73f2b33c7"
+  integrity sha512-wxAFs27j5Nx4LGLBe/U9pLwkga4qjc9IrRSSviIkRao0feEjrBNhG+px7zXYIaHlbNEhgqQ8HpKpGfxEv7qI+Q==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1816,10 +1816,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@^3.89.0":
-  version "3.89.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.89.0/8326512dc81c67c091b047b48cc12f8114f0b3b3#8326512dc81c67c091b047b48cc12f8114f0b3b3"
-  integrity sha512-o9ubHk7epT934u0IVv2MacquavJytL4Fiz3LnttgE6pIONA9mc/OwZFIwqhYS/jxJiXW70lrfvgle4trUXbV+A==
+"@harness/uicore@^3.89.2":
+  version "3.89.2"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.89.2/e80ad77d6b22617d36861248e04dde90dbc7d84a#e80ad77d6b22617d36861248e04dde90dbc7d84a"
+  integrity sha512-j9ZDjpAbmnpP0Q9BcxbQQLZ/NzU85CWlrTyyhHNRxV8/hVB2uJv6qyGbbvs6vSuQvszolunw994Rg0HGbHZkLQ==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
@@ -3672,6 +3672,13 @@
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-4.0.1.tgz#e4d421ed2d06d463b120621774185a5cd1b92d77"
   integrity "sha1-5NQh7S0G1GOxIGIXdBhaXNG5LXc= sha512-wH6Tu9mbiOt0n5EvdoWy0VGQaJMHfLIxY/6wS0xLC7CV1taM6gESEzcYy0ZlWvxxiiljYvfDIvz4hHbUUDRlhw=="
+
+"@types/nanoid@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/nanoid/-/nanoid-3.0.0.tgz#c757b20f343f3a1dd76e80a9a431b6290fc20f35"
+  integrity sha512-UXitWSmXCwhDmAKe7D3hNQtQaHeHt5L8LO1CB8GF8jlYVzOv5cBWDNqiJ+oPEWrWei3i3dkZtHY/bUtd0R/uOQ==
+  dependencies:
+    nanoid "*"
 
 "@types/node-fetch@^2.5.12", "@types/node-fetch@^2.5.7":
   version "2.5.12"
@@ -12430,6 +12437,11 @@ mysql@^2.18.1:
     readable-stream "2.3.7"
     safe-buffer "5.1.2"
     sqlstring "2.3.1"
+
+nanoid@*, nanoid@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-4.0.0.tgz#6e144dee117609232c3f415c34b0e550e64999a5"
+  integrity sha512-IgBP8piMxe/gf73RTQx7hmnhwz0aaEXYakvqZyE302IXW3HyVNhdNGC+O2MwMAVhLEnvXlvKtGbtJf6wvHihCg==
 
 nanoid@^3.1.23, nanoid@^3.3.1:
   version "3.3.1"

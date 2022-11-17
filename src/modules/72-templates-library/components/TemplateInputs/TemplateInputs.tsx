@@ -14,7 +14,7 @@ import {
   Formik,
   PageError,
   AllowedTypesWithRunTime
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { parse } from 'yaml'
 import { Color } from '@harness/design-system'
 import { defaultTo, noop } from 'lodash-es'

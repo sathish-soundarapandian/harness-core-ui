@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Color, FontVariation } from '@harness/design-system'
-import { Text, Container, Formik, FormikForm, Button } from '@wings-software/uicore'
+import { Text, Container, Formik, FormikForm, Button } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikConfig, FormikErrors } from 'formik'
 import type { FeatureFlagStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'

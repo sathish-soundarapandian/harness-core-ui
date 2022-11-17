@@ -223,6 +223,44 @@ exports[`Delegates Overview Page render data 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main tagTitle StyledProps--font-variation-body"
+      >
+        connectivityStatus
+      </p>
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-small StyledProps--color StyledProps--color-green600"
+            icon="full-circle"
+          >
+            <svg
+              data-icon="full-circle"
+              height="6"
+              viewBox="0 0 16 16"
+              width="6"
+            >
+              <desc>
+                full-circle
+              </desc>
+              <path
+                d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          connected
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 `;

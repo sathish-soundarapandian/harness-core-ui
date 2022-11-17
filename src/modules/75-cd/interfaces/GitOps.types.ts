@@ -6,7 +6,7 @@
  */
 
 import type React from 'react'
-import type { Breadcrumb } from '@wings-software/uicore'
+import type { Breadcrumb } from '@harness/uicore'
 import type { GetLinkForAccountResourcesProps } from '@common/utils/BreadcrumbUtils'
 import type {
   DeployEnvironmentProps,

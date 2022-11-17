@@ -17,7 +17,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   StepProps
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorInfoDTO,

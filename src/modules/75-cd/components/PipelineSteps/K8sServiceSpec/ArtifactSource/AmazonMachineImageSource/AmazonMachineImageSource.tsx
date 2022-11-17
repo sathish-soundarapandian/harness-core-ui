@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'

@@ -7,7 +7,7 @@
 
 import React, { FormEvent } from 'react'
 import { PopoverPosition, Radio, RadioGroup } from '@blueprintjs/core'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import css from './RunPipelineForm.module.scss'

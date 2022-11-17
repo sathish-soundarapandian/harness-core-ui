@@ -13,7 +13,6 @@ import type { FormikContextType, FormikProps } from 'formik'
 import cx from 'classnames'
 import {
   Text,
-  FontVariation,
   Layout,
   CardSelect,
   Icon,
@@ -24,10 +23,10 @@ import {
   FormInput,
   ButtonVariation,
   ButtonSize,
-  Color,
   FormError,
   PageSpinner
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -336,7 +335,7 @@ const SelectGitProviderRef = (
     if (gitProvider?.type === NonGitOption.OTHER) {
       updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
     } else {
-      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.selectRepo')}`)
+      updateFooterLabel?.(`${getString('next')}: ${getString('common.selectRepository')}`)
     }
   }, [gitProvider])
 
@@ -391,10 +390,14 @@ const SelectGitProviderRef = (
           updatedConnectorPayload = set(
             updatedConnectorPayload,
             'spec.authentication.spec.spec.tokenRef',
-            `${secretId}`
+            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
           )
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
-          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.spec.tokenRef', `${secretId}`)
+          updatedConnectorPayload = set(
+            updatedConnectorPayload,
+            'spec.apiAccess.spec.tokenRef',
+            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+          )
           return updatedConnectorPayload
         case Connectors.BITBUCKET:
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernamePassword')

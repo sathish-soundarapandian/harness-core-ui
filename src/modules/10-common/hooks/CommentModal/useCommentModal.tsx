@@ -6,12 +6,11 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, FormikForm, FormInput, Icon, Layout, Text } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Button, ButtonVariation, Container, FormikForm, FormInput, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Formik } from 'formik'
 import { Dialog } from '@blueprintjs/core'
-import { FontVariation } from '@wings-software/design-system'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import css from './useCommentModal.module.scss'

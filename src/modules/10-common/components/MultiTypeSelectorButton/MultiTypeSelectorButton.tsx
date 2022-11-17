@@ -14,7 +14,7 @@ import {
   MultiTypeIcon,
   MultiTypeIconSize,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Popover } from '@blueprintjs/core'
 import cx from 'classnames'
 import css from './MultiTypeSelectorButton.module.scss'

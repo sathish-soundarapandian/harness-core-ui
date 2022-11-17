@@ -20,7 +20,7 @@ import {
   Text,
   FormError,
   Layout
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { UseFromStageInfraYaml } from 'services/ci'
 import type { StringsMap } from 'stringTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'

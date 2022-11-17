@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import { Container, FormInput } from '@wings-software/uicore'
+import { Container, FormInput } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -74,7 +74,7 @@ export default function RunTimeMonitoredService({
         <div className={css.emptyFields}>
           <div className={css.emptyFieldItem}>
             {`
-              ${getString('connectors.cdng.runTimeMonitoredService.pleaseSpecify')} 
+              ${getString('connectors.cdng.runTimeMonitoredService.pleaseSpecify')}
               ${isEmpty(serviceIdentifier) ? getString('service') : ''}
               ${isEmpty(serviceIdentifier) && isEmpty(envIdentifier) ? getString('and') : ''}
               ${isEmpty(envIdentifier) ? getString('environment') : ''}

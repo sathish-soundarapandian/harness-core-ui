@@ -125,7 +125,7 @@ exports[`PipelineModal List View render list view 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400"
                 >
-                  1612245891280
+                  pipelineSteps.pullNeverLabel
                 </p>
               </div>
             </div>
@@ -283,7 +283,7 @@ exports[`PipelineModal List View render list view 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400"
                 >
-                  1616478470728
+                  pipelineSteps.pullNeverLabel
                 </p>
               </div>
             </div>
@@ -362,7 +362,7 @@ exports[`PipelineModal List View render list view 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400"
                 >
-                  1610771852023
+                  pipelineSteps.pullNeverLabel
                 </p>
               </div>
             </div>

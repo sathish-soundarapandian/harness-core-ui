@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect } from 'formik'
-import { Container, FormInput, PageError, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
+import { Container, FormInput, PageError, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Feature, useGetAllFeatures } from 'services/cf'

@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, FormInput, Heading, Text } from '@wings-software/uicore'
+import { Button, Formik, FormikForm, FormInput, Heading, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { Utils } from '@ce/common/Utils'
 import { useToaster } from '@common/exports'

@@ -1,0 +1,578 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with tooltip context hook if formname is empty: tooltipId formname empty 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+        >
+          testing
+        </p>
+        <div
+          class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
+        >
+          <div
+            class="StyledProps--font StyledProps--main pointer"
+          >
+            <p
+              class="StyledProps--font StyledProps--main selectBtn StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+            >
+              common.selectUserGroups
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with tooltip context hook if tooltip ID taken from form name: tooltipId formname 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="ugFormName_userGroups"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+          >
+            testing
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
+        >
+          <div
+            class="StyledProps--font StyledProps--main pointer"
+          >
+            <p
+              class="StyledProps--font StyledProps--main selectBtn StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+            >
+              common.selectUserGroups
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Rendering Modal should close on clicking cross 1`] = `
+<div
+  class="bp3-dialog dialog"
+>
+  <div
+    class="bp3-dialog-header"
+  >
+    <h4
+      class="bp3-heading"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            common.selectUserGroups
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+          >
+            common.sortedByCreatedTime
+          </p>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main bp3-popover-dismiss"
+        >
+          <button
+            aria-label="+ common.userGroup"
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-secondary"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              + common.userGroup
+            </span>
+          </button>
+        </div>
+      </div>
+    </h4>
+    <button
+      aria-label="Close"
+      class="bp3-button bp3-minimal bp3-dialog-close-button"
+      type="button"
+    >
+      <span
+        class="bp3-icon bp3-icon-small-cross"
+        icon="small-cross"
+      >
+        <svg
+          data-icon="small-cross"
+          height="20"
+          viewBox="0 0 20 20"
+          width="20"
+        >
+          <desc>
+            small-cross
+          </desc>
+          <path
+            d="M11.41 10l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L10 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L8.59 10 5.3 13.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3.29-3.3 3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L11.41 10z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main container main"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    >
+      <div
+        class="searchBox"
+      >
+        <div
+          class="TextInput--main search"
+        >
+          <div
+            class="bp3-input-group"
+          >
+            <span
+              class="bp3-icon bp3-icon-search StyledProps--main"
+              icon="search"
+            >
+              <svg
+                data-icon="search"
+                height="12"
+                viewBox="0 0 16 16"
+                width="12"
+              >
+                <desc>
+                  search
+                </desc>
+                <path
+                  d="M15.55 13.43l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <input
+              class="bp3-input"
+              placeholder="search"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tabsContainer tabWidth"
+    >
+      <div
+        class="bp3-tabs bp3-vertical Tabs--main Tabs--vertical"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_selectScope_account"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="account"
+            id="bp3-tab-title_selectScope_account"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--padding-medium StyledProps--flex StyledProps--flex-alignItems-center"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                <span
+                  class="bp3-icon bp3-icon-layers StyledProps--main iconMargin"
+                  icon="layers"
+                >
+                  <svg
+                    data-icon="layers"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      layers
+                    </desc>
+                    <path
+                      d="M.55 4.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5a.998.998 0 00-.06-1.81L8.4.08a1.006 1.006 0 00-.79 0l-6.99 3a.992.992 0 00-.07 1.81zM15 10c-.16 0-.31.04-.45.11L8 13.38 1.45 10.1c-.14-.06-.29-.1-.45-.1-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1zm0-3.5c-.16 0-.31.04-.45.11L8 9.88 1.45 6.61A.997.997 0 001 6.5c-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                account
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_selectScope_account"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_selectScope_account"
+          role="tabpanel"
+        >
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge StyledProps--flex StyledProps--flex-align-center-center"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              noData
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      >
+        <button
+          aria-label="entityReference.apply"
+          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+          disabled=""
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            entityReference.apply
+          </span>
+        </button>
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      >
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--inline"
+        >
+          common.totalSelected
+        </span>
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall StyledProps--flex StyledProps--flex-align-center-center StyledProps--background-primary7 StyledProps--color StyledProps--color-white StyledProps--border"
+        >
+          0
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Rendering should render 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="ugInput"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+          >
+            testing
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
+        >
+          <div
+            class="StyledProps--font StyledProps--main pointer"
+          >
+            <p
+              class="StyledProps--font StyledProps--main selectBtn StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+            >
+              common.selectUserGroups
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Rendering should render Modal 1`] = `
+<div
+  class="bp3-dialog dialog"
+>
+  <div
+    class="bp3-dialog-header"
+  >
+    <h4
+      class="bp3-heading"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            common.selectUserGroups
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+          >
+            common.sortedByCreatedTime
+          </p>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main bp3-popover-dismiss"
+        >
+          <button
+            aria-label="+ common.userGroup"
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-secondary"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              + common.userGroup
+            </span>
+          </button>
+        </div>
+      </div>
+    </h4>
+    <button
+      aria-label="Close"
+      class="bp3-button bp3-minimal bp3-dialog-close-button"
+      type="button"
+    >
+      <span
+        class="bp3-icon bp3-icon-small-cross"
+        icon="small-cross"
+      >
+        <svg
+          data-icon="small-cross"
+          height="20"
+          viewBox="0 0 20 20"
+          width="20"
+        >
+          <desc>
+            small-cross
+          </desc>
+          <path
+            d="M11.41 10l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L10 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L8.59 10 5.3 13.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3.29-3.3 3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L11.41 10z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main container main"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    >
+      <div
+        class="searchBox"
+      >
+        <div
+          class="TextInput--main search"
+        >
+          <div
+            class="bp3-input-group"
+          >
+            <span
+              class="bp3-icon bp3-icon-search StyledProps--main"
+              icon="search"
+            >
+              <svg
+                data-icon="search"
+                height="12"
+                viewBox="0 0 16 16"
+                width="12"
+              >
+                <desc>
+                  search
+                </desc>
+                <path
+                  d="M15.55 13.43l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <input
+              class="bp3-input"
+              placeholder="search"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tabsContainer tabWidth"
+    >
+      <div
+        class="bp3-tabs bp3-vertical Tabs--main Tabs--vertical"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_selectScope_account"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="account"
+            id="bp3-tab-title_selectScope_account"
+            role="tab"
+            tabindex="0"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--padding-medium StyledProps--flex StyledProps--flex-alignItems-center"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                <span
+                  class="bp3-icon bp3-icon-layers StyledProps--main iconMargin"
+                  icon="layers"
+                >
+                  <svg
+                    data-icon="layers"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      layers
+                    </desc>
+                    <path
+                      d="M.55 4.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5a.998.998 0 00-.06-1.81L8.4.08a1.006 1.006 0 00-.79 0l-6.99 3a.992.992 0 00-.07 1.81zM15 10c-.16 0-.31.04-.45.11L8 13.38 1.45 10.1c-.14-.06-.29-.1-.45-.1-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1zm0-3.5c-.16 0-.31.04-.45.11L8 9.88 1.45 6.61A.997.997 0 001 6.5c-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                account
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_selectScope_account"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_selectScope_account"
+          role="tabpanel"
+        >
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge StyledProps--flex StyledProps--flex-align-center-center"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              noData
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      >
+        <button
+          aria-label="entityReference.apply"
+          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+          disabled=""
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            entityReference.apply
+          </span>
+        </button>
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      >
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--inline"
+        >
+          common.totalSelected
+        </span>
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall StyledProps--flex StyledProps--flex-align-center-center StyledProps--background-primary7 StyledProps--color StyledProps--color-white StyledProps--border"
+        >
+          0
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

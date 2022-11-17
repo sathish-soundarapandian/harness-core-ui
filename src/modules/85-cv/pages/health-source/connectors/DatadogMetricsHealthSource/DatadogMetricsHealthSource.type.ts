@@ -6,7 +6,7 @@
  */
 
 import type { Dispatch, SetStateAction } from 'react'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { DatadogDashboardDTO } from 'services/cv'
 import type { StringKeys } from 'framework/strings'
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'

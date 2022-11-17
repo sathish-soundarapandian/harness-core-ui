@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { get } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'

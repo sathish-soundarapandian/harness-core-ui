@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, ExpandingSearchInput, Layout } from '@wings-software/uicore'
+import { Button, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

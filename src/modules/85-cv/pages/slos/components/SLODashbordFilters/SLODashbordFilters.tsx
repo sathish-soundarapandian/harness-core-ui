@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Button, ButtonVariation, Layout, Select } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, Select } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { SLODashbordFiltersProps } from './SLODashboardFilters.types'

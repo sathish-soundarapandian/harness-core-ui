@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, act } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { UseGetReturnData } from '@common/utils/testUtils'
@@ -75,6 +75,7 @@ describe('ACR Step', () => {
         spec: {
           connectorRef: RUNTIME_INPUT_VALUE,
           repository: RUNTIME_INPUT_VALUE,
+          subscriptionId: RUNTIME_INPUT_VALUE,
           tags: RUNTIME_INPUT_VALUE,
           dockerfile: RUNTIME_INPUT_VALUE,
           context: RUNTIME_INPUT_VALUE,
@@ -119,6 +120,7 @@ describe('ACR Step', () => {
         spec: {
           connectorRef: 'account.connectorRef',
           repository: 'Repository',
+          subscriptionId: 'Subscription Id',
           tags: ['tag1', 'tag2', 'tag3'],
           dockerfile: 'Dockerfile',
           context: 'Context',
@@ -181,6 +183,7 @@ describe('ACR Step', () => {
         spec: {
           connectorRef: RUNTIME_INPUT_VALUE,
           repository: RUNTIME_INPUT_VALUE,
+          subscriptionId: RUNTIME_INPUT_VALUE,
           tags: RUNTIME_INPUT_VALUE,
           dockerfile: RUNTIME_INPUT_VALUE,
           context: RUNTIME_INPUT_VALUE,
@@ -208,6 +211,7 @@ describe('ACR Step', () => {
         spec: {
           connectorRef: RUNTIME_INPUT_VALUE,
           repository: RUNTIME_INPUT_VALUE,
+          subscriptionId: RUNTIME_INPUT_VALUE,
           tags: RUNTIME_INPUT_VALUE,
           dockerfile: RUNTIME_INPUT_VALUE,
           context: RUNTIME_INPUT_VALUE,
@@ -257,6 +261,7 @@ describe('ACR Step', () => {
         spec: {
           connectorRef: 'account.connectorRef',
           repository: 'Repository',
+          subscriptionId: 'Subscription Id',
           tags: ['tag1', 'tag2', 'tag3'],
           dockerfile: 'Dockerfile',
           context: 'Context',
@@ -313,6 +318,7 @@ describe('ACR Step', () => {
             spec: {
               connectorRef: 'account.connectorRef',
               repository: 'Repository',
+              subscriptionId: 'Subscription Id',
               tags: ['tag1', 'tag2', 'tag3'],
               dockerfile: 'Dockerfile',
               context: 'Context',
@@ -454,6 +460,7 @@ describe('ACR Step', () => {
               spec: {
                 connectorRef: 'step-connectorRef',
                 repository: 'step-repository',
+                subscriptionId: 'step-subscription-id',
                 tags: 'step-tags',
                 dockerfile: 'step-dockerfile',
                 context: 'step-context',

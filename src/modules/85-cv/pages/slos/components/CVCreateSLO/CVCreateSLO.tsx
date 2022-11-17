@@ -18,7 +18,7 @@ import {
   Dialog,
   Text,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'

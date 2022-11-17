@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, PageError, PageSpinner, TableV2, Text } from '@wings-software/uicore'
+import { Container, Layout, PageError, PageSpinner, TableV2, Text } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

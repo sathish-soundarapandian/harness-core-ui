@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, Checkbox, Tag } from '@wings-software/uicore'
+import { ButtonVariation, Checkbox, Tag } from '@harness/uicore'
 import { parse } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
@@ -101,8 +101,8 @@ function PipelineYamlView(): React.ReactElement {
           try {
             const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
             if (
-              (!isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
-                entityValidityDetails?.valid === false) &&
+              pipelineFromYaml &&
+              !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
               // @ts-ignore

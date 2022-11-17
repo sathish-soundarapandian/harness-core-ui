@@ -42,12 +42,13 @@ stageExecutionsHelperText: Allow selective stage(s) executions?
 sslVerify: SSL Verify
 noPipelinesLabel: No pipelines
 noPipelinesText: There are no pipelines in your project. Click the button below to create a pipeline.
+noRunsSimpleText: No {{moduleRunType}}
 noRunsLabel: No {{moduleRunType}} in your project
 noRunsText: Your project does not have any {{moduleRunType}} yet. Click the button below to run a pipeline.
 parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
-regionPlaceholder: Select Region
+regionPlaceholder: Select or Enter Region
 repositoryPlaceholder: <container-registry-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days
@@ -792,7 +793,6 @@ addStage:
 pipelineSteps:
   templateStage: Template Stage
   customStage: Custom Stage
-  chainedPipeline: Chained Pipeline
   templateStageDescription: Use stage template.
   customStageDescription: Use this to set up a stage configurable to your needs.
   chainedPipelineDescription: Run a Pipeline as a stage in another Pipeline.
@@ -1439,6 +1439,7 @@ duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
 azureWebApp:
+  name: Azure Web App
   strategy:
     basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
     canary: 'Harness performs a three phase deployment: Phase 1 deploys a new service version to the deployment slot. Phase 2 performs a Traffic Shift to that deployment slot. Phase 3 swaps the deployment slot with target slot.'

@@ -8,15 +8,18 @@
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { NotificationRule } from '../../NotificationsContainer.types'
 
+export type FieldValueType = SelectOption | MultiSelectOption[] | string
+
+export type MoreFieldsType = Record<string, FieldValueType | undefined>
+
 export interface NotificationRuleRowProps {
   notificationRule: NotificationRule
   showDeleteNotificationsIcon: boolean
   handleChangeField: (
     notificationRule: NotificationRule,
-    currentFieldValue: SelectOption | MultiSelectOption[] | string,
+    currentFieldValue: FieldValueType,
     currentField: string,
-    nextField?: string,
-    nextFieldValue?: SelectOption | MultiSelectOption[] | string
+    moreFields?: MoreFieldsType
   ) => void
   handleDeleteNotificationRule: (id: string) => void
   index: number

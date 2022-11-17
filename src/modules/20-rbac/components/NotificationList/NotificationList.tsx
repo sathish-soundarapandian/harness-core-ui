@@ -20,20 +20,20 @@ import {
   Text,
   MultiTypeInputType,
   getMultiTypeFromValue
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Form, FormikProps } from 'formik'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import { TestPagerDutyNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
+import { TestEmailNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
 import { useStrings } from 'framework/strings'
 import { NotificationSettingConfigDTO, usePutUserGroup, UserGroupDTO } from 'services/cd-ng'
-import { TestEmailNotifications } from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
-import { TestPagerDutyNotifications } from '@notifications/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
-import { TestSlackNotifications } from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
+import { TestSlackNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
-import { TestMSTeamsNotifications } from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
-import { getNotificationByConfig } from '@notifications/Utils/Utils'
+import { TestMSTeamsNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
+import { getNotificationByConfig } from '@rbac/utils/NotificationUtils'
 import { EmailSchema, URLValidationSchema } from '@common/utils/Validation'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -108,22 +108,22 @@ const ChannelRow: React.FC<ChannelRow> = ({
       case 'EMAIL':
         return {
           name: 'groupEmail',
-          textPlaceholder: getString('notifications.emailOrAlias')
+          textPlaceholder: getString('rbac.notifications.emailOrAlias')
         }
       case 'SLACK':
         return {
           name: 'slackWebhookUrl',
-          textPlaceholder: getString('notifications.labelWebhookUrl')
+          textPlaceholder: getString('rbac.notifications.labelWebhookUrl')
         }
       case 'PAGERDUTY':
         return {
           name: 'pagerDutyKey',
-          textPlaceholder: getString('notifications.labelPagerDuty')
+          textPlaceholder: getString('rbac.notifications.labelPagerDuty')
         }
       case 'MSTEAMS':
         return {
           name: 'microsoftTeamsWebhookUrl',
-          textPlaceholder: getString('notifications.labelMSTeam')
+          textPlaceholder: getString('rbac.notifications.labelMSTeam')
         }
       default:
         return {
@@ -232,7 +232,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
           }),
           pagerDutyKey: Yup.string().when(['type'], {
             is: 'PAGERDUTY',
-            then: Yup.string().trim().required(getString('notifications.validationPDKey'))
+            then: Yup.string().trim().required(getString('rbac.notifications.validationPDKey'))
           }),
           microsoftTeamsWebhookUrl: Yup.string().when(['type'], {
             is: 'MSTEAMS',
@@ -399,22 +399,22 @@ const NotificationList: React.FC<NotificationListProps> = ({
   const { getString } = useStrings()
 
   const EmailNotification: NotificationOption = {
-    label: getString('notifications.emailOrAlias'),
+    label: getString('rbac.notifications.emailOrAlias'),
     value: 'EMAIL'
   }
 
   const SlackNotification: NotificationOption = {
-    label: getString('notifications.labelWebhookUrl'),
+    label: getString('rbac.notifications.labelWebhookUrl'),
     value: 'SLACK'
   }
 
   const PDNotification: NotificationOption = {
-    label: getString('notifications.labelPagerDuty'),
+    label: getString('rbac.notifications.labelPagerDuty'),
     value: 'PAGERDUTY'
   }
 
   const MSNotification: NotificationOption = {
-    label: getString('notifications.labelMSTeam'),
+    label: getString('rbac.notifications.labelMSTeam'),
     value: 'MSTEAMS'
   }
 

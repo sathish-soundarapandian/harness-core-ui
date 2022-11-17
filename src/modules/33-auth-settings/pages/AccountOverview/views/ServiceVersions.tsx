@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -15,11 +16,11 @@ import css from '../AccountOverview.module.scss'
 const versionAPIs = [
   {
     label: 'Access Control',
-    url: 'authz/api/version',
+    url: 'gateway/authz/api/version',
     id: 'access_control'
   },
   {
-    url: window.location.origin + '/auth/version.json',
+    url: 'auth/version.json',
     label: 'Auth UI',
     id: 'ng_auth_ui'
   },
@@ -37,6 +38,16 @@ const versionAPIs = [
     label: 'Continuous Integration',
     url: 'ci/version',
     id: 'ci'
+  },
+  {
+    label: 'Security Tests',
+    url: 'sto/api/v2/system/version',
+    id: 'sto'
+  },
+  {
+    label: 'Security Tests Manager',
+    url: 'sto-manager/version',
+    id: 'sto_manager'
   },
   {
     label: 'Continuous Verification',
@@ -69,7 +80,7 @@ const versionAPIs = [
     id: 'notifications'
   },
   {
-    label: 'PMS',
+    label: 'Pipelines',
     url: 'pipeline/api/version',
     id: 'pms'
   },
@@ -85,7 +96,7 @@ const versionAPIs = [
   }
 ]
 
-const BASE_URL = window.location.pathname.replace(/ng\/static\/versions\.html$/, '')
+const BASE_URL = window.location.pathname.replace(/\/ng\/?/, '/')
 
 interface ServiceData {
   label?: string
@@ -99,12 +110,12 @@ const ServiceVersions = () => {
   const { showError } = useToaster()
 
   const fetchServices = () => {
-    const servicesLength = Object.keys(data).length
+    const servicesLength = data.length
     if (servicesLength <= 0) {
       const promiseArr = versionAPIs.map(row => fetch(row.url.startsWith('http') ? row.url : BASE_URL + row.url))
 
       setLoading(true)
-      Promise.all(promiseArr)
+      Promise.allSettled(promiseArr)
         .then(async responses => {
           setLoading(false)
           const labelVersionsArr: ServiceData[] = []
@@ -113,8 +124,8 @@ const ServiceVersions = () => {
             let serviceRow: ServiceData = {
               label: row.label
             }
-            if (res.status === 200) {
-              const response = await res.json()
+            if (res.status === 'fulfilled') {
+              const response = await res.value.json()
 
               if (response.version) {
                 // for NGUI

@@ -10,7 +10,6 @@ import cx from 'classnames'
 import {
   Layout,
   Text,
-  FontVariation,
   Collapse,
   Container,
   Heading,
@@ -19,7 +18,7 @@ import {
   PageSpinner,
   PageError
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ApiCallLogDTO } from 'services/cv'
 import { CopyText } from '@common/components/CopyText/CopyText'

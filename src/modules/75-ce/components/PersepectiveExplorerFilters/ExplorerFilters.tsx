@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Container, Button, Icon } from '@wings-software/uicore'
+import { Container, Button, Icon } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 // import cx from 'classnames'
 import { useFetchViewFieldsQuery, QlceViewFilterWrapperInput, QlceViewFilterInput } from 'services/ce/services'

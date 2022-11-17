@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Formik, FormikForm, FormInput, Layout, Heading } from '@wings-software/uicore'
+import { Button, Formik, FormikForm, FormInput, Layout, Heading } from '@harness/uicore'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import type { AccessPoint } from 'services/lw'
 import { useToaster } from '@common/exports'

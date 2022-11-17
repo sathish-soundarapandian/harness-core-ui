@@ -19,7 +19,7 @@ import {
   AllowedTypes,
   AllowedTypesWithExecutionTime,
   Layout
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import cx from 'classnames'
 import { FormikContextType, connect } from 'formik'

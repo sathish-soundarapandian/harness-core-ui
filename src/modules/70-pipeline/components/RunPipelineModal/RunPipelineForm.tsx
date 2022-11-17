@@ -80,7 +80,7 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { getFreezeRouteLink } from '@pipeline/utils/freezeWindowUtils'
+import { getFreezeRouteLink } from '@common/utils/freezeWindowUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
@@ -176,7 +176,7 @@ function RunPipelineFormBasic({
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isInputSetApplied, setIsInputSetApplied] = useState(true)
 
-  const [canEdit] = usePermission(
+  const [canSaveInputSet, canEditYaml] = usePermission(
     {
       resourceScope: {
         accountIdentifier: accountId,
@@ -187,18 +187,22 @@ function RunPipelineFormBasic({
         resourceType: ResourceType.PIPELINE,
         resourceIdentifier: pipelineIdentifier
       },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE]
+      permissions: [PermissionIdentifier.EDIT_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
     },
     [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier]
   )
 
   const stageIdentifiers = useMemo((): string[] => {
     let stageIds: string[] = []
-    stageIds = stagesExecuted?.length
-      ? stagesExecuted
-      : selectedStageData.allStagesSelected
-      ? []
-      : (selectedStageData.selectedStageItems.map(stageData => stageData.value) as string[])
+
+    if (stagesExecuted?.length) {
+      stageIds = stagesExecuted
+    } else if (selectedStageData.allStagesSelected) {
+      // do nothing
+    } else {
+      stageIds = selectedStageData.selectedStageItems.map(stageData => stageData.value) as string[]
+    }
+
     if (stageIds.includes(ALL_STAGE_VALUE)) {
       stageIds = []
     }
@@ -237,7 +241,8 @@ function RunPipelineFormBasic({
       repoIdentifier,
       branch,
       getDefaultFromOtherRepo: true
-    }
+    },
+    lazy: executionView
   })
 
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
@@ -359,7 +364,8 @@ function RunPipelineFormBasic({
       repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    lazy: executionView
   })
 
   const executionStageList = useMemo((): SelectOption[] => {
@@ -839,7 +845,7 @@ function RunPipelineFormBasic({
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
-                          isEditModeSupported={canEdit}
+                          isEditModeSupported={canEditYaml}
                           comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
                         />
                       </Layout.Vertical>
@@ -875,7 +881,7 @@ function RunPipelineFormBasic({
                               (!selectedInputSets || selectedInputSets.length === 0) &&
                               existingProvide === 'existing'
                             ) {
-                              setExistingProvide('provide')
+                              hasRuntimeInputs ? setExistingProvide('provide') : submitForm()
                             } else {
                               if (selectedView === SelectedView.YAML) {
                                 const parsedYaml = yamlParse<PipelineConfig>(
@@ -953,7 +959,7 @@ function RunPipelineFormBasic({
                         currentPipeline={{ pipeline: values }}
                         values={values}
                         template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
-                        canEdit={canEdit}
+                        canEdit={canSaveInputSet}
                         accountId={accountId}
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}
@@ -1011,9 +1017,13 @@ export function RunPipelineFormWrapper(props: RunPipelineFormWrapperProps): Reac
 export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   return (
     <NestedAccordionProvider>
-      <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+      {props.executionView ? (
         <RunPipelineFormBasic {...props} />
-      </PipelineVariablesContextProvider>
+      ) : (
+        <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+          <RunPipelineFormBasic {...props} />
+        </PipelineVariablesContextProvider>
+      )}
     </NestedAccordionProvider>
   )
 }

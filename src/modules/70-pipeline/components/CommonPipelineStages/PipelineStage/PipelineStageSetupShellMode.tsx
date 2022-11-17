@@ -7,7 +7,7 @@
 
 import React, { useRef, useState } from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { Button, ButtonVariation, Icon, Layout, Tab, Tabs } from '@harness/uicore'
 import { Expander } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'

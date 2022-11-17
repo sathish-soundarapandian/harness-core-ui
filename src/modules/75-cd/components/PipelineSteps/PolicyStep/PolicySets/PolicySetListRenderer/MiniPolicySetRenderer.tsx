@@ -11,7 +11,8 @@ import { defaultTo } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import cx from 'classnames'
 
-import { Button, Color, Layout, Text } from '@harness/uicore'
+import { Button, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { LinkedPolicy, useGetPolicySet } from 'services/pm'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

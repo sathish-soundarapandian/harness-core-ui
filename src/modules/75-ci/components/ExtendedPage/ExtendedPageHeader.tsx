@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Heading, Layout, Container } from '@wings-software/uicore'
+import { Heading, Layout, Container } from '@harness/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
 import css from './ExtendedPageHeader.module.scss'

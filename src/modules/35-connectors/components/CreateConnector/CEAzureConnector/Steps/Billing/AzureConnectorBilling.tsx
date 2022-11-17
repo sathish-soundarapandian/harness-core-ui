@@ -18,13 +18,14 @@ import {
   Container,
   ButtonSize,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import type { BillingExportSpec, CEAzureConnector } from 'services/cd-ng'
+import type { BillingExportSpec } from 'services/cd-ng'
+import type { CEAzureConnector } from 'services/ce'
 import { CE_AZURE_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { connectorHelperUrls } from '@connectors/constants'

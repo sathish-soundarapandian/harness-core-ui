@@ -11,7 +11,7 @@ import produce from 'immer'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption } from '@harness/uicore'
 
 import {
   DeploymentStageConfig,

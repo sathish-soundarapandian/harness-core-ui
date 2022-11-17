@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'

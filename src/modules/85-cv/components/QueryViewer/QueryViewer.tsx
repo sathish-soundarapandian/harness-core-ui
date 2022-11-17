@@ -7,15 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import {
-  Button,
-  Container,
-  FormInput,
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  Text
-} from '@wings-software/uicore'
+import { Button, Container, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'

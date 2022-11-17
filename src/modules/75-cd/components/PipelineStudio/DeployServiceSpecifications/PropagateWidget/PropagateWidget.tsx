@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, SelectOption, Layout, Radio, Container, HarnessDocTooltip } from '@wings-software/uicore'
+import { FormInput, SelectOption, Layout, Radio, Container, HarnessDocTooltip } from '@harness/uicore'
 import { noop, isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Formik, FormikProps } from 'formik'

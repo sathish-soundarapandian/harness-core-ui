@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import * as Yup from 'yup'
-import { Formik, FormikForm, FormInput, Layout, Button } from '@wings-software/uicore'
+import { Formik, FormikForm, FormInput, Layout, Button } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ConnectionConfigProps } from '@connectors/components/CreateConnector/CommonCVConnector/constants'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'

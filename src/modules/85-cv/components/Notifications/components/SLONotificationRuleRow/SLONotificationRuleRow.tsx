@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import type { NotificationRuleRowProps } from './SLONotificationRuleRow.types'
 import { getValueFromEvent } from './SLONotificationRuleRow.utils'
 import { SLOCondition, sloConditionOptions } from './SLONotificationRuleRow.constants'
+import { defaultOption } from '../../NotificationsContainer.constants'
 import css from './SLONotificationRuleRow.module.scss'
 
 export default function SLONotificationRuleRow({
@@ -26,7 +27,9 @@ export default function SLONotificationRuleRow({
 
   const handleThresholdChange = useCallback(
     e => {
-      handleChangeField(notificationRule, getValueFromEvent(e), 'threshold', 'lookBackDuration', lookBackDuration)
+      handleChangeField(notificationRule, getValueFromEvent(e), 'threshold', {
+        lookBackDuration: lookBackDuration || defaultOption
+      })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [lookBackDuration, notificationRule]
@@ -101,7 +104,7 @@ export default function SLONotificationRuleRow({
             value={condition}
             items={sloConditionOptions}
             onChange={option => {
-              handleChangeField(notificationRule, option, 'condition', 'threshold', threshold)
+              handleChangeField(notificationRule, option, 'condition', { threshold: threshold || defaultOption })
             }}
           />
         </Layout.Vertical>

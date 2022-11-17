@@ -8,8 +8,8 @@
 import React, { useState } from 'react'
 import { isNil, isEqual } from 'lodash-es'
 import produce from 'immer'
-import { useToggleOpen, ConfirmationDialog, Intent } from '@harness/uicore'
-
+import { Intent } from '@harness/design-system'
+import { useToggleOpen, ConfirmationDialog } from '@harness/uicore'
 import NotificationTable, { NotificationRulesItem } from '@pipeline/components/Notifications/NotificationTable'
 import { NotificationsHeader } from '@pipeline/components/Notifications/NotificationHeader'
 import type { NotificationRules, PipelineInfoConfig } from 'services/pipeline-ng'
@@ -180,7 +180,7 @@ function PipelineNotificationsWithRef(
         />
       </div>
       <ConfirmationDialog
-        titleText={getString('notifications.name')}
+        titleText={getString('rbac.notifications.name')}
         contentText={getString('pipeline.stepConfigHasChanges')}
         isOpen={isConfirmationDialogOpen}
         confirmButtonText={getString('applyChanges')}

@@ -17,7 +17,7 @@ import {
   useToaster,
   NoDataCard,
   Pagination
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { useParams, useHistory } from 'react-router-dom'
 import { get } from 'lodash-es'
