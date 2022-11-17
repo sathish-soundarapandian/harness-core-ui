@@ -13,7 +13,6 @@ import type { FormikContextType, FormikProps } from 'formik'
 
 import {
   Text,
-  FontVariation,
   Layout,
   Icon,
   Container,
@@ -23,10 +22,11 @@ import {
   FormInput,
   ButtonVariation,
   ButtonSize,
-  Color,
   FormError,
   PageSpinner
 } from '@harness/uicore'
+
+import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo, set } from 'lodash-es'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
@@ -423,7 +423,7 @@ const SelectGitProviderRef = (
           <Layout.Vertical>
             <Button
               variation={ButtonVariation.PRIMARY}
-              text={getString('common.smtp.testConnection')}
+              text={getString('cd.getStartedWithCD.testConnection')}
               size={ButtonSize.SMALL}
               type="submit"
               onClick={() => {

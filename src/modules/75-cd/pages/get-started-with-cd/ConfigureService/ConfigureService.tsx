@@ -9,13 +9,10 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react'
 
 import {
   Text,
-  FontVariation,
   Layout,
   Container,
   Formik,
   FormikForm as Form,
-  Color,
-  PageSpinner,
   useToaster,
   FormInput,
   Button,
@@ -23,6 +20,8 @@ import {
   IconName,
   Icon
 } from '@harness/uicore'
+
+import { FontVariation, Color } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { cloneDeep, cloneDeepWith, defaultTo, get, isEmpty, isEqual, omit, set, unset } from 'lodash-es'
 import produce from 'immer'
@@ -49,6 +48,7 @@ import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { ManifestStores, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { ManifestStoreMap, manifestTypeIcons } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import {
   BinaryLabels,
   cleanServiceDataUtil,
@@ -362,7 +362,7 @@ const ConfigureServiceRef = (
           <Button
             className={css.authMethodBtn}
             round
-            text={'In Harness FileStore'}
+            text={getString('cd.getStartedWithCD.harnessFileStore')}
             onClick={() => {
               onManifestStoreSelection(ManifestStoreMap.Harness)
             }}
@@ -474,7 +474,7 @@ const ConfigureServiceRef = (
   }, [serviceData, updateManifestStepStatus])
 
   return createLoading ? (
-    <PageSpinner />
+    <ContainerSpinner />
   ) : (
     <Layout.Vertical width="70%">
       <Formik<ConfigureServiceInterface>

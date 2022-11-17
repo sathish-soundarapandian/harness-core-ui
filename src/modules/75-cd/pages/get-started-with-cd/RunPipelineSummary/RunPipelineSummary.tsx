@@ -6,18 +6,9 @@
  */
 
 import React from 'react'
-import {
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Color,
-  Container,
-  FontVariation,
-  Icon,
-  Layout,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
 
+import { Color, FontVariation } from '@harness/design-system'
 import { capitalize } from 'lodash-es'
 import { StringKeys, useStrings } from 'framework/strings'
 import successSetup from '../../home/images/success_setup.svg'
@@ -45,8 +36,8 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
   }
 
   const serviceEntities: Record<string, string> = {
-    'common.serviceName': service?.name as string,
-    'pipelineSteps.serviceTab.manifestList.manifestType': service?.serviceDefinition?.spec?.manifests?.[0]?.manifest
+    'cd.getStartedWithCD.serviceName': service?.name as string,
+    'cd.getStartedWithCD.manifestTypeSelection': service?.serviceDefinition?.spec?.manifests?.[0]?.manifest
       ?.type as string,
     'cd.getStartedWithCD.manifestStorage': service?.serviceDefinition?.spec?.manifests?.[0]?.manifest?.spec?.store
       ?.type as string,
@@ -58,7 +49,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
         <Icon name="success-tick" />
         <Text font="normal" color={Color.GREEN_700}>
-          {capitalize(getString('cd.getStartedWithCD.successFull'))}
+          {capitalize(getString('success'))}
         </Text>
       </Layout.Horizontal>
     )
@@ -69,7 +60,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
       <Layout.Vertical padding="xxlarge">
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'large' }}>
           <Layout.Vertical>
-            <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'huge' }}>
+            <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xxlarge' }}>
               {getString('cd.getStartedWithCD.allSet')}
             </Text>
 
@@ -78,7 +69,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
               padding={{ bottom: 'medium' }}
             >
               <Text font={{ variation: FontVariation.H5 }} padding={{ right: 'medium' }}>
-                {getString('deploymentTypeText')}
+                {getString('cd.getStartedWithCD.deploymentType')}
               </Text>
               <Icon
                 name="Edit"

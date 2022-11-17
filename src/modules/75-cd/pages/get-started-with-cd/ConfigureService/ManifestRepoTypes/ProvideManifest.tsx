@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, StepProps } from '@harness/uicore'
+import { AllowedTypesWithRunTime, Layout, MultiTypeInputType, StepProps, Text } from '@harness/uicore'
+
+import { FontVariation } from '@harness/design-system'
 import { defaultTo, get, omit } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
@@ -90,6 +92,7 @@ const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => 
       manifestIdsList: [],
       isReadonly: false, //readonly,
       prevStepData: prevStepData
+      // formClassName:''
     }
     if (formikProps?.values?.manifestData?.type === ManifestDataType.HelmChart) {
       manifestDetailsProps.deploymentType = get(serviceData, 'serviceDefinition.type')
@@ -99,12 +102,15 @@ const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => 
   }, [formikProps?.values?.manifestData?.type])
 
   return (
-    <>
+    <Layout.Vertical spacing="small" padding={{ bottom: 'xxlarge' }}>
+      <Text font={{ variation: FontVariation.H5 }} padding={{ bottom: 'small' }}>
+        {getString('cd.getStartedWithCD.provideManifest')}
+      </Text>
       {useManifestTypeLastSteps({
         selectedManifestType: formikProps?.values?.manifestData?.type,
         lastStepProps
       })}
-    </>
+    </Layout.Vertical>
   )
 }
 

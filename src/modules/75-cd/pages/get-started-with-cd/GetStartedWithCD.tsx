@@ -30,7 +30,7 @@ export default function GetStartedWithCD(): React.ReactElement {
               {getString('cd.getStartedWithCD.onboardingTitle')}
             </Text>
             <Text padding="medium" font={{ variation: FontVariation.BODY1 }} className={css.centerAlign}>
-              {getString('common.purpose.cd.description')}
+              {getString('cd.getStartedWithCD.onBoardingSubTitle')}
             </Text>
             <Container padding="xxlarge" style={{ flex: 1 }} className={css.centerAlign}>
               <Container

@@ -498,13 +498,14 @@ azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
+  onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   selectDeploymentType: Select Deployment Type
   deployToGitops: Do you want to deploy using GitOps?
   configureEnvironment: Connect to Environment
   configureService: Configure Service
   helm: Helm
-  manifestTypeSelection: 'What is your {{ $.manifestsText }} type?'
-  manifestStoreLabel: Where is your Manifest stored?
+  manifestTypeSelection: Manifest type
+  manifestStoreLabel: Manifest location
   gitopsRedirect:
     title: Deploy with Gitops
     subtitle: You will be redirected to Gitops section. Are you sure you want to leave this page?
@@ -513,16 +514,18 @@ getStartedWithCD:
     subtitle: You are about to leave without having set up a pipeline for deployment. Are you sure you want to leave anyway?
   inHarnessFileStore: Use the Harness provided manifests from your Harness account file store
   environmentDetails: Environment details
-  entityCreationTitle: Following entities have been auto-created
+  entityCreationTitle: 'The following Harness entities have automatically been created for you:'
   delegateRunAs: Delegate run as
-  artifactStorage: Artifact Storage
-  manifestStorage: ManifestStorage
+  artifactStorage: Artifact storage
+  manifestStorage: Manifest storage
   serviceConfiguration: Service Configuration
-  allSet: You are all set!
+  allSet: Your pipeline is ready to go!
   successFull: successful
   connectTo: Connect to
-  selectArtifactRepo: Select your artifactory repository
-  artifactToDeploy: Do you have an Artifact to deploy?
+  deploymentType: Deployment type
+  serviceName: Service name
+  selectArtifactRepo: Select your artifact repository
+  artifactToDeploy: Do you have an artifact to deploy?
   workloadDeploy: What workload would you like to deploy?
   serviceDeploy: Where do you want to deploy your service?
   serviceHeading: What is the name of your Service?
@@ -551,7 +554,10 @@ getStartedWithCD:
   setupaNewDelegate: + Setup a New Delegate
   viewDelegateDetails: View Delegate Details
   hideDelegateDetails: Hide Delegate Details
-
+  checkDelegateInstalled: Checking for the delegate. Installation takes a minute or two.
+  testConnection: Test connection
+  harnessFileStore: Harness Filestore
+  delegateSuccess: The delegate is installed. Next you can configure the service.
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -586,13 +592,12 @@ welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate?
 installDelegate: Install Delegate
-instructionsDelegate: Instructions to Install the Delegate
-downloadYAML: Download the YAML
+instructionsDelegate: Install the delegate
 previewYAML: Preview Yaml
 installCluster: Install on your Cluster
-checkCluster: Check if you can connect to your cluster
+checkCluster: Check your connection to your cluster
 delegateInstallCommand: Install the delegate by running the following command
-delegateConnectionWait: Waiting for Delegate to connect
+delegateConnectionWait: Wait for the delegate to connect
 delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
 delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster

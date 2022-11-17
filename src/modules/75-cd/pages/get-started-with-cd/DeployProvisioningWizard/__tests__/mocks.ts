@@ -36,7 +36,8 @@ export const contextValues = {
   },
   saveServiceData: jest.fn(),
   saveEnvironmentData: jest.fn(),
-  saveInfrastructureData: jest.fn()
+  saveInfrastructureData: jest.fn(),
+  setSelectedSectionId: jest.fn()
 }
 
 export const services = {

@@ -197,7 +197,7 @@ export const CreateDockerDelegate = ({
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                {getString('cd.downloadYAML')}
+                {getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
                 <Button

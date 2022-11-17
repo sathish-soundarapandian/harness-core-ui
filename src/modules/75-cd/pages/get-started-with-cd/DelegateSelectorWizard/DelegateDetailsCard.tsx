@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, PageError, PageSpinner } from '@harness/uicore'
+import { Container, Layout, PageError } from '@harness/uicore'
 import type {
   ProjectPathProps,
   ModulePathParams,
@@ -16,6 +16,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useGetDelegateGroupByIdentifier, useGetV2 } from 'services/portal'
 import { DelegateOverview } from '@delegates/pages/delegates/DelegateOverview'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 const DelegateDetailsCard = ({ delegateIdentifier }: { delegateIdentifier: string }): JSX.Element => {
@@ -47,7 +48,7 @@ const DelegateDetailsCard = ({ delegateIdentifier }: { delegateIdentifier: strin
   return (
     <Layout.Vertical width="100%">
       {loading ? (
-        <PageSpinner />
+        <ContainerSpinner />
       ) : (
         <Layout.Horizontal spacing="large">
           <Container flex width="100%">
