@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, set, get, isEmpty } from 'lodash-es'
+import { defaultTo, set, get, isEmpty, isString } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -215,26 +215,18 @@ export class TasServiceSpec extends Step<ServiceSpec> {
   }: ValidateInputSetProps<K8SDirectServiceStep>): FormikErrors<K8SDirectServiceStep> {
     const errors: FormikErrors<K8SDirectServiceStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    if (
-      isEmpty(data?.artifacts?.primary?.spec?.connectorRef) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.spec?.connectorRef) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, 'artifacts.primary.spec.connectorRef', getString?.('fieldRequired', { field: 'Artifact Server' }))
-    }
+    const artifactType = !isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec)
+      ? 'artifacts.primary.sources[0].type'
+      : 'artifacts.primary.type'
+    const artifactPath = !isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec)
+      ? 'artifacts.primary.sources[0].spec'
+      : 'artifacts.primary.spec'
 
-    if (
-      isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec?.connectorRef) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.sources?.[0]?.spec?.connectorRef) ===
-        MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        'artifacts.primary.sources[0].spec.connectorRef',
-        getString?.('fieldRequired', { field: 'ConnectorRef' })
-      )
-    }
+    const artifactSourceTemplatePath = 'artifacts.primary.sources'
+
+    const isArtifactSourceRuntime =
+      isString(template?.artifacts?.primary?.sources) &&
+      getMultiTypeFromValue(template?.artifacts?.primary?.sources) === MultiTypeInputType.RUNTIME
 
     if (
       isEmpty(data?.artifacts?.primary?.primaryArtifactRef) &&
@@ -249,56 +241,117 @@ export class TasServiceSpec extends Step<ServiceSpec> {
     }
 
     if (
-      isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec?.tag) &&
+      isEmpty(get(data, `${artifactPath}.connectorRef`)) &&
       isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.sources?.[0]?.spec?.tag) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.connectorRef`)
+      ) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, 'artifacts.primary.sources[0].spec.tag', getString?.('fieldRequired', { field: 'Tag' }))
+      set(errors, `${artifactPath}.connectorRef`, getString?.('fieldRequired', { field: 'ConnectorRef' }))
     }
     if (
-      !tagExists(data?.artifacts?.primary?.spec?.tag) &&
+      isEmpty(get(data, `${artifactPath}.tag`)) &&
       isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.spec?.tag) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.tag`)
+      ) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, 'artifacts.primary.spec.tag', getString?.('fieldRequired', { field: 'Tag' }))
+      set(errors, `${artifactPath}.tag`, getString?.('fieldRequired', { field: 'Tag' }))
     }
     if (
-      isEmpty(data?.artifacts?.primary?.spec?.tagRegex) &&
+      isEmpty(get(data, `${artifactPath}.tagRegex`)) &&
       isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.spec?.tagRegex) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.tagRegex`)
+      ) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, 'artifacts.primary.spec.tagRegex', getString?.('fieldRequired', { field: 'Tag Regex' }))
-    }
-
-    if (
-      isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec?.imagePath) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.sources?.[0]?.spec?.imagePath) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, 'artifacts.primary.sources[0].spec.imagePath', getString?.('fieldRequired', { field: 'Image Path' }))
-    }
-    if (
-      isEmpty(data?.artifacts?.primary?.spec?.imagePath) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.spec?.imagePath) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, 'artifacts.primary.spec.imagePath', getString?.('fieldRequired', { field: 'Image Path' }))
+      set(errors, `${artifactPath}.tagRegex`, getString?.('fieldRequired', { field: 'tagRegex' }))
     }
 
     if (
-      isEmpty(data?.artifacts?.primary?.spec?.repository) &&
+      isEmpty(get(data, `${artifactPath}.imagePath`)) &&
       isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.spec?.repository) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.imagePath`)
+      ) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, 'artifacts.primary.spec.repository', getString?.('fieldRequired', { field: 'Repository' }))
+      set(errors, `${artifactPath}.imagePath`, getString?.('fieldRequired', { field: 'Image Path' }))
     }
 
     if (
-      !tagExists(data?.artifacts?.primary?.spec?.artifactPath) &&
+      !tagExists(get(data, `${artifactPath}.artifactPath`)) &&
       isRequired &&
-      getMultiTypeFromValue(template?.artifacts?.primary?.spec?.artifactPath) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.artifactPath`)
+      ) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, 'artifacts.primary.spec.artifactPath', getString?.('fieldRequired', { field: 'Artifact Path' }))
+      set(errors, `${artifactPath}.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
+    }
+    if (
+      !tagExists(get(data, `${artifactPath}.spec.artifactPath`)) &&
+      isRequired &&
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.spec.artifactPath`)
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `${artifactPath}.spec.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
+    }
+
+    if (
+      isEmpty(get(data, `${artifactPath}.repository`)) &&
+      isRequired &&
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.repository`)
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `${artifactPath}.repository`, getString?.('fieldRequired', { field: 'Repository' }))
+    }
+    if (
+      isEmpty(get(data, `${artifactPath}.repositoryUrl`)) &&
+      isRequired &&
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.repositoryUrl`)
+      ) === MultiTypeInputType.RUNTIME &&
+      get(data, artifactType) !== 'ArtifactoryRegistry'
+    ) {
+      set(errors, `${artifactPath}.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository Url' }))
+    }
+    if (
+      isEmpty(get(data, `${artifactPath}.spec.repositoryUrl`)) &&
+      isRequired &&
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.spec.repositoryUrl`)
+      ) === MultiTypeInputType.RUNTIME &&
+      get(data, artifactType) !== 'ArtifactoryRegistry'
+    ) {
+      set(errors, `${artifactPath}.spec.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository Url' }))
+    }
+    if (
+      isEmpty(get(data, `${artifactPath}.repositoryPort`)) &&
+      isRequired &&
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.repositoryPort`)
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `${artifactPath}.repositoryPort`, getString?.('fieldRequired', { field: 'repository Port' }))
+    }
+    if (
+      isEmpty(get(data, `${artifactPath}.bucketName`)) &&
+      isRequired &&
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.bucketName`)
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `${artifactPath}.bucketName`, getString?.('fieldRequired', { field: 'Bucket Name' }))
+    }
+    if (
+      isEmpty(get(data, `${artifactPath}.filePath`)) &&
+      isRequired &&
+      getMultiTypeFromValue(
+        get(template, isArtifactSourceRuntime ? artifactSourceTemplatePath : `${artifactPath}.filePath`)
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `${artifactPath}.filePath`, getString?.('fieldRequired', { field: 'File Path' }))
     }
 
     data?.manifests?.forEach((manifest, index) => {
