@@ -108,10 +108,6 @@ export function Nexus3Artifact({
     branch
   }
 
-  React.useEffect(() => {
-    console.log('selectedDeploymenttype', selectedDeploymentType)
-  }, [selectedDeploymentType])
-
   const schemaObject = {
     tagType: Yup.string(),
     tagRegex: Yup.string().when('tagType', {
