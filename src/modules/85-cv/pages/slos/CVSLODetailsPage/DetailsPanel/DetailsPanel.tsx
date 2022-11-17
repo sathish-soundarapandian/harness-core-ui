@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Color, Container, FontVariation, Heading, Page, Text } from '@harness/uicore'
+import { Card, Container, Heading, Page, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetSLODetails } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

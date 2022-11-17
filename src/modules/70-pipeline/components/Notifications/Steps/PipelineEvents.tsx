@@ -5,16 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  Button,
-  ButtonVariation,
-  Formik,
-  FormInput,
-  Layout,
-  MultiSelectOption,
-  StepProps,
-  Text
-} from '@wings-software/uicore'
+import { Button, ButtonVariation, Formik, FormInput, Layout, MultiSelectOption, StepProps, Text } from '@harness/uicore'
 import React from 'react'
 import { Color, Intent } from '@harness/design-system'
 import * as Yup from 'yup'
@@ -110,7 +101,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
-        {getString('notifications.pipelineEvents')}
+        {getString('rbac.notifications.pipelineEvents')}
       </Text>
       <Formik<PipelineEventsFormData>
         initialValues={{ ...initialValues, types }}
@@ -124,13 +115,13 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
               if (isEmpty(val?.types)) {
                 return this.createError({
                   path: 'types',
-                  message: getString('notifications.eventRequired')
+                  message: getString('rbac.notifications.eventRequired')
                 })
               }
               if (Object.keys(val.types).length === 1 && val.types[PipelineEventType.ALL_EVENTS] === false) {
                 return this.createError({
                   path: 'types',
-                  message: getString('notifications.eventRequired')
+                  message: getString('rbac.notifications.eventRequired')
                 })
               }
 
@@ -140,7 +131,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
               ) {
                 return this.createError({
                   path: PipelineEventType.StageStart,
-                  message: getString('notifications.stageRequired')
+                  message: getString('rbac.notifications.stageRequired')
                 })
               } else if (
                 val.types[PipelineEventType.StageFailed] &&
@@ -148,7 +139,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
               ) {
                 return this.createError({
                   path: PipelineEventType.StageFailed,
-                  message: getString('notifications.stageRequired')
+                  message: getString('rbac.notifications.stageRequired')
                 })
               } else if (
                 val.types[PipelineEventType.StageSuccess] &&
@@ -156,7 +147,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
               ) {
                 return this.createError({
                   path: PipelineEventType.StageSuccess,
-                  message: getString('notifications.stageRequired')
+                  message: getString('rbac.notifications.stageRequired')
                 })
               }
 
@@ -185,11 +176,11 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
             <Form>
               <Layout.Vertical spacing="medium" className={css.formContent}>
                 <Text margin={{ bottom: !isEmpty(formikProps.errors) ? 'small' : 'large' }}>
-                  {getString('notifications.selectPipelineEvents')}
+                  {getString('rbac.notifications.selectPipelineEvents')}
                 </Text>
                 {!isEmpty(formikProps.errors) && (
                   <Text intent={Intent.DANGER} margin={{ top: 'none', bottom: 'small' }}>
-                    {getString('notifications.eventRequired')}
+                    {getString('rbac.notifications.eventRequired')}
                   </Text>
                 )}
                 {pipelineEventItems.map(event => {
@@ -235,7 +226,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                             name={event.value}
                             label={''}
                             multiSelectProps={{
-                              placeholder: getString('notifications.selectStagesPlaceholder'),
+                              placeholder: getString('rbac.notifications.selectStagesPlaceholder'),
                               allowCreatingNewItems: false
                             }}
                           />

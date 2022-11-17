@@ -23,8 +23,8 @@ import {
   Icon,
   MultiTypeInputType,
   PageSpinner
-} from '@wings-software/uicore'
-import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
+} from '@harness/uicore'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { isEmpty, isUndefined, set, uniqBy, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
@@ -380,7 +380,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
 
@@ -1175,81 +1175,66 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       </>
     )
 
-  const renderPlatformInfraSection = (): React.ReactElement => (
-    <>
-      <MultiTypeSelectField
-        label={
-          <Text
-            tooltipProps={{ dataTooltipId: 'os' }}
-            font={{ variation: FontVariation.FORM_LABEL }}
-            margin={{ bottom: 'xsmall' }}
-          >
-            {getString('pipeline.infraSpecifications.selectOs')}
-          </Text>
-        }
-        name={'os'}
-        style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
-        multiTypeInputProps={{
-          selectItems:
-            CIBuildInfrastructureType.KubernetesDirect === buildInfraType
-              ? [
-                  { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-                  {
-                    label: getString('pipeline.infraSpecifications.osTypes.windows'),
-                    value: OsTypes.Windows
-                  }
-                ]
-              : CIBuildInfrastructureType.Cloud === buildInfraType
-              ? [{ label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux }]
-              : [
-                  { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-                  { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
-                  {
-                    label: getString('pipeline.infraSpecifications.osTypes.windows'),
-                    value: OsTypes.Windows
-                  }
-                ],
-          multiTypeInputProps: {
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-            disabled: isReadonly
+  const renderPlatformInfraSection = (): React.ReactElement => {
+    let buildInfraSelectOptions = []
+    const buildArchSelectOptions = [
+      {
+        label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+        value: ArchTypes.Amd64
+      }
+    ]
+
+    switch (buildInfraType) {
+      case CIBuildInfrastructureType.KubernetesDirect:
+        buildInfraSelectOptions = [
+          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+          {
+            label: getString('pipeline.infraSpecifications.osTypes.windows'),
+            value: OsTypes.Windows
           }
-        }}
-        useValue
-      />
-      {[CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
-        buildInfraType as CIBuildInfrastructureType
-      ) && (
+        ]
+        break
+      case CIBuildInfrastructureType.Cloud:
+        buildInfraSelectOptions = [{ label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux }]
+        if (CIE_HOSTED_VMS_MAC)
+          buildInfraSelectOptions.push({
+            label: getString('pipeline.infraSpecifications.osTypes.macos'),
+            value: OsTypes.MacOS
+          })
+        break
+      default:
+        buildInfraSelectOptions = [
+          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+          { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
+          {
+            label: getString('pipeline.infraSpecifications.osTypes.windows'),
+            value: OsTypes.Windows
+          }
+        ]
+    }
+
+    if (CIE_HOSTED_VMS_MAC)
+      buildArchSelectOptions.push({
+        label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+        value: ArchTypes.Arm64
+      })
+
+    return (
+      <>
         <MultiTypeSelectField
           label={
             <Text
-              tooltipProps={{ dataTooltipId: 'arch' }}
+              tooltipProps={{ dataTooltipId: 'os' }}
               font={{ variation: FontVariation.FORM_LABEL }}
               margin={{ bottom: 'xsmall' }}
             >
-              {getString('pipeline.infraSpecifications.selectArchitecture')}
+              {getString('pipeline.infraSpecifications.selectOs')}
             </Text>
           }
-          name={'arch'}
+          name={'os'}
           style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
           multiTypeInputProps={{
-            selectItems:
-              CIBuildInfrastructureType.Cloud === buildInfraType
-                ? [
-                    {
-                      label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-                      value: ArchTypes.Amd64
-                    }
-                  ]
-                : [
-                    {
-                      label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-                      value: ArchTypes.Amd64
-                    },
-                    {
-                      label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-                      value: ArchTypes.Arm64
-                    }
-                  ],
+            selectItems: buildInfraSelectOptions,
             multiTypeInputProps: {
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
               disabled: isReadonly
@@ -1257,9 +1242,34 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           }}
           useValue
         />
-      )}
-    </>
-  )
+        {[CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+          buildInfraType as CIBuildInfrastructureType
+        ) && (
+          <MultiTypeSelectField
+            label={
+              <Text
+                tooltipProps={{ dataTooltipId: 'arch' }}
+                font={{ variation: FontVariation.FORM_LABEL }}
+                margin={{ bottom: 'xsmall' }}
+              >
+                {getString('pipeline.infraSpecifications.selectArchitecture')}
+              </Text>
+            }
+            name={'arch'}
+            style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+            multiTypeInputProps={{
+              selectItems: buildArchSelectOptions,
+              multiTypeInputProps: {
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+                disabled: isReadonly
+              }
+            }}
+            useValue
+          />
+        )}
+      </>
+    )
+  }
 
   const renderBuildInfraMainSection = React.useCallback((): React.ReactElement => {
     switch (buildInfraType) {

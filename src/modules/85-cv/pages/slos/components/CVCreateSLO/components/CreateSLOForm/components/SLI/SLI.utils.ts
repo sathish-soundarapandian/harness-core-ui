@@ -6,7 +6,7 @@
  */
 
 import type { IOptionProps } from '@blueprintjs/core'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'

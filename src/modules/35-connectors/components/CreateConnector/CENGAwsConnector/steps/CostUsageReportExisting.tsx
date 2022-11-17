@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { ExpandingSearchInput, Layout, Table, Text } from '@wings-software/uicore'
+import { ExpandingSearchInput, Layout, Table, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ExistingCURDetails } from './OverviewStep'

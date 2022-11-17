@@ -6,11 +6,12 @@
  */
 
 import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, Icon, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { getModuleRunType, getModuleRunTypeDetails } from '@pipeline/utils/runPipelineUtils'
+import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import type { ExecutionListProps } from '../ExecutionList'
 import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import { useExecutionListEmptyAction } from './useExecutionListEmptyAction'
@@ -24,13 +25,13 @@ export function ExecutionListEmpty({
   const { isAnyFilterApplied, clearFilter } = useExecutionListFilterContext()
   const { module } = useModuleInfo()
   const { hasNoPipelines, loading, EmptyAction } = useExecutionListEmptyAction(!!isPipelineInvalid, onRunPipeline)
-  const { icon, illustration } = getModuleRunTypeDetails(module)
+  const { illustration } = getModuleRunTypeDetails(module)
 
   return (
     <div className={css.noExecutions}>
       {isAnyFilterApplied ? (
         <Layout.Vertical spacing="small" flex>
-          <Icon size={50} name={icon} margin={{ bottom: 'large' }} />
+          <img src={EmptySearchResults} className={css.image} />
           <Text
             margin={{ top: 'large', bottom: 'small' }}
             font={{ weight: 'bold', size: 'medium' }}

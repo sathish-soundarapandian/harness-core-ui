@@ -6,7 +6,7 @@
  */
 
 import { useModalHook } from '@harness/use-modal'
-import { Layout, SelectOption, shouldShowError } from '@wings-software/uicore'
+import { Layout, SelectOption, shouldShowError } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import React, { useEffect, useMemo, useRef } from 'react'

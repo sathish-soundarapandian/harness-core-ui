@@ -18,7 +18,7 @@ import {
   Dialog,
   Text,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -42,6 +42,7 @@ import {
 } from './CVCreateSLOV2.utils'
 import { CreateCompositeSloForm } from './components/CreateCompositeSloForm/CreateCompositeSloForm'
 import type { SLOV2Form } from './CVCreateSLOV2.types'
+import { SLOType } from './CVCreateSLOV2.constants'
 import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.module.scss'
 
 const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element => {
@@ -186,17 +187,24 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
     }
   ]
   // TODO: Update with swagger
-  const sloType = isComposite ? 'Composite' : 'Simple'
+  const sloType = isComposite ? SLOType.COMPOSITE : SLOType.SIMPLE
   return (
     <Container margin={{ bottom: 'large' }}>
       {!identifier && (
         <Page.Header
           breadcrumbs={<NGBreadcrumbs links={links} />}
           title={
-            <Heading level={3} font={{ variation: FontVariation.H4 }}>
-              {getString('cv.slos.createSLO')}
-              <HarnessDocTooltip tooltipId={'createSLO'} useStandAlone />
-            </Heading>
+            <Layout.Vertical flex={{ justifyContent: 'space-evenly', alignItems: 'flex-start' }} height={45}>
+              <Heading level={3} font={{ variation: FontVariation.H4 }}>
+                {isComposite ? getString('cv.CompositeSLO.CreateTitle') : getString('cv.slos.createSLO')}
+                <HarnessDocTooltip tooltipId={'createCompositeSLO'} useStandAlone />
+              </Heading>
+              {isComposite && (
+                <Text color={Color.GREY_600} font={{ variation: FontVariation.BODY2, weight: 'light' }}>
+                  {getString('cv.CompositeSLO.CreateMessage')}
+                </Text>
+              )}
+            </Layout.Vertical>
           }
         />
       )}

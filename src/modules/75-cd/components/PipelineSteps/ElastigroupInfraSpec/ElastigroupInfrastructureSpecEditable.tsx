@@ -20,7 +20,7 @@ import {
   ButtonVariation,
   FormError,
   useToggleOpen
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import type { ButtonProps } from '@wings-software/uicore'
+import type { ButtonProps } from '@harness/uicore'
 import RbacButton from '@rbac/components/Button/Button'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'

@@ -7,7 +7,7 @@
 
 import React, { FC, ReactNode, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { FormInput, SelectOption } from '@wings-software/uicore'
+import { FormInput, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetAllTargets, UseGetAllTargetsProps } from 'services/cf'
 import targetToSelectOption from '@cf/utils/targetToSelectOption'

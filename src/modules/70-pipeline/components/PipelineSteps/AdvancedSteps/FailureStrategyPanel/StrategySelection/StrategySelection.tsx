@@ -9,7 +9,7 @@ import React from 'react'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import { connect, FormikContextType, FieldArray } from 'formik'
 import { get, difference } from 'lodash-es'
-import { MultiTextInput, Button, MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTextInput, Button, MultiTypeInputType } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
 

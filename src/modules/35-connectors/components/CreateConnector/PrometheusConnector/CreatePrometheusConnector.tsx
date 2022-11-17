@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
-import { Container, FormikForm, Layout, FormInput, Formik, Button, Text } from '@wings-software/uicore'
+import { Container, FormikForm, Layout, FormInput, Formik, Button, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { buildPrometheusPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'

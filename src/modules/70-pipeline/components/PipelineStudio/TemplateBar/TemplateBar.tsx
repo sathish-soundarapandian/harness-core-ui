@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Icon, IconName, Layout, Popover, Text, useConfirmationDialog } from '@wings-software/uicore'
+import { Container, Icon, IconName, Layout, Popover, Text, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, Intent, Menu, Position } from '@blueprintjs/core'

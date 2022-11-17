@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import type { ModuleName } from 'framework/types/ModuleName'
 
 import type { ModuleLicenseDTO } from 'services/cd-ng'

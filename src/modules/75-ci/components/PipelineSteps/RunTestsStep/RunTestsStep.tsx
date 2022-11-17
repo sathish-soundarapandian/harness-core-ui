@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -110,10 +110,11 @@ export class RunTestsStep extends PipelineStep<RunTestsStepData> {
 
   protected type = StepType.RunTests
   protected stepName = 'Configure Run Tests Step'
-  protected stepIcon: IconName = 'run-tests-step'
+  protected stepIcon: IconName = 'run-tests-ci-step'
   protected stepIconColor = '#6B6D85'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.RunTests'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: RunTestsStepData = {
     identifier: '',

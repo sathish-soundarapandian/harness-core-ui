@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Container, HarnessDocTooltip } from '@wings-software/uicore'
+import { Text, Container, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { scheduleTabsId, isCronValid } from './ScheduleUtils'

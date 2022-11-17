@@ -6,7 +6,7 @@
  */
 
 import React, { createContext, useEffect, useMemo, useState } from 'react'
-import { Container, Tab, Tabs } from '@wings-software/uicore'
+import { Container, Tab, Tabs } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'

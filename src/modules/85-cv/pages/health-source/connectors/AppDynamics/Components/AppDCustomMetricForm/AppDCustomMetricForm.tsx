@@ -17,7 +17,7 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'

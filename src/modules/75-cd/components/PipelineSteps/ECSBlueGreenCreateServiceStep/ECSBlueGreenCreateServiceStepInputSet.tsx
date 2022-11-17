@@ -11,7 +11,7 @@ import produce from 'immer'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption } from '@harness/uicore'
 
 import {
   DeploymentStageConfig,
@@ -26,6 +26,7 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type {
   ECSBlueGreenCreateServiceStepInitialValues,
   ECSBlueGreenCreateServiceCustomStepProps
@@ -52,7 +53,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
 ): React.ReactElement => {
   const { initialValues, inputSetData, allowableTypes, customStepProps, formik } = props
   const { template, path, readonly, allValues } = inputSetData
-  const { selectedStage, stageIdentifier } = customStepProps
+  const selectedStage = customStepProps?.selectedStage
+  const stageIdentifier = customStepProps?.stageIdentifier
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -68,13 +70,13 @@ const ECSBlueGreenCreateServiceStepInputSet = (
   // These are to be passed in API calls after Service/Env V2 redesign
   const environmentRef = defaultTo(
     defaultTo(
-      selectedStage.stage?.spec?.environment?.environmentRef,
-      selectedStage.stage?.spec?.infrastructure?.environmentRef
+      selectedStage?.stage?.spec?.environment?.environmentRef,
+      selectedStage?.stage?.spec?.infrastructure?.environmentRef
     ),
     ''
   )
   const infrastructureRef = defaultTo(
-    selectedStage.stage?.spec?.environment?.infrastructureDefinitions?.[0].identifier,
+    selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0].identifier,
     ''
   )
 
@@ -93,7 +95,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
   )
   const initialAwsConnectorRef = !isEmpty(awsConnRef)
     ? awsConnRef
-    : selectedStage.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.connectorRef
+    : selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.connectorRef
   const region = defaultTo(
     (currentStageFormik?.stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition?.spec.region,
     (currentStageFormik?.stage?.spec as DeploymentStageConfig)?.environment?.infrastructureDefinitions?.[0]?.inputs
@@ -101,7 +103,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
   )
   const initialRegion = !isEmpty(region)
     ? region
-    : selectedStage.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.region
+    : selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.region
   const initialElasticLoadBalancer = !isEmpty(initialValues.spec?.loadBalancer)
     ? initialValues.spec?.loadBalancer
     : allValues?.spec?.loadBalancer
@@ -192,7 +194,10 @@ const ECSBlueGreenCreateServiceStepInputSet = (
     }
   }, [initialElasticLoadBalancer, initialStageListener])
 
-  const fetchLoadBalancers = () => {
+  const fetchLoadBalancers = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
+      return
+    }
     if (!loadingLoadBalancers) {
       if ((initialAwsConnectorRef && initialRegion) || (environmentRef && infrastructureRef)) {
         refetchLoadBalancers()
@@ -200,7 +205,10 @@ const ECSBlueGreenCreateServiceStepInputSet = (
     }
   }
 
-  const fetchListeners = (selectedLoadBalancer: string) => {
+  const fetchListeners = (e: React.FocusEvent<HTMLInputElement>, selectedLoadBalancer: string) => {
+    if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
+      return
+    }
     if (!loadingListeners) {
       if (
         (initialAwsConnectorRef && initialRegion && selectedLoadBalancer) ||
@@ -385,8 +393,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
                   formik?.setValues(updatedValues)
                 }
               },
-              onFocus: () => {
-                fetchListeners(get(formik?.values, `${prefix}spec.loadBalancer`))
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
               }
             }}
             label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
@@ -452,8 +460,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
                   formik?.setValues(updatedValues)
                 }
               },
-              onFocus: () => {
-                fetchListeners(get(formik?.values, `${prefix}spec.loadBalancer`))
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
               }
             }}
             label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}

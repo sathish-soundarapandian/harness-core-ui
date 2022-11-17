@@ -18,7 +18,7 @@ import {
   MultiTypeInputType,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
@@ -32,7 +32,7 @@ import {
   ServiceSpec,
   SidecarArtifact,
   useGetBuildDetailsForArtifactoryArtifactWithYaml,
-  useGetImagePathsForArtifactory,
+  useGetImagePathsForArtifactoryV2,
   useGetService
 } from 'services/cd-ng'
 
@@ -275,19 +275,31 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const connectorRef =
     get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
 
+  const repositoryValue = getDefaultQueryParam(
+    artifact?.spec?.repository,
+    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+  )
+
   const {
     data: imagePathData,
     loading: imagePathLoading,
     refetch: refetchImagePathData,
     error: imagePathError
-  } = useGetImagePathsForArtifactory({
+  } = useMutateAsGet(useGetImagePathsForArtifactoryV2, {
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
-      repository: '',
+      repository: getFinalQueryParamValue(repositoryValue),
       connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       fqnPath: getFqnPath(
         path as string,
         !!isPropagatedStage,
@@ -340,10 +352,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const connectorRefValue = getDefaultQueryParam(
     artifact?.spec?.connectorRef,
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
-  )
-  const repositoryValue = getDefaultQueryParam(
-    artifact?.spec?.repository,
-    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
   const artifactoryTagsDataCallMetadataQueryParams = React.useMemo(() => {
@@ -609,39 +617,21 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               />
             )}
           </div>
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) && isGenericArtifactory && (
-              <TextFieldInputSetView
-                label={getString('pipeline.artifactsSelection.artifactDirectory')}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactDirectory`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
-                onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
-                fieldPath={`artifacts.${artifactPath}.spec.artifactDirectory`}
-                template={template}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactDirectory`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactDirectory`)}
-                type="String"
-                variableName="artifactDirectory"
-                showRequiredField={false}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactDirectory`, value)
-                }}
-              />
-            )}
-          </div>
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) && isGenericArtifactory && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.artifactDirectory')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactDirectory`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
+              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
+              fieldPath={`artifacts.${artifactPath}.spec.artifactDirectory`}
+              template={template}
+            />
+          )}
+
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && !isGenericArtifactory && (
               <FormInput.MultiTypeInput
@@ -668,15 +658,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                     ) {
                       return
                     }
-                    refetchImagePathData({
-                      queryParams: {
-                        repository: repositoryValue,
-                        connectorRef,
-                        accountIdentifier: accountId,
-                        orgIdentifier,
-                        projectIdentifier
-                      }
-                    })
+                    refetchImagePathData()
                   }
                 }}
               />

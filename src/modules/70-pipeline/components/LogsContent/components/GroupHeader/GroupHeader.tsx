@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonSize, ButtonVariation, Icon, IconName } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Icon, IconName } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 
 import { Duration } from '@common/components/Duration/Duration'

@@ -15,7 +15,7 @@ import {
   MultiSelectOption,
   MultiTypeInputType,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { SubmenuSelectOption } from '@harness/uicore/dist/components/SelectWithSubmenu/SelectWithSubmenu'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'

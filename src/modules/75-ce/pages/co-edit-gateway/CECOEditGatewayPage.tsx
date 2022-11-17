@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
-import { PageSpinner } from '@wings-software/uicore'
+import { PageSpinner } from '@harness/uicore'
 import COGatewayDetails from '@ce/components/COGatewayDetails/COGatewayDetails'
 import type {
   GatewayDetails,

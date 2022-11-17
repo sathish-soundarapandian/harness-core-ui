@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import SelectDelegateType, { FormikForSelectDelegateType } from './SelectDelegateType'

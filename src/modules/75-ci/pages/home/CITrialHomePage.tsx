@@ -13,24 +13,21 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PageNames } from '@ci/constants/TrackingConstants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
+import { isOnPrem } from '@common/utils/utils'
 import bgImageURL from './images/ci.svg'
-
 import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const [loading, setLoading] = useState<boolean>(false)
   const { status: currentCIStatus } = licenseInformation['CI'] || {}
-
   useEffect(() => {
     setLoading(true)
     try {
@@ -62,7 +59,7 @@ const CITrialHomePage: React.FC = () => {
 
   useTelemetry({ pageName: PageNames.CIStartTrial })
 
-  const startBtnDescription = FREE_PLAN_ENABLED
+  const startBtnDescription = !isOnPrem()
     ? getString('common.startFreePlan', { module: 'CI' })
     : getString('ci.ciTrialHomePage.startTrial.startBtn.description')
 

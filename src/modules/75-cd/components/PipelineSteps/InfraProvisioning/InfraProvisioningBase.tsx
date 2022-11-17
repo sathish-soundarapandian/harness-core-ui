@@ -8,7 +8,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Spinner } from '@blueprintjs/core'
 import { Field, FormikContextType, FormikProps } from 'formik'
-import { Container, Formik, FormikForm, FormInput } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, FormInput } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'

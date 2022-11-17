@@ -7,7 +7,7 @@
 
 import React, { FC } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { ButtonVariation } from '@wings-software/uicore'
+import { ButtonVariation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

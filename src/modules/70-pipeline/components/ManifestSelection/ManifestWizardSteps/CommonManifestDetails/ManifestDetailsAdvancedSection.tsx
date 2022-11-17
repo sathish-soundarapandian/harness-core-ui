@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Accordion, Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
+import { Accordion, Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { ManifestConfig } from 'services/cd-ng'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Position, PopoverInteractionKind, Popover } from '@blueprintjs/core'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 

@@ -89,7 +89,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
         <p
           class="StyledProps--font StyledProps--main tableTitle"
         >
-          notifications.name
+          rbac.notifications.name
         </p>
       </div>
       <div
@@ -321,7 +321,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
           class="Layout--horizontal StyledProps--main headerActions StyledProps--flex"
         >
           <button
-            aria-label="notifications.name"
+            aria-label="rbac.notifications.name"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
             id="newNotificationBtn"
             type="button"
@@ -348,7 +348,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
             <span
               class="bp3-button-text"
             >
-              notifications.name
+              rbac.notifications.name
             </span>
           </button>
         </div>
@@ -408,7 +408,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
               >
-                NOTIFICATIONS.NOTIFICATIONMETHOD
+                RBAC.NOTIFICATIONS.NOTIFICATIONMETHOD
               </p>
             </div>
             <div

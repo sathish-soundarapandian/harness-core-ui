@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
-import { FormInput, Layout, MultiTypeInputType, Text } from '@wings-software/uicore'
+import { FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'

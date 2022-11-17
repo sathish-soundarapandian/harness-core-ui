@@ -13,10 +13,10 @@ import {
   FormikForm,
   Layout,
   FormInput,
-  Color,
   useToaster,
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'

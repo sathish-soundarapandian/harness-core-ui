@@ -8,7 +8,7 @@
 import React from 'react'
 import { truncate } from 'lodash-es'
 import cx from 'classnames'
-import { Text, Icon, Container, Layout } from '@wings-software/uicore'
+import { Text, Icon, Container, Layout } from '@harness/uicore'
 
 import css from './CICodebaseHeader.module.scss'
 

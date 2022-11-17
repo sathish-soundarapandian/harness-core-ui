@@ -20,7 +20,7 @@ import {
   SelectOption,
   ButtonVariation,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'

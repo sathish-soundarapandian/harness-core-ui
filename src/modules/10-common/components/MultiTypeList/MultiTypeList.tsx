@@ -8,13 +8,7 @@
 import React from 'react'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import cx from 'classnames'
-import {
-  FormInput,
-  Button,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  MultiTextInputProps
-} from '@wings-software/uicore'
+import { FormInput, Button, getMultiTypeFromValue, MultiTypeInputType, MultiTextInputProps } from '@harness/uicore'
 import { FieldArray, connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

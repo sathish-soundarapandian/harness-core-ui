@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { AllowedTypes, Formik } from '@wings-software/uicore'
+import { AllowedTypes, Formik } from '@harness/uicore'
 import { noop } from 'lodash-es'
 // eslint-disable-next-line no-restricted-imports
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'

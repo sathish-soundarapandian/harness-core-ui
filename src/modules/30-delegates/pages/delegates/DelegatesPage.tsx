@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
-import { TabNavigation } from '@wings-software/uicore'
+import { TabNavigation } from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import ScopedTitle from '@common/components/Title/ScopedTitle'

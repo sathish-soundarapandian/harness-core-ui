@@ -16,11 +16,11 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  Color,
   Layout,
   Button,
   Label
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {

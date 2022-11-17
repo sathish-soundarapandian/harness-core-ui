@@ -10,17 +10,17 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
+import '@harness/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
-import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil } from 'lodash-es'
+import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil, get } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
-import { scalarOptions, defaultOptions } from 'yaml'
-import { Tag, Icon, Container, useConfirmationDialog } from '@wings-software/uicore'
+import { scalarOptions, defaultOptions, parse } from 'yaml'
+import { Tag, Icon, Container, useConfirmationDialog } from '@harness/uicore'
 import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
@@ -63,6 +63,8 @@ import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { isWindowsOS } from '@common/utils/utils'
 import { carriageReturnRegex } from '@common/utils/StringUtils'
+import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
+import { CompletionItemKind } from 'vscode-languageserver-types'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -116,8 +118,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     onErrorCallback,
     renderCustomHeader,
     openDialogProp,
-    showCopyIcon = true
+    showCopyIcon = true,
+    comparableYaml
   } = props
+  const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
+
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
@@ -137,6 +142,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
+  let allowedValuesCompletionDisposer: { dispose: () => void }
 
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -309,6 +315,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     if (runTimeCompletionDisposer) {
       runTimeCompletionDisposer.dispose()
     }
+    if (allowedValuesCompletionDisposer) {
+      allowedValuesCompletionDisposer.dispose()
+    }
   }
 
   /* #endregion */
@@ -360,6 +369,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     if (editor) {
       suggestionsPromise.then(suggestions => {
         // @ts-ignore
+        disposePreviousSuggestions()
         runTimeCompletionDisposer = monaco?.languages?.registerCompletionItemProvider('yaml', {
           triggerCharacters: [' '],
           provideCompletionItems: () => {
@@ -367,6 +377,41 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           }
         })
       })
+    }
+  }
+
+  function isAllowedValues(input: string): boolean {
+    let regex = /<\+input>\.allowedValues\([^)]*\)/i
+    return regex.test(input)
+  }
+
+  const getAllowedValuesFromString = (inputValue: string): CompletionItemInterface[] => {
+    const parsedInput = parseInput(inputValue)
+    const items: CompletionItemInterface[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
+      label: item,
+      insertText: item,
+      kind: CompletionItemKind.Field
+    }))
+
+    return items
+  }
+
+  /** Run-time Allowed values Inputs support */
+  function registerCompletionItemProviderForAllowedValues(
+    editor: editor.IStandaloneCodeEditor,
+    currentPathValue: string
+  ): void {
+    if (isAllowedValues(currentPathValue)) {
+      const suggestedValues = getAllowedValuesFromString(currentPathValue)
+      if (editor) {
+        disposePreviousSuggestions()
+        allowedValuesCompletionDisposer = monaco?.languages?.registerCompletionItemProvider('yaml', {
+          triggerCharacters: [' '],
+          provideCompletionItems: () => {
+            return { suggestions: suggestedValues }
+          }
+        })
+      }
     }
   }
 
@@ -437,15 +482,55 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           event.preventDefault()
         }
       }
-      if (ctrlKey && code === KEY_CODE_FOR_SPACE) {
-        disposePreviousSuggestions()
-      }
 
       // dispose expressionCompletion if (+) sign is not preceding with (<)
       if (code === KEY_CODE_FOR_PLUS_SIGN) {
         const lastKeyStrokeCharacter = getEditorContentInCurrentLine(editor)?.substr(-1)
         if (lastKeyStrokeCharacter !== ANGULAR_BRACKET_CHAR) {
           expressionCompletionDisposer?.dispose()
+        }
+      }
+
+      if (code === KEY_CODE_FOR_SPACE || code === KEY_CODE_FOR_SEMI_COLON) {
+        const yamlPathForAllowedValues = getMetaDataForKeyboardEventProcessing({
+          editor,
+          onErrorCallback
+        })?.parentToCurrentPropertyPath
+
+        //currently working with Pipelines and InputSets entityTypes only as these are the only ones which support runtime inputs
+        const currentPathWithoutEntityType =
+          //for runPipelineForm we don't need to remove the entityType as it already starts from 'pipeline.[something]'
+          entityType === 'Pipelines'
+            ? defaultTo(yamlPathForAllowedValues, '')
+            : entityType === 'InputSets'
+            ? defaultTo(yamlPathForAllowedValues?.split('inputSet.').pop(), '')
+            : ''
+        const currentPathValue = get(comparableYamlJson, currentPathWithoutEntityType)
+
+        //disposing values
+        if (isAllowedValues(currentPathValue)) {
+          runTimeCompletionDisposer?.dispose()
+          expressionCompletionDisposer?.dispose()
+        } else {
+          allowedValuesCompletionDisposer?.dispose()
+        }
+
+        // this is to invoke allowedValues inputs as suggestions
+        if (isAllowedValues(currentPathValue)) {
+          registerCompletionItemProviderForAllowedValues(editor, currentPathValue)
+        }
+
+        // this is to invoke run-time inputs as suggestions
+        // also these are restricted to specific keystrokes as these action make api calls
+        if ((ctrlKey && code === KEY_CODE_FOR_SPACE) || (shiftKey && code === KEY_CODE_FOR_SEMI_COLON)) {
+          if (invocationMap && invocationMap.size > 0 && !isAllowedValues(currentPathValue)) {
+            const yamlPathForNonAllowedValued = getMetaDataForKeyboardEventProcessing({
+              editor,
+              onErrorCallback,
+              shouldAddPlaceholder: true
+            })?.parentToCurrentPropertyPath
+            invokeCallBackForMatchingYAMLPaths(editor, yamlPathForNonAllowedValued)
+          }
         }
       }
 
@@ -458,16 +543,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           })?.parentToCurrentPropertyPath
           disposePreviousSuggestions()
           registerCompletionItemProviderForExpressions(editor, TRIGGER_CHARS_FOR_NEW_EXPR, yamlPath)
-        }
-        // this is to invoke run-time inputs as suggestions
-        else if (code === KEY_CODE_FOR_SEMI_COLON && invocationMap && invocationMap.size > 0) {
-          const yamlPath = getMetaDataForKeyboardEventProcessing({
-            editor,
-            onErrorCallback,
-            shouldAddPlaceholder: true
-          })?.parentToCurrentPropertyPath
-          disposePreviousSuggestions()
-          invokeCallBackForMatchingYAMLPaths(editor, yamlPath)
         }
       }
       // this is to invoke partial expressions callback e.g. invoke expressions callback on hitting a period(.) after an expression: expr1.expr2. <-

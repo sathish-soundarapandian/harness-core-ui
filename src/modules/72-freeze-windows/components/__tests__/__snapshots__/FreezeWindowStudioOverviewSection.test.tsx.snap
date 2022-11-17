@@ -18,7 +18,7 @@ exports[`Freeze Window Studio OverView Section it should render Overview section
             level="3"
             style="font-weight: 600; font-size: 16px; line-height: 24px;"
           >
-            freezeWindows.freezeStudio.freezeOverview
+            overview
           </h3>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard"

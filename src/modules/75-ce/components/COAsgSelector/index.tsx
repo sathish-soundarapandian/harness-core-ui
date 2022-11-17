@@ -20,7 +20,7 @@ import {
   TableV2,
   SelectOption,
   Select
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { GatewayDetails } from '@ce/components/COCreateGateway/models'
 import { useStrings } from 'framework/strings'

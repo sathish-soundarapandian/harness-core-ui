@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Container, Text, HarnessDocTooltip } from '@wings-software/uicore'
+import { Layout, Container, Text, HarnessDocTooltip } from '@harness/uicore'
 import { isUndefined } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

@@ -20,7 +20,7 @@ import {
   FormikForm,
   useToaster,
   getErrorInfoFromErrorObject
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import { CEReportSchedule, useCreateReportSetting, useUpdateReportSetting } from 'services/ce'

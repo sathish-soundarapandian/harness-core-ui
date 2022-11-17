@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Icon, Text } from '@wings-software/uicore'
+import { Layout, Icon, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ModuleRenderer.module.scss'

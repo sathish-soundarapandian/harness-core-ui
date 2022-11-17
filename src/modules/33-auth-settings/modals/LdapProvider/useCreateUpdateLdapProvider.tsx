@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Dialog } from '@wings-software/uicore'
+import { Button, Dialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { cloneDeep } from 'lodash-es'
 import CreateUpdateLdapWizard from '@auth-settings/components/CreateUpdateLdapWizard/CreateUpdateLdapWizard'

@@ -16,7 +16,7 @@ import {
   SelectOption,
   Button,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { cloneDeep, get, isArray, isEmpty, set } from 'lodash-es'
 import { FieldArray } from 'formik'
 import { PopoverInteractionKind, Spinner } from '@blueprintjs/core'

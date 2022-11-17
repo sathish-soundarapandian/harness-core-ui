@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { Form } from 'formik'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StageAdvancedInputSetForm } from '../StageAdvancedInputSetForm'

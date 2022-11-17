@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'

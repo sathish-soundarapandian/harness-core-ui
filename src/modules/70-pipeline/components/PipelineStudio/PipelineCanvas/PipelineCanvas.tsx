@@ -221,6 +221,7 @@ export function PipelineCanvas({
   const [selectedBranch, setSelectedBranch] = React.useState(branch || '')
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
+  const [modalMode, setModalMode] = React.useState<'edit' | 'create'>('create')
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
@@ -342,11 +343,7 @@ export function PipelineCanvas({
             isOpen={true}
             className={'padded-dialog'}
             onClose={onCloseCreate}
-            title={
-              pipelineIdentifier === DefaultNewPipelineId
-                ? getString('moduleRenderer.newPipeLine')
-                : getString('editPipeline')
-            }
+            title={modalMode === 'create' ? getString('moduleRenderer.newPipeLine') : getString('editPipeline')}
           >
             <CreatePipelines
               afterSave={onSubmit}
@@ -359,6 +356,7 @@ export function PipelineCanvas({
               })}
               closeModal={onCloseCreate}
               gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
+              primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
             />
           </Dialog>
         </PipelineVariablesContextProvider>
@@ -372,7 +370,8 @@ export function PipelineCanvas({
     repoName,
     gitDetails,
     branch,
-    connectorRef
+    connectorRef,
+    modalMode
   ])
 
   React.useEffect(() => {
@@ -398,6 +397,7 @@ export function PipelineCanvas({
   React.useEffect(() => {
     if (isInitialized) {
       if (pipeline?.identifier === DefaultNewPipelineId) {
+        setModalMode('create')
         showModal()
       }
       if (isBEPipelineUpdated && !discardBEUpdateDialog) {
@@ -870,7 +870,10 @@ export function PipelineCanvas({
                         <Button
                           variation={ButtonVariation.ICON}
                           icon="Edit"
-                          onClick={showModal}
+                          onClick={() => {
+                            setModalMode('edit')
+                            showModal()
+                          }}
                           aria-label={getString('editPipeline')}
                         />
                       )}

@@ -12,7 +12,7 @@ import { isEmpty, omit } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import classNames from 'classnames'
-import { useToaster } from '@wings-software/uicore'
+import { useToaster } from '@harness/uicore'
 import { DefaultTemplate } from 'framework/Templates/templates'
 import {
   ModalProps,

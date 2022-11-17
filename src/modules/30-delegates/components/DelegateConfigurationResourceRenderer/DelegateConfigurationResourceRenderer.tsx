@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { get } from 'lodash-es'
-import { Button, TableV2 } from '@wings-software/uicore'
+import { Button, TableV2 } from '@harness/uicore'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import { useListDelegateProfilesNg, DelegateProfileDetailsNg } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'

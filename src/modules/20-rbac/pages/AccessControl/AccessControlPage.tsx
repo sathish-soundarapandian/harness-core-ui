@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { TabNavigation } from '@wings-software/uicore'
+import { TabNavigation } from '@harness/uicore'
 import { useParams, useLocation, matchPath } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'

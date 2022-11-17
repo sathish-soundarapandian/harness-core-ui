@@ -46,7 +46,7 @@ export function ConfigFilesWizard({
       className={css.configFileWizard}
       onStepChange={onStepChange}
       icon={deploymentTypeIcon[deploymentType as ServiceTypes]}
-      iconProps={{ size: 50 }}
+      iconProps={{ size: 50, inverse: true }}
       title={`${
         deploymentType && getString(deploymentTypeLabel[deploymentType as ServiceDefinition['type']])
       } ${getString('pipeline.configFiles.title', { type: 'Source' })}`}

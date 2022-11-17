@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { Formik } from 'formik'
-import { FormikForm } from '@wings-software/uicore'
+import { FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   initialFormData,
@@ -108,28 +108,30 @@ describe('Test SLOTargetAndBudgetPolicy component', () => {
   })
 
   test('verify getErrorBudget', () => {
-    expect(getErrorBudget(serviceLevelObjective)).toEqual(43200)
-    expect(getErrorBudget({ ...serviceLevelObjective, SLOTargetPercentage: NaN })).toEqual(0)
-    expect(getErrorBudget({ ...serviceLevelObjective, SLOTargetPercentage: -1 })).toEqual(0)
-    expect(getErrorBudget({ ...serviceLevelObjective, SLOTargetPercentage: 101 })).toEqual(0)
-    expect(getErrorBudget({ ...serviceLevelObjective, periodLength: 'NaN' })).toEqual(0)
+    const { periodType, periodLength, periodLengthType, SLOTargetPercentage } = serviceLevelObjective
+    const errorBudgetParams = { periodType, periodLength, periodLengthType, SLOTargetPercentage }
+    expect(getErrorBudget({ ...errorBudgetParams })).toEqual(43200)
+    expect(getErrorBudget({ ...errorBudgetParams, SLOTargetPercentage: NaN })).toEqual(0)
+    expect(getErrorBudget({ ...errorBudgetParams, SLOTargetPercentage: -1 })).toEqual(0)
+    expect(getErrorBudget({ ...errorBudgetParams, SLOTargetPercentage: 101 })).toEqual(0)
+    expect(getErrorBudget({ ...errorBudgetParams, periodLength: 'NaN' })).toEqual(0)
     expect(
       getErrorBudget({
-        ...serviceLevelObjective,
+        ...errorBudgetParams,
         periodType: PeriodTypes.CALENDAR,
         periodLengthType: PeriodLengthTypes.WEEKLY
       })
     ).toEqual(10080)
     expect(
       getErrorBudget({
-        ...serviceLevelObjective,
+        ...errorBudgetParams,
         periodType: PeriodTypes.CALENDAR,
         periodLengthType: PeriodLengthTypes.MONTHLY
       })
     ).toEqual(43200)
     expect(
       getErrorBudget({
-        ...serviceLevelObjective,
+        ...errorBudgetParams,
         periodType: PeriodTypes.CALENDAR,
         periodLengthType: PeriodLengthTypes.QUARTERLY
       })

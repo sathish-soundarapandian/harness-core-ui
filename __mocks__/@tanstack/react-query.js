@@ -8,6 +8,8 @@ module.exports.useMutation = () => {
   return {}
 }
 
-class QueryClientMock {}
+class QueryClientMock {
+  invalidateQueries = () => void 0
+}
 
 module.exports.QueryClient = QueryClientMock

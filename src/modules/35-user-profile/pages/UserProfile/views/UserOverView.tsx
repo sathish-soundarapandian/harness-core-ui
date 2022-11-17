@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import UserSummaryTab from './UserSummaryTab'
 
 const UserOverView: React.FC = () => {

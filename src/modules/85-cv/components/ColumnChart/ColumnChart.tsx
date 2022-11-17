@@ -8,7 +8,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import cx from 'classnames'
-import { Text, Container, Popover, PageError, NoDataCard } from '@wings-software/uicore'
+import { Text, Container, Popover, PageError, NoDataCard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import noDataImage from '@cv/assets/noData.svg'

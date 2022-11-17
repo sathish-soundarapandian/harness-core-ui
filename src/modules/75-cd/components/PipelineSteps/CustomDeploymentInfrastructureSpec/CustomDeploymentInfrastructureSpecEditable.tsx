@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, FormInput, Formik, FormikForm, HarnessDocTooltip } from '@wings-software/uicore'
+import { Text, Layout, FormInput, Formik, FormikForm, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'

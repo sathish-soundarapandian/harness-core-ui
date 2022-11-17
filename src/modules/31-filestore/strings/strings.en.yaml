@@ -21,7 +21,6 @@ folderSuccessSaved: 'Folder "{{name}}" saved'
 fileSuccessSaved: 'File "{{name}}" saved'
 fileReferenceText: 'To delete your files, please remove the reference file from these entities.'
 cantDeleteFile: 'Unable to delete {{type}}'
-referenceButtonText: 'Go view references'
 errors:
   fileUsage: 'File Usage is required'
   cannotRender: 'File format not supported'

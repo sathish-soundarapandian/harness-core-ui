@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'

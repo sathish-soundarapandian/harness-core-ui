@@ -6,16 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Layout,
-  PageBody,
-  PageHeader,
-  Container,
-  Text,
-  FontVariation,
-  useToaster,
-  getErrorInfoFromErrorObject
-} from '@harness/uicore'
+import { Layout, PageBody, PageHeader, Container, Text, useToaster, getErrorInfoFromErrorObject } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Drawer, Position } from '@blueprintjs/core'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'

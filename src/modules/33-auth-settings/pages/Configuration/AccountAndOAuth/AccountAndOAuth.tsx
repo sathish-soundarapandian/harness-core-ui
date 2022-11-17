@@ -8,7 +8,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { Radio, Container, Layout, Collapse, Text, useConfirmationDialog } from '@wings-software/uicore'
+import { Radio, Container, Layout, Collapse, Text, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings, String } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

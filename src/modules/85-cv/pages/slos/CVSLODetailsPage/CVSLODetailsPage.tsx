@@ -9,7 +9,7 @@ import React, { useEffect, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Container, FlexExpander, Page, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useDeleteSLOData, useGetSLODetails, useResetErrorBudget } from 'services/cv'
+import { useDeleteSLOData, useDeleteSLOV2Data, useGetSLODetails, useResetErrorBudget } from 'services/cv'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -23,6 +23,7 @@ import DetailsPanel from './DetailsPanel/DetailsPanel'
 import TabToolbar from './DetailsPanel/views/TabToolbar'
 import { SLODetailsPageTabIds } from './CVSLODetailsPage.types'
 import CVCreateSLOV2 from '../components/CVCreateSLOV2/CVCreateSLOV2'
+import { SLOType } from '../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import css from './CVSLODetailsPage.module.scss'
 
 const CVSLODetailsPage: React.FC = () => {
@@ -41,6 +42,7 @@ const CVSLODetailsPage: React.FC = () => {
   } = useQueryParams<{ tab?: SLODetailsPageTabIds; monitoredServiceIdentifier?: string; sloType?: string }>()
 
   const projectIdentifierRef = useRef<string>()
+  const isCompositeSLO = sloType === SLOType.COMPOSITE
   useEffect(() => {
     if (projectIdentifierRef.current && projectIdentifierRef.current !== projectIdentifier) {
       history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier }))
@@ -66,7 +68,7 @@ const CVSLODetailsPage: React.FC = () => {
   })
 
   useEffect(() => {
-    if (identifier && !sloType) {
+    if (identifier && !isCompositeSLO) {
       refetch()
     }
   }, [identifier, refetch, sloType])
@@ -81,6 +83,14 @@ const CVSLODetailsPage: React.FC = () => {
   })
 
   const { mutate: deleteSLO, loading: deleteSLOLoading } = useDeleteSLOData({
+    queryParams: {
+      accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  })
+
+  const { mutate: deleteSLOV2, loading: deleteSLOV2Loading } = useDeleteSLOV2Data({
     queryParams: {
       accountId,
       orgIdentifier,
@@ -103,7 +113,7 @@ const CVSLODetailsPage: React.FC = () => {
   }
 
   const { description, createdAt, lastModifiedAt, sloDashboardWidget, timeRangeFilters } = data?.data ?? {}
-  const loading = sloDetailsLoading || resetErrorBudgetLoading || deleteSLOLoading
+  const loading = sloDetailsLoading || resetErrorBudgetLoading || deleteSLOLoading || deleteSLOV2Loading
 
   const breadcrumbLinks = [
     {
@@ -148,10 +158,10 @@ const CVSLODetailsPage: React.FC = () => {
                   error={getErrorMessage(error)}
                   retryOnError={() => refetch()}
                   noData={{
-                    when: () => !sloDashboardWidget && !sloType
+                    when: () => !sloDashboardWidget && !isCompositeSLO
                   }}
                 >
-                  {sloType ? <CVCreateSLOV2 isComposite /> : <CVCreateSLO />}
+                  {isCompositeSLO ? <CVCreateSLOV2 isComposite /> : <CVCreateSLO />}
                 </Page.Body>
               )
             }
@@ -162,7 +172,7 @@ const CVSLODetailsPage: React.FC = () => {
             <TabToolbar
               sloDashboardWidget={sloDashboardWidget}
               resetErrorBudget={resetErrorBudget}
-              deleteSLO={deleteSLO}
+              deleteSLO={isCompositeSLO ? deleteSLOV2 : deleteSLO}
               refetchSLODetails={refetch}
               onTabChange={onTabChange}
             />

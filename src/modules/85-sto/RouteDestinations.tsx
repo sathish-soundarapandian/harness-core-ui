@@ -61,6 +61,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.STO, {
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_TESTTARGET, {
   icon: 'sto-color-filled',
   label: 'sto.targets.testTargets',
+  labelSingular: 'common.singularLabels.testTarget',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_TESTTARGET]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -70,6 +71,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_TESTTARGET, {
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXEMPTION, {
   icon: 'sto-color-filled',
   label: 'sto.exemptions',
+  labelSingular: 'sto.stoExemption',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_EXEMPTION]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -80,6 +82,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXEMPTION, {
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_SCAN, {
   icon: 'sto-color-filled',
   label: 'sto.scans',
+  labelSingular: 'common.singularLabels.scan',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_SCAN]: <LocaleString stringID="rbac.permissionLabels.view" />
@@ -88,6 +91,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_SCAN, {
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
   icon: 'sto-color-filled',
   label: 'sto.issues',
+  labelSingular: 'common.singularLabels.issue',
   category: ResourceCategory.STO,
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_ISSUE]: <LocaleString stringID="rbac.permissionLabels.view" />

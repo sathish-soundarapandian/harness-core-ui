@@ -3,7 +3,7 @@
 exports[`Terraform artifactory tests initial render 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -17,7 +17,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <p
             class="StyledProps--font StyledProps--main"
@@ -343,7 +343,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
 exports[`Terraform artifactory tests initial render with form data for config and tf apply/destroy 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -357,7 +357,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <p
             class="StyledProps--font StyledProps--main"
@@ -683,7 +683,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
 exports[`Terraform artifactory tests initial render with form data for config in tf plan 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -697,7 +697,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <p
             class="StyledProps--font StyledProps--main"
@@ -1023,7 +1023,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
 exports[`Terraform artifactory tests initial render with form data for var files  1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -1037,7 +1037,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <div
             class="formGroup md"
@@ -1621,7 +1621,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
 exports[`Terraform artifactory tests initial render with no form data for config and tf apply/destroy 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -1635,7 +1635,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <p
             class="StyledProps--font StyledProps--main"
@@ -1961,7 +1961,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
 exports[`Terraform artifactory tests submit when it is a config form 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -1975,7 +1975,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <p
             class="StyledProps--font StyledProps--main"
@@ -2301,7 +2301,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
 exports[`Terraform artifactory tests test click previous button 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -2315,7 +2315,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <p
             class="StyledProps--font StyledProps--main"
@@ -2641,7 +2641,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
 exports[`Terraform artifactory tests test submitting when terraform plan form 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -2655,7 +2655,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <div
             class="formGroup md"
@@ -3119,7 +3119,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
 exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
@@ -3133,7 +3133,7 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
         action="#"
       >
         <div
-          class="tfRemoteForm"
+          class="tfArtifactoryStepTwo"
         >
           <div
             class="formGroup md"

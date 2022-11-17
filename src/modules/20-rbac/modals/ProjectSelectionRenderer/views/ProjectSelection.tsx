@@ -6,16 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Button,
-  ButtonVariation,
-  Color,
-  Container,
-  ExpandingSearchInput,
-  Layout,
-  TagsPopover,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonVariation, Container, ExpandingSearchInput, Layout, TagsPopover, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { Project, useGetProjectList } from 'services/cd-ng'

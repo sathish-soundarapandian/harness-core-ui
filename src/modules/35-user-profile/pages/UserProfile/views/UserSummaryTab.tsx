@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import SourceCodeManagerList from '@user-profile/components/UserSummary/SourceCodeManagerList'
 import MyProjectsList from '@user-profile/components/UserSummary/MyProjectsList'
 import ApiKeyList from '@rbac/components/ApiKeyList/ApiKeyList'

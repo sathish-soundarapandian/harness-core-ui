@@ -22,7 +22,7 @@ import {
   MultiTypeInputType,
   PageSpinner,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'

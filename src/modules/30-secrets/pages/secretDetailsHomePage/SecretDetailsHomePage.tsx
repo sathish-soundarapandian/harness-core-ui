@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom'
-import { Container, Layout, Text, Icon, Tabs } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon, Tabs } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'

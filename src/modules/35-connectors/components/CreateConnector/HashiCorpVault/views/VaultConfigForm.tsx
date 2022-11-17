@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, Layout, StepProps, Container, Text, ButtonVariation } from '@wings-software/uicore'
+import { Button, Formik, FormikForm, Layout, StepProps, Container, Text, ButtonVariation } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { VaultConnectorDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

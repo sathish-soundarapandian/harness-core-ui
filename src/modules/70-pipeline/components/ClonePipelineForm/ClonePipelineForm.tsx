@@ -20,12 +20,10 @@ import {
   SelectOption,
   useToaster,
   Text,
-  FontVariation,
-  Color,
   Icon
 } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
-
+import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { PMSPipelineSummaryResponse, useClonePipeline } from 'services/pipeline-ng'

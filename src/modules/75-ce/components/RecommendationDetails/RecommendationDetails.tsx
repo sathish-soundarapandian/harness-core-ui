@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Container, Layout, Text, Button, Icon, Popover } from '@wings-software/uicore'
+import { Container, Layout, Text, Button, Icon, Popover } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import copy from 'copy-to-clipboard'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'

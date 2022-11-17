@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { AllowedTypes, Layout } from '@wings-software/uicore'
+import { AllowedTypes, Layout } from '@harness/uicore'
 import cx from 'classnames'
 
 import { defaultTo } from 'lodash-es'
@@ -20,17 +20,17 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { CustomVariableInputSetExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import azureWebAppConfigBaseFactory from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
+import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
+import { RuntimeApplicationConfig } from '@pipeline/components/RuntimeApplicationConfig/RuntimeApplicationConfig'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
 import PrimaryArtifactRef from '../../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import { ConfigFiles } from '../../SshServiceSpec/SshConfigFiles/ConfigFiles'
-import { ApplicationConfig } from '../../AzureWebAppServiceSpec/RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
-import { AzureWebAppConfigType } from '../../AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
+import { ApplicationConfigType } from '../../AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
 import css from './GenericServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
@@ -111,22 +111,22 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
       )}
 
       {!!template?.applicationSettings && (
-        <ApplicationConfig
-          type={AzureWebAppConfigType.applicationSettings}
+        <RuntimeApplicationConfig
+          type={ApplicationConfigType.applicationSettings}
           template={template}
-          azureWebAppConfig={allValues?.applicationSettings}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
+          applicationConfig={allValues?.applicationSettings}
+          applicationConfigBaseFactory={applicationConfigBaseFactory}
           stageIdentifier={stageIdentifier}
           {...commonProps}
         />
       )}
 
       {!!template?.connectionStrings && (
-        <ApplicationConfig
-          type={AzureWebAppConfigType.connectionStrings}
+        <RuntimeApplicationConfig
+          type={ApplicationConfigType.connectionStrings}
           template={template}
-          azureWebAppConfig={allValues?.connectionStrings}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
+          applicationConfig={allValues?.connectionStrings}
+          applicationConfigBaseFactory={applicationConfigBaseFactory}
           stageIdentifier={stageIdentifier}
           {...commonProps}
         />

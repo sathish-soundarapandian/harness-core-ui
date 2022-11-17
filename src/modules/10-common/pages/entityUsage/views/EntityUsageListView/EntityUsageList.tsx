@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import type { Column, Renderer, CellProps } from 'react-table'
-import { Text, Layout, Icon, TableV2 } from '@wings-software/uicore'
+import { Text, Layout, Icon, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import type {

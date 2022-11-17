@@ -28,6 +28,8 @@ declare const styles: {
   readonly dragging: string
   readonly editBtn: string
   readonly fieldBorder: string
+  readonly fileDropdown: string
+  readonly fileSelect: string
   readonly formComponent: string
   readonly formContainerStepOne: string
   readonly headerContainer: string
@@ -46,6 +48,7 @@ declare const styles: {
   readonly radioBtns: string
   readonly remoteIcon: string
   readonly squareCardContainer: string
+  readonly tfArtifactoryStepTwo: string
   readonly tfContainer: string
   readonly tfMenu: string
   readonly tfRemoteForm: string

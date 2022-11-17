@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import { parse } from 'yaml'
 import { get } from 'lodash-es'
 import type { FormikErrors } from 'formik'
@@ -88,9 +88,10 @@ export class RestoreCacheGCSStep extends PipelineStep<RestoreCacheGCSStepData> {
 
   protected type = StepType.RestoreCacheGCS
   protected stepName = 'Restore Cache from GCS'
-  protected stepIcon: IconName = 'restore-cache-gcs-step'
+  protected stepIcon: IconName = 'restore-cache-gcs-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.RestoreCacheGCS'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: RestoreCacheGCSStepData = {
     identifier: '',

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'

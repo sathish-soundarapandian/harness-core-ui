@@ -8,7 +8,7 @@
 import React, { Fragment, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type {

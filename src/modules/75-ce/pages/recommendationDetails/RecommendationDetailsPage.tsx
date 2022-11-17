@@ -20,7 +20,7 @@ import {
   ButtonSize,
   PillToggle,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem, Slider } from '@blueprintjs/core'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'

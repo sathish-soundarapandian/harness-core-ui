@@ -1,10 +1,10 @@
 {
   "name": "nextgenui",
   "description": "Harness Inc",
-  "version": "0.327.0",
+  "version": "0.328.0",
   "author": "Harness Inc",
   "license": "Harness Inc",
-  "homepage": "http://app.harness.io/",
+  "homepage": "https://app.harness.io/",
   "repository": {
     "type": "git",
     "url": "https://github.com/harness/harness-core-ui.git"
@@ -58,12 +58,13 @@
     "@emotion/styled": "^10.0.27",
     "@harness/design-system": "1.0.0",
     "@harness/help-panel": "1.14.0",
-    "@harness/icons": "^1.75.0",
+    "@harness/icons": "^1.81.0",
     "@harness/monaco-yaml": "^1.0.0",
     "@harness/ng-tooltip": "^1.31.25",
     "@harness/telemetry": "^1.0.42",
-    "@harness/uicore": "^3.87.0",
+    "@harness/uicore": "^3.89.2",
     "@harness/use-modal": "1.1.0",
+    "@harnessio/ff-react-client-sdk": "^1.0.0-alpha.12",
     "@popperjs/core": "^2.4.2",
     "@stripe/react-stripe-js": "^1.9.0",
     "@stripe/stripe-js": "^1.32.0",
@@ -96,6 +97,7 @@
     "monaco-editor-core": "0.15.5",
     "monaco-languages": "1.6.0",
     "monaco-plugin-helpers": "^1.0.2",
+    "nanoid": "^4.0.0",
     "p-debounce": "^3.0.1",
     "qs": "^6.9.4",
     "react": "^17.0.2",
@@ -151,6 +153,7 @@
     "@types/lodash-es": "^4.17.3",
     "@types/masonry-layout": "^4.2.1",
     "@types/mustache": "^4.0.1",
+    "@types/nanoid": "^3.0.0",
     "@types/node": "^16.4.10",
     "@types/path-to-regexp": "^1.7.0",
     "@types/qs": "^6.9.4",
@@ -249,7 +252,7 @@
       "sh scripts/license/stamp.sh"
     ],
     "*.{ts,tsx}": [
-      "eslint --rulesdir ./scripts/eslint-rules --resolve-plugins-relative-to",
+      "eslint --rulesdir ./scripts/eslint-rules",
       "sh scripts/typecheck-staged.sh",
       "prettier --check"
     ],

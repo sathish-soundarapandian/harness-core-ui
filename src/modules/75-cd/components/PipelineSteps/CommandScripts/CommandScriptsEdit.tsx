@@ -19,7 +19,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { Color } from '@harness/design-system'
 

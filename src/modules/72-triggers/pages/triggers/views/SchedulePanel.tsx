@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Tabs, Tab, Text, HarnessDocTooltip } from '@wings-software/uicore'
+import { Layout, Tabs, Tab, Text, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { MinutesTab, HourlyTab, DailyTab, WeeklyTab, MonthlyTab, YearlyTab, CustomTab } from './subviews'

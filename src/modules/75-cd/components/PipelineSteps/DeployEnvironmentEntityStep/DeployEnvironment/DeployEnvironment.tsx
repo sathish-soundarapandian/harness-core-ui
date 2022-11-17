@@ -30,6 +30,7 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -38,6 +39,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -100,20 +102,20 @@ export default function DeployEnvironment({
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { refetchPipelineVariable } = usePipelineVariables()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
-  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue(initialValues.environment)
+  const [environmentsType, setEnvironmentsType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.environment || initialValues.environments)
   )
 
   // Constants
-  const isFixed =
-    (isMultiEnvironment ? getMultiTypeFromValue(values.environments) : environmentRefType) === MultiTypeInputType.FIXED
+  const isFixed = environmentsType === MultiTypeInputType.FIXED
 
-  const isExpression = environmentRefType === MultiTypeInputType.EXPRESSION
+  const isExpression = environmentsType === MultiTypeInputType.EXPRESSION
 
   // API
   const {
@@ -130,6 +132,19 @@ export default function DeployEnvironment({
     envIdentifiers: selectedEnvironments,
     envGroupIdentifier
   })
+
+  useEffect(() => {
+    /**
+     * This sets the type of the field when toggling between single, multi environment & environment group
+     * This is required as the initialValues get updated 1 tick later and hence type would be fixed by default
+     */
+    if (
+      (isValueRuntimeInput(values.environment) || isValueRuntimeInput(values.environments)) &&
+      !isMultiTypeRuntime(environmentsType)
+    ) {
+      setEnvironmentsType(MultiTypeInputType.RUNTIME)
+    }
+  }, [values.environment, values.environments, environmentsType])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
@@ -149,7 +164,10 @@ export default function DeployEnvironment({
     }
 
     // This condition sets the unique path when switching from single env to multi env after the component has loaded with single env view
-    if (isMultiEnvironment && values.environments?.length && selectedEnvironments.length) {
+    if (
+      isMultiEnvironment &&
+      ((values.environments?.length && selectedEnvironments.length) || (!isFixed && values.environments))
+    ) {
       setFieldValue(uniquePathForEnvironments.current, values.environments)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -289,6 +307,7 @@ export default function DeployEnvironment({
   }
 
   const onEnvironmentEntityUpdate = (): void => {
+    refetchPipelineVariable?.()
     refetchEnvironmentsList()
     refetchEnvironmentsData()
   }
@@ -362,6 +381,7 @@ export default function DeployEnvironment({
               }
             }}
             multiTypeProps={{
+              onTypeChange: setEnvironmentsType,
               width: 280,
               allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
             }}
@@ -375,7 +395,7 @@ export default function DeployEnvironment({
             disabled={disabled}
             placeholder={placeHolderForEnvironment}
             multiTypeInputProps={{
-              onTypeChange: setEnvironmentRefType,
+              onTypeChange: setEnvironmentsType,
               width: 300,
               selectProps: { items: selectOptions },
               allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,

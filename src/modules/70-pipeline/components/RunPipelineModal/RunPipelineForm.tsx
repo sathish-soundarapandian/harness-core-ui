@@ -80,7 +80,7 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { getFreezeRouteLink } from '@pipeline/utils/freezeWindowUtils'
+import { getFreezeRouteLink } from '@common/utils/freezeWindowUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
@@ -176,7 +176,7 @@ function RunPipelineFormBasic({
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isInputSetApplied, setIsInputSetApplied] = useState(true)
 
-  const [canEdit] = usePermission(
+  const [canSaveInputSet, canEditYaml] = usePermission(
     {
       resourceScope: {
         accountIdentifier: accountId,
@@ -187,7 +187,7 @@ function RunPipelineFormBasic({
         resourceType: ResourceType.PIPELINE,
         resourceIdentifier: pipelineIdentifier
       },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE]
+      permissions: [PermissionIdentifier.EDIT_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
     },
     [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier]
   )
@@ -839,7 +839,8 @@ function RunPipelineFormBasic({
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
-                          isEditModeSupported={canEdit}
+                          isEditModeSupported={canEditYaml}
+                          comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
                         />
                       </Layout.Vertical>
                     </div>
@@ -874,7 +875,7 @@ function RunPipelineFormBasic({
                               (!selectedInputSets || selectedInputSets.length === 0) &&
                               existingProvide === 'existing'
                             ) {
-                              setExistingProvide('provide')
+                              hasRuntimeInputs ? setExistingProvide('provide') : submitForm()
                             } else {
                               if (selectedView === SelectedView.YAML) {
                                 const parsedYaml = yamlParse<PipelineConfig>(
@@ -952,7 +953,7 @@ function RunPipelineFormBasic({
                         currentPipeline={{ pipeline: values }}
                         values={values}
                         template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
-                        canEdit={canEdit}
+                        canEdit={canSaveInputSet}
                         accountId={accountId}
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}

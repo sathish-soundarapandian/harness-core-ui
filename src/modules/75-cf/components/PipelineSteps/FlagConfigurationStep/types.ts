@@ -6,7 +6,7 @@
  */
 
 import type { FormikState } from 'formik'
-import type { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import type { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StepElementConfig, StepSpecType } from 'services/cd-ng'
 
 export interface FeatureFlagConfigurationInstruction {

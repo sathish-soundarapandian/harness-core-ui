@@ -8,7 +8,7 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import classnames from 'classnames'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { EntityConfig, ResourcesInterface } from '@freeze-windows/types'
 import { convertValuesToYamlObj, FieldVisibility } from '@freeze-windows/utils/FreezeWindowStudioUtil'

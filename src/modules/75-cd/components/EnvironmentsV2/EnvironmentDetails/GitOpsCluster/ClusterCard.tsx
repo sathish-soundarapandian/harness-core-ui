@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, FontVariation, Icon, Layout, Tag, Text } from '@harness/uicore'
+import { Icon, Layout, Tag, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import React from 'react'

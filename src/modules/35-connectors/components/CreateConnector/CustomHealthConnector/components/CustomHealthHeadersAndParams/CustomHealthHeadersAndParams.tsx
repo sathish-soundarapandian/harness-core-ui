@@ -7,17 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { cloneDeep } from 'lodash-es'
-import {
-  Container,
-  FormikForm,
-  Layout,
-  FormInput,
-  Formik,
-  Button,
-  Text,
-  Heading,
-  PageSpinner
-} from '@wings-software/uicore'
+import { Container, FormikForm, Layout, FormInput, Formik, Button, Text, Heading, PageSpinner } from '@harness/uicore'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'

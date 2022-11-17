@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text, Icon, Layout } from '@wings-software/uicore'
+import { Container, Text, Icon, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'

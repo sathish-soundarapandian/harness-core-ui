@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Table } from '@wings-software/uicore'
+import { Table } from '@harness/uicore'
 import type { RDSDatabase } from 'services/lw'
 import { TableCell } from './common'
 

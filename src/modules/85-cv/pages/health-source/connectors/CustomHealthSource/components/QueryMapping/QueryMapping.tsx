@@ -7,7 +7,7 @@
 
 import React, { useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, FormInput, Layout, Text, Utils, Icon } from '@wings-software/uicore'
+import { Container, FormInput, Layout, Text, Utils, Icon } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { QueryViewer } from '@cv/components/QueryViewer/QueryViewer'
 import { Records } from '@cv/components/Records/Records'

@@ -9,7 +9,7 @@ import React, { useEffect, useRef } from 'react'
 import cx from 'classnames'
 import { unset, capitalize as _capitalize, toUpper } from 'lodash-es'
 import produce from 'immer'
-import { Button, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { Button, Icon, Layout, Tab, Tabs } from '@harness/uicore'
 import { Expander } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -170,7 +170,7 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
           id={tabHeadings[1]}
           title={
             <span className={css.tab}>
-              <Icon name="deployment-success-legacy" height={20} size={20} />
+              <Icon name="tick" height={20} size={20} />
               {tabHeadings[1]}
             </span>
           }

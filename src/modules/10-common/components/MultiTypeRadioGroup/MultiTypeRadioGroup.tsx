@@ -14,7 +14,7 @@ import {
   FormikTooltipContext,
   MultiTypeInputValue,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { connect } from 'formik'
 import cx from 'classnames'

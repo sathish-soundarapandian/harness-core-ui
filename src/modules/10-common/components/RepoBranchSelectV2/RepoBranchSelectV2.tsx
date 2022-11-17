@@ -32,6 +32,7 @@ export interface RepoBranchSelectProps {
   connectorIdentifierRef?: string
   repoName?: string
   selectedValue?: string
+  isExecutionHistoryPage?: boolean
   onChange?: (selected: SelectOption, defaultSelected?: boolean) => void // defaultSelected will be true component selected default itself
   setErrorResponse?: React.Dispatch<React.SetStateAction<ResponseMessage[]>>
   branchSelectorClassName?: string
@@ -157,6 +158,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
 
     if (responseHasBranches(response)) {
       const branchOptions = getBranchSelectOptions(response?.data?.branches, selectedValue)
+
       setBranchSelectOptions(branchOptions)
 
       // If used in Formik, onChange will set branch after default selection to overcome form validation
@@ -192,6 +194,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         }}
         className={cx(branchSelectorClassName, css.branchSelector)}
       />
+
       {!showIcons ? null : loading && !disabled ? (
         <Layout.Horizontal
           spacing="small"

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, Layout, Container, Text, Card, CardBody } from '@wings-software/uicore'
+import { FormInput, Layout, Container, Text, Card, CardBody } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

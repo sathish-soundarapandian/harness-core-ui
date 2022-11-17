@@ -18,7 +18,7 @@ import {
   Tab,
   Tabs,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, unset } from 'lodash-es'
@@ -50,8 +50,7 @@ import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/TemplateYaml'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
-import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
-import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import { TemplateReferenceByTabPanel } from '@templates-library/components/TemplateDetails/TemplateReferenceByTabPanel'
 import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
@@ -84,20 +83,6 @@ export enum TemplateTabs {
 export enum ParentTemplateTabs {
   BASIC = 'BASIC',
   ACTVITYLOG = 'ACTVITYLOG'
-}
-
-interface Params {
-  selectedTemplate: TemplateSummaryResponse
-  templates: TemplateSummaryResponse[]
-}
-
-const getTemplateEntityIdentifier = ({ selectedTemplate, templates }: Params): string => {
-  const versionLabel = selectedTemplate.versionLabel
-    ? selectedTemplate.versionLabel
-    : (templates.find(template => template.stableTemplate && template.versionLabel) as TemplateSummaryResponse)
-        .versionLabel
-
-  return `${selectedTemplate.identifier}/${versionLabel}/`
 }
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
@@ -471,12 +456,9 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                               title={getString('templatesLibrary.referencedBy')}
                               className={css.referencedByTab}
                               panel={
-                                <EntitySetupUsage
-                                  pageSize={4}
-                                  pageHeaderClassName={css.referencedByHeader}
-                                  pageBodyClassName={css.referencedByBody}
-                                  entityType={EntityType.Template}
-                                  entityIdentifier={getTemplateEntityIdentifier({ selectedTemplate, templates })}
+                                <TemplateReferenceByTabPanel
+                                  selectedTemplate={selectedTemplate}
+                                  templates={templates}
                                 />
                               }
                             />

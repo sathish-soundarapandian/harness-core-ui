@@ -8,7 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { useToggleOpen, ConfirmationDialog, Intent, Dialog, AllowedTypes } from '@harness/uicore'
+import { useToggleOpen, ConfirmationDialog, Dialog, AllowedTypes } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import { IDialogProps, Spinner } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'

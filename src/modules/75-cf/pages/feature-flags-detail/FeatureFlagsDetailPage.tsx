@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Layout, PageError } from '@wings-software/uicore'
+import { Layout, PageError } from '@harness/uicore'
 import { useParams, useLocation } from 'react-router-dom'
 import { GetFeatureFlagQueryParams, useGetFeatureFlag } from 'services/cf'
 import { useGovernance } from '@cf/hooks/useGovernance'

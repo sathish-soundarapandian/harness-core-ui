@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Card, CardBody, Icon, Layout, Text, useConfirmationDialog, useToaster } from '@wings-software/uicore'
+import { Card, CardBody, Icon, Layout, Text, useConfirmationDialog, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Classes, Intent, Menu } from '@blueprintjs/core'

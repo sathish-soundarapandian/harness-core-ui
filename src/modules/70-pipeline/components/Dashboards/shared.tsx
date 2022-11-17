@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { useToaster } from '@wings-software/uicore'
+import { useToaster } from '@harness/uicore'
 import moment from 'moment'
 import type { GetDataError } from 'restful-react'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'

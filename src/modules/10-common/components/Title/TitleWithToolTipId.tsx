@@ -1,5 +1,6 @@
 import React from 'react'
-import { FontVariation, Text, TextProps } from '@harness/uicore'
+import { Text, TextProps } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 interface ToolTipTitleProps {
   title: string
   toolTipId?: string

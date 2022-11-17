@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import cx from 'classnames'
-import { Container, Icon, StackTraceList, Text, PageError, NoDataCard } from '@wings-software/uicore'
+import { Container, Icon, StackTraceList, Text, PageError, NoDataCard } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

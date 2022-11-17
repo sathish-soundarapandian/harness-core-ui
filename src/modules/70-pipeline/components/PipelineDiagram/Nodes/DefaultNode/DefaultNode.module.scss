@@ -92,6 +92,12 @@
 
     box-shadow: 0px 2px 4px 0px #60617029;
 
+    // Specific non-logo icons need to render larger
+    span[data-icon='initialize-ci-step'] svg {
+      height: 34px !important;
+      width: 34px !important;
+    }
+
     &.selected {
       border-color: var(--diagram-selected) !important;
       background: var(--pipeline-selected-node) !important;

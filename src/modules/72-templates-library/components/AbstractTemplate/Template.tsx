@@ -6,7 +6,7 @@
  */
 
 import type React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'

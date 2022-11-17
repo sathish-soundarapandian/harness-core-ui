@@ -8,7 +8,7 @@
 import moment from 'moment'
 import { minBy, maxBy } from 'lodash-es'
 import type Highcharts from 'highcharts'
-import { Utils } from '@wings-software/uicore'
+import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Point } from 'services/cv'
 

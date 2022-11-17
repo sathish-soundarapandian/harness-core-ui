@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Container, Layout, Text, useToaster } from '@wings-software/uicore'
+import { Button, Container, Layout, Text, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cdImage from '@cd/modals/images/cd.png'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'

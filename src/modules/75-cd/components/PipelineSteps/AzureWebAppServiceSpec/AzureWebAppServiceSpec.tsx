@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { get, isEmpty, set, isString } from 'lodash-es'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'

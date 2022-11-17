@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { StepProps } from '@wings-software/uicore'
+import type { StepProps } from '@harness/uicore'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import FullSyncForm from '@gitsync/components/FullSyncForm/FullSyncForm'
 

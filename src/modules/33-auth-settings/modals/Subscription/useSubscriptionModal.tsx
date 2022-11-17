@@ -7,7 +7,8 @@
 
 import React, { useMemo, useState } from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Layout, Dialog, Text, IconName, FontVariation } from '@harness/uicore'
+import { Layout, Dialog, Text, IconName } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'

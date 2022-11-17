@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Container, Icon, Layout, TableV2, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, TableV2, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'

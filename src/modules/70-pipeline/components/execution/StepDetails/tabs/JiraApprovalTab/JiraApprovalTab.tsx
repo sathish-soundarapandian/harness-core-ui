@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import type { ApprovalInstanceResponse, JiraApprovalInstanceDetails } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
 import { ApprovalStatus } from '@pipeline/utils/approvalUtils'
@@ -39,7 +39,6 @@ export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
   const jiraKey = approvalData?.details.issue.key
   const jiraUrl = approvalData?.details.issue.url
-  const shouldShowExecutionTimeInfo = !isWaiting && approvalData?.status !== ApprovalStatus.WAITING
 
   return (
     <React.Fragment>
@@ -101,12 +100,12 @@ export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement
           ) : null}
         </div>
       )}
-      {shouldShowExecutionTimeInfo && (
-        <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-          <StepDetails step={{ startTs, endTs, stepParameters }} />
-        </Container>
-      )}
-      <div className={cx(css.jiraApproval, { [css.applyTopPadding]: !shouldShowExecutionTimeInfo })}>
+
+      <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
+        <StepDetails step={{ startTs, endTs, stepParameters }} />
+      </Container>
+
+      <div className={cx(css.jiraApproval, css.applyTopPadding)}>
         {approvalData?.details?.approvalCriteria ? (
           <JiraCriteria type="approval" criteria={approvalData.details.approvalCriteria} />
         ) : null}

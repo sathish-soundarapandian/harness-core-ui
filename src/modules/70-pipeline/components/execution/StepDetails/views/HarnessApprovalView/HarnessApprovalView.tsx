@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { Spinner, Tabs } from '@blueprintjs/core'
-import { Button, Layout, PageError } from '@wings-software/uicore'
+import { Button, Layout, PageError } from '@harness/uicore'
 import { get, merge } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'

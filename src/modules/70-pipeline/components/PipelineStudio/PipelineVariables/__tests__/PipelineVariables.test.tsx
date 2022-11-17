@@ -7,11 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import {
-  AllowedTypesWithRunTime,
-  MultiTypeInputType,
-  VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 
 import produce from 'immer'
 import { cloneDeep, get, set } from 'lodash-es'

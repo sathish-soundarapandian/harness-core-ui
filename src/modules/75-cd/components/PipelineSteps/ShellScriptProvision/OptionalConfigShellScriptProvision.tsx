@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
-import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput } from '@wings-software/uicore'
+import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import { isArray } from 'lodash-es'
 import { useStrings } from 'framework/strings'

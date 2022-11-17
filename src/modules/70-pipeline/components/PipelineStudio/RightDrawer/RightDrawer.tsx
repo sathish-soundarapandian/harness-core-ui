@@ -7,7 +7,7 @@
 
 import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
-import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
@@ -47,7 +47,7 @@ import {
   Values
 } from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
-import { addService, addStepOrGroup, generateRandomString, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
+import { addService, addStepOrGroup, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
 import PipelineVariables, { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables'
 import { PipelineNotifications, PipelineNotificationsRef } from '../PipelineNotifications/PipelineNotifications'
 import { PipelineTemplates } from '../PipelineTemplates/PipelineTemplates'
@@ -667,20 +667,48 @@ export function RightDrawer(): React.ReactElement {
       if (isConfirmed) {
         applyChanges(formikRef, data, getString, updatePipelineView, pipelineView, setSelectedStepId, trackEvent)
       }
-    }
+    },
+    className: css.dialogWrapper
   })
 
   const { onSearchInputChange } = usePipelineVariables()
 
+  const getStepMaxIndex = (stepType: string, stepName: string, isProvisioner = false) => {
+    let maxId = -1
+    const stepsMap = data?.paletteData?.stepsMap
+    stepsMap?.forEach((_value, key: string) => {
+      const stepDetails = getStepFromId(
+        isProvisioner
+          ? (selectedStage as StageElementWrapper<DeploymentStageElementConfig>)?.stage?.spec?.infrastructure
+              ?.infrastructureDefinition?.provisioner
+          : selectedStage?.stage?.spec?.execution,
+        key
+      )
+      if (stepDetails?.node?.type === stepType) {
+        const stepNodeName = stepDetails?.node?.name
+        const tempName = stepNodeName.slice(0, stepName.length)
+        if (tempName === stepName) {
+          if (stepNodeName.length > stepName.length && stepNodeName[stepName.length] === '_') {
+            const idx = parseInt(stepNodeName.slice(stepName.length + 1))
+            if (idx > maxId) maxId = idx
+          } else if (stepNodeName.length === stepName.length) maxId = maxId === -1 ? 0 : maxId
+        }
+      }
+    })
+
+    return maxId + 1
+  }
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
+    const maxIndex = getStepMaxIndex(item.type, item.name)
+    const stepName = maxIndex === 0 ? item.name : `${item.name}_${maxIndex}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
       const newStepData = {
         step: {
           type: item.type,
-          name: item.name,
-          identifier: generateRandomString(item.name),
+          name: stepName,
+          identifier: stepName.split(' ').join(''),
           spec: {}
         }
       }
@@ -973,11 +1001,13 @@ export function RightDrawer(): React.ReactElement {
             const paletteData = data.paletteData
             if (paletteData?.entity) {
               const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
+              const maxIndex = getStepMaxIndex(item.type, item.name, true)
+              const stepName = maxIndex === 0 ? item.name : `${item.name}_${maxIndex}`
               const newStepData = {
                 step: {
                   type: item.type,
-                  name: item.name,
-                  identifier: generateRandomString(item.name),
+                  name: stepName,
+                  identifier: stepName.split(' ').join(''),
                   spec: {}
                 }
               }

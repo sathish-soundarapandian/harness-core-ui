@@ -17,7 +17,7 @@ import {
   Radio,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

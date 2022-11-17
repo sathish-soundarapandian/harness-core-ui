@@ -16,7 +16,7 @@ import {
   NestedAccordionProvider,
   HarnessDocTooltip,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
 import type { FormikProps } from 'formik'

@@ -23,11 +23,7 @@ const renderComponent = (props?: Partial<CreateAFlagViewProps>): RenderResult =>
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <CreateAFlagView
-        selectedFlag={props?.selectedFlag}
-        setSelectedFlag={setSelectedFlag}
-        setCreateFlagError={jest.fn()}
-      />
+      <CreateAFlagView selectedFlag={props?.selectedFlag} setSelectedFlag={setSelectedFlag} />
     </TestWrapper>
   )
 }
@@ -55,8 +51,6 @@ describe('CreateAFlagView', () => {
 
   test('It should render correctly with empty select input', () => {
     renderComponent()
-    expect(screen.getByText('cf.onboarding.letsGetStarted')).toBeVisible()
-    expect(screen.getByText('cf.onboarding.createFlag')).toBeVisible()
     expect(screen.getByText('cf.featureFlags.flagsDescription')).toBeVisible()
     expect(screen.getByText('cf.onboarding.flagInputLabel')).toBeVisible()
 

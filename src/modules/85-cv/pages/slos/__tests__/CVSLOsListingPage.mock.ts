@@ -32,7 +32,7 @@ export const testWrapperProps: TestWrapperProps = {
   pathParams
 }
 
-export const dashboardWidgetsContentData: SLOHealthListView = {
+export const dashboardWidgetsContentData = {
   burnRate: 90,
   errorBudgetRemaining: 60,
   errorBudgetRemainingPercentage: 60,
@@ -52,9 +52,8 @@ export const dashboardWidgetsContentData: SLOHealthListView = {
   environmentName: 'env',
   serviceName: 'serviceName',
   noOfActiveAlerts: 0,
-  noOfMaximumAlerts: 5,
-  userJourneyIdentifier: 'userJourney',
-  userJourneyName: 'userJourney'
+  userJourneys: [{ name: 'userJourney', identifier: 'userJourney' }],
+  sloType: 'Simple'
 }
 
 export const dashboardWidgetsContent: SLODashboardWidget = {
@@ -92,12 +91,15 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
 
 export const dashboardWidgetsResponse: ResponsePageSLOHealthListView = {
   data: {
-    totalItems: 1,
-    totalPages: 1,
+    totalItems: 2,
+    totalPages: 2,
     pageIndex: 0,
-    pageItemCount: 1,
+    pageItemCount: 2,
     pageSize: 4,
-    content: [dashboardWidgetsContentData]
+    content: [
+      dashboardWidgetsContentData as unknown as SLOHealthListView,
+      { dashboardWidgetsContentData, sloType: 'Composite' } as unknown as SLOHealthListView
+    ]
   }
 }
 
@@ -207,7 +209,6 @@ export const mockSLODashboardWidgetsData = {
         sloTargetType: 'Rolling',
         sloTargetPercentage: 97.0,
         noOfActiveAlerts: 12,
-        noOfMaximumAlerts: 5,
         errorBudgetRisk: 'HEALTHY'
       }
     ],

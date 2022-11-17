@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import cx from 'classnames'
 import { Expander, IconName } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'

@@ -15,7 +15,7 @@ import React from 'react'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
-import type { FreezeSummaryResponse, FreezeWindow, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
+import type { FreezeSummaryResponse, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
 import { FreezeStatus, getReadableDateFromDateString } from '@freeze-windows/utils/freezeWindowUtils'
 import css from './FreezeWindowList.module.scss'
 
@@ -105,7 +105,12 @@ export const FreezeWindowCell: CellType = ({ row, column }) => {
 
 export const ScheduleCell: CellType = ({ row }) => {
   const data = row.original
-  const freezeWindow = data.windows?.[0] || ({} as FreezeWindow)
+  const freezeWindow = data.windows?.[0]
+
+  if (!freezeWindow) {
+    return null
+  }
+
   const { startTime, duration, endTime, timeZone, recurrence } = freezeWindow
   return (
     <Layout.Vertical>

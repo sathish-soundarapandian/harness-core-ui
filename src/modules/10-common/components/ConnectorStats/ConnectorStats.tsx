@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as moment from 'moment'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { StringUtils } from '@common/exports'
 import type { ConnectorConnectivityDetails } from 'services/cd-ng'

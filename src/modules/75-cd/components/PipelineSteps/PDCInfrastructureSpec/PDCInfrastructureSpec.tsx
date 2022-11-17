@@ -21,9 +21,10 @@ import {
   Table,
   AllowedTypes,
   Checkbox,
-  Text,
-  FontVariation
+  Text
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+
 import type { ObjectSchema } from 'yup'
 import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'

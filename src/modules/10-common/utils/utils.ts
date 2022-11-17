@@ -131,7 +131,7 @@ export function isMultiTypeRuntime(type: MultiTypeInputType): boolean {
 }
 
 export function isValueRuntimeInput(
-  value: boolean | string | number | SelectOption | string[] | MultiSelectOption[]
+  value?: boolean | string | number | SelectOption | string[] | MultiSelectOption[]
 ): boolean {
   const type = getMultiTypeFromValue(value)
 

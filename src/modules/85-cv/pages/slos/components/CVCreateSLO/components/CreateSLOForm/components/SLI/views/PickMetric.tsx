@@ -18,9 +18,9 @@ import {
   SelectOption,
   Icon,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import type { RadioButtonProps } from '@wings-software/uicore/dist/components/RadioButton/RadioButton'
+import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
 import { ResponseMonitoredServiceResponse, useGetSloMetrics } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, timeToDisplayText, Text, Layout, Container } from '@wings-software/uicore'
+import { Icon, timeToDisplayText, Text, Layout, Container } from '@harness/uicore'
 import moment from 'moment'
 import { Color } from '@harness/design-system'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'

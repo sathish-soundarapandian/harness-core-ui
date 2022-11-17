@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
-import { Container, Layout } from '@wings-software/uicore'
+import { Container, Layout } from '@harness/uicore'
 import { compile } from 'path-to-regexp'
 
 import routes from '@common/RouteDefinitions'

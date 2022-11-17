@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, Color, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Button, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'
 import type { ManifestConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

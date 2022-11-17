@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import serviceData from '@common/modals/HarnessServiceModal/__tests__/serviceMock'
 import { getOrganizationAggregateDTOListMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'
@@ -48,13 +48,13 @@ describe('Freeze Window Studio Wrapper', () => {
     expect(document.getElementsByClassName('bp3-tab').length).toBeDefined()
 
     // Overview section should be rendered by default
-    expect(getByText('overview')).toBeDefined()
-    expect(getByText('freezeWindows.freezeStudio.freezeConfiguration')).toBeDefined()
-    expect(getByText('common.schedule')).toBeDefined()
-    expect(getByText('freezeWindows.freezeStudio.freezeOverview')).toBeDefined()
+    const tablist = screen.getByRole('tablist')
+    expect(within(tablist).getByText('common.coverage')).toBeInTheDocument()
+    expect(within(tablist).getByText('common.schedule')).toBeInTheDocument()
+    expect(within(tablist).getByText('overview')).toBeInTheDocument()
 
     // Notifications
-    expect(getByText('notifications.pipelineName')).toBeDefined()
+    expect(getByText('rbac.notifications.pipelineName')).toBeDefined()
     expect(container).toMatchSnapshot('Freeze Studio Wrapper Snapshot')
   })
 })

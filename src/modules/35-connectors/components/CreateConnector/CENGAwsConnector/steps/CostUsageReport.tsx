@@ -18,10 +18,11 @@ import {
   ButtonSize,
   ButtonVariation,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { AwsCurAttributes, CEAwsConnector } from 'services/cd-ng'
+import type { AwsCurAttributes } from 'services/cd-ng'
+import type { CEAwsConnector } from 'services/ce'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstructionList/ConnectorCreationInstructionList'

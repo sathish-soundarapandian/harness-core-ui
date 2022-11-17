@@ -17,7 +17,7 @@ import {
   Button,
   ButtonVariation,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useLockoutPolicyModal } from '@auth-settings/modals/LockoutPolicy/useLockoutPolicy'
 import { useToaster } from '@common/components'

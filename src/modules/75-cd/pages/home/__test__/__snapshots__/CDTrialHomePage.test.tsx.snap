@@ -32,7 +32,7 @@ exports[`CDTrialHomePage snapshot test should render properly 1`] = `
           cd.learnMore
         </a>
         <button
-          aria-label="cd.cdTrialHomePage.startTrial.startBtn.description"
+          aria-label="common.startFreePlan"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"
@@ -40,9 +40,14 @@ exports[`CDTrialHomePage snapshot test should render properly 1`] = `
           <span
             class="bp3-button-text"
           >
-            cd.cdTrialHomePage.startTrial.startBtn.description
+            common.startFreePlan
           </span>
         </button>
+        <a
+          href="/account/undefined/settings/subscriptions?moduleCard=cd&&tab=PLANS"
+        >
+          common.exploreAllPlans
+        </a>
       </div>
     </div>
   </div>

@@ -6,7 +6,7 @@
  */
 
 import React, { SetStateAction, Dispatch } from 'react'
-import { Heading, VisualYamlSelectedView as SelectedView, VisualYamlToggle } from '@wings-software/uicore'
+import { Heading, VisualYamlSelectedView as SelectedView, VisualYamlToggle } from '@harness/uicore'
 import cx from 'classnames'
 import { parse } from 'yaml'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'

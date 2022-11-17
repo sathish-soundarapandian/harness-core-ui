@@ -285,7 +285,7 @@ export const getInfraGroups = (
       items: [
         {
           label: getString('pipeline.serviceDeploymentTypes.elastigroup'),
-          icon: 'service-elastigroup',
+          icon: 'elastigroup',
           value: InfraDeploymentType.Elastigroup
         }
       ]
@@ -383,7 +383,7 @@ const infraGroupItems: {
   },
   [InfraDeploymentType.Elastigroup]: {
     label: 'pipeline.serviceDeploymentTypes.elastigroup',
-    icon: 'service-elastigroup',
+    icon: 'elastigroup',
     value: InfraDeploymentType.Elastigroup
   }
 }

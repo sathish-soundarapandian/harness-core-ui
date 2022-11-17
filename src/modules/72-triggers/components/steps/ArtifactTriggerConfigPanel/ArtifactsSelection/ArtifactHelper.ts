@@ -6,7 +6,7 @@
  */
 
 import type { Schema } from 'yup'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
 import { NameSchema } from '@common/utils/Validation'

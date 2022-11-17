@@ -9,7 +9,7 @@ import React, { ReactElement } from 'react'
 import cx from 'classnames'
 
 import { capitalize } from 'lodash-es'
-import { Container, Icon, Text } from '@wings-software/uicore'
+import { Container, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'

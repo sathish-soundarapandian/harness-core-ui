@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Button } from '@wings-software/uicore'
+import { Container, Layout, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'

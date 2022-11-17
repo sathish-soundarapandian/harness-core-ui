@@ -8,7 +8,7 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
-import { FormInput, Layout, MultiTypeInputType, SelectOption, Text } from '@wings-software/uicore'
+import { FormInput, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
@@ -20,13 +20,22 @@ import {
   GARBuildDetailsDTO,
   RegionGar,
   SidecarArtifact,
-  useGetBuildDetailsForGoogleArtifactRegistry,
+  useGetBuildDetailsForGoogleArtifactRegistryV2,
   useGetRegionsForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
+import { useMutateAsGet } from '@common/hooks'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
+import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
+  getYamlData,
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity
+} from '../artifactSourceUtils'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -49,7 +58,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     repoIdentifier,
     branch,
     fromTrigger,
-    isSidecar
+    isSidecar,
+    serviceIdentifier,
+    stepViewType,
+    pipelineIdentifier
   } = props
 
   const { getString } = useStrings()
@@ -63,31 +75,63 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     branch
   }
 
-  const connectorRefValue =
-    get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`) || get(artifact, `spec.connectorRef`)
-  const packageValue =
-    get(formik, `values.${path}.artifacts.${artifactPath}.spec.package`) || get(artifact, `spec.package`)
-  const projectValue =
-    get(formik, `values.${path}.artifacts.${artifactPath}.spec.project`) || get(artifact, `spec.project`)
-  const regionValue =
-    get(formik, `values.${path}.artifacts.${artifactPath}.spec.region`) || get(artifact, `spec.region`)
-  const repositoryNameValue =
-    get(formik, `values.${path}.artifacts.${artifactPath}.spec.repositoryName`) || get(artifact, `spec.repositoryName`)
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`)
+  )
+  const packageValue = getDefaultQueryParam(
+    artifact?.spec?.package,
+    get(initialValues?.artifacts, `${artifactPath}.spec.package`)
+  )
+  const projectValue = getDefaultQueryParam(
+    artifact?.spec?.project,
+    get(initialValues?.artifacts, `${artifactPath}.spec.project`)
+  )
+  const regionValue = getDefaultQueryParam(
+    artifact?.spec?.region,
+    get(initialValues?.artifacts, `${artifactPath}.spec.region`)
+  )
+  const repositoryNameValue = getDefaultQueryParam(
+    artifact?.spec?.repositoryName,
+    get(initialValues?.artifacts, `${artifactPath}.spec.repositoryName`)
+  )
 
   const {
     data: buildsDetail,
     refetch: refetchBuildDetails,
     loading: fetchingBuilds,
     error
-  } = useGetBuildDetailsForGoogleArtifactRegistry({
+  } = useMutateAsGet(useGetBuildDetailsForGoogleArtifactRegistryV2, {
     lazy: true,
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
-      package: packageValue,
-      project: projectValue,
-      region: regionValue,
-      repositoryName: repositoryNameValue
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      package: getFinalQueryParamValue(packageValue),
+      project: getFinalQueryParamValue(projectValue),
+      region: getFinalQueryParamValue(regionValue),
+      repositoryName: getFinalQueryParamValue(repositoryNameValue),
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'version'
+      )
     }
   })
 
@@ -263,16 +307,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   allowCreatingNewItems: true
                 },
                 onFocus: () => {
-                  refetchBuildDetails({
-                    queryParams: {
-                      ...commonParams,
-                      connectorRef: connectorRefValue,
-                      package: packageValue,
-                      project: projectValue,
-                      region: regionValue,
-                      repositoryName: repositoryNameValue
-                    }
-                  })
+                  refetchBuildDetails()
                 }
               }}
             />

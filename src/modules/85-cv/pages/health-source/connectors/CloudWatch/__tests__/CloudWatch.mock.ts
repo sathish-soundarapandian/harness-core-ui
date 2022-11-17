@@ -1,3 +1,4 @@
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { CloudWatchSetupSource } from '../CloudWatch.types'
 
 export const mockData: CloudWatchSetupSource = {
@@ -52,6 +53,48 @@ export const mockData: CloudWatchSetupSource = {
     label: 'CloudWatch Metrics',
     value: 'CloudWatch Metrics'
   }
+}
+
+export const mockDataTemplate: CloudWatchSetupSource = {
+  ...mockData,
+  healthSourceList: [
+    {
+      ...mockData.healthSourceList[0],
+      spec: {
+        ...mockData.healthSourceList[0].spec,
+        metricDefinitions: [
+          {
+            identifier: 'CustomMetric 1',
+            metricName: 'CustomMetric 1',
+            riskProfile: {
+              riskCategory: 'Infrastructure',
+              thresholdTypes: ['ACT_WHEN_HIGHER']
+            },
+            analysis: {
+              liveMonitoring: {
+                enabled: true
+              },
+              deploymentVerification: {
+                enabled: true
+              },
+              riskProfile: {
+                riskCategory: 'Infrastructure',
+                thresholdTypes: ['ACT_WHEN_HIGHER']
+              }
+            },
+            sli: {
+              enabled: true
+            },
+            groupName: 'G2',
+            responseMapping: {
+              serviceInstanceJsonPath: RUNTIME_INPUT_VALUE
+            },
+            expression: '<+monitoredService.name>'
+          }
+        ]
+      }
+    }
+  ]
 }
 
 export const emptyHealthSource: CloudWatchSetupSource = {
@@ -166,6 +209,12 @@ export const submitRequestFormikPayload = {
         sli: { enabled: true }
       }
     ],
+    metricPacks: [
+      {
+        identifier: 'Custom',
+        metricThresholds: []
+      }
+    ],
     region: 'ap-south-1'
   },
   type: 'CloudWatchMetrics'
@@ -175,12 +224,24 @@ export const initialValueMock = {
   isEdit: false
 }
 
-export const defaultFormikValue = { customMetrics: [], region: '', selectedCustomMetricIndex: 0 }
+export const initialValueMockWithMetricThresholds = {
+  isEdit: false
+}
+
+export const defaultFormikValue = {
+  customMetrics: [],
+  region: '',
+  selectedCustomMetricIndex: 0,
+  failFastThresholds: [],
+  ignoreThresholds: []
+}
 
 export const formValuesMock = {
   region: '',
   customMetrics: [],
-  selectedCustomMetricIndex: 0
+  selectedCustomMetricIndex: 0,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const formValuesMockNoAssign = {
@@ -359,4 +420,223 @@ export const riskCategoryErrorMock = {
   'customMetrics.0.metricName': 'cv.monitoringSources.metricNameValidation',
   'customMetrics.0.responseMapping.serviceInstanceJsonPath': 'cv.monitoringSources.gcoLogs.validation.serviceInstance',
   region: 'cd.cloudFormation.errors.region'
+}
+
+export const healthSourceWithMetricThresholds: CloudWatchSetupSource = {
+  connectorRef: 'awsNew',
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'CloudWatchMetrics',
+      name: 'asss',
+      identifier: 'asss',
+      spec: {
+        region: 'us-east-2',
+        connectorRef: 'awsNew',
+        feature: 'CloudWatch Metrics',
+        metricDefinitions: [
+          {
+            expression: '*',
+            groupName: 'G2',
+            identifier: 'customMetric_2',
+            metricName: 'customMetric 2',
+            analysis: {
+              riskProfile: {
+                riskCategory: 'Performance_Other',
+                thresholdTypes: ['ACT_WHEN_LOWER']
+              },
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: true
+              }
+            },
+            sli: {
+              enabled: true
+            },
+            responseMapping: {
+              serviceInstanceJsonPath: 'wew'
+            },
+            riskProfile: {
+              riskCategory: 'Performance_Other',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          },
+          {
+            expression: '*',
+            groupName: 'G2',
+            identifier: 'customMetric_3',
+            metricName: 'customMetric 3',
+            analysis: {
+              riskProfile: {
+                riskCategory: 'Performance_Other',
+                thresholdTypes: ['ACT_WHEN_LOWER']
+              },
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: true
+              }
+            },
+            sli: {
+              enabled: true
+            },
+            responseMapping: {
+              serviceInstanceJsonPath: 'wew'
+            },
+            riskProfile: {
+              riskCategory: 'Performance_Other',
+              thresholdTypes: ['ACT_WHEN_LOWER']
+            }
+          }
+        ],
+        metricPacks: [
+          {
+            identifier: 'Custom',
+            metricThresholds: [
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 12
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'customMetric 2'
+              },
+              {
+                type: 'FailImmediately',
+                spec: {
+                  action: 'FailAfterOccurrence',
+                  spec: {
+                    count: 2
+                  }
+                },
+                criteria: {
+                  type: 'Percentage',
+                  spec: {
+                    greaterThan: 1
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'customMetric 2'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 'test1',
+  environmentRef: 'envmtdynatrace',
+  monitoredServiceRef: {
+    name: 'test1_envmtdynatrace',
+    identifier: 'test1_envmtdynatrace'
+  },
+  healthSourceName: 'asss',
+  healthSourceIdentifier: 'asss',
+  sourceType: 'CloudWatchMetrics',
+  dataSourceType: null,
+  region: 'us-east-2',
+  product: {
+    label: 'CloudWatch Metrics',
+    value: 'CloudWatch Metrics'
+  }
+} as CloudWatchSetupSource
+
+export const healthSourceWithEmptyCustomMetrics: CloudWatchSetupSource = {
+  connectorRef: 'awsNew',
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'CloudWatchMetrics',
+      name: 'asss',
+      identifier: 'asss',
+      spec: {
+        region: 'us-east-2',
+        connectorRef: 'awsNew',
+        feature: 'CloudWatch Metrics',
+        metricDefinitions: [],
+        metricPacks: []
+      }
+    }
+  ],
+  serviceRef: 'test1',
+  environmentRef: 'envmtdynatrace',
+  monitoredServiceRef: {
+    name: 'test1_envmtdynatrace',
+    identifier: 'test1_envmtdynatrace'
+  },
+  healthSourceName: 'asss',
+  healthSourceIdentifier: 'asss',
+  sourceType: 'CloudWatchMetrics',
+  dataSourceType: null,
+  region: 'us-east-2',
+  product: {
+    label: 'CloudWatch Metrics',
+    value: 'CloudWatch Metrics'
+  }
+} as CloudWatchSetupSource
+
+export const expectedInitialValueWithMetricThresholds = {
+  customMetrics: [
+    {
+      analysis: {
+        deploymentVerification: { enabled: true },
+        higherBaselineDeviation: false,
+        liveMonitoring: { enabled: false },
+        lowerBaselineDeviation: true,
+        riskProfile: { riskCategory: 'Performance_Other', thresholdTypes: ['ACT_WHEN_LOWER'] }
+      },
+      expression: '*',
+      groupName: { label: 'G2', value: 'G2' },
+      identifier: 'customMetric_2',
+      metricName: 'customMetric 2',
+      responseMapping: { serviceInstanceJsonPath: 'wew' },
+      riskProfile: { riskCategory: 'Performance_Other', thresholdTypes: ['ACT_WHEN_LOWER'] },
+      sli: { enabled: true }
+    },
+    {
+      analysis: {
+        deploymentVerification: { enabled: true },
+        higherBaselineDeviation: false,
+        liveMonitoring: { enabled: false },
+        lowerBaselineDeviation: true,
+        riskProfile: { riskCategory: 'Performance_Other', thresholdTypes: ['ACT_WHEN_LOWER'] }
+      },
+      expression: '*',
+      groupName: { label: 'G2', value: 'G2' },
+      identifier: 'customMetric_3',
+      metricName: 'customMetric 3',
+      responseMapping: { serviceInstanceJsonPath: 'wew' },
+      riskProfile: { riskCategory: 'Performance_Other', thresholdTypes: ['ACT_WHEN_LOWER'] },
+      sli: { enabled: true }
+    }
+  ],
+  failFastThresholds: [
+    {
+      criteria: { spec: { greaterThan: 1 }, type: 'Percentage' },
+      metricName: 'customMetric 2',
+      metricType: 'Custom',
+      spec: { action: 'FailAfterOccurrence', spec: { count: 2 } },
+      type: 'FailImmediately'
+    }
+  ],
+  ignoreThresholds: [
+    {
+      criteria: { spec: { greaterThan: 12 }, type: 'Absolute' },
+      metricName: 'customMetric 2',
+      metricType: 'Custom',
+      spec: { action: 'Ignore' },
+      type: 'IgnoreThreshold'
+    }
+  ],
+  region: 'us-east-2',
+  selectedCustomMetricIndex: 0
 }

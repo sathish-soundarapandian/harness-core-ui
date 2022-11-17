@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Color } from '@harness/design-system'
-import { Layout, Button, Text, FormInput, FormikForm, Container } from '@wings-software/uicore'
+import { Layout, Button, Text, FormInput, FormikForm, Container } from '@harness/uicore'
 import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { noop } from 'lodash-es'

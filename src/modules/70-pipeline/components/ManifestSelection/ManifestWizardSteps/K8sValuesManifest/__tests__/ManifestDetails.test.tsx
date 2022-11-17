@@ -8,7 +8,7 @@
 import React from 'react'
 import * as uuid from 'uuid'
 import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { Scope } from '@common/interfaces/SecretsInterface'

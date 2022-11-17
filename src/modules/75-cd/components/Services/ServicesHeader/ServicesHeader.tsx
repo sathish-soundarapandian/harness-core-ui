@@ -8,7 +8,7 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { Button, Layout } from '@wings-software/uicore'
+import { Button, Layout } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

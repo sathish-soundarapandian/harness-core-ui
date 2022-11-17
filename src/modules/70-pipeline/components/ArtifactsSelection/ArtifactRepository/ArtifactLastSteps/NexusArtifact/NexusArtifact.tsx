@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { merge, defaultTo, memoize } from 'lodash-es'

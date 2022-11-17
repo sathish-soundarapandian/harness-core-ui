@@ -319,11 +319,7 @@ describe('Execution Stages', () => {
     })
   }
 
-  const stepLibrarySelection = function (
-    stageText: string,
-    resourceName: StepResourceObject[],
-    withWarning?: boolean
-  ): void {
+  const stepLibrarySelection = function (stageText: string, resourceName: StepResourceObject[]): void {
     cy.get('*[class^="ExecutionGraph-module_canvas"]')
       .should('be.visible')
       .within(() => {
@@ -340,13 +336,6 @@ describe('Execution Stages', () => {
     cy.wait('@stepLibrary').wait(500)
     cy.contains('section', stageText).click({ force: true })
 
-    if (withWarning) {
-      cy.get('.pipeline-studio-right-drawer span[icon="cross"]').click()
-      cy.wait(1000)
-      cy.get('span[icon="warning-sign"]').should('exist')
-      cy.get('p').contains(stageText).click({ force: true })
-    }
-
     stepFieldSelection(stageText, resourceName)
     cy.wait(500)
     cy.get('span[icon="warning-sign"]').should('not.exist')
@@ -360,7 +349,7 @@ describe('Execution Stages', () => {
       }).should('be.visible')
       cy.contains('p', 'testStage_Cypress').click()
       cy.contains('span', 'Execution').click()
-      stepLibrarySelection(key, value?.resourceName, value?.warningCheck)
+      stepLibrarySelection(key, value?.resourceName)
     })
   })
 })

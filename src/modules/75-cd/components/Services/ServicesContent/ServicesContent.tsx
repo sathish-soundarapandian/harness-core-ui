@@ -7,7 +7,7 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout } from '@wings-software/uicore'
+import { Card, Layout } from '@harness/uicore'
 import { Page } from '@common/exports'
 import { GetServiceDetailsQueryParams, useGetServiceDetails } from 'services/cd-ng'
 import { DeploymentsTimeRangeContext, useServiceStore, Views } from '@cd/components/Services/common'

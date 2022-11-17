@@ -22,6 +22,7 @@ import {
   validateKubernetesYamlResponse
 } from './mocks'
 
+jest.mock('nanoid', () => ({ nanoid: () => 'hjhj87878' }))
 jest.useFakeTimers()
 const mockGetCallFunction = jest.fn()
 jest.mock('services/cd-ng', () => ({
@@ -44,7 +45,8 @@ jest.mock('services/portal', () => ({
     return { data: heartbeatWaitingResponse, refetch: jest.fn(), error: null, loading: false }
   }),
   validateDockerDelegatePromise: jest.fn().mockImplementation(() => Promise.resolve({ responseMessages: [] })),
-  generateDockerDelegateYAMLPromise: jest.fn(() => dockerYamlResponse)
+  generateDockerDelegateYAMLPromise: jest.fn(() => dockerYamlResponse),
+  createDelegateGroupPromise: jest.fn()
 }))
 global.URL.createObjectURL = jest.fn()
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')

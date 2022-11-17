@@ -15,7 +15,6 @@ import {
   Button,
   ButtonVariation,
   getMultiTypeFromValue,
-  Intent,
   Layout,
   MultiTypeInputType,
   Text,
@@ -23,6 +22,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import {
   NGTriggerConfigV2,

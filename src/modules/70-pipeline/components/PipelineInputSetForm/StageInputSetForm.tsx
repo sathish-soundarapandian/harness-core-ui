@@ -65,8 +65,7 @@ import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { CollapseForm } from './CollapseForm'
@@ -504,7 +503,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC } = useFeatureFlags()
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -807,6 +806,25 @@ export function StageInputSetFormInternal({
     }
   }, [])
 
+  const buildInfraSelectOptions = [{ label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux }]
+  const buildArchSelectOptions = [
+    {
+      label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+      value: ArchTypes.Amd64
+    }
+  ]
+
+  if (CIE_HOSTED_VMS_MAC) {
+    buildInfraSelectOptions.push({
+      label: getString('pipeline.infraSpecifications.osTypes.macos'),
+      value: OsTypes.MacOS
+    })
+    buildArchSelectOptions.push({
+      label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+      value: ArchTypes.Arm64
+    })
+  }
+
   return (
     <>
       {deploymentStageTemplate.serviceConfig && (
@@ -880,7 +898,7 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
-      {isSvcEnvEntityEnabled && deploymentStageTemplate.service && (
+      {NG_SVC_ENV_REDESIGN && deploymentStageTemplate.service && (
         <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('service')}</div>
           <div className={css.nestedAccordions}>
@@ -941,7 +959,7 @@ export function StageInputSetFormInternal({
         </div>
       )}
 
-      {isSvcEnvEntityEnabled && deploymentStageTemplate.services ? (
+      {NG_SVC_ENV_REDESIGN && deploymentStageTemplate.services ? (
         <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('services')}</div>
           <div className={css.nestedAccordions}>
@@ -1453,11 +1471,7 @@ export function StageInputSetFormInternal({
                     name={`${namePath}platform.os`}
                     style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
                     multiTypeInputProps={{
-                      selectItems: [
-                        { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-                        { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
-                        { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
-                      ],
+                      selectItems: buildInfraSelectOptions,
                       multiTypeInputProps: {
                         allowableTypes: [MultiTypeInputType.FIXED]
                       },
@@ -1486,22 +1500,13 @@ export function StageInputSetFormInternal({
                         font={{ variation: FontVariation.FORM_LABEL }}
                         margin={{ bottom: 'xsmall' }}
                       >
-                        {getString(osLabel)}
+                        {getString(archLabel)}
                       </Text>
                     }
                     name={`${namePath}platform.arch`}
                     style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
                     multiTypeInputProps={{
-                      selectItems: [
-                        {
-                          label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-                          value: ArchTypes.Amd64
-                        },
-                        {
-                          label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-                          value: ArchTypes.Arm64
-                        }
-                      ],
+                      selectItems: buildArchSelectOptions,
                       multiTypeInputProps: {
                         allowableTypes: [MultiTypeInputType.FIXED]
                       },

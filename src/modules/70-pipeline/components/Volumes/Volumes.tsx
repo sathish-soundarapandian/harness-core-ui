@@ -16,7 +16,7 @@ import {
   getMultiTypeFromValue,
   AllowedTypesWithRunTime,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'

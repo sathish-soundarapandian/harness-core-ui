@@ -20,7 +20,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { listenerRulesPromise, ResponseListString, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -29,6 +29,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type {
   ECSBlueGreenCreateServiceStepInitialValues,
@@ -74,10 +75,10 @@ const ECSBlueGreenCreateServiceStepEdit = (
   const [stageListenerRulesLoading, setStageListenerRulesLoading] = useState<boolean>(false)
 
   const environmentRef = defaultTo(
-    selectedStage.stage?.spec?.environment?.environmentRef,
-    selectedStage.stage?.spec?.infrastructure?.environmentRef
+    selectedStage?.stage?.spec?.environment?.environmentRef,
+    selectedStage?.stage?.spec?.infrastructure?.environmentRef
   )
-  const infrastructureRef = selectedStage.stage?.spec?.environment?.infrastructureDefinitions?.[0].identifier
+  const infrastructureRef = selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0].identifier
 
   const awsConnectorRef = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.connectorRef
   const region = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.region
@@ -144,14 +145,17 @@ const ECSBlueGreenCreateServiceStepEdit = (
 
   React.useEffect(() => {
     if (shouldFetchFieldData([initialValues.spec.loadBalancer, initialValues.spec.prodListener])) {
-      fetchProdListenerRules(initialValues.spec.loadBalancer, initialValues.spec.prodListener)
+      fetchProdListenerRules(initialValues.spec.loadBalancer, initialValues.spec.prodListener, undefined, true)
     }
     if (shouldFetchFieldData([initialValues.spec.loadBalancer, initialValues.spec.stageListener])) {
-      fetchStageListenerRules(initialValues.spec.loadBalancer, initialValues.spec.stageListener)
+      fetchStageListenerRules(initialValues.spec.loadBalancer, initialValues.spec.stageListener, undefined, true)
     }
   }, [initialValues.spec.loadBalancer, initialValues.spec.prodListener, initialValues.spec.stageListener])
 
-  const fetchLoadBalancers = () => {
+  const fetchLoadBalancers = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
+      return
+    }
     if (!loadingLoadBalancers) {
       if ((awsConnectorRef && region) || (environmentRef && infrastructureRef)) {
         refetchLoadBalancers()
@@ -159,7 +163,11 @@ const ECSBlueGreenCreateServiceStepEdit = (
     }
   }
 
-  const fetchListeners = (selectedLoadBalancer: string) => {
+  const fetchListeners = (e: React.FocusEvent<HTMLInputElement>, selectedLoadBalancer: string) => {
+    if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
+      return
+    }
+
     if (!loadingListeners) {
       if (
         shouldFetchFieldData([awsConnectorRef, region, selectedLoadBalancer]) ||
@@ -181,7 +189,19 @@ const ECSBlueGreenCreateServiceStepEdit = (
     }
   }
 
-  const fetchProdListenerRules = (selectedLoadBalancer: string, selectedProdListener: string) => {
+  const fetchProdListenerRules = (
+    selectedLoadBalancer: string,
+    selectedProdListener: string,
+    e?: React.FocusEvent<HTMLInputElement>,
+    fromEffect = false
+  ) => {
+    if (
+      (!fromEffect && e?.target?.type !== 'text') ||
+      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+    ) {
+      return
+    }
+
     if (
       shouldFetchFieldData([awsConnectorRef, region, selectedLoadBalancer, selectedProdListener]) ||
       shouldFetchFieldData([
@@ -221,7 +241,19 @@ const ECSBlueGreenCreateServiceStepEdit = (
     }
   }
 
-  const fetchStageListenerRules = (selectedLoadBalancer: string, selectedStageListener: string) => {
+  const fetchStageListenerRules = (
+    selectedLoadBalancer: string,
+    selectedStageListener: string,
+    e?: React.FocusEvent<HTMLInputElement>,
+    fromEffect = false
+  ) => {
+    if (
+      (!fromEffect && e?.target?.type !== 'text') ||
+      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+    ) {
+      return
+    }
+
     if (
       shouldFetchFieldData([awsConnectorRef, region, selectedLoadBalancer, selectedStageListener]) ||
       shouldFetchFieldData([
@@ -418,8 +450,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       })
                       formik.setValues(updatedValues)
                     },
-                    onFocus: () => {
-                      fetchListeners(formik.values.spec.loadBalancer)
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      fetchListeners(e, formik.values.spec.loadBalancer)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
@@ -460,8 +492,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       allowCreatingNewItems: true,
                       loadingItems: prodListenerRulesLoading
                     },
-                    onFocus: () => {
-                      fetchProdListenerRules(formik.values.spec.loadBalancer, formik.values.spec.prodListener)
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      fetchProdListenerRules(formik.values.spec.loadBalancer, formik.values.spec.prodListener, e)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
@@ -514,8 +546,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       })
                       formik.setValues(updatedValues)
                     },
-                    onFocus: () => {
-                      fetchListeners(formik.values.spec.loadBalancer)
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      fetchListeners(e, formik.values.spec.loadBalancer)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
@@ -556,8 +588,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       allowCreatingNewItems: true,
                       loadingItems: stageListenerRulesLoading
                     },
-                    onFocus: () => {
-                      fetchStageListenerRules(formik.values.spec.loadBalancer, formik.values.spec.stageListener)
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      fetchStageListenerRules(formik.values.spec.loadBalancer, formik.values.spec.stageListener, e)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceLayout } from '../SetupSourceLayout'
 

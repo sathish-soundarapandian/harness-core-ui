@@ -8,7 +8,7 @@
 import React, { useRef, useState } from 'react'
 import { uniq } from 'lodash-es'
 import cx from 'classnames'
-import { Button, Layout, StepProps, CardSelect, Icon, IconName, Container, Text } from '@wings-software/uicore'
+import { Button, Layout, StepProps, CardSelect, Icon, IconName, Container, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'

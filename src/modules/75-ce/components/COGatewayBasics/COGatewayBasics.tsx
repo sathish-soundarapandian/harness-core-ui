@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'

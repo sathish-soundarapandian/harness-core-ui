@@ -19,7 +19,7 @@ import {
   Layout,
   SelectOption,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'

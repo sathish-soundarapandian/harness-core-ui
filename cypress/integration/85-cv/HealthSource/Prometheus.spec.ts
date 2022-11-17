@@ -582,6 +582,17 @@ describe('AWS Prometheus', () => {
 
     cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
 
+    cy.findByRole('button', { name: /Previous/i }).click()
+
+    cy.get('input[value="AWS_PROMETHEUS"]').should('be.checked')
+
+    cy.findByPlaceholderText('- Select a Workspace Id -').click()
+    cy.contains('p', 'Workspace 1').click()
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+
     cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
     cy.get('input[name="metricName"]').clear()
 
@@ -665,5 +676,16 @@ describe('AWS Prometheus', () => {
     cy.get('input[value="Workspace 1"]').should('exist')
 
     cy.findByTestId(/thumbnail-select-change/).should('be.disabled')
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+
+    cy.findByRole('button', { name: /Previous/i }).click()
+
+    cy.get('input[value="AWS_PROMETHEUS"]').should('be.checked')
+
+    cy.get('input[value="region 1"]').should('exist')
+    cy.get('input[value="Workspace 1"]').should('exist')
   })
 })

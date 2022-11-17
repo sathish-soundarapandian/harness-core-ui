@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getDurationLabelFromMilliseconds } from './DurationView.utils'
 

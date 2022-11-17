@@ -8,7 +8,7 @@
 import React from 'react'
 import ReactTimeago from 'react-timeago'
 import type { CellProps, Renderer } from 'react-table'
-import { Icon, Layout, Table, Text } from '@wings-software/uicore'
+import { Icon, Layout, Table, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO, ConnectorResponse } from 'services/cd-ng'

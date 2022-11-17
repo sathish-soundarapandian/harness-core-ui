@@ -6,10 +6,10 @@
  */
 
 import React, { useState } from 'react'
-import { Container, FormInput, Layout, TagInputProps, Text, tagsType } from '@wings-software/uicore'
+import { Container, FormInput, Layout, TagInputProps, Text, tagsType } from '@harness/uicore'
 import type { ITagInputProps } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
-import type { InputWithIdentifierProps } from '@wings-software/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'
+import type { InputWithIdentifierProps } from '@harness/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'

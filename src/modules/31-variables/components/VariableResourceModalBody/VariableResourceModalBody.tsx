@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import type { Column } from 'react-table'
-import { Container, Layout, Text, Icon } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { useGetVariablesList, VariableResponseDTO } from 'services/cd-ng'

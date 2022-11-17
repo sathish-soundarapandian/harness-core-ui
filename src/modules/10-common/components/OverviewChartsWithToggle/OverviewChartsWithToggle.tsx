@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { merge } from 'lodash-es'
 import type { SeriesColumnOptions } from 'highcharts'
-import { Button, Container, Layout } from '@wings-software/uicore'
+import { Button, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

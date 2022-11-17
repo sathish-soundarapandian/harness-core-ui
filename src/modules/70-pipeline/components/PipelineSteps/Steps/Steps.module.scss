@@ -252,3 +252,19 @@
     height: 180px !important;
   }
 }
+
+.inputWidth {
+  width: 50% !important;
+}
+
+.layoutVerticalSpacing {
+  margin-bottom: var(--spacing-main) !important;
+  .verticalSpacingInput {
+    margin-bottom: var(--spacing-small);
+  }
+  :global {
+    .bp3-form-group {
+      margin-bottom: 0;
+    }
+  }
+}

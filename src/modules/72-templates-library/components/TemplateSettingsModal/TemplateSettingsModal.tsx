@@ -16,7 +16,7 @@ import {
   ButtonVariation,
   SelectOption,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

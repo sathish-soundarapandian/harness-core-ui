@@ -50,6 +50,7 @@ export interface YamlBuilderProps {
   renderCustomHeader?: () => React.ReactElement | null
   openDialogProp?: () => void
   showCopyIcon?: boolean
+  comparableYaml?: string //this is the actual Yaml that we enter at studio level and is used in Yaml builder to get the value of a field by comparing the Yaml with the given regex/yamlPath
 }
 
 export interface CompletionItemInterface {

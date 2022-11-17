@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 
-import { FormInput, Layout } from '@wings-software/uicore'
+import { FormInput, Layout } from '@harness/uicore'
 import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'

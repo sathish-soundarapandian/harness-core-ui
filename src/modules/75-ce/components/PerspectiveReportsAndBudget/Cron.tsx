@@ -23,7 +23,7 @@
 // Yearly  -> month, day of month, hour, min
 
 import React, { useReducer, useMemo, useEffect } from 'react'
-import { Container, Select, Text } from '@wings-software/uicore'
+import { Container, Select, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from './Cron.module.scss'
 

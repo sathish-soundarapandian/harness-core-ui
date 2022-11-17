@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type {

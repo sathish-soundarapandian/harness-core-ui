@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { EvaluationView } from '@governance/EvaluationView'

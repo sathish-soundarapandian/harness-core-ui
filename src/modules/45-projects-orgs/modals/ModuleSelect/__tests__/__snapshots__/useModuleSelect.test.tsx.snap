@@ -782,14 +782,14 @@ exports[`module select test free trial btn  1`] = `
           common.purpose.cd.continuous
         </p>
         <button
-          aria-label="common.startTrial"
+          aria-label="common.startFreePlan"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
           <span
             class="bp3-button-text"
           >
-            common.startTrial
+            common.startFreePlan
           </span>
         </button>
       </div>

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, Text, Icon } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import ResourceHandlerTable, {

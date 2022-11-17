@@ -16,7 +16,7 @@ import {
   Layout,
   StepProps,
   ThumbnailSelect
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'

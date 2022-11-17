@@ -9,8 +9,6 @@ import React from 'react'
 import { Heading, Layout, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import {
   ResponseModuleLicenseDTO,
@@ -21,7 +19,7 @@ import {
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
-import { getSavedRefererURL } from '@common/utils/utils'
+import { getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import bgImageURL from '../ff.svg'
 import CFTrialPanel from './CFTrialPanel'
 import css from './CFTrialPage.module.scss'
@@ -29,7 +27,7 @@ import css from './CFTrialPage.module.scss'
 const CFTrialHomePage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isFreeEnabled = !isOnPrem()
   const refererURL = getSavedRefererURL()
 
   const startTrialRequestBody: StartTrialDTORequestBody = {
@@ -67,7 +65,7 @@ const CFTrialHomePage: React.FC = () => {
       url: 'https://docs.harness.io/article/0a2u2ppp8s-getting-started-with-continuous-features'
     },
     startBtn: {
-      description: useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+      description: !isOnPrem()
         ? getString('cf.cfTrialHomePage.startFreePlanBtn')
         : getString('cf.cfTrialHomePage.startTrial.startBtn.description')
     }

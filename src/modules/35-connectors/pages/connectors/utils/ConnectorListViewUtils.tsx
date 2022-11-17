@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import classNames from 'classnames'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -127,6 +127,8 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.dockerRegistryUrl))
     case Connectors.JENKINS:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.jenkinsUrl))
+    case Connectors.AZURE_ARTIFACTS:
+      return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.azureArtifactsUrl))
     case Connectors.NEXUS:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.nexusServerUrl))
     case Connectors.ARTIFACTORY:

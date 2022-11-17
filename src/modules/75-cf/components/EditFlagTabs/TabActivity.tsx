@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { AuditLogObjectType } from '@cf/utils/CFUtils'
 import type { Feature } from 'services/cf'
 import { AuditLogs } from '../AuditLogs/AuditLogs'

@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
-import { Button, ButtonVariation, Icon, Container } from '@wings-software/uicore'
+import { Button, ButtonVariation, Icon, Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { WindowPathProps } from '@freeze-windows/types'
 import RbacButton from '@rbac/components/Button/Button'

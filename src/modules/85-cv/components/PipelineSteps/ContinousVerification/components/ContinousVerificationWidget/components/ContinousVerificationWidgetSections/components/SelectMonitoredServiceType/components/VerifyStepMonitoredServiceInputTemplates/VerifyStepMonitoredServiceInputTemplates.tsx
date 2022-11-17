@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { Card, FormInput, AllowedTypes } from '@harness/uicore'
-import { Text } from '@wings-software/uicore'
+import { Card, FormInput, AllowedTypes, Text } from '@harness/uicore'
 import {
   useGetHarnessEnvironments,
   useGetHarnessServices

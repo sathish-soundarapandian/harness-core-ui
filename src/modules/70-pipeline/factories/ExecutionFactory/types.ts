@@ -7,7 +7,7 @@
 
 import type { RefObject } from 'react'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 
 import type { ExecutionNode, GraphLayoutNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'

@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
-import { Container, Text, Layout, TableV2, NoDataCard, Heading, Utils, TagsPopover } from '@wings-software/uicore'
+import { Container, Text, Layout, TableV2, NoDataCard, Heading, Utils, TagsPopover } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'

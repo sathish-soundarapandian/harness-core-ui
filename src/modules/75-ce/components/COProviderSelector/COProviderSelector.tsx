@@ -7,18 +7,9 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  CardSelect,
-  Layout,
-  CardBody,
-  Button,
-  Heading,
-  Container,
-  Text,
-  HarnessDocTooltip
-} from '@wings-software/uicore'
+import { CardSelect, Layout, CardBody, Button, Heading, Container, Text, HarnessDocTooltip } from '@harness/uicore'
 import { omit as _omit } from 'lodash-es'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import type { GatewayDetails, Provider, ProviderWithDependencies } from '@ce/components/COCreateGateway/models'

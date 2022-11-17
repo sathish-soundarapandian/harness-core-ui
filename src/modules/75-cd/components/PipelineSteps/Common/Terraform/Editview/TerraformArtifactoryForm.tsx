@@ -20,11 +20,11 @@ import {
   Icon,
   HarnessDocTooltip,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, map } from 'lodash-es'
+import { defaultTo, get, map } from 'lodash-es'
 import cx from 'classnames'
 import { FieldArray, Form, FieldArrayRenderProps } from 'formik'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -87,6 +87,7 @@ interface TFArtifactoryProps {
   isConfig: boolean
   isTerraformPlan: boolean
   allowableTypes: AllowedTypes
+  isBackendConfig?: boolean
 }
 
 export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = ({
@@ -95,7 +96,8 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   onSubmitCallBack,
   isConfig,
   isTerraformPlan,
-  allowableTypes
+  allowableTypes,
+  isBackendConfig = false
 }) => {
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -106,8 +108,8 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const initialValues = formatInitialValues(isConfig, prevStepData, isTerraformPlan)
-  const connectorRef = getConnectorRef(isConfig, isTerraformPlan, prevStepData)
+  const initialValues = formatInitialValues(isConfig, isBackendConfig, prevStepData, isTerraformPlan)
+  const connectorRef = getConnectorRef(isConfig, isBackendConfig, isTerraformPlan, prevStepData)
   const { expressions } = useVariablesExpression()
   const {
     data: ArtifactRepoData,
@@ -143,18 +145,22 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   }, [ArtifactRepoData, connectorRef])
 
   return (
-    <Layout.Vertical spacing="xxlarge" padding="small" className={css.tfVarStore}>
+    <Layout.Vertical spacing="xxlarge" className={css.tfVarStore}>
       <Text font="large" color={Color.GREY_800}>
-        {isConfig ? getString('cd.configFileDetails') : getString('cd.varFileDetails')}
+        {isConfig
+          ? getString('cd.configFileDetails')
+          : isBackendConfig
+          ? getString('cd.backendConfigFileDetails')
+          : getString('cd.varFileDetails')}
       </Text>
       <Formik
-        formName="tfRemoteWizardForm"
+        formName={'tfRemoteWizardForm'}
         initialValues={initialValues}
         enableReinitialize
-        validationSchema={terraformArtifactorySchema(isConfig, getString)}
+        validationSchema={terraformArtifactorySchema(isConfig, isBackendConfig, getString)}
         onSubmit={(values: any) => {
           /* istanbul ignore next */
-          if (isConfig) {
+          if (isConfig || isBackendConfig) {
             onSubmitCallBack(values, prevStepData)
           } else {
             const varFiles = {
@@ -186,14 +192,20 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
               [{ path: '' }]
             )
             repoName = formik?.values?.spec?.configuration?.configFiles?.store?.spec?.repositoryName
+          } else if (isBackendConfig) {
+            selectedArtifacts = defaultTo(
+              get(formik?.values, 'spec.configuration.backendConfig.spec.store.spec.artifactPaths'),
+              [{ path: '' }]
+            )
+            repoName = get(formik?.values, 'spec.configuration.backendConfig.spec.store.spec.repositoryName')
           } else {
             selectedArtifacts = defaultTo(formik.values?.varFile?.spec?.store?.spec?.artifactPaths, [{ path: '' }])
             repoName = formik.values?.varFile?.spec?.store?.spec?.repositoryName
           }
           return (
             <Form>
-              <div className={css.tfRemoteForm}>
-                {!isConfig && (
+              <div className={css.tfArtifactoryStepTwo}>
+                {!isConfig && !isBackendConfig && (
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.Text name="varFile.identifier" label={getString('identifier')} />
                   </div>
@@ -221,7 +233,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                   {getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED ? (
                     <FormInput.MultiTypeInput
                       selectItems={connectorRepos ? connectorRepos : []}
-                      name={tfArtifactoryFormInputNames(isConfig).repositoryName}
+                      name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName}
                       label={''}
                       useValue
                       placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
@@ -233,13 +245,13 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                     />
                   ) : (
                     <FormInput.MultiTextInput
-                      name={tfArtifactoryFormInputNames(isConfig).repositoryName}
+                      name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName}
                       label={''}
                       placeholder={getString('cd.selectRepository')}
                       multiTextInputProps={{
                         expressions,
-                        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                          item => !isMultiTypeRuntime(item)
+                        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
+                          isMultiTypeRuntime(item)
                         ) as AllowedTypes
                       }}
                     />
@@ -249,20 +261,23 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                       style={{ alignSelf: 'center' }}
                       value={repoName}
                       type="String"
-                      variableName={tfArtifactoryFormInputNames(isConfig).repositoryName}
+                      variableName={tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName}
                       showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
                       onChange={value =>
                         /* istanbul ignore next */
-                        formik.setFieldValue(tfArtifactoryFormInputNames(isConfig).repositoryName, value)
+                        formik.setFieldValue(
+                          tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName,
+                          value
+                        )
                       }
                     />
                   )}
                 </div>
                 <div className={cx(stepCss.md)}>
                   <MultiTypeFieldSelector
-                    name={tfArtifactoryFormInputNames(isConfig).artifactPaths}
+                    name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths}
                     style={{ width: 370 }}
                     allowedTypes={
                       (allowableTypes as MultiTypeInputType[]).filter(
@@ -271,25 +286,25 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                     }
                     label={
                       <Text flex={{ inline: true }}>
-                        {getString(isConfig ? 'pipeline.artifactPathLabel' : 'cd.artifactPaths')}
+                        {getString(isConfig || isBackendConfig ? 'pipeline.artifactPathLabel' : 'cd.artifactPaths')}
                         <HarnessDocTooltip useStandAlone={true} tooltipId="artifactory_file_path" />
                       </Text>
                     }
                   >
-                    {isConfig ? (
+                    {isConfig || isBackendConfig ? (
                       <FormInput.MultiTextInput
-                        name={`${tfArtifactoryFormInputNames(isConfig).artifactPaths}[0].path`}
+                        name={`${tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths}[0].path`}
                         label=""
                         multiTextInputProps={{
                           expressions,
-                          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                            item => !isMultiTypeRuntime(item)
+                          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
+                            isMultiTypeRuntime(item)
                           ) as AllowedTypes
                         }}
                       />
                     ) : (
                       <FieldArray
-                        name={tfArtifactoryFormInputNames(isConfig).artifactPaths}
+                        name={tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths}
                         render={arrayHelpers => {
                           return (
                             <div>
@@ -316,17 +331,19 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                                     <Icon name="drag-handle-vertical" className={css.drag} />
                                     <Text width={12}>{`${index + 1}.`}</Text>
                                     <FormInput.MultiTextInput
-                                      name={`${tfArtifactoryFormInputNames(isConfig).artifactPaths}[${index}].path`}
+                                      name={`${
+                                        tfArtifactoryFormInputNames(isConfig, isBackendConfig).artifactPaths
+                                      }[${index}].path`}
                                       label=""
                                       multiTextInputProps={{
                                         expressions,
-                                        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                          item => !isMultiTypeRuntime(item)
+                                        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
+                                          isMultiTypeRuntime(item)
                                         ) as AllowedTypes
                                       }}
                                       style={{ width: 320 }}
                                     />
-                                    {!isConfig && (
+                                    {!isConfig && !isBackendConfig && (
                                       <Button
                                         minimal
                                         icon="main-trash"
@@ -337,7 +354,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                                   </Layout.Horizontal>
                                 </Layout.Horizontal>
                               ))}
-                              {!isConfig && (
+                              {!isConfig && !isBackendConfig && (
                                 <Button
                                   icon="plus"
                                   variation={ButtonVariation.LINK}
@@ -361,7 +378,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                   text={getString('back')}
                   variation={ButtonVariation.SECONDARY}
                   icon="chevron-left"
-                  onClick={() => previousStep?.()}
+                  onClick={() => previousStep?.(prevStepData)}
                   data-name="tf-remote-back-btn"
                 />
                 <Button

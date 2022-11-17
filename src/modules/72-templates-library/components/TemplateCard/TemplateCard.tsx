@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo, isEmpty, noop } from 'lodash-es'
-import { Card, Text, Container, Tag, Layout, Icon } from '@wings-software/uicore'
+import { Card, Text, Container, Tag, Layout, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { Position } from '@blueprintjs/core'

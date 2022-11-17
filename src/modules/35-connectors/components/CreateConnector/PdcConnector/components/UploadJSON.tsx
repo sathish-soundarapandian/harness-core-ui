@@ -7,8 +7,7 @@
 
 import React, { useState, useRef, DragEvent, useCallback } from 'react'
 import type { FormikProps } from 'formik'
-import { Icon, Text } from '@harness/uicore'
-import { Button, ButtonVariation, FormInput } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, FormInput } from '@harness/uicore'
 import { debounce } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'

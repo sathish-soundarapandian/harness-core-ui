@@ -9,7 +9,7 @@ import React from 'react'
 
 import cx from 'classnames'
 
-import { Layout, Text, Button, Icon, StepWizard, Label, ButtonVariation, AllowedTypes } from '@wings-software/uicore'
+import { Layout, Text, Button, Icon, StepWizard, Label, ButtonVariation, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, MenuItem, Popover, PopoverInteractionKind, Menu, Dialog, IDialogProps } from '@blueprintjs/core'
 import { FieldArray, FieldArrayRenderProps } from 'formik'

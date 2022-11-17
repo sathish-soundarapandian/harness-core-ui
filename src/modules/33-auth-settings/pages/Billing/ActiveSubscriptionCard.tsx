@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FontVariation, Text, Card, Layout, Color, OverlaySpinner, Button, ButtonVariation } from '@harness/uicore'
+import { Text, Card, Layout, OverlaySpinner, Button, ButtonVariation } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './BillingPage.module.scss'
 export interface ActiveSubscriptionDetails {

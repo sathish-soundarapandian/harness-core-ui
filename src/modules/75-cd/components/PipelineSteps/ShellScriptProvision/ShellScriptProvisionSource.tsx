@@ -8,7 +8,7 @@
 import React, { FormEvent, useState } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'

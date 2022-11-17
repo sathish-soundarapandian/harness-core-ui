@@ -7,7 +7,7 @@
 
 import React, { ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Container, Layout, AvatarGroup } from '@wings-software/uicore'
+import { Text, Container, Layout, AvatarGroup } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import {
   UserGroupDTO,

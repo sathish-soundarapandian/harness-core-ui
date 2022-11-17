@@ -6,8 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
-import { Layout, Text, Icon, Button, ButtonVariation, IconProps, TextProps, IconName } from '@wings-software/uicore'
-import type { LayoutProps } from '@wings-software/uicore/dist/layouts/Layout'
+import { Layout, Text, Icon, Button, ButtonVariation, IconProps, TextProps, IconName } from '@harness/uicore'
+import type { LayoutProps } from '@harness/uicore/dist/layouts/Layout'
 import { Color, FontVariation, FontWeight } from '@harness/design-system'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'

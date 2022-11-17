@@ -14,11 +14,13 @@ import type {
   UseCreateConnectorModalProps,
   UseCreateConnectorModalReturn
 } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import type { DurationProps } from '@common/exports'
 
 export interface ChaosCustomMicroFrontendProps {
   customComponents: {
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
     OverviewChartsWithToggle: React.ComponentType<OverviewChartsWithToggleProps>
+    Duration: React.ComponentType<DurationProps>
     NavigationCheck: React.ComponentType<NavigationCheckProps>
   }
   customHooks: {

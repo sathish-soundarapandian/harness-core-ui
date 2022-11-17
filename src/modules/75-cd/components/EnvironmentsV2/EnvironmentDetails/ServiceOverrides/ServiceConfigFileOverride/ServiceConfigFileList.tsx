@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, Text, Layout, FontVariation, StepProps, ButtonSize, ButtonVariation } from '@harness/uicore'
+import { Button, Text, Layout, StepProps, ButtonSize, ButtonVariation } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import type { ConfigFileWrapper, ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

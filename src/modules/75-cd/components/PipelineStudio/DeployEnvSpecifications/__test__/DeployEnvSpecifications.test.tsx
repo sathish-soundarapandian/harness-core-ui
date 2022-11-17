@@ -94,6 +94,21 @@ describe('Deploy env specifications test', () => {
     )
   })
 
+  test('Should show runtime if scope is not project and multi env flag enabled', async () => {
+    const context = getOverrideContextValue()
+    render(
+      <TestWrapper defaultFeatureFlagValues={{ MULTI_SERVICE_INFRA: true }}>
+        <PipelineContext.Provider value={context}>
+          <DeployEnvSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    await waitFor(() =>
+      expect(screen.getByTestId('envOrGroupLoader')).toHaveTextContent('{"environmentRef":"<+input>"}')
+    )
+  })
+
   test('Should call submitFormsForTab when errorMap is not empty', async () => {
     const errorContextProvider = {
       state: {} as any,

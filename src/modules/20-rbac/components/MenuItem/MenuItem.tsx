@@ -7,8 +7,7 @@
 
 import React from 'react'
 import { IMenuItemProps, Menu, MenuItem, PopoverInteractionKind, MaybeElement } from '@blueprintjs/core'
-import { Icon, Popover } from '@wings-software/uicore'
-import type { IconName } from '@harness/uicore'
+import { Icon, Popover, IconName } from '@harness/uicore'
 import { usePermission, PermissionsRequest } from '@rbac/hooks/usePermission'
 import { useGetFirstDisabledFeature } from '@common/hooks/useFeatures'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'

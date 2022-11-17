@@ -6,7 +6,7 @@
  */
 
 import { pick } from 'lodash-es'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 import type { StringVariableConfigDTO, VariableConfigDTO, VariableDTO, VariableRequestDTO } from 'services/cd-ng'
 

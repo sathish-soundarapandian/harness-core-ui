@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { isUndefined } from 'lodash-es'
 import moment from 'moment'

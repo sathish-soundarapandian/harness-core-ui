@@ -8,7 +8,7 @@
 import React from 'react'
 import Highcharts from 'highcharts/highcharts'
 import moment from 'moment'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { QlceViewTimeGroupType } from 'services/ce/services'
 import type { ChartConfigType } from './chartUtils'
 import CEChart from '../CEChart/CEChart'

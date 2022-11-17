@@ -52,7 +52,8 @@ const getEditProps = (
 ): PipelineCreateProps => ({
   afterSave,
   initialValues: { identifier, description, name, repo, branch, stages: [] },
-  closeModal
+  closeModal,
+  primaryButtonText: 'continue'
 })
 
 describe('PipelineCreate test', () => {
@@ -65,7 +66,7 @@ describe('PipelineCreate test', () => {
           pipelineIdentifier: -1
         }}
       >
-        <PipelineCreate />
+        <PipelineCreate primaryButtonText="start" />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -96,7 +97,7 @@ describe('PipelineCreate test', () => {
           pipelineIdentifier: -1
         }}
       >
-        <PipelineCreate />
+        <PipelineCreate primaryButtonText="start" />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -162,7 +163,7 @@ describe('PipelineCreate test', () => {
           pipelineIdentifier: DefaultNewPipelineId // PipelineCreate is taking pipelineIdentifier from pathParam
         }}
       >
-        <PipelineCreate {...getEditProps(DefaultNewPipelineId)} />
+        <PipelineCreate {...getEditProps(DefaultNewPipelineId)} primaryButtonText="start" />
       </TestWrapper>
     )
     await waitFor(() => getByText('start'))
@@ -190,7 +191,7 @@ describe('PipelineCreate test', () => {
         }}
         defaultAppStoreValues={{ isGitSyncEnabled: true }}
       >
-        <PipelineCreate initialValues={initialPipelineCreateData} afterSave={afterSave} />
+        <PipelineCreate initialValues={initialPipelineCreateData} afterSave={afterSave} primaryButtonText="continue" />
       </TestWrapper>
     )
 

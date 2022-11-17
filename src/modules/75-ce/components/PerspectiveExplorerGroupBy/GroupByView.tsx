@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { ExpandingSearchInput, Button, ButtonVariation, Text } from '@wings-software/uicore'
+import { ExpandingSearchInput, Button, ButtonVariation, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Popover, Position, PopoverInteractionKind, Classes, MenuItem } from '@blueprintjs/core'
 import cx from 'classnames'

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { isValidCron } from 'cron-validator'
 import { zeroFiftyNineDDOptions, amPmOptions, oneTwelveDDOptions } from '@common/components/TimeSelect/TimeSelectUtils'
 const cronSensicalMinutes = [5, 10, 15, 20, 30]

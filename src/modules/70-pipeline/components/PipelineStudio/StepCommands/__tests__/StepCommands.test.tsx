@@ -8,7 +8,7 @@
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
 import type { IconName } from '@blueprintjs/core'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

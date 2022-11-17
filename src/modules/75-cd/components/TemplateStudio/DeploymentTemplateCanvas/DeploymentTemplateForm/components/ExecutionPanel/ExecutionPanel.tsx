@@ -20,9 +20,9 @@ import {
   useToaster,
   ExpandingSearchInputHandle,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
-import { Color } from '@wings-software/design-system'
+import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'

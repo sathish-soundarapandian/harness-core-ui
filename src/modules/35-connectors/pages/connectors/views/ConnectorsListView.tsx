@@ -17,11 +17,11 @@ import {
   TagsPopover,
   TableV2,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Menu, Classes, Position, Intent, TextArea, Tooltip } from '@blueprintjs/core'
-import { useParams, useHistory, Link } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import classNames from 'classnames'
 import { pick, defaultTo } from 'lodash-es'
@@ -43,6 +43,9 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { getIconByType, isSMConnector } from '../utils/ConnectorUtils'
 import { getConnectorDisplaySummary } from '../utils/ConnectorListViewUtils'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
@@ -122,7 +125,6 @@ export const RenderColumnDetails: Renderer<CellProps<ConnectorResponse>> = ({ ro
 
 export const RenderGitDetails: Renderer<CellProps<ConnectorResponse>> = ({ row }) => {
   const data = row.original
-
   return data.gitDetails ? (
     <div className={css.wrapper}>
       <Layout.Horizontal>
@@ -185,6 +187,7 @@ const RenderColumnStatus: Renderer<CellProps<ConnectorResponse>> = ({ row }) => 
 const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column }) => {
   const history = useHistory()
   const params = useParams<PipelineType<ProjectPathProps>>()
+  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
   const data = row.original
   const gitDetails = data?.gitDetails ?? {}
   const isHarnessManaged = data.harnessManaged
@@ -247,32 +250,42 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
     )
   }
 
-  const { openDialog: openReferenceErrorDialog } = useConfirmationDialog({
-    contentText: (
-      <span>
-        <Text inline font={{ weight: 'bold' }}>
-          {`${data.connector?.name} `}
-        </Text>
-        {getString('connectors.connectorReferenceText')}
-        <Link
-          to={{
-            pathname: routes.toConnectorDetails({
-              ...params,
-              connectorId: data.connector?.identifier
-            }),
-            search: `?view=${ConnectorDetailsView.referencedBy}`
-          }}
-        >
-          {getString('clickHere')}
-        </Link>
-      </span>
-    ),
+  const deleteHandler = async (forceDelete?: boolean): Promise<void> => {
+    try {
+      const deleted = await deleteConnector(data.connector?.identifier || '', {
+        headers: { 'content-type': 'application/json' },
+        queryParams: { forceDelete: Boolean(forceDelete) }
+      })
+
+      if (deleted) {
+        showSuccess(getString('connectors.deletedSuccssMessage', { name: data.connector?.name }))
+      }
+      ;(column as any).reload?.()
+    } catch (err) {
+      handleConnectorDeleteError(err?.data.code, defaultTo(err?.data?.message, err?.message))
+    }
+  }
+
+  const redirectToReferencedBy = (): void =>
+    history.push({
+      pathname: routes.toConnectorDetails({
+        ...params,
+        connectorId: data.connector?.identifier
+      }),
+      search: `?view=${ConnectorDetailsView.referencedBy}`
+    })
+
+  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.CONNECTOR,
+      name: defaultTo(data.connector?.name, '')
+    },
     titleText: getString('connectors.cantDeleteConnector'),
-    cancelButtonText: getString('cancel'),
-    intent: Intent.DANGER
+    redirectToReferencedBy: redirectToReferencedBy,
+    forceDeleteCallback: isForceDeleteSupported ? () => deleteHandler(true) : undefined
   })
 
-  const handleConnectorDeleteError = (code: string, message: string) => {
+  const handleConnectorDeleteError = (code: string, message: string): void => {
     if (code === 'ENTITY_REFERENCE_EXCEPTION') {
       openReferenceErrorDialog()
     } else {
@@ -287,20 +300,9 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
     cancelButtonText: getString('cancel'),
     intent: Intent.DANGER,
     buttonIntent: Intent.DANGER,
-    onCloseDialog: async (isConfirmed: boolean) => {
+    onCloseDialog: (isConfirmed: boolean) => {
       if (isConfirmed) {
-        try {
-          const deleted = await deleteConnector(data.connector?.identifier || '', {
-            headers: { 'content-type': 'application/json' }
-          })
-
-          if (deleted) {
-            showSuccess(getString('connectors.deletedSuccssMessage', { name: data.connector?.name }))
-          }
-          ;(column as any).reload?.()
-        } catch (err) {
-          handleConnectorDeleteError(err?.data.code, defaultTo(err?.data?.message, err?.message))
-        }
+        deleteHandler()
       }
     }
   })

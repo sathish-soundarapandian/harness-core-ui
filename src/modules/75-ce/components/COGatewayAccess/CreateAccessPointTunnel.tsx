@@ -19,7 +19,7 @@ import {
   StepProps,
   SelectOption,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import {
   ConnectorReferenceField,
   ConnectorReferenceFieldProps

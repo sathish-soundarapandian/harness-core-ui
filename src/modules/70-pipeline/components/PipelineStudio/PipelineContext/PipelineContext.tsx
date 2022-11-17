@@ -211,8 +211,8 @@ export const savePipeline = (
         body: body as any,
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
       })
-        .then((response: any) => {
-          if ((typeof response as unknown) === 'string') {
+        .then((response: unknown) => {
+          if (typeof response === 'string') {
             return JSON.parse(response as string) as Failure
           } else {
             return response
@@ -356,7 +356,10 @@ export const findAllByKey = (keyToFind: string, obj?: PipelineInfoConfig): strin
     : []
 }
 
-const getResolvedCustomDeploymentDetailsMap = (pipeline: PipelineInfoConfig, queryParams: GetPipelineQueryParams) => {
+const getResolvedCustomDeploymentDetailsMap = (
+  pipeline: PipelineInfoConfig,
+  queryParams: GetPipelineQueryParams
+): ReturnType<typeof getResolvedCustomDeploymentDetailsByRef> => {
   const templateRefs = map(findAllByKey('customDeploymentRef', pipeline), 'templateRef')
   return getResolvedCustomDeploymentDetailsByRef(
     {
@@ -377,7 +380,7 @@ const getTemplateType = (
   queryParams: GetPipelineQueryParams,
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean
-) => {
+): ReturnType<typeof getTemplateTypesByRef> => {
   const templateRefs = findAllByKey('templateRef', pipeline)
   return getTemplateTypesByRef(
     {
@@ -395,7 +398,7 @@ const getTemplateType = (
   )
 }
 
-const getRepoIdentifierName = (gitDetails?: EntityGitDetails) => {
+const getRepoIdentifierName = (gitDetails?: EntityGitDetails): string => {
   return gitDetails?.repoIdentifier || gitDetails?.repoName || ''
 }
 
@@ -444,15 +447,24 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
 
     const pipelineAPIResponses = await Promise.allSettled([pipelineByIdPromise, pipelineMetaDataPromise])
 
-    const [pipelineById, pipelineMetaData] = pipelineAPIResponses.map((response: PromiseSettledResult<any>) => {
+    const [pipelineById, pipelineMetaData] = pipelineAPIResponses.map((response: PromiseSettledResult<unknown>) => {
       if (response?.status === 'fulfilled') {
         return response?.value
       } else {
-        // For aborted request, we have to ignore else Abort error will be set as pipeline in IDB
-        // Adding check for stack trace too to ignore other unexpected error
-        return response?.reason?.stack || response?.reason?.name === 'AbortError' ? undefined : response?.reason
+        return response?.reason
       }
     })
+
+    // For aborted request, we have to ignore else Abort error will be set as pipeline in IDB
+    // Adding check for stack trace too to ignore other unexpected error
+    if (
+      pipelineById?.stack ||
+      pipelineById?.name === 'AbortError' ||
+      pipelineMetaData?.stack ||
+      pipelineMetaData?.name === 'AbortError'
+    ) {
+      return
+    }
 
     if (pipelineById?.templateError) {
       dispatch(PipelineContextActions.error({ templateError: pipelineById.templateError }))
@@ -502,7 +514,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       pipeline,
       originalPipeline: cloneDeep(pipeline),
       isUpdated: false,
-      modules: pipelineWithGitDetails.modules,
+      modules: pipelineWithGitDetails?.modules,
       gitDetails:
         pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
           ? pipelineWithGitDetails.gitDetails
@@ -532,7 +544,6 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
         ? await getResolvedCustomDeploymentDetailsMap(data.pipeline, templateQueryParams)
         : { resolvedCustomDeploymentDetailsByRef: {} }
-
       dispatch(
         PipelineContextActions.success({
           error: '',
@@ -541,7 +552,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: !isEqual(pipeline, data.originalPipeline),
           isUpdated: !isEqual(pipeline, data.pipeline),
-          modules: defaultTo(pipelineWithGitDetails.modules, data.modules),
+          modules: defaultTo(pipelineWithGitDetails?.modules, data.modules),
           gitDetails:
             pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
               ? pipelineWithGitDetails.gitDetails
@@ -1124,7 +1135,7 @@ export function PipelineProvider({
 
   // stage/step selection
   const queryParamStateSelection = usePipelineQuestParamState()
-  const setSelection = (selectedState: PipelineSelectionState) => {
+  const setSelection = (selectedState: PipelineSelectionState): void => {
     queryParamStateSelection.setPipelineQuestParamState(selectedState)
   }
   /** @deprecated use `setSelection` */

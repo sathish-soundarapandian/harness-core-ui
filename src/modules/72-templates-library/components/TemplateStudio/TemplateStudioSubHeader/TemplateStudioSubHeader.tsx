@@ -16,7 +16,7 @@ import {
   Text,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'

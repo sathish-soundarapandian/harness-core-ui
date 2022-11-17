@@ -18,7 +18,7 @@ import {
   AvatarGroup,
   ButtonSize,
   Page
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Popover, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
@@ -38,7 +38,7 @@ import {
 } from 'services/cd-ng'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import useSelectUserGroupsModal from '@common/modals/SelectUserGroups/useSelectUserGroupsModal'
+import useSelectUserGroupsModal from '@rbac/modals/SelectUserGroups/useSelectUserGroupsModal'
 import { getPrincipalScopeFromDTO, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

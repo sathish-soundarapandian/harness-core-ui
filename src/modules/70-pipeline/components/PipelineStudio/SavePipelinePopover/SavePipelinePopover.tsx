@@ -10,7 +10,6 @@ import {
   Button,
   ButtonVariation,
   Container,
-  FontVariation,
   Heading,
   PopoverProps,
   SplitButton,
@@ -18,6 +17,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'

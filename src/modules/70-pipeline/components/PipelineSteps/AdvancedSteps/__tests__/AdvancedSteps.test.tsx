@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, act } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 

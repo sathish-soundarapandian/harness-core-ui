@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Color, Text } from '@harness/uicore'
+import { Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import SeverityPill from '@sto/components/SeverityPill/SeverityPill'
 import { SeverityCode } from '@sto/types'

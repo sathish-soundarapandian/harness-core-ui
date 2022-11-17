@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { CodeBlock, Container, Text } from '@wings-software/uicore'
+import { CodeBlock, Container, Text } from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 
 enum BlockType {

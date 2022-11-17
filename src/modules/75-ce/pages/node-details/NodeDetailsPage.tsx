@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { Container, Text, FlexExpander, Layout } from '@wings-software/uicore'
+import { Container, Text, FlexExpander, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'

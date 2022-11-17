@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'

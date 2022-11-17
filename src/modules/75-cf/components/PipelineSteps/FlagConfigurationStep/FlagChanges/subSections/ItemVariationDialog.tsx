@@ -17,7 +17,7 @@ import {
   Layout,
   MultiSelectOption,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'

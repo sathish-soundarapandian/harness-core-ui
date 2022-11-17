@@ -5,12 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Page, Button, ButtonVariation } from '@harness/uicore'
 import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
+import type { SLOTargetFilterDTO } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
 import { isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
@@ -23,6 +24,8 @@ import SLOTargetNotificationsContainer from '../../../CVCreateSLO/components/Cre
 import SLOTarget from './components/SLOTarget/SLOTarget'
 import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningModal'
 import PeriodLength from './components/PeriodLength/PeriodLength'
+import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
+import { CompositeSLOContext } from './CompositeSLOContext'
 import css from './CreateCompositeSloForm.module.scss'
 
 export const CreateCompositeSloForm = ({
@@ -43,7 +46,7 @@ export const CreateCompositeSloForm = ({
 
   const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)
   const compositeSloPayloadRef = useRef<SLOV2Form | null>()
-  const periodTypesRef = useRef<SLOV2Form['periodType']>()
+  const periodTypesRef = useRef<SLOTargetFilterDTO>()
   const prevStepDataRef = useRef<SLOV2Form | null>()
 
   const [openSaveCancelModal, openPeriodUpdateModal] = useCreateCompositeSloWarningModal({
@@ -57,15 +60,17 @@ export const CreateCompositeSloForm = ({
     prevStepDataRef.current = formikProps.values
   }, [])
 
+  const formikFilterData = useMemo(() => createSloTargetFilterDTO(formikProps.values), [formikProps.values])
+
   useEffect(() => {
-    if (shouldOpenPeriodUpdateModal(formikProps, periodTypesRef)) {
+    if (shouldOpenPeriodUpdateModal(formikProps.values, periodTypesRef)) {
       openPeriodUpdateModal()
     }
-  }, [openPeriodUpdateModal, formikProps.values.periodType])
+  }, [openPeriodUpdateModal, formikFilterData])
 
   const onStepChange = (): void => {
     prevStepDataRef.current = formikProps.values
-    periodTypesRef.current = formikProps.values.periodType
+    periodTypesRef.current = createSloTargetFilterDTO(formikProps.values)
   }
 
   const onCancel = (): void => {
@@ -115,12 +120,15 @@ export const CreateCompositeSloForm = ({
             {
               id: CreateCompositeSLOSteps.Error_Budget_Policy,
               title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
+              isOptional: true,
               panel: (
-                <SLOTargetNotificationsContainer
-                  identifier={identifier}
-                  setFieldValue={formikProps?.setFieldValue}
-                  notificationRuleRefs={formikProps.values?.notificationRuleRefs}
-                />
+                <CompositeSLOContext.Provider value={{ renderInsideCompositeSLO: true }}>
+                  <SLOTargetNotificationsContainer
+                    identifier={identifier}
+                    setFieldValue={formikProps?.setFieldValue}
+                    notificationRuleRefs={formikProps.values?.notificationRuleRefs}
+                  />
+                </CompositeSLOContext.Provider>
               )
             }
           ]}

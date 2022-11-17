@@ -21,7 +21,7 @@ import {
   OverlaySpinner,
   ButtonVariation,
   useToaster
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import type { FormikProps, FormikErrors } from 'formik'

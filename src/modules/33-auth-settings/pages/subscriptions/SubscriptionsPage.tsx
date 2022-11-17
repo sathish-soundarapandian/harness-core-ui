@@ -10,7 +10,7 @@ import cx from 'classnames'
 
 import moment from 'moment'
 import { useParams, useHistory } from 'react-router-dom'
-import { Card, Container, Icon, IconName, Layout, Heading, PageError } from '@wings-software/uicore'
+import { Card, Container, Icon, IconName, Layout, Heading, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'

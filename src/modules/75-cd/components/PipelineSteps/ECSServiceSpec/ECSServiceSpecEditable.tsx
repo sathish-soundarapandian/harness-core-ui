@@ -9,7 +9,7 @@ import React, { useCallback, useMemo } from 'react'
 import { defaultTo, get, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
-import { Card, HarnessDocTooltip } from '@wings-software/uicore'
+import { Card, HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type {
@@ -24,7 +24,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
 import { getManifestsHeaderTooltipId, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
@@ -414,6 +414,10 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
                 data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
               >
                 {getString('pipelineSteps.configFiles')}
+                <HarnessDocTooltip
+                  tooltipId={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
               </div>
               <ConfigFilesSelection
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}
@@ -431,7 +435,13 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
+          <div
+            className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+            data-tooltip-id={getVariablesHeaderTooltipId(selectedDeploymentType)}
+          >
+            {getString('common.variables')}
+            <HarnessDocTooltip tooltipId={getVariablesHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+          </div>
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}

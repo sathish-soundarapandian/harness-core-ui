@@ -7,7 +7,7 @@
 
 import React, { useContext } from 'react'
 import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
-import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
+import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

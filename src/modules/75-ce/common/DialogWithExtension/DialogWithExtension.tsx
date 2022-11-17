@@ -7,7 +7,7 @@
 
 import React, { createContext, ReactElement, useState } from 'react'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import css from './DialogWithExtension.module.scss'
 
 interface ChildrenProps {

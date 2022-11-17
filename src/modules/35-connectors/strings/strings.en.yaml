@@ -87,6 +87,7 @@ connectivityMode:
 title:
   customSecretManager: 'Custom Secrets Manager'
   gcpSecretManager: 'GCP Secrets Manager'
+  azureArtifacts: 'Azure Artifacts'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -160,6 +161,7 @@ testConnectionStep:
     vault: 'Vault URL : '
     bitbucket: 'URL : '
     gcr: 'GCR URL : '
+    spot: 'SPOT URL : '
   validationText:
     k8s: Validating the reachability of provided URL
     docker: Validating Docker Registry authentication and permissions
@@ -188,6 +190,7 @@ testConnectionStep:
     gcpKms: Validating GCP Key Management Service authentication and permissions
     testingURLReachability: Testing reachability to the URL
     customSM: Validating Custom Secret Manager authentication and permissions
+    spot: Validating the Spot connector authentication and permissions
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
@@ -314,6 +317,10 @@ jenkins:
   jenkins: 'Jenkins'
   jenkinsUrlRequired: 'Jenkins Registry URL is required'
   jenkinsUrl: 'Jenkins Registry URL'
+azureArtifacts:
+  azureArtifactsUrlRequired: Azure Artifacts URL is required
+  tokenRefRequired: Token ref is required
+  azureArtifactsUrl: Azure Artifacts URL
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
 aws:

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, ExpandingSearchInput, Table, Text } from '@wings-software/uicore'
+import { Container, ExpandingSearchInput, Table, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { CEAzureConnector } from 'services/cd-ng'

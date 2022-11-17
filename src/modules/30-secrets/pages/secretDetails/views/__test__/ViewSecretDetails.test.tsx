@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { VisualYamlSelectedView } from '@wings-software/uicore'
+import { VisualYamlSelectedView } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, secretPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'

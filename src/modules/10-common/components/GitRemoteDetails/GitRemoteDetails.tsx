@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Text, SelectOption } from '@wings-software/uicore'
+import { Icon, Text, SelectOption } from '@harness/uicore'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
@@ -19,9 +19,11 @@ export interface GitRemoteDetailsProps {
   fileUrl?: string
   branch?: string
   onBranchChange?: (selectedFilter: { branch: string }, defaultSelected?: boolean) => void
+
   flags?: {
     borderless?: boolean
     showRepo?: boolean
+    showBranch?: boolean
     normalInputStyle?: boolean
     readOnly?: boolean
     fallbackDefaultBranch?: boolean
@@ -49,7 +51,8 @@ const GitRemoteDetails = ({
   fileUrl,
   branch = '',
   onBranchChange,
-  flags: { borderless = true, showRepo = true, normalInputStyle = false, readOnly = false } = {}
+
+  flags: { borderless = true, showRepo = true, showBranch = true, normalInputStyle = false, readOnly = false } = {}
 }: GitRemoteDetailsProps): React.ReactElement => {
   return (
     <div className={cx(css.wrapper, { [css.normalInputStyle]: normalInputStyle })}>
@@ -75,41 +78,45 @@ const GitRemoteDetails = ({
           >
             {repoName}
           </Text>
-          <span className={css.separator}></span>
+          {showBranch && <span className={css.separator}></span>}
         </>
       )}
-      <Icon
-        name="git-new-branch"
-        size={normalInputStyle ? undefined : 14}
-        margin={{
-          right: 'small'
-        }}
-      />
-      {readOnly ? (
-        <Text lineClamp={1} className={css.repoDetails}>
-          {branch}
-        </Text>
-      ) : (
-        <RepoBranchSelectV2
-          name="remoteBranch"
-          noLabel={true}
-          connectorIdentifierRef={connectorRef}
-          repoName={repoName}
-          onChange={(selected: SelectOption, defaultSelected = false): void => {
-            onBranchChange?.(
-              {
-                branch: selected.value as string
-              },
-              defaultSelected
-            )
+      {showBranch && (
+        <Icon
+          name="git-new-branch"
+          size={normalInputStyle ? undefined : 14}
+          margin={{
+            right: 'small'
           }}
-          selectedValue={branch}
-          branchSelectorClassName={cx(css.branchSelector, { [css.transparent]: borderless })}
-          selectProps={{ borderless }}
-          showIcons={false}
-          showErrorInModal
         />
       )}
+      {showBranch ? (
+        readOnly ? (
+          <Text lineClamp={1} className={css.repoDetails}>
+            {branch}
+          </Text>
+        ) : (
+          <RepoBranchSelectV2
+            name="remoteBranch"
+            noLabel={true}
+            connectorIdentifierRef={connectorRef}
+            repoName={repoName}
+            onChange={(selected: SelectOption, defaultSelected = false): void => {
+              onBranchChange?.(
+                {
+                  branch: selected.value as string
+                },
+                defaultSelected
+              )
+            }}
+            selectedValue={branch}
+            branchSelectorClassName={cx(css.branchSelector, { [css.transparent]: borderless })}
+            selectProps={{ borderless }}
+            showIcons={false}
+            showErrorInModal
+          />
+        )
+      ) : null}
     </div>
   )
 }

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Text, TextInput, Card, FontVariation, Color } from '@harness/uicore'
+import { Layout, Text, TextInput, Card } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { CardElement } from '@stripe/react-stripe-js'
 import { useStrings } from 'framework/strings'
 import PowerByStripe from './img/powered_by_stripe.svg'

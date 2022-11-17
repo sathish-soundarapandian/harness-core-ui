@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonSize, ButtonVariation, Intent, Layout } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Layout } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import React, { FC } from 'react'
 import { useStrings } from 'framework/strings'
 import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'

@@ -5,12 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Container, Icon, PageError, Text } from '@wings-software/uicore'
+import React, { useContext } from 'react'
+import { Container, Icon, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
-import SRMNotificationTable from './components/SRMNotificationTable/SRMNotificationTable'
+import { CompositeSLOContext } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CompositeSLOContext'
+import SRMNotificationTable from '@cv/components/Notifications/components/SRMNotificationTable/SRMNotificationTable'
 import { GET_NOTIFICATIONS_PAGE_SIZE } from './NotificationsContainer.constants'
 import { NotificationsContainerProps, SRMNotificationType } from './NotificationsContainer.types'
 import { getErrorMessage } from '../ExecutionVerification/components/DeploymentMetrics/DeploymentMetrics.utils'
@@ -32,6 +33,8 @@ export default function NotificationsContainer(props: NotificationsContainerProp
   } = props
 
   const { getString } = useStrings()
+  const { renderInsideCompositeSLO } = useContext(CompositeSLOContext)
+  const containerBorder = renderInsideCompositeSLO ? false : { top: true, bottom: true }
 
   const renderContent = (): JSX.Element => {
     if (loading) {
@@ -39,7 +42,7 @@ export default function NotificationsContainer(props: NotificationsContainerProp
         <Container
           height={200}
           flex={{ justifyContent: 'center' }}
-          border={{ top: true, bottom: true }}
+          border={containerBorder}
           style={{ overflow: 'auto' }}
         >
           <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
@@ -48,7 +51,7 @@ export default function NotificationsContainer(props: NotificationsContainerProp
     }
     if (error) {
       return (
-        <Container height={200} border={{ top: true, bottom: true }} style={{ overflow: 'auto' }}>
+        <Container height={200} border={containerBorder} style={{ overflow: 'auto' }}>
           <PageError width={400} message={getErrorMessage(error)} onClick={() => getNotifications()} />
         </Container>
       )
@@ -65,11 +68,15 @@ export default function NotificationsContainer(props: NotificationsContainerProp
         pageItemCount={GET_NOTIFICATIONS_PAGE_SIZE}
         pageSize={GET_NOTIFICATIONS_PAGE_SIZE}
         totalItems={notificationsInTable.length}
-        gotoPage={index => {
+        gotoPage={(index: number) => {
           setPage(index)
         }}
       />
     )
+  }
+
+  if (renderInsideCompositeSLO) {
+    return renderContent()
   }
 
   return (
@@ -77,7 +84,7 @@ export default function NotificationsContainer(props: NotificationsContainerProp
       <Text tooltipProps={{ dataTooltipId: 'healthSourcesLabel' }} className={css.tableTitle}>
         {type == SRMNotificationType.SERVICE_LEVEL_OBJECTIVE
           ? getString('cv.notifications.errorBudgetPolicies')
-          : getString('notifications.name')}
+          : getString('rbac.notifications.name')}
       </Text>
       {renderContent()}
     </CardWithOuterTitle>

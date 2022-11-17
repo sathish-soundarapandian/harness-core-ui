@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

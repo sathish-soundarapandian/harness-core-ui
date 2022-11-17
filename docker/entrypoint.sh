@@ -33,6 +33,12 @@ sed -i "s|<\!-- newNavContetfulSpace -->|<script>window.newNavContetfulSpace = '
 sed -i "s|<\!-- newNavContentfulEnvironment -->|<script>window.newNavContentfulEnvironment = '$NEW_NAV_CONTENTFUL_ENVIRONMENT'</script>|" index.html
 sed -i "s|<\!-- harnessNameSpacePlaceHolder -->|<script>window.harnessNameSpace = '$HARNESS_NAME_SPACE'</script>|" index.html
 sed -i "s|<\!-- stripeApiKey -->|<script>window.stripeApiKey = '$STRIPE_API_KEY'</script>|" index.html
+
+sed -i "s|USE_LEGACY_FEATURE_FLAGS_PLACEHOLDER|$USE_LEGACY_FEATURE_FLAGS|" index.html
+sed -i "s|HARNESS_FF_SDK_BASE_URL_PLACEHOLDER|$HARNESS_FF_SDK_BASE_URL|" index.html
+sed -i "s|HARNESS_FF_SDK_ENABLE_STREAM_PLACEHOLDER|$HARNESS_FF_SDK_ENABLE_STREAM|" index.html
+sed -i "s|HARNESS_FF_SDK_KEY_PLACEHOLDER|$HARNESS_FF_SDK_KEY|" index.html
+
 if [ "$HARNESS_ENABLE_CDN_PLACEHOLDER" = "true" ]
 then
   sed -i "s|\"static\/main\.\(.*\)\.js\"|\"//static.harness.io/ng-static/main.\1.js\"|" index.html

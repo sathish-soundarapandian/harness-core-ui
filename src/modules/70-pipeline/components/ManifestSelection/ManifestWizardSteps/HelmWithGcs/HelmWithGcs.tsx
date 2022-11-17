@@ -20,7 +20,7 @@ import {
   getErrorInfoFromErrorObject,
   AllowedTypes,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'

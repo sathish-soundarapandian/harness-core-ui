@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { CreateDelegateWizard } from '@delegates/components/CreateDelegate/CreateDelegateWizard'

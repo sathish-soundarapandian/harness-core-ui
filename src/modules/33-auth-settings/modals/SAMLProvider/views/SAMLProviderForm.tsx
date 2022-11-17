@@ -25,10 +25,10 @@ import {
   ThumbnailSelect,
   Label,
   Page
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
-import type { ToasterProps } from '@wings-software/uicore/dist/hooks/useToaster/useToaster'
+import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'
 import { CopyText } from '@common/components/CopyText/CopyText'

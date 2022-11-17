@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Formik, Layout } from '@wings-software/uicore'
+import { Container, Formik, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'

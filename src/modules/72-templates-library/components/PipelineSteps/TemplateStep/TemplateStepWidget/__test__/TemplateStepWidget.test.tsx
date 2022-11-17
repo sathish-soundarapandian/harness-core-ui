@@ -7,7 +7,7 @@
 
 import { render } from '@testing-library/react'
 import React from 'react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
@@ -60,6 +60,15 @@ describe('<TemplateStepWidgetWithRef /> tests', () => {
                 }
               } as JsonNode
             }
+          }}
+          customStepProps={{
+            selectedStage: {
+              identifier: 'testStage',
+              name: 'Test Stage',
+              type: 'Deployment',
+              spec: {}
+            },
+            stageIdentifier: 'testStage'
           }}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
           factory={factory}

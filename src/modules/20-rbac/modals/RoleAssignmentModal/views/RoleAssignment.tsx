@@ -15,7 +15,7 @@ import {
   FormInput,
   ModalErrorHandler,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import type { ReleaseRepoManifest } from 'services/cd-ng'

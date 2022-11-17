@@ -20,30 +20,7 @@ export interface ACLAggregateFilter {
 export type AMIArtifactConfig = ArtifactConfig & {
   connectorRef: string
   filters?: AMIFilter[]
-  region:
-    | 'us-east-1'
-    | 'us-east-2'
-    | 'us-west-1'
-    | 'us-west-2'
-    | 'af-south-1'
-    | 'ap-east-1'
-    | 'ap-south-east-3'
-    | 'ap-south-east-2'
-    | 'ap-south-east-1'
-    | 'ap-south-1'
-    | 'ap-northeast-3'
-    | 'ap-north-east-2'
-    | 'ap-north-east-1'
-    | 'ca-central-1'
-    | 'eu-central-1'
-    | 'eu-west-1'
-    | 'eu-west-2'
-    | 'eu-west-3'
-    | 'eu-south-1'
-    | 'eu-north-1'
-    | 'me-south-1'
-    | 'me-central-1'
-    | 'sa-east-1'
+  region: string
   tags?: AMITag[]
   version?: string
   versionRegex?: string
@@ -419,6 +396,7 @@ export interface AccessControlCheckError {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -451,6 +429,7 @@ export interface Account {
   forImport?: boolean
   globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
+  immutableDelegateEnabled?: boolean
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
   licenseId?: string
@@ -570,6 +549,7 @@ export interface AccountPermissions {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'ACCESS_NEXTGEN'
   )[]
 }
 
@@ -843,6 +823,7 @@ export interface AppPermission {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'ACCESS_NEXTGEN'
 }
 
 export interface ApplicationSettingsConfiguration {
@@ -1775,20 +1756,20 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
 }
 
 export type CELicenseSummaryDTO = LicensesWithSummaryDTO & {
@@ -1851,7 +1832,7 @@ export interface CcmConnectorFilter {
   awsAccountId?: string
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
 }
@@ -2606,6 +2587,7 @@ export interface CustomScriptBaseSource {
 
 export interface CustomScriptInfo {
   inputs?: NGVariable[]
+  runtimeInputYaml?: string
   script: string
 }
 
@@ -3265,11 +3247,19 @@ export interface ElastigroupConfiguration {
   store: StoreConfigWrapper
 }
 
+export type ElastigroupCurrentRunningInstances = ElastigroupInstancesSpec & { [key: string]: any }
+
 export type ElastigroupDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   metadata?: string
   newService?: Capacity
   oldService?: Capacity
+}
+
+export type ElastigroupFixedInstances = ElastigroupInstancesSpec & {
+  desired?: number
+  max?: number
+  min?: number
 }
 
 export type ElastigroupInfrastructure = Infrastructure & {
@@ -3278,8 +3268,28 @@ export type ElastigroupInfrastructure = Infrastructure & {
   metadata?: string
 }
 
+export interface ElastigroupInstances {
+  spec?: ElastigroupInstancesSpec
+  type: 'Fixed' | 'CurrentRunning'
+}
+
+export interface ElastigroupInstancesSpec {
+  type?: 'Fixed' | 'CurrentRunning'
+}
+
+export type ElastigroupRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  metadata?: string
+}
+
 export type ElastigroupServiceSpec = ServiceSpec & {
   startupScript?: StartupScriptConfiguration
+}
+
+export type ElastigroupSetupStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  instances: ElastigroupInstances
+  name: string
 }
 
 export interface Element {
@@ -3409,6 +3419,40 @@ export interface EntityDetail {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -3451,6 +3495,10 @@ export interface EntityDetail {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4060,6 +4108,7 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4422,6 +4471,7 @@ export interface ErrorMetadata {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   errorMessage?: string
 }
 
@@ -4835,6 +4885,7 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5442,7 +5493,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -5656,6 +5707,40 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -5698,6 +5783,10 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5779,6 +5868,40 @@ export interface GitEntityFilterProperties {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -5821,6 +5944,10 @@ export interface GitEntityFilterProperties {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5935,6 +6062,40 @@ export interface GitFullSyncEntityInfoDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -5977,6 +6138,10 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6066,6 +6231,40 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6108,6 +6307,10 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6305,6 +6508,40 @@ export interface GitSyncEntityDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6347,6 +6584,10 @@ export interface GitSyncEntityDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6430,6 +6671,40 @@ export interface GitSyncEntityListDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6472,6 +6747,10 @@ export interface GitSyncEntityListDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6572,6 +6851,40 @@ export interface GitSyncErrorDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -6614,6 +6927,10 @@ export interface GitSyncErrorDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -6912,6 +7229,10 @@ export type HelmChartManifest = ManifestAttributes & {
   skipResourceVersioning?: boolean
   store?: StoreConfigWrapper
   valuesPaths?: string[]
+}
+
+export interface HelmChartResponseDTO {
+  helmChartVersions?: string[]
 }
 
 export type HelmDeployStepInfo = StepSpecType & {
@@ -7817,7 +8138,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -7825,7 +8146,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -8135,6 +8455,7 @@ export interface Member {
 export type MergePRStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteSourceBranch: boolean
+  variables?: NGVariable[]
 }
 
 export type MicrosoftTeamsConfig = NotificationSettingConfig & {
@@ -8481,10 +8802,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -9507,6 +9827,40 @@ export interface ReferencedByDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -9549,6 +9903,10 @@ export interface ReferencedByDTO {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export interface RefreshResponse {
@@ -9570,6 +9928,10 @@ export type RemoteCloudformationTagsFileSpec = CloudformationTagsFileSpec & {
 }
 
 export type RemoteCloudformationTemplateFileSpec = CloudformationTemplateFileSpec & {
+  store: StoreConfigWrapper
+}
+
+export type RemoteTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
   store: StoreConfigWrapper
 }
 
@@ -10310,6 +10672,13 @@ export interface ResponseHealthDeploymentDashboard {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseHelmChartResponseDTO {
+  correlationId?: string
+  data?: HelmChartResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseInfrastructureConfig {
   correlationId?: string
   data?: InfrastructureConfig
@@ -10583,6 +10952,40 @@ export interface ResponseListEntityType {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -10625,6 +11028,10 @@ export interface ResponseListEntityType {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11285,6 +11692,7 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -13319,9 +13727,9 @@ export interface ShouldDisableDeploymentFreezeResponseDTO {
 export interface SidecarArtifact {
   identifier: string
   name?: string
-  spec: ArtifactConfig
+  spec?: ArtifactConfig
   template?: TemplateLinkConfig
-  type:
+  type?:
     | 'DockerRegistry'
     | 'Gcr'
     | 'Ecr'
@@ -13577,6 +13985,8 @@ export interface StepData {
     | 'EcsBlueGreenRollback'
     | 'GitOpsUpdateReleaseRepo'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'ElastigroupSetup'
 }
 
 export interface StepElementConfig {
@@ -14593,9 +15003,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -15033,6 +15443,62 @@ export const updateAccountDefaultExperienceNGPromise = (
     UpdateAccountDefaultExperienceNGPathParams
   >('PUT', getConfig('ng/api'), `/accounts/${accountIdentifier}/default-experience`, props, signal)
 
+export interface IsImmutableDelegateEnabledPathParams {
+  accountIdentifier: string
+}
+
+export type IsImmutableDelegateEnabledProps = Omit<
+  GetProps<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>,
+  'path'
+> &
+  IsImmutableDelegateEnabledPathParams
+
+/**
+ * Get Immutable delegate enabled flag
+ */
+export const IsImmutableDelegateEnabled = ({ accountIdentifier, ...props }: IsImmutableDelegateEnabledProps) => (
+  <Get<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>
+    path={`/accounts/${accountIdentifier}/immutable-delegate-enabled`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseIsImmutableDelegateEnabledProps = Omit<
+  UseGetProps<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>,
+  'path'
+> &
+  IsImmutableDelegateEnabledPathParams
+
+/**
+ * Get Immutable delegate enabled flag
+ */
+export const useIsImmutableDelegateEnabled = ({ accountIdentifier, ...props }: UseIsImmutableDelegateEnabledProps) =>
+  useGet<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>(
+    (paramsInPath: IsImmutableDelegateEnabledPathParams) =>
+      `/accounts/${paramsInPath.accountIdentifier}/immutable-delegate-enabled`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Get Immutable delegate enabled flag
+ */
+export const isImmutableDelegateEnabledPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams> & {
+    accountIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBoolean, Failure | Error, void, IsImmutableDelegateEnabledPathParams>(
+    getConfig('ng/api'),
+    `/accounts/${accountIdentifier}/immutable-delegate-enabled`,
+    props,
+    signal
+  )
+
 export interface UpdateAccountNameNGPathParams {
   accountIdentifier: string
 }
@@ -15180,6 +15646,40 @@ export interface ListActivitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15222,6 +15722,10 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15297,6 +15801,40 @@ export interface ListActivitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15339,6 +15877,10 @@ export interface ListActivitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -15518,6 +16060,40 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15560,6 +16136,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -15635,6 +16215,40 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -15677,6 +16291,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -17989,6 +18607,100 @@ export const getImagePathsForArtifactoryPromise = (
     signal
   )
 
+export interface GetImagePathsForArtifactoryV2QueryParams {
+  connectorRef?: string
+  repositoryType?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier: string
+  repository: string
+  fqnPath?: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetImagePathsForArtifactoryV2Props = Omit<
+  MutateProps<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Image Paths details
+ */
+export const GetImagePathsForArtifactoryV2 = (props: GetImagePathsForArtifactoryV2Props) => (
+  <Mutate<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/artifactory/imagePathsV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetImagePathsForArtifactoryV2Props = Omit<
+  UseMutateProps<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Image Paths details
+ */
+export const useGetImagePathsForArtifactoryV2 = (props: UseGetImagePathsForArtifactoryV2Props) =>
+  useMutate<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/artifactory/imagePathsV2`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Image Paths details
+ */
+export const getImagePathsForArtifactoryV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseArtifactoryImagePathsDTO,
+    Failure | Error,
+    GetImagePathsForArtifactoryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/artifactory/imagePathsV2`, props, signal)
+
 export interface GetRepositoriesDetailsForArtifactoryQueryParams {
   connectorRef?: string
   repositoryType?: string
@@ -18944,7 +19656,7 @@ export type GetJobDetailsForCustomProps = Omit<
 >
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const GetJobDetailsForCustom = (props: GetJobDetailsForCustomProps) => (
   <Mutate<ResponseListBuildDetails, Failure | Error, GetJobDetailsForCustomQueryParams, CustomScriptInfo, void>
@@ -18961,7 +19673,7 @@ export type UseGetJobDetailsForCustomProps = Omit<
 >
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const useGetJobDetailsForCustom = (props: UseGetJobDetailsForCustomProps) =>
   useMutate<ResponseListBuildDetails, Failure | Error, GetJobDetailsForCustomQueryParams, CustomScriptInfo, void>(
@@ -18971,7 +19683,7 @@ export const useGetJobDetailsForCustom = (props: UseGetJobDetailsForCustomProps)
   )
 
 /**
- * Gets Job details for Custom
+ * Gets Job details for Custom Artifact
  */
 export const getJobDetailsForCustomPromise = (
   props: MutateUsingFetchProps<
@@ -20089,6 +20801,106 @@ export const getRegionsForGoogleArtifactRegistryPromise = (
     props,
     signal
   )
+
+export interface GetBuildDetailsForGoogleArtifactRegistryV2QueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  package?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  version?: string
+  versionRegex?: string
+  fqnPath: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetBuildDetailsForGoogleArtifactRegistryV2Props = Omit<
+  MutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const GetBuildDetailsForGoogleArtifactRegistryV2 = (props: GetBuildDetailsForGoogleArtifactRegistryV2Props) => (
+  <Mutate<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/gar/v2/getBuildDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBuildDetailsForGoogleArtifactRegistryV2Props = Omit<
+  UseMutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const useGetBuildDetailsForGoogleArtifactRegistryV2 = (
+  props: UseGetBuildDetailsForGoogleArtifactRegistryV2Props
+) =>
+  useMutate<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/gar/v2/getBuildDetails`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets google artifact registry build details v2
+ */
+export const getBuildDetailsForGoogleArtifactRegistryV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetBuildDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/gar/v2/getBuildDetails`, props, signal)
 
 export interface GetBuildDetailsForGcrQueryParams {
   imagePath: string
@@ -24881,7 +25693,7 @@ export const listBucketsWithServiceV2Promise = (
 export interface GetFilePathsV2ForS3QueryParams {
   region?: string
   connectorRef?: string
-  bucketName: string
+  bucketName?: string
   filePathRegex?: string
   accountIdentifier: string
   orgIdentifier?: string
@@ -26130,6 +26942,7 @@ export interface DeleteConnectorQueryParams {
   filePath?: string
   commitMsg?: string
   lastObjectId?: string
+  forceDelete?: boolean
 }
 
 export type DeleteConnectorProps = Omit<
@@ -29744,6 +30557,40 @@ export interface ListReferredByEntitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -29786,6 +30633,10 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -29922,6 +30773,40 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -29964,6 +30849,10 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   searchTerm?: string
 }
 
@@ -32946,6 +33835,40 @@ export interface GetReferencedByQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -32988,6 +33911,10 @@ export interface GetReferencedByQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   searchTerm?: string
 }
 
@@ -35253,6 +36180,40 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -35295,6 +36256,10 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -35438,6 +36403,40 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'SaveCacheGCS'
       | 'SaveCacheS3'
       | 'Security'
+      | 'AquaTrivy'
+      | 'AWSECR'
+      | 'Bandit'
+      | 'BlackDuck'
+      | 'Brakeman'
+      | 'Burp'
+      | 'Checkmarx'
+      | 'Clair'
+      | 'DataTheorem'
+      | 'DockerContentTrust'
+      | 'External'
+      | 'FortifyOnDemand'
+      | 'Grype'
+      | 'JfrogXray'
+      | 'Mend'
+      | 'Metasploit'
+      | 'Nessus'
+      | 'NexusIQ'
+      | 'Nikto'
+      | 'Nmap'
+      | 'Openvas'
+      | 'Owasp'
+      | 'PrismaCloud'
+      | 'Prowler'
+      | 'Qualys'
+      | 'Reapsaw'
+      | 'ShiftLeft'
+      | 'Sniper'
+      | 'Snyk'
+      | 'Sonarqube'
+      | 'Sysdig'
+      | 'Tenable'
+      | 'Veracode'
+      | 'Zap'
       | 'GitClone'
       | 'ArtifactoryUpload'
       | 'GCSUpload'
@@ -35480,6 +36479,10 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsRunTask'
       | 'Chaos'
       | 'ElastigroupDeploy'
+      | 'ElastigroupRollback'
+      | 'Action'
+      | 'ElastigroupSetup'
+      | 'Bitrise'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -40553,6 +41556,63 @@ export const getModuleLicenseByIdPromise = (
     GetModuleLicenseByIdPathParams
   >(getConfig('ng/api'), `/licenses/${identifier}`, props, signal)
 
+export interface GetHelmChartVersionDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId?: string
+  fqnPath: string
+  connectorRef?: string
+  chartName?: string
+  region?: string
+  bucketName?: string
+  folderPath?: string
+}
+
+export type GetHelmChartVersionDetailsProps = Omit<
+  GetProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets helm chart version details
+ */
+export const GetHelmChartVersionDetails = (props: GetHelmChartVersionDetailsProps) => (
+  <Get<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>
+    path={`/manifests/helm/chart/version`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetHelmChartVersionDetailsProps = Omit<
+  UseGetProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets helm chart version details
+ */
+export const useGetHelmChartVersionDetails = (props: UseGetHelmChartVersionDetailsProps) =>
+  useGet<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>(
+    `/manifests/helm/chart/version`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets helm chart version details
+ */
+export const getHelmChartVersionDetailsPromise = (
+  props: GetUsingFetchProps<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseHelmChartResponseDTO, Failure | Error, GetHelmChartVersionDetailsQueryParams, void>(
+    getConfig('ng/api'),
+    `/manifests/helm/chart/version`,
+    props,
+    signal
+  )
+
 export interface ConfigureOauthQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -41097,6 +42157,40 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -41139,6 +42233,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   yamlGroup?: string
 }
 
@@ -41342,6 +42440,40 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -41384,6 +42516,10 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -52302,7 +53438,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -52312,7 +53448,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -52325,7 +53461,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -52339,7 +53475,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -52351,7 +53487,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52360,7 +53496,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -52753,7 +53889,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52767,7 +53903,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -52782,7 +53918,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52796,7 +53932,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -52808,7 +53944,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52817,7 +53953,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -52952,7 +54088,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -52967,7 +54103,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -52982,7 +54118,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -52997,7 +54133,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -53016,7 +54152,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -53025,7 +54161,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -53044,7 +54180,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -53059,7 +54195,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -53074,7 +54210,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -53089,7 +54225,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -53108,7 +54244,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -53117,7 +54253,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -53705,6 +54841,40 @@ export interface GetYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -53747,6 +54917,10 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
   subtype?:
     | 'K8sCluster'
     | 'Git'

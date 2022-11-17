@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 import type { ApprovalInstanceResponse } from 'services/pipeline-ng'
@@ -50,7 +50,6 @@ function CustomApprovalMessage({ status }: { status: keyof typeof ApprovalStatus
 export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactElement {
   const { approvalData, isWaiting, startTs, endTs, stepParameters } = props
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
-  const shouldShowExecutionTimeInfo = !isWaiting && approvalData?.status !== ApprovalStatus.WAITING
 
   return (
     <>
@@ -85,12 +84,12 @@ export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactEle
           )}
         </div>
       )}
-      {shouldShowExecutionTimeInfo && (
-        <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-          <StepDetails step={{ startTs, endTs, stepParameters }} />
-        </Container>
-      )}
-      <div className={cx(css.customApproval, { [css.applyTopPadding]: !shouldShowExecutionTimeInfo })}>
+
+      <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
+        <StepDetails step={{ startTs, endTs, stepParameters }} />
+      </Container>
+
+      <div className={cx(css.customApproval, css.applyTopPadding)}>
         {approvalData?.details?.approvalCriteria ? (
           <CustomApprovalCriteria type="approval" criteria={approvalData.details.approvalCriteria} />
         ) : null}

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { Formik, FormikForm, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Formik, FormikForm, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { FormMultiTypeCheckboxField } from '../MultiTypeCheckbox/MultiTypeCheckbox'
 import { FormMultiTypeRadioGroupField } from '../MultiTypeRadioGroup/MultiTypeRadioGroup'
 import { FormMultiTypeTextAreaField } from '../MultiTypeTextArea/MultiTypeTextArea'

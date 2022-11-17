@@ -8,7 +8,7 @@
 import React from 'react'
 import { Dialog, Classes } from '@blueprintjs/core'
 import { FormikProps, connect } from 'formik'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import css from './TFMonaco.module.scss'

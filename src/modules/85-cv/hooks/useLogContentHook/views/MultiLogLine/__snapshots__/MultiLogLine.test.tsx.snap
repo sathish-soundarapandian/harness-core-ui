@@ -220,7 +220,7 @@ exports[`<MultiLogLine /> tests works with link containing search text 2`] = `
       <span
         class=""
       >
-        + echo @wings-software:registry=
+        + echo @harness:registry=
         <a
           class="ansi-decoration-link"
           href="https://npm.pkg.github.com"

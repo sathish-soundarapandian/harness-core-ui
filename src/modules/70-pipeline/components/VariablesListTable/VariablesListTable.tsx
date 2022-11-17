@@ -9,7 +9,7 @@ import React, { useMemo, useState } from 'react'
 import { isPlainObject, get, isNil, escape, defaultTo, find } from 'lodash-es'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
-import { Text, useNestedAccordion } from '@wings-software/uicore'
+import { Text, useNestedAccordion } from '@harness/uicore'
 import type { VariableResponseMapValue } from 'services/pipeline-ng'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 

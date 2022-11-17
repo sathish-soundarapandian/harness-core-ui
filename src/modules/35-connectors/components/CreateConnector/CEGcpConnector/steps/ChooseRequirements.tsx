@@ -15,7 +15,7 @@ import {
   CardData,
   FeaturesString
 } from '@connectors/common/RequirementCard/RequirementCard'
-import type { GcpCloudCostConnector } from 'services/cd-ng'
+import type { GcpCloudCostConnector } from 'services/ce'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/TrackingConstants'
 import type { CEGcpConnectorDTO } from './OverviewStep'

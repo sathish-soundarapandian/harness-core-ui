@@ -161,3 +161,9 @@ $top-offset: 110px;
   justify-content: space-between;
   width: 70%;
 }
+
+.dialogWrapper {
+  :global(.bp3-button-text) {
+    flex-shrink: 0 !important;
+  }
+}

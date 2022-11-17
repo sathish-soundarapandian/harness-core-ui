@@ -8,9 +8,8 @@
 import { connect, FormikContextType } from 'formik'
 import React from 'react'
 import { get } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
-import type { FormSelectWithSubmenuTypeInputProps } from '@wings-software/uicore/dist/components/FormikForm/FormikForm'
-import { Container } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Container } from '@harness/uicore'
+import type { FormSelectWithSubmenuTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 export interface MultiSelectWithSubmenuTypeInputProps extends FormSelectWithSubmenuTypeInputProps {

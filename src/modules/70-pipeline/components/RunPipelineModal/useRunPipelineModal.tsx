@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { Button, ButtonVariation, Layout, PageSpinner } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, PageSpinner } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import type { InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'

@@ -6,7 +6,8 @@
  */
 
 import React, { FC } from 'react'
-import { FontVariation, Text } from '@harness/uicore'
+import { Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { Feature } from 'services/cf'
 
 export interface FlagDetailsCellProps {

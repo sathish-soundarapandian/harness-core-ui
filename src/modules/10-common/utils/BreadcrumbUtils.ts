@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { Breadcrumb } from '@wings-software/uicore'
+import type { Breadcrumb } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { NoDataCard, PageError } from '@wings-software/uicore'
+import { NoDataCard, PageError } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import noDataImage from '@cv/assets/noData.svg'
 import { useGetChangeEventDetail } from 'services/cv'

@@ -9,7 +9,7 @@ import React, { useEffect, useState, useCallback, useMemo, useRef, SetStateActio
 import { Intent, ProgressBar } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { get, omit } from 'lodash-es'
-import { Button, Icon, Container, Text, useIsMounted, Layout, TableV2, ButtonVariation } from '@wings-software/uicore'
+import { Button, Icon, Container, Text, useIsMounted, Layout, TableV2, ButtonVariation } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'

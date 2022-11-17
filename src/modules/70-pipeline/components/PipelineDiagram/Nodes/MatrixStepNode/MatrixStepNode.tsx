@@ -7,7 +7,7 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
+import { Icon, Layout, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, lowerCase } from 'lodash-es'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Heading, Layout, Text } from '@wings-software/uicore'
+import { Container, Heading, Layout, Text } from '@harness/uicore'
 import Ansi from 'ansi-to-react'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

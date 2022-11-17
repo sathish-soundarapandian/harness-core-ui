@@ -8,7 +8,7 @@
 import React, { ReactElement } from 'react'
 
 import { useParams, useHistory } from 'react-router-dom'
-import { Button, Layout } from '@wings-software/uicore'
+import { Button, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import type { ModuleName } from 'framework/types/ModuleName'

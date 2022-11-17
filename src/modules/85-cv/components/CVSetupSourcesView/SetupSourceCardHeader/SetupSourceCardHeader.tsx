@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Heading, Text } from '@wings-software/uicore'
+import { Container, Heading, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { StepLabel, StepLabelProps } from '../StepLabel/StepLabel'
 import css from './SetupSourceCardHeader.module.scss'

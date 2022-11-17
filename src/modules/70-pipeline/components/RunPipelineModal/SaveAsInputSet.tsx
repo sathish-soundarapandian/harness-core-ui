@@ -11,7 +11,7 @@ import * as Yup from 'yup'
 import type { FormikErrors } from 'formik'
 import { defaultTo, isUndefined, omit, omitBy, isNull, set } from 'lodash-es'
 import type { MutateMethod } from 'restful-react'
-import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {

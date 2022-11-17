@@ -8,7 +8,7 @@
 import React, { CSSProperties } from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text } from '@wings-software/uicore'
+import { Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import type { BaseReactComponentProps } from '../../types'

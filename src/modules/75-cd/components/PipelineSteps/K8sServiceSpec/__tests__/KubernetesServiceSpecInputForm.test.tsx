@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, act, waitFor, fireEvent } from '@testing-library/react'
-import { Formik, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Formik, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { AllNGVariables } from '@pipeline/utils/types'

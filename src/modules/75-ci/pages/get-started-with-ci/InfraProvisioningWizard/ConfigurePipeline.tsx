@@ -13,7 +13,6 @@ import type { FormikContextType } from 'formik'
 import { noop } from 'lodash-es'
 import {
   Text,
-  FontVariation,
   Layout,
   Card,
   Icon,
@@ -25,6 +24,7 @@ import {
   FormInput,
   SelectOption
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'

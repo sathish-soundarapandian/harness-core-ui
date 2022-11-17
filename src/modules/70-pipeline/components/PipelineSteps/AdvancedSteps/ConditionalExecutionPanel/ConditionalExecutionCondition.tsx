@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, getMultiTypeFromValue, HarnessDocTooltip, MultiTypeInputType } from '@wings-software/uicore'
+import { Container, getMultiTypeFromValue, HarnessDocTooltip, MultiTypeInputType } from '@harness/uicore'
 import { Checkbox } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'

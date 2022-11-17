@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Text, TextProps, timeToDisplayText } from '@wings-software/uicore'
+import { Text, TextProps, timeToDisplayText } from '@harness/uicore'
 import { isNil } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 

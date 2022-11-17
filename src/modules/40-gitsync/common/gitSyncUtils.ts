@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import type { GitSyncConfig, ConnectorInfoDTO, GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { GitSuffixRegex } from '@common/utils/StringUtils'

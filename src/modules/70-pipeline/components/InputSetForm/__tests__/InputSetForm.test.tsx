@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, waitFor, fireEvent, act } from '@testing-library/react'
 import { cloneDeep, noop } from 'lodash-es'
-import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'

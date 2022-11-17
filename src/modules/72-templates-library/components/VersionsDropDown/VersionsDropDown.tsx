@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Container, DropDown, Layout, Tag, Text } from '@wings-software/uicore'
-import { FontVariation } from '@wings-software/design-system'
-import type { DropDownProps } from '@wings-software/uicore/dist/components/DropDown/DropDown'
+import { Container, DropDown, Layout, Tag, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+import type { DropDownProps } from '@harness/uicore/dist/components/DropDown/DropDown'
 import { useStrings } from 'framework/strings'
 import css from './VersionsDropDown.module.scss'
 

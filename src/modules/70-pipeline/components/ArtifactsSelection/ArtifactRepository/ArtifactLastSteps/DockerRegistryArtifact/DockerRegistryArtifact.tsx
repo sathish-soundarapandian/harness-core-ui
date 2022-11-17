@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import { Formik, Layout, Button, StepProps, Text, ButtonVariation, FormikForm } from '@wings-software/uicore'
+import { Formik, Layout, Button, StepProps, Text, ButtonVariation, FormikForm } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'

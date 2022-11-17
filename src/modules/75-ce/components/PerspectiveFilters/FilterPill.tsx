@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { Popover, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import type {
   QlceViewFieldIdentifierData,

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout, Text } from '@wings-software/uicore'
+import { Card, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import {
   AzureWebAppInstanceInfoDTO,

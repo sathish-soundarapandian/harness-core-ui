@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Formik, FormikForm as Form, Button, Icon } from '@wings-software/uicore'
+import { Text, Layout, Formik, FormikForm as Form, Button, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { omit } from 'lodash-es'

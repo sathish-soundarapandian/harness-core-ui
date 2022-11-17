@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Pagination } from '@wings-software/uicore'
+import { Container, Layout, Pagination } from '@harness/uicore'
 import type { Project, ProjectAggregateDTO, ResponsePageProjectAggregateDTO } from 'services/cd-ng'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import css from './ProjectGridView.module.scss'

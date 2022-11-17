@@ -17,7 +17,7 @@ import {
   Text,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetAllDynatraceServiceMetrics, useGetDynatraceSampleData } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

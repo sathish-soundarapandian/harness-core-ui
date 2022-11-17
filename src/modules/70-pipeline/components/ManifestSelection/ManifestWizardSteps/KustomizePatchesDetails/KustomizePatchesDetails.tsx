@@ -19,7 +19,7 @@ import {
   Icon,
   AllowedTypes,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FieldArray, FieldArrayRenderProps } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'

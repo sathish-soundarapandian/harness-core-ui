@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Color, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import type { ConfigFileWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { ConfigFileIconByType, ConfigFileTypeTitle } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import { parse } from 'yaml'
 import { get } from 'lodash-es'
 import type { FormikErrors } from 'formik'
@@ -90,9 +90,10 @@ export class RestoreCacheS3Step extends PipelineStep<RestoreCacheS3StepData> {
 
   protected type = StepType.RestoreCacheS3
   protected stepName = 'Restore Cache from S3'
-  protected stepIcon: IconName = 'restore-cache-s3-step'
+  protected stepIcon: IconName = 'restore-cache-s3-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.RestoreCacheS3'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: RestoreCacheS3StepData = {
     identifier: '',

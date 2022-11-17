@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor, act } from '@testing-library/react'
-import { Container, Button } from '@wings-software/uicore'
+import { Container, Button } from '@harness/uicore'
 import * as dbHook from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'

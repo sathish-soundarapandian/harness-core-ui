@@ -11,6 +11,7 @@ application: Application
 certificate: Certificate
 subscriptionId: Subscription Id
 repositoryCertificates: Repository Certificates
+selectRepository: Select Repository
 notEnabled: 'Not Enabled'
 apiStatus: 'API Status'
 gpgkey: 'GPG Key'
@@ -20,6 +21,7 @@ featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
 schedule: Schedule
+coverage: Coverage
 selectService: Select Service
 selectServices: Select Services
 inputVariables: Input Variables
@@ -332,6 +334,7 @@ gitSync:
   harnessFolderLabel: Harness Folder
   commitDetailsLabel: Commit Details
   allRepositories: All Repositories
+  selectBranch: Select Branch
   defaultBranches: Default Branches
   repoDetails: Repo Details
   gitRepositoryDetails: Git Repository Details
@@ -430,6 +433,10 @@ errorHandler:
   communityForum: ' Harness Community Forum'
 noRefData: 'No references found'
 references: 'References'
+referenceButtonText: Go view references
+referenceTextWarning: The {{type}} [{{name}}] is being referenced in other entities. Please remove the referenced {{type}} from affected entities before deleting.
+forcedDeleteWarning: Forceful deletion might render entities referencing this {{type}} invalid and will need to be updated.
+forcedDeleteLabel: Forcefully delete this {{type}} now
 labelTestConnection: 'Connection Test'
 path: 'Path'
 enableGitSyncPipeline:
@@ -456,6 +463,7 @@ submittingRequest: Submitting request and pushing changes to Git
 submittingRequestToGitViaDelegate: Submitting request and pushing changes to Git from Delegate
 local: Local
 subscribed: Subscribed
+usage: Usage
 overSubscribed: Oversubscribed
 unlimited: Unlimited
 billing: Billing
@@ -870,7 +878,7 @@ clientSecret: Client Secret
 copy: Copy
 levelUp: LEVEL UP
 overuse: OVERUSE
-scope: '{{ $.delegate.Scope }}'
+scope: '{{ $.common.scopeLabel }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
@@ -971,6 +979,7 @@ environmentOverrides: Environment Overrides
 serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 repositoryFormat: Repository Format
+scopeLabel: Scope
 hostLabel: Host
 useSSL: Use SSL
 moduleList:
@@ -1091,10 +1100,25 @@ allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time
 configDetails: 'Configuration Details'
-freezeActiveBannerText: Freeze enabled on all deployments for this <b>{{scope}}</b> from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeActiveBannerTextPrefix: Freeze enabled on all deployments for this
+freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
-freezeListActiveBannerExpandedText: On the {{scope}} from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeListActiveBannerExpandedTextPrefix: On the
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
+singularLabels:
+  authenticationSetting: 'Authentication Setting'
+  defaultSetting: Default Setting
+  governancePolicy: Governance Policy
+  governancePolicySet: Governance Policy Set
+  accountSetting: Account Setting
+  repositoryCertificate: Repository Certificate
+  gnupgKey: GnuPG Key
+  autoStoppingRule: 'AutoStopping Rule'
+  testTarget: Test Target
+  scan: Scan
+  issue: Issue
 pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions
+executionTab:
+  stepsCount: At least one step is required

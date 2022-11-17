@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Button, Container } from '@wings-software/uicore'
+import { Layout, Text, Button, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ValidationStatusProps } from './ValidationStatus.types'

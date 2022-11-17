@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement, useState } from 'react'
-import { Container, FormikForm, Formik, Button, FormInput, Layout, SelectOption } from '@wings-software/uicore'
+import { Container, FormikForm, Formik, Button, FormInput, Layout, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import type { GitRepoRequestRequestBody } from 'services/cf'

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { ExpandingSearchInput, Text, Icon, Layout, Container, Heading } from '@wings-software/uicore'
+import { ExpandingSearchInput, Text, Icon, Layout, Container, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { cloneDeep, uniqBy, isEmpty } from 'lodash-es'
 import cx from 'classnames'

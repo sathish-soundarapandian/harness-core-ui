@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { capitalize } from 'lodash-es'
-import { Layout, Card, Text, Button, ButtonVariation, FontVariation, Color } from '@harness/uicore'
+import { Layout, Card, Text, Button, ButtonVariation } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 // import { useParams } from 'react-router-dom'
 import { Editions, SubscribeViews } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'

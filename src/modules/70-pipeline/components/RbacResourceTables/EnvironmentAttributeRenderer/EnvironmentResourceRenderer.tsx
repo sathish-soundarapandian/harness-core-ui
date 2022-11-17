@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'

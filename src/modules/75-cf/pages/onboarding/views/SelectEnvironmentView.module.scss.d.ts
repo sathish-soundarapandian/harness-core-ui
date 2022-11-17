@@ -7,9 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly environmentContainer: string
+  readonly grid: string
   readonly idText: string
-  readonly onboardingLayout: string
   readonly sdkLabel: string
   readonly secret: string
   readonly selectEnvironment: string

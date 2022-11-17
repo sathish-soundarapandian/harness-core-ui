@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 
 import { fireEvent, render } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'

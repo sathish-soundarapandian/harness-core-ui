@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { FontVariation, Layout, Text, Card, Icon } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Layout, Text, Card, Icon } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import css from './PipelineCard.module.scss'
 

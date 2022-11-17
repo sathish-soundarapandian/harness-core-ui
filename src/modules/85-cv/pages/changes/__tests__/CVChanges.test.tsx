@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, findAllByRole, findByText, fireEvent, render, waitFor } from '@testing-library/react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { RiskValues } from '@cv/utils/CommonUtils'

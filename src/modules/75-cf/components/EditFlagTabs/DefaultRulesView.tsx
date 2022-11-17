@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, Heading, Layout, SelectOption, Text } from '@wings-software/uicore'
+import { FormInput, Heading, Layout, SelectOption, Text } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { FontVariation } from '@harness/design-system'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'

@@ -15,7 +15,6 @@ import { Menu } from '@blueprintjs/core'
 import {
   Button,
   ButtonVariation,
-  FontVariation,
   Formik,
   FormikForm,
   FormInput,
@@ -26,7 +25,7 @@ import {
   StepProps,
   Text
 } from '@harness/uicore'
-
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import { BucketResponse, ConnectorConfigDTO, useGetV2BucketListForS3 } from 'services/cd-ng'

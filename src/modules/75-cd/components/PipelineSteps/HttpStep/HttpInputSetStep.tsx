@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, AllowedTypes } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, AllowedTypes } from '@harness/uicore'
 import { isEmpty, isArray } from 'lodash-es'
 import cx from 'classnames'
 

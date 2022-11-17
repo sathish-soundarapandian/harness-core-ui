@@ -9,7 +9,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import type { Clause, Segment } from 'services/cf'

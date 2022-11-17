@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import SelectHealthSourceServices from '../SelectHealthSourceServices'

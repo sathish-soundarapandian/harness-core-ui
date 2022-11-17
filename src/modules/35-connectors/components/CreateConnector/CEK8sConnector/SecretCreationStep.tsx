@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Heading, Layout, StepProps } from '@wings-software/uicore'
+import { Button, Heading, Layout, StepProps } from '@harness/uicore'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'

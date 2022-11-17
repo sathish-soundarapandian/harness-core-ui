@@ -7,13 +7,17 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Card, HarnessDocTooltip } from '@wings-software/uicore'
+import { Card, HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getSelectedDeploymentType,
+  getVariablesHeaderTooltipId,
+  isServerlessDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import {
   DeployTabs,
   isNewServiceEnvEntity
@@ -119,6 +123,10 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
                 data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
               >
                 {getString('pipelineSteps.configFiles')}
+                <HarnessDocTooltip
+                  tooltipId={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
               </div>
               <ConfigFilesSelection
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}
@@ -136,7 +144,13 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
+          <div
+            className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+            data-tooltip-id={getVariablesHeaderTooltipId(selectedDeploymentType)}
+          >
+            {getString('common.variables')}
+            <HarnessDocTooltip tooltipId={getVariablesHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+          </div>
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}

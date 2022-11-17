@@ -1208,7 +1208,7 @@ exports[`StartTrialModalContent Rendering test that the warning container render
       common.purpose.ce.description
     </span>
     <button
-      aria-label="common.startTrial"
+      aria-label="common.startFreePlan"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       style="width: 270px; height: 2.5px;"
       type="button"
@@ -1216,7 +1216,7 @@ exports[`StartTrialModalContent Rendering test that the warning container render
       <span
         class="bp3-button-text"
       >
-        common.startTrial
+        common.startFreePlan
       </span>
     </button>
   </div>
@@ -1282,7 +1282,7 @@ exports[`StartTrialModalContent Rendering that the content renders 1`] = `
       common.purpose.ce.description
     </span>
     <button
-      aria-label="common.startTrial"
+      aria-label="common.startFreePlan"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--border StyledProps--font StyledProps--font-align-center StyledProps--padding-medium StyledProps--intent-primary Button--with-current-color"
       style="width: 270px; height: 2.5px;"
       type="button"
@@ -1290,7 +1290,7 @@ exports[`StartTrialModalContent Rendering that the content renders 1`] = `
       <span
         class="bp3-button-text"
       >
-        common.startTrial
+        common.startFreePlan
       </span>
     </button>
   </div>

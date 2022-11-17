@@ -16,7 +16,7 @@ import {
   Formik,
   FormikForm,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { noop } from 'lodash-es'
 import { Color } from '@harness/design-system'

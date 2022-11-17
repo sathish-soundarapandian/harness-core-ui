@@ -341,7 +341,7 @@ exports[`Freeze Window Studio Wrapper it should render FreezeWindow Studio in a 
                       />
                     </svg>
                   </span>
-                  freezeWindows.freezeStudio.freezeConfiguration
+                  common.coverage
                 </span>
               </div>
               <div
@@ -402,7 +402,7 @@ exports[`Freeze Window Studio Wrapper it should render FreezeWindow Studio in a 
                         level="3"
                         style="font-weight: 600; font-size: 16px; line-height: 24px;"
                       >
-                        freezeWindows.freezeStudio.freezeOverview
+                        overview
                       </h3>
                       <div
                         class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -634,7 +634,7 @@ exports[`Freeze Window Studio Wrapper it should render FreezeWindow Studio in a 
       class="rightBar"
     >
       <button
-        aria-label="notifications.pipelineName"
+        aria-label="rbac.notifications.pipelineName"
         class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -659,7 +659,7 @@ exports[`Freeze Window Studio Wrapper it should render FreezeWindow Studio in a 
         <span
           class="bp3-button-text"
         >
-          notifications.pipelineName
+          rbac.notifications.pipelineName
         </span>
       </button>
     </div>

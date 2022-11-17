@@ -47,8 +47,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { AzureWebAppSelectionTypes } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
-import ApplicationConfigSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
+import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
+import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
@@ -442,11 +442,11 @@ export default function AddEditServiceOverride({
                           title={getString('pipeline.appServiceConfig.applicationSettings.name')}
                           panel={
                             <ApplicationConfigSelection
-                              environmentAllowableTypes={allowableTypes}
+                              allowableTypes={allowableTypes}
                               readonly={isReadonly}
                               showApplicationSettings={true}
                               data={formikProps.values?.applicationSettings}
-                              selectionType={AzureWebAppSelectionTypes.SERVICE_OVERRIDE_WIDGET}
+                              selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE_WIDGET}
                               handleSubmitConfig={(
                                 config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
                               ) => handleOverrideSubmit(config, 0, 'applicationSettings')}
@@ -461,11 +461,11 @@ export default function AddEditServiceOverride({
                           title={getString('pipeline.appServiceConfig.connectionStrings.name')}
                           panel={
                             <ApplicationConfigSelection
-                              environmentAllowableTypes={allowableTypes}
+                              allowableTypes={allowableTypes}
                               readonly={isReadonly}
                               showConnectionStrings={true}
                               data={formikProps.values?.connectionStrings}
-                              selectionType={AzureWebAppSelectionTypes.SERVICE_OVERRIDE_WIDGET}
+                              selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE_WIDGET}
                               handleSubmitConfig={(
                                 config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
                               ) => handleOverrideSubmit(config, 0, 'connectionStrings')}

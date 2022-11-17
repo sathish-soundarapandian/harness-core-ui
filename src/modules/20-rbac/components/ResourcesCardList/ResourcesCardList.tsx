@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, Container, Layout, Page, Text } from '@harness/uicore'
+import { Container, Layout, Page, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import ResourcesCard from '@rbac/components/ResourcesCard/ResourcesCard'
 import { useStrings } from 'framework/strings'

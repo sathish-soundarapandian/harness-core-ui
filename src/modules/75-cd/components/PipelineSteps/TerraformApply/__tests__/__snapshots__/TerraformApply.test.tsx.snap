@@ -462,7 +462,7 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -503,7 +503,7 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"
@@ -1826,7 +1826,7 @@ exports[`Test TerraformApply rendering more than one varfile 2`] = `
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -1986,7 +1986,7 @@ exports[`Test TerraformApply rendering more than one varfile 2`] = `
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"
@@ -4388,6 +4388,7 @@ exports[`Test TerraformApply should submit form for inline config 1`] = `
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /
@@ -4861,6 +4862,7 @@ exports[`Test TerraformApply should trigger validation error for expression valu
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /
@@ -5312,6 +5314,7 @@ exports[`Test TerraformApply should trigger validation error for fixed value 1`]
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /
@@ -5763,6 +5766,7 @@ exports[`Test TerraformApply should trigger validation error for invalid fixed v
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /

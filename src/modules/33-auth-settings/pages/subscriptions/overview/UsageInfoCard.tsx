@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Layout, Text, Icon, Popover, Container } from '@wings-software/uicore'
+import { Card, Layout, Text, Icon, Popover, Container } from '@harness/uicore'
 import { Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -60,15 +60,7 @@ const PercentageSubscribedLabel: React.FC<{
   percentage: number
   color: string
   label: string
-}> = ({ overPercentage, percentage, color, label }) => {
-  const { getString } = useStrings()
-  if (overPercentage) {
-    return (
-      <Text font={{ size: 'xsmall' }} color={color}>
-        {overPercentage}% {getString('common.overSubscribed')}
-      </Text>
-    )
-  }
+}> = ({ percentage, label }) => {
   return (
     <Text font={{ size: 'xsmall' }} color={percentage > 90 ? Color.ORANGE_500 : ''}>
       {percentage}% {label}

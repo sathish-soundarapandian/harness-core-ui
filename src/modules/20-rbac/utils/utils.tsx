@@ -6,7 +6,7 @@
  */
 
 import React, { ReactNode } from 'react'
-import type { IconName, ModalErrorHandlerBinding, SelectOption } from '@wings-software/uicore'
+import type { IconName, ModalErrorHandlerBinding, SelectOption } from '@harness/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import type { StringsMap } from 'stringTypes'
 import type {

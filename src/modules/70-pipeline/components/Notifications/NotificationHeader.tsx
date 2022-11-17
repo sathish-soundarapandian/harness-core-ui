@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
@@ -28,7 +28,7 @@ export function NotificationsHeader(props: NotificationsHeaderProps): React.Reac
       border={{ bottom: true, color: Color.GREY_300 }}
     >
       <Text color={Color.BLACK} font={{ weight: 'bold', size: 'medium' }}>{`${name} : ${getString(
-        'notifications.name'
+        'rbac.notifications.name'
       )}`}</Text>
       <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
         <Button

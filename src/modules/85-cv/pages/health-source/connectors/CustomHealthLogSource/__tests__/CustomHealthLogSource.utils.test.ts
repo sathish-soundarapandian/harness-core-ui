@@ -6,7 +6,7 @@
  */
 
 import { cloneDeep } from 'lodash-es'
-import * as core from '@harness/uicore'
+import { Utils } from '@harness/uicore'
 import { waitFor } from '@testing-library/react'
 import {
   validateSetupSource,
@@ -72,7 +72,7 @@ describe('Unit tests for customhealthsourcelogutils', () => {
   })
 
   test('ensure initializeSelectedQueryMap works correctly', async () => {
-    jest.spyOn(core.Utils, 'randomId').mockReturnValue('123')
+    jest.spyOn(Utils, 'randomId').mockReturnValue('123')
 
     // with no data
     const clonedData = cloneDeep(sourceData)

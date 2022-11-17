@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'

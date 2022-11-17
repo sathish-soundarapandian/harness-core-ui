@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StagesMap } from '../../PipelineContext/PipelineContext'
 

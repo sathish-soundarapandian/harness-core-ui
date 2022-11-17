@@ -9,7 +9,7 @@ import React from 'react'
 import { render, fireEvent, findByText, waitFor, getAllByText, findAllByText } from '@testing-library/react'
 
 import { act } from 'react-test-renderer'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -17,6 +17,8 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { pipelineContextKubernetes } from '@pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
 import { GenericServiceSpec } from '../K8sServiceSpec'
 import PipelineMock from './mock.json'
 import TemplateMock from './template.mock.json'
@@ -437,13 +439,15 @@ describe('StepWidget tests', () => {
   test(`renders ServiceStep for Service Tab `, () => {
     const { container } = render(
       <TestWrapper>
-        <StepWidget<K8SDirectServiceStep>
-          factory={factory}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-          initialValues={serviceTabInitialValues}
-          type={StepType.K8sServiceSpec}
-          stepViewType={StepViewType.Edit}
-        />
+        <PipelineContext.Provider value={pipelineContextKubernetes}>
+          <StepWidget<K8SDirectServiceStep>
+            factory={factory}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            initialValues={serviceTabInitialValues}
+            type={StepType.K8sServiceSpec}
+            stepViewType={StepViewType.Edit}
+          />
+        </PipelineContext.Provider>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

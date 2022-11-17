@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, Container, FontVariation, Layout, Text, Utils } from '@harness/uicore'
+import { Container, Layout, Text, Utils } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import CEChart from '@ce/components/CEChart/CEChart'
 import { getRadialChartOptions } from '@ce/components/CEChart/CEChartOptions'

@@ -24,7 +24,7 @@ import {
   PageError,
   HarnessDocTooltip,
   ExpandingSearchInput
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { get, noop, omit, debounce } from 'lodash-es'

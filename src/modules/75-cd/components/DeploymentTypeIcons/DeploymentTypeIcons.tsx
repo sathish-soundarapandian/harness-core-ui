@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { deploymentTypeIcon, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
 
 export interface DeploymentTypeIconsProps {

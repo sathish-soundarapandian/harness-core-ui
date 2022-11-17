@@ -14,7 +14,7 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

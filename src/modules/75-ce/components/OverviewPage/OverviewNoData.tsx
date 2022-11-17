@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import CCMDocsImage from './images/CCMDocs.svg'

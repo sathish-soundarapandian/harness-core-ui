@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Container, Formik, FormikForm, Button, Layout, FormInput } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, Button, Layout, FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { buildDynatracePayload } from '@connectors/pages/connectors/utils/ConnectorUtils'

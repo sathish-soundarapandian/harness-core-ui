@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, lowerCase } from 'lodash-es'

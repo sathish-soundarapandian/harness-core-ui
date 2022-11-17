@@ -6,12 +6,11 @@
  */
 
 import React from 'react'
-import { Label, MultiTypeInputType } from '@harness/uicore'
+import { Label, MultiTypeInputType, Formik, FormikForm } from '@harness/uicore'
 import { act } from 'react-dom/test-utils'
 import { render, fireEvent, waitFor, findByTestId } from '@testing-library/react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 
-import { Formik, FormikForm } from '@wings-software/uicore'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 
 import { TestWrapper } from '@common/utils/testUtils'

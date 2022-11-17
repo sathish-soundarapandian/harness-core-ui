@@ -127,7 +127,10 @@ function DeployInfrastructures({
       deploymentType: selectedDeploymentType,
       ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
     },
-    lazy: environmentRefType !== MultiTypeInputType.FIXED ? true : !environmentIdentifier
+    lazy:
+      environmentRefType !== MultiTypeInputType.FIXED
+        ? true
+        : getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })
 
   const {

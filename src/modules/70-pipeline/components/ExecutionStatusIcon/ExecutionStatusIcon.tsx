@@ -6,7 +6,7 @@
  */
 
 import type { IconProps } from '@harness/icons'
-import { Icon, Layout, Popover } from '@wings-software/uicore'
+import { Icon, Layout, Popover } from '@harness/uicore'
 import cx from 'classnames'
 import React from 'react'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'

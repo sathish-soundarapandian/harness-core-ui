@@ -8,7 +8,6 @@
 import {
   Button,
   ButtonVariation,
-  Color,
   Container,
   Formik,
   Layout,
@@ -16,6 +15,7 @@ import {
   SelectOption,
   Text
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Form } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -136,7 +136,7 @@ export default function ConfigureMonitoredServiceAlertConditions({
   return (
     <>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'medium' }}>
-        {getString('notifications.configureConditions')}
+        {getString('rbac.notifications.configureConditions')}
       </Text>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'normal' }} padding={{ top: 'large' }}>
         {`Category:${getString('cv.notifications.serviceHealth')} `}

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, PageError, PageSpinner } from '@wings-software/uicore'
+import { Layout, PageError, PageSpinner } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { FetchPlansQuery, useFetchPlansQuery } from 'services/common/services'

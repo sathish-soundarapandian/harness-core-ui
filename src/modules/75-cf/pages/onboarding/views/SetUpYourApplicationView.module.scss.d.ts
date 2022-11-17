@@ -7,13 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly container: string
   readonly environmentContainer: string
-  readonly languageSelectionContainer: string
+  readonly grid: string
   readonly selectEnvironment: string
-  readonly selectLanguage: string
-  readonly setUpLabel: string
-  readonly setUpYourCode: string
   readonly setUpYourCodeContainer: string
   readonly successLabel: string
 }

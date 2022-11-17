@@ -20,7 +20,7 @@ import {
   MultiSelectOption,
   PageError,
   shouldShowError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import { Dialog } from '@blueprintjs/core'

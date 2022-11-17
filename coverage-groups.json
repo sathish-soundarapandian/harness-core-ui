@@ -1,7 +1,6 @@
 {
   "groups": {
     "Framework": ["src/framework/**"],
-    "Notification": ["src/modules/15-notifications/**"],
     "Secrets": ["src/modules/30-secrets/**"],
     "Projects & Orgs": ["src/modules/45-projects-orgs/**"],
     "AuditTrail": ["src/modules/18-audit-trail/**"],

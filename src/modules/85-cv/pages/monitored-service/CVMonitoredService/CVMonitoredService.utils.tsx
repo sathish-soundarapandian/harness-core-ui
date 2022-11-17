@@ -8,7 +8,7 @@
 import React, { ReactElement } from 'react'
 import { isNull, isNumber } from 'lodash-es'
 import Highcharts, { PointOptionsObject } from 'highcharts'
-import { Text, Layout, Tag, SelectOption } from '@wings-software/uicore'
+import { Text, Layout, Tag, SelectOption } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import type { Renderer, CellProps } from 'react-table'

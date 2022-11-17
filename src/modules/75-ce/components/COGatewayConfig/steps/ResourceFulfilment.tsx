@@ -8,7 +8,7 @@
 import React, { useCallback, useState } from 'react'
 import { get as _get, defaultTo as _defaultTo, debounce as _debounce, isEmpty as _isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
-import { CardSelect, Container, Formik, FormikForm, FormInput, Layout, Text } from '@wings-software/uicore'
+import { CardSelect, Container, Formik, FormikForm, FormInput, Layout, Text } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import type { StringsMap } from 'stringTypes'
 import type { GatewayDetails } from '@ce/components/COCreateGateway/models'

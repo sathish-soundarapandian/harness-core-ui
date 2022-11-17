@@ -33,6 +33,7 @@ import type { ResourceDTO } from 'services/audit'
 RbacFactory.registerResourceTypeHandler(ResourceType.SECRET, {
   icon: 'res-secrets',
   label: 'common.secrets',
+  labelSingular: 'secretType',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_SECRET]: <String stringID="rbac.permissionLabels.view" />,

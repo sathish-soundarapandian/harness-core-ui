@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Container, Icon, Layout, Text } from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'

@@ -6,7 +6,7 @@
  */
 
 import React, { useContext, ReactElement } from 'react'
-import { Layout, Icon, Text, Button } from '@wings-software/uicore'
+import { Layout, Icon, Text, Button } from '@harness/uicore'
 import { Popover, Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'

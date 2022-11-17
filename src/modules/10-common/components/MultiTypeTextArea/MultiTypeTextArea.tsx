@@ -19,7 +19,7 @@ import {
   FormError,
   FormikTooltipContext,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { connect } from 'formik'
 import { get } from 'lodash-es'
 import cx from 'classnames'

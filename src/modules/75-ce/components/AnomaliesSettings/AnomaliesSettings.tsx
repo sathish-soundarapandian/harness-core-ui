@@ -9,9 +9,7 @@ import React, { useEffect, useState } from 'react'
 import {
   Button,
   ButtonVariation,
-  Color,
   Container,
-  FontVariation,
   getErrorInfoFromErrorObject,
   Icon,
   IconName,
@@ -19,6 +17,7 @@ import {
   Text,
   useToaster
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 
 import cx from 'classnames'
 import type { Column, CellProps, Renderer } from 'react-table'

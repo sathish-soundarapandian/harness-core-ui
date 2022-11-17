@@ -7,7 +7,7 @@
 
 import React, { SyntheticEvent } from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { DrawerSizes, DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 import TemplateVariablesWrapper from '@templates-library/components/TemplateStudio/TemplateVariables/TemplateVariables'

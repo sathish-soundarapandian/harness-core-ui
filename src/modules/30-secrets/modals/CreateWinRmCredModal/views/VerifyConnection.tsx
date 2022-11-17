@@ -7,16 +7,7 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import {
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Container,
-  Formik,
-  FormikForm,
-  FormInput,
-  Text
-} from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Formik, FormikForm, FormInput, Text } from '@harness/uicore'
 import type { WinRmCredentialsValidationMetadata } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'

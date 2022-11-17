@@ -26,6 +26,7 @@ import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 RbacFactory.registerResourceTypeHandler(ResourceType.FILE, {
   icon: 'file',
   label: 'common.files',
+  labelSingular: 'common.file',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_FILE]: <String stringID="rbac.permissionLabels.view" />,

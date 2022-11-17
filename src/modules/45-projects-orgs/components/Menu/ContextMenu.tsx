@@ -8,7 +8,7 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
-import { Layout, Text, Icon } from '@wings-software/uicore'
+import { Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Project } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'

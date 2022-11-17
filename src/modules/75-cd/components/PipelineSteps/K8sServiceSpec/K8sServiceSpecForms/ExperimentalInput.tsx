@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import { get } from 'lodash-es'
 const generateNewKey = (): string => uuid()

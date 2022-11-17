@@ -9,7 +9,7 @@ import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, getYAMLValida
 import { parse } from 'yaml'
 import type { Diagnostic } from 'vscode-languageserver-types'
 
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
+jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
 }))
 

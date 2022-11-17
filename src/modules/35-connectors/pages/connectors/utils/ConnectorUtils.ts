@@ -6,7 +6,7 @@
  */
 
 import { pick, isString, get } from 'lodash-es'
-import type { IconName, StepProps } from '@wings-software/uicore'
+import type { IconName, StepProps } from '@harness/uicore'
 import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
 import type {
   ConnectorInfoDTO,
@@ -796,6 +796,22 @@ export const setupJenkinsFormData = async (connectorInfo: ConnectorInfoDTO, acco
   }
   return formData
 }
+export const setupAzureArtifactsFormData = async (
+  connectorInfo: ConnectorInfoDTO,
+  accountId: string
+): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+  const formData = {
+    azureArtifactsUrl: connectorInfo.spec.azureArtifactsUrl,
+    authType: connectorInfo.spec.auth.spec.type,
+    tokenRef: await setSecretField(connectorInfo.spec.auth.spec.spec.tokenRef, scopeQueryParams)
+  }
+  return formData
+}
 
 export const setupHelmFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const scopeQueryParams: GetSecretV2QueryParams = {
@@ -1266,6 +1282,31 @@ export const buildJenkinsPayload = (formData: FormData) => {
                 tokenRef: formData.bearerToken.referenceString
               }
             }
+    }
+  }
+  return { connector: savedData }
+}
+
+export const buildAzureArtifactsPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.AZURE_ARTIFACTS,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      azureArtifactsUrl: formData.azureArtifactsUrl.trim(),
+      auth: {
+        spec: {
+          type: 'PersonalAccessToken',
+          spec: {
+            tokenRef: formData.tokenRef.referenceString
+          }
+        }
+      }
     }
   }
   return { connector: savedData }
@@ -2168,10 +2209,14 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'microsoft-azure'
     case Connectors.JENKINS:
       return 'service-jenkins'
+    case Connectors.AZURE_ARTIFACTS:
+      return 'service-azure-artifact-connector'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
     case Connectors.GcpSecretManager:
       return 'gcp-secret-manager'
+    case Connectors.SPOT:
+      return 'spot'
     default:
       return 'cog'
   }
@@ -2251,6 +2296,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'GCP Secrets Manager'
     case Connectors.SPOT:
       return 'Spot'
+    case Connectors.AZURE_ARTIFACTS:
+      return 'Azure Artifacts'
     default:
       return ''
   }
@@ -2352,6 +2399,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.customSM')
     case Connectors.GcpSecretManager:
       return getString('connectors.testConnectionStep.validationText.gcpSM')
+    case Connectors.SPOT:
+      return getString('connectors.testConnectionStep.validationText.spot')
     default:
       return ''
   }

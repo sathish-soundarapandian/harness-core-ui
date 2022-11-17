@@ -15,7 +15,6 @@ import {
   ButtonVariation,
   Layout,
   Text,
-  Color,
   StepProps,
   Formik,
   MultiTypeInputType,
@@ -24,6 +23,7 @@ import {
   FormInput,
   Icon
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'

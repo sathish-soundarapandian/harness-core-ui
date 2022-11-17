@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { FontVariation, Heading, Layout, Container, Text, Color, Select, Checkbox } from '@harness/uicore'
+import { Heading, Layout, Container, Text, Select, Checkbox } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetAllHealthSourcesForServiceAndEnvironment, useGetVerifyStepHealthSources } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

@@ -9,7 +9,7 @@ import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { K8sAzureInfrastructure } from 'services/cd-ng'
+import type { Infrastructure, K8sAzureInfrastructure } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
@@ -82,13 +82,23 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
   })
 }
 export interface AzureInfrastructureSpecEditableProps {
-  initialValues: K8sAzureInfrastructure
-  allValues?: K8sAzureInfrastructure
-  onUpdate?: (data: K8sAzureInfrastructure) => void
+  initialValues: K8sAzureInfrastructureUI
+  allValues?: K8sAzureInfrastructureUI
+  onUpdate?: (data: K8sAzureInfrastructureUI) => void
   stepViewType?: StepViewType
   readonly?: boolean
   template?: AzureInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8sAzureInfrastructure
   allowableTypes: AllowedTypes
+}
+
+export type K8sAzureInfrastructureUI = Infrastructure & {
+  cluster?: string
+  connectorRef?: string
+  namespace?: string
+  releaseName?: string
+  resourceGroup?: string
+  subscriptionId?: string
+  useClusterAdminCredentials?: boolean
 }

@@ -16,7 +16,7 @@ import {
   RUNTIME_INPUT_VALUE,
   IconName,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty, set } from 'lodash-es'

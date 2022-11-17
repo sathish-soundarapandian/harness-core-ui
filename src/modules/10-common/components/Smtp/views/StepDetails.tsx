@@ -19,7 +19,7 @@ import {
   ModalErrorHandler,
   getErrorInfoFromErrorObject,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'

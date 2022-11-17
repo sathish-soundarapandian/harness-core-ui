@@ -16,7 +16,7 @@ import {
   Icon,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'

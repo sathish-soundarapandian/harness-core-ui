@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard, Icon, AllowedTypes } from '@wings-software/uicore'
+import { StepWizard, Icon, AllowedTypes } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
@@ -24,6 +24,7 @@ import StepJenkinsAuthentication from '@connectors/components/CreateConnector/Je
 import {
   buildArtifactoryPayload,
   buildAWSPayload,
+  buildAzureArtifactsPayload,
   buildAzurePayload,
   buildDockerPayload,
   buildGcpPayload,
@@ -34,6 +35,7 @@ import {
 import ConnectivityModeStep from '@connectors/components/CreateConnector/commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import StepAzureArtifactAuthentication from '@connectors/components/CreateConnector/AzureArtifactConnector/StepAuth/StepAzureArtifactAuthentication'
 import { ArtifactoryRepoType } from '../ArtifactRepository/ArtifactoryRepoType'
 import { ArtifactConnector } from '../ArtifactRepository/ArtifactConnector'
 import type { InitialArtifactDataType, ConnectorRefLabelType, ArtifactType } from '../ArtifactInterface'
@@ -126,6 +128,8 @@ function ArtifactWizard({
         return <AzureAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
         return <GcpAuthentication name={getString('details')} {...newConnectorProps.auth} />
+      case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+        return <StepAzureArtifactAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
         return <StepGithubAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
       default:
@@ -169,6 +173,8 @@ function ArtifactWizard({
         return buildJenkinsPayload
       case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
         return buildGithubPayload
+      case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+        return buildAzureArtifactsPayload
       default:
         return <></>
     }

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Popover, Container, Layout, Card, Icon } from '@wings-software/uicore'
+import { Text, Popover, Container, Layout, Card, Icon } from '@harness/uicore'
 import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty, isNil } from 'lodash-es'

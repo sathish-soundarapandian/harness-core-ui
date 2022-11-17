@@ -9,7 +9,7 @@ import React, { ReactElement } from 'react'
 import cx from 'classnames'
 
 import { PopoverPosition } from '@blueprintjs/core'
-import { Text, Container, Button, Icon } from '@wings-software/uicore'
+import { Text, Container, Button, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import SettingsMenu from './SettingsMenu'

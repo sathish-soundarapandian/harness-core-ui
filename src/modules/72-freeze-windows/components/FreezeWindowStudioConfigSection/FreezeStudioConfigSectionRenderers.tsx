@@ -7,7 +7,7 @@
 
 import React from 'react'
 import classnames from 'classnames'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { FormInput, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'

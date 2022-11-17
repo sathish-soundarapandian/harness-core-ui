@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Text, TextInput, Button, Icon, ButtonVariation } from '@wings-software/uicore'
+import { Container, Layout, Text, TextInput, Button, Icon, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Slider } from '@blueprintjs/core'
 import { isEqual } from 'lodash-es'

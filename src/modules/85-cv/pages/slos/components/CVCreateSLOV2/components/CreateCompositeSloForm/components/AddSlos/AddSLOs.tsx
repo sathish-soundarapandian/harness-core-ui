@@ -6,92 +6,155 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
+import cx from 'classnames'
 import type { Column, Renderer, CellProps } from 'react-table'
 import {
   Button,
   ButtonVariation,
-  Color,
   Icon,
   Text,
   TextInput,
   TableV2,
-  Intent,
-  Page,
-  useConfirmationDialog
+  useConfirmationDialog,
+  Container,
+  Layout
 } from '@harness/uicore'
+import { Color, Intent } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { useMutateAsGet } from '@common/hooks'
+import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import type { ServiceLevelObjectiveDetailsDTO } from 'services/cv'
-import { getDistribution } from './AddSLOs.utils'
+import { SLOObjective, SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { ServiceLevelObjectiveDetailsDTO, SLOHealthListView, useGetSLOHealthListViewV2 } from 'services/cv'
+import { createRequestBodyForSLOHealthListViewV2, onWeightChange, RenderName, resetSLOWeightage } from './AddSLOs.utils'
 import { SLOList } from './components/SLOList'
-import { resetSLOWeightage } from './components/SLOList.utils'
+import {
+  RenderMonitoredService,
+  RenderSLIType,
+  RenderTags,
+  RenderTarget,
+  RenderUserJourney
+} from './components/SLOList.utils'
+import { SLOWeight } from '../../CreateCompositeSloForm.constant'
+import css from './AddSLOs.module.scss'
 
 export const AddSLOs = (): JSX.Element => {
   const formikProps = useFormikContext<SLOV2Form>()
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const [isListViewDataInitialised, setIsListViewDataInitialised] = useState(false)
+  const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
+    ProjectPathProps & { identifier: string }
+  >()
+  const [initialSLODetails, setInitialSLODetails] = useState<SLOObjective[]>(
+    () => formikProps?.values?.serviceLevelObjectivesDetails || []
+  )
+
   const { showDrawer, hideDrawer } = useDrawer({
-    createHeader: () => <Page.Header title={getString('cv.CompositeSLO.AddSLO')} />,
     createDrawerContent: () => {
       return (
         <SLOList
           hideDrawer={() => hideDrawer()}
           onAddSLO={formikProps.setFieldValue}
-          filter={formikProps.values.periodType}
+          filter={createRequestBodyForSLOHealthListViewV2({ values: formikProps?.values })}
           serviceLevelObjectivesDetails={formikProps?.values?.serviceLevelObjectivesDetails || []}
         />
       )
     }
   })
 
-  const [serviceLevelObjectivesDetails, setServiceLevelObjectivesDetails] = useState(
-    () => formikProps?.values?.serviceLevelObjectivesDetails || []
-  )
-
-  const [cursorIndex, setCursorIndex] = useState(0)
+  const {
+    data: dashboardWidgetsResponse,
+    loading: dashboardWidgetsLoading,
+    refetch: refetchDashboardWidgets,
+    error: dashboardWidgetsError
+  } = useMutateAsGet(useGetSLOHealthListViewV2, {
+    lazy: true,
+    queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber: 0, pageSize: 20 },
+    body: { compositeSLOIdentifier: identifier }
+  })
 
   useEffect(() => {
-    if (
-      formikProps?.values?.serviceLevelObjectivesDetails &&
-      !isEqual(serviceLevelObjectivesDetails, formikProps?.values?.serviceLevelObjectivesDetails)
-    ) {
-      setServiceLevelObjectivesDetails(formikProps?.values?.serviceLevelObjectivesDetails || [])
+    if (identifier) {
+      refetchDashboardWidgets()
+    }
+  }, [identifier])
+
+  useEffect(() => {
+    if (dashboardWidgetsResponse?.data?.content && !isListViewDataInitialised) {
+      const updatedSLODetails = formikProps?.values?.serviceLevelObjectivesDetails?.map(sloDetail => {
+        return {
+          ...sloDetail,
+          ...(dashboardWidgetsResponse?.data?.content?.find(
+            item => item.sloIdentifier === sloDetail.serviceLevelObjectiveRef
+          ) as SLOHealthListView)
+        }
+      })
+      formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetails)
+      setInitialSLODetails(updatedSLODetails as SLOObjective[])
+      setIsListViewDataInitialised(true)
+    }
+  }, [dashboardWidgetsResponse?.data?.content])
+
+  useEffect(() => {
+    if (!initialSLODetails?.length) {
+      setInitialSLODetails(formikProps?.values?.serviceLevelObjectivesDetails as SLOObjective[])
     }
   }, [formikProps?.values?.serviceLevelObjectivesDetails])
 
-  const onWeightChange = (weight: number, index: number): void => {
-    if (weight < 100) {
-      const neweDist = getDistribution(weight, index, serviceLevelObjectivesDetails)
-      setServiceLevelObjectivesDetails(neweDist)
-    } else {
-      const cloneList = [...serviceLevelObjectivesDetails]
-      cloneList[index].weightagePercentage = weight
-      setServiceLevelObjectivesDetails(cloneList)
-    }
-    setCursorIndex(index)
-  }
+  const [cursorIndex, setCursorIndex] = useState(0)
+
+  const serviceLevelObjectivesDetails = formikProps?.values?.serviceLevelObjectivesDetails || []
+  const setServiceLevelObjectivesDetails = (updatedSLODetails: SLOObjective[]): void =>
+    formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetails)
 
   const RenderWeightInput: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
     return (
-      <TextInput
-        max={99}
-        min={1}
-        autoFocus={row.index === cursorIndex}
-        intent={row.original.weightagePercentage > 99 ? Intent.DANGER : Intent.PRIMARY}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onWeightChange(Number(e.currentTarget.value), row.index)}
-        name="weightagePercentage"
-        value={row.original.weightagePercentage.toString()}
-      />
+      <Container className={css.weightageInput}>
+        <TextInput
+          type="number"
+          step={SLOWeight.STEP}
+          max={SLOWeight.MAX}
+          min={SLOWeight.MIN}
+          autoFocus={row.index === cursorIndex}
+          intent={row.original.weightagePercentage > 99 ? Intent.DANGER : Intent.PRIMARY}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onWeightChange({
+              index: row.index,
+              weight: Number(e.currentTarget.value),
+              serviceLevelObjectivesDetails,
+              setServiceLevelObjectivesDetails,
+              setCursorIndex
+            })
+          }
+          name="weightagePercentage"
+          value={row.original.weightagePercentage.toString()}
+        />
+        {serviceLevelObjectivesDetails?.[row.index]?.isManuallyUpdated && (
+          <Button
+            icon="reset"
+            minimal
+            withoutCurrentColor
+            onClick={() => {
+              const currentSLO = initialSLODetails.find(
+                item => item.serviceLevelObjectiveRef === row.original.serviceLevelObjectiveRef
+              )
+              const initWeight = currentSLO?.weightagePercentage
+              onWeightChange({
+                index: row.index,
+                weight: initWeight || 0,
+                serviceLevelObjectivesDetails,
+                setServiceLevelObjectivesDetails,
+                setCursorIndex,
+                isReset: true
+              })
+            }}
+          />
+        )}
+      </Container>
     )
-  }
-
-  const RenderName: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
-    return <Text>{row.original.serviceLevelObjectiveRef}</Text>
   }
 
   const RenderDelete: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
@@ -117,7 +180,7 @@ export const AddSLOs = (): JSX.Element => {
 
     return (
       <Icon
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', float: 'right' }}
         padding={'small'}
         name="main-trash"
         onClick={e => {
@@ -132,7 +195,33 @@ export const AddSLOs = (): JSX.Element => {
     {
       accessor: 'serviceLevelObjectiveRef',
       Header: getString('name'),
+      width: '20%',
       Cell: RenderName
+    },
+    {
+      Header: getString('cv.slos.monitoredService').toUpperCase(),
+      width: '20%',
+      Cell: RenderMonitoredService
+    },
+    {
+      Header: getString('cv.slos.userJourney').toUpperCase(),
+      width: '20%',
+      Cell: RenderUserJourney
+    },
+    {
+      Header: getString('tagsLabel').toUpperCase(),
+      width: '10%',
+      Cell: RenderTags
+    },
+    {
+      Header: getString('cv.slos.sliType').toUpperCase(),
+      width: '10%',
+      Cell: RenderSLIType
+    },
+    {
+      Header: getString('cv.slos.target').toUpperCase(),
+      width: '10%',
+      Cell: RenderTarget
     },
     {
       accessor: 'weightagePercentage',
@@ -156,6 +245,7 @@ export const AddSLOs = (): JSX.Element => {
           </Text>
         </>
       ),
+      width: '10%',
       Cell: RenderWeightInput
     },
     {
@@ -166,19 +256,55 @@ export const AddSLOs = (): JSX.Element => {
   ]
 
   const showSLOTableAndMessage = Boolean(serviceLevelObjectivesDetails.length)
+  const pageLoading = identifier ? dashboardWidgetsLoading : false
+  const pageError = identifier ? Boolean(dashboardWidgetsError) : false
+  const totalOfSloWeight = Number(
+    serviceLevelObjectivesDetails
+      .reduce((total, num) => {
+        return num.weightagePercentage + total
+      }, 0)
+      .toFixed(2)
+  )
+  const showErrorState = totalOfSloWeight > 100
 
   return (
     <>
       {showSLOTableAndMessage && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
       <Button
+        width={150}
+        loading={pageLoading}
         data-testid={'addSlosButton'}
         variation={ButtonVariation.SECONDARY}
         text={getString('cv.CompositeSLO.AddSLO')}
         iconProps={{ name: 'plus' }}
         onClick={showDrawer}
-        margin={{ bottom: 'large', top: 'large' }}
+        margin={showSLOTableAndMessage ? { bottom: 'large', top: 'large' } : {}}
       />
-      {showSLOTableAndMessage && <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />}
+      {showSLOTableAndMessage && (
+        <>
+          {pageLoading ? (
+            <Container className={css.sloTableConatiner}>
+              <Icon name="spinner" color="primary5" size={30} />
+            </Container>
+          ) : (
+            <>
+              <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
+              <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
+                {Array(columns.length - 3)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div key={index.toString()}></div>
+                  ))}
+                <Layout.Horizontal spacing={'medium'}>
+                  <Text>{`${getString('total')} ${getString('cv.CompositeSLO.Weightage').toLowerCase()}`}</Text>
+                  <Text intent={showErrorState ? Intent.DANGER : Intent.SUCCESS}>{totalOfSloWeight}</Text>
+                </Layout.Horizontal>
+              </Container>
+            </>
+          )}
+        </>
+      )}
+      {pageError && <Text>{getErrorMessage(dashboardWidgetsError)}</Text>}
     </>
   )
 }

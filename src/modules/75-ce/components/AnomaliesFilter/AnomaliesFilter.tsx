@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { FlexExpander, Layout, SelectOption, Container } from '@wings-software/uicore'
+import { FlexExpander, Layout, SelectOption, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'

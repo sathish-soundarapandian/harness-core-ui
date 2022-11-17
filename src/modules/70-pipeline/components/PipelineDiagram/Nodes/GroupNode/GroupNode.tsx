@@ -8,7 +8,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, IconName, Text, Layout, Container } from '@wings-software/uicore'
+import { Icon, IconName, Text, Layout, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/exports'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'

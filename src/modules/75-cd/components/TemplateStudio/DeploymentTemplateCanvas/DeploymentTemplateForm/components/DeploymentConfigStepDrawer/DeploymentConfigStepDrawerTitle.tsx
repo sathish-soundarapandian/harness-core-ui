@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Icon, Text, Layout } from '@wings-software/uicore'
+import { Button, Icon, Text, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'

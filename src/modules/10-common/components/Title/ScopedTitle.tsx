@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isObject } from 'lodash-es'
-import { Text, Layout } from '@wings-software/uicore'
+import { Text, Layout } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'

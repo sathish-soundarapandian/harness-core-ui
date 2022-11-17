@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { SelectOption, Select } from '@wings-software/uicore'
+import { SelectOption, Select } from '@harness/uicore'
 import { DashboardTimeRange, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
 import { useStrings } from 'framework/strings'
 

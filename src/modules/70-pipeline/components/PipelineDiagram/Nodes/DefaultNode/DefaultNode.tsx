@@ -8,11 +8,12 @@
 import React from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import SVGMarker from '../SVGMarker'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import type { BaseReactComponentProps } from '../../types'
+import { attachDragImageToEventHandler } from '../utils'
 import css from './DefaultNode.module.scss'
 interface DefaultNodeProps extends BaseReactComponentProps {
   disableClick?: boolean
@@ -128,6 +129,7 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
           event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
           event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           event.dataTransfer.dropEffect = 'move'
+          attachDragImageToEventHandler(event)
         }}
         onDragEnd={event => {
           event.preventDefault()

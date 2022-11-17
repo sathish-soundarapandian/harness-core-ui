@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Text, Icon, Layout } from '@wings-software/uicore'
+import { Text, Icon, Layout } from '@harness/uicore'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { ExecutionSummaryProps } from '@pipeline/factories/ExecutionFactory/types'
 import { getUIType, UIType } from '../common/getUIType'

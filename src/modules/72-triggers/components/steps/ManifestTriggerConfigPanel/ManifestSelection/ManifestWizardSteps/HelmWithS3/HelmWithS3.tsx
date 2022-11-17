@@ -10,16 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Form, FormikValues } from 'formik'
 import * as Yup from 'yup'
 import { defaultTo, memoize } from 'lodash-es'
-import {
-  Text,
-  Layout,
-  Button,
-  FormInput,
-  Formik,
-  StepProps,
-  SelectOption,
-  ButtonVariation
-} from '@wings-software/uicore'
+import { Text, Layout, Button, FormInput, Formik, StepProps, SelectOption, ButtonVariation } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

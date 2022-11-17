@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'

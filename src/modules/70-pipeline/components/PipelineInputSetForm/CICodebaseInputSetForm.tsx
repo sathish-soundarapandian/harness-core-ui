@@ -22,7 +22,7 @@ import {
   AllowedTypesWithRunTime,
   MultiSelectOption,
   getMultiTypeFromValue
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
 import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'

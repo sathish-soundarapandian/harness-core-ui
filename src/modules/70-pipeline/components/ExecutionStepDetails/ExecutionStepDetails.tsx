@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, IconName } from '@wings-software/uicore'
+import { Button, IconName } from '@harness/uicore'
 import { Popover, Menu, Spinner } from '@blueprintjs/core'
 import { has, defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'

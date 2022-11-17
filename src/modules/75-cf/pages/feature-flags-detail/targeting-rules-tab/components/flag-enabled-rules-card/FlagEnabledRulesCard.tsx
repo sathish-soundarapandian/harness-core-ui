@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Container, FontVariation, Heading, Layout, SelectOption } from '@harness/uicore'
+import { Card, Container, Heading, Layout, SelectOption } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import React, { ReactElement } from 'react'
 
 import { useStrings } from 'framework/strings'

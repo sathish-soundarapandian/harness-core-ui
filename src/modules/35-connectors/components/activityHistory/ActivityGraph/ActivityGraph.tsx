@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { Container, PageSpinner } from '@wings-software/uicore'
+import { Container, PageSpinner } from '@harness/uicore'
 import HighchartsReact from 'highcharts-react-official'
 import { Color } from '@harness/design-system'
 import Highcharts, { SeriesColumnOptions } from 'highcharts'

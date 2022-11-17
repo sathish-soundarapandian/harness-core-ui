@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import {
   ManifestDataType,
@@ -21,7 +21,7 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import List from '@common/components/List/List'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
-import { GitConfigDTO, useGetBucketListForS3, useGetGCSBucketList } from 'services/cd-ng'
+import { GitConfigDTO, useGetBucketListForS3, useGetGCSBucketList, useGetHelmChartVersionDetails } from 'services/cd-ng'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
@@ -34,6 +34,7 @@ import {
   getDefaultQueryParam,
   getFinalQueryParamData,
   getFqnPath,
+  getFqnPathForChart,
   isFieldfromTriggerTabDisabled,
   shouldDisplayRepositoryName
 } from '../ManifestSourceUtils'
@@ -68,11 +69,43 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
+  const errorMessage = 'data.message'
+
+  const connectorRefPath =
+    manifest?.spec?.store?.type === 'OciHelmChart'
+      ? `${manifestPath}.spec.store.spec.config.spec.connectorRef`
+      : `${manifestPath}.spec.store.spec.connectorRef`
+
+  const folderPath =
+    manifest?.spec?.store?.type === 'OciHelmChart'
+      ? `${manifestPath}.spec.store.spec.basePath`
+      : `${manifestPath}.spec.store.spec.folderPath`
 
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
     }
+  })
+
+  const {
+    data: chartVersionData,
+    loading: loadingChartVersions,
+    refetch: refetchChartVersions,
+    error: chartVersionsError
+  } = useGetHelmChartVersionDetails({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier,
+      serviceId: serviceIdentifier,
+      fqnPath: getFqnPathForChart(stageIdentifier, manifest?.identifier as string),
+      connectorRef: get(initialValues, connectorRefPath),
+      chartName: get(initialValues, `${manifestPath}.spec.chartName`),
+      region: get(initialValues, `${manifestPath}.spec.store.spec.region`),
+      bucketName: get(initialValues, `${manifestPath}.spec.store.spec.bucketName`),
+      folderPath: get(initialValues, folderPath)
+    },
+    lazy: true
   })
 
   const commonQueryParam = {
@@ -109,6 +142,11 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const regions = (regionData?.resource || []).map((region: NameValuePair) => ({
     value: region.value,
     label: region.name
+  }))
+
+  const chartVersions = (chartVersionData?.data?.helmChartVersions || []).map((chartVersion: string) => ({
+    value: chartVersion,
+    label: chartVersion
   }))
 
   const s3BucketOptions = Object.keys(s3BucketList || {}).map(item => ({
@@ -254,10 +292,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   }
 
   // this OR condition is for OCI helm connector
-  const connectorRefPath =
-    manifest?.spec?.store?.type === 'OciHelmChart'
-      ? `${manifestPath}.spec.store.spec.config.spec.connectorRef`
-      : `${manifestPath}.spec.store.spec.connectorRef`
 
   return (
     <Layout.Vertical
@@ -335,35 +369,16 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       </div>
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
-          <div className={css.verticalSpacingInput}>
-            <TextFieldInputSetView
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
-              name={`${path}.${manifestPath}.spec.store.spec.branch`}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              label={getString('pipelineSteps.deploy.inputSet.branch')}
-              fieldPath={`${manifestPath}.spec.store.spec.branch`}
-              template={template}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.branch`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.branch`)}
-            type="String"
-            variableName="branch"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.branch`, value)
+          <TextFieldInputSetView
+            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
+            name={`${path}.${manifestPath}.spec.store.spec.branch`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
             }}
+            label={getString('pipelineSteps.deploy.inputSet.branch')}
+            fieldPath={`${manifestPath}.spec.store.spec.branch`}
+            template={template}
           />
         )}
       </div>
@@ -574,16 +589,49 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.chartVersion`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
-              disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
-              name={`${path}.${manifestPath}.spec.chartVersion`}
-              multiTextInputProps={{
-                ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
-                expressions,
-                allowableTypes
-              }}
-              label={getString('pipeline.manifestType.http.chartVersion')}
-            />
+            {isNewServiceEnvEntity(path as string) ? (
+              <ExperimentalInput
+                formik={formik}
+                name={`${path}.${manifestPath}.spec.chartVersion`}
+                disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
+                multiTypeInputProps={{
+                  onFocus: () => {
+                    if (!chartVersions?.length) {
+                      refetchChartVersions()
+                    }
+                  },
+                  selectProps: {
+                    usePortal: true,
+                    addClearBtn: !readonly,
+                    ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
+                    items: chartVersions,
+                    noResults: (
+                      <Text padding={'small'}>
+                        {loadingChartVersions
+                          ? getString('loading')
+                          : get(chartVersionsError, errorMessage, null) || 'No manifest chart Versions found'}
+                      </Text>
+                    )
+                  },
+                  expressions,
+                  allowableTypes
+                }}
+                useValue
+                selectItems={chartVersions}
+                label={getString('pipeline.manifestType.http.chartVersion')}
+              />
+            ) : (
+              <FormInput.MultiTextInput
+                disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
+                name={`${path}.${manifestPath}.spec.chartVersion`}
+                multiTextInputProps={{
+                  ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.manifestType.http.chartVersion')}
+              />
+            )}
           </div>
         )}
         {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.chartVersion`)) ===

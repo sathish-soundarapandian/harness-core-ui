@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -83,9 +83,10 @@ export class SaveCacheGCSStep extends PipelineStep<SaveCacheGCSStepData> {
 
   protected type = StepType.SaveCacheGCS
   protected stepName = 'Save Cache to GCS'
-  protected stepIcon: IconName = 'save-cache-gcs-step'
+  protected stepIcon: IconName = 'save-cache-gcs-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SaveCacheGCS'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: SaveCacheGCSStepData = {
     identifier: '',

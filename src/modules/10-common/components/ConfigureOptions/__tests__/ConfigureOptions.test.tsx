@@ -18,7 +18,7 @@ import {
   queryByText
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions'
 

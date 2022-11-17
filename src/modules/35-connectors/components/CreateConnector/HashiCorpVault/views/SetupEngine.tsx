@@ -21,7 +21,7 @@ import {
   ModalErrorHandlerBinding,
   ButtonVariation,
   shouldShowError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

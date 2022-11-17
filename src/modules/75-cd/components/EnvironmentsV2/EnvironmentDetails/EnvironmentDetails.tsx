@@ -43,9 +43,10 @@ import type { EnvironmentPathProps, EnvironmentQueryParams, ProjectPathProps } f
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import { isOnPrem } from '@common/utils/utils'
 
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isOnPrem } from '@common/utils/utils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
@@ -65,6 +66,8 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
+  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
@@ -255,7 +258,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                         id: EnvironmentDetailsTab.GITOPS,
                         title: getString('cd.gitOpsCluster'),
                         panel: <GitOpsCluster envRef={identifier} />,
-                        hidden: isOnPrem()
+                        hidden: !gitopsOnPremEnabled && isOnPrem()
                       }
                     ]}
                   >

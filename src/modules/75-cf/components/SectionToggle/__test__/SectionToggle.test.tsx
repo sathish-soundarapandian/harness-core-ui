@@ -11,7 +11,7 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TooltipContextProvider, TooltipContextProviderProps } from '@wings-software/uicore'
+import { TooltipContextProvider, TooltipContextProviderProps } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import SectionToggle from '@cf/components/SectionToggle/SectionToggle'
 

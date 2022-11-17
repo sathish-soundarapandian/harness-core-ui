@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Button, Text } from '@wings-software/uicore'
+import { Icon, Button, Text } from '@harness/uicore'
 import { ResizeSensor } from '@blueprintjs/core'
 import cx from 'classnames'
 import { throttle } from 'lodash-es'

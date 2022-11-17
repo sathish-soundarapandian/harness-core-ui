@@ -8,7 +8,7 @@
 import React, { useMemo, useCallback, useState } from 'react'
 import type { GetDataError } from 'restful-react'
 import { useParams } from 'react-router-dom'
-import { Container, FormInput } from '@wings-software/uicore'
+import { Container, FormInput } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { InputWithDynamicModalForJson } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJson'
 import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/MetricLineChart'

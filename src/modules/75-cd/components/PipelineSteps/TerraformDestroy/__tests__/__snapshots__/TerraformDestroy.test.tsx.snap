@@ -462,7 +462,7 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -564,7 +564,7 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"
@@ -1496,7 +1496,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -1537,7 +1537,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"
@@ -2560,7 +2560,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -2662,7 +2662,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"
@@ -4346,6 +4346,11 @@ exports[`Test TerraformDestroy should render variable view 1`] = `
       </p>
     </div>
   </div>
+  <p
+    class="StyledProps--font StyledProps--main stepTitle"
+  >
+    pipelineSteps.configFiles
+  </p>
   <div
     class="variablesListTable variablePaddingL3"
   >

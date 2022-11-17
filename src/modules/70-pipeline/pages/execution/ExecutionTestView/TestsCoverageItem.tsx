@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text, Icon } from '@wings-software/uicore'
+import { Container, Text, Icon } from '@harness/uicore'
 import copy from 'copy-to-clipboard'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

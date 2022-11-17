@@ -12,7 +12,7 @@ import { parse } from 'yaml'
 
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import type { ToasterProps } from '@wings-software/uicore/dist/hooks/useToaster/useToaster'
+import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 
 /**
  * Get YAML from editor with placeholder added at current position in editor

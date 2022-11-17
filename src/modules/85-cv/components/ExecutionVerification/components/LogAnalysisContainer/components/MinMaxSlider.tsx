@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useCallback, useEffect, useState, useRef } from 'react'
-import { Color, Button, ButtonVariation, Container, Layout } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { debounce } from 'lodash-es'
 import classnames from 'classnames'
 import { useStrings } from 'framework/strings'

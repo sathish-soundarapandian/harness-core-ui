@@ -10,8 +10,8 @@ import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ElastigroupConfiguration, StoreConfigWrapper } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
 import ElastigroupConfigStepOne from './ElastigroupConfigStepOne'
-import { HarnessOption } from '../AzureWebAppServiceSpec/HarnessOption'
 import css from './ElastigroupInfra.module.scss'
 
 interface ElastigroupConfigProp {
@@ -26,9 +26,10 @@ export function ElastigroupConfig({ initialValues, handleSubmit }: ElastigroupCo
   return (
     <StepWizard
       className={css.elastiWizard}
-      icon={'service-elastigroup'}
+      icon={'elastigroup'}
       iconProps={{
-        size: 37
+        size: 37,
+        inverse: true
       }}
       title={getString('cd.steps.elastigroup.elastigroupTitle')}
       initialStep={2} //directly take us to 2nd step as we currently just have one option i.e. harness

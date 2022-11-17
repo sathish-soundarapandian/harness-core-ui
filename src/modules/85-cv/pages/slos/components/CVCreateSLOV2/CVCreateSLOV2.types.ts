@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type {
   ServiceLevelObjectiveV2DTO,
   SimpleServiceLevelObjectiveSpec,
@@ -6,7 +13,7 @@ import type {
   RollingSLOTargetSpec,
   WeeklyCalendarSpec,
   CalenderSLOTargetSpec,
-  CompositeServiceLevelObjectiveSpec
+  SLOHealthListView
 } from 'services/cv'
 
 export const enum SLOV2FormFields {
@@ -36,6 +43,15 @@ export const enum SLOV2FormFields {
   TYPE = 'type'
 }
 
+export interface SLOObjective extends Partial<SLOHealthListView> {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceLevelObjectiveRef: string
+  weightagePercentage: number
+  isManuallyUpdated?: boolean
+}
+
 export interface SLOV2Form {
   [SLOV2FormFields.TYPE]: ServiceLevelObjectiveV2DTO['type']
   [SLOV2FormFields.NAME]: ServiceLevelObjectiveV2DTO['name']
@@ -45,12 +61,12 @@ export interface SLOV2Form {
   [SLOV2FormFields.USER_JOURNEY_REF]: ServiceLevelObjectiveV2DTO['userJourneyRefs']
   [SLOV2FormFields.HEALTH_SOURCE_REF]?: SimpleServiceLevelObjectiveSpec['healthSourceRef']
   [SLOV2FormFields.MONITORED_SERVICE_REF]?: SimpleServiceLevelObjectiveSpec['monitoredServiceRef']
-  [SLOV2FormFields.PERIOD_TYPE]?: SLOTargetDTO['type']
+  [SLOV2FormFields.PERIOD_TYPE]: SLOTargetDTO['type']
   [SLOV2FormFields.PERIOD_LENGTH]?: RollingSLOTargetSpec['periodLength']
   [SLOV2FormFields.PERIOD_LENGTH_TYPE]?: CalenderSLOTargetSpec['type']
   [SLOV2FormFields.DAY_OF_MONTH]?: MonthlyCalenderSpec['dayOfMonth']
   [SLOV2FormFields.DAY_OF_WEEK]?: WeeklyCalendarSpec['dayOfWeek']
   [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: SLOTargetDTO['sloTargetPercentage']
   [SLOV2FormFields.NOTIFICATION_RULE_REFS]: ServiceLevelObjectiveV2DTO['notificationRuleRefs']
-  [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]?: CompositeServiceLevelObjectiveSpec['serviceLevelObjectivesDetails']
+  [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]?: SLOObjective[]
 }

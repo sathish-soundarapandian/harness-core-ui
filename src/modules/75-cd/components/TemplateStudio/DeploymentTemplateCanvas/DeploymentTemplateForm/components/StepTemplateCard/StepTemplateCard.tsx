@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { defaultTo, isNil } from 'lodash-es'
-import { Button, ButtonVariation, Card, Icon, Layout, Text } from '@wings-software/uicore'
-import { Color } from '@wings-software/design-system'
+import { Button, ButtonVariation, Card, Icon, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'

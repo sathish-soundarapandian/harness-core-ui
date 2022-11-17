@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { fireEvent, queryByText, render } from '@testing-library/react'
-import { Color } from '@harness/uicore'
+import {} from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { TestWrapper } from '@common/utils/testUtils'
 import Step from '../Step/Step'
 

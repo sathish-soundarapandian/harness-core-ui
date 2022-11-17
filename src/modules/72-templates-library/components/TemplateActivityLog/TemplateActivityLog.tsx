@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 import cx from 'classnames'
 import ReactTimeago from 'react-timeago'
-import { Button, Container, Heading, Icon, Layout, PageError, Text } from '@wings-software/uicore'
+import { Button, Container, Heading, Icon, Layout, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { PageSpinner } from '@common/components'

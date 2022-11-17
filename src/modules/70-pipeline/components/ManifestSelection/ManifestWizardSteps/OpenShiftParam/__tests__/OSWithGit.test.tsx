@@ -8,7 +8,7 @@
 import React from 'react'
 import * as uuid from 'uuid'
 import { render, fireEvent, act, queryByAttribute, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import OpenShiftParamWithGit from '../OSWithGit'

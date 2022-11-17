@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Card, Icon, CardBody, Container, Layout, Text, CardProps } from '@wings-software/uicore'
+import { Card, Icon, CardBody, Container, Layout, Text, CardProps } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'

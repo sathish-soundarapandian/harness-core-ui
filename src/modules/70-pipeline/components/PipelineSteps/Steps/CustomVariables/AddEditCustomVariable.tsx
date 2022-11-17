@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog } from '@wings-software/uicore'
+import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'

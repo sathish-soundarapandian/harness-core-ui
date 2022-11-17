@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { Button, Container } from '@wings-software/uicore'
+import { Button, Container } from '@harness/uicore'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

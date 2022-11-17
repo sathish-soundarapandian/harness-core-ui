@@ -10,7 +10,8 @@ import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { isEmpty, set } from 'lodash-es'
 
-import { IconName, Color, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'

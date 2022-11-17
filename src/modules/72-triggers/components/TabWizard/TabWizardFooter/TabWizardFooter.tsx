@@ -9,15 +9,8 @@ import React, { RefObject, Dispatch, SetStateAction, useMemo } from 'react'
 import type { FormikErrors, FormikProps } from 'formik'
 import { parse } from 'yaml'
 import { defaultTo, isEmpty } from 'lodash-es'
-
-import {
-  Layout,
-  Button,
-  ButtonVariation,
-  useToaster,
-  VisualYamlSelectedView as SelectedView,
-  Color
-} from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { Layout, Button, ButtonVariation, useToaster, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 

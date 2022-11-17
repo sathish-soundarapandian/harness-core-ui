@@ -7,7 +7,7 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@wings-software/uicore'
+import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harness/uicore'
 import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
@@ -27,7 +27,6 @@ export function StepGroupNode(props: any): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
-  const [showAddLink, setShowAddLink] = React.useState(false)
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
   const { showPrimary } = useToaster()
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -200,6 +199,9 @@ export function StepGroupNode(props: any): JSX.Element {
                       data: { ...props }
                     })
                   }}
+                  tooltipProps={{
+                    position: 'bottom'
+                  }}
                 >
                   {props.name}
                 </Text>
@@ -248,10 +250,7 @@ export function StepGroupNode(props: any): JSX.Element {
               identifier={props.identifier}
               prevNodeIdentifier={props.prevNodeIdentifier as string}
               style={{ left: getPositionOfAddIcon(props), top: isNestedStepGroup ? '48px' : '22px' }}
-              setShowAddLink={setShowAddLink}
-              className={cx(defaultCss.addNodeIcon, 'stepAddIcon', defaultCss.stepGroupAddIcon, {
-                [defaultCss.show]: showAddLink
-              })}
+              className={cx(defaultCss.addNodeIcon, 'stepAddIcon', defaultCss.stepGroupAddIcon)}
             />
           )}
           {!props?.nextNode && props?.parentIdentifier && !props.readonly && !props.isParallelNode && (
@@ -267,7 +266,6 @@ export function StepGroupNode(props: any): JSX.Element {
               identifier={props.identifier}
               prevNodeIdentifier={props.prevNodeIdentifier as string}
               className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
-              setShowAddLink={setShowAddLink}
             />
           )}
           {allowAdd && !props.readonly && CreateNode && (

@@ -12,14 +12,14 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  AllowedTypes
-} from '@wings-software/uicore'
+  AllowedTypes,
+  Accordion
+} from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'

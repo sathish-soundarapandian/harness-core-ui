@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { FieldArray, FormikProps } from 'formik'
-import { Icon, Text, Button } from '@wings-software/uicore'
+import { Icon, Text, Button } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

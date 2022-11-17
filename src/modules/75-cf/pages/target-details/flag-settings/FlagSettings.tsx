@@ -17,7 +17,7 @@ import {
   Text,
   PageError,
   Pagination
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import { useStrings } from 'framework/strings'
 import { Feature, GitDetails, GitSyncErrorResponse, Target, useGetAllFeatures, Variation } from 'services/cf'

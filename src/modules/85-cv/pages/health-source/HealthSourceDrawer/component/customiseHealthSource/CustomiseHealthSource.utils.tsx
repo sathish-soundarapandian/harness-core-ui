@@ -154,7 +154,7 @@ export const LoadSourceByType = ({
       if (!isCloudWatchEnabled) {
         return null
       }
-      return <CloudWatch data={data} onSubmit={onSubmit} />
+      return <CloudWatch data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
     default:
       return <></>

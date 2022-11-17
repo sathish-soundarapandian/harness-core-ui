@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useContext } from 'react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type { ErrorTrackingHealthSourceProps } from './ErrorTrackingSource.types'
 import DrawerFooter from '../../common/DrawerFooter/DrawerFooter'

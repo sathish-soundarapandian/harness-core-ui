@@ -66,6 +66,11 @@ const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches }
+  }),
+  useListAllEntityUsageByFqn: () => ({
+    loading: false,
+    data: {},
+    refetch: jest.fn()
   })
 }))
 
@@ -92,6 +97,20 @@ describe('<TemplateDetails /> tests', () => {
         <ComponentWrapper {...baseProps} />
       </TestWrapper>
     )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should match snapshot - when reference by tab is selected', async () => {
+    const { container, queryByText } = render(
+      <TestWrapper>
+        <ComponentWrapper {...baseProps} />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      fireEvent.click(queryByText('templatesLibrary.referencedBy')!)
+    })
+
     expect(container).toMatchSnapshot()
   })
 

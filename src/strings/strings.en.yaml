@@ -718,7 +718,6 @@ delegate:
   delegateConfigurations: 'Delegate Configurations'
   delegateConfiguration: 'Delegate Configuration'
   CONFIGURATION_NAME: 'Delegate Configuration Name'
-  Scope: 'Scope'
   Init_Script: 'Initialization Script'
   instancesCount: '({{count}} of {{total}} instances)'
   deleteDelegate: 'Delete Delegate'

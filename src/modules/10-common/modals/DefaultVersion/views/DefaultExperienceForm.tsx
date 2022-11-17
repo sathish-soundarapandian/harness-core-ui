@@ -17,7 +17,7 @@ import {
   CardSelect,
   CardSelectType,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Experiences } from '@common/constants/Utils'
 import { useStrings } from 'framework/strings'

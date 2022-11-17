@@ -8,7 +8,7 @@
 import React from 'react'
 import { omit, set } from 'lodash-es'
 import { render, act } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { UseGetReturnData } from '@common/utils/testUtils'

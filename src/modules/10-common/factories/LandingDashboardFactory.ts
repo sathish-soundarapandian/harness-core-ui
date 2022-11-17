@@ -6,7 +6,7 @@
  */
 
 import type React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { ModuleName } from 'framework/types/ModuleName'

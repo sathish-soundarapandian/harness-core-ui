@@ -52,6 +52,7 @@ describe('CITrialHomePage snapshot test', () => {
   })
 
   test('should call button event when click', async () => {
+    window.deploymentType = 'ON_PREM'
     const { container, getByText } = render(
       <TestWrapper>
         <CITrialHomePage />

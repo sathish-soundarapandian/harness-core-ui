@@ -6,7 +6,7 @@
  */
 
 import React, { ReactNode } from 'react'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 

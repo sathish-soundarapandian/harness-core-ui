@@ -9,7 +9,6 @@ import React, { ReactElement, useRef, useState } from 'react'
 import {
   Button,
   ButtonVariation,
-  FontVariation,
   Formik,
   FormikForm,
   Layout,
@@ -18,6 +17,7 @@ import {
   useConfirmationDialog,
   useToaster
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'

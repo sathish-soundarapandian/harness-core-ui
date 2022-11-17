@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Intent, TextArea } from '@blueprintjs/core'
-import { Text, useConfirmationDialog } from '@wings-software/uicore'
+import { Text, useConfirmationDialog } from '@harness/uicore'
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineDTO } from '@pipeline/components/PipelineModalListView/RunPipelineListView'

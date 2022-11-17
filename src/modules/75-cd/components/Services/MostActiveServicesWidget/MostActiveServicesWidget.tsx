@@ -8,7 +8,7 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError } from '@wings-software/uicore'
+import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 // import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'

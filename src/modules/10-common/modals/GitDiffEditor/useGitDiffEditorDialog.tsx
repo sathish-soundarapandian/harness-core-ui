@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { omit, pick, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
-import { Button, Layout, Icon, Text, ModalErrorHandlerBinding, ModalErrorHandler } from '@wings-software/uicore'
+import { Button, Layout, Icon, Text, ModalErrorHandlerBinding, ModalErrorHandler } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import { Dialog, IDialogProps } from '@blueprintjs/core'

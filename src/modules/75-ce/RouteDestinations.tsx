@@ -90,6 +90,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_OVERVIEW, {
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE, {
   icon: 'ccm-solid',
   label: 'ce.perspectives.sideNavText',
+  labelSingular: 'ce.sideNav.perspective',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_PERSPECTIVE]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -112,6 +113,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE_FOLDERS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {
   icon: 'ccm-solid',
   label: 'ce.budgets.sideNavText',
+  labelSingular: 'ce.common.budget',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_BUDGET]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -123,6 +125,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COST_CATEGORY, {
   icon: 'ccm-solid',
   label: 'ce.businessMapping.sideNavText',
+  labelSingular: 'ce.businessMapping.costCategory',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_COST_CATEGORY]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -134,6 +137,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COST_CATEGORY, {
 RbacFactory.registerResourceTypeHandler(ResourceType.AUTOSTOPPINGRULE, {
   icon: 'ccm-solid',
   label: 'ce.co.breadCrumb.rules',
+  labelSingular: 'common.singularLabels.autoStoppingRule',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_AUTOSTOPPING_RULE]: <LocaleString stringID="rbac.permissionLabels.view" />,

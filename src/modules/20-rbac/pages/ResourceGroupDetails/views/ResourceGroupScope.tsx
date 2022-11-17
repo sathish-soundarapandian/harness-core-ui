@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Button, ButtonVariation, Card, Collapse, Color, DropDown, FontVariation, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Card, Collapse, DropDown, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { groupBy } from 'lodash-es'
 import { useStrings } from 'framework/strings'

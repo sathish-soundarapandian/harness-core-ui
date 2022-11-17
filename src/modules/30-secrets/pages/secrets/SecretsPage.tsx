@@ -17,7 +17,7 @@ import {
   PageError,
   PageSpinner,
   Popover
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Error, ResponsePageSecretResponseWrapper, useListSecretsV2 } from 'services/cd-ng'

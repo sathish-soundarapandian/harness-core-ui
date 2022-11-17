@@ -6,12 +6,11 @@
  */
 
 import React, { useState } from 'react'
-import { Card, HarnessDocTooltip } from '@wings-software/uicore'
+import { Card, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
-import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
-import StartupScriptSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptSelection'
+import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import {
@@ -26,10 +25,11 @@ import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesS
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
+import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
+import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
+import StartupScriptSelection from '@pipeline/components/StartupScriptSelection/StartupScriptSelection'
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
-import AzureWebAppConfigSelection from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
-import { AzureWebAppSelectionTypes } from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -55,7 +55,8 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
       selectionState: { selectedStageId }
     },
     updateStage,
-    getStageFromPipeline
+    getStageFromPipeline,
+    allowableTypes
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
   const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
@@ -110,7 +111,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               })}
               <HarnessDocTooltip tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <AzureWebAppConfigSelection
+            <ApplicationConfigSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
@@ -118,7 +119,8 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               updateStage={updateStageData}
               showApplicationSettings={true}
               showConnectionStrings={true}
-              selectionType={AzureWebAppSelectionTypes.PIPELINE}
+              selectionType={ApplicationConfigSelectionTypes.PIPELINE}
+              allowableTypes={allowableTypes}
             />
           </Card>
 
@@ -155,6 +157,10 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
                 data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
               >
                 {getString('pipelineSteps.configFiles')}
+                <HarnessDocTooltip
+                  tooltipId={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
               </div>
               <ConfigFilesSelection
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}
@@ -172,7 +178,13 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
+          <div
+            className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+            data-tooltip-id={getVariablesHeaderTooltipId(selectedDeploymentType)}
+          >
+            {getString('common.variables')}
+            <HarnessDocTooltip tooltipId={getVariablesHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+          </div>
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}

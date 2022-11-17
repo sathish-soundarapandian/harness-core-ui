@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Text, Container } from '@wings-software/uicore'
+import { Icon, Text, Container } from '@harness/uicore'
 
 import { OAuthProviderType, OAuthProviders, URLS } from '@common/constants/OAuthProviders'
 

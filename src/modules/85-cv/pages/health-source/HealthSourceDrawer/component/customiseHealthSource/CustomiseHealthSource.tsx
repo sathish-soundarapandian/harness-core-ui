@@ -8,7 +8,7 @@
 import React, { useContext, useMemo } from 'react'
 import { omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { useToaster } from '@wings-software/uicore'
+import { useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
   MonitoredServiceDTO,

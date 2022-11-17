@@ -19,7 +19,7 @@ import {
   ButtonVariation,
   AllowedTypes,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'

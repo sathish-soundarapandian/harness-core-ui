@@ -17,7 +17,7 @@ import {
   Text,
   useConfirmationDialog,
   ButtonSize
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Classes, Intent, Menu, Position } from '@blueprintjs/core'

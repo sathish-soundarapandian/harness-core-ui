@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { useGetCommunity } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 import css from './DockerPrerequisites.module.scss'

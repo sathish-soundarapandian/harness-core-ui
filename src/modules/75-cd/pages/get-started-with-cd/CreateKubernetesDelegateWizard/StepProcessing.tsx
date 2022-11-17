@@ -7,7 +7,7 @@
 
 import React, { useState, FC } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Icon, Text, useToaster } from '@wings-software/uicore'
+import { Layout, Icon, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 

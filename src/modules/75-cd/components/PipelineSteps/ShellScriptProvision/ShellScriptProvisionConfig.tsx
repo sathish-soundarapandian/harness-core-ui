@@ -23,11 +23,12 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import MultiTypeConfigFileSelect from '@pipeline/components/StartupScriptSelection/MultiTypeConfigFileSelect'
 import type {
   MultiTypeMapProps,
   MultiTypeMapValue
-} from '../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/MultiConfigSelectField'
-import MultiTypeConfigFileSelect from '../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/MultiTypeConfigFileSelect'
+} from '@pipeline/components/StartupScriptSelection/MultiConfigSelectField'
+
 import css from './ShellScriptProvision.module.scss'
 
 export function ShellScriptProvisionConfig(props: MultiTypeMapProps): React.ReactElement {

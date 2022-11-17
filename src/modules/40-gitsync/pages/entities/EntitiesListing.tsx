@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Container, PageSpinner, TableV2 } from '@wings-software/uicore'
+import { Text, Container, PageSpinner, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 

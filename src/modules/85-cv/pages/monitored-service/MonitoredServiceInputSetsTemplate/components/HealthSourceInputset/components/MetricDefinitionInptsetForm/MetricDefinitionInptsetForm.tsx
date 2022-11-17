@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { Text, Color, FormInput, MultiTypeInputType } from '@harness/uicore'
+import { Text, FormInput, MultiTypeInputType } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   getLabelByName,

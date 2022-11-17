@@ -1,5 +1,6 @@
 import React from 'react'
-import { Color, Container, Text } from '@harness/uicore'
+import { Container, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { ENABLED_ARTIFACT_TYPES } from '../ArtifactHelper'
 import type { ArtifactType } from '../ArtifactInterface'
 import css from '../ArtifactsSelection.module.scss'

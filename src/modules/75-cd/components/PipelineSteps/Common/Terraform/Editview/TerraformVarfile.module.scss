@@ -126,6 +126,9 @@
 .configWizard {
   width: 100%;
 
+  [class*='stepName'] {
+    word-break: break-word;
+  }
   [class*='stepDetails'] {
     background-color: var(--white) !important;
   }
@@ -299,4 +302,21 @@
 
 .tooltipProps {
   font-size: small;
+}
+
+.fileSelect {
+  position: absolute;
+  right: 35px;
+}
+
+.fileDropdown {
+  border: none;
+  background-color: unset;
+  font-size: var(--font-size-normal);
+  font-weight: 400 !important;
+  color: var(--grey-900) !important;
+}
+
+.tfArtifactoryStepTwo {
+  min-height: 440px;
 }

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import { useParams, useLocation } from 'react-router-dom'
 import { get, isEmpty } from 'lodash-es'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'

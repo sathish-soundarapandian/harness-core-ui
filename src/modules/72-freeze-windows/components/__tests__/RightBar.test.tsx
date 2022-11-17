@@ -42,7 +42,7 @@ describe('Freeze Window Studio - Right Bar', () => {
 
     expect(document.body.getElementsByClassName('rightBar')[0]).toMatchSnapshot('closed state of Right Bar')
 
-    userEvent.click(getByRole('button', { name: 'notifications.pipelineName' }))
+    userEvent.click(getByRole('button', { name: 'rbac.notifications.pipelineName' }))
     expect(setDrawerType).toHaveBeenCalledWith(DrawerTypes.Notification)
   })
   test('it should render in open state of Notifications', async () => {

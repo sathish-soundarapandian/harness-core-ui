@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -143,6 +143,18 @@ export interface ImagePathProps<T> {
   isMultiArtifactSource?: boolean
   formClassName?: string
   prevStepData?: ConnectorConfigDTO
+}
+
+export interface AzureArtifactsInitialValues {
+  identifier?: string
+  versionType?: string
+  scope: string
+  project?: string
+  feed: string
+  packageType: string
+  package: string
+  version?: string
+  versionRegex?: string
 }
 
 export interface AmazonS3ArtifactProps {
@@ -332,6 +344,7 @@ export interface ArtifactTagHelperText {
   artifactArrayPath?: string
   versionPath?: string
   packageName?: string
+  feed?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType

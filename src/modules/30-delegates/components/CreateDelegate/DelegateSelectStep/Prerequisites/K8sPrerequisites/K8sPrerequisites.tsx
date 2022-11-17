@@ -5,18 +5,34 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Layout, Text, Container } from '@wings-software/uicore'
+import React, { useEffect } from 'react'
+import { Layout, Text, Container, useToaster, PageSpinner } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useIsImmutableDelegateEnabled } from 'services/cd-ng'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './K8sPrerequisites.module.scss'
 
 const K8sPrerequisites = () => {
   const { getString } = useStrings()
-  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
+  const { accountId } = useParams<AccountPathProps>()
 
+  const { showError } = useToaster()
+  const {
+    data: useImmutableDelegate,
+    error,
+    loading
+  } = useIsImmutableDelegateEnabled({
+    accountIdentifier: accountId
+  })
+  useEffect(() => {
+    if (error) {
+      showError(error.message)
+    }
+  }, [error])
   return (
     <>
+      {loading ? <PageSpinner /> : null}
       <Text className={css.prereq}>{getString('delegate.kubernetes.prerequisites')}</Text>
       <Container
         style={{
@@ -52,7 +68,7 @@ const K8sPrerequisites = () => {
           </Layout.Horizontal>
           <Layout.Horizontal>
             <Text className={css.preReqContent} icon="arrow-right" iconProps={{ size: 8 }}>
-              {USE_IMMUTABLE_DELEGATE
+              {useImmutableDelegate?.data
                 ? getString('delegate.kubernetes.permissions_info3')
                 : getString('delegate.kubernetes.permissions_info2')}
             </Text>

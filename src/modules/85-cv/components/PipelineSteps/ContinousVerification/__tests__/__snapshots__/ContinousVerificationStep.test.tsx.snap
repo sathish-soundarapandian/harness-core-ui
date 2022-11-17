@@ -23,7 +23,7 @@ exports[`Test ContinousVerificationStep Step renders empty inputSetView 1`] = `
                 class="emptyFieldItem"
               >
                 
-              connectors.cdng.runTimeMonitoredService.pleaseSpecify 
+              connectors.cdng.runTimeMonitoredService.pleaseSpecify
               service
               and
               environment
@@ -84,7 +84,7 @@ exports[`Test ContinousVerificationStep Step renders inputSetView 1`] = `
                 class="emptyFieldItem"
               >
                 
-              connectors.cdng.runTimeMonitoredService.pleaseSpecify 
+              connectors.cdng.runTimeMonitoredService.pleaseSpecify
               service
               and
               environment

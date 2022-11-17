@@ -28,6 +28,10 @@ export const transformValuesFieldsConfig = [
   {
     name: 'spec.expectedResilienceScore',
     type: TransformValuesTypes.Numeric
+  },
+  {
+    name: 'spec.assertion',
+    type: TransformValuesTypes.Text
   }
 ]
 
@@ -53,13 +57,18 @@ export const editViewValidateFieldsConfig = [
   {
     name: 'spec.expectedResilienceScore',
     type: ValidationFieldTypes.Numeric,
-    label: 'chaos.pipelineStep.expectedResiliencyScoreLabel',
+    label: 'chaos.pipelineStep.expectedResilienceScoreLabel',
     isRequired: true
+  },
+  {
+    name: 'spec.assertion',
+    type: ValidationFieldTypes.Text,
+    label: 'pipeline.utilitiesStep.assertion',
+    isRequired: false
   }
 ]
 
 export function getInputSetViewValidateFieldsConfig(): Array<{
-  // isRequired = true
   name: string
   type: ValidationFieldTypes
   label?: string

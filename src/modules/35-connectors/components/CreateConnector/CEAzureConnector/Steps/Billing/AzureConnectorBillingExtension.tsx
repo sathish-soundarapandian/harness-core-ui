@@ -6,7 +6,7 @@
  */
 
 import React, { useRef } from 'react'
-import { Container, Heading, Text } from '@wings-software/uicore'
+import { Container, Heading, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from '../../CreateCeAzureConnector_new.module.scss'
 

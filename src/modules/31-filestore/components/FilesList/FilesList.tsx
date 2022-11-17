@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout } from '@wings-software/uicore'
+import { Container, Layout } from '@harness/uicore'
 
 export interface StoreViewProps {
   title?: string

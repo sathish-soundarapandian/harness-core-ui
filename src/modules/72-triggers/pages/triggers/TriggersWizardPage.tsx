@@ -18,7 +18,7 @@ import {
   useConfirmationDialog,
   ButtonVariation,
   Button
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
@@ -278,7 +278,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
   })
 
-  const isGithubWebhookAuthenticationEnabled = useIsGithubWebhookAuthenticationEnabled()
+  const { isGithubWebhookAuthenticationEnabled } = useIsGithubWebhookAuthenticationEnabled()
 
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     if (values.triggerType === TriggerTypes.WEBHOOK) {
@@ -1366,7 +1366,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         identifier: '',
         tags: {},
         ...(sourceRepoOnNew === GitSourceProviders.GITHUB.value &&
-          isSpgNgGithubWebhookAuthenticationEnabled && { encryptedWebhookSecretIdentifier: '' }),
+          isSpgNgGithubWebhookAuthenticationEnabled && {
+            encryptedWebhookSecretIdentifier: '',
+            isGithubWebhookAuthenticationEnabled
+          }),
         pipeline: newPipeline,
         originalPipeline,
         resolvedPipeline,
@@ -1420,8 +1423,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         : newInitialValues
     }
 
+    const isGitHubWebhookTrigger = newInitialValues.sourceRepo === GitSourceProviders.GITHUB.value
+
+    if (isGitHubWebhookTrigger) {
+      Object.assign(newInitialValues, { isGithubWebhookAuthenticationEnabled })
+    }
+
     setInitialValues(newInitialValues)
-  }, [onEditInitialValues, currentPipeline])
+  }, [onEditInitialValues, currentPipeline, isGithubWebhookAuthenticationEnabled])
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline

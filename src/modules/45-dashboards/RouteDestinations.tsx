@@ -40,6 +40,7 @@ const viewPathProps: { viewId: string; folderId: string } = {
 RbacFactory.registerResourceTypeHandler(ResourceType.DASHBOARDS, {
   icon: 'support-account',
   label: 'common.dashboards',
+  labelSingular: 'dashboardLabel',
   labelOverride: 'dashboards.homePage.folders',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {

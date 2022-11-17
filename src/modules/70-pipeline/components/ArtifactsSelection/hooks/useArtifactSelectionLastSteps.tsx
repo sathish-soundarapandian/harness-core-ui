@@ -15,7 +15,8 @@ import type {
   ImagePathTypes,
   JenkinsArtifactType,
   Nexus2InitialValuesType,
-  ArtifactType
+  ArtifactType,
+  AzureArtifactsInitialValues
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { GCRImagePath } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
@@ -31,6 +32,7 @@ import { GoogleArtifactRegistry } from '@pipeline/components/ArtifactsSelection/
 import { GithubPackageRegistry } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import { DockerRegistryArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { AmazonMachineImage } from '../ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
+import { AzureArtifacts } from '../ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzureArtifacts'
 
 export type ArtifactLastStepProps = ImagePathProps<
   ImagePathTypes &
@@ -39,7 +41,8 @@ export type ArtifactLastStepProps = ImagePathProps<
     GoogleArtifactRegistryInitialValuesType &
     CustomArtifactSource &
     GithubPackageRegistryInitialValuesType &
-    Nexus2InitialValuesType
+    Nexus2InitialValuesType &
+    AzureArtifactsInitialValues
 >
 
 export interface ArtifactSelectionLastStepsParams {
@@ -65,6 +68,8 @@ export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastSteps
       return <AmazonS3 {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
       return <CustomArtifact {...artifactLastStepProps} />
+    case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+      return <AzureArtifacts {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.Acr:
       return <ACRArtifact {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.Jenkins:

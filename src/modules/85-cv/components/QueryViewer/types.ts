@@ -6,7 +6,7 @@
  */
 
 import { IDrawerProps, Position } from '@blueprintjs/core'
-import type { TextAreaProps } from '@wings-software/uicore/dist/components/FormikForm/FormikForm'
+import type { TextAreaProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { TimeSeriesSampleDTO } from 'services/cv'
 import type { RecordsProps } from '../Records/types'
 

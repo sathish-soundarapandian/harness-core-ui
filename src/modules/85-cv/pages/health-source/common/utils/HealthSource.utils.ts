@@ -276,3 +276,11 @@ export const getCurrentHealthSourceData = (
 
   return foundHealthSource
 }
+
+export const getConnectorRef = (connectorRef?: string | { value: string }): string | undefined => {
+  if (typeof connectorRef === 'string') {
+    return connectorRef
+  }
+
+  return connectorRef?.value
+}

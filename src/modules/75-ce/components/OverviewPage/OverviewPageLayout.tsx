@@ -8,7 +8,7 @@
 import React, { ReactNode, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Container, Icon, Layout, Text, Utils } from '@wings-software/uicore'
+import { Container, Icon, Layout, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { CE_COLOR_CONST, getRadialChartOptions } from '@ce/components/CEChart/CEChartOptions'

@@ -8,17 +8,16 @@
 import React, { useMemo, useState } from 'react'
 import {
   Card,
-  Color,
   Container,
   ExpandingSearchInput,
   FlexExpander,
-  FontVariation,
   Icon,
   Layout,
   PageBody,
   PageHeader,
   Text
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { Link, useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useStrings } from 'framework/strings'

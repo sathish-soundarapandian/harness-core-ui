@@ -8,17 +8,15 @@
 
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
-import * as cdngServices from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockImport from 'framework/utils/mockImport'
-import { SelectEnvironmentView } from '../views/SelectEnvironmentView'
+import { SelectEnvironmentView, SelectEnvironmentViewProps } from '../views/SelectEnvironmentView'
 
 const setApiKey = jest.fn()
-const setEnvironmentIdentifier = jest.fn()
+const setSelectedEnvironment = jest.fn()
 
-const renderComponent = (): RenderResult => {
+const renderComponent = (props?: Partial<SelectEnvironmentViewProps>): RenderResult => {
   return render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
@@ -26,28 +24,45 @@ const renderComponent = (): RenderResult => {
     >
       <SelectEnvironmentView
         language={{
-          name: 'foo',
-          icon: 'bar',
-          type: PlatformEntryType.CLIENT,
+          name: 'java',
+          icon: 'javaicon',
+          type: PlatformEntryType.SERVER,
           readmeStringId: 'cf.onboarding.readme.java'
         }}
-        apiKey={{
-          name: 'xxx-xxx-xxx',
-          apiKey: 'xxx-xxx-xxx',
-          identifier: 'xxx-xxx-xxx',
-          type: 'server'
-        }}
         setApiKey={setApiKey}
-        setEnvironmentIdentifier={setEnvironmentIdentifier}
+        setSelectedEnvironment={setSelectedEnvironment}
+        {...props}
       />
     </TestWrapper>
   )
 }
 
 describe('SelectEnvironmentView', () => {
+  beforeEach(() => {
+    mockImport('@cf/hooks/useEnvironmentSelectV2', {
+      useEnvironmentSelectV2: () => ({
+        loading: false,
+        error: undefined,
+        refetch: jest.fn(),
+        EnvironmentSelect: function EnvironmentSelect() {
+          return <div />
+        },
+        environments: [
+          {
+            accountId: 'dummy',
+            identifier: 'foo',
+            name: 'bar',
+            type: 'Production'
+          }
+        ]
+      })
+    })
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
+
   test('It should render loading correctly', () => {
     mockImport('@cf/hooks/useEnvironmentSelectV2', {
       useEnvironmentSelectV2: () => ({ loading: true, refetch: jest.fn() })
@@ -57,8 +72,7 @@ describe('SelectEnvironmentView', () => {
     expect(document.querySelector('span[data-icon="spinner"]')).toBeVisible()
   })
 
-  test('It should render elements and data correctly', async () => {
-    const createEnv = jest.spyOn(cdngServices, 'useCreateEnvironment')
+  test('It should render elements and data correctly when no environment selected', async () => {
     mockImport('@cf/hooks/useEnvironmentSelectV2', {
       useEnvironmentSelectV2: () => ({
         loading: false,
@@ -82,21 +96,107 @@ describe('SelectEnvironmentView', () => {
 
     await waitFor(() => {
       expect(document.querySelector('span[data-icon="spinner"]')).not.toBeInTheDocument()
-      expect(screen.getByText('cf.onboarding.createEnv')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.environmentDescription')).toBeVisible()
+      expect(screen.queryByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' })).not.toBeInTheDocument()
+    })
+  })
+
+  test('It should open the Create Environment modal', async () => {
+    renderComponent({
+      language: {
+        name: 'javascript',
+        icon: 'javascripticon',
+        type: PlatformEntryType.CLIENT,
+        readmeStringId: 'cf.onboarding.readme.javascript'
+      },
+      selectedEnvironment: { identifier: 'foo', name: 'foo' },
+      apiKey: {
+        name: 'xxx-xxx-xxx',
+        apiKey: 'xxx-xxx-xxx',
+        identifier: 'xxx-xxx-xxx',
+        type: 'client'
+      }
     })
 
-    userEvent.click(screen.getByText('cf.onboarding.createEnv'))
-
     await waitFor(() => {
-      expect(screen.getByText('cf.environments.create.description')).toBeVisible()
-      expect(document.getElementsByName('name')[0]).toBeVisible()
+      expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.environmentDescription')).toBeVisible()
+      expect(screen.queryByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' })).not.toBeInTheDocument()
+      expect(screen.getByText('cf.onboarding.keyDescriptionClient')).toBeVisible()
     })
-    userEvent.click(document.getElementsByName('name')[0])
-    userEvent.type(document.getElementsByName('name')[0], 'OnboardingEnv', { allAtOnce: true })
-    userEvent.click(document.querySelector('button[type="submit"]') as TargetElement)
+  })
+
+  test('It should render button to create SDK key when environment selected', async () => {
+    mockImport('@cf/hooks/useEnvironmentSelectV2', {
+      useEnvironmentSelectV2: () => ({
+        loading: false,
+        error: undefined,
+        refetch: jest.fn(),
+        EnvironmentSelect: function EnvironmentSelect() {
+          return <div />
+        },
+        environments: [
+          {
+            accountId: 'dummy',
+            identifier: 'foo',
+            name: 'bar',
+            type: 'Production'
+          }
+        ]
+      })
+    })
+
+    renderComponent({ selectedEnvironment: { identifier: 'foo', name: 'foo' } })
 
     await waitFor(() => {
-      expect(createEnv).toBeCalled()
+      expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.environmentDescription')).toBeVisible()
+      expect(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' })).toBeVisible()
+    })
+  })
+
+  test('It should render correctly when environment selected and SERVER SDK Key created', async () => {
+    renderComponent({
+      selectedEnvironment: { identifier: 'foo', name: 'foo' },
+      apiKey: {
+        name: 'xxx-xxx-xxx',
+        apiKey: 'xxx-xxx-xxx',
+        identifier: 'xxx-xxx-xxx',
+        type: 'server'
+      }
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.environmentDescription')).toBeVisible()
+      expect(screen.queryByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' })).not.toBeInTheDocument()
+      expect(screen.getByText('cf.onboarding.keyDescriptionServer')).toBeVisible()
+    })
+  })
+
+  test('It should render correctly when environment selected and CLIENT SDK Key created', async () => {
+    renderComponent({
+      language: {
+        name: 'javascript',
+        icon: 'javascripticon',
+        type: PlatformEntryType.CLIENT,
+        readmeStringId: 'cf.onboarding.readme.javascript'
+      },
+      selectedEnvironment: { identifier: 'foo', name: 'foo' },
+      apiKey: {
+        name: 'xxx-xxx-xxx',
+        apiKey: 'xxx-xxx-xxx',
+        identifier: 'xxx-xxx-xxx',
+        type: 'client'
+      }
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.environmentDescription')).toBeVisible()
+      expect(screen.queryByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' })).not.toBeInTheDocument()
+      expect(screen.getByText('cf.onboarding.keyDescriptionClient')).toBeVisible()
     })
   })
 })

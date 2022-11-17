@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { get, isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
@@ -286,7 +286,7 @@ export function getCDStageValidationSchema(
       ...getServiceSchema(getString, isNewServiceEnvEntity),
       ...getEnvironmentInfraSchema(getString, isNewEnvInfraDef, deploymentType),
       execution: Yup.object().shape({
-        steps: Yup.array().required().min(1, getString('cd.pipelineSteps.executionTab.stepsCount'))
+        steps: Yup.array().required().min(1, getString('common.executionTab.stepsCount'))
       })
     }),
     failureStrategies: getFailureStrategiesValidationSchema(getString),

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@harness/uicore'
 import { isEmpty, get, isArray } from 'lodash-es'
 import cx from 'classnames'
 import { FieldArray } from 'formik'

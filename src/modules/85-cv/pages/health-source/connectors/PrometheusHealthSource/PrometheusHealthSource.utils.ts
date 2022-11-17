@@ -11,7 +11,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { clone, cloneDeep, defaultTo, isEmpty, isEqual, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec } from 'services/cv'

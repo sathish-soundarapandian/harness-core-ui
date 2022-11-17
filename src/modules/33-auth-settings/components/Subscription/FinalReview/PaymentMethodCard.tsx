@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Card, Text, Button, ButtonVariation, FontVariation } from '@harness/uicore'
+import { Layout, Card, Text, Button, ButtonVariation } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { SubscribeViews, PaymentMethodProps } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 interface PaymentMethodCardProps {

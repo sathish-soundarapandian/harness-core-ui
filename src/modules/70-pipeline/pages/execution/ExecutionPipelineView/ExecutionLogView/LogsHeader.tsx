@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Container, Text } from '@wings-software/uicore'
+import { Button, Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from './LogsHeader.module.scss'
 

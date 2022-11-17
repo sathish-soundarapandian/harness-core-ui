@@ -6,7 +6,7 @@
  */
 
 import React, { useContext, useState } from 'react'
-import { SelectOption, Container } from '@wings-software/uicore'
+import { SelectOption, Container } from '@harness/uicore'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import GroupName from '@cv/components/GroupName/GroupName'

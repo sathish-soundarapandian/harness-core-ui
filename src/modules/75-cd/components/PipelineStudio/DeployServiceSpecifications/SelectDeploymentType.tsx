@@ -13,7 +13,6 @@ import {
   Button,
   Card,
   Checkbox,
-  Color,
   Container,
   FormError,
   HarnessDocTooltip,
@@ -22,6 +21,7 @@ import {
   Thumbnail,
   Utils
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
@@ -66,6 +66,7 @@ interface RecentDeploymentTemplatesProps {
   readonly: boolean
   labelClassName?: string
   templateLinkConfig?: TemplateLinkConfig
+  selectedDeploymentType?: ServiceDeploymentType
   onDeploymentTemplateSelect: (template: TemplateSummaryResponse, fromTemplateSelector: boolean) => void
 }
 
@@ -73,6 +74,7 @@ const RecentDeploymentTemplates: FC<RecentDeploymentTemplatesProps> = ({
   readonly,
   labelClassName,
   templateLinkConfig,
+  selectedDeploymentType,
   onDeploymentTemplateSelect
 }) => {
   const { getString } = useStrings()
@@ -121,42 +123,48 @@ const RecentDeploymentTemplates: FC<RecentDeploymentTemplatesProps> = ({
       </Container>
     )
   }
-  if (error) return null
+  if (error || !templates?.length || (readonly && selectedDeploymentType !== ServiceDeploymentType.CustomDeployment)) {
+    return null
+  }
+
+  const filteredTemplates = templates?.filter(
+    template => !readonly || isSelected(getTemplateRefVersionLabelObject(template))
+  )
+
+  if (!filteredTemplates?.length) return null
 
   return (
     <>
       <div className={labelClassName}>{getString('cd.deploymentTemplates')}</div>
       <div className={deployServiceCss.recentDeploymentTemplates}>
-        {templates
-          ?.filter(template => !readonly || isSelected(getTemplateRefVersionLabelObject(template)))
-          ?.map(template => {
-            const currentTemplateLinkConfig = getTemplateRefVersionLabelObject(template)
-            const templateIconName = getIconForTemplate(getString, template)
+        {filteredTemplates?.map(template => {
+          const currentTemplateLinkConfig = getTemplateRefVersionLabelObject(template)
+          const templateIconName = getIconForTemplate(getString, template)
 
-            return (
-              <div key={currentTemplateLinkConfig.templateRef} className={deployServiceCss.thumbnailContainer}>
-                <Thumbnail
-                  className={cx(!readonly && deployServiceCss.cursorPointer)}
-                  value={currentTemplateLinkConfig.templateRef}
-                  icon={templateIconName}
-                  imageProps={{
-                    src: template.icon,
-                    alt: getString('cd.logoOfName', { name: template.name })
-                  }}
-                  disabled={readonly}
-                  selected={isSelected(currentTemplateLinkConfig)}
-                  onClick={() => onDeploymentTemplateSelect(template, false)}
-                />
-                <Text
-                  lineClamp={2}
-                  font={{ weight: 'semi-bold', size: 'small' }}
-                  color={readonly ? Color.GREY_500 : Color.GREY_600}
-                >
-                  {template.name}
-                </Text>
-              </div>
-            )
-          })}
+          return (
+            <div key={currentTemplateLinkConfig.templateRef} className={deployServiceCss.thumbnailContainer}>
+              <Thumbnail
+                className={cx(!readonly && deployServiceCss.cursorPointer)}
+                value={currentTemplateLinkConfig.templateRef}
+                icon={templateIconName}
+                imageProps={{
+                  src: template.icon,
+                  alt: getString('cd.logoOfName', { name: template.name })
+                }}
+                disabled={readonly}
+                selected={isSelected(currentTemplateLinkConfig)}
+                onClick={() => onDeploymentTemplateSelect(template, false)}
+              />
+              <Text
+                lineClamp={2}
+                font={{ weight: 'semi-bold', size: 'small' }}
+                color={readonly ? Color.GREY_500 : Color.GREY_600}
+              >
+                {template.name}
+              </Text>
+            </div>
+          )
+        })}
 
         {!readonly && (
           <Button
@@ -341,6 +349,7 @@ export default function SelectDeploymentType({
       readonly={isReadonly}
       templateLinkConfig={templateLinkConfig}
       onDeploymentTemplateSelect={onDeploymentTemplateSelect}
+      selectedDeploymentType={selectedDeploymentType}
     />
   )
 

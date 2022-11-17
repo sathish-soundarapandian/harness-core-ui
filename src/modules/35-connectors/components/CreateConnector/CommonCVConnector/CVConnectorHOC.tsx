@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { StepWizard, Container, StepProps } from '@wings-software/uicore'
+import { StepWizard, Container, StepProps } from '@harness/uicore'
 import {
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
   CreateConnectorModalProps,

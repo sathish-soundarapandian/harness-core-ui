@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Icon, IconName, Layout, Text } from '@wings-software/uicore'
+import { Container, Icon, IconName, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { RiskCount } from 'services/cv'
 import { getRiskColorLogo, getRiskColorValue } from '@cv/utils/CommonUtils'

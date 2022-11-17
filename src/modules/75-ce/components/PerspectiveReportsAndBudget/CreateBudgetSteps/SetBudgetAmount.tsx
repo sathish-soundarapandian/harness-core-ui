@@ -20,7 +20,7 @@ import {
   DateInput,
   Icon,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import moment from 'moment'
 import { FontVariation, Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'

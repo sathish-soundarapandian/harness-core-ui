@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement, useState } from 'react'
-import { Text, Container, Icon, Layout } from '@wings-software/uicore'
+import { Text, Container, Icon, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { GitSyncSetupRedirect } from '@cf/components/GitSyncSetupRedirect/GitSyncSetupRedirect'

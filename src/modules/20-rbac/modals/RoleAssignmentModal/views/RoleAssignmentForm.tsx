@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Layout, Text, FieldArray, Select, SelectOption } from '@wings-software/uicore'
+import { Container, Layout, Text, FieldArray, Select, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { defaultTo } from 'lodash-es'

@@ -10,6 +10,7 @@ import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
+import { DEFAULT_MODULES_ORDER } from '@common/hooks/useNavModuleInfo'
 import MainNav from '../MainNav'
 
 jest.mock('framework/PreferenceStore/PreferenceStoreContext')
@@ -120,5 +121,106 @@ describe('main nav tests', () => {
     expect(queryByText('deploymentsText')).not.toBeNull()
     expect(queryByText('buildsText')).not.toBeNull()
     expect(queryByText('featureFlagsText')).not.toBeNull()
+  })
+
+  test('test when one of the feature flag of selected modules turns off', () => {
+    const selectedModules = [ModuleName.CD, ModuleName.CI, ModuleName.CF]
+    const orderedModules = DEFAULT_MODULES_ORDER
+    ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
+      return {
+        setPreference: setModuleConfigPreference,
+        preference: {
+          orderedModules,
+          selectedModules
+        },
+        clearPreference: jest.fn
+      }
+    })
+
+    render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          CDNG_ENABLED: true,
+          CING_ENABLED: true,
+          CFNG_ENABLED: false,
+          CHAOS_ENABLED: true,
+          NEW_LEFT_NAVBAR_SETTINGS: true
+        }}
+      >
+        <MainNav />
+      </TestWrapper>
+    )
+
+    expect(setModuleConfigPreference).toBeCalledWith({
+      orderedModules,
+      selectedModules: [ModuleName.CD, ModuleName.CI]
+    })
+  })
+
+  test('test when there are no ordered modules', () => {
+    ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
+      return {
+        setPreference: setModuleConfigPreference,
+        preference: {
+          orderedModules: [],
+          selectedModules: []
+        },
+        clearPreference: jest.fn
+      }
+    })
+
+    render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          CDNG_ENABLED: true,
+          CING_ENABLED: true,
+          CFNG_ENABLED: false,
+          CHAOS_ENABLED: true,
+          NEW_LEFT_NAVBAR_SETTINGS: true
+        }}
+      >
+        <MainNav />
+      </TestWrapper>
+    )
+
+    expect(setModuleConfigPreference).toBeCalledWith({
+      orderedModules: DEFAULT_MODULES_ORDER,
+      selectedModules: []
+    })
+  })
+
+  test('test when a new module is added', () => {
+    const selectedModules = [ModuleName.CD, ModuleName.CI, ModuleName.CF]
+    const orderedModules = [...DEFAULT_MODULES_ORDER]
+    orderedModules.pop()
+    ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
+      return {
+        setPreference: setModuleConfigPreference,
+        preference: {
+          orderedModules: orderedModules,
+          selectedModules: selectedModules
+        },
+        clearPreference: jest.fn
+      }
+    })
+
+    render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          CDNG_ENABLED: true,
+          CING_ENABLED: true,
+          CFNG_ENABLED: true,
+          CHAOS_ENABLED: true,
+          NEW_LEFT_NAVBAR_SETTINGS: true
+        }}
+      >
+        <MainNav />
+      </TestWrapper>
+    )
+
+    expect(setModuleConfigPreference).toBeCalledWith({
+      orderedModules: DEFAULT_MODULES_ORDER,
+      selectedModules
+    })
   })
 })

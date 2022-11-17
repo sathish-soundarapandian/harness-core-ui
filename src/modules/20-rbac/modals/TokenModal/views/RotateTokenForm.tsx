@@ -18,7 +18,7 @@ import {
   ModalErrorHandlerBinding,
   Text,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@common/components'

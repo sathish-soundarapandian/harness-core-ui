@@ -21,7 +21,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   useToaster
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { ConnectorInfoDTO, ConnectorRequestBody } from 'services/cd-ng'
 import { useCreateConnector } from 'services/cd-ng'
 import { DialogWithExtensionContext } from '@ce/common/DialogWithExtension/DialogWithExtension'

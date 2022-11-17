@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { StepWizard } from '@wings-software/uicore'
+import { StepWizard } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'

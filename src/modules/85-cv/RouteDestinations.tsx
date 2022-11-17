@@ -149,6 +149,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.CHANGEINTELLIGENCE_FUNCTIO
 RbacFactory.registerResourceTypeHandler(ResourceType.MONITOREDSERVICE, {
   icon: 'cv-main',
   label: 'cv.monitoredServices.title',
+  labelSingular: 'cv.monitoredServices.heading',
   category: ResourceCategory.CHANGEINTELLIGENCE_FUNCTION,
   permissionLabels: {
     [PermissionIdentifier.VIEW_MONITORED_SERVICE]: <String stringID="rbac.permissionLabels.view" />,

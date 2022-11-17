@@ -8,7 +8,7 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { Icon, Tab, Tabs } from '@wings-software/uicore'
+import { Icon, Tab, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ResourcesInterface, FreezeObj, ValidationErrorType } from '@freeze-windows/types'
@@ -93,7 +93,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
           title={
             <span>
               <Icon name="services" height={20} size={20} className={css.tabIcon} />
-              {getString('freezeWindows.freezeStudio.freezeConfiguration')}
+              {getString('common.coverage')}
             </span>
           }
         />

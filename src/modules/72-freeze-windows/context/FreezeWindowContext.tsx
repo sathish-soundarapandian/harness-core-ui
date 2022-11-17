@@ -9,7 +9,7 @@ import React, { useContext } from 'react'
 import { noop } from 'lodash-es'
 import { parse } from 'yaml'
 
-import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
@@ -128,8 +128,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
       const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
       updateFreeze({ ...freezeObj, oldFreezeObj: { ...freezeObj } })
       setIsActiveFreeze(
-        getFreezeStatus(freezeObjData.data?.currentOrUpcomingWindow, freezeObjData.data?.status === 'Enabled') ===
-          FreezeStatus['ACTIVE']
+        getFreezeStatus(freezeObjData.data, freezeObjData.data?.status === 'Enabled') === FreezeStatus['ACTIVE']
       )
       setIsUpdatingFreeze(false)
     }

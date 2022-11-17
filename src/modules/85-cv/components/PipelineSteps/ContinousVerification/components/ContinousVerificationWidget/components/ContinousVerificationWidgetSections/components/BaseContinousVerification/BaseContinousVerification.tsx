@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 

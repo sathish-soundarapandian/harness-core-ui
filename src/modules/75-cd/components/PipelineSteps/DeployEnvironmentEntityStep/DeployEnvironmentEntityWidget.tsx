@@ -18,21 +18,23 @@ import {
   Formik,
   FormikForm,
   getMultiTypeFromValue,
-  Intent,
   Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Toggle,
   useToggleOpen
 } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import { StringKeys, useStrings } from 'framework/strings'
 
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
@@ -69,6 +71,7 @@ export default function DeployEnvironmentEntityWidget({
   const { getString } = useStrings()
   const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
   const isEnvGroupFFEnabled = useFeatureFlag(FeatureFlag.ENV_GROUP)
+  const { scope } = usePipelineContext()
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
 
@@ -157,7 +160,15 @@ export default function DeployEnvironmentEntityWidget({
           }
         }
       })
-      updateValuesInFormikAndPropogate(newValues)
+      updateValuesInFormikAndPropogate(
+        scope === Scope.PROJECT
+          ? newValues
+          : {
+              environments: RUNTIME_INPUT_VALUE as any,
+              category: 'multi',
+              parallel: true
+            }
+      )
       setRadioValue(getString('environments'))
     }
 
@@ -175,7 +186,14 @@ export default function DeployEnvironmentEntityWidget({
         delete draft.clusters
         delete draft.environmentGroup
       })
-      updateValuesInFormikAndPropogate(newValues)
+      updateValuesInFormikAndPropogate(
+        scope === Scope.PROJECT
+          ? newValues
+          : {
+              environment: RUNTIME_INPUT_VALUE,
+              category: 'single'
+            }
+      )
       setRadioValue(getString('environments'))
     }
 
@@ -191,7 +209,14 @@ export default function DeployEnvironmentEntityWidget({
         delete draft.environment
         delete draft.environments
       })
-      updateValuesInFormikAndPropogate(newValues)
+      updateValuesInFormikAndPropogate(
+        scope === Scope.PROJECT
+          ? newValues
+          : {
+              environmentGroup: RUNTIME_INPUT_VALUE,
+              category: 'group'
+            }
+      )
       setRadioValue(getString('common.environmentGroup.label'))
     }
 
@@ -203,22 +228,13 @@ export default function DeployEnvironmentEntityWidget({
     if (formikRef.current) {
       const formValues = formikRef.current.values
       if (checked) {
-        // The gitOpsEnabled check is to be removed once multi environments is supported for gitOps
-        if (gitOpsEnabled) {
-          if (formValues.environment) {
-            openSwitchToEnvironmentGroupDialog()
-          } else {
-            handleSwitchToEnvironmentGroupConfirmation(true)
-          }
+        if (formValues.environment && scope === Scope.PROJECT) {
+          openSwitchToMultiEnvironmentDialog()
         } else {
-          if (formValues.environment) {
-            openSwitchToMultiEnvironmentDialog()
-          } else {
-            handleSwitchToMultiEnvironmentConfirmation(true)
-          }
+          handleSwitchToMultiEnvironmentConfirmation(true)
         }
       } else {
-        if (!isEmpty(formValues.environments) || !isEmpty(formValues.environmentGroup)) {
+        if ((!isEmpty(formValues.environments) || !isEmpty(formValues.environmentGroup)) && scope === Scope.PROJECT) {
           openSwitchToSingleEnvironmentDialog()
         } else {
           handleSwitchToSingleEnvironmentConfirmation(true)
@@ -229,14 +245,14 @@ export default function DeployEnvironmentEntityWidget({
 
   function handleEnvironmentGroupToggle(event: BaseSyntheticEvent): void {
     if (event.target.value === getString('environments')) {
-      if (formikRef.current?.values.environmentGroup) {
+      if (formikRef.current?.values.environmentGroup && scope === Scope.PROJECT) {
         openSwitchToMultiEnvironmentDialog()
       } else {
         handleSwitchToMultiEnvironmentConfirmation(true)
         setRadioValue(event?.target.value)
       }
     } else {
-      if (formikRef.current?.values.environments) {
+      if (formikRef.current?.values.environments && scope === Scope.PROJECT) {
         openSwitchToEnvironmentGroupDialog()
       } else {
         handleSwitchToEnvironmentGroupConfirmation(true)
@@ -264,19 +280,15 @@ export default function DeployEnvironmentEntityWidget({
           const isMultiEnvironment = values.category === 'multi'
           const isEnvironmentGroup = values.category === 'group'
 
-          // The first check is to be removed once BE supports multi environments for gitops
-          const toggleLabel = gitOpsEnabled
-            ? getString('cd.pipelineSteps.environmentTab.envGroupToggleText')
-            : getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
-                name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
-              })
+          const toggleLabel = getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
+            name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
+          })
 
           return (
             <FormikForm>
-              {/* Gitops stage css to be removed once BE supports multi environments for gitops */}
               <div
                 className={cx(css.environmentEntityWidget, {
-                  [css.centerRadio]: gitOpsEnabled || !isEnvGroupFFEnabled
+                  [css.centerRadio]: !isEnvGroupFFEnabled
                 })}
               >
                 <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
@@ -287,8 +299,7 @@ export default function DeployEnvironmentEntityWidget({
                       label={toggleLabel}
                       tooltipId={'multiEnvInfraToggle'}
                     />
-                    {/* !gitOpsEnabled check is to be removed once BE supports multi environments for gitops */}
-                    {(isMultiEnvironment || isEnvironmentGroup) && isEnvGroupFFEnabled && !gitOpsEnabled && (
+                    {(isMultiEnvironment || isEnvironmentGroup) && isEnvGroupFFEnabled && (
                       <RadioGroup
                         onChange={handleEnvironmentGroupToggle}
                         options={[
@@ -318,6 +329,7 @@ export default function DeployEnvironmentEntityWidget({
                     deploymentType={deploymentType}
                     customDeploymentRef={customDeploymentRef}
                     gitOpsEnabled={gitOpsEnabled}
+                    scope={scope}
                   />
                 ) : (
                   <DeployEnvironment

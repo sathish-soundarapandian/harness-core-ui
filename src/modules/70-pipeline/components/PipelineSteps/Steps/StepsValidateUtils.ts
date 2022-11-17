@@ -8,7 +8,7 @@
 import * as yup from 'yup'
 import type { StringSchema, Lazy, ArraySchema, Schema } from 'yup'
 import type { FormikErrors } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { get, set, uniq, uniqBy, isEmpty, isUndefined } from 'lodash-es'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'

@@ -7,10 +7,14 @@
 
 import React from 'react'
 import type { FormikContextType } from 'formik'
-import { Layout, Icon, Container, FormInput } from '@harness/uicore'
+import { Layout, Icon, Text, Container, FormInput } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
+import { ErrorBudgetCard } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
+import { SLOTargetChart } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
+import { getCustomOptionsForSLOTargetChart } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
 import { CalenderValuePreview, LabelAndValue } from '../CreatePreview/CreatePreview'
 
 interface SLOTargetProps {
@@ -19,6 +23,10 @@ interface SLOTargetProps {
 
 const SLOTarget = ({ formikProps }: SLOTargetProps): JSX.Element => {
   const { getString } = useStrings()
+
+  const { periodType, periodLength = '', periodLengthType, SLOTargetPercentage } = formikProps.values
+  const errorBudgetCardProps = { periodType, periodLength, periodLengthType, SLOTargetPercentage }
+
   return (
     <>
       <Layout.Horizontal spacing="medium" margin={{ bottom: 'small' }}>
@@ -44,6 +52,26 @@ const SLOTarget = ({ formikProps }: SLOTargetProps): JSX.Element => {
           }}
         />
       </Container>
+      <Layout.Horizontal spacing="xxxlarge" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+        <Container width={450}>
+          <SLOTargetChart
+            bottomLabel={
+              <Text
+                color={Color.GREY_500}
+                font={{ variation: FontVariation.SMALL_SEMI }}
+                margin={{ top: 'large', left: 'xxxlarge' }}
+                icon="symbol-square"
+                iconProps={{ color: Color.PRIMARY_4 }}
+              >
+                {getString('cv.SLIMetricRatio')}
+              </Text>
+            }
+            customChartOptions={getCustomOptionsForSLOTargetChart(formikProps.values?.SLOTargetPercentage)}
+            dataPoints={[]}
+          />
+        </Container>
+        <ErrorBudgetCard {...errorBudgetCardProps} />
+      </Layout.Horizontal>
     </>
   )
 }

@@ -257,7 +257,31 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                       >
                         {currentNode.name}
                       </Text>
-                      <Icon name="file" />
+                      {currentNode.description && (
+                        <Text
+                          margin={{ right: 'xsmall' }}
+                          tooltip={
+                            <Container width={100} padding={'small'}>
+                              {currentNode.description}
+                            </Container>
+                          }
+                        >
+                          <Icon name="description" />
+                        </Text>
+                      )}
+                      {!!currentNode?.tags?.length && (
+                        <Text
+                          tooltip={
+                            <Container padding={'small'} width={100}>
+                              {currentNode.tags.map((tag, i) => (
+                                <Text key={`${tag.key}-${i}`}>{tag.key}</Text>
+                              ))}
+                            </Container>
+                          }
+                        >
+                          <Icon name="main-tags" /> {currentNode.tags.length}
+                        </Text>
+                      )}
                     </Container>
                     <Container padding={{ left: 'small' }} flex={{ justifyContent: 'space-between' }}>
                       <Container flex>

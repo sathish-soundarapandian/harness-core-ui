@@ -9,7 +9,7 @@ import React from 'react'
 
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { Card, Heading, Layout, PageSpinner } from '@wings-software/uicore'
+import { Card, Heading, Layout, PageSpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'

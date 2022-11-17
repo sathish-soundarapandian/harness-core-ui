@@ -18,10 +18,9 @@ import {
   Layout,
   MultiTypeInputType,
   StepProps,
-  Text,
-  Color
+  Text
 } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'

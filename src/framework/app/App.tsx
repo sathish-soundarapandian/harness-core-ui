@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { FocusStyleManager } from '@blueprintjs/core'
-import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@wings-software/uicore'
+import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
@@ -36,8 +36,9 @@ import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
-import './App.scss'
 import { ToolTipProvider } from 'framework/tooltip/TooltipContext'
+import { FeatureFlagsProvider } from 'framework/FeatureFlags/FeatureFlagsProvider'
+import './App.scss'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -187,24 +188,26 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
         <StringsContextProvider initialStrings={props.strings}>
           <ToolTipProvider>
             <PreferenceStoreProvider>
-              <AppStoreProvider>
-                <AppErrorBoundary>
-                  <FeaturesProvider>
-                    <LicenseStoreProvider>
-                      <HelpPanelProvider>
-                        <PermissionsProvider>
-                          <SideNavProvider>
-                            <Suspense fallback={<PageSpinner />}>
-                              <RouteDestinations />
-                            </Suspense>
-                          </SideNavProvider>
-                        </PermissionsProvider>
-                      </HelpPanelProvider>
-                      <ThirdPartyIntegrations />
-                    </LicenseStoreProvider>
-                  </FeaturesProvider>
-                </AppErrorBoundary>
-              </AppStoreProvider>
+              <FeatureFlagsProvider>
+                <AppStoreProvider>
+                  <AppErrorBoundary>
+                    <FeaturesProvider>
+                      <LicenseStoreProvider>
+                        <HelpPanelProvider>
+                          <PermissionsProvider>
+                            <SideNavProvider>
+                              <Suspense fallback={<PageSpinner />}>
+                                <RouteDestinations />
+                              </Suspense>
+                            </SideNavProvider>
+                          </PermissionsProvider>
+                        </HelpPanelProvider>
+                        <ThirdPartyIntegrations />
+                      </LicenseStoreProvider>
+                    </FeaturesProvider>
+                  </AppErrorBoundary>
+                </AppStoreProvider>
+              </FeatureFlagsProvider>
             </PreferenceStoreProvider>
           </ToolTipProvider>
         </StringsContextProvider>

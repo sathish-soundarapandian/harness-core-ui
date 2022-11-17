@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { ButtonVariation, Container, FormInput, Icon, NoDataCard, TableV2, Text } from '@wings-software/uicore'
+import { ButtonVariation, Container, FormInput, Icon, NoDataCard, TableV2, Text } from '@harness/uicore'
 import type { CellProps } from 'react-table'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'

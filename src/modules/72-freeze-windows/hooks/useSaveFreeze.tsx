@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { getErrorInfoFromErrorObject, useToaster } from '@wings-software/uicore'
+import { getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
 import { useCreateFreeze, useUpdateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'

@@ -8,8 +8,8 @@
 import React from 'react'
 import { slice } from 'lodash-es'
 import cx from 'classnames'
-import type { ContainerProps } from '@wings-software/uicore/dist/components/Container/Container'
-import { Button, Container } from '@wings-software/uicore'
+import type { ContainerProps } from '@harness/uicore/dist/components/Container/Container'
+import { Button, Container } from '@harness/uicore'
 import { SEGMENT_PRIMARY_COLOR } from '@cf/utils/CFUtils'
 import css from './StackedCircleContainer.module.scss'
 

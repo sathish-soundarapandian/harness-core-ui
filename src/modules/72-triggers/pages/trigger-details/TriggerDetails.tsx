@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, TabNavigation } from '@wings-software/uicore'
+import { Container, Layout, TabNavigation } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Page } from '@common/exports'

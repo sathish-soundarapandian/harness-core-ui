@@ -15,8 +15,8 @@ import { projectPathProps, modulePathProps } from '@common/utils/routeUtils'
 import { useUpdateFreezeStatus, useDeleteManyFreezes } from 'services/cd-ng'
 import FreezeWindowsPage from '../FreezeWindowsPage'
 import { projectLevelFreezeList } from './mocks/freezeListMock'
-import getGlobalfreezeMock from './mocks/getGlobalfreezeMock.json'
-import getGlobalFreezeWithBannerDetailsMock from './mocks/getGlobalFreezeWithBannerDetailsMock.json'
+import { getGlobalfreezeDisabledOrgScope } from './mocks/getGlobalfreezeMock'
+import { getGlobalFreezeWithBannerDetailsNoFreeze } from './mocks/getGlobalFreezeWithBannerDetailsMock'
 
 jest.mock('services/cd-ng', () => ({
   useGetFreezeList: jest.fn().mockImplementation(() => ({
@@ -26,10 +26,10 @@ jest.mock('services/cd-ng', () => ({
   })),
   useGetGlobalFreeze: jest
     .fn()
-    .mockImplementation(() => ({ loading: false, data: getGlobalfreezeMock, refetch: jest.fn() })),
+    .mockImplementation(() => ({ loading: false, data: getGlobalfreezeDisabledOrgScope, refetch: jest.fn() })),
   useGetGlobalFreezeWithBannerDetails: jest
     .fn()
-    .mockImplementation(() => ({ loading: false, data: getGlobalFreezeWithBannerDetailsMock, refetch: jest.fn() })),
+    .mockImplementation(() => ({ loading: false, data: getGlobalFreezeWithBannerDetailsNoFreeze, refetch: jest.fn() })),
   useGlobalFreeze: jest.fn().mockImplementation(() => ({ loading: false, data: null, refetch: jest.fn() })),
   useUpdateFreezeStatus: jest.fn().mockReturnValue({ data: null, loading: false }),
   useDeleteManyFreezes: jest.fn().mockReturnValue({ data: null, loading: false })
@@ -37,23 +37,27 @@ jest.mock('services/cd-ng', () => ({
 
 jest.useFakeTimers()
 
-const PROJECT_LEVEL_ROUTE = routes.toFreezeWindows({ ...projectPathProps, ...modulePathProps })
+const PROJECT_LEVEL_FREEZE_ROUTE = routes.toFreezeWindows({ ...projectPathProps, ...modulePathProps })
 
-const PROJECT_LEVEL_PATH_PARAMS = {
+const PROJECT_LEVEL_FREEZE_ROUTE_PARAMS = {
   accountId: 'accountId',
   orgIdentifier: 'orgIdentifier',
   projectIdentifier: 'projectIdentifier',
   module: 'cd'
 }
 
-const renderFreezeWindows = (path = PROJECT_LEVEL_ROUTE): RenderResult =>
+const renderFreezeWindows = (path = PROJECT_LEVEL_FREEZE_ROUTE): RenderResult =>
   render(
-    <TestWrapper path={path} pathParams={PROJECT_LEVEL_PATH_PARAMS} defaultAppStoreValues={defaultAppStoreValues}>
+    <TestWrapper
+      path={path}
+      pathParams={PROJECT_LEVEL_FREEZE_ROUTE_PARAMS}
+      defaultAppStoreValues={defaultAppStoreValues}
+    >
       <FreezeWindowsPage />
     </TestWrapper>
   )
 
-describe('Freeze Windows Page', () => {
+describe('Freeze Windows - Project Level', () => {
   test('render table and go to a specific freeze window', async () => {
     renderFreezeWindows()
     const rows = await screen.findAllByRole('row')
@@ -65,7 +69,7 @@ describe('Freeze Windows Page', () => {
     ).toHaveAttribute(
       'href',
       routes.toFreezeWindowStudio({
-        ...PROJECT_LEVEL_PATH_PARAMS,
+        ...PROJECT_LEVEL_FREEZE_ROUTE_PARAMS,
         windowIdentifier: projectLevelFreezeList.data.content[0].identifier
       } as any)
     )

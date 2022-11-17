@@ -138,6 +138,7 @@ function ServiceVariableOverride({
               <Form>
                 <FormInput.Select
                   name="name"
+                  className={css.variableListMenu}
                   selectProps={{
                     allowCreatingNewItems: true
                   }}

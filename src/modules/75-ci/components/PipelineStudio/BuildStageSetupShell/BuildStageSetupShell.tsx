@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { Expander } from '@blueprintjs/core'
 import { cloneDeep, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
-import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { HarnessIconName } from '@harness/icons'
 import {

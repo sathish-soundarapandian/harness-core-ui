@@ -33,19 +33,20 @@ export interface ExecutionStageProps {
   isMatrixStage?: boolean
 }
 
-const stageIconMap: Partial<Record<StageType, IconName>> = {
-  [StageType.BUILD]: 'ci-solid',
-  [StageType.DEPLOY]: 'cd-solid',
-  [StageType.SECURITY]: 'sto-color-filled',
-  [StageType.FEATURE]: 'ff-solid',
-  [StageType.APPROVAL]: 'approval-stage-icon',
-  [StageType.CUSTOM]: 'pipeline-custom'
+const stageIconMap: Partial<Record<StageType, { name: IconName; color?: string }>> = {
+  [StageType.BUILD]: { name: 'ci-solid' },
+  [StageType.DEPLOY]: { name: 'cd-solid' },
+  [StageType.SECURITY]: { name: 'sto-color-filled' },
+  [StageType.FEATURE]: { name: 'ff-solid' },
+  [StageType.APPROVAL]: { name: 'approval-stage-icon' },
+  [StageType.CUSTOM]: { name: 'pipeline-custom' },
+  [StageType.MATRIX]: { name: 'looping', color: Color.GREY_900 }
 }
 
 export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage, isMatrixStage, row }) => {
   const pipelineExecution = row?.original
   const { getString } = useStrings()
-  const iconName = stageIconMap[stage.type as StageType]
+  const stageIconProps = stageIconMap[stage.type as StageType]
   const data: PipelineExecutionSummary = stage.data || {}
   const stageFailureMessage = data?.failureInfo?.message
   // TODO: others stages UX not available yet
@@ -56,7 +57,7 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
   return (
     <div className={cx(css.stage, isMatrixStage && css.matrixStage)}>
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-        {iconName && <Icon name={iconName} size={16} />}
+        {stageIconProps && <Icon size={16} {...stageIconProps} />}
         <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
           {stage.name}
         </Text>

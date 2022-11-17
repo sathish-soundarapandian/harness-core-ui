@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
+import { unstable_batchedUpdates } from 'react-dom'
 import { useFormikContext } from 'formik'
-import { get, isEmpty, isNil, omit, pick, set, unset } from 'lodash-es'
+import { get, isBoolean, isEmpty, isNil, omit, pick, set, unset } from 'lodash-es'
 import cx from 'classnames'
 
-import { Color, Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'
@@ -249,7 +251,16 @@ function MultiEnvironmentsInputSetForm({
              * Because we need to repeat the same selection steps without the field*/
             deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll
           }}
-          onUpdate={data => formik.setFieldValue(`${path}.${pathToEnvironments}`, get(data, pathToEnvironments))}
+          onUpdate={data => {
+            unstable_batchedUpdates(() => {
+              formik.setFieldValue(`${path}.${pathToEnvironments}`, get(data, pathToEnvironments))
+
+              const deployToAll = get(data, 'environmentGroup.deployToAll')
+              if (isBoolean(deployToAll)) {
+                formik.setFieldValue(`${path}.environmentGroup.deployToAll`, deployToAll)
+              }
+            })
+          }}
         />
       )}
 

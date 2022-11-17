@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -32,7 +32,7 @@ export function ConfigVariables(props: TerraformPlanVariableStepProps): React.Re
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
-      {variablesData?.spec?.configuration?.configFiles?.store?.spec?.gitFetchType && (
+      {variablesData?.spec?.configuration?.configFiles?.store?.spec && (
         <>
           <Text className={css.stepTitle}>{getString('pipelineSteps.configFiles')}</Text>
           <VariablesListTable

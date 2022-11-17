@@ -6,17 +6,19 @@
  */
 
 import React from 'react'
-import { Card, HarnessDocTooltip } from '@wings-software/uicore'
+import { Card, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
-import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { setupMode } from '../PipelineStepsUtil'
+import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import type { CustomDeploymentServiceInputFormProps } from './CustomDeploymentServiceSpecInterface'
 import css from './CustomDeploymentServiceSpec.module.scss'
 
@@ -27,7 +29,7 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
-
+  const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -37,6 +39,10 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!NG_ARTIFACT_SOURCES,
+    stage?.stage as DeploymentStageElementConfig
+  )
 
   return (
     <div className={css.serviceDefinition}>
@@ -53,12 +59,21 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
+
+            {isPrimaryArtifactSources ? (
+              <ServiceV2ArtifactsSelection
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            ) : (
+              <ArtifactsSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            )}
           </Card>
         </>
       )}
@@ -68,7 +83,13 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={css.tabSubHeading}>{getString('common.variables')}</div>
+          <div
+            className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+            data-tooltip-id={getVariablesHeaderTooltipId(selectedDeploymentType)}
+          >
+            {getString('common.variables')}
+            <HarnessDocTooltip tooltipId={getVariablesHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+          </div>
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}

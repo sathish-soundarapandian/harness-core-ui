@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Container, Icon, Checkbox, TextInput } from '@wings-software/uicore'
+import { Container, Icon, Checkbox, TextInput } from '@harness/uicore'
 import cx from 'classnames'
 import { debounce } from 'lodash-es'
 import { Virtuoso } from 'react-virtuoso'

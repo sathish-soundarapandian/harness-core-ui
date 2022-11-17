@@ -6,7 +6,7 @@
  */
 
 import React, { FC } from 'react'
-import { ButtonVariation, Heading, Layout, Text } from '@wings-software/uicore'
+import { ButtonVariation, Heading, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Segment } from 'services/cf'

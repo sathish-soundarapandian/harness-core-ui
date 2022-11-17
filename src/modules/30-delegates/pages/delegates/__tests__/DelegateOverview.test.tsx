@@ -30,7 +30,11 @@ describe('Delegates Overview Page', () => {
   test('render data', () => {
     const { container } = render(
       <TestWrapper>
-        <DelegateOverview delegate={DelegateGroupMock} delegateProfile={delegateProfile} />
+        <DelegateOverview
+          delegate={DelegateGroupMock}
+          delegateProfile={delegateProfile}
+          showConnectivityStatus={true}
+        />
       </TestWrapper>
     )
 

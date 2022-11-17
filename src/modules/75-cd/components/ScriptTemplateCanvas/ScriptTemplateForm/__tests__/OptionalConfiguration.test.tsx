@@ -10,7 +10,7 @@ import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { Form } from 'formik'
 
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ShellScriptFormData } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { OptionalConfigurationWithRef } from '../OptionalConfigurations'

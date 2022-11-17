@@ -7,16 +7,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react'
 import * as Yup from 'yup'
-import {
-  Container,
-  FormikForm,
-  Layout,
-  FormInput,
-  Formik,
-  Button,
-  SelectOption,
-  PageSpinner
-} from '@wings-software/uicore'
+import { Container, FormikForm, Layout, FormInput, Formik, Button, SelectOption, PageSpinner } from '@harness/uicore'
 import { buildSumoLogicPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import type { ConnectorConfigDTO } from 'services/cd-ng'

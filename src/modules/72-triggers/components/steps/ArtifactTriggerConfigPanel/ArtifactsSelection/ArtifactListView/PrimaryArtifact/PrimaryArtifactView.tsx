@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, Color, Icon, Layout, Text } from '@harness/uicore'
+import { Button, Icon, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'

@@ -16,7 +16,7 @@ import {
   Text,
   FormError,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, get, isEmpty, pick } from 'lodash-es'
 import { Formik } from 'formik'

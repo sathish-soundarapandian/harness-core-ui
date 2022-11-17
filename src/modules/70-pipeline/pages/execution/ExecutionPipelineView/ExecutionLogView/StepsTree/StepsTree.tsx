@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import cx from 'classnames'
 import { get, omit, defaultTo } from 'lodash-es'
 

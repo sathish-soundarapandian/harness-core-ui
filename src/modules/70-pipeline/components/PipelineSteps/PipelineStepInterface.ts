@@ -55,6 +55,8 @@ export enum StepType {
   RestoreCacheGCS = 'RestoreCacheGCS',
   SaveCacheS3 = 'SaveCacheS3',
   RestoreCacheS3 = 'RestoreCacheS3',
+  SaveCacheHarness = 'SaveCacheHarness',
+  RestoreCacheHarness = 'RestoreCacheHarness',
   DockerHub = 'BuildAndPushDockerRegistry',
   GCS = 'GCSUpload',
   S3 = 'S3Upload',
@@ -122,7 +124,8 @@ export enum StepType {
   ShellScriptProvision = 'ShellScriptProvision',
   ChaosExperiment = 'Chaos',
   Elastigroup = 'Elastigroup',
-  ElastigroupService = 'ElastigroupService'
+  ElastigroupService = 'ElastigroupService',
+  ElastigroupRollback = 'ElastigroupRollback'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

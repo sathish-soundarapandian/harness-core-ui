@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TooltipContextProvider } from '@wings-software/uicore'
+import { TooltipContextProvider } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import StringWithTooltip, { StringWithTooltipProps } from '@common/components/StringWithTooltip/StringWithTooltip'
 

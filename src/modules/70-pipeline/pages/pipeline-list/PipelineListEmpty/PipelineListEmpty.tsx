@@ -6,12 +6,13 @@
  */
 
 import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, Icon, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import React, { ReactElement, ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { getModuleRunType } from '@pipeline/utils/runPipelineUtils'
+import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import CIPipelineIllustration from '../images/ci-pipeline-illustration.svg'
 import CDPipelineIllustration from '../images/cd-pipeline-illustration.svg'
 import CFPipelineIllustration from '../images/cf-pipeline-illustration.svg'
@@ -38,7 +39,7 @@ export function PipelineListEmpty({ hasFilter, resetFilter, createPipeline }: Pi
       <Layout.Vertical spacing="small" flex={{ justifyContent: 'center', alignItems: 'center' }} width={720}>
         {hasFilter ? (
           <>
-            <Icon size={50} name={module === 'ci' ? 'ci-main' : 'cd-main'} margin={{ bottom: 'large' }} />
+            <img src={EmptySearchResults} className={css.image} />
             <Text
               margin={{ top: 'large', bottom: 'small' }}
               font={{ weight: 'bold', size: 'medium' }}
@@ -56,7 +57,7 @@ export function PipelineListEmpty({ hasFilter, resetFilter, createPipeline }: Pi
           <>
             <img src={module ? illustration[module] : CDPipelineIllustration} className={css.image} />
             <Text className={css.noPipelineText} margin={{ top: 'medium', bottom: 'small' }}>
-              {getString('pipeline.noRunsText', { moduleRunType: getModuleRunType(module) })}
+              {getString('pipeline.noPipelinesLabel', { moduleRunType: getModuleRunType(module) })}
             </Text>
             <Text className={css.aboutPipeline} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
               {getString('pipeline-list.aboutPipeline')}

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { DateRangePickerButton, Layout, DropDown, SelectOption } from '@wings-software/uicore'
+import { DateRangePickerButton, Layout, DropDown, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
 import { useGetAuditEventList } from 'services/audit'

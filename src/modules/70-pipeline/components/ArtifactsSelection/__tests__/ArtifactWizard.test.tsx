@@ -16,7 +16,7 @@ import {
   render,
   waitFor
 } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper, findDialogContainer, queryByNameAttribute } from '@common/utils/testUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'

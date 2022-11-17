@@ -144,10 +144,10 @@ exports[`TargetDetailPage TargetDetailPage should render data correctly 1`] = `
             t1
           </h3>
           <div
-            class="StyledProps--font StyledProps--main identifierContainer"
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-small"
           >
             <span
-              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small StyledProps--margin-right-xsmall"
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"
             >
               idLabel
             </span>
@@ -702,10 +702,10 @@ exports[`TargetDetailPage TargetDetailPage should render its segments 1`] = `
             t1
           </h3>
           <div
-            class="StyledProps--font StyledProps--main identifierContainer"
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-small"
           >
             <span
-              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small StyledProps--margin-right-xsmall"
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"
             >
               idLabel
             </span>

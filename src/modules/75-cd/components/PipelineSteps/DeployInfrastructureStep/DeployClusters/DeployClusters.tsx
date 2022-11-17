@@ -81,7 +81,7 @@ function DeployClusters({
       setClustersSelectOptions([
         { label: getString('cd.pipelineSteps.environmentTab.allClustersSelected'), value: getString('all') },
         ...clusters.map(cluster => {
-          return { label: defaultTo(cluster.clusterRef, ''), value: defaultTo(cluster.clusterRef, '') }
+          return { label: defaultTo(cluster.name, ''), value: defaultTo(cluster.clusterRef, '') }
         })
       ])
     }

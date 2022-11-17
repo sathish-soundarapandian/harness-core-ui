@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, IconName } from '@wings-software/uicore'
+import { Icon, IconName } from '@harness/uicore'
 import cx from 'classnames'
 import { NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'

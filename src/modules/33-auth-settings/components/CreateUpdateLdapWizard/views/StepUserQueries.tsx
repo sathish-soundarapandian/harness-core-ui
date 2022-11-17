@@ -9,19 +9,17 @@ import React, { useMemo, useRef, useState } from 'react'
 import produce from 'immer'
 import {
   Button,
-  FontVariation,
   Text,
   StepProps,
   Layout,
   ButtonVariation,
   Icon,
-  Color,
   Container,
   Formik,
   FormikForm,
-  FormInput,
-  Intent
+  FormInput
 } from '@harness/uicore'
+import { FontVariation, Color, Intent } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'

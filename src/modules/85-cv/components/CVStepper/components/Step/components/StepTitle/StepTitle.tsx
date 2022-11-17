@@ -7,12 +7,22 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { Text, Layout, FontVariation, Icon } from '@harness/uicore'
+import { Text, Layout, Icon } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+import { useStrings } from 'framework/strings'
 import type { StepTitleInterface } from './StepTitle.types'
 import { getStateByStatus } from './StepTitle.utils'
 import { StepStatus } from '../../Step.constants'
 
-export const StepTitle = ({ step, index, isCurrent, stepStatus, onClick }: StepTitleInterface): JSX.Element => {
+export const StepTitle = ({
+  step,
+  index,
+  isCurrent,
+  stepStatus,
+  onClick,
+  isOptional
+}: StepTitleInterface): JSX.Element => {
+  const { getString } = useStrings()
   const isErrorOrSuccess = stepStatus !== StepStatus.INCONCLUSIVE
   const { icon, labelColor, iconColor, cursor } = getStateByStatus(stepStatus)
   return (
@@ -30,7 +40,7 @@ export const StepTitle = ({ step, index, isCurrent, stepStatus, onClick }: StepT
           <Icon name={icon} size={20} margin="small" color={iconColor} />
         )}
         <Text font={{ variation: FontVariation.H5 }} color={labelColor}>
-          {step.title}
+          {step.title} {isOptional && getString('titleOptional')}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>

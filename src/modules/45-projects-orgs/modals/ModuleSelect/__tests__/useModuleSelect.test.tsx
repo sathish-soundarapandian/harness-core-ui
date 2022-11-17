@@ -63,8 +63,7 @@ describe('module select test', () => {
       CVNG_ENABLED: true,
       CING_ENABLED: true,
       CENG_ENABLED: true,
-      CFNG_ENABLED: true,
-      FREE_PLAN_ENABLED: true
+      CFNG_ENABLED: true
     }))
     const { getByText } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>

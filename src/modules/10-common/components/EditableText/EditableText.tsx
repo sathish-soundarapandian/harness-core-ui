@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import ContentEditable from 'react-contenteditable'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 
 import css from './EditableText.module.scss'
 

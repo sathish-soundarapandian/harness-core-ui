@@ -45,7 +45,7 @@ describe('Freeze Window Studio OverView Section', () => {
       </TestWrapper>
     )
 
-    expect(getByText('freezeWindows.freezeStudio.freezeOverview')).toBeInTheDocument()
+    expect(getByText('overview')).toBeInTheDocument()
     await userEvent.click(getByText('continue'))
     await waitFor(() => {
       expect(getByText('common.validation.nameIsRequired')).toBeInTheDocument()

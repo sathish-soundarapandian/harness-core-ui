@@ -8,7 +8,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { debounce } from 'lodash-es'
-import { Page, Tabs, Container, Layout, Button, ButtonVariation, Heading, useToaster } from '@wings-software/uicore'
+import { Page, Tabs, Container, Layout, Button, ButtonVariation, Heading, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

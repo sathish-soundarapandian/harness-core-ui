@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, set, get, isArray, merge } from 'lodash-es'
 import * as Yup from 'yup'

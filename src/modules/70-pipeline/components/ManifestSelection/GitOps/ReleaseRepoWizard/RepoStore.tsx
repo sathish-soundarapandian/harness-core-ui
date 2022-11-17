@@ -21,7 +21,7 @@ import {
   FormikForm,
   ButtonSize,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'

@@ -16,7 +16,7 @@ import {
   SelectOption,
   FormInput,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'

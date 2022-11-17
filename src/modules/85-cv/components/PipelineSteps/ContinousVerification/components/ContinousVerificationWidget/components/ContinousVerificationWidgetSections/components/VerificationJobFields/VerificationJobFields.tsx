@@ -6,7 +6,7 @@
  */
 
 import React, { CSSProperties, useMemo } from 'react'
-import { AllowedTypes, FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
 import { useStrings } from 'framework/strings'

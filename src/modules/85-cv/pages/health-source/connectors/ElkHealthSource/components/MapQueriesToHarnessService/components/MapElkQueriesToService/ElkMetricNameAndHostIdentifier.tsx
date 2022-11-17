@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useCallback, useMemo } from 'react'
-import { Container, FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import { Container, FormInput, MultiTypeInputType } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

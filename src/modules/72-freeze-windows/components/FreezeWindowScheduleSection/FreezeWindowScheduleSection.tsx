@@ -7,7 +7,8 @@
 
 import React, { useCallback } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Card, Container, Heading, ButtonVariation, Button, Layout, Color } from '@harness/uicore'
+import { Card, Container, Heading, ButtonVariation, Button, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { FreezeWindow } from 'services/cd-ng'
@@ -43,7 +44,7 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
       <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-        {getString('freezeWindows.freezeStudio.freezeSchedule')}
+        {getString('common.schedule')}
       </Heading>
       <Card className={css.sectionCard}>
         <ScheduleFreezeForm

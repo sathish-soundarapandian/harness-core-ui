@@ -99,9 +99,10 @@ export class Dependency extends PipelineStep<DependencyData> {
 
   protected type = StepType.Dependency
   protected stepName = 'Configure Service Dependency'
-  protected stepIcon: IconName = 'dependency-step'
+  protected stepIcon: IconName = 'dependency-ci-step'
   protected stepIconColor = '#004BA4'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: DependencyData = {
     identifier: '',

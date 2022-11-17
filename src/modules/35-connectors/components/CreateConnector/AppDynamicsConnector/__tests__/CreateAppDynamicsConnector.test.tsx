@@ -8,7 +8,7 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-import { Container, FormInput } from '@wings-software/uicore'
+import { Container, FormInput } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

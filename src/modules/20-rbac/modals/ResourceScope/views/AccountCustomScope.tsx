@@ -16,10 +16,9 @@ import {
   SelectOption,
   ButtonVariation,
   PageSpinner,
-  Color,
-  FontVariation,
   ButtonSize
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { useLayoutEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import type { Views } from '@wings-software/uicore'
+import type { Views } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'

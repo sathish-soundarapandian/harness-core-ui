@@ -5,8 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.alignContainerRight {
+.stepContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.borderLeft {
   border-left: 2px solid var(--grey-200);
+}
+
+.alignContainerRight {
   padding: 1em !important;
   margin: 0 !important;
   margin-left: 16px !important;

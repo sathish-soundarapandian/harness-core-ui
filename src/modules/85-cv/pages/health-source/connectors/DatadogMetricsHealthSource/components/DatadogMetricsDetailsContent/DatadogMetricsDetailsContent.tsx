@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import type { ITagInputProps } from '@blueprintjs/core'
-import { FormInput, SelectOption } from '@wings-software/uicore'
+import { FormInput, SelectOption } from '@harness/uicore'
 import { DatadogMetricsHealthSourceFieldNames } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.constants'
 import GroupName from '@cv/components/GroupName/GroupName'
 import type {

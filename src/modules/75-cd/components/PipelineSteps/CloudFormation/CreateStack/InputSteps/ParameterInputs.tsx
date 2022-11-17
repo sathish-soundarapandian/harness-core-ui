@@ -10,17 +10,8 @@ import { map, get, some } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { FormikContextType, FieldArray } from 'formik'
-import {
-  FormInput,
-  Text,
-  Color,
-  Container,
-  Layout,
-  Icon,
-  Button,
-  ButtonVariation,
-  MultiSelectOption
-} from '@harness/uicore'
+import { FormInput, Text, Container, Layout, Icon, Button, ButtonVariation, MultiSelectOption } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'

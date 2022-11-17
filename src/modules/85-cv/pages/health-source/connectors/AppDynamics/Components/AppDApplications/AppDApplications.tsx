@@ -16,7 +16,7 @@ import {
   MultiTypeInput,
   Text,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'

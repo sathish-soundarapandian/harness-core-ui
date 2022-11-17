@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, FontVariation, TableV2, Text, Layout } from '@harness/uicore'
+import { Container, TableV2, Text, Layout } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import moment from 'moment'
 import type { BusinessMapping } from 'services/ce'

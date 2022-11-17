@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { Dialog } from '@blueprintjs/core'
 import { pick } from 'lodash-es'
 import cx from 'classnames'

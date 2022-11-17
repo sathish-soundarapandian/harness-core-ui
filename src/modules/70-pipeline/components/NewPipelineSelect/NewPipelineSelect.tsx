@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import type { SelectOption } from '@wings-software/uicore'
-import { DropDown } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
+import { DropDown } from '@harness/uicore'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetPipelineList } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
@@ -52,6 +52,7 @@ export default function NewPipelineSelect(props: NewPipelineSelectProps): React.
 
   return (
     <DropDown
+      minWidth={120}
       buttonTestId="pipeline-select"
       onChange={option => {
         props.onPipelineSelect(option.value as string)

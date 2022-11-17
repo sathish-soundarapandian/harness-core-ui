@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { act, render, fireEvent, waitFor } from '@testing-library/react'
 import * as useFeaturesLib from '@common/hooks/useFeatures'

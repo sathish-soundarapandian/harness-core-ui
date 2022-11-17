@@ -9,7 +9,7 @@ import React from 'react'
 import { noop } from 'lodash-es'
 import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
 import { Formik, Form } from 'formik'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 

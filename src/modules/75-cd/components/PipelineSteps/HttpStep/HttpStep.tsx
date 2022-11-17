@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'

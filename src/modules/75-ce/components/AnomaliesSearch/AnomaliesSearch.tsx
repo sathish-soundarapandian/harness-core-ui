@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonSize, ButtonVariation, Layout, ExpandingSearchInput } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Layout, ExpandingSearchInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from '../../pages/anomalies-overview/AnomaliesOverviewPage.module.scss'
 

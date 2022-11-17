@@ -20,7 +20,7 @@ import {
   useConfirmationDialog,
   useToaster,
   TableV2
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { SecretResponseWrapper, useDeleteSecretV2 } from 'services/cd-ng'

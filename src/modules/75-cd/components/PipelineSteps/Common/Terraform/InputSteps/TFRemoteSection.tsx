@@ -19,7 +19,7 @@ import {
   Text,
   useToaster,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
 import { Connectors } from '@connectors/constants'

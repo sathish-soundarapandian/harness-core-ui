@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import classnames from 'classnames'
 import { isNumber } from 'lodash-es'

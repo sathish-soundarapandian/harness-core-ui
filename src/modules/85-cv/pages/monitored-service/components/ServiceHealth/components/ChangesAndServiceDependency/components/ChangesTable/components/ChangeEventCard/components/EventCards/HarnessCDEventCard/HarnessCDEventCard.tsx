@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { Divider } from '@blueprintjs/core'
-import { Card, Container, Text } from '@wings-software/uicore'
+import { Card, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ChangeEventDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'

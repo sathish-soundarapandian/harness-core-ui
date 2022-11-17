@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { isEmpty, pick } from 'lodash-es'

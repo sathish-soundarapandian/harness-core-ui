@@ -6,7 +6,7 @@
  */
 
 import cx from 'classnames'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { RightDrawer } from '@templates-library/components/TemplateStudio/RightDrawer/RightDrawer'

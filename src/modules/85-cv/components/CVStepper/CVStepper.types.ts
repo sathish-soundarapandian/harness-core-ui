@@ -10,6 +10,7 @@ export interface StepDetailsInterface {
   title: string
   panel: React.ReactElement
   preview?: React.ReactElement
+  isOptional?: boolean
 }
 
 export interface CVStepperProps {

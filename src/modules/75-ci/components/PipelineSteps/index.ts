@@ -24,6 +24,8 @@ import { S3Step } from './S3Step/S3Step'
 import { JFrogArtifactoryStep } from './JFrogArtifactoryStep/JFrogArtifactoryStep'
 import { Dependency } from './Dependency/Dependency'
 import { RunTestsStep } from './RunTestsStep/RunTestsStep'
+import { SaveCacheHarnessStep } from './SaveCacheHarnessStep/SaveCacheHarnessStep'
+import { RestoreCacheHarnessStep } from './RestoreCacheHarnessStep/RestoreCacheHarnessStep'
 
 factory.registerStep(new RunStep())
 factory.registerStep(new BackgroundStep())
@@ -42,3 +44,5 @@ factory.registerStep(new JFrogArtifactoryStep())
 factory.registerStep(new Dependency())
 factory.registerStep(new RunTestsStep())
 factory.registerStep(new GitCloneStep())
+factory.registerStep(new SaveCacheHarnessStep())
+factory.registerStep(new RestoreCacheHarnessStep())

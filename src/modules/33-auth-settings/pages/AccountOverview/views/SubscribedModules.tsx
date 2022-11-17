@@ -7,9 +7,8 @@
 
 import React from 'react'
 import { capitalize } from 'lodash-es'
-import { Container, Text, Card, Layout, Icon, PageError, PageSpinner } from '@wings-software/uicore'
+import { Container, Text, Card, Layout, Icon, PageError, PageSpinner, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { IconName } from '@wings-software/uicore'
 import moment from 'moment'
 import { useParams, Link } from 'react-router-dom'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'

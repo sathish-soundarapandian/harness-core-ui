@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@harness/uicore'
 import { isEmpty, omit, set } from 'lodash-es'
 import { produce } from 'immer'
 import {

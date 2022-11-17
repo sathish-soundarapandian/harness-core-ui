@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { connect, FormikErrors } from 'formik'
 import { omit } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'

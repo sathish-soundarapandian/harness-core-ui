@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Select, SelectOption } from '@wings-software/uicore'
+import { Select, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import classNames from 'classnames'
 import { useStrings } from 'framework/strings'

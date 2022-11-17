@@ -8,7 +8,7 @@
 import React from 'react'
 import type { FormikErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 
 import type { StoreConfigWrapper, StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'

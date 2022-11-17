@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Text, Color, Checkbox } from '@harness/uicore'
+import { Layout, Text, Checkbox } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
 import type { ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 import css from './SLOList.module.scss'
@@ -26,7 +27,8 @@ export const getUpdatedSLOObjectives = (
       orgIdentifier,
       projectIdentifier,
       serviceLevelObjectiveRef: item?.sloIdentifier,
-      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
+      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight),
+      ...item
     }
   })
   return updatedSLOObjective
@@ -56,7 +58,6 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
     <Layout.Vertical padding={{ left: 'small' }}>
       <>
         <Text
-          color={Color.PRIMARY_7}
           className={css.titleInSloTable}
           title={serviceName}
           font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
@@ -65,7 +66,7 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
         </Text>
       </>
       <>
-        <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
+        <Text title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
           {environmentIdentifier}
         </Text>
       </>
@@ -75,16 +76,17 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
 
 export const RenderUserJourney: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
   const slo = row.original
-  const { userJourneyName = '' } = slo
-  return (
+  const { userJourneys = [] } = slo || {}
+  return userJourneys?.map(userJourney => (
     <Text
+      key={userJourney.identifier}
       className={css.titleInSloTable}
-      title={userJourneyName}
+      title={userJourney.name}
       font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
     >
-      {userJourneyName}
+      {userJourney.name}
     </Text>
-  )
+  ))
 }
 
 export const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
@@ -111,6 +113,15 @@ export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) =>
       font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
     >
       {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+    </Text>
+  )
+}
+
+export const RenderSLIType: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
+  const slo = row.original
+  return (
+    <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+      {slo?.sliType}
     </Text>
   )
 }
@@ -147,25 +158,4 @@ export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos }: RenderC
       }}
     />
   )
-}
-
-export const resetSLOWeightage = (
-  selectedSlos: ServiceLevelObjectiveDetailsDTO[],
-  accountId: string,
-  orgIdentifier: string,
-  projectIdentifier: string
-): ServiceLevelObjectiveDetailsDTO[] => {
-  const selectedSlosLength = selectedSlos.length
-  const weight = Number(100 / selectedSlosLength).toFixed(1)
-  const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
-  const updatedSLOObjective = selectedSlos.map((item, index) => {
-    return {
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      serviceLevelObjectiveRef: item.serviceLevelObjectiveRef,
-      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
-    }
-  })
-  return updatedSLOObjective
 }

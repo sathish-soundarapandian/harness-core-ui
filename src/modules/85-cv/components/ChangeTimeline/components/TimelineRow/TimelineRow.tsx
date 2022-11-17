@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import moment from 'moment'
 import { Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import type { TimelineDataPoint, TimelineRowProps } from './TimelineRow.types'

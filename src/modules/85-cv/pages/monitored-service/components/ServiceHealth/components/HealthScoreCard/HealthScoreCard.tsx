@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
-import { Container, Layout, Text, Icon } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { FontVariation, Color, Intent } from '@harness/design-system'
 import { useGetMonitoredServiceScores } from 'services/cv'
 import { RiskValues, getErrorMessage } from '@cv/utils/CommonUtils'

@@ -17,7 +17,7 @@ import {
   useConfirmationDialog,
   ButtonVariation,
   Button
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'

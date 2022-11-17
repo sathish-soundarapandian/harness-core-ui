@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Layout, Container, Icon, Text, SelectOption, PageSpinner, PageError } from '@wings-software/uicore'
+import { Layout, Container, Icon, Text, SelectOption, PageSpinner, PageError } from '@harness/uicore'
 import { Tag } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useParams, useHistory } from 'react-router-dom'

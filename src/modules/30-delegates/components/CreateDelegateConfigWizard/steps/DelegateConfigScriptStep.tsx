@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Button, Layout, Container, Heading, Text } from '@wings-software/uicore'
+import { Button, Layout, Container, Heading, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { DelegateProfileDetailsNg } from 'services/cd-ng'

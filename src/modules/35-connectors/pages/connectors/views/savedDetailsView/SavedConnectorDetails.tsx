@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Icon, IconName, Card } from '@wings-software/uicore'
+import { Layout, Text, Icon, IconName, Card } from '@harness/uicore'
 import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { Connectors } from '@connectors/constants'
@@ -297,6 +297,19 @@ const getDockerSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
     {
       label: 'password',
       value: connector?.spec?.auth?.spec?.passwordRef
+    }
+  ]
+}
+
+const getAzureArtifactSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.azureArtifacts.azureArtifactsUrl',
+      value: connector?.spec?.azureArtifactsUrl
+    },
+    {
+      label: 'personalAccessToken',
+      value: connector?.spec?.auth?.spec?.spec?.tokenRef
     }
   ]
 }
@@ -855,6 +868,8 @@ const getSchemaByType = (
       return getDockerSchema(connector)
     case Connectors.HttpHelmRepo:
       return getHelmHttpSchema(connector)
+    case Connectors.AZURE_ARTIFACTS:
+      return getAzureArtifactSchema(connector)
     case Connectors.OciHelmRepo:
       return getOCIHelmSchema(connector)
     case Connectors.GCP:

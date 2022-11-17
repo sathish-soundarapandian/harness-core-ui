@@ -22,7 +22,7 @@ import {
   HarnessDocTooltip,
   FormError,
   FormikTooltipContext
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {

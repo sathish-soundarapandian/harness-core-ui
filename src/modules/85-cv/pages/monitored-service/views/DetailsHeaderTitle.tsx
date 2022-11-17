@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Layout, Container, Text, Heading } from '@wings-software/uicore'
+import { Layout, Container, Text, Heading } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { TitleProps } from '../MonitoredServicePage.types'

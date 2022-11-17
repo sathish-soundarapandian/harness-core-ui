@@ -98,12 +98,17 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
             </div>
           </div>
         </div>
-        <h3
-          class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--font-variation-h4"
-          level="3"
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-evenly StyledProps--flex-alignItems-flex-start"
+          style="height: 45px;"
         >
-          cv.slos.createSLO
-        </h3>
+          <h3
+            class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--font-variation-h4"
+            level="3"
+          >
+            cv.slos.createSLO
+          </h3>
+        </div>
       </div>
     </div>
     <div

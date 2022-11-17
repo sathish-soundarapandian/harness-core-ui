@@ -16,7 +16,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   Button
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import type { ConnectorInfoDTO, ConnectorConfigDTO } from 'services/cd-ng'
 import { useGetTestConnectionResult } from 'services/cd-ng'

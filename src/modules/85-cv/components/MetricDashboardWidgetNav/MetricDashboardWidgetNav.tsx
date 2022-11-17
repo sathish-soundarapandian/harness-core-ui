@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { defaultTo } from 'lodash-es'
-import { Container, Icon, Layout, Link, Text, Utils } from '@wings-software/uicore'
+import { Container, Icon, Layout, Link, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, ITreeNode, PopoverInteractionKind, Tree } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'

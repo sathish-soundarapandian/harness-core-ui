@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Text, Color, SelectOption, MultiSelectOption } from '@harness/uicore'
+import { Layout, Text, SelectOption, MultiSelectOption } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { PeriodLengthTypes, PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'

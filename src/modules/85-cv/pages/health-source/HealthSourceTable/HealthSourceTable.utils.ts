@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import type { ChangeSourceDTO, Sources } from 'services/cv'
 import { Connectors } from '@connectors/constants'
@@ -64,6 +64,7 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'PROMETHEUS':
     case 'Prometheus':
     case 'AwsPrometheus':
+    case 'AWS_PROMETHEUS':
       return 'service-prometheus'
     //TODO one type will be removed once it is full deprecated from backend.
     case 'STACKDRIVER_LOG':
@@ -94,6 +95,7 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'ErrorTracking':
       return 'error-tracking'
     case HealthSourceTypes.CloudWatchMetrics:
+    case 'CLOUDWATCH_METRICS':
       return 'service-aws'
     default:
       return 'placeholder'

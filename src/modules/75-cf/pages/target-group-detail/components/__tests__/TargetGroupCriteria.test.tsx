@@ -10,7 +10,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import TargetGroupCriteria, { TargetGroupCriteriaProps } from '../TargetGroupCriteria'
 

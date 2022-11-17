@@ -214,7 +214,6 @@ resourceGroup:
   selectionHeading: 'Select Resource and define its scope of access.'
 updateNotificationSuccess: Notification preferences updated successfully
 userRequired: User is required
-userUpperLimit: Addition of more than 15 users is not allowed
 userGroupRequired: At least one user group is required
 resourceSelectorErrorMessage: Add atleast one specific resource for the following types [{{resources}}]
 accessControlTitle:
@@ -274,3 +273,53 @@ inheritedScope:
   accountScopeNoData: No Organization or Project is using this Group
   orgScopeNoData: No Project is using this Group
 scopeLabel: 'Scope:'
+notifications:
+  name: Notifications
+  pipelineName: Notify
+  titleEmail: Setup Email Notifications
+  titleSlack: Setup Slack Notifications
+  titlePagerDuty: Setup PagerDuty Notifications
+  helpPagerDuty: Enter the key for a PagerDuty Account/Service to which Harness can send notifications. You can copy/paste this key from PagerDuty's Configuration > Services > Service Details dialog > Integrations tab.
+  infoPagerDuty: For more details, see PagerDutys documentation on Creating Integrations.
+  helpSlack: You can receive Harness notifications in your Slack channels. You simply add a Slack Incoming Webhook into a Harness User Group's Notification Settings.
+  infoSlack: For more details, see Slack’s documentation Getting Started with Incoming Webhooks.
+  helpMSTeams: You can receive Harness notifications in Microsoft Teams channels. You simply create an incoming webhook connector in a Microsoft Teams Channel and copy its URL. Next, paste it here in Microsoft Teams Webhook URL(s).
+  labelEmailUserGroups: Alternatively Notify the individual users in a user group via their respective email addresses
+  buttonSend: Send
+  labelSlackUserGroups: Alternatively Notify the Slack Channels associated with these user groups
+  labelMSTeamsUserGroups: Alternatively, Harness can notify the Microsoft Teams Channel associated with the user group(s) selected below (Optional)
+  validationWebhook: Webhook URL is required
+  labelPDKey: PagerDuty Key
+  labelPDUserGroups: Alternatively Notify the PagerDuty keys associated with these user groups
+  notificationName: Give your notification a name
+  nameOftheRule: Name of the Rule
+  pipelineEvents: Pipeline Events
+  configureConditions: Configure the conditions for which you want to be notified
+  selectPipelineEvents: Select Pipeline Events
+  selectStagesPlaceholder: 'Select Stages'
+  notificationMethod: '{{$.notificationMethod}}'
+  emailRecipients: Type emails of your recipients
+  emailTestSuccess: Email test is successfully executed
+  slackwebhookUrl: Slack Webhook URL
+  slackuserGroups: Notify the Slack Channels associated with these user groups
+  slackTestSuccess: Slack test is successfully executed
+  pagerDutykey: PagerDuty Key (Optional)
+  pagerDutyuserGroups: Notify these user groups
+  pagerDutyTestSuccess: Pager Duty test is successfully executed
+  userGroupsPlaceholder: Type and press enter to add user group
+  labelMS: Microsoft Teams
+  placeholderMSKeys: Type and press enter to add URL
+  errors:
+    msTeamUrlRequired: Microsoft Teams URL is required
+    invalidUrl: Not a valid URL
+  msTestSuccess: Microsoft Teams test is successfully executed
+  eventRequired: Event is required
+  invalidPagerDutyKey: Invalid pagerduty key
+  invalidWebhookURL: Invalid Webhook URL
+  stageRequired: Select one of the stages
+  enterMicrosoftTeamsUrl: Enter Microsoft Teams URL
+  emailOrAlias: Email/Alias
+  labelWebhookUrl: Slack Webhook URL (Optional)
+  labelPagerDuty: PagerDuty Integration Key
+  labelMSTeam: Microsoft Teams Webhook URL(s)
+  validationPDKey: PagerDuty Key is required

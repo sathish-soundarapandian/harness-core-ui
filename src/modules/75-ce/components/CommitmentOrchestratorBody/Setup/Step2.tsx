@@ -8,12 +8,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
+import { FontVariation, Color } from '@harness/design-system'
+
 import {
   Checkbox,
-  Color,
   Container,
   ExpandingSearchInput,
-  FontVariation,
   Icon,
   Layout,
   Select,

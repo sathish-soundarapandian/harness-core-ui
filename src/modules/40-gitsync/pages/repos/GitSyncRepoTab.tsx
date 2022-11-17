@@ -22,7 +22,7 @@ import {
   useToaster,
   TableV2,
   Utils
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'

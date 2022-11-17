@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 import {
@@ -48,6 +48,9 @@ export interface EnvironmentDialogProps {
   environments?: EnvironmentResponseDTO[]
   isLinkVariation?: boolean
   buttonText?: StringKeys
+  createEnvFromInput?: boolean
+  createEnvName?: string
+  onCloseDialog?: () => void
 }
 
 interface EnvironmentValues {
@@ -64,7 +67,10 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
   buttonProps,
   environments,
   isLinkVariation,
-  buttonText
+  buttonText,
+  createEnvFromInput = false,
+  onCloseDialog = () => undefined,
+  createEnvName = ''
 }) => {
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -89,14 +95,14 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
   const getTypeOption = (v: string) => envTypes.find(x => x.value === v) || envTypes[0]
 
   const initialValues: EnvironmentValues = {
-    name: '',
-    identifier: '',
+    name: createEnvName,
+    identifier: createEnvName,
     description: '',
     type: EnvironmentType.NON_PRODUCTION,
     tags: []
   }
 
-  const handleSubmit = (values: EnvironmentValues) => {
+  const handleSubmit = (values: EnvironmentValues): void => {
     trackEvent(FeatureActions.CreateEnvSubmit, {
       category: Category.FEATUREFLAG,
       data: values
@@ -141,12 +147,17 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
   }
   const { trackEvent } = useTelemetry()
 
+  const handleCloseModal = (): void => {
+    hideModal()
+    onCloseDialog()
+  }
+
   const [openModal, hideModal] = useModalHook(() => {
     return (
       <Dialog
         enforceFocus={false}
         isOpen
-        onClose={hideModal}
+        onClose={handleCloseModal}
         className={css.dialog}
         title={getString('cf.environments.create.title')}
       >
@@ -210,7 +221,13 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
                     intent="primary"
                     disabled={loading}
                   />
-                  <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} type="reset" minimal />
+                  <Button
+                    variation={ButtonVariation.TERTIARY}
+                    text={getString('cancel')}
+                    type="reset"
+                    minimal
+                    onClick={handleCloseModal}
+                  />
                   {loading && <Spinner size={16} />}
                 </Layout.Horizontal>
               </FormikForm>
@@ -221,7 +238,16 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
     )
   }, [loading])
 
-  return (
+  useEffect(() => {
+    if (createEnvFromInput) {
+      openModal()
+    } else {
+      hideModal()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createEnvFromInput])
+
+  return !createEnvFromInput ? (
     <RbacButton
       icon="plus"
       disabled={disabled}
@@ -247,7 +273,7 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
       {...buttonProps}
       {...planEnforcementProps}
     />
-  )
+  ) : null
 }
 
 export default EnvironmentDialog

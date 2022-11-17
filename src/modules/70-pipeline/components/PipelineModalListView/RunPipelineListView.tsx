@@ -8,7 +8,7 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column, CellProps, Renderer } from 'react-table'
-import { Layout, Text, TableV2 } from '@wings-software/uicore'
+import { Layout, Text, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'

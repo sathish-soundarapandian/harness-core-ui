@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor, act } from '@testing-library/react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { useMutateAsGet } from '@common/hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'

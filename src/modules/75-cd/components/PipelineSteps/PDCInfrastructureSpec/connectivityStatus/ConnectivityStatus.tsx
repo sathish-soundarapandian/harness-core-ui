@@ -7,7 +7,7 @@
 
 import React, { MouseEvent } from 'react'
 
-import { Text, Layout, IconName } from '@wings-software/uicore'
+import { Text, Layout, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import { defaultTo } from 'lodash-es'

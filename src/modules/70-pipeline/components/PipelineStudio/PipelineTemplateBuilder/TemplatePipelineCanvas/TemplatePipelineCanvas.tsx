@@ -6,10 +6,9 @@
  */
 
 import React from 'react'
-import { PageError, Tag } from '@wings-software/uicore'
+import { PageError, Tag, PageSpinner } from '@harness/uicore'
 import { defaultTo, get, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { PageSpinner } from '@harness/uicore'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'

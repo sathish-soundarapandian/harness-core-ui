@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import type { ArtifactType, CustomArtifactSource } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'

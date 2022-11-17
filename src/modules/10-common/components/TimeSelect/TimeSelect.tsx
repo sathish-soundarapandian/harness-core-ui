@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, SelectOption, Text, Container, Select } from '@wings-software/uicore'
+import { Layout, SelectOption, Text, Container, Select } from '@harness/uicore'
 import { zeroFiftyNineDDOptions, amPmOptions, oneTwelveDDOptions } from './TimeSelectUtils'
 import css from './TimeSelect.module.scss'
 

@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import * as yup from 'yup'
-import { Accordion, Card, Formik, FormikForm, Switch, Text, MultiTypeInputType } from '@wings-software/uicore'
+import { Accordion, Card, Formik, FormikForm, Switch, Text, MultiTypeInputType } from '@harness/uicore'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { cloneDeep, debounce, defaultTo, isEqual, uniqBy } from 'lodash-es'
 import cx from 'classnames'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import ChangesTable from './components/ChangesTable/ChangesTable'
 import type { ChangesAndServiceDependencyInterface } from './ChangesAndServiceDependency.types'

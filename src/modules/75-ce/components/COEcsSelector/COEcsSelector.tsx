@@ -20,10 +20,10 @@ import {
   ButtonVariation,
   useToaster,
   TableV2
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { CellProps } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   ContainerClusterMinimal,

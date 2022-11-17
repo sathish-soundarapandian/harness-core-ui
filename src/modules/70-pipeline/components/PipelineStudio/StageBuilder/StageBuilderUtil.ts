@@ -6,7 +6,7 @@
  */
 
 import { flatMap, findIndex, cloneDeep, set, noop, isEmpty } from 'lodash-es'
-import { Utils } from '@wings-software/uicore'
+import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
 import produce from 'immer'

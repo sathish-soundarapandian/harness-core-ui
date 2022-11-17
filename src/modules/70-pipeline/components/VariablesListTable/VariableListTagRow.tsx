@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { escape, isEmpty } from 'lodash-es'
-import { useNestedAccordion } from '@wings-software/uicore'
+import { useNestedAccordion } from '@harness/uicore'
 import type { VariableResponseMapValue } from 'services/pipeline-ng'
 import { TagsPopover } from '@common/components'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'

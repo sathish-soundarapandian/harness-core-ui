@@ -17,8 +17,8 @@ import {
   Text,
   ButtonVariation,
   useToaster
-} from '@wings-software/uicore'
-import type { RadioButtonProps } from '@wings-software/uicore/dist/components/RadioButton/RadioButton'
+} from '@harness/uicore'
+import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

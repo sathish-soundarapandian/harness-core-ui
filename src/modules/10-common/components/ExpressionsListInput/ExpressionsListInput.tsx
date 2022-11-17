@@ -9,7 +9,7 @@ import React, { useEffect } from 'react'
 import { connect, FormikContextType } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { FormGroup } from '@blueprintjs/core'
-import { ExpressionInput, EXPRESSION_INPUT_PLACEHOLDER } from '@wings-software/uicore'
+import { ExpressionInput, EXPRESSION_INPUT_PLACEHOLDER } from '@harness/uicore'
 import { ListInput } from '@common/components/ListInput/ListInput'
 
 import css from './ExpressionsListInput.module.scss'

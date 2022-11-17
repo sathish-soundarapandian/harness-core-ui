@@ -4,6 +4,7 @@ import type {
   DynatraceMetricDefinition,
   useGetRiskCategoryForCustomHealthMetric
 } from 'services/cv'
+import type { MetricThresholdType } from '../MetricThresholds/MetricThresholds.types'
 
 // For all Health sources, their custom metric types will be added here like "CloudWatchMetricDefinition | AppDMetricDefinition |..."
 type CombinedMetricDefinitionsOfHealthSources = CloudWatchMetricDefinition | DynatraceMetricDefinition
@@ -26,10 +27,12 @@ export type CommonCustomMetricsType = CombinedMetricDefinitionsOfHealthSources &
 export interface CommonCustomMetricPropertyType {
   customMetrics: CommonCustomMetricsType[]
   selectedCustomMetricIndex: number
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface GroupedMetric {
-  groupName?: SelectOption | string
+  groupName?: SelectOption
   metricName?: string
   index?: number
   continuousVerification?: boolean
@@ -42,4 +45,13 @@ export interface GroupedCreatedMetrics {
 export interface CustomMetricsV2HelperContextType {
   groupedCreatedMetrics: GroupedCreatedMetrics
   riskProfileResponse: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
+  isTemplate?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
+}
+
+export interface FilterMetricThresholdsParamsType {
+  isMetricThresholdEnabled: boolean
+  customMetricNameToRemove: string
+  metricThresholdsToFilter: MetricThresholdType[]
 }

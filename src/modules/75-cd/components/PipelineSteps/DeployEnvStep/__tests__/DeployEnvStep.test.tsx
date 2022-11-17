@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, fireEvent, getByText, act, waitFor } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'

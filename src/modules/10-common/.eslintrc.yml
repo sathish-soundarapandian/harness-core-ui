@@ -12,7 +12,6 @@ rules:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
         - group:
-            - modules/15-notifications/*
             - modules/18-audit-trail/*
             - modules/20-rbac/*
             - modules/23-default-settings/*
@@ -41,7 +40,6 @@ rules:
             - modules/85-cv/*
             - modules/85-sto/*
             - modules/90-gitops/*
-            - '@notifications/*'
             - '@audit-trail/*'
             - '@rbac/*'
             - '@default-settings/*'
@@ -83,7 +81,7 @@ rules:
           message: import from "react-router-dom" instead
         - name: microfrontends
           message: Import from 'microfrontends' is only allowed in child apps
-        - name: '@wings-software/uicore'
+        - name: '@harness/uicore'
           importNames:
             - Color
             - FontVariation

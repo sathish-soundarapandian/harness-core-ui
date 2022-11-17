@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Tag } from '@wings-software/uicore'
+import { Tag } from '@harness/uicore'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import css from './ScopeBadge.module.scss'

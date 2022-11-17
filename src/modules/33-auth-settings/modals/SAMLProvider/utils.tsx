@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import type { UseStringsReturn } from 'framework/strings'
 export interface FormValues {

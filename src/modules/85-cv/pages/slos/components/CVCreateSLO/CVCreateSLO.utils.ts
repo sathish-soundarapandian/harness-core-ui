@@ -7,7 +7,7 @@
 
 import { omit, isEqual } from 'lodash-es'
 import type { TabId } from '@blueprintjs/core'
-import { SelectOption, Utils } from '@wings-software/uicore'
+import { SelectOption, Utils } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
@@ -36,7 +36,8 @@ import {
   CreateSLOTabs,
   SLOFormFields,
   SLIMetricTypes,
-  Comparators
+  Comparators,
+  ErrorBudgetInterface
 } from './CVCreateSLO.types'
 
 export const convertServiceLevelIndicatorToSLIFormData = (serviceLevelIndicator: ServiceLevelIndicatorDTO): SLIForm => {
@@ -324,7 +325,7 @@ export const getWindowEndOptionsForMonth = (): SelectOption[] => {
     .map((_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }))
 }
 
-export const getErrorBudget = (values: SLOForm): number => {
+export const getErrorBudget = (values: ErrorBudgetInterface): number => {
   const { periodType, periodLength = '', periodLengthType, SLOTargetPercentage } = values
 
   if (Number.isNaN(SLOTargetPercentage) || SLOTargetPercentage < 0 || SLOTargetPercentage > 100) {
@@ -347,7 +348,9 @@ export const getErrorBudget = (values: SLOForm): number => {
   return Math.round(((100 - SLOTargetPercentage) / 100) * totalMinutes)
 }
 
-export const getCustomOptionsForSLOTargetChart = (values: SLOForm): Highcharts.Options => {
+export const getCustomOptionsForSLOTargetChart = (
+  SLOTargetPercentage: SLOForm['SLOTargetPercentage']
+): Highcharts.Options => {
   const labelColor = Utils.getRealCSSColor(Color.PRIMARY_7)
 
   return {
@@ -358,7 +361,7 @@ export const getCustomOptionsForSLOTargetChart = (values: SLOForm): Highcharts.O
       tickInterval: 25,
       plotLines: [
         {
-          value: Number((Number(values.SLOTargetPercentage) || 0).toFixed(2)),
+          value: Number((Number(SLOTargetPercentage) || 0).toFixed(2)),
           color: Utils.getRealCSSColor(Color.PRIMARY_7),
           width: 2,
           zIndex: 4,
@@ -367,7 +370,7 @@ export const getCustomOptionsForSLOTargetChart = (values: SLOForm): Highcharts.O
             formatter: function () {
               return `
                 <div style="background-color:${labelColor};padding:4px 6px;border-radius:4px" >
-                  <span style="color:white" >${Number((Number(values.SLOTargetPercentage) || 0).toFixed(2))}%</span>
+                  <span style="color:white" >${Number((Number(SLOTargetPercentage) || 0).toFixed(2))}%</span>
                 </div>
               `
             }

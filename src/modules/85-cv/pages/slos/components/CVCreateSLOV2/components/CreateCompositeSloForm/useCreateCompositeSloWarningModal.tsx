@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { FormikHelpers } from 'formik'
-import { Button, Color, Container, Dialog, FontVariation, Heading, Text, Layout } from '@harness/uicore'
+import { Button, Container, Dialog, Heading, Text, Layout } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { ShowModal, useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import sloReviewChange from '@cv/assets/sloReviewChange.svg'

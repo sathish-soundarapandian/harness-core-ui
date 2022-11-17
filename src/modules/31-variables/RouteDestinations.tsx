@@ -34,6 +34,7 @@ AuditTrailFactory.registerResourceHandler('VARIABLE', {
 RbacFactory.registerResourceTypeHandler(ResourceType.VARIABLE, {
   icon: 'variable',
   label: 'common.variables',
+  labelSingular: 'variableLabel',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_VARIABLE]: <String stringID="rbac.permissionLabels.view" />,

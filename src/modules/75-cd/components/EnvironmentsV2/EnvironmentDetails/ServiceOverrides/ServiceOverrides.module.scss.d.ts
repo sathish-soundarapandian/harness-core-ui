@@ -21,5 +21,6 @@ declare const styles: {
   readonly valueColumn: string
   readonly valueString: string
   readonly variableListButtons: string
+  readonly variableListMenu: string
 }
 export default styles

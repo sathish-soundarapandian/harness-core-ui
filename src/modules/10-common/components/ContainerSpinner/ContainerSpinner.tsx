@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { PageSpinner } from '@common/components'
 import css from './ContainerSpinner.module.scss'
 

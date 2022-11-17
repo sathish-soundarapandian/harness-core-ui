@@ -19,7 +19,7 @@ import {
   MultiTypeInputValue,
   FormikTooltipContext,
   Layout
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { get, isNil } from 'lodash-es'
 import { connect } from 'formik'

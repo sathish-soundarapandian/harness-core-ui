@@ -9,14 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import {
-  Layout,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  StepProps,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { Layout, FormInput, getMultiTypeFromValue, MultiTypeInputType, StepProps, AllowedTypes } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'

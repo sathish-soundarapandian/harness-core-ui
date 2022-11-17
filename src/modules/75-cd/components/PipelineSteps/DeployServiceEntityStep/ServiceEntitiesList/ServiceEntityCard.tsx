@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Card, Icon, Text, Color, AllowedTypes, ButtonSize, Layout } from '@harness/uicore'
+import { Button, ButtonVariation, Card, Icon, Text, AllowedTypes, ButtonSize, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, set } from 'lodash-es'
@@ -23,6 +24,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServiceSpec } from 'services/cd-ng'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
+import { useDeepCompareEffect } from '@common/hooks'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -59,6 +61,10 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const arifactsSpecPath = `serviceInputs.${serviceIdentifier}.serviceDefinition.spec`
 
   const type = service.serviceDefinition?.type as ServiceDeploymentType
+
+  useDeepCompareEffect(() => {
+    setTemplate(serviceInputs?.serviceDefinition?.spec)
+  }, [serviceInputs?.serviceDefinition?.spec])
 
   function toggle(): void {
     setShowInputs(s => !s)

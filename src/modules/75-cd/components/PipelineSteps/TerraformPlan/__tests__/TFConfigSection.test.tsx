@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, MultiTypeInputType } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 

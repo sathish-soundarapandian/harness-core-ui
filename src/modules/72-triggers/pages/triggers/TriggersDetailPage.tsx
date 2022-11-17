@@ -17,7 +17,7 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import React, { ReactNode } from 'react'
 import { useHistory, useParams } from 'react-router-dom'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { render, fireEvent, waitFor, queryByText } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'

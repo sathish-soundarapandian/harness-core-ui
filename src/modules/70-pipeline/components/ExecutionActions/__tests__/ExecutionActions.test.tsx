@@ -342,6 +342,7 @@ describe('<ExecutionActions /> tests', () => {
           executionStatus="Expired"
           refetch={jest.fn()}
           showEditButton={false}
+          isExecutionListView
         />
       </TestWrapper>
     )

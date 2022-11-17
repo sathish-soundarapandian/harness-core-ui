@@ -148,7 +148,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     }
 
     return {
-      environment: { environmentRef: '' }
+      environment: { environmentRef: scope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : '' }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage?.stage?.spec])

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, AllowedTypes, Formik, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { Accordion, AllowedTypes, Formik, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'

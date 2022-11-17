@@ -17,7 +17,7 @@ import {
   ButtonVariation,
   AllowedTypes,
   StepProps
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
@@ -30,9 +30,9 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import type { ConnectorTypes } from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
+import type { ConnectorTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import { gitFetchTypeList, GitFetchTypes, AzureBlueprintData } from '../AzureBlueprintTypes.types'
-import { HarnessOption } from '../../AzureWebAppServiceSpec/HarnessOption'
 
 import css from './ScriptWizard.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

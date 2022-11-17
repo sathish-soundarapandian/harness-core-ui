@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
+import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

@@ -9,7 +9,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import cx from 'classnames'
 
 import { useParams, useHistory } from 'react-router-dom'
-import { Button, Layout } from '@wings-software/uicore'
+import { Button, Layout } from '@harness/uicore'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import { SubscriptionTabNames, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
@@ -18,11 +18,8 @@ import type { ModuleName } from 'framework/types/ModuleName'
 import type { AccountDTO, ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
-
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'stringTypes'
-import { useGetCommunity } from '@common/utils/utils'
-
+import { useGetCommunity, isOnPrem } from '@common/utils/utils'
 import SubscriptionOverview from './overview/SubscriptionOverview'
 import SubscriptionBanner from './SubscriptionBanner'
 import SubscriptionPlans from './plans/SubscriptionPlans'
@@ -74,15 +71,12 @@ const SubscriptionTab = ({
   licenseData,
   refetchGetLicense
 }: SubscriptionTabProps): ReactElement => {
-  const { PLANS_ENABLED } = useFeatureFlags()
   const isCommunity = useGetCommunity()
-
   const [selectedSubscriptionTab, setSelectedSubscriptionTab] = useState<SubscriptionTabInfo>(SUBSCRIPTION_TABS[0])
   const { getString } = useStrings()
   const { tab: queryTab } = useQueryParams<{ tab?: SubscriptionTabNames }>()
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
-
   const { isFreeOrCommunity, edition, isExpired, expiredDays, days } = trialInfo
 
   useEffect(() => {
@@ -117,7 +111,6 @@ const SubscriptionTab = ({
 
       const isSelected = tab === selectedSubscriptionTab
       const buttonClassnames = cx(css.subscriptionTabButton, isSelected && css.selected)
-
       return (
         <Button className={buttonClassnames} key={tab.label} round onClick={handleTabClick}>
           {getString(tab.label)}
@@ -126,7 +119,7 @@ const SubscriptionTab = ({
     })
 
     // show Plans tab only when feature flag is on, always show for community edition
-    if (!isCommunity && !PLANS_ENABLED) {
+    if (!isCommunity && isOnPrem()) {
       tabs.splice(1, 1)
     }
 

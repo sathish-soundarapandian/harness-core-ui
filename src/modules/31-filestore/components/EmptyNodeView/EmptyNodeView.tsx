@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import filestoreIllustration from '@filestore/images/no-files-state.svg'
 import { NewFileButton } from '@filestore/common/NewFile/NewFile'

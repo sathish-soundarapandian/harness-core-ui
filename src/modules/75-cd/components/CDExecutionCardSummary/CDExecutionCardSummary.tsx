@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { identity, uniqBy } from 'lodash-es'
 import { String } from 'framework/strings'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'

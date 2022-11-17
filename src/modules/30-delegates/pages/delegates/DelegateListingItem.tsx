@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, set } from 'lodash-es'
 import { useParams, useHistory } from 'react-router-dom'
@@ -16,8 +16,9 @@ import {
   Popover,
   useToaster,
   useConfirmationDialog,
-  ButtonVariation
-} from '@wings-software/uicore'
+  ButtonVariation,
+  PageSpinner
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem, Classes, Position, Dialog } from '@blueprintjs/core'
 import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
@@ -33,9 +34,10 @@ import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 import { Table } from '@common/components'
 import { killEvent } from '@common/utils/eventUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useIsImmutableDelegateEnabled } from 'services/cd-ng'
 import { DelegateInstanceList } from './DelegateInstanceList'
 import { getAutoUpgradeTextColor, getInstanceStatus } from './utils/DelegateHelper'
+import DelegateConnectivityStatus from './DelegateConnectivityStatus'
 import css from './DelegatesPage.module.scss'
 
 interface DelegateProps {
@@ -122,41 +124,8 @@ const RenderHeartbeat: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => 
 }
 
 const RenderConnectivityStatus: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
-  const { getString } = useStrings()
   const delegate = row.original
-  const isConnected = delegate.activelyConnected
-  const text = isConnected ? getString('connected') : getString('delegate.notConnected')
-  const [troubleshoterOpen, setOpenTroubleshoter] = useState<{ isConnected: boolean | undefined }>()
-  return (
-    <Layout.Vertical>
-      <Text
-        icon="full-circle"
-        iconProps={{ size: 6, color: isConnected ? Color.GREEN_600 : Color.GREY_400, padding: 'small' }}
-      >
-        {text}
-      </Text>
-      <Dialog
-        isOpen={!!troubleshoterOpen}
-        enforceFocus={false}
-        style={{ width: '680px', height: '100%' }}
-        onClose={() => setOpenTroubleshoter(undefined)}
-      >
-        <DelegateInstallationError showDelegateInstalledMessage={false} delegateType={delegate?.delegateType} />
-      </Dialog>
-      {!isConnected && delegate.delegateType === 'KUBERNETES' && (
-        <div
-          className={css.troubleshootLink}
-          onClick={(e: React.MouseEvent) => {
-            /*istanbul ignore next */
-            e.stopPropagation()
-            setOpenTroubleshoter({ isConnected: delegate.activelyConnected })
-          }}
-        >
-          {getString('delegates.troubleshootOption')}
-        </div>
-      )}
-    </Layout.Vertical>
-  )
+  return <DelegateConnectivityStatus delegate={delegate} />
 }
 
 const RenderColumnMenu: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
@@ -331,10 +300,21 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
       history.push(routes.toDelegatesDetails(params))
     }
   }
-
-  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
+  const { showError } = useToaster()
+  const {
+    data: useImmutableDelegate,
+    error,
+    loading
+  } = useIsImmutableDelegateEnabled({
+    accountIdentifier: accountId
+  })
+  useEffect(() => {
+    if (error) {
+      showError(error.message)
+    }
+  }, [error])
   const columns = useMemo(() => {
-    const columnsArray = USE_IMMUTABLE_DELEGATE
+    const columnsArray = useImmutableDelegate?.data
       ? [
           {
             Header: '',
@@ -443,20 +423,21 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
           }
         ]
     return columnsArray
-  }, [])
+  }, [useImmutableDelegate?.data])
 
   const renderRowSubComponent = React.useCallback(
     ({ row }) => (
       <>
         <Layout.Horizontal className={css.podDetailsSeparator}></Layout.Horizontal>
-        <DelegateInstanceList row={row}></DelegateInstanceList>
+        <DelegateInstanceList row={row} canUseImmutableDelegate={!!useImmutableDelegate?.data}></DelegateInstanceList>
       </>
     ),
-    []
+    [useImmutableDelegate?.data]
   )
 
   return (
     <Layout.Horizontal width={'100%'}>
+      {loading ? <PageSpinner /> : null}
       <Table<DelegateGroupDetails>
         columns={columns}
         className={css.instanceTable}

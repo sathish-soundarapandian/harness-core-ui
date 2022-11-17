@@ -21,7 +21,7 @@ import {
   Select,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import produce from 'immer'
 import { Classes, Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -162,7 +162,6 @@ const BasicTemplateDetails = (
     supportingTemplatesGitx
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const formName = `create${initialValues.type}Template`
   const [loading, setLoading] = React.useState<boolean>()
   const { isReadonly } = useContext(TemplateContext)
   const scope = getScopeFromDTO(pathParams)
@@ -389,7 +388,8 @@ const BasicTemplateDetails = (
       const base64 = await toBase64(file)
       formikRef.current?.setFieldValue('icon', base64, true)
     } catch (error) {
-      formikRef.current?.setFieldValue('icon', undefined, true)
+      // setting the value to 'invalid-image' shows a broken image which can be removed
+      formikRef.current?.setFieldValue('icon', 'invalid-image', true)
     } finally {
       setLoading(false)
     }
@@ -420,7 +420,7 @@ const BasicTemplateDetails = (
         initialValues={formInitialValues}
         onSubmit={onSubmit}
         validate={setPreviewValues}
-        formName={formName}
+        formName={`create${initialValues.type}Template`}
         validationSchema={Yup.object().shape({
           name: NameSchema({
             requiredErrorMsg: getString('common.validation.fieldIsRequired', {
@@ -444,7 +444,7 @@ const BasicTemplateDetails = (
                     <Container>
                       <Layout.Vertical>
                         <NameIdDescriptionTags
-                          tooltipProps={{ dataTooltipId: formName }}
+                          tooltipProps={{ dataTooltipId: `create${initialValues.type}Template` }}
                           formikProps={formik}
                           identifierProps={{
                             isIdentifierEditable: !disabledFields.includes(Fields.Identifier) && !isReadonly,

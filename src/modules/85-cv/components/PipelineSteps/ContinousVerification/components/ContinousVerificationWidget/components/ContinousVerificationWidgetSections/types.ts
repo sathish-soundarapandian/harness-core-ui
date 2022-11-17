@@ -6,7 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
-import type { AllowedTypes } from '@wings-software/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 

@@ -10,7 +10,8 @@ import moment from 'moment'
 import { defaultTo } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
-import { Checkbox, Collapse, Color, Container, Layout, Page, Text } from '@harness/uicore'
+import { Checkbox, Collapse, Container, Layout, Page, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { PolicySet } from 'services/pm'
 

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Heading, Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
+import { Card, Heading, Icon, Layout, Text, Button, ButtonVariation } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { Page } from '@common/exports'
@@ -103,7 +103,7 @@ const OrganizationDetailsPage: React.FC = () => {
   const deploymentFreezeCard: ResourceOption[] = [
     {
       label: <String stringID="common.freezeWindows" />,
-      icon: 'nav-settings',
+      icon: 'FreezeWindow',
       colorClass: css.freezeWindows,
       route: routes.toFreezeWindows({ accountId, orgIdentifier }),
       selectable: true

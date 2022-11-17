@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { Views } from '@wings-software/uicore'
+import { Views } from '@harness/uicore'
 import { defaultTo, set } from 'lodash-es'
 import produce from 'immer'
 import { TestWrapper } from '@common/utils/testUtils'

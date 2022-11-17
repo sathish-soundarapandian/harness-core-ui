@@ -13,15 +13,14 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
-  Color,
   Container,
-  FontVariation,
   Layout,
   NoDataCard,
   PillToggle,
   PillToggleProps,
   Text
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { MonitoredServiceChangeDetailSLO, useGetMonitoredServiceChangeDetails } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

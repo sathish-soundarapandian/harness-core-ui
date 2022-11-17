@@ -16,7 +16,6 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  MultiSelectOption,
   SelectOption,
   FormikForm,
   Accordion,
@@ -26,7 +25,7 @@ import { FieldArray } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, memoize, merge, omit, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, memoize, merge, omit, set } from 'lodash-es'
 import cx from 'classnames'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -88,7 +87,7 @@ function FormContent({
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const isTemplateContext = context === ModalViewFor.Template
-  const [delegates, setDelegates] = React.useState<MultiSelectOption[]>([])
+  const [delegates, setDelegates] = React.useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -119,7 +118,7 @@ function FormContent({
   ]
 
   const versionPathValue = getGenuineValue(get(formik, `values.spec.scripts.fetchAllArtifacts.versionPath`))
-  const scriptValue = getGenuineValue(get(formik, `values.spec.scripts.fetchAllArtifacts.spec.source.spec.script`))
+  const scriptValue = get(formik, `values.spec.scripts.fetchAllArtifacts.spec.source.spec.script`)
   const inputValue = get(formik, `values.spec.inputs`)
 
   const artifactArrayPathValue = getGenuineValue(
@@ -184,7 +183,7 @@ function FormContent({
             label: item,
             value: item
           }
-        }) as any
+        }) as SelectOption[]
       )
     }
   }, [delegatesData])
@@ -688,7 +687,7 @@ export function CustomArtifact(
     )
   })
   const getInitialValues = (): CustomArtifactSource => {
-    let currentValue = initialValues
+    let currentValue = cloneDeep(initialValues)
     if (prevStepData?.spec) {
       currentValue = { ...prevStepData, type: 'CustomArtifact' }
     }
@@ -702,7 +701,7 @@ export function CustomArtifact(
             label: item,
             value: item
           } as SelectOption)
-      )
+      ) as SelectOption[]
     }
     if (currentValue?.spec?.scripts) {
       currentValue.formType = formFillingMethod.SCRIPT
@@ -719,9 +718,7 @@ export function CustomArtifact(
   const submitFormData = (formData: CustomArtifactSource): void => {
     const delegateSelectorsStrings =
       getMultiTypeFromValue(formData?.spec?.delegateSelectors) === MultiTypeInputType.FIXED
-        ? (formData?.spec?.delegateSelectors as unknown as MultiSelectOption[])?.map(
-            (item: MultiSelectOption) => item.value
-          )
+        ? (formData?.spec?.delegateSelectors as SelectOption[])?.map((item: SelectOption) => item.value)
         : formData?.spec?.delegateSelectors
     set(formData, 'spec.delegateSelectors', delegateSelectorsStrings)
     if (isIdentifierAllowed) {

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { ButtonVariation, ButtonSize, ButtonProps } from '@wings-software/uicore'
+import { ButtonVariation, ButtonSize, ButtonProps } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

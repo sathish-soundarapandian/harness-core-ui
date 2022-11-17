@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { Dialog } from '@blueprintjs/core'
 
 interface FixedScheduleDialogProps {

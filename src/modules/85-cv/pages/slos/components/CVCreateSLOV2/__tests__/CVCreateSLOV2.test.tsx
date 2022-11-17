@@ -32,6 +32,13 @@ const testPathParams = {
   identifier: 'new_slov2'
 }
 
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
 jest.mock('services/cv', () => ({
   useSaveSLOV2Data: jest.fn().mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useUpdateSLOV2Data: jest
@@ -58,6 +65,10 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('CVCreateSloV2', () => {
+  beforeEach(() => {
+    jest.setTimeout(30000)
+  })
+
   test('CVCreateSLOV2 when isComposite is false', async () => {
     const { container } = render(
       <TestWrapper>

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react'
-import { Layout, Text, Container, Select } from '@wings-software/uicore'
+import { Layout, Text, Container, Select } from '@harness/uicore'
 import { sumBy, clamp } from 'lodash-es'
 import type { Distribution, WeightedVariation, Variation } from 'services/cf'
 import { useStrings } from 'framework/strings'

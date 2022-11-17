@@ -7,18 +7,31 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Select, SelectOption, SelectProps } from '@wings-software/uicore'
+import { Select, SelectOption, SelectProps } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { rewriteCurrentLocationWithActiveEnvironment } from '@cf/utils/CFUtils'
+import css from './useEnvironmentSelectV2.module.scss'
 
 export interface UseEnvironmentSelectV2Params {
   selectedEnvironmentIdentifier?: string
   onChange?: (opt: SelectOption, environment: EnvironmentResponseDTO, userEvent: boolean) => void
   onEmpty?: () => void
+  allowCreatingNewItems?: boolean
+  showCreateButton?: boolean
+  noDefault?: boolean
 }
 
 export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => {
-  const { onChange = () => undefined, onEmpty = () => undefined, selectedEnvironmentIdentifier } = params
+  const { getString } = useStrings()
+  const {
+    onChange = () => undefined,
+    onEmpty = () => undefined,
+    selectedEnvironmentIdentifier,
+    allowCreatingNewItems,
+    showCreateButton,
+    noDefault
+  } = params
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const { data, loading, error, refetch } = useGetEnvironmentListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier }
@@ -46,10 +59,11 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           return
         }
       }
-
-      setSelectedEnvironment(selectOptions[0])
-      onChange(selectOptions[0], data?.data?.content?.[0], false)
-      rewriteCurrentLocationWithActiveEnvironment(data?.data?.content?.[0].identifier)
+      if (!noDefault) {
+        setSelectedEnvironment(selectOptions[0])
+        onChange(selectOptions[0], data?.data?.content?.[0], false)
+        rewriteCurrentLocationWithActiveEnvironment(data?.data?.content?.[0].identifier)
+      }
     } else if (data?.data?.content?.length === 0) {
       onEmpty()
       rewriteCurrentLocationWithActiveEnvironment()
@@ -60,9 +74,12 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     EnvironmentSelect: function EnvironmentSelect(props: Partial<SelectProps>) {
       return (
         <Select
+          usePortal={false}
+          popoverClassName={!showCreateButton ? css.hideCreateButton : ''}
           value={selectedEnvironment}
           items={selectOptions}
           name="environmentSelectEl"
+          allowCreatingNewItems={allowCreatingNewItems}
           onChange={opt => {
             if (selectedEnvironment?.value !== opt.value) {
               setSelectedEnvironment(opt)
@@ -73,6 +90,12 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
               )
               rewriteCurrentLocationWithActiveEnvironment(opt.value as string)
             }
+          }}
+          inputProps={{
+            placeholder: getString(
+              allowCreatingNewItems ? 'cf.onboarding.selectOrCreateEnvironment' : 'cf.shared.selectEnvironment'
+            ),
+            id: 'selectOrCreateEnvironmentInput'
           }}
           {...props}
         />

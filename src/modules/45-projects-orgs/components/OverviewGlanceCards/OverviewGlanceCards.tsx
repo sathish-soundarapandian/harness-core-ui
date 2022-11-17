@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Card, Icon, Layout, Text } from '@wings-software/uicore'
+import { Card, Icon, Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'

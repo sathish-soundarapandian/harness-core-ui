@@ -13,17 +13,16 @@ import {
   Text,
   Button,
   ButtonVariation,
-  Color,
   Container,
   Icon,
   Layout,
   PageError,
   TextInput,
   Dialog,
-  FontVariation,
   shouldShowError,
   useToaster
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { get, isEmpty } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'

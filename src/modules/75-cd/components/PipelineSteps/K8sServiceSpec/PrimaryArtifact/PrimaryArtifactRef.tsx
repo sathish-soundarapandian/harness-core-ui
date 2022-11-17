@@ -92,7 +92,8 @@ function PrimaryArtifactRef({
             formik?.setValues(
               produce(formik?.values, (draft: any) => {
                 set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
-                set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
+                isEmpty(serviceInputsFormikValue) &&
+                  set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
               })
             )
           }

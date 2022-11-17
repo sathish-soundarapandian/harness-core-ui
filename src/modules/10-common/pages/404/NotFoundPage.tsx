@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Layout, Heading, Text, Container } from '@wings-software/uicore'
+import { Icon, Layout, Heading, Text, Container } from '@harness/uicore'
 
 export default function NotFoundPage(): JSX.Element {
   return (

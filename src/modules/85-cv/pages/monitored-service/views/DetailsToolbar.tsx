@@ -8,7 +8,7 @@
 import React from 'react'
 import moment from 'moment'
 import { Classes } from '@blueprintjs/core'
-import { Layout, Container, Text } from '@wings-software/uicore'
+import { Layout, Container, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ToolbarProps } from '../MonitoredServicePage.types'

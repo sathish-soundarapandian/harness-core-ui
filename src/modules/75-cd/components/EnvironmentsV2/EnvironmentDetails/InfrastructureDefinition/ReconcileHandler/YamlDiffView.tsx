@@ -6,12 +6,20 @@
  */
 
 import React, { useRef } from 'react'
-import { Button, ButtonSize, ButtonVariation, Container, Layout, Text, useIsMounted } from '@wings-software/uicore'
-import { Color } from '@wings-software/design-system'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
+  Layout,
+  Text,
+  useIsMounted,
+  PageError,
+  PageSpinner
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { MonacoDiffEditor } from 'react-monaco-editor'
-import { PageError, PageSpinner } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { ResponseCustomDeploymentRefreshYaml } from 'services/cd-ng'

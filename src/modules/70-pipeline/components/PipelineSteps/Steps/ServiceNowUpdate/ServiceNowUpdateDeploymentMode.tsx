@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isNull, isUndefined } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
 import { useStrings, StringKeys } from 'framework/strings'
 import type {
   AccountPathProps,

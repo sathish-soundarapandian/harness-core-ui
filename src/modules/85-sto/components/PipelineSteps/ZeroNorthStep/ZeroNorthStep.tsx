@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -82,7 +82,6 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
   protected stepName = 'Configure Security Scan Step'
   protected stepIcon: IconName = 'sto-color-filled'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.ZeroNorth'
-
   protected stepPaletteVisible = false
 
   protected defaultValues: ZeroNorthStepData = {

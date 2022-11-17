@@ -16,7 +16,6 @@ import {
   Button,
   ButtonVariation,
   getMultiTypeFromValue,
-  Intent,
   Layout,
   MultiTypeInputType,
   SelectOption,
@@ -25,6 +24,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import {
   NGTriggerConfigV2,
@@ -192,7 +192,7 @@ export default function WebhookTriggerWizard(
     }
   })
 
-  const isGithubWebhookAuthenticationEnabled = useIsGithubWebhookAuthenticationEnabled()
+  const { isGithubWebhookAuthenticationEnabled } = useIsGithubWebhookAuthenticationEnabled()
 
   const returnToTriggersPage = (): void =>
     history.push(
@@ -327,7 +327,10 @@ export default function WebhookTriggerWizard(
       sourceRepo,
       identifier: '',
       tags: {},
-      ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier: '' }),
+      ...(sourceRepo === GitSourceProviders.GITHUB.value && {
+        encryptedWebhookSecretIdentifier: '',
+        isGithubWebhookAuthenticationEnabled
+      }),
       pipeline: newPipeline as PipelineInfoConfig,
       originalPipeline,
       resolvedPipeline,
@@ -349,9 +352,15 @@ export default function WebhookTriggerWizard(
         : newInitialValues
     }
 
+    const isGitHubWebhookTrigger = sourceRepo === GitSourceProviders.GITHUB.value
+
+    if (isGitHubWebhookTrigger) {
+      Object.assign(newInitialValues, { isGithubWebhookAuthenticationEnabled })
+    }
+
     setInitialValues(newInitialValues)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onEditInitialValues, currentPipeline])
+  }, [onEditInitialValues, currentPipeline, isGithubWebhookAuthenticationEnabled])
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline
@@ -616,7 +625,7 @@ export default function WebhookTriggerWizard(
           identifier,
           description,
           tags,
-          ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
+          ...(sourceRepoForYaml === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
           sourceRepo: sourceRepoForYaml,
           triggerType: TriggerBaseType.WEBHOOK,

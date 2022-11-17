@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { first } from 'lodash-es'
-import { Text, Button, Icon, Utils, Container, Layout } from '@wings-software/uicore'
+import { Text, Button, Icon, Utils, Container, Layout } from '@harness/uicore'
 import { Collapse } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import type { CIBuildCommit } from 'services/ci'

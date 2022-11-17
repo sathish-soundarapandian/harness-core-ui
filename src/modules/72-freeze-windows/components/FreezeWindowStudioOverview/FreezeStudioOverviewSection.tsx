@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
-import { Card, Container, Heading, FormikForm, ButtonVariation, Button, Formik } from '@wings-software/uicore'
+import { Card, Container, Heading, FormikForm, ButtonVariation, Button, Formik } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
@@ -67,7 +67,7 @@ export const FreezeStudioOverviewSection = (
           <FormikForm>
             <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
               <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-                {getString('freezeWindows.freezeStudio.freezeOverview')}
+                {getString('overview')}
               </Heading>
               <Card className={css.sectionCard}>
                 <NameIdDescriptionTags

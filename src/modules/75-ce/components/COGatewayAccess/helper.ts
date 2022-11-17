@@ -6,7 +6,7 @@
  */
 
 import { isEmpty as _isEmpty, defaultTo as _defaultTo, get } from 'lodash-es'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { Utils } from '@ce/common/Utils'
 import type {
   AccessPoint,

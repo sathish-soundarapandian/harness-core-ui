@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout } from '@wings-software/uicore'
+import { Text, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 const UserActivityLogTab: React.FC = () => {

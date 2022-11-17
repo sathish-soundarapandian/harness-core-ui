@@ -14,7 +14,7 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, get, set } from 'lodash-es'
 import produce from 'immer'

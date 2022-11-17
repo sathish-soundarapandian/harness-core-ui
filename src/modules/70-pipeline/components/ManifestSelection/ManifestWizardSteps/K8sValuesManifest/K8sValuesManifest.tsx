@@ -17,7 +17,7 @@ import {
   ButtonVariation,
   AllowedTypes,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'

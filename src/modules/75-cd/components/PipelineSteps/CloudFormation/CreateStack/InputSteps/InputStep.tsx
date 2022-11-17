@@ -12,7 +12,6 @@ import cx from 'classnames'
 import {
   FormikForm,
   Text,
-  Color,
   MultiSelectOption,
   MultiSelectTypeInput,
   Label,
@@ -21,6 +20,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

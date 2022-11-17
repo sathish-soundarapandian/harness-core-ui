@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { FormInput, SelectOption } from '@wings-software/uicore'
-import type { CustomRenderProps } from '@wings-software/uicore/dist/components/FormikForm/FormikForm'
+import { FormInput, SelectOption } from '@harness/uicore'
+import type { CustomRenderProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

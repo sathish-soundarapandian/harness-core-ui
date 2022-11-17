@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Button, ButtonSize, ButtonVariation, Container, Dialog, Icon, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Dialog, Icon, Layout, Text } from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'

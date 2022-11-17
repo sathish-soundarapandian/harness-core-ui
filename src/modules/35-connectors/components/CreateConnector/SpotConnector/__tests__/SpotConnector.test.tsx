@@ -45,7 +45,7 @@ describe('<SpotConnector />', () => {
         <SpotConnector {...commonProps} isEditMode={false} connectorInfo={connectorInfoMock} mock={mockResponse} />
       </TestWrapper>
     )
-    expect(getByText('connectors.title.spot')).toBeInTheDocument()
+    expect(getByText('cd.steps.elastigroup.connectorSpot')).toBeInTheDocument()
     expect(getByText('credentials')).toBeInTheDocument()
     expect(getByText('connectors.selectConnectivityMode')).toBeInTheDocument()
 

@@ -10,10 +10,6 @@
   line-height: var(--spaceing-large) !important;
 }
 
-.onboardingLayout {
-  align-items: baseline !important;
-}
-
 .secret {
   font-weight: 600 !important;
 }
@@ -30,7 +26,8 @@
   color: var(--grey-800);
 }
 
-.environmentContainer {
-  padding: var(--spacing-large) !important;
-  background-color: var(--grey-50) !important;
+.grid {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
 }

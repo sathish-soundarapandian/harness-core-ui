@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
 import type { JiraUpdateData } from './types'
 

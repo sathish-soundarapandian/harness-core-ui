@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 import type { AllNGVariables as Variable } from '@pipeline/utils/types'
@@ -134,7 +134,12 @@ export default function WorkflowVariables({
             tabName,
             formName,
             yamlProperties: getYamlPropertiesForVariables().map(
-              variable => metadataMap[variable.value || '']?.yamlProperties || {}
+              variable =>
+                metadataMap[variable.value || '']?.yamlProperties || {
+                  fqn: `serviceVariables.${variable?.name}`,
+                  variableName: variable?.name,
+                  visible: true
+                }
             ),
             enableValidation: true
           }}

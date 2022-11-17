@@ -6,7 +6,7 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 
 export enum VariableType {

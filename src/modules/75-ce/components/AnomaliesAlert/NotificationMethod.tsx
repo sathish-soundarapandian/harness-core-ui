@@ -6,18 +6,8 @@
  */
 
 import React from 'react'
-import {
-  Layout,
-  StepProps,
-  Color,
-  FontVariation,
-  Text,
-  ButtonVariation,
-  Button,
-  Icon,
-  FormInput,
-  SelectOption
-} from '@harness/uicore'
+import { Layout, StepProps, Text, ButtonVariation, Button, Icon, FormInput, SelectOption } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { FieldArray, FormikProps } from 'formik'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'

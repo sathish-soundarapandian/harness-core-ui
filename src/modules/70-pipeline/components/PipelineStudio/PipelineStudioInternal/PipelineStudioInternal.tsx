@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Container, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type {
   PipelinePathProps,
   ProjectPathProps,

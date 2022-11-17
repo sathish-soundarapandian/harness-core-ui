@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Layout, Container, Icon } from '@wings-software/uicore'
+import { Layout, Container, Icon } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Drawer, Position } from '@blueprintjs/core'
 import { CCM_CHART_TYPES } from '@ce/constants'

@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, Color, ButtonSize, Text, Card, FontVariation, FlexExpander, Button } from '@harness/uicore'
+import { Container, Layout, ButtonSize, Text, Card, FlexExpander, Button } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Collapse } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

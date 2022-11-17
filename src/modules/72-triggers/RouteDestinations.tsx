@@ -64,7 +64,7 @@ export const TriggersRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
-      path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps, ...moduleParams })}
+      path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps })}
       pageName={PAGE_NAME.TriggersDetailPage}
     >
       <TriggersDetailPage />

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { Container, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import type { ResourcesInterface } from '@freeze-windows/types'
 import { FreezeWindowStudioVisualView } from './FreezeWindowStudioVisualView'

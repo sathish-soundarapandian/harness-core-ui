@@ -5,10 +5,13 @@ import { Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import GroupedSideNav from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import AddCustomMetricButton from '../AddCustomMetricsButton'
 import { getCurrentSelectedMetricName, getGroupedCustomMetrics } from '../../CustomMetric.utils'
 import type { CommonCustomMetricPropertyType } from '../../CustomMetric.types'
 import { selectedIndexFormikPropertyName } from '../../CustomMetricV2.constants'
+import useCustomMetricV2HelperContext from '../../hooks/useCustomMetricV2HelperContext'
 import css from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/SelectedAppsSideNav.module.scss'
 import customCSS from '../../CustomMetricV2.module.scss'
 
@@ -21,6 +24,10 @@ export default function CustomMetricSideNav<T extends CommonCustomMetricProperty
   props: CustomMetricSideNavProps
 ): JSX.Element {
   const { onAddMetric, onDeleteMetric } = props
+
+  const { isTemplate } = useCustomMetricV2HelperContext()
+
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const { getString } = useStrings()
 
@@ -58,7 +65,7 @@ export default function CustomMetricSideNav<T extends CommonCustomMetricProperty
         selectedItem={currentSelectedMetricName}
         onRemoveItem={onDeleteMetric}
         groupedSelectedAppsList={groupedEntries as [string, GroupedMetric[]][]}
-        isMetricThresholdEnabled={false}
+        isMetricThresholdEnabled={isMetricThresholdEnabled}
       />
     </Layout.Vertical>
   )

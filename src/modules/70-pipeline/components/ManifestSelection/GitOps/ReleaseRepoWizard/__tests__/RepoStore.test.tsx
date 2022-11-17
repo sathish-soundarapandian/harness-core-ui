@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, getByText, render } from '@testing-library/react'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import RepoStore from '../RepoStore'
 

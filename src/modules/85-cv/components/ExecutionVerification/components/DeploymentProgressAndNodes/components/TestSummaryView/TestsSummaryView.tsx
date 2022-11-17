@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import moment from 'moment'
 import type { FontProps } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

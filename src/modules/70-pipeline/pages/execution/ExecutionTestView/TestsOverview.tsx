@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Icon, Text, Container, Layout, Heading, timeToDisplayText, HarnessDocTooltip } from '@wings-software/uicore'
+import { Icon, Text, Container, Layout, Heading, timeToDisplayText, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

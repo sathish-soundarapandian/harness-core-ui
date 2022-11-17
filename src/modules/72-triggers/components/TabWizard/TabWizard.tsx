@@ -18,9 +18,9 @@ import {
   Icon,
   IconName,
   VisualYamlSelectedView as SelectedView,
-  Container,
-  Color
+  Container
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'

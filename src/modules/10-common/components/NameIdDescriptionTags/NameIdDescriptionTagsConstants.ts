@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { TagInputProps } from '@wings-software/uicore'
+import type { TagInputProps } from '@harness/uicore'
 import type { ITagInputProps, IInputGroupProps } from '@blueprintjs/core'
-import type { InputWithIdentifierProps } from '@wings-software/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'
+import type { InputWithIdentifierProps } from '@harness/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'
 import type { FormikProps } from 'formik'
 
 export interface DescriptionProps {

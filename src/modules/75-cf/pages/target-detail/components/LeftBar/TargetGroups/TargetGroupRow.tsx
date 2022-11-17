@@ -7,7 +7,8 @@
 
 import React, { FC } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { ButtonVariation, FontVariation, Layout, Text } from '@harness/uicore'
+import { ButtonVariation, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import type { TargetDetailSegment } from 'services/cf'
 import { useStrings } from 'framework/strings'

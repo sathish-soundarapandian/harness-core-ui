@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'

@@ -10,18 +10,8 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { debounce } from 'lodash-es'
 import type { Column, CellProps } from 'react-table'
-import {
-  Text,
-  FontVariation,
-  Layout,
-  TableV2,
-  Container,
-  RadioButton,
-  Color,
-  TextInput,
-  FormError,
-  Icon
-} from '@harness/uicore'
+import { Text, Layout, TableV2, Container, RadioButton, TextInput, FormError, Icon } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useGetListOfAllReposByRefConnector, UserRepoResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

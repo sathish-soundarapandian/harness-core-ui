@@ -7,7 +7,8 @@
 
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Icon, IconName } from '@harness/icons'
-import { Color, FontVariation, FormInput, Layout, Popover, SelectOption, Text } from '@harness/uicore'
+import { FormInput, Layout, Popover, SelectOption, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'

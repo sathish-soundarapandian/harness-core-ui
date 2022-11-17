@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Popover, Position } from '@blueprintjs/core'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import cx from 'classnames'
 
 import { String } from 'framework/strings'

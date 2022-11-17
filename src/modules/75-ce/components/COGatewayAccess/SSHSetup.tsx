@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import DownloadCLI from '../DownloadCLI/DownloadCLI'
 import css from './COGatewayAccess.module.scss'
 

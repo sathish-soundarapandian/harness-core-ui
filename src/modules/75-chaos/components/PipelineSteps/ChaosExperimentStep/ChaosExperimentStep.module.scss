@@ -6,6 +6,10 @@
  */
 
 .chaosExperimentStep {
+  > * {
+    margin: 0 !important;
+  }
+
   #chaosExperimentReferenceField {
     background: var(--white);
     justify-content: space-between;
@@ -13,14 +17,17 @@
     padding: 0 12px;
     border-radius: var(--spacing-2);
     width: 100%;
+    max-width: 352px;
 
     &:hover {
       border-color: var(--primary-6);
     }
   }
 
-  .expectedResilienceScoreField {
-    margin: 16px 0;
-    width: 100%;
+  input {
+    max-width: 352px;
+  }
+  .nameIdDescriptionField {
+    max-width: 352px;
   }
 }

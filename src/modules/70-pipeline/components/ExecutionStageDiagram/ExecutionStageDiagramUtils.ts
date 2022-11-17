@@ -6,7 +6,7 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import { IconName, Utils } from '@wings-software/uicore'
+import { IconName, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import type { CSSProperties } from 'react'

@@ -17,7 +17,7 @@ import {
   ButtonSize,
   ButtonVariation,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'

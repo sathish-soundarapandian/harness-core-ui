@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState, useCallback } from 'react'
-import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation } from '@wings-software/uicore'
+import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { clone } from 'lodash-es'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'

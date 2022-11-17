@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { MultiSelectOption, AllowedTypes, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, AllowedTypes, SelectOption } from '@harness/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   Failure,

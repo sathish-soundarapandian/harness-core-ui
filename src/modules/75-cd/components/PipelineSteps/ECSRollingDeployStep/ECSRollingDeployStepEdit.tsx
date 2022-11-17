@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, Formik, FormikForm, FormInput, Layout } from '@wings-software/uicore'
+import { AllowedTypes, Formik, FormikForm, FormInput, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { StepElementConfig } from 'services/cd-ng'

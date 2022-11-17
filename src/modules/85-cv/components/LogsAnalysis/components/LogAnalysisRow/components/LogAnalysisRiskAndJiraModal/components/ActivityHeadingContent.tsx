@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Container, Text, Layout } from '@wings-software/uicore'
+import { Container, Text, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'

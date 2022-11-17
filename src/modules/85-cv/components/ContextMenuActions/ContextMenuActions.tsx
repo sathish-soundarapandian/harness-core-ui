@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Menu, Popover, Position } from '@blueprintjs/core'
-import { Button, ButtonVariation, Icon, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, ButtonVariation, Icon, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { ContextMenuActionsProps } from '@cv/pages/monitored-service/CVMonitoredService/CVMonitoredService.types'

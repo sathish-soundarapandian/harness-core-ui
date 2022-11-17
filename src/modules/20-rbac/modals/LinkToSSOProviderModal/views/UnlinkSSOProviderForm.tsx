@@ -18,7 +18,7 @@ import {
   FormInput,
   ButtonVariation,
   shouldShowError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

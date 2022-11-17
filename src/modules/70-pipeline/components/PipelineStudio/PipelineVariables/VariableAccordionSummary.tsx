@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Text } from '@wings-software/uicore'
+import { Icon, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import css from './PipelineVariables.module.scss'
 

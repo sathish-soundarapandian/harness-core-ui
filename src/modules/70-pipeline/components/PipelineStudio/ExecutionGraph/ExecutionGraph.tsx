@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { cloneDeep, set, isEmpty, get, defaultTo, omit } from 'lodash-es'
 import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'

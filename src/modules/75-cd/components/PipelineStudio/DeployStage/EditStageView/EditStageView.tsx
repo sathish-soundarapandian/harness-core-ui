@@ -19,7 +19,7 @@ import {
   Text,
   useConfirmationDialog
 } from '@harness/uicore'
-import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { Color, Intent } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'

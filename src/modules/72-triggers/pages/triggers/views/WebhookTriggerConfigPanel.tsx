@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { Layout, FormInput, SelectOption, Text, HarnessDocTooltip, PageSpinner } from '@wings-software/uicore'
+import { Layout, FormInput, SelectOption, Text, HarnessDocTooltip, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { useGetGitTriggerEventDetails } from 'services/pipeline-ng'

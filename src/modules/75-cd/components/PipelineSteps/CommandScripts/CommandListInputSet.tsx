@@ -9,17 +9,8 @@ import React from 'react'
 import { FieldArray } from 'formik'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import {
-  AllowedTypes,
-  Color,
-  Container,
-  getMultiTypeFromValue,
-  Icon,
-  Layout,
-  MultiTypeInputType,
-  Text
-} from '@harness/uicore'
-
+import { AllowedTypes, Container, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'

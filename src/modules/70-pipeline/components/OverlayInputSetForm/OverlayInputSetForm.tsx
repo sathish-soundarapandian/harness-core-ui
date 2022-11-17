@@ -22,7 +22,7 @@ import {
   VisualYamlToggle,
   Heading,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 

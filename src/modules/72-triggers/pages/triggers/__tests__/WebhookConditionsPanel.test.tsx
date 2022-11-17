@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor, queryByText, fireEvent } from '@testing-library/react'
-import { Formik, FormikForm, Button } from '@wings-software/uicore'
+import { Formik, FormikForm, Button } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'
 import { setFieldValue, InputTypes } from '@common/utils/JestFormHelper'

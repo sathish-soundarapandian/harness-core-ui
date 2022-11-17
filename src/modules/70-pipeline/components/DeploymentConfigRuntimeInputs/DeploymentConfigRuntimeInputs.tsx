@@ -14,9 +14,9 @@ import {
   Layout,
   MultiTypeInputType,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
-import { Color } from '@wings-software/design-system'
+import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { CustomVariableInputSet } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'

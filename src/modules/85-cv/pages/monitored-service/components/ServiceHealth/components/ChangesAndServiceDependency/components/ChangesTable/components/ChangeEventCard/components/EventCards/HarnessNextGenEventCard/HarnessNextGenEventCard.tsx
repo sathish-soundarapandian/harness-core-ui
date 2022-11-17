@@ -8,7 +8,7 @@
 import React, { useMemo, useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
-import { Card, Container, Layout, Text } from '@wings-software/uicore'
+import { Card, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'

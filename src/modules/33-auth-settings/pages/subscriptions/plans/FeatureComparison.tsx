@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Accordion, Text, Icon, Container, TableV2 } from '@wings-software/uicore'
+import { Accordion, Text, Icon, Container, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import type { FetchPlansQuery } from 'services/common/services'

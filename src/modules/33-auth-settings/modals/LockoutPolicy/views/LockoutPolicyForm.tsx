@@ -20,7 +20,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useToaster } from '@common/components'
 import type { LoginSettings, UserLockoutPolicy } from 'services/cd-ng'

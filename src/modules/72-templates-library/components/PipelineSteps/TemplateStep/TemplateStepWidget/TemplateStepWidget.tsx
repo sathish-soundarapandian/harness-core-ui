@@ -6,16 +6,7 @@
  */
 
 import React from 'react'
-import {
-  Container,
-  Formik,
-  FormikForm,
-  FormInput,
-  Layout,
-  AllowedTypes,
-  Heading,
-  PageError
-} from '@wings-software/uicore'
+import { Container, Formik, FormikForm, FormInput, Layout, AllowedTypes, Heading, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -56,6 +47,7 @@ export interface TemplateStepWidgetProps {
   readonly?: boolean
   factory: AbstractStepFactory
   allowableTypes: AllowedTypes
+  customStepProps: unknown
 }
 
 function TemplateStepWidget(
@@ -66,7 +58,7 @@ function TemplateStepWidget(
     state: { storeMetadata },
     setIntermittentLoading
   } = usePipelineContext()
-  const { initialValues, onUpdate, isNewStep, readonly, allowableTypes } = props
+  const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, customStepProps } = props
   const { getString } = useStrings()
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
@@ -77,6 +69,7 @@ function TemplateStepWidget(
   const [formValues, setFormValues] = React.useState<TemplateStepNode>(initialValues)
   const [allValues, setAllValues] = React.useState<StepElementConfig>()
   const [templateInputs, setTemplateInputs] = React.useState<StepElementConfig>()
+  const selectedStage = (customStepProps as any)?.selectedStage
 
   const {
     data: stepTemplateResponse,
@@ -248,6 +241,14 @@ function TemplateStepWidget(
                       allowableTypes={allowableTypes}
                       onUpdate={noop}
                       hideTitle={true}
+                      customStepProps={{
+                        // This is done because when StepForm used in normal steps, data structure is different
+                        // While here data structure is diff
+                        // This data is required in ECSBlueGreenCreateServiceStepInputSet component
+                        // where we need to find out Cluster/Region or envRef/infraRef
+                        selectedStage: selectedStage?.stage?.spec,
+                        stageIdentifier: selectedStage?.identifier
+                      }}
                     />
                   </Layout.Vertical>
                 )}
