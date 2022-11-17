@@ -137,7 +137,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   // Only do polling on first page and not initial default loading
   const isPolling = usePolling(fetchExecutions, {
     startPolling: page === DEFAULT_PAGE_INDEX && !loading,
-    pollingInterval: 20_000
+    pollingInterval: 5_000
   })
 
   const isCommunity = useGetCommunity()

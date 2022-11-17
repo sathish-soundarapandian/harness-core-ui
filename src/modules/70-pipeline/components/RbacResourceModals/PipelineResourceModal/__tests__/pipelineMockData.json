@@ -11,12 +11,7 @@
         "createdAt": 1610773936801,
         "lastUpdatedAt": 1617690550779,
         "modules": ["cd"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [0, 0, 0, 0, 0, 0, 0],
-          "lastExecutionTs": 1612245891280,
-          "lastExecutionStatus": "Failed"
-        },
+        "recentExecutionsInfo": [],
         "filters": {
           "cd": {
             "deploymentTypes": ["Kubernetes"],
@@ -36,10 +31,8 @@
         "createdAt": 1613451344796,
         "lastUpdatedAt": 1616493352883,
         "modules": ["cd"],
-        "executionSummaryInfo": {
-          "numOfErrors": [],
-          "deployments": []
-        },
+        "recentExecutionsInfo": [],
+
         "filters": {
           "cd": {
             "deploymentTypes": ["Kubernetes"],
@@ -60,13 +53,8 @@
         "createdAt": 1612160888498,
         "lastUpdatedAt": 1612161120783,
         "modules": ["cd"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [0, 0, 0, 0, 0, 0, 0],
-          "lastExecutionTs": 1616478470728,
-          "lastExecutionStatus": "Failed",
-          "lastExecutionId": "2ZVqL1GbQuaq4bl97hjTiA"
-        },
+        "recentExecutionsInfo": [],
+
         "filters": {
           "cd": {
             "deploymentTypes": ["Kubernetes"],
@@ -84,12 +72,7 @@
         "createdAt": 1609758041810,
         "lastUpdatedAt": 1609758041810,
         "modules": ["cd"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [0, 0, 0, 0, 0, 0, 0],
-          "lastExecutionTs": 1610771852023,
-          "lastExecutionStatus": "Success"
-        },
+        "recentExecutionsInfo": [],
         "filters": {
           "cd": {
             "deploymentTypes": ["Kubernetes"],

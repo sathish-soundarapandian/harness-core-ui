@@ -744,7 +744,7 @@ export const pipelineSummaryResponse = {
     createdAt: 1645768746144,
     lastUpdatedAt: 1645781212062,
     modules: ['cd'],
-    executionSummaryInfo: { numOfErrors: [], deployments: [] },
+    recentExecutionsInfo: [],
     filters: {
       cd: {
         deploymentTypes: ['Kubernetes'],

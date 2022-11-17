@@ -160,13 +160,7 @@ export const pipelinesListCallResponse = {
         createdAt: 1643729398277,
         lastUpdatedAt: 1643729619074,
         modules: ['cd'],
-        executionSummaryInfo: {
-          numOfErrors: [0, 0, 0, 0, 0, 0, 15],
-          deployments: [0, 0, 0, 0, 0, 0, 15],
-          lastExecutionTs: 1643739804626,
-          lastExecutionStatus: 'Failed',
-          lastExecutionId: '-_gYM5jES1Wnow2BKbvDBQ'
-        },
+        recentExecutionsInfo: [],
         filters: {
           cd: {
             deploymentTypes: ['Kubernetes'],
@@ -198,13 +192,7 @@ export const pipelinesListCallResponse = {
         createdAt: 1641473199732,
         lastUpdatedAt: 1643184469790,
         modules: ['cd', 'ci'],
-        executionSummaryInfo: {
-          numOfErrors: [1, 0, 0, 0, 0, 0, 0],
-          deployments: [6, 0, 20, 0, 0, 9, 0],
-          lastExecutionTs: 1643601881783,
-          lastExecutionStatus: 'Aborted',
-          lastExecutionId: 'wjWjWYaBRNeT1Rrza4N9Dg'
-        },
+        recentExecutionsInfo: [],
         filters: {
           cd: {
             deploymentTypes: ['Kubernetes'],
@@ -248,10 +236,7 @@ export const pipelinesListCallResponse = {
         createdAt: 1637310118606,
         lastUpdatedAt: 1640093470460,
         modules: ['cd'],
-        executionSummaryInfo: {
-          numOfErrors: [],
-          deployments: []
-        },
+        recentExecutionsInfo: [],
         filters: {
           cd: {
             deploymentTypes: ['Kubernetes'],

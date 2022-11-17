@@ -6,10 +6,10 @@
  */
 
 import { camelCase } from 'lodash-es'
-import type { ExecutionSummaryInfo } from 'services/pipeline-ng'
+import type { RecentExecutionInfoDTO } from 'services/pipeline-ng'
 
 export type ExecutionStatus = Exclude<
-  Required<ExecutionSummaryInfo>['lastExecutionStatus'],
+  Required<RecentExecutionInfoDTO>['status'],
   'NOT_STARTED' | 'INTERVENTION_WAITING' | 'APPROVAL_WAITING' | 'APPROVAL_REJECTED' | 'WAITING'
 >
 

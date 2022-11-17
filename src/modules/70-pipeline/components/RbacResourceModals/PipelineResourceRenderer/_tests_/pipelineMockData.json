@@ -11,12 +11,7 @@
         "createdAt": 1610773936801,
         "lastUpdatedAt": 1617690550779,
         "modules": ["cd"],
-        "executionSummaryInfo": {
-          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-          "deployments": [0, 0, 0, 0, 0, 0, 0],
-          "lastExecutionTs": 1612245891280,
-          "lastExecutionStatus": "Failed"
-        },
+        "recentExecutionsInfo": [],
         "filters": {
           "cd": {
             "deploymentTypes": ["Kubernetes"],
