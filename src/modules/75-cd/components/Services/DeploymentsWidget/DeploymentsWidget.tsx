@@ -17,7 +17,8 @@ import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticke
 import { getBucketSizeForTimeRange } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { PageSpinner, TimeSeriesAreaChart } from '@common/components'
 import type { TimeSeriesAreaChartProps } from '@common/components/TimeSeriesAreaChart/TimeSeriesAreaChart'
-import { DeploymentsTimeRangeContext, INVALID_CHANGE_RATE, numberFormatter } from '@cd/components/Services/common'
+import { DeploymentsTimeRangeContext, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import DeploymentsEmptyState from '@cd/icons/DeploymentsEmptyState.svg'
 import {
   GetServiceDeploymentsInfoQueryParams,

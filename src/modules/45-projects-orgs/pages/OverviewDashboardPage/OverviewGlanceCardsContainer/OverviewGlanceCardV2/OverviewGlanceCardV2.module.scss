@@ -4,4 +4,31 @@
   height: 110px;
   width: 110px !important;
   background-color: var(--white) !important;
+  padding: var(--spacing-medium) var(--margin-form-field) !important;
+  border: 1px solid transparent;
+  position: relative;
+
+  &.active {
+    &:hover {
+      transition: background-color 200ms ease-out;
+      transition: border 200ms ease-out;
+      border: 1px solid var(--primary-6);
+      background-color: var(--primary-bg) !important;
+
+      .viewAll {
+        display: block !important;
+      }
+    }
+  }
+  .deltaContainer {
+    width: fit-content;
+    border-radius: 100px;
+    padding: var(--spacing-xsmall) var(--spacing-small);
+  }
+  .viewAll {
+    display: none;
+    position: absolute;
+    right: var(--spacing-small);
+    bottom: var(--spacing-small);
+  }
 }

@@ -22,7 +22,7 @@ import { roundNumber, useErrorHandler } from '@pipeline/components/Dashboards/sh
 import { useGetDeploymentHealth, DeploymentDateAndCount } from 'services/cd-ng'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import { getFormattedTimeRange } from './dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
