@@ -181,7 +181,7 @@ export const SCMNavItem = () => {
     <li className={css.navItem}>
       <Link {...commonLinkProps} to={routes.toSCM(params)}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-          <Icon name="gitops-green" size={30} />
+          <Icon name="code" size={30} />
           <Text
             font={{ weight: 'semi-bold', align: 'center' }}
             padding={{ bottom: 'xsmall' }}

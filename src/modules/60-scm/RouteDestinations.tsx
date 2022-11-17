@@ -20,7 +20,7 @@ import SCMHomePage from './pages/home/SCMHomePage'
 export const sidebarProps: SidebarContext = {
   navComponent: SideNav,
   title: 'Code',
-  icon: 'gitops-green'
+  icon: 'code'
 }
 
 const RedirectToDefaultSCMRoute: React.FC = () => {
