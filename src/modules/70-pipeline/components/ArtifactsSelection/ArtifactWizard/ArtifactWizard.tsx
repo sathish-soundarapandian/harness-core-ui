@@ -87,7 +87,7 @@ function ArtifactWizard({
   const [connectivityMode, setConnectivityMode] = React.useState<ConnectivityModeType>()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
-    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 3) {
+    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
       handleViewChange(false)
     }
   }
