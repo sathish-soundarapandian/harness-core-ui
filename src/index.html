@@ -118,6 +118,14 @@
       }
     </script>
     <script>
+      window.getHarnessLocationPathname = () => {
+        let pathName = window.location.pathname
+        if (window.browserRouterEnabled) {
+          const nameSpace = window.harnessNameSpace ? `${window.harnessNameSpace}/` : ''
+          pathName = `/${nameSpace}ng/`
+        }
+        return pathName
+      }
       window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.NON_CDN_BASE_PATH
     </script>
 

@@ -13,7 +13,7 @@ export const getConfig = (str: string): string => {
   if (window.browserRouterEnabled) {
     return `${window.apiUrl || ''}/${str}`
   } else {
-    return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+    return window.apiUrl ? `${window.apiUrl}/${str}` : window.getHarnessLocationPathname().replace('ng/', '') + str
   }
 }
 export interface GetUsingFetchProps<

@@ -127,7 +127,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
         branch: selectedTemplate.gitDetails?.branch
       })
 
-      window.open(`${window.location.origin}${window.location.pathname}#${templateStudioPath}`, '_blank')
+      window.open(`${window.location.origin}${window.getHarnessLocationPathname()}#${templateStudioPath}`, '_blank')
     }
   }
 

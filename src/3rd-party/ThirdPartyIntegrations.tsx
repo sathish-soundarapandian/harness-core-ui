@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { injectHotJar, identifyHotJarUser } from './HotJar'
 import { useShouldIntegrateHotJar } from './hotjarUtil'
@@ -20,13 +21,12 @@ export const ThirdPartyIntegrations: React.FC = () => {
       injectHotJar()
     }
   }, [shouldIntegrateHotJar])
-
   useEffect(() => {
     if (shouldIntegrateHotJar && currentUserInfo) {
       identifyHotJarUser(email, {
         email,
         name: name || email?.split('@')[0] || '',
-        accountId: accounts?.find(({ uuid }) => location.hash.includes(uuid as string))?.uuid || ''
+        accountId: accounts?.find(({ uuid }) => useLocation().pathname.includes(uuid as string))?.uuid || ''
       })
     }
   }, [shouldIntegrateHotJar, currentUserInfo])

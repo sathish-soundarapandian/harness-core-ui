@@ -96,7 +96,7 @@ const versionAPIs = [
   }
 ]
 
-const BASE_URL = window.location.pathname.replace(/\/ng\/?/, '/')
+const BASE_URL = window.getHarnessLocationPathname().replace(/\/ng\/?/, '/')
 
 interface ServiceData {
   label?: string

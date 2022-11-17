@@ -57,9 +57,15 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
         'editor.background': '#f3f3fa'
       }
     })
-
+    const getLocationPath = () => {
+      if (window.browserRouterEnabled) {
+        return `${__DEV__ ? '/' : window.getHarnessLocationPathname()}`
+      } else {
+        return `${window.location.pathname}`
+      }
+    }
     const getUrlPrefix = () => {
-      let urlPrefix = `${window.location.origin}${window.location.pathname}`
+      let urlPrefix = `${window.location.origin}${getLocationPath()}`
       if (urlPrefix.charAt(urlPrefix.length - 1) !== '/') {
         urlPrefix += '/'
       }

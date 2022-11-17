@@ -132,7 +132,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
           // This may be overriden by the defaultExperience of the most recent account opened (in AppStoreContext)
           localStorage.setItem('defaultExperience', account.defaultExperience || '')
           // this needs to be a server-redirect to support cluster isolation
-          window.location.href = window.location.pathname
+          window.location.href = window.getHarnessLocationPathname()
         } else {
           showError(getString('common.switchAccountError'))
         }

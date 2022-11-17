@@ -10,8 +10,9 @@ import type { ModuleName } from 'framework/types/ModuleName'
 declare global {
   interface Window {
     bugsnagClient: any // eslint-disable-line,
-    browserRouterEnabled?: boolean //eslint-disable-line
-    harnessNameSpace: string //eslint-disable-line
+    browserRouterEnabled?: boolean
+    harnessNameSpace: string
+    getHarnessLocationPathname: () => string
   }
 }
 

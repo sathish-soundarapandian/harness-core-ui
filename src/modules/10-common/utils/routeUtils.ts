@@ -229,4 +229,4 @@ export const validateReturnUrl = (url: string): boolean => {
   }
 }
 
-export const returnLaunchUrl = (url: string): string => `${window.location.pathname.replace(/\/ng\//, '/')}${url}`
+export const returnLaunchUrl = (url: string): string => `${window.getHarnessLocationPathname().replace(/\/ng\//, '/')}${url}`

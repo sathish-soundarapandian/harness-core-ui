@@ -88,7 +88,7 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
 }
 
 const getRedirectionUrl = (accountId: string, source: string | undefined): string => {
-  const baseUrl = window.location.pathname.replace(/\/ng\//, '/')
+  const baseUrl = window.getHarnessLocationPathname().replace(/\/ng\//, '/')
   const dashboardUrl = `${baseUrl}#/account/${accountId}/dashboard`
   const onboardingUrl = `${baseUrl}#/account/${accountId}/onboarding`
   return source === 'signup' ? onboardingUrl : dashboardUrl

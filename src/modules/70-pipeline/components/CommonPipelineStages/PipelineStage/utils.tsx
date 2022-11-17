@@ -136,7 +136,7 @@ export const ViewPipelineButtonCell: Renderer<CellProps<PMSPipelineSummaryRespon
       branch: get(data, 'gitDetails.branch'),
       storeType: get(data, 'storeType') as StoreType
     })
-    window.open(`${window.location.origin}${window.location.pathname}#${pipelineStudioPath}`, '_blank')
+    window.open(`${window.location.origin}${window.getHarnessLocationPathname()}#${pipelineStudioPath}`, '_blank')
   }
 
   return (

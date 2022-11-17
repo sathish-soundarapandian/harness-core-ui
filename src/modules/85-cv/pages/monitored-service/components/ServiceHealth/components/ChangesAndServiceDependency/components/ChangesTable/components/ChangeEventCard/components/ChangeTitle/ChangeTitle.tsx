@@ -28,7 +28,7 @@ export default function ChangeTitle({ changeTitleData }: { changeTitleData: Chan
   )
 
   const openPipelineInNewTab = useCallback(() => {
-    const pipelineURL = `${window.location.origin}${window.location.pathname}#${url}`
+    const pipelineURL = `${window.location.origin}${window.getHarnessLocationPathname()}#${url}`
     if (url) {
       window.open(pipelineURL, '_blank')
     }

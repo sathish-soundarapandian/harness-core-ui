@@ -15,7 +15,7 @@ interface GetLoginPageURL {
 }
 
 export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
-  const locationPath = window.browserRouterEnabled ? '/' : window.location.pathname.replace(/\/ng\/?/, '/')
+  const locationPath = window.getHarnessLocationPathname().replace(/\/ng\/?/, '/')
   const basePath = window.HARNESS_ENABLE_NG_AUTH_UI ? `${locationPath}auth/#/signin` : `${locationPath}#/login`
 
   return returnUrl
@@ -26,8 +26,8 @@ export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
 export const getForgotPasswordURL = (): string => {
   // for basepath, pick current path, but remove `/ng/` or `/ng`, to respect PR env namespaces
   return window.HARNESS_ENABLE_NG_AUTH_UI
-    ? `${window.location.pathname.replace(/\/ng\/?/, '/')}auth/#/forgot-password`
-    : `${window.location.pathname.replace(/\/ng\//, '/')}#/forgot-password`
+    ? `${window.getHarnessLocationPathname().replace(/\/ng\/?/, '/')}auth/#/forgot-password`
+    : `${window.getHarnessLocationPathname().replace(/\/ng\//, '/')}#/forgot-password`
 }
 
 export interface UseLogoutReturn {
