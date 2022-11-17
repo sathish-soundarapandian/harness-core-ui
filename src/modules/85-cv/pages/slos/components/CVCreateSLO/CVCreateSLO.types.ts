@@ -164,3 +164,9 @@ export interface SLOTargetAndBudgetPolicyProps
   children: JSX.Element
   formikProps: FormikProps<SLOForm>
 }
+export interface ErrorBudgetInterface {
+  periodType: SLOForm['periodType']
+  periodLength: SLOForm['periodLength']
+  periodLengthType: SLOForm['periodLengthType']
+  SLOTargetPercentage: SLOForm['SLOTargetPercentage']
+}

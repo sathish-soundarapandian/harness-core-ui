@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import * as Highcharts from 'highcharts'
 import { render } from '@testing-library/react'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -23,6 +24,9 @@ const Wrapper = ({ data }: any) => {
 }
 
 describe('Valiate SLOTarget', () => {
+  beforeEach(() => {
+    Highcharts.useSerialIds(true)
+  })
   test('should render SLOTarget', () => {
     const { container } = render(<Wrapper data={{ SLOTargetPercentage: 0, periodLength: 0, periodLengthType: '' }} />)
     expect(container).toMatchSnapshot()
