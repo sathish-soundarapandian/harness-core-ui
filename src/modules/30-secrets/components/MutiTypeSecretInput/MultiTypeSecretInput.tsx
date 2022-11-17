@@ -189,7 +189,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
             fixedTypeComponentProps={{ onClick: openCreateOrSelectSecretModal }}
             fixedTypeComponent={MultiTypeSecretInputFixedTypeComponent}
             defaultValueToReset=""
-            style={{ flexGrow: 1 }}
+            className={css.secretInputField}
           />
         ) : (
           <MultiTypeSecretInputFixedTypeComponent

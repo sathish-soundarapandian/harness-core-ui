@@ -200,8 +200,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep - input sets are empty 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
+                    class="Layout--horizontal StyledProps--main secretInputField"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -1063,8 +1062,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
+                    class="Layout--horizontal StyledProps--main secretInputField"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -1926,8 +1924,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
+                    class="Layout--horizontal StyledProps--main secretInputField"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -2701,8 +2698,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
+                    class="Layout--horizontal StyledProps--main secretInputField"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -3688,8 +3684,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
+                    class="Layout--horizontal StyledProps--main secretInputField"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
