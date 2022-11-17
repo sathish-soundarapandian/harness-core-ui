@@ -35,7 +35,7 @@ export default function FilePreview(): JSX.Element {
   const { drawerData, setDrawerData } = useCDOnboardingContext()
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const [initialContent, setInitialContent] = React.useState<string>('')
   const [value, setValue] = React.useState('')
@@ -73,13 +73,13 @@ export default function FilePreview(): JSX.Element {
     refetch
   } = useDownloadFile({
     identifier: drawerData?.fileContent?.identifier as string,
-    queryParams: { accountIdentifier: accountId },
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
     lazy: true
   })
 
   const { mutate: updateNode, loading: saveLoading } = useUpdate({
     identifier: drawerData?.fileContent?.identifier as string,
-    queryParams: { accountIdentifier: accountId }
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
   useEffect(() => {
