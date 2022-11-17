@@ -32,7 +32,6 @@ import { Connectors } from '@connectors/constants'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { setupTasFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-//import { URLValidationSchema } from '@common/utils/Validation'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../GithubConnector/StepAuth/StepGithubAuthentication.module.scss'
 
@@ -116,7 +115,7 @@ const StepTasAuthentication: React.FC<StepProps<StepConfigureProps> & TasAuthent
   return (
     <Layout.Vertical className={classNames(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}>
       <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'tasAuthenticationDetails' }}>
-        {getString('details')}
+        {getString('credentials')}
       </Text>
       <Formik
         initialValues={{
@@ -125,8 +124,7 @@ const StepTasAuthentication: React.FC<StepProps<StepConfigureProps> & TasAuthent
         }}
         formName="stepTasAuthForm"
         validationSchema={Yup.object().shape({
-          endpointUrl: Yup.string().trim().required(getString('validation.endpointUrl')),
-          //  URLValidationSchema({ requiredMessage: getString('validation.masterUrl') }),
+          endpointUrl: Yup.string().trim().required(getString('connectors.validation.endpointUrl')),
           username: Yup.string().trim().required(getString('username')),
           passwordRef: Yup.string().trim().required(getString('password'))
         })}
@@ -137,7 +135,7 @@ const StepTasAuthentication: React.FC<StepProps<StepConfigureProps> & TasAuthent
             <Layout.Vertical className={classNames(css.stepFormWrapper, commonCss.paddingTop8)} spacing="large">
               <FormInput.Text
                 name="endpointUrl"
-                label={getString('connectors.k8.masterUrlLabel')}
+                label={getString('pipelineSteps.endpointLabel')}
                 placeholder={getString('UrlLabel')}
                 tooltipProps={{ dataTooltipId: `tas_master_url` }}
               />

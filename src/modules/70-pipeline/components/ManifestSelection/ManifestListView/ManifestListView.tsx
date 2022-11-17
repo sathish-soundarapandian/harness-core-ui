@@ -261,9 +261,7 @@ function ManifestListView({
     let manifestDetailStep = null
     const isGitTypeStores = isGitTypeManifestStore(manifestStore as ManifestStores)
 
-    switch (
-      true //TODO:: CHECK CHANES NEEDED HERE
-    ) {
+    switch (true) {
       case selectedManifest === ManifestDataType.HelmChart && isGitTypeStores:
         manifestDetailStep = <HelmWithGIT {...lastStepProps()} />
         break
@@ -313,7 +311,10 @@ function ManifestListView({
         ManifestDataType.Values,
         ManifestDataType.HelmChart,
         ManifestDataType.OpenshiftTemplate,
-        ManifestDataType.OpenshiftParam
+        ManifestDataType.OpenshiftParam,
+        ManifestDataType.TasManifest,
+        ManifestDataType.Vars,
+        ManifestDataType.AutoScaler
       ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.CustomRemote:
         manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
         break

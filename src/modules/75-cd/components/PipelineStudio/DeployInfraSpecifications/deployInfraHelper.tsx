@@ -406,7 +406,7 @@ const infraGroupItems: {
   },
   [InfraDeploymentType.TAS]: {
     label: 'pipeline.serviceDeploymentTypes.tas',
-    icon: 'cog', //TODO:: icon change'tas',
+    icon: 'service-pivotal', //TODO:: icon change'tas',
     value: InfraDeploymentType.TAS
   }
 }

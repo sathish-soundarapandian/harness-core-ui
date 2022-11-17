@@ -199,6 +199,7 @@ validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
   connectorIsRequired: Connector is required.
+  endpointUrl: Endpoint URL is required
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
 ociHelm:

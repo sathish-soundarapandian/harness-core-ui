@@ -187,9 +187,9 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsServiceDefinition: 'service-amazon-ecs',
   EcsScalingPolicyDefinition: 'service-amazon-ecs',
   EcsScalableTargetDefinition: 'service-amazon-ecs',
-  TasManifest: 'cog', //TODO:: icon change --> 'tas-manifest',
-  Vars: 'cog', //TODO:: icon change -->  'list-vars',
-  AutoScaler: 'cog' //TODO:: icon change --> 'autoScaler'
+  TasManifest: 'service-pivotal', //TODO:: icon change --> 'tas-manifest',
+  Vars: 'service-pivotal', //TODO:: icon change -->  'list-vars',
+  AutoScaler: 'service-pivotal' //TODO:: icon change --> 'autoScaler'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {

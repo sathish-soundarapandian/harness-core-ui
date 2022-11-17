@@ -34,7 +34,7 @@ describe('<StepTasAuthentication />', () => {
       </TestWrapper>
     )
 
-    // Change Master URL
+    // Change Endpoint URL
     await act(async () => {
       fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
         target: { value: 'http://sample_url_tas.com/' }
