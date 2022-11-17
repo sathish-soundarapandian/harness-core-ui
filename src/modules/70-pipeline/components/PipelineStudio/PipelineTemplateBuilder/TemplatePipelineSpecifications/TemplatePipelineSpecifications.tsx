@@ -84,6 +84,25 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   })
 
+  const originalEntityYaml = React.useMemo(
+    () =>
+      yamlStringify({
+        pipeline: {
+          name: pipeline.name,
+          identifier: pipeline.identifier,
+          orgIdentifier: pipeline.orgIdentifier,
+          projectIdentifier: pipeline.projectIdentifier,
+          tags: pipeline.tags,
+          template: {
+            templateRef,
+            versionLabel: templateVersionLabel,
+            templateInputs
+          }
+        }
+      }),
+    [pipeline, templateRef, templateVersionLabel, templateInputs]
+  )
+
   const {
     data: pipelineResponse,
     error: pipelineError,
@@ -95,24 +114,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
       pipelineIdentifier: pipeline.identifier,
       ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     },
-    body: {
-      originalEntityYaml: yamlStringify({
-        pipeline: {
-          name: pipeline.name,
-          identifier: pipeline.identifier,
-          orgIdentifier: pipeline.orgIdentifier,
-          projectIdentifier: pipeline.projectIdentifier,
-          tags: pipeline.tags,
-          template: {
-            templateRef,
-            versionLabel: templateVersionLabel,
-            templateInputs: {
-              ...parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, ''))
-            }
-          }
-        }
-      })
-    },
+    body: { originalEntityYaml },
     lazy: true
   })
 
