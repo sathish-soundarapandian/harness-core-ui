@@ -20,9 +20,9 @@ body,
 }
 
 body {
-  --font-family: "Inter", sans-serif;
-  --font-family-mono: Monaco, "Ubuntu Mono", "Courier New", monospace;
-  --font-family-reenie-beanie: "Reenie Beanie";
+  --font-family: 'Inter', sans-serif;
+  --font-family-mono: Monaco, 'Ubuntu Mono', 'Courier New', monospace;
+  --font-family-reenie-beanie: 'Reenie Beanie';
   --font-size: var(--font-size-small);
   min-width: 1280px;
 }
@@ -74,4 +74,4 @@ body {
 }
 /* stylelint-enable  color-no-hex */
 
-@import "@common/styles/index.scss";
+@import '@common/styles/index.scss';
