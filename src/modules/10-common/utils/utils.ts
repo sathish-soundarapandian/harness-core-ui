@@ -189,3 +189,41 @@ export const getImageDimensions = (url: string): Promise<{ width: number; height
     img.src = url
   })
 }
+
+export interface NumberFormatterOptions {
+  truncate?: boolean
+}
+
+export const numberFormatter: (value?: number, options?: NumberFormatterOptions) => string = (
+  value?: number,
+  options = { truncate: true }
+) => {
+  // istanbul ignore if
+  if (value === undefined) {
+    return ''
+  }
+  const truncateOptions = [
+    { value: 1000000, suffix: 'm' },
+    { value: 1000, suffix: 'k' }
+  ]
+  if (options.truncate) {
+    for (const truncateOption of truncateOptions) {
+      if (value >= truncateOption.value) {
+        const truncatedValue = value / truncateOption.value
+        // istanbul ignore if
+        if (truncatedValue % 1 !== 0) {
+          return `${truncatedValue.toFixed(1)}${truncateOption.suffix}`
+        }
+        return `${truncatedValue}${truncateOption.suffix}`
+      }
+    }
+  }
+  return `${getFixed(value)}`
+}
+
+export const getFixed = (value: number, places = 1): number => {
+  if (value % 1 === 0) {
+    return value
+  }
+  return parseFloat(value.toFixed(places))
+}

@@ -117,6 +117,10 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     clearPreference: clearSavedProject
   } = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
 
+  const { preference: recentProjects = [], setPreference: setRecentProjects } = usePreferenceStore<
+    SavedProjectDetails[]
+  >(PreferenceScope.USER, 'recentProjects')
+
   const [state, setState] = React.useState<Omit<AppStoreContextProps, 'updateAppStore' | 'strings'>>({
     featureFlags: {},
     currentUserInfo: { uuid: '' },
@@ -320,6 +324,15 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
             selectedProject: project
           }))
           setSavedProject({ projectIdentifier, orgIdentifier })
+          const indexInRecentProjects = recentProjects.findIndex(item => item.projectIdentifier === projectIdentifier)
+
+          if (indexInRecentProjects > -1) {
+            const recentProjectsCopy = [...recentProjects]
+            recentProjects.splice(indexInRecentProjects, 1)
+            setRecentProjects([{ projectIdentifier, orgIdentifier }, ...recentProjectsCopy])
+          } else {
+            setRecentProjects([{ projectIdentifier, orgIdentifier }, ...recentProjects])
+          }
         } else {
           // if no project was fetched, clear preference
           clearSavedProject()

@@ -1016,6 +1016,7 @@ export interface StringsMap {
   'common.variables': string
   'common.versionLabel': string
   'common.videoNotSupportedError': string
+  'common.viewAll': string
   'common.viewAndExecutePermissions': string
   'common.viewContent': string
   'common.viewLatest': string

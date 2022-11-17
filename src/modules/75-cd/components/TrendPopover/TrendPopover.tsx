@@ -11,7 +11,7 @@ import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { SparklineChart, SparklineChartProps } from '@common/components/SparklineChart/SparklineChart'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import css from '@cd/components/TrendPopover/TrendPopover.module.scss'
 
 export interface TrendPopoverProps {

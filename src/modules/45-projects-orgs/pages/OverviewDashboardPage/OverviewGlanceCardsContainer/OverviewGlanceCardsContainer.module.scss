@@ -2,7 +2,7 @@
   .card {
     margin-right: var(--margin-form-field);
     &:last-child {
-      margin-right: none;
+      margin-right: 0;
     }
   }
 }

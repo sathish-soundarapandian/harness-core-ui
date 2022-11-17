@@ -6,6 +6,7 @@ import { useGetCounts } from 'services/dashboard-service'
 import { OverviewGalanceCard } from '@projects-orgs/components/OverviewGlanceCards/OverviewGlanceCards'
 import type { CountChangeAndCountChangeRateInfo } from 'services/dashboard-service'
 import type { StringsMap } from 'stringTypes'
+import routes from '@common/RouteDefinitions'
 import OverviewGlanceCardV2 from './OverviewGlanceCardV2/OverviewGlanceCardV2'
 import css from './OverviewGlanceCardsContainer.module.scss'
 
@@ -14,6 +15,7 @@ interface GlanceCard {
   label: StringsMap
   count?: number
   countChangeInfo?: CountChangeAndCountChangeRateInfo
+  url?: string
 }
 
 const OverviewGlanceCardsV2 = () => {
@@ -36,7 +38,8 @@ const OverviewGlanceCardsV2 = () => {
       type: OverviewGalanceCard.PROJECT,
       label: 'projectsText',
       count: projectsCountDetail?.count,
-      countChangeInfo: projectsCountDetail?.countChangeAndCountChangeRateInfo
+      countChangeInfo: projectsCountDetail?.countChangeAndCountChangeRateInfo,
+      redirectUrl: routes.toProjects({ accountId })
     },
     {
       type: OverviewGalanceCard.SERVICES,
