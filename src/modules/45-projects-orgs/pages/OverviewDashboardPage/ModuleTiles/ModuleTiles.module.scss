@@ -1,0 +1,20 @@
+.moduleTiles {
+  padding-top: var(--spacing-large) !important;
+  display: grid;
+  grid-template-columns: repeat(3, 186px);
+  grid-template-rows: repeat(3, 148px);
+  grid-gap: var(--spacing-large);
+  grid-auto-flow: row;
+
+  .tile {
+    width: 186px;
+    height: 148px;
+  }
+
+  .expanded {
+    grid-row-end: span 2;
+    grid-column-end: span 2;
+    width: 392px;
+    height: 316px;
+  }
+}
