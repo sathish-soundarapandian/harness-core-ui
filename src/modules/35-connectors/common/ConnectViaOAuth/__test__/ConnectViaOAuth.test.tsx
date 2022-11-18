@@ -27,7 +27,9 @@ describe('Test ConnectViaOAuth component', () => {
     accountId: 'accountId',
     gitProviderType: 'Github',
     setOAuthStatus: jest.fn(),
-    setForceFailOAuthTimeoutId: jest.fn()
+    setForceFailOAuthTimeoutId: jest.fn(),
+    orgIdentifier: 'orgId',
+    projectIdentifier: 'projectId'
   }
   test('Initial render for Github connector', () => {
     const { getByText } = render(<ConnectViaOAuth {...props} />)
