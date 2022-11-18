@@ -74,11 +74,8 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     try {
       const { headers } = getRequestOptions()
       let oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProviderType.toLowerCase()}&accountId=${accountId}`
-      oauthRedirectEndpoint += orgIdentifier
-        ? projectIdentifier
-          ? `&orgId=${orgIdentifier}&projectId=${projectIdentifier}`
-          : `&orgId=${orgIdentifier}`
-        : ''
+      if (orgIdentifier) oauthRedirectEndpoint += `&orgId=${orgIdentifier}`
+      if (orgIdentifier && projectIdentifier) oauthRedirectEndpoint += `&projectId=${projectIdentifier}`
       const response = await fetch(oauthRedirectEndpoint, {
         headers
       })
