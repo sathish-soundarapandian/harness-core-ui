@@ -13,7 +13,9 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { FocusStyleManager } from '@blueprintjs/core'
 import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
+import { HarnessReactAPIClient } from '@harnessio/react-api-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
+import { noop } from 'lodash-es'
 import SessionToken from 'framework/utils/SessionToken'
 import { queryClient } from 'services/queryClient'
 
@@ -175,6 +177,18 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       globalResponseHandler(detail.response)
     }
   })
+
+  useEffect(() => {
+    new HarnessReactAPIClient({
+      responseInterceptor: globalResponseHandler,
+      requestInterceptor: noop,
+      getHeaders: () => {
+        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+      },
+      setHeaders: noop
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalResponseHandler])
 
   return (
     <RestfulProvider

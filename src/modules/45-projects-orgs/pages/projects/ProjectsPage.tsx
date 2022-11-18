@@ -20,8 +20,9 @@ import {
   ButtonSize
 } from '@harness/uicore'
 
+import { OrganizationResponse, useGetOrganizationsQuery } from '@harnessio/react-api-client'
 import { useQueryParams } from '@common/hooks'
-import { useGetOrganizationList, useGetProjectAggregateDTOList } from 'services/cd-ng'
+import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
@@ -78,11 +79,26 @@ const ProjectsListPage: React.FC = () => {
     []
   )
 
-  const { data: orgsData } = useGetOrganizationList({
-    queryParams: {
-      accountIdentifier: accountId
+  const {
+    data: orgsDataFromQuery,
+    // isLoading: isQueryLoading,
+    // status,
+    refetch: refetchQuery
+  } = useGetOrganizationsQuery(
+    {
+      queryParams: {
+        limit: 100
+      }
+    },
+    {
+      staleTime: 60 * 1000 * 15
     }
-  })
+  )
+
+  useEffect(() => {
+    refetchQuery()
+  }, [refetchQuery])
+
   const { showSuccess } = useToaster()
 
   useEffect(
@@ -98,14 +114,15 @@ const ProjectsListPage: React.FC = () => {
   const organizations: SelectOption[] = useMemo(() => {
     return [
       allOrgsSelectOption,
-      ...(orgsData?.data?.content?.map(org => {
+      ...(orgsDataFromQuery?.map((orgData: OrganizationResponse) => {
+        const org = orgData?.org
         return {
-          label: org.organization.name,
-          value: org.organization.identifier
+          label: org?.name || '',
+          value: org?.slug || ''
         }
       }) || [])
     ]
-  }, [orgsData?.data?.content, allOrgsSelectOption])
+  }, [orgsDataFromQuery, allOrgsSelectOption])
 
   React.useEffect(() => {
     setPage(0)

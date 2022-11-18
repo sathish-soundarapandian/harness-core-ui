@@ -65,6 +65,7 @@
     "@harness/uicore": "^3.89.2",
     "@harness/use-modal": "1.1.0",
     "@harnessio/ff-react-client-sdk": "^1.0.0-alpha.12",
+    "@harnessio/react-api-client": "^0.0.4",
     "@popperjs/core": "^2.4.2",
     "@stripe/react-stripe-js": "^1.9.0",
     "@stripe/stripe-js": "^1.32.0",
@@ -240,6 +241,7 @@
     "@types/react-dom": "^17.0.3",
     "@types/testing-library__react": "^10.0.0",
     "@types/testing-library__dom": "^7.0.0",
+    "@tanstack/react-query": "^4.14.1",
     "anser": "2.0.1",
     "create-react-context": "0.3.0",
     "webpack": "5.70.0"
