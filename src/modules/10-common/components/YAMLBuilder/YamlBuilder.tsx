@@ -14,8 +14,6 @@ import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.ap
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil, get } from 'lodash-es'
 import { useToaster } from '@common/exports'
-<<<<<<< HEAD
-import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
@@ -26,16 +24,6 @@ import type {
   YamlBuilderHandlerBinding,
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
-=======
-import SplitPane from 'react-split-pane'
-import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { useStrings } from 'framework/strings'
-import cx from 'classnames'
-import { scalarOptions, defaultOptions } from 'yaml'
-import { Tag, Icon, Container, useConfirmationDialog } from '@wings-software/uicore'
-import type { YamlBuilderProps, YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import SnippetSection from '@common/components/SnippetSection/SnippetSection'
->>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
@@ -57,7 +45,8 @@ import {
   META_EVENT_KEY_CODE,
   SHIFT_EVENT_KEY_CODE,
   navigationKeysMap,
-  allowedKeysInEditModeMap
+  allowedKeysInEditModeMap,
+  KEY_CODE_FOR_SEMI_COLON
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -82,11 +71,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     isEditModeSupported = true,
     isHarnessManaged = false,
     hideErrorMesageOnReadOnlyMode = false,
-<<<<<<< HEAD
-    invocationMap,
-=======
-    showSnippetSection = true,
->>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
     bind,
     onExpressionTrigger,
     schema,
@@ -100,16 +84,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     showCopyIcon = true,
     comparableYaml
   } = props
-<<<<<<< HEAD
-<<<<<<< HEAD
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
-  setUpEditor(theme)
-=======
->>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
-  const params = useParams()
-=======
->>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
   const [currentJSON, setCurrentJSON] = useState<object>()
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
@@ -343,26 +319,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
-<<<<<<< HEAD
-  /** Run-time Inputs support */
-  function registerCompletionItemProviderForRTInputs(
-    editor: editor.IStandaloneCodeEditor,
-    suggestionsPromise: Promise<CompletionItemInterface[]>
-  ): void {
-    if (editor) {
-      suggestionsPromise.then(suggestions => {
-        // @ts-ignore
-        disposePreviousSuggestions()
-        runTimeCompletionDisposer = monaco?.languages?.registerCompletionItemProvider('yaml', {
-          triggerCharacters: [' '],
-          provideCompletionItems: () => {
-            return { suggestions }
-          }
-        })
-      })
-    }
-  }
-
   function isAllowedValues(input: string): boolean {
     let regex = /<\+input>\.allowedValues\([^)]*\)/i
     return regex.test(input)
@@ -398,23 +354,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
-  const invokeCallBackForMatchingYAMLPaths = (
-    editor: editor.IStandaloneCodeEditor,
-    matchingPath: string | undefined
-  ): void => {
-    if (editor && matchingPath) {
-      invocationMap?.forEach((callBackFunc, yamlPath) => {
-        if (matchingPath.match(yamlPath) && typeof callBackFunc === 'function') {
-          const yamlFromEditor = getYAMLFromEditor(editor, true) as string
-          const suggestionsPromise = callBackFunc(matchingPath, yamlFromEditor, params)
-          registerCompletionItemProviderForRTInputs(editor, suggestionsPromise)
-        }
-      })
-    }
-  }
-
-=======
->>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
   const shouldInvokeExpressions = (editor: editor.IStandaloneCodeEditor, event: IKeyboardEvent): boolean => {
     const lastKeyStrokeCharacter = getEditorContentInCurrentLine(editor)?.substr(-1)
     const { shiftKey, code } = event
@@ -504,19 +443,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         if (isAllowedValues(currentPathValue)) {
           registerCompletionItemProviderForAllowedValues(editor, currentPathValue)
         }
-
-        // this is to invoke run-time inputs as suggestions
-        // also these are restricted to specific keystrokes as these action make api calls
-        if ((ctrlKey && code === KEY_CODE_FOR_SPACE) || (shiftKey && code === KEY_CODE_FOR_SEMI_COLON)) {
-          if (invocationMap && invocationMap.size > 0 && !isAllowedValues(currentPathValue)) {
-            const yamlPathForNonAllowedValued = getMetaDataForKeyboardEventProcessing({
-              editor,
-              onErrorCallback,
-              shouldAddPlaceholder: true
-            })?.parentToCurrentPropertyPath
-            invokeCallBackForMatchingYAMLPaths(editor, yamlPathForNonAllowedValued)
-          }
-        }
       }
 
       if (shiftKey) {
@@ -529,21 +455,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           disposePreviousSuggestions()
           registerCompletionItemProviderForExpressions(editor, TRIGGER_CHARS_FOR_NEW_EXPR, yamlPath)
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        // this is to invoke run-time inputs as suggestions
-        else if (code === KEY_CODE_FOR_SEMI_COLON && invocationMap && invocationMap.size > 0) {
-          const yamlPath = getMetaDataForKeyboardEventProcessing({
-            editor,
-            onErrorCallback,
-            shouldAddPlaceholder: true
-          })?.parentToCurrentPropertyPath
-          disposePreviousSuggestions()
-        }
->>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
-=======
->>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
       }
       // this is to invoke partial expressions callback e.g. invoke expressions callback on hitting a period(.) after an expression: expr1.expr2. <-
       if (code === KEY_CODE_FOR_PERIOD) {
