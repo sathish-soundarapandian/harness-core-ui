@@ -91,7 +91,7 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
 
     labelFilters.forEach(item => {
       item.idFilter?.values?.forEach(val => {
-        tags.push(`${item.idFilter?.field?.fieldName} IN ${val}`)
+        tags.push(`${item.idFilter?.field?.fieldName}:${val}`)
       })
     })
 
@@ -145,7 +145,7 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
   }
 
   const handleOnRemove = (tag: string): void => {
-    const valArr = tag.split(' IN ')
+    const valArr = tag.split(':')
 
     const key = valArr[0]
     const value = valArr[1]
