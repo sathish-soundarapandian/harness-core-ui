@@ -15,7 +15,7 @@ export const ThirdPartyIntegrations: React.FC = () => {
   const { currentUserInfo } = useAppStore()
   const { email, name, accounts } = currentUserInfo
   const shouldIntegrateHotJar = useShouldIntegrateHotJar()
-
+  const { pathname } = useLocation()
   useEffect(() => {
     if (shouldIntegrateHotJar) {
       injectHotJar()
@@ -26,7 +26,7 @@ export const ThirdPartyIntegrations: React.FC = () => {
       identifyHotJarUser(email, {
         email,
         name: name || email?.split('@')[0] || '',
-        accountId: accounts?.find(({ uuid }) => useLocation().pathname.includes(uuid as string))?.uuid || ''
+        accountId: accounts?.find(({ uuid }) => pathname.includes(uuid as string))?.uuid || ''
       })
     }
   }, [shouldIntegrateHotJar, currentUserInfo])

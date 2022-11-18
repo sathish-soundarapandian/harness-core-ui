@@ -13,7 +13,10 @@ export const getConfig = (str: string): string => {
   if (window.browserRouterEnabled) {
     return `${window.apiUrl || ''}/${str}`
   } else {
-    return window.apiUrl ? `${window.apiUrl}/${str}` : window.getHarnessLocationPathname().replace('ng/', '') + str
+    // repeating location.pathname since  every test case is failing giving error saying window.getHarnessLocationPathname
+    // not defined and need to write window.getharnesslocationpathname in every test case to correct it
+    const pathName = window.getHarnessLocationPathname ? window.getHarnessLocationPathname() : window.location.pathname
+    return window.apiUrl ? `${window.apiUrl}/${str}` : pathName.replace('ng/', '') + str
   }
 }
 export interface GetUsingFetchProps<
