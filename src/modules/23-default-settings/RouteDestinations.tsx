@@ -24,16 +24,56 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { String } from 'framework/strings'
 import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
-import { SettingType } from './interfaces/SettingType.types'
+import { SettingType, SettingGroups } from './interfaces/SettingType.types'
 import {
   DefaultSettingCheckBoxWithTrueAndFalse,
-  DefaultSettingRadioBtnWithTrueAndFalse
+  DefaultSettingRadioBtnWithTrueAndFalse,
+  DefaultSettingStringDropDown,
+  DefaultSettingTextbox
 } from './components/ReusableHandlers'
 
 DefaultSettingsFactory.registerCategory('CORE', {
   icon: 'cog',
   label: 'common.module.core',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'scm', 'sto']
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {
+  label: 'common.accountSetting.connector.disableBISMHeading',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'CORE'
+})
+DefaultSettingsFactory.registerCategory('AUTH', {
+  icon: 'cd-main',
+  label: 'common.purpose.cd.continuous',
+  settingsAndGroupDisplayOrder: [
+    SettingType.test_setting_AUTH_1,
+    SettingType.test_setting_AUTH_2,
+    SettingType.test_setting_AUTH_3
+  ],
+  modulesWhereCategoryWillBeDisplayed: ['cd']
+})
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.test_group_AUTH, {
+  settingCategory: 'AUTH',
+  groupName: 'defaultSettings.test_group_AUTH'
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_AUTH_1, {
+  label: 'defaultSettings.test_setting_AUTH_1',
+  settingCategory: 'AUTH',
+  groupId: SettingGroups.test_group_AUTH,
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_AUTH_2, {
+  label: 'defaultSettings.test_setting_AUTH_2',
+  settingCategory: 'AUTH',
+  groupId: SettingGroups.test_group_AUTH,
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_AUTH_3, {
+  label: 'defaultSettings.test_setting_AUTH_3',
+  settingCategory: 'CD',
+  groupId: SettingGroups.test_group_AUTH,
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
 })
 DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {
   label: 'common.accountSetting.connector.disableBISMHeading',

@@ -1351,6 +1351,10 @@ export interface StringsMap {
   'defaultSettings.mandateWebhookSecretsGithubTriggers': string
   'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
+  'defaultSettings.test_group_AUTH': string
+  'defaultSettings.test_setting_AUTH_1': string
+  'defaultSettings.test_setting_AUTH_2': string
+  'defaultSettings.test_setting_AUTH_3': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string

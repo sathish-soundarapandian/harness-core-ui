@@ -111,6 +111,8 @@ const SettingsList = () => {
     updateValidationScheme({ ...validationScheme, ...val })
   }
 
+  // console.log('defaultSettingsCategory:', defaultSettingsCategory)
+
   return (
     <>
       {hasRBACViewPermission ? (
