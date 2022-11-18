@@ -264,7 +264,7 @@ export function PipelineListPage(): React.ReactElement {
               }}
             />
           ) : (
-            <RepoFilter onChange={onChangeRepo} value={repoName} isPipelinePage={true} />
+            <RepoFilter onChange={onChangeRepo} value={repoName} isPipelinePage />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal style={{ alignItems: 'center' }}>

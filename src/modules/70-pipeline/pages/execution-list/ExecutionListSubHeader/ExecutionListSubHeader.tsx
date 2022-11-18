@@ -193,7 +193,7 @@ export function ExecutionListSubHeader(
               onBranchChange(selected.value as string)
             }}
             selectedBranch={selectedBranch}
-            isExecutionsPage={true}
+            isExecutionsPage
           />
         )}
       </div>
