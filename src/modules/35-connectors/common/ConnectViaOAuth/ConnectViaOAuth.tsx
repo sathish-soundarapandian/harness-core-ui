@@ -31,6 +31,8 @@ export interface ConnectViaOAuthProps {
   oAuthSecretIntercepted?: React.MutableRefObject<boolean>
   forceFailOAuthTimeoutId?: NodeJS.Timeout
   setForceFailOAuthTimeoutId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | undefined>>
+  orgIdentifier: string | undefined
+  projectIdentifier: string | undefined
 }
 
 export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
@@ -43,7 +45,9 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     oAuthSecretIntercepted,
     setOAuthStatus,
     forceFailOAuthTimeoutId,
-    setForceFailOAuthTimeoutId
+    setForceFailOAuthTimeoutId,
+    orgIdentifier,
+    projectIdentifier
   } = props
   const { getString } = useStrings()
 
@@ -69,7 +73,12 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     }
     try {
       const { headers } = getRequestOptions()
-      const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProviderType.toLowerCase()}&accountId=${accountId}`
+      let oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProviderType.toLowerCase()}&accountId=${accountId}`
+      oauthRedirectEndpoint += orgIdentifier
+        ? projectIdentifier
+          ? `&orgId=${orgIdentifier}&projectId=${projectIdentifier}`
+          : `&orgId=${orgIdentifier}`
+        : ''
       const response = await fetch(oauthRedirectEndpoint, {
         headers
       })

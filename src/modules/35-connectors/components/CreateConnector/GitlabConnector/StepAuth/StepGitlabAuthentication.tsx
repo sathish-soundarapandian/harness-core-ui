@@ -461,6 +461,8 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
                         oAuthSecretIntercepted={oAuthSecretIntercepted}
                         forceFailOAuthTimeoutId={forceFailOAuthTimeoutId}
                         setForceFailOAuthTimeoutId={setForceFailOAuthTimeoutId}
+                        orgIdentifier={props.orgIdentifier}
+                        projectIdentifier={props.projectIdentifier}
                       />
                     </Layout.Vertical>
                   ) : (

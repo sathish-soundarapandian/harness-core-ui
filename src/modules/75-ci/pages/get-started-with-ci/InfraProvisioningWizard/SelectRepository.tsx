@@ -31,6 +31,7 @@ import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { getFullRepoName } from '../../../utils/HostedBuildsUtils'
+import { ACCOUNT_SCOPE_PREFIX } from './Constants'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -135,7 +136,7 @@ const SelectRepositoryRef = (
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          connectorRef: `${connectorRef}`
+          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRef}`
         }
       })
     }

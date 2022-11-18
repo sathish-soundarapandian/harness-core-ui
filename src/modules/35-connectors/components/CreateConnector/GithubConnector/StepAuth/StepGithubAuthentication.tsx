@@ -445,6 +445,8 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                       oAuthSecretIntercepted={oAuthSecretIntercepted}
                       forceFailOAuthTimeoutId={forceFailOAuthTimeoutId}
                       setForceFailOAuthTimeoutId={setForceFailOAuthTimeoutId}
+                      orgIdentifier={props.orgIdentifier}
+                      projectIdentifier={props.projectIdentifier}
                     />
                   ) : (
                     <>

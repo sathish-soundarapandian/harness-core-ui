@@ -39,9 +39,7 @@ describe('Test HostedBuildsUtils methods', () => {
   test('Test getOAuthConnectorPayload method', () => {
     const oAuthConnectorPayloadForGithub = getOAuthConnectorPayload({
       tokenRef: 'secret-token',
-      gitProviderType: 'Github',
-      orgIdentifier: 'default',
-      projectIdentifier: 'defaultproject'
+      gitProviderType: 'Github'
     })
     expect(get(oAuthConnectorPayloadForGithub, 'connector.name')).toBe('Github OAuth')
     expect(get(oAuthConnectorPayloadForGithub, 'connector.identifier')).toBe('Github_OAuth_1585699200000')
@@ -52,9 +50,7 @@ describe('Test HostedBuildsUtils methods', () => {
     const oAuthConnectorPayloadForGitlab = getOAuthConnectorPayload({
       tokenRef: 'secret-token',
       refreshTokenRef: 'secret-refresh-token',
-      gitProviderType: 'Gitlab',
-      orgIdentifier: 'default',
-      projectIdentifier: 'defaultproject'
+      gitProviderType: 'Gitlab'
     })
     expect(get(oAuthConnectorPayloadForGitlab, 'connector.name')).toBe('Gitlab OAuth')
     expect(get(oAuthConnectorPayloadForGitlab, 'connector.identifier')).toBe('Gitlab_OAuth_1585699200000')
@@ -71,9 +67,7 @@ describe('Test HostedBuildsUtils methods', () => {
     const oAuthConnectorPayloadForBitbucket = getOAuthConnectorPayload({
       tokenRef: 'secret-token',
       refreshTokenRef: 'secret-refresh-token',
-      gitProviderType: 'Bitbucket',
-      orgIdentifier: 'default',
-      projectIdentifier: 'defaultproject'
+      gitProviderType: 'Bitbucket'
     })
     expect(get(oAuthConnectorPayloadForBitbucket, 'connector.name')).toBe('Bitbucket OAuth')
     expect(get(oAuthConnectorPayloadForBitbucket, 'connector.identifier')).toBe('Bitbucket_OAuth_1585699200000')

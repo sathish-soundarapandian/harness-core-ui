@@ -115,7 +115,7 @@ const SelectGitProviderRef = (
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(TestStatus.NOT_INITIATED)
   const formikRef = useRef<FormikContextType<SelectGitProviderInterface>>()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
   const [connector, setConnector] = useState<ConnectorInfoDTO>()
   const [secret, setSecret] = useState<SecretDTOV2>()
@@ -143,9 +143,7 @@ const SelectGitProviderRef = (
               getOAuthConnectorPayload({
                 tokenRef: tokenRef,
                 refreshTokenRef: refreshTokenRef ? refreshTokenRef : '',
-                gitProviderType: gitProvider.type as ConnectorInfoDTO['type'],
-                orgIdentifier,
-                projectIdentifier
+                gitProviderType: gitProvider.type as ConnectorInfoDTO['type']
               }),
               'connector.spec.url',
               getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type'])
@@ -933,7 +931,7 @@ const SelectGitProviderRef = (
                               if (gitProvider?.type) {
                                 try {
                                   const { headers } = getRequestOptions()
-                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}&orgId=${orgIdentifier}&projectId=${projectIdentifier}`
+                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}`
                                   const response = await fetch(oauthRedirectEndpoint, {
                                     headers
                                   })
