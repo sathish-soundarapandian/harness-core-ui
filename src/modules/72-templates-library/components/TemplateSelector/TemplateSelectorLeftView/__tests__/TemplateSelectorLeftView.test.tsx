@@ -102,8 +102,8 @@ describe('<TemplateSelectorLeftView> tests', () => {
         <TemplateSelectorLeftView {...baseProps} />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
     expect(useGetRepositoryList).toBeCalled()
+    expect(container).toMatchSnapshot()
 
     expect(templateListCallMock).toBeCalledWith(
       undefined,

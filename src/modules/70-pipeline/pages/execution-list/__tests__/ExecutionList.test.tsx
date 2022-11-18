@@ -21,7 +21,7 @@ import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipelin
 import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
 import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
-import { useGetExecutionData, useGetListOfExecutions } from 'services/pipeline-ng'
+import { useGetExecutionData, useGetListOfExecutions, useGetExecutionRepositoriesList } from 'services/pipeline-ng'
 import { ExecutionList } from '../ExecutionList'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -65,6 +65,9 @@ jest.mock('services/pipeline-ng', () => ({
     cancel: jest.fn()
   })),
   useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  }),
+  useGetRepositoryList: jest.fn().mockImplementation(() => {
     return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
   }),
   useGetPipelineList: jest.fn().mockImplementation(args => {
@@ -182,10 +185,9 @@ describe('Execution List', () => {
 
   test('should have relevant navigation links for CD execution', async () => {
     renderExecutionPage()
-
     const rows = await screen.findAllByRole('row')
     const cdExecutionRow = rows[4]
-
+    expect(useGetExecutionRepositoriesList).toBeCalled()
     // should navigate to execution details as primary link
     expect(
       within(cdExecutionRow).getByRole('link', {

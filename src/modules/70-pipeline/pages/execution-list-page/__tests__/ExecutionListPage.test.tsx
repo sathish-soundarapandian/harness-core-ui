@@ -56,6 +56,9 @@ jest.mock('services/pipeline-ng', () => ({
   useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
     return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
   }),
+  useGetRepositoryList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  }),
   useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches, error: null, loading: false }
   }),
@@ -149,7 +152,6 @@ describe('ExecutionListPage', () => {
       </TestWrapper>
     )
     expect(useGetExecutionRepositoriesList).toBeCalled()
-
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     const noRunsText = await screen.findByText('pipeline.noRunsText')
     expect(noRunsText).toBeInTheDocument()

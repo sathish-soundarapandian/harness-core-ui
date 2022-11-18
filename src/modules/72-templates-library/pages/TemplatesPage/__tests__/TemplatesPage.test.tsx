@@ -143,6 +143,7 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
+
     expect(useGetRepositoryList).toBeCalled()
 
     expect(container).toMatchSnapshot()
@@ -189,7 +190,7 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
-
+    expect(useGetRepositoryList).toBeCalled()
     const selectTemplateButton = getByText('Select Template')
     act(() => {
       fireEvent.click(selectTemplateButton)

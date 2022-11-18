@@ -10,8 +10,13 @@ import { findByText, fireEvent, getByTestId, render, RenderResult, waitFor } fro
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useGetExecutionBranchesList, useGetRepositoryList } from 'services/pipeline-ng'
+import {
+  useGetExecutionBranchesList,
+  useGetExecutionRepositoriesList,
+  useGetRepositoryList
+} from 'services/pipeline-ng'
 import * as pipelineNg from 'services/pipeline-ng'
+import { useGetRepositoryList as getRepoListForTemplate } from 'services/template-ng'
 import RepoFilter from '../RepoFilter'
 
 const getModuleParams = (module = 'cd') => ({
@@ -53,23 +58,52 @@ jest.mock('services/pipeline-ng', () => {
     }),
     useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
       return { data: mockBranches, refetch: fetchBranches, error: null, loading: false }
+    }),
+    useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+      return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+    })
+  }
+})
+jest.mock('services/template-ng', () => {
+  return {
+    useGetRepositoryList: jest.fn().mockImplementation(() => {
+      return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
     })
   }
 })
 const renderPipelinesListPage = (module = 'cd'): RenderResult =>
   render(
     <TestWrapper path={TEST_PATH} pathParams={getModuleParams(module)}>
-      <RepoFilter />
+      <RepoFilter isPipelinePage={true} />
     </TestWrapper>
   )
 
 describe('Repo Filter test', () => {
   test('should render filter dropdown', async () => {
     const { getByText } = renderPipelinesListPage()
-
-    expect(useGetRepositoryList).toBeCalledTimes(1)
-
+    expect(useGetRepositoryList).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        queryParams: {
+          accountIdentifier: 'accountId',
+          orgIdentifier: 'orgIdentifier',
+          projectIdentifier: 'projectIdentifier'
+        }
+      })
+    )
     expect(getByText('common.selectRepository')).toBeInTheDocument()
+
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
+        <RepoFilter isExecutionsPage />
+      </TestWrapper>
+    )
+    expect(useGetExecutionRepositoriesList).toBeCalled()
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
+        <RepoFilter isTemplatesPage />
+      </TestWrapper>
+    )
+    expect(getRepoListForTemplate).toBeCalled()
   })
 
   test('default rendering RepoFilter - loading true', async () => {
@@ -79,12 +113,16 @@ describe('Repo Filter test', () => {
       data: null,
       refetch: jest.fn()
     } as any)
-    const { container } = renderPipelinesListPage()
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
+        <RepoFilter isPipelinePage />
+      </TestWrapper>
+    )
     const dropdown = getByTestId(container, 'repo-filter')?.closest('.DropDown--main')
     expect(dropdown).toHaveClass('DropDown--disabled')
   })
 
-  test('Show refetch button if branch list api failed', async () => {
+  test('Show refetch button if repo list api failed', async () => {
     const refetchCall = jest.fn()
     jest.spyOn(pipelineNg, 'useGetRepositoryList').mockReturnValue({
       loading: false,
@@ -99,7 +137,7 @@ describe('Repo Filter test', () => {
 
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter />
+        <RepoFilter isPipelinePage />
       </TestWrapper>
     )
 
@@ -113,7 +151,7 @@ describe('Repo Filter test', () => {
     const repoChangeHandler = jest.fn()
     const { container, getByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter onChange={repoChangeHandler} />
+        <RepoFilter onChange={repoChangeHandler} isPipelinePage />
       </TestWrapper>
     )
 
@@ -137,7 +175,7 @@ describe('Repo Filter test', () => {
   test('Branch Filter render test in deplyments page', async () => {
     const { container, getByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter showBranchFilter={true} />
+        <RepoFilter showBranchFilter={true} isExecutionsPage />
       </TestWrapper>
     )
 
@@ -151,7 +189,7 @@ describe('Repo Filter test', () => {
     const branchChangeHandler = jest.fn()
     render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter value={'main'} showBranchFilter={true} onBranchChange={branchChangeHandler} />
+        <RepoFilter value={'main'} showBranchFilter={true} onBranchChange={branchChangeHandler} isExecutionsPage />
       </TestWrapper>
     )
     expect(useGetExecutionBranchesList).toBeCalled()
@@ -181,6 +219,6 @@ describe('Repo Filter test', () => {
     const icon = container.querySelector('[data-icon="refresh"]')
     expect(icon).toBeInTheDocument()
     fireEvent.click(icon as HTMLElement)
-    expect(refetchCall).toBeCalledTimes(1)
+    expect(refetchCall).toBeCalled()
   })
 })

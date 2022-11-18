@@ -79,22 +79,22 @@ export function RepoFilter({
   }, [selectedScope, accountId, orgIdentifier, projectIdentifier])
 
   const {
-    data: repoListOfPipelines,
-    error: ErrorForPipelines,
-    loading: loadingForPipelines,
-    refetch: refetchRepoForPipelines
+    data: repoListOfPipeline,
+    error: errorForPipeline,
+    loading: loadingForPipeline,
+    refetch: refetchRepoForPipeline
   } = useGetRepositoryList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
     },
-    lazy: isPipelinePage
+    lazy: !isPipelinePage
   })
 
   const {
     data: repoListOfExecutions,
-    error: ErrorForExecutions,
+    error: errorForExecution,
     loading: loadingForExecutions,
     refetch: refetchRepoForExecutions
   } = useGetExecutionRepositoriesList({
@@ -103,42 +103,42 @@ export function RepoFilter({
       orgIdentifier,
       projectIdentifier
     },
-    lazy: isExecutionsPage
+    lazy: !isExecutionsPage
   })
 
   const {
-    data: repoListOfTemplates,
-    error: ErrorForTemplates,
-    loading: loadingForTemplates,
-    refetch: refetchRepoForTemplates
+    data: repoListOfTemplate,
+    error: errorForTemplate,
+    loading: loadingForTemplate,
+    refetch: refetchRepoForTemplate
   } = getRepoListForTemplate({
     queryParams: queryParamsForTemplate,
-    lazy: isTemplatesPage
+    lazy: !isTemplatesPage
   })
 
   const onRefetch = React.useCallback((): void => {
-    if (isPipelinePage) refetchRepoForPipelines()
+    if (isPipelinePage) refetchRepoForPipeline()
     else if (isExecutionsPage) refetchRepoForExecutions()
-    else refetchRepoForTemplates()
-  }, [isExecutionsPage, isPipelinePage, refetchRepoForExecutions, refetchRepoForPipelines, refetchRepoForTemplates])
+    else refetchRepoForTemplate()
+  }, [isExecutionsPage, isPipelinePage, refetchRepoForExecutions, refetchRepoForPipeline, refetchRepoForTemplate])
 
   const repositories = useMemo(() => {
-    if (isPipelinePage) return repoListOfPipelines?.data?.repositories
+    if (isPipelinePage) return repoListOfPipeline?.data?.repositories
     else if (isExecutionsPage) return repoListOfExecutions?.data?.repositories
-    return repoListOfTemplates?.data?.repositories
-  }, [isExecutionsPage, isPipelinePage, repoListOfExecutions, repoListOfPipelines, repoListOfTemplates])
+    return repoListOfTemplate?.data?.repositories
+  }, [isExecutionsPage, isPipelinePage, repoListOfExecutions, repoListOfPipeline, repoListOfTemplate])
 
   const isLoading = useMemo((): boolean => {
-    if (isPipelinePage) return loadingForPipelines
+    if (isPipelinePage) return loadingForPipeline
     else if (isExecutionsPage) return loadingForExecutions
-    return loadingForTemplates
-  }, [isExecutionsPage, isPipelinePage, loadingForExecutions, loadingForPipelines, loadingForTemplates])
+    return loadingForTemplate
+  }, [isExecutionsPage, isPipelinePage, loadingForExecutions, loadingForPipeline, loadingForTemplate])
 
   const error = useMemo(() => {
-    if (isPipelinePage) return ErrorForPipelines
-    else if (isExecutionsPage) return ErrorForExecutions
-    return ErrorForTemplates
-  }, [ErrorForExecutions, ErrorForPipelines, ErrorForTemplates, isExecutionsPage, isPipelinePage])
+    if (isPipelinePage) return errorForPipeline
+    else if (isExecutionsPage) return errorForExecution
+    return errorForTemplate
+  }, [errorForExecution, errorForPipeline, errorForTemplate, isExecutionsPage, isPipelinePage])
 
   const dropDownItems = React.useMemo(
     () =>
