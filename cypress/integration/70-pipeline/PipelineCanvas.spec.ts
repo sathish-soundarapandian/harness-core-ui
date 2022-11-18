@@ -220,7 +220,7 @@ describe('APPROVAL STAGE', () => {
   })
 })
 
-describe('GIT SYNC ENABLED', () => {
+describe.only('GIT SYNC ENABLED', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -243,7 +243,7 @@ describe('GIT SYNC ENABLED', () => {
     cy.createDeploymentStage()
   })
 
-  it('should display the git sync dialog on save', () => {
+  it.skip('should display the git sync dialog on save', () => {
     // open the sav confirmation dialog
     cy.contains('span', 'Save').click({ force: true })
     cy.contains(

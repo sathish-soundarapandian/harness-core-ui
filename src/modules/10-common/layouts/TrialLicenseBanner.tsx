@@ -328,9 +328,6 @@ export const TrialLicenseBanner: React.FC = () => {
   if (module === undefined || isBannerDismissed[module] || licenseType !== 'TRIAL') {
     return <></>
   }
-  console.log(module, 'hi')
-  console.log(isBannerDismissed[module], 'hi2')
-  console.log(licenseType, 'hi3')
   if (loading) {
     return <PageSpinner />
   }
