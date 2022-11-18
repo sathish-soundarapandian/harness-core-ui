@@ -14,6 +14,7 @@ import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.ap
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil, get } from 'lodash-es'
 import { useToaster } from '@common/exports'
+<<<<<<< HEAD
 import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -25,9 +26,19 @@ import type {
   YamlBuilderHandlerBinding,
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
+=======
+import SplitPane from 'react-split-pane'
+import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { useStrings } from 'framework/strings'
+import cx from 'classnames'
+import { scalarOptions, defaultOptions } from 'yaml'
+import { Tag, Icon, Container, useConfirmationDialog } from '@wings-software/uicore'
+import type { YamlBuilderProps, YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import SnippetSection from '@common/components/SnippetSection/SnippetSection'
+>>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
-import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
+import { getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
 
 import css from './YamlBuilder.module.scss'
 import './resizer.scss'
@@ -38,7 +49,6 @@ import {
   TRIGGER_CHAR_FOR_PARTIAL_EXPR,
   KEY_CODE_FOR_PLUS_SIGN,
   ANGULAR_BRACKET_CHAR,
-  KEY_CODE_FOR_SEMI_COLON,
   KEY_CODE_FOR_PERIOD,
   KEY_CODE_FOR_SPACE,
   KEY_CODE_FOR_CHAR_Z,
@@ -72,7 +82,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     isEditModeSupported = true,
     isHarnessManaged = false,
     hideErrorMesageOnReadOnlyMode = false,
+<<<<<<< HEAD
     invocationMap,
+=======
+    showSnippetSection = true,
+>>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
     bind,
     onExpressionTrigger,
     schema,
@@ -87,17 +101,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     comparableYaml
   } = props
 <<<<<<< HEAD
+<<<<<<< HEAD
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
   setUpEditor(theme)
 =======
 >>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
   const params = useParams()
+=======
+>>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
   const [currentJSON, setCurrentJSON] = useState<object>()
-  const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
-    !defaultTo(existingYaml, existingJSON)
-  )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
@@ -516,6 +530,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           registerCompletionItemProviderForExpressions(editor, TRIGGER_CHARS_FOR_NEW_EXPR, yamlPath)
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         // this is to invoke run-time inputs as suggestions
         else if (code === KEY_CODE_FOR_SEMI_COLON && invocationMap && invocationMap.size > 0) {
@@ -527,6 +542,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           disposePreviousSuggestions()
         }
 >>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
+=======
+>>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
       }
       // this is to invoke partial expressions callback e.g. invoke expressions callback on hitting a period(.) after an expression: expr1.expr2. <-
       if (code === KEY_CODE_FOR_PERIOD) {

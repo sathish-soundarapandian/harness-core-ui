@@ -7,7 +7,10 @@
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+<<<<<<< HEAD
 import * as yamlLanguageService from '@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService'
+=======
+>>>>>>> 48fc1f4a1918 (chore: [PL-28682]: Monaco editor upgrade)
 import { isEmpty } from 'lodash-es'
 import { TextDocument, Diagnostic } from 'vscode-languageserver-types'
 import { parse } from 'yaml'

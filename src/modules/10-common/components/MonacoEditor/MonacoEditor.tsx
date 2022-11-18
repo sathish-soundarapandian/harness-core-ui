@@ -8,7 +8,6 @@
 import React, { MutableRefObject, useRef } from 'react'
 import ReactMonacoEditor from 'react-monaco-editor'
 import type { MonacoEditorProps } from 'react-monaco-editor'
-import { suppressHotJarRecording } from '@common/utils/utils'
 
 export type ReactMonacoEditorRef =
   | ((instance: ReactMonacoEditor | null) => void)

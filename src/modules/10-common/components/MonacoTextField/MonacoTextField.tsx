@@ -12,14 +12,10 @@ import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
 import { Dialog, Classes } from '@blueprintjs/core'
 import { Button, Container } from '@harness/uicore'
-import type { languages, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import { useDeepCompareEffect } from '@common/hooks'
 
 import css from './MonacoTextField.module.scss'
-
-type Languages = typeof languages
 
 export interface MonacoTextFieldProps {
   name: string
@@ -35,7 +31,6 @@ export interface ConnectedMonacoTextFieldProps extends MonacoTextFieldProps {
   formik: FormikProps<unknown>
 }
 
-const VAR_REGEX = /.*<\+.*?/
 const LANG_ID = 'plaintext'
 
 export const getDefaultMonacoConfig = (disabled: boolean): MonacoEditorProps['options'] => ({

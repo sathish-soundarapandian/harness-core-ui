@@ -12,14 +12,12 @@ import cx from 'classnames'
 import { FormikProps, connect } from 'formik'
 import { get } from 'lodash-es'
 import { Button } from '@harness/uicore'
-import type { languages, IDisposable, editor } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import { useDeepCompareEffect } from '@common/hooks'
 import css from './ShellScriptMonaco.module.scss'
 
 export type ScriptType = 'Bash' | 'PowerShell'
-type Languages = typeof languages
 
 const langMap: Record<ScriptType, string> = {
   Bash: 'shell',
@@ -39,8 +37,6 @@ export interface ShellScriptMonacoProps {
 export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps {
   formik: FormikProps<unknown>
 }
-
-const VAR_REGEX = /.*<\+.*?/
 
 export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React.ReactElement {
   const { scriptType, formik, name, disabled, title, className, editorOptions } = props
