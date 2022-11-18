@@ -11,6 +11,7 @@ import { Accordion, Container, PageSpinner, TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 import css from '../AccountOverview.module.scss'
 
 const versionAPIs = [
@@ -96,7 +97,7 @@ const versionAPIs = [
   }
 ]
 
-const BASE_URL = window.getHarnessLocationPathname().replace(/\/ng\/?/, '/')
+const BASE_URL = getLocationPathName().replace(/\/ng\/?/, '/')
 
 interface ServiceData {
   label?: string

@@ -10,6 +10,7 @@ import { Text, Container, Layout, Button, ButtonVariation, ButtonSize } from '@h
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import VerificationStatusCard from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
 import { IconWithText } from '../IconWithText/IconWithText'
 import css from '../ChangeTitle/ChangeTitle.module.scss'
@@ -29,7 +30,7 @@ export default function ChangeTitleForHarness({ changeTitleData }: { changeTitle
   )
 
   const openPipelineInNewTab = useCallback(() => {
-    const pipelineURL = `${window.location.origin}${window.getHarnessLocationPathname()}#${url}`
+    const pipelineURL = `${window.location.origin}${getLocationPathName()}#${url}`
     window.open(pipelineURL, '_blank')
   }, [url])
 

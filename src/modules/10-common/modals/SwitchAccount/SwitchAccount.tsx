@@ -38,6 +38,7 @@ import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useGetCurrentUserInfo } from 'services/cd-ng'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 import css from './SwitchAccount.module.scss'
 
 interface SwitchAccountProps {
@@ -132,7 +133,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
           // This may be overriden by the defaultExperience of the most recent account opened (in AppStoreContext)
           localStorage.setItem('defaultExperience', account.defaultExperience || '')
           // this needs to be a server-redirect to support cluster isolation
-          window.location.href = window.getHarnessLocationPathname()
+          window.location.href = getLocationPathName()
         } else {
           showError(getString('common.switchAccountError'))
         }

@@ -9,6 +9,7 @@ import React, { useMemo, useCallback } from 'react'
 import { Text, Container, Icon, Layout, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
 import { getIconByChangeType } from './ChangeTitle.utils'
 import css from './ChangeTitle.module.scss'
@@ -28,7 +29,7 @@ export default function ChangeTitle({ changeTitleData }: { changeTitleData: Chan
   )
 
   const openPipelineInNewTab = useCallback(() => {
-    const pipelineURL = `${window.location.origin}${window.getHarnessLocationPathname()}#${url}`
+    const pipelineURL = `${window.location.origin}${getLocationPathName()}#${url}`
     if (url) {
       window.open(pipelineURL, '_blank')
     }

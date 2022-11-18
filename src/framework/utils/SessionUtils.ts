@@ -9,13 +9,14 @@ import { useHistory } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { returnUrlParams } from '@common/utils/routeUtils'
 import SecureStorage from './SecureStorage'
+import { getLocationPathName } from './windowLocationUtils'
 
 interface GetLoginPageURL {
   returnUrl?: string
 }
 
 export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
-  const locationPath = window.getHarnessLocationPathname().replace(/\/ng\/?/, '/')
+  const locationPath = getLocationPathName().replace(/\/ng\/?/, '/')
   const basePath = window.HARNESS_ENABLE_NG_AUTH_UI ? `${locationPath}auth/#/signin` : `${locationPath}#/login`
 
   return returnUrl
@@ -26,8 +27,8 @@ export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
 export const getForgotPasswordURL = (): string => {
   // for basepath, pick current path, but remove `/ng/` or `/ng`, to respect PR env namespaces
   return window.HARNESS_ENABLE_NG_AUTH_UI
-    ? `${window.getHarnessLocationPathname().replace(/\/ng\/?/, '/')}auth/#/forgot-password`
-    : `${window.getHarnessLocationPathname().replace(/\/ng\//, '/')}#/forgot-password`
+    ? `${getLocationPathName().replace(/\/ng\/?/, '/')}auth/#/forgot-password`
+    : `${getLocationPathName().replace(/\/ng\//, '/')}#/forgot-password`
 }
 
 export interface UseLogoutReturn {

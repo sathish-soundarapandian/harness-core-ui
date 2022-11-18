@@ -32,6 +32,7 @@ import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import routes from '@common/RouteDefinitions'
 import type { Error } from 'services/cd-ng'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 
@@ -88,7 +89,7 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
 }
 
 const getRedirectionUrl = (accountId: string, source: string | undefined): string => {
-  const baseUrl = window.getHarnessLocationPathname().replace(/\/ng\//, '/')
+  const baseUrl = getLocationPathName().replace(/\/ng\//, '/')
   const dashboardUrl = `${baseUrl}#/account/${accountId}/dashboard`
   const onboardingUrl = `${baseUrl}#/account/${accountId}/onboarding`
   return source === 'signup' ? onboardingUrl : dashboardUrl

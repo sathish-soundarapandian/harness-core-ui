@@ -6,6 +6,7 @@
  */
 
 import SessionToken from 'framework/utils/SessionToken'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 import { mapKeys } from 'lodash-es'
 import qs from 'qs'
 
@@ -13,10 +14,7 @@ export const getConfig = (str: string): string => {
   if (window.browserRouterEnabled) {
     return `${window.apiUrl || ''}/${str}`
   } else {
-    // repeating location.pathname since  every test case is failing giving error saying window.getHarnessLocationPathname
-    // not defined and need to write window.getharnesslocationpathname in every test case to correct it
-    const pathName = window.getHarnessLocationPathname ? window.getHarnessLocationPathname() : window.location.pathname
-    return window.apiUrl ? `${window.apiUrl}/${str}` : pathName.replace('ng/', '') + str
+    return window.apiUrl ? `${window.apiUrl}/${str}` : getLocationPathName().replace('ng/', '') + str
   }
 }
 export interface GetUsingFetchProps<

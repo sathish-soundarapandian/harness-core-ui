@@ -30,6 +30,7 @@ import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -127,7 +128,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
         branch: selectedTemplate.gitDetails?.branch
       })
 
-      window.open(`${window.location.origin}${window.getHarnessLocationPathname()}#${templateStudioPath}`, '_blank')
+      window.open(`${window.location.origin}${getLocationPathName()}#${templateStudioPath}`, '_blank')
     }
   }
 

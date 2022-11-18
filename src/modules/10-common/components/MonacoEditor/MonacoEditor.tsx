@@ -11,6 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import { StaticServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices'
 import { suppressHotJarRecording } from '@common/utils/utils'
+import { getLocationPathName } from 'framework/utils/windowLocationUtils'
 StaticServices.configurationService.get().updateValue('files.eol', '\n')
 
 export type ReactMonacoEditorRef =
@@ -59,7 +60,7 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
     })
     const getLocationPath = () => {
       if (window.browserRouterEnabled) {
-        return `${__DEV__ ? '/' : window.getHarnessLocationPathname()}`
+        return `${__DEV__ ? '/' : getLocationPathName()}`
       } else {
         return `${window.location.pathname}`
       }
