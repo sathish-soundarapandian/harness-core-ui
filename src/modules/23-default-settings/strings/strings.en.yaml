@@ -4,3 +4,7 @@ noSettingToDisplay: No Settings to Display
 harnessDefault: Harness Default
 inheritedFrom: Inherited from {{source}}
 mandateWebhookSecretsGithubTriggers: Mandate Webhook Secrets for Github Triggers
+test_group_AUTH: test GROUP Auth
+test_setting_AUTH_1: test Setting Auth 1
+test_setting_AUTH_2: test Setting Auth 2
+test_setting_AUTH_3: test Setting Auth 3
