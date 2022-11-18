@@ -151,6 +151,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
+  const [shouldOpenPluginsPanel, setShouldOpenPluginsPanel] = useState<boolean>(true)
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -180,6 +181,46 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       bind?.(undefined)
     }
   }, [bind, handler])
+
+  useEffect(() => {
+    const commandId = editorRef.current?.editor?.addCommand(
+      0,
+      function () {
+        setShouldOpenPluginsPanel((shouldOpen: boolean) => !shouldOpen)
+      },
+      ''
+    )
+
+    const registration = monaco.languages.registerCodeLensProvider('yaml', {
+      provideCodeLenses: function (_model: unknown, _token: unknown) {
+        return {
+          lenses: [
+            {
+              range: {
+                startLineNumber: 8,
+                startColumn: 1,
+                endLineNumber: 9,
+                endColumn: 1
+              },
+              id: 'plugin-settings',
+              command: {
+                id: commandId,
+                title: 'Settings'
+              }
+            }
+          ],
+          dispose: () => {}
+        }
+      },
+      resolveCodeLens: function (_model: unknown, codeLens: unknown, _token: unknown) {
+        return codeLens
+      }
+    })
+
+    return () => {
+      registration.dispose()
+    }
+  }, [])
 
   useEffect(() => {
     setDynamicWidth(width as number)
@@ -778,6 +819,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
+  const shouldRenderPluginsPanel = showPluginsPanel && shouldOpenPluginsPanel
+
   return (
     <Layout.Horizontal>
       <Layout.Vertical>
@@ -786,7 +829,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             css.main,
             { [css.darkBg]: theme === 'DARK' },
             { [css.borderWithErrorPanel]: showErrorFooter },
-            { [css.borderWithPluginsPanel]: showPluginsPanel }
+            { [css.borderWithPluginsPanel]: shouldRenderPluginsPanel }
           )}
         >
           <div className={css.editor}>
@@ -796,7 +839,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </div>
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
-      {showPluginsPanel ? <PluginsPanel height={height} /> : null}
+      {shouldRenderPluginsPanel ? <PluginsPanel height={height} /> : null}
     </Layout.Horizontal>
   )
 }
