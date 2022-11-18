@@ -223,6 +223,26 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   useEffect(() => {
+    editorRef.current?.editor?.deltaDecorations(
+      [],
+      [
+        {
+          range: {
+            startLineNumber: 8,
+            startColumn: 1,
+            endLineNumber: 13,
+            endColumn: 50
+          } as Range,
+          options: {
+            isWholeLine: false,
+            className: css.pluginDecorator
+          }
+        }
+      ]
+    )
+  }, [])
+
+  useEffect(() => {
     setDynamicWidth(width as number)
   }, [width])
 
