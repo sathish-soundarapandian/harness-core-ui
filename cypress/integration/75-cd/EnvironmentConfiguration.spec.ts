@@ -42,7 +42,7 @@ describe('EnvironmentsV2 Configuration Page', () => {
       fixture: 'ng/api/environmentConfiguration/createEnvironmentConfigurationSecret.json'
     }).as('envSecretCall')
     cy.wait(3000)
-
+    cy.get('button[data-testid="trial-banner-dismiss"]').click()
     cy.visitPageAssertion(pageHeaderClassName)
     cy.get('[data-testid="advanced-panel"]').click()
     cy.contains('p', 'Variables').should('be.visible')

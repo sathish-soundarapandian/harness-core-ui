@@ -173,11 +173,12 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const {
     data,
     error,
-    refetch,
+    refetch: refetchLicense,
     loading: gettingLicense
   } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier: accountId
+    accountIdentifier: accountId,
+    lazy: true
   })
 
   const licenseData = data?.data
@@ -197,6 +198,9 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const isSelfService = licenseInformation?.[moduleType]?.selfService === true
   const isSelfServiceEnabled = !isOnPrem() && isSelfService
 
+  useEffect(() => {
+    refetchLicense()
+  }, [])
   useEffect(() => {
     handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -302,7 +306,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   }
 
   if (error) {
-    return <PageError message={(error.data as Error)?.message} onClick={() => refetch()} />
+    return <PageError message={(error.data as Error)?.message} onClick={() => refetchLicense()} />
   }
 
   if (actionErrs) {
