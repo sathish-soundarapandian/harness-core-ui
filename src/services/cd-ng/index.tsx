@@ -13618,7 +13618,19 @@ export interface ServicesYamlMetadataApiInput {
 export interface SettingDTO {
   allowOverrides: boolean
   allowedValues?: string[]
-  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  category:
+    | 'CD'
+    | 'CI'
+    | 'CE'
+    | 'CV'
+    | 'CF'
+    | 'STO'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'CHAOS'
+    | 'AUTH'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -47327,7 +47339,19 @@ export interface GetSettingsListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  category:
+    | 'CD'
+    | 'CI'
+    | 'CE'
+    | 'CV'
+    | 'CF'
+    | 'STO'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'CHAOS'
+    | 'AUTH'
   group?: string
 }
 

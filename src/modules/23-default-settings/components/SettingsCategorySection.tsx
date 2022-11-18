@@ -17,6 +17,7 @@ import { getSettingsListPromise, SettingDTO, SettingRequestDTO } from 'services/
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { SettingCategory, SettingType, SettingYupValidation } from '../interfaces/SettingType.types'
 import SettingCategorySectionContents from './SettingCategorySectionContents'
+// import { getAuthSettingsPromiseMock } from './mocks/settingsMocks'
 import css from './SettingsCategorySection.module.scss'
 
 interface SettingsCategorySectionProps {
@@ -49,14 +50,12 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   const settingCategoryHandler = DefaultSettingsFactory.getCategoryHandler(settingCategory)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
   const [isCateogryOpen, updateIsCateogryOpen] = useState<boolean>(false)
-  const { getString } = useStrings()
-
   const [categoryAllSettings, updateCategoryAllSettings] = useState<Map<SettingType, SettingDTO>>(new Map())
-
   const [refinedSettingTypes, updateSettingTypes] = useState<Set<SettingType>>(new Set())
-
-  const { showError } = useToaster()
   const [loadingSettingTypes, updateLoadingSettingTypes] = useState(false)
+  const { getString } = useStrings()
+  const { showError } = useToaster()
+
   useEffect(() => {
     let settingsChanged = false
     const categoryAllSettingsLocal: Map<SettingType, SettingDTO> = new Map(categoryAllSettings)
@@ -70,13 +69,18 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
       updateCategoryAllSettings(categoryAllSettingsLocal)
     }
   }, [savedSettings])
+
   const categorySectionOpen = async () => {
     if (!refinedSettingTypes.size) {
       updateLoadingSettingTypes(true)
       try {
-        const data = await getSettingsListPromise({
+        const apiOptions = {
           queryParams: { accountIdentifier: accountId, category: settingCategory, orgIdentifier, projectIdentifier }
-        })
+        }
+        // if (settingCategory === 'AUTH') {
+        //   apiOptions.mock = getAuthSettingsPromiseMock
+        // }
+        const data = await getSettingsListPromise(apiOptions)
         const refinedSettingTypesTemp: Set<SettingType> = new Set()
         const categorySettings = new Map()
         const validationsSchema: SettingYupValidation = {}
@@ -158,6 +162,10 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   }
   const { label, icon } = settingCategoryHandler
 
+  if (settingCategory === 'AUTH') {
+    console.log('refinedSettingTypes:', refinedSettingTypes)
+    console.log('categoryAllSettings:', categoryAllSettings)
+  }
   return (
     <Card className={css.summaryCard}>
       <Accordion
