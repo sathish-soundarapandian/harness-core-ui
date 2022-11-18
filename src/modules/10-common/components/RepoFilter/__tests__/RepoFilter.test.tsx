@@ -80,7 +80,7 @@ const renderPipelinesListPage = (module = 'cd'): RenderResult =>
 
 describe('Repo Filter test', () => {
   test('should render filter dropdown', async () => {
-    const { getByText } = renderPipelinesListPage()
+    const { getByText, container } = renderPipelinesListPage()
     expect(useGetRepositoryList).toHaveBeenLastCalledWith(
       expect.objectContaining({
         queryParams: {
@@ -91,6 +91,12 @@ describe('Repo Filter test', () => {
       })
     )
     expect(getByText('common.selectRepository')).toBeInTheDocument()
+    const dropdown = container.querySelector('[data-icon="main-chevron-down"]') as HTMLInputElement
+
+    fireEvent.click(dropdown)
+    await waitFor(() => {
+      expect(getByText('main')).toBeInTheDocument()
+    })
 
     render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
@@ -98,12 +104,24 @@ describe('Repo Filter test', () => {
       </TestWrapper>
     )
     expect(useGetExecutionRepositoriesList).toBeCalled()
+    const dropdown1 = container.querySelector('[data-icon="main-chevron-down"]') as HTMLInputElement
+
+    fireEvent.click(dropdown1)
+    await waitFor(() => {
+      expect(getByText('main-patch')).toBeInTheDocument()
+    })
     render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
         <RepoFilter isTemplatesPage />
       </TestWrapper>
     )
     expect(getRepoListForTemplate).toBeCalled()
+    const dropdown2 = container.querySelector('[data-icon="main-chevron-down"]') as HTMLInputElement
+
+    fireEvent.click(dropdown2)
+    await waitFor(() => {
+      expect(getByText('main-patch1')).toBeInTheDocument()
+    })
   })
 
   test('default rendering RepoFilter - loading true', async () => {
