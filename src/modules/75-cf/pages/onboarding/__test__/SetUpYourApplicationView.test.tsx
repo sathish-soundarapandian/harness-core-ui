@@ -25,6 +25,21 @@ const renderComponent = (props?: Partial<SetUpYourApplicationViewProps>): Render
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
       <SetUpYourApplicationView
+        flagInfo={{
+          project: 'dummy',
+          createdAt: 1662647079713,
+          name: 'hello world',
+          identifier: 'hello_world',
+          kind: 'boolean',
+          archived: false,
+          variations: [
+            { identifier: 'true', name: 'True', value: 'true' },
+            { identifier: 'false', name: 'False', value: 'false' }
+          ],
+          defaultOnVariation: 'true',
+          defaultOffVariation: 'false',
+          permanent: false
+        }}
         language={undefined}
         setLanguage={setLanguage}
         apiKey={{

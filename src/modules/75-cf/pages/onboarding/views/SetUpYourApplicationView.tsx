@@ -9,13 +9,15 @@ import React, { useEffect } from 'react'
 import { Container, Heading, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { ApiKey } from 'services/cf'
+import type { ApiKey, Feature } from 'services/cf'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { LanguageSelection, PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { SelectEnvironmentView } from './SelectEnvironmentView'
+import { SetUpYourCodeView } from './SetUpYourCodeView'
 export interface SetUpYourApplicationViewProps {
+  flagInfo: Feature
   language?: PlatformEntry
   setLanguage: (language: PlatformEntry | undefined) => void
   apiKey?: ApiKey
@@ -25,6 +27,7 @@ export interface SetUpYourApplicationViewProps {
 }
 
 export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> = ({
+  flagInfo,
   language,
   setLanguage,
   apiKey,
@@ -43,8 +46,8 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
   }, [])
 
   return (
-    <Layout.Vertical padding={{ top: 'medium', bottom: 'medium' }}>
-      <Layout.Horizontal margin={{ top: 'medium' }}>
+    <Layout.Vertical padding={{ top: 'small', bottom: 'small' }}>
+      <Layout.Horizontal margin={{ top: 'small' }}>
         <Heading level={4} font={{ variation: FontVariation.H4 }}>
           {getString('cf.onboarding.selectEnvAndSdk')}
         </Heading>
@@ -67,7 +70,6 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
           />
         </Container>
       </Layout.Vertical>
-
       {language && (
         <SelectEnvironmentView
           apiKey={apiKey}
@@ -76,6 +78,10 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
           setSelectedEnvironment={setSelectedEnvironment}
           language={language}
         />
+      )}
+
+      {selectedEnvironment && language && apiKey && (
+        <SetUpYourCodeView apiKey={apiKey} language={language} flagName={flagInfo.name} />
       )}
     </Layout.Vertical>
   )
