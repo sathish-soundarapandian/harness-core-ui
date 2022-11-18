@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { returnUrlParams } from '@common/utils/routeUtils'
 import SecureStorage from './SecureStorage'
-import { getLocationPathName } from './windowLocationUtils'
+import { getLocationPathName } from './WindowLocationUtils'
 
 interface GetLoginPageURL {
   returnUrl?: string

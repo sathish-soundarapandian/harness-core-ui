@@ -38,7 +38,7 @@ import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useGetCurrentUserInfo } from 'services/cd-ng'
-import { getLocationPathName } from 'framework/utils/windowLocationUtils'
+import { getLocationPathName } from 'framework/utils/WindowLocationUtils'
 import css from './SwitchAccount.module.scss'
 
 interface SwitchAccountProps {

@@ -37,7 +37,7 @@ import type {
   VariablesPathProps,
   SCMPathProps
 } from '@common/interfaces/RouteInterfaces'
-import { getLocationPathName } from 'framework/utils/windowLocationUtils'
+import { getLocationPathName } from 'framework/utils/WindowLocationUtils'
 
 export const accountPathProps: AccountPathProps = {
   accountId: ':accountId'

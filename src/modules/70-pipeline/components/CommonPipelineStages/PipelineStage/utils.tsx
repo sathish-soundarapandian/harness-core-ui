@@ -19,7 +19,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getLocationPathName } from 'framework/utils/windowLocationUtils'
+import { getLocationPathName } from 'framework/utils/WindowLocationUtils'
 import css from './PipelineStageMinimalMode.module.scss'
 
 interface CodeSourceWrapper {

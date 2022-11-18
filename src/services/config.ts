@@ -6,7 +6,7 @@
  */
 
 import SessionToken from 'framework/utils/SessionToken'
-import { getLocationPathName } from 'framework/utils/windowLocationUtils'
+import { getLocationPathName } from 'framework/utils/WindowLocationUtils'
 import { mapKeys } from 'lodash-es'
 import qs from 'qs'
 

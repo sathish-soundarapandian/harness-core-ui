@@ -32,7 +32,7 @@ import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import routes from '@common/RouteDefinitions'
 import type { Error } from 'services/cd-ng'
-import { getLocationPathName } from 'framework/utils/windowLocationUtils'
+import { getLocationPathName } from 'framework/utils/WindowLocationUtils'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 

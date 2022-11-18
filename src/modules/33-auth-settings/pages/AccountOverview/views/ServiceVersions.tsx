@@ -11,7 +11,7 @@ import { Accordion, Container, PageSpinner, TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
-import { getLocationPathName } from 'framework/utils/windowLocationUtils'
+import { getLocationPathName } from 'framework/utils/WindowLocationUtils'
 import css from '../AccountOverview.module.scss'
 
 const versionAPIs = [
