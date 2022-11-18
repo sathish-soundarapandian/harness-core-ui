@@ -39,7 +39,6 @@ import {
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
   useGetPipelineList,
-  useGetRepositoryList,
   useSoftDeletePipeline
 } from 'services/pipeline-ng'
 import { DEFAULT_PIPELINE_LIST_TABLE_SORT, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
@@ -265,7 +264,7 @@ export function PipelineListPage(): React.ReactElement {
               }}
             />
           ) : (
-            <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
+            <RepoFilter onChange={onChangeRepo} value={repoName} isPipelinePage={true} />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal style={{ alignItems: 'center' }}>

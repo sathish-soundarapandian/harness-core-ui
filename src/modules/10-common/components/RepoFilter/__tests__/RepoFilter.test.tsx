@@ -59,7 +59,7 @@ jest.mock('services/pipeline-ng', () => {
 const renderPipelinesListPage = (module = 'cd'): RenderResult =>
   render(
     <TestWrapper path={TEST_PATH} pathParams={getModuleParams(module)}>
-      <RepoFilter getRepoListPromise={useGetRepositoryList} />
+      <RepoFilter />
     </TestWrapper>
   )
 
@@ -99,7 +99,7 @@ describe('Repo Filter test', () => {
 
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter getRepoListPromise={useGetRepositoryList} />
+        <RepoFilter />
       </TestWrapper>
     )
 
@@ -113,7 +113,7 @@ describe('Repo Filter test', () => {
     const repoChangeHandler = jest.fn()
     const { container, getByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter getRepoListPromise={useGetRepositoryList} onChange={repoChangeHandler} />
+        <RepoFilter onChange={repoChangeHandler} />
       </TestWrapper>
     )
 
@@ -137,7 +137,7 @@ describe('Repo Filter test', () => {
   test('Branch Filter render test in deplyments page', async () => {
     const { container, getByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter getRepoListPromise={useGetRepositoryList} showBranchFilter={true} />
+        <RepoFilter showBranchFilter={true} />
       </TestWrapper>
     )
 
@@ -151,12 +151,7 @@ describe('Repo Filter test', () => {
     const branchChangeHandler = jest.fn()
     render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter
-          getRepoListPromise={useGetRepositoryList}
-          value={'main'}
-          showBranchFilter={true}
-          onBranchChange={branchChangeHandler}
-        />
+        <RepoFilter value={'main'} showBranchFilter={true} onBranchChange={branchChangeHandler} />
       </TestWrapper>
     )
     expect(useGetExecutionBranchesList).toBeCalled()
@@ -179,7 +174,7 @@ describe('Repo Filter test', () => {
 
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams('cd')}>
-        <RepoFilter getRepoListPromise={useGetRepositoryList} value={'main'} showBranchFilter={true} />
+        <RepoFilter value={'main'} showBranchFilter={true} />
       </TestWrapper>
     )
 

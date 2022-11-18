@@ -23,12 +23,7 @@ import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { Sort, SortFields, TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateDetailsDrawer } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
-import {
-  TemplateSummaryResponse,
-  useGetRepositoryList,
-  useGetTemplateList,
-  useGetTemplateMetadataList
-} from 'services/template-ng'
+import { TemplateSummaryResponse, useGetTemplateList, useGetTemplateMetadataList } from 'services/template-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { NewTemplatePopover } from '@templates-library/pages/TemplatesPage/views/NewTemplatePopover/NewTemplatePopover'
@@ -234,7 +229,7 @@ export default function TemplatesPage(): React.ReactElement {
               />
             </GitSyncStoreProvider>
           ) : (
-            <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
+            <RepoFilter onChange={onChangeRepo} value={repoName} />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>

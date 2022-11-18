@@ -5,17 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Container, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import type { UseGetReturn } from 'restful-react'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { Failure } from 'services/template-ng'
-
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { useGetExecutionRepositoriesList, useGetRepositoryList } from 'services/pipeline-ng'
+import { useGetRepositoryList as getRepoListForTemplate } from 'services/template-ng'
 import BranchFilter from '../BranchFilter/BranchFilter'
 import css from './RepoFilter.module.scss'
 
@@ -27,24 +26,25 @@ export interface RepoFilterProps {
   selectedBranch?: string
   onBranchChange?: (selected: SelectOption) => void
   disabled?: boolean
-
   selectedScope?: string
-  getRepoListPromise: (props: any) => UseGetReturn<any, Failure | Error, any, unknown>
+  isPipelinePage?: boolean
+  isExecutionsPage?: boolean
 }
 
 export function RepoFilter({
   value,
   onChange,
-  getRepoListPromise,
   showBranchFilter,
+  isPipelinePage = false,
+  isExecutionsPage = false,
   onBranchChange,
   selectedBranch,
   selectedScope
-}: RepoFilterProps) {
+}: RepoFilterProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
 
-  const queryParams = useMemo(() => {
+  const queryParamsForTemplate = useMemo(() => {
     switch (selectedScope) {
       case 'all':
         return {
@@ -69,34 +69,84 @@ export function RepoFilter({
           projectIdentifier
         }
     }
-    return {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    }
   }, [selectedScope, accountId, orgIdentifier, projectIdentifier])
 
   const {
-    data: repoListData,
-    error,
-    loading,
-    refetch
-  } = getRepoListPromise({
-    queryParams: queryParams
+    data: repoListOfPipelines,
+    error: ErrorForPipelines,
+    loading: loadingForPipelines,
+    refetch: refetchRepoForPipelines
+  } = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: true
   })
+
+  const {
+    data: repoListOfExecutions,
+    error: ErrorForExecutions,
+    loading: loadingForExecutions,
+    refetch: refetchRepoForExecutions
+  } = useGetExecutionRepositoriesList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: true
+  })
+
+  const {
+    data: repoListOfTemplates,
+    error: ErrorForTemplates,
+    loading: loadingForTemplates,
+    refetch: refetchRepoForTemplates
+  } = getRepoListForTemplate({
+    queryParams: queryParamsForTemplate,
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (isPipelinePage) refetchRepoForPipelines()
+    else if (isExecutionsPage) refetchRepoForExecutions()
+    else refetchRepoForTemplates()
+  }, [isExecutionsPage, isPipelinePage, refetchRepoForExecutions, refetchRepoForPipelines, refetchRepoForTemplates])
+
+  const onRefetch = React.useCallback((): void => {
+    if (isPipelinePage) refetchRepoForPipelines()
+    else if (isExecutionsPage) refetchRepoForExecutions()
+    else refetchRepoForTemplates()
+  }, [isExecutionsPage, isPipelinePage, refetchRepoForExecutions, refetchRepoForPipelines, refetchRepoForTemplates])
+
+  const repositories = useMemo(() => {
+    if (isPipelinePage) return repoListOfPipelines?.data?.repositories
+    else if (isExecutionsPage) return repoListOfExecutions?.data?.repositories
+    return repoListOfTemplates?.data?.repositories
+  }, [isExecutionsPage, isPipelinePage, repoListOfExecutions, repoListOfPipelines, repoListOfTemplates])
+
+  const isLoading = useMemo((): boolean => {
+    if (isPipelinePage) return loadingForPipelines
+    else if (isExecutionsPage) return loadingForExecutions
+    return loadingForTemplates
+  }, [isExecutionsPage, isPipelinePage, loadingForExecutions, loadingForPipelines, loadingForTemplates])
+
+  const error = useMemo(() => {
+    if (isPipelinePage) return ErrorForPipelines
+    else if (isExecutionsPage) return ErrorForExecutions
+    return ErrorForTemplates
+  }, [ErrorForExecutions, ErrorForPipelines, ErrorForTemplates, isExecutionsPage, isPipelinePage])
 
   const dropDownItems = React.useMemo(
     () =>
-      repoListData?.data?.repositories?.map((repo: string) => ({
+      repositories?.map((repo: string) => ({
         label: defaultTo(repo, ''),
         value: defaultTo(repo, '')
       })) as SelectOption[],
-    [repoListData?.data?.repositories]
+    [repositories]
   )
-
-  const onRefetch = React.useCallback((): void => {
-    refetch()
-  }, [refetch])
 
   return (
     <Container>
@@ -104,7 +154,7 @@ export function RepoFilter({
         <DropDown
           className={css.repoFilterContainer}
           items={dropDownItems}
-          disabled={loading || !isEmpty(error)}
+          disabled={isLoading || !isEmpty(error)}
           buttonTestId={'repo-filter'}
           value={value}
           onChange={selected => onChange?.(selected.value.toString())}

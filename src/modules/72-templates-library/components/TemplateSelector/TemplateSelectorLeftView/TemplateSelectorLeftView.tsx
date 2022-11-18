@@ -23,12 +23,7 @@ import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  TemplateSummaryResponse,
-  useGetRepositoryList,
-  useGetTemplateList,
-  useGetTemplateMetadataList
-} from 'services/template-ng'
+import { TemplateSummaryResponse, useGetTemplateList, useGetTemplateMetadataList } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { useMutateAsGet } from '@common/hooks'
@@ -234,7 +229,6 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   <RepoFilter
                     value={selectedRepo}
                     onChange={repoName => setSelectedRepo(repoName)}
-                    getRepoListPromise={useGetRepositoryList}
                     selectedScope={selectedScope.value.toString()}
                   />
                 )}

@@ -19,7 +19,6 @@ import { getFeaturePropsForRunPipelineButton, getRbacButtonModules } from '@pipe
 import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { GetListOfExecutionsQueryParams, useGetExecutionRepositoriesList } from 'services/pipeline-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -30,6 +29,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
+import type { GetListOfExecutionsQueryParams } from 'services/pipeline-ng'
 import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionListFilter } from '../ExecutionListFilter/ExecutionListFilter'
 import type { ExecutionListProps } from '../ExecutionList'
@@ -186,7 +186,6 @@ export function ExecutionListSubHeader(
 
         {props.showRepoBranchFilter && !isGitSyncEnabled && (
           <RepoFilter
-            getRepoListPromise={useGetExecutionRepositoriesList}
             onChange={props.onChangeRepo}
             value={props.repoName}
             showBranchFilter={props.showRepoBranchFilter}
@@ -194,6 +193,7 @@ export function ExecutionListSubHeader(
               onBranchChange(selected.value as string)
             }}
             selectedBranch={selectedBranch}
+            isExecutionsPage={true}
           />
         )}
       </div>
