@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Container, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -29,6 +29,7 @@ export interface RepoFilterProps {
   selectedScope?: string
   isPipelinePage?: boolean
   isExecutionsPage?: boolean
+  isTemplatesPage?: boolean
 }
 
 export function RepoFilter({
@@ -37,6 +38,7 @@ export function RepoFilter({
   showBranchFilter,
   isPipelinePage = false,
   isExecutionsPage = false,
+  isTemplatesPage = false,
   onBranchChange,
   selectedBranch,
   selectedScope
@@ -69,6 +71,11 @@ export function RepoFilter({
           projectIdentifier
         }
     }
+    return {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
   }, [selectedScope, accountId, orgIdentifier, projectIdentifier])
 
   const {
@@ -82,7 +89,7 @@ export function RepoFilter({
       orgIdentifier,
       projectIdentifier
     },
-    lazy: true
+    lazy: isPipelinePage
   })
 
   const {
@@ -96,7 +103,7 @@ export function RepoFilter({
       orgIdentifier,
       projectIdentifier
     },
-    lazy: true
+    lazy: isExecutionsPage
   })
 
   const {
@@ -106,14 +113,8 @@ export function RepoFilter({
     refetch: refetchRepoForTemplates
   } = getRepoListForTemplate({
     queryParams: queryParamsForTemplate,
-    lazy: true
+    lazy: isTemplatesPage
   })
-
-  useEffect(() => {
-    if (isPipelinePage) refetchRepoForPipelines()
-    else if (isExecutionsPage) refetchRepoForExecutions()
-    else refetchRepoForTemplates()
-  }, [isExecutionsPage, isPipelinePage, refetchRepoForExecutions, refetchRepoForPipelines, refetchRepoForTemplates])
 
   const onRefetch = React.useCallback((): void => {
     if (isPipelinePage) refetchRepoForPipelines()

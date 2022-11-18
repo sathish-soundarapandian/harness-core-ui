@@ -229,7 +229,7 @@ export default function TemplatesPage(): React.ReactElement {
               />
             </GitSyncStoreProvider>
           ) : (
-            <RepoFilter onChange={onChangeRepo} value={repoName} />
+            <RepoFilter onChange={onChangeRepo} value={repoName} isTemplatesPage={true} />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
