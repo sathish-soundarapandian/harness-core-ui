@@ -67,6 +67,9 @@ jest.mock('services/pipeline-ng', () => {
     useGetRepositoryList: jest.fn().mockImplementation(() => {
       return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
     }),
+    useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+      return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+    }),
     useSoftDeletePipeline: jest.fn(() => ({ mutate: deletePipeline, loading: false })),
     useGetFilterList: jest.fn(() => ({ mutate: jest.fn().mockResolvedValue(filters), loading: false })),
     usePostFilter: mockMutate,
