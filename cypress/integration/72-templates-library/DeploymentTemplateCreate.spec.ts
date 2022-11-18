@@ -66,12 +66,12 @@ describe('Deployment Template creation and assertion', () => {
     )
     cy.intercept('POST', connectorsListCall, { fixture: 'ng/api/connectors' })
     cy.visitPageAssertion('[class*=TemplatesPage-module_templatesPageBody]')
-
+    cy.get('span[icon="cross"]').should('be.visible').click()
     cy.contains('span', 'New Template').click()
     cy.get('.bp3-menu').within(() => {
       cy.contains('p', 'Deployment').click({ force: true })
     })
-
+    
     cy.contains('p', 'Create New Deployment Template').should('be.visible')
     cy.contains('p', 'DEPLOYMENT').should('be.visible') //
     //clicking "Start" without entering version label assertion
