@@ -28,7 +28,6 @@ import { StageTemplate } from '@templates-library/components/Templates/StageTemp
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
-import { useGetRepositoryList } from 'services/template-ng'
 
 const templateListCallMock = jest
   .spyOn(hooks, 'useMutateAsGet')
@@ -144,8 +143,6 @@ describe('<TemplatesPage /> tests', () => {
       </TestWrapper>
     )
 
-    expect(useGetRepositoryList).toBeCalled()
-
     expect(container).toMatchSnapshot()
     expect(templateListCallMock).toBeCalledWith(
       undefined,
@@ -161,7 +158,6 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
-    expect(useGetRepositoryList).toBeCalled()
 
     const typeFilterButton = getByText('all')
     act(() => {
@@ -190,7 +186,7 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
-    expect(useGetRepositoryList).toBeCalled()
+
     const selectTemplateButton = getByText('Select Template')
     act(() => {
       fireEvent.click(selectTemplateButton)
@@ -238,7 +234,6 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
-    expect(useGetRepositoryList).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
@@ -251,7 +246,6 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
-    expect(useGetRepositoryList).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
@@ -265,7 +259,6 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
-    expect(useGetRepositoryList).toBeCalled()
 
     expect(container).toMatchSnapshot()
 

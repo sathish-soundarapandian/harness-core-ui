@@ -14,7 +14,7 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps, accountPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { branchStatusMock, sourceCodeManagers } from '@connectors/mocks/mock'
-import { useGetPipelineList, useGetRepositoryList } from 'services/pipeline-ng'
+import { useGetPipelineList } from 'services/pipeline-ng'
 import { PipelineListPage } from '../PipelineListPage'
 import filters from './mocks/filters.json'
 import deploymentTypes from './mocks/deploymentTypes.json'
@@ -127,7 +127,6 @@ const renderPipelinesListPage = (module = 'cd'): RenderResult =>
 describe('CD Pipeline List Page', () => {
   test('should render pipeline table and able to go to a pipeline', async () => {
     renderPipelinesListPage()
-    expect(useGetRepositoryList).toBeCalled()
 
     const rows = await screen.findAllByRole('row')
     const pipelineRow = rows[1]
@@ -169,7 +168,6 @@ describe('CD Pipeline List Page', () => {
     })
 
     renderPipelinesListPage()
-    expect(useGetRepositoryList).toBeCalled()
 
     const refresh = await screen.findByRole('button', {
       name: /refresh/i
@@ -181,7 +179,6 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able to add a new pipeline with identifier as "-1"', async () => {
     renderPipelinesListPage()
-    expect(useGetRepositoryList).toBeCalled()
     const addPipeline = await screen.findByTestId('add-pipeline')
     userEvent.click(addPipeline)
     const location = await screen.findByTestId('location')
@@ -192,7 +189,6 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able to run pipeline from menu', async () => {
     renderPipelinesListPage()
-    expect(useGetRepositoryList).toBeCalled()
     const row = await screen.findAllByRole('row')
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
@@ -206,7 +202,6 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able to view pipeline from menu', async () => {
     renderPipelinesListPage()
-    expect(useGetRepositoryList).toBeCalled()
     const row = await screen.findAllByRole('row')
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
@@ -229,7 +224,6 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able delete pipeline from the menu', async () => {
     renderPipelinesListPage()
-    expect(useGetRepositoryList).toBeCalled()
     const row = await screen.findAllByRole('row')
     const moreOptions = within(row[1]).getByRole('button', {
       name: /pipeline menu actions/i
@@ -259,7 +253,6 @@ describe('CD Pipeline List Page', () => {
     })
 
     renderPipelinesListPage()
-    expect(useGetRepositoryList).toBeCalled()
     expect(await screen.findByText('NG Docker Image')).toBeInTheDocument()
     mutateListOfPipelines.mockReset()
     userEvent.type(screen.getByRole('searchbox'), 'asd')
@@ -292,7 +285,6 @@ describe('CI Pipeline List Page', () => {
     })
 
     renderPipelinesListPage('ci')
-    expect(useGetRepositoryList).toBeCalled()
     const rows = await screen.findAllByRole('row')
     const pipelineRow = rows[1]
     expect(
@@ -337,7 +329,6 @@ describe('CI Pipeline List Page', () => {
     })
 
     renderPipelinesListPage('ci')
-    expect(useGetRepositoryList).toBeCalled()
     const rows = await screen.findAllByRole('row')
     const webhookPipeline = rows[7]
     const cronPipeline = rows[8]
@@ -383,7 +374,6 @@ describe('Pipeline List Page with git details', () => {
     })
 
     renderPipelinesListPage('ci')
-    expect(useGetRepositoryList).toBeCalled()
     const rows = await screen.findAllByRole('row')
     const remotePipeline = rows[6]
     expect(

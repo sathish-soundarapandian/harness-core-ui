@@ -20,7 +20,6 @@ import {
   mockApiFetchingResponse
 } from '@templates-library/components/TemplateActivityLog/__tests__/TemplateActivityLogTestHelper'
 import { templateSelectorContextMock } from 'framework/Templates/TemplateSelectorContext/stateMocks'
-import { useGetRepositoryList } from 'services/template-ng'
 import { TemplateSelectorLeftView, TemplateSelectorLeftViewProps } from '../TemplateSelectorLeftView'
 
 const TEST_PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
@@ -102,7 +101,6 @@ describe('<TemplateSelectorLeftView> tests', () => {
         <TemplateSelectorLeftView {...baseProps} />
       </TestWrapper>
     )
-    expect(useGetRepositoryList).toBeCalled()
     expect(container).toMatchSnapshot()
 
     expect(templateListCallMock).toBeCalledWith(
