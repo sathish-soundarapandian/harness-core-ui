@@ -542,6 +542,7 @@ minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
 instanceWarmupLabel: Instance Warmup (Optional)
 instanceWarmupPlaceholder: Instance Warmup
 skipMatchingLabel: Skip Matching
+k8sDryRunStepDescription: K8s Dry Run Step Description.
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control

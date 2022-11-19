@@ -5078,6 +5078,7 @@ export interface StringsMap {
   'cd.instanceWarmupPlaceholder': string
   'cd.instructionsCluster': string
   'cd.instructionsDelegate': string
+  'cd.k8sDryRunStepDescription': string
   'cd.kubectl': string
   'cd.kubectlCommand': string
   'cd.kubectlNamespace': string
