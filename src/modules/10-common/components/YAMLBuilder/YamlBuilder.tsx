@@ -223,26 +223,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   useEffect(() => {
-    editorRef.current?.editor?.deltaDecorations(
-      [],
-      [
-        {
-          range: {
-            startLineNumber: 8,
-            startColumn: 1,
-            endLineNumber: 13,
-            endColumn: 50
-          } as Range,
-          options: {
-            isWholeLine: false,
-            className: css.pluginDecorator
-          }
-        }
-      ]
-    )
-  }, [])
-
-  useEffect(() => {
     setDynamicWidth(width as number)
   }, [width])
 
@@ -841,6 +821,46 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const shouldRenderPluginsPanel = showPluginsPanel && shouldOpenPluginsPanel
 
+  const addTextAtCurrentCursorPosition = useCallback(
+    (textToInsert: string): void => {
+      const editor = editorRef.current?.editor
+      const linesOfText = textToInsert.split('\n')
+      const numberOfNewLinesIntroduced = linesOfText.length
+      if (editor) {
+        const position = editor?.getPosition()
+        if (position) {
+          const endingLineForCursorPosition =
+            position.lineNumber + (numberOfNewLinesIntroduced ? numberOfNewLinesIntroduced - 1 : 0)
+          const contentInEndlingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition)
+          if (contentInEndlingLine?.length) {
+            editor.trigger('keyboard', 'type', { text: textToInsert })
+            editor.setPosition({
+              column: contentInEndlingLine.length + 1,
+              lineNumber: endingLineForCursorPosition
+            })
+            editor.focus()
+          }
+          highlightInsertedText(position.lineNumber, endingLineForCursorPosition)
+        }
+      }
+    },
+    [editorRef.current?.editor]
+  )
+
+  const highlightInsertedText = useCallback(
+    (fromLine: number, toLineNum: number): void => {
+      const pluginInputDecoration: editor.IModelDeltaDecoration = {
+        range: new monaco.Range(fromLine, 1, toLineNum, 1),
+        options: {
+          isWholeLine: true,
+          className: css.pluginDecorator
+        }
+      }
+      editorRef?.current?.editor?.deltaDecorations([], [pluginInputDecoration])
+    },
+    [editorRef.current?.editor]
+  )
+
   return (
     <Layout.Horizontal>
       <Layout.Vertical>
@@ -859,7 +879,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </div>
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
-      {shouldRenderPluginsPanel ? <PluginsPanel height={height} /> : null}
+      {shouldRenderPluginsPanel ? (
+        <PluginsPanel
+          height={height}
+          onPluginAdd={(pluginInput: string) => addTextAtCurrentCursorPosition(pluginInput)}
+        />
+      ) : null}
     </Layout.Horizontal>
   )
 }

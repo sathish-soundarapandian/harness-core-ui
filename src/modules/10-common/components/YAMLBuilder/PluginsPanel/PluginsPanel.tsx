@@ -1,6 +1,17 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import cx from 'classnames'
-import { Container, Layout, Tabs, Text, ExpandingSearchInput, Tab, IconName, Icon, IconProps } from '@harness/uicore'
+import {
+  Container,
+  Layout,
+  Tabs,
+  Text,
+  ExpandingSearchInput,
+  Tab,
+  IconName,
+  Icon,
+  IconProps,
+  Button
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { PluginInterface } from './plugins'
@@ -9,12 +20,15 @@ import { Plugins } from './plugins'
 import css from './PluginsPanel.module.scss'
 
 interface PluginsPanelInterface {
+  onPluginAdd: (pluginInput: string) => void
   height?: React.CSSProperties['height']
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height } = props
+  const { height, onPluginAdd } = props
   const { getString } = useStrings()
+  const [textarea, setTextarea] = useState<string>('')
+  const [selectedPlugin, setSelectedPlugin] = useState<string>('')
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
     const { name, description, pluginIcon, publisherIcon, className } = plugin
@@ -31,6 +45,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         className={css.plugin}
         width="100%"
         flex={{ justifyContent: 'space-between' }}
+        onClick={() => setSelectedPlugin(name)}
       >
         <Layout.Horizontal style={{ flex: 2 }}>
           {/* {isInstalled ? (
@@ -65,6 +80,15 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [])
 
+  const onChangeInput = (e: any) => {
+    setTextarea((e.target as any).value)
+  }
+
+  const onAddText = () => {
+    onPluginAdd(textarea)
+    setTextarea('')
+  }
+
   return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'}>
@@ -81,19 +105,28 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Text>
           }
           panel={
-            <Layout.Vertical>
-              <Container className={css.search}>
-                <ExpandingSearchInput autoFocus={true} alwaysExpanded={true} />
-              </Container>
-              <Container
-                className={css.overflow}
-                style={{
-                  height: `calc(${height} - 75px)`
-                }}
-              >
-                {Plugins.map((item: PluginInterface) => renderPlugin(item))}
-              </Container>
-            </Layout.Vertical>
+            selectedPlugin ? (
+              <Layout.Vertical spacing="medium" padding="medium">
+                <textarea style={{ height: '100px', width: '300px' }} value={textarea} onChange={onChangeInput} />
+                <Button style={{ height: '40px', width: '100px' }} onClick={onAddText}>
+                  {getString('add')}
+                </Button>
+              </Layout.Vertical>
+            ) : (
+              <Layout.Vertical>
+                <Container className={css.search}>
+                  <ExpandingSearchInput autoFocus={true} alwaysExpanded={true} />
+                </Container>
+                <Container
+                  className={css.overflow}
+                  style={{
+                    height: `calc(${height} - 75px)`
+                  }}
+                >
+                  {Plugins.map((item: PluginInterface) => renderPlugin(item))}
+                </Container>
+              </Layout.Vertical>
+            )
           }
         />
       </Tabs>

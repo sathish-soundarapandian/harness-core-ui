@@ -14,7 +14,7 @@ export interface PluginInterface {
 
 export const Plugins: PluginInterface[] = [
   {
-    name: 'Bash/ Shell script',
+    name: 'Bash/Shell script',
     description: 'Run a script on macOS, Linux, or Windows',
     pluginIcon: { name: 'plugin-step' },
     publisherIcon: 'ci-main',
