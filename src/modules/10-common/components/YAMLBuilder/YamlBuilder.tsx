@@ -151,7 +151,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
-  const [shouldOpenPluginsPanel, setShouldOpenPluginsPanel] = useState<boolean>(true)
+  const [pluginInput, setPluginInput] = useState<string>('')
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -181,46 +181,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       bind?.(undefined)
     }
   }, [bind, handler])
-
-  useEffect(() => {
-    const commandId = editorRef.current?.editor?.addCommand(
-      0,
-      function () {
-        setShouldOpenPluginsPanel((shouldOpen: boolean) => !shouldOpen)
-      },
-      ''
-    )
-
-    const registration = monaco.languages.registerCodeLensProvider('yaml', {
-      provideCodeLenses: function (_model: unknown, _token: unknown) {
-        return {
-          lenses: [
-            {
-              range: {
-                startLineNumber: 8,
-                startColumn: 1,
-                endLineNumber: 9,
-                endColumn: 1
-              },
-              id: 'plugin-settings',
-              command: {
-                id: commandId,
-                title: 'Settings'
-              }
-            }
-          ],
-          dispose: () => {}
-        }
-      },
-      resolveCodeLens: function (_model: unknown, codeLens: unknown, _token: unknown) {
-        return codeLens
-      }
-    })
-
-    return () => {
-      registration.dispose()
-    }
-  }, [])
 
   useEffect(() => {
     setDynamicWidth(width as number)
@@ -819,7 +779,45 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
-  const shouldRenderPluginsPanel = showPluginsPanel && shouldOpenPluginsPanel
+  const addCodeLens = useCallback(
+    (fromLine: number, toLineNum: number) => {
+      const commandId = editorRef.current?.editor?.addCommand(
+        0,
+        function () {
+          setPluginInput('\na\nb')
+        },
+        ''
+      )
+
+      const registrationId = monaco.languages.registerCodeLensProvider('yaml', {
+        provideCodeLenses: function (_model: unknown, _token: unknown) {
+          return {
+            lenses: [
+              {
+                range: {
+                  startLineNumber: fromLine,
+                  startColumn: 1,
+                  endLineNumber: toLineNum,
+                  endColumn: 1
+                },
+                id: 'plugin-settings',
+                command: {
+                  id: commandId,
+                  title: 'Settings'
+                }
+              }
+            ],
+            dispose: () => {}
+          }
+        }
+      })
+
+      return () => {
+        registrationId.dispose()
+      }
+    },
+    [editorRef.current?.editor]
+  )
 
   const addTextAtCurrentCursorPosition = useCallback(
     (textToInsert: string): void => {
@@ -829,11 +827,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (editor) {
         const position = editor?.getPosition()
         if (position) {
+          editor.trigger('keyboard', 'type', { text: `\n${textToInsert}` })
           const endingLineForCursorPosition =
-            position.lineNumber + (numberOfNewLinesIntroduced ? numberOfNewLinesIntroduced - 1 : 0)
+            position.lineNumber + (numberOfNewLinesIntroduced ? numberOfNewLinesIntroduced : 0)
           const contentInEndlingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition)
-          if (contentInEndlingLine?.length) {
-            editor.trigger('keyboard', 'type', { text: textToInsert })
+          if (contentInEndlingLine) {
             editor.setPosition({
               column: contentInEndlingLine.length + 1,
               lineNumber: endingLineForCursorPosition
@@ -841,6 +839,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             editor.focus()
           }
           highlightInsertedText(position.lineNumber, endingLineForCursorPosition)
+          addCodeLens(position.lineNumber, endingLineForCursorPosition)
         }
       }
     },
@@ -852,7 +851,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const pluginInputDecoration: editor.IModelDeltaDecoration = {
         range: new monaco.Range(fromLine, 1, toLineNum, 1),
         options: {
-          isWholeLine: true,
+          isWholeLine: false,
           className: css.pluginDecorator
         }
       }
@@ -860,6 +859,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     },
     [editorRef.current?.editor]
   )
+
+  useEffect(() => {
+    if (pluginInput) {
+      addTextAtCurrentCursorPosition(pluginInput)
+    }
+  }, [pluginInput])
 
   return (
     <Layout.Horizontal>
@@ -869,7 +874,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             css.main,
             { [css.darkBg]: theme === 'DARK' },
             { [css.borderWithErrorPanel]: showErrorFooter },
-            { [css.borderWithPluginsPanel]: shouldRenderPluginsPanel }
+            { [css.borderWithPluginsPanel]: showPluginsPanel }
           )}
         >
           <div className={css.editor}>
@@ -879,10 +884,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </div>
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
-      {shouldRenderPluginsPanel ? (
+      {showPluginsPanel ? (
         <PluginsPanel
           height={height}
-          onPluginAdd={(pluginInput: string) => addTextAtCurrentCursorPosition(pluginInput)}
+          onPluginAdd={(pluginInput: string) => setPluginInput(pluginInput)}
+          existingPluginValues={pluginInput}
         />
       ) : null}
     </Layout.Horizontal>

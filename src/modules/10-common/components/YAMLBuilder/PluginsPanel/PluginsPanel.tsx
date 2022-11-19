@@ -20,14 +20,15 @@ import { Plugins } from './plugins'
 import css from './PluginsPanel.module.scss'
 
 interface PluginsPanelInterface {
+  existingPluginValues: string
   onPluginAdd: (pluginInput: string) => void
   height?: React.CSSProperties['height']
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height, onPluginAdd } = props
+  const { height, onPluginAdd, existingPluginValues } = props
   const { getString } = useStrings()
-  const [textarea, setTextarea] = useState<string>('')
+  const [textarea, setTextarea] = useState<string>(existingPluginValues)
   const [selectedPlugin, setSelectedPlugin] = useState<string>('')
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
