@@ -120,18 +120,22 @@ export default function DeployEnvironmentEntityInputStep({
     // if this is a multi environment template, then set up a dummy field,
     // so that environments can be updated in this dummy field
     if (isMultiEnvironment) {
-      formik.setFieldValue(
-        uniquePath.current,
-        get(formik.values, pathForDeployToAll) === true
-          ? [SELECT_ALL_OPTION]
-          : environmentIdentifiers.map(environmentId => ({
-              label: defaultTo(
-                environmentsList.find(environmentInList => environmentInList.identifier === environmentId)?.name,
-                environmentId
-              ),
-              value: environmentId
-            }))
-      )
+      if (isValueRuntimeInput(get(formik.values, pathToEnvironments))) {
+        formik.setFieldValue(uniquePath.current, RUNTIME_INPUT_VALUE)
+      } else {
+        formik.setFieldValue(
+          uniquePath.current,
+          get(formik.values, pathForDeployToAll) === true
+            ? [SELECT_ALL_OPTION]
+            : environmentIdentifiers.map(environmentId => ({
+                label: defaultTo(
+                  environmentsList.find(environmentInList => environmentInList.identifier === environmentId)?.name,
+                  environmentId
+                ),
+                value: environmentId
+              }))
+        )
+      }
     }
 
     // update identifiers in state when deployToAll is true. This sets the environmentsData
@@ -147,7 +151,9 @@ export default function DeployEnvironmentEntityInputStep({
     // On load of data
     // if no value is selected, clear the inputs and template
     if (environmentIdentifiers.length === 0 && !envGroupIdentifier) {
-      if (isMultiEnvironment) {
+      if (isValueRuntimeInput(environmentValues as unknown as string)) {
+        return
+      } else if (isMultiEnvironment) {
         updateStageFormTemplate(RUNTIME_INPUT_VALUE, fullPath)
         formik.setFieldValue(pathToEnvironments, [])
       } else {
@@ -216,7 +222,9 @@ export default function DeployEnvironmentEntityInputStep({
       }
 
       const deployToAll = isMultiEnvironment
-        ? !!environmentObject?.deployToAll
+        ? isValueRuntimeInput(environmentObject?.deployToAll)
+          ? RUNTIME_INPUT_VALUE
+          : !!environmentObject?.deployToAll
         : get(formik.values, `${pathToEnvironments}.deployToAll`)
 
       const infrastructureDefinitions = isMultiEnvironment
@@ -302,7 +310,11 @@ export default function DeployEnvironmentEntityInputStep({
   }
 
   function handleEnvironmentsChange(values: SelectOption[]): void {
-    if (values?.at(0)?.value === 'All') {
+    if (isValueRuntimeInput(values)) {
+      updateStageFormTemplate(RUNTIME_INPUT_VALUE, fullPath)
+      setEnvironmentIdentifiers([])
+      formik.setFieldValue(pathToEnvironments, RUNTIME_INPUT_VALUE)
+    } else if (values?.at(0)?.value === 'All') {
       const newIdentifiers = environmentsList.map(environmentInList => environmentInList.identifier)
       setEnvironmentIdentifiers(newIdentifiers)
 
@@ -381,12 +393,12 @@ export default function DeployEnvironmentEntityInputStep({
               placeholder: placeHolderForEnvironments,
               disabled,
               // checking for a non-boolean value as it is undefined in case of multi environments
-              isAllSelectionSupported: !!envGroupIdentifier,
-              selectAllOptionIfAllItemsAreSelected: !!envGroupIdentifier
+              isAllSelectionSupported: !!envGroupIdentifier
             }}
             onChange={handleEnvironmentsChange}
             multiTypeProps={{
               width: 300,
+              height: 32,
               allowableTypes
             }}
           />
