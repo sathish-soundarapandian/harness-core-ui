@@ -236,6 +236,7 @@ export default function DeployClusterEntityInputStep({
             onChange={handleClustersChange}
             multiTypeProps={{
               width: 300,
+              height: 32,
               allowableTypes
             }}
           />
