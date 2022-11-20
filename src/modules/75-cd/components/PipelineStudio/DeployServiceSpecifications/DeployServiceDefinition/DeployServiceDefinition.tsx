@@ -289,6 +289,7 @@ function DeployServiceDefinition(): React.ReactElement {
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
         templateLinkConfig={customDeploymentData}
         addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
+        isServiceCreateModalView={isServiceCreateModalView}
       />
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>

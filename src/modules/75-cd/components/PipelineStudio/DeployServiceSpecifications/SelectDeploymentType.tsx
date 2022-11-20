@@ -235,6 +235,7 @@ interface SelectServiceDeploymentTypeProps {
   onDeploymentTemplateSelect: (template: TemplateSummaryResponse, fromTemplateSelector: boolean) => void
   addOrUpdateTemplate?: () => void | Promise<void>
   templateBarOverrideClassName?: string
+  isServiceCreateModalView?: boolean // Is New Service
 }
 
 export default function SelectDeploymentType({
@@ -248,7 +249,8 @@ export default function SelectDeploymentType({
   templateLinkConfig,
   onDeploymentTemplateSelect,
   addOrUpdateTemplate,
-  templateBarOverrideClassName = ''
+  templateBarOverrideClassName = '',
+  isServiceCreateModalView = true
 }: SelectServiceDeploymentTypeProps): JSX.Element {
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -335,7 +337,7 @@ export default function SelectDeploymentType({
           name="gitOpsEnabled"
           checked={gitOpsEnabled}
           onChange={handleGitOpsCheckChanged}
-          disabled={isReadonly}
+          disabled={isReadonly || !isServiceCreateModalView}
           className={deployServiceCss.gitOpsCheck}
         />
       )
