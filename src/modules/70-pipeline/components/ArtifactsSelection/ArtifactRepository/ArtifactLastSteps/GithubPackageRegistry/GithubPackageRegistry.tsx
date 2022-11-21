@@ -114,7 +114,8 @@ function FormComponent({
       packageType: defaultTo(packageTypeValue, ''),
       packageName: defaultTo(packageNameValue, ''),
       connectorRef: defaultTo(connectorRefValue, ''),
-      versionRegex: '*'
+      versionRegex: '*',
+      org: orgValue
     }
   })
 
@@ -338,15 +339,7 @@ function FormComponent({
                   ) {
                     return
                   }
-                  refetchVersionDetails({
-                    queryParams: {
-                      ...commonParams,
-                      packageType: defaultTo(packageTypeValue, ''),
-                      packageName: defaultTo(packageNameValue, ''),
-                      connectorRef: defaultTo(connectorRefValue, ''),
-                      versionRegex: '*'
-                    }
-                  })
+                  refetchVersionDetails()
                 }
               }}
             />
