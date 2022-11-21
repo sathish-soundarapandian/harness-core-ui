@@ -8,5 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly container: string
+  readonly header: string
+  readonly table: string
+  readonly tableProjectsHeader: string
+  readonly viewAllText: string
 }
 export default styles

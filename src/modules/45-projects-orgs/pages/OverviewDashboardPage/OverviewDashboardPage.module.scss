@@ -7,4 +7,8 @@
     margin-left: var(--spacing-huge);
     width: 475px;
   }
+  .border {
+    border-bottom: 1px solid var(--black);
+    opacity: 0.1;
+  }
 }

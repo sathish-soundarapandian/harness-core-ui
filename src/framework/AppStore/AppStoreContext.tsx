@@ -67,6 +67,7 @@ export interface AppStoreContextProps {
 export interface SavedProjectDetails {
   projectIdentifier: string
   orgIdentifier: string
+  name?: string
 }
 
 export const AppStoreContext = React.createContext<AppStoreContextProps>({
@@ -328,10 +329,10 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
 
           if (indexInRecentProjects > -1) {
             const recentProjectsCopy = [...recentProjects]
-            recentProjects.splice(indexInRecentProjects, 1)
-            setRecentProjects([{ projectIdentifier, orgIdentifier }, ...recentProjectsCopy])
+            recentProjectsCopy.splice(indexInRecentProjects, 1)
+            setRecentProjects([{ projectIdentifier, orgIdentifier, name: project.name }, ...recentProjectsCopy])
           } else {
-            setRecentProjects([{ projectIdentifier, orgIdentifier }, ...recentProjects])
+            setRecentProjects([{ projectIdentifier, orgIdentifier, name: project.name }, ...recentProjects])
           }
         } else {
           // if no project was fetched, clear preference
