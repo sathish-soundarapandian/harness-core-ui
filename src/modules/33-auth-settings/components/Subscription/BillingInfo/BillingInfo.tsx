@@ -19,8 +19,8 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import type { StateByCountryMap } from '@common/hooks/useRegionList'
 import BillingContact, { InitialBillingInfo } from './BillingContact'
 import { Header } from '../Header'
-import css from './BillingInfo.module.scss'
 import { PLAN_TYPES } from '../subscriptionUtils'
+import css from './BillingInfo.module.scss'
 
 interface BillingInfoProp {
   subscriptionProps: SubscriptionProps

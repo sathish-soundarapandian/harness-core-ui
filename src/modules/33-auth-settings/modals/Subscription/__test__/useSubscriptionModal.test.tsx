@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
-import { useRetrieveProductPrices, useCreateFfSubscription, useRetrieveRecommendation } from 'services/cd-ng/index'
+import { useRetrieveProductPrices, useCreateSubscription, useRetrieveRecommendation } from 'services/cd-ng/index'
 import { useSubscribeModal } from '../useSubscriptionModal'
 
 jest.mock('services/cd-ng')
@@ -23,7 +23,7 @@ const subscriptionData = {
 }
 const createNewSubscriptionMock = jest.fn(() => Promise.resolve({ data: subscriptionData }))
 
-const useCreateFfSubscriptionMock = useCreateFfSubscription as jest.MockedFunction<any>
+const useCreateFfSubscriptionMock = useCreateSubscription as jest.MockedFunction<any>
 useCreateFfSubscriptionMock.mockImplementation(() => {
   return {
     mutate: createNewSubscriptionMock,
