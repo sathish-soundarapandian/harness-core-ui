@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { findLastIndex } from 'lodash-es'
 import { isNumeric } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
-import type { CanReplaceAllNumberParams, NoRecordForm } from './InputWithDynamicModalForJson.types'
+import type { NoRecordForm } from './InputWithDynamicModalForJson.types'
 
 export const MAX_ARRAY_LENGTH = 10000
 
@@ -66,33 +65,14 @@ export const getJSONPathIfLastElementIsNum = (selectedValuePathElements: string[
   const pathElementsExceptLastNumElement = selectedValuePathElements.slice(0, selectedValuePathElements.length - 1)
   const lastNumElement = selectedValuePathElements[selectedValuePathElements.length - 1]
 
-  const path = replaceAllNum(pathElementsExceptLastNumElement, true)
+  const path = replaceAllNum(pathElementsExceptLastNumElement)
 
   return `${path}.[${lastNumElement}]`
 }
 
-const getCanReplaceNumber = ({
-  lastNumberIndex,
-  index,
-  filteredNumbers,
-  replaceAllNumbers
-}: CanReplaceAllNumberParams): boolean =>
-  replaceAllNumbers || filteredNumbers?.length === 1 || index !== lastNumberIndex
-
-export const replaceAllNum = (path: string[], replaceAllNumbers?: boolean): string => {
-  const lastNumberIndex = findLastIndex(path, currentPath => isNumeric(currentPath))
-  const filteredNumbers = path.filter(currentPath => isNumeric(currentPath))
-
-  const updatedPath = path.map((currentPath, index) => {
-    if (
-      isNumeric(currentPath) &&
-      getCanReplaceNumber({
-        lastNumberIndex,
-        index,
-        filteredNumbers,
-        replaceAllNumbers
-      })
-    ) {
+export const replaceAllNum = (path: string[]): string => {
+  const updatedPath = path.map(currentPath => {
+    if (isNumeric(currentPath)) {
       return '*'
     }
 

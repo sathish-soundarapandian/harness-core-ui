@@ -121,4 +121,57 @@ describe('Unit tests for InputWithDynamicModalForJson component', () => {
     const expectedJSONPath = `$.['series'].[*].['pointlist'].[*].[1]`
     expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
   })
+
+  test('Verify if formatJSONPath method returns correct jsonPath if last three elements are number', () => {
+    const pathSelected = ['series', '1', 'pointlist', '0', '1', '3']
+    const expectedJSONPath = `$.['series'].[*].['pointlist'].[*].[*].[3]`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
+  test('Verify if formatJSONPath method returns correct jsonPath if random values are numbers', () => {
+    const pathSelected = ['aggregations', 'by_district', 'buckets', '0', 'tops', 'hits', 'hits', '1', '_score']
+    const expectedJSONPath = `$.['aggregations'].['by_district'].['buckets'].[*].['tops'].['hits'].['hits'].[*].['_score']`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
+  test('Verify if formatJSONPath method returns correct jsonPath if more numbers are present in middle', () => {
+    const pathSelected = [
+      'aggregations',
+      'by_district',
+      'buckets',
+      '0',
+      'tops',
+      'hits',
+      'hits',
+      '1',
+      '_score',
+      '2',
+      '4',
+      '5',
+      '34',
+      'ABC'
+    ]
+    const expectedJSONPath = `$.['aggregations'].['by_district'].['buckets'].[*].['tops'].['hits'].['hits'].[*].['_score'].[*].[*].[*].[*].['ABC']`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
+  test('Verify if formatJSONPath method returns correct jsonPath if more numbers are present in middle and in end', () => {
+    const pathSelected = [
+      'aggregations',
+      'by_district',
+      'buckets',
+      '0',
+      'tops',
+      'hits',
+      'hits',
+      '1',
+      '_score',
+      '2',
+      '4',
+      '5',
+      '34',
+      'ABC',
+      '1',
+      '21'
+    ]
+    const expectedJSONPath = `$.['aggregations'].['by_district'].['buckets'].[*].['tops'].['hits'].['hits'].[*].['_score'].[*].[*].[*].[*].['ABC'].[*].[21]`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
 })
