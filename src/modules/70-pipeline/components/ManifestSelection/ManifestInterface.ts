@@ -78,8 +78,13 @@ export interface ManifestListViewProps {
   allowableTypes: AllowedTypes
   updateManifestList: (obj: ManifestConfigWrapper, idx: number) => void
   removeManifestConfig: (idx: number) => void
-  attachPathYaml: (formData: ConnectorConfigDTO, manifestId: string, manifestType: PrimaryManifestType) => void
-  removeValuesYaml: (index: number, manifestId: string, manifestType: PrimaryManifestType) => void
+  attachPathYaml: (
+    formData: ConnectorConfigDTO,
+    manifestId: string,
+    manifestType: PrimaryManifestType,
+    pathKey?: string
+  ) => void
+  removeValuesYaml: (index: number, manifestId: string, manifestType: PrimaryManifestType, pathKey?: string) => void
   allowOnlyOneManifest?: boolean
   addManifestBtnText?: string
   preSelectedManifestType?: ManifestTypes
@@ -152,7 +157,17 @@ export interface HelmWithOCIDataType {
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }
-
+export interface TASManifestDataType {
+  identifier: string
+  branch: string | undefined
+  commitId: string | undefined
+  gitFetchType: 'Branch' | 'Commit'
+  paths: any
+  skipResourceVersioning?: boolean
+  repoName?: string
+  varsPaths?: any
+  autoScalerPath?: any
+}
 export interface HelmWithGcsDataType extends HelmWithHTTPDataType {
   bucketName: SelectOption | string
   folderPath: string

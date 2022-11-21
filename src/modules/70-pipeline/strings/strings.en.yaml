@@ -338,6 +338,8 @@ manifestType:
   kustomizePathRequired: Kustomize Path is required
   kustomizeFolderPathRequired: Kustomize Folder Path is required
   pathRequired: File Path is required
+  varsPathRequired: Vars Path is required
+  autoScalerPathRequired: Autoscaler Path is required
   bucketNameRequired: Bucket Name is required
   path: '{{$.common.path}}'
   osTemplatePath: Template File Path
@@ -364,6 +366,10 @@ manifestType:
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
+  varsYAMLPath: Vars.yaml
+  addVarsYAMLPath: Add Vars.yaml
+  autoScalerYAMLPath: AutoScaler.yaml
+  addAutoScalerYAMLPath: Add AutoScaler.yaml
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
