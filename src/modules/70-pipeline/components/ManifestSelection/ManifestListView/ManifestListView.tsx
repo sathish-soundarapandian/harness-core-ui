@@ -53,7 +53,9 @@ import {
   showAddManifestBtn,
   getBuildPayload,
   isGitTypeManifestStore,
-  ManifestToPathMap
+  ManifestToPathMap,
+  TASManifestToPaths,
+  TASManifestTypeMetaData
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -84,6 +86,7 @@ import HarnessFileStore from '../ManifestWizardSteps/HarnessFileStore/HarnessFil
 import KustomizeWithHarnessStore from '../ManifestWizardSteps/KustomizeWithHarnessStore/KustomizeWithHarnessStore'
 import { CommonManifestDetails } from '../ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
 import HelmWithHarnessStore from '../ManifestWizardSteps/HelmWithHarnessStore/HelmWithHarnessStore'
+import TasManifest from '../ManifestWizardSteps/TasManifest/TasManifest'
 import css from '../ManifestSelection.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -306,13 +309,16 @@ function ManifestListView({
       case manifestStore === ManifestStoreMap.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
+      case selectedManifest === ManifestDataType.TasManifest:
+        manifestDetailStep = <TasManifest {...lastStepProps()} />
+        break
       case [
         ManifestDataType.K8sManifest,
         ManifestDataType.Values,
         ManifestDataType.HelmChart,
         ManifestDataType.OpenshiftTemplate,
         ManifestDataType.OpenshiftParam,
-        ManifestDataType.TasManifest,
+        // ManifestDataType.TasManifest,
         ManifestDataType.Vars,
         ManifestDataType.AutoScaler
       ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.CustomRemote:
@@ -603,6 +609,41 @@ function ManifestListView({
                         }
                       />
                     )}
+                    {manifest?.type === ManifestDataType.TasManifest &&
+                      TASManifestToPaths.map(type => (
+                        <AttachPathYamlFlow
+                          key={type}
+                          renderConnectorField={renderConnectorField(
+                            manifest?.spec?.store.type,
+                            manifest?.spec?.store?.spec.connectorRef,
+                            connectorName,
+                            color
+                          )}
+                          manifestType={manifest?.type as PrimaryManifestType}
+                          manifestStore={manifest?.spec?.store?.type}
+                          valuesPathMetaData={TASManifestTypeMetaData[type]}
+                          valuesPaths={manifest?.spec[type]}
+                          expressions={expressions}
+                          allowableTypes={allowableTypes}
+                          isReadonly={isReadonly}
+                          attachPathYaml={formData =>
+                            attachPathYaml(
+                              formData,
+                              manifest?.identifier as string,
+                              manifest?.type as PrimaryManifestType,
+                              TASManifestTypeMetaData[type].pathKeyMap
+                            )
+                          }
+                          removeValuesYaml={valuesYamlIndex =>
+                            removeValuesYaml(
+                              valuesYamlIndex,
+                              manifest?.identifier as string,
+                              manifest?.type as PrimaryManifestType,
+                              TASManifestTypeMetaData[type].pathKeyMap
+                            )
+                          }
+                        />
+                      ))}
                   </div>
                 )
               })}

@@ -30,7 +30,7 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
-import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap } from '../Manifesthelper'
+import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap, ManifestMetaData } from '../Manifesthelper'
 import type { ManifestStores, PrimaryManifestType } from '../ManifestInterface'
 import DragnDropPaths from '../DragnDropPaths'
 import { removeEmptyFieldsFromStringArray } from '../ManifestWizardSteps/ManifestUtils'
@@ -46,6 +46,7 @@ interface AttachPathYamlFlowType {
   removeValuesYaml: (index: number) => void
   valuesPaths: string[]
   isReadonly: boolean
+  valuesPathMetaData?: ManifestMetaData
 }
 
 function AttachPathYamlFlow({
@@ -57,10 +58,12 @@ function AttachPathYamlFlow({
   allowableTypes,
   attachPathYaml,
   removeValuesYaml,
-  isReadonly
+  isReadonly,
+  valuesPathMetaData
 }: AttachPathYamlFlowType): React.ReactElement | null {
   const { getString } = useStrings()
 
+  const allowOnlyOneFilePath = defaultTo(valuesPathMetaData?.allowOnlyOneFilePath, false)
   const getValuesPathInitialValue = (): string[] | Array<{ path: string; uuid: string }> => {
     if (manifestStore === ManifestStoreMap.Harness) {
       return valuesPaths
@@ -122,57 +125,66 @@ function AttachPathYamlFlow({
           }}
           enableReinitialize={true}
         >
-          {formik => (
-            <Form>
-              <Layout.Vertical>
-                <Heading
-                  margin={{ bottom: 'xlarge' }}
-                  level={3}
-                  font={{ size: 'medium', weight: 'bold' }}
-                  color={Color.GREY_900}
-                >
-                  {getString('pipeline.manifestType.addValuesYamlPath')}
-                </Heading>
-                {ManifestToPathMap[manifestType] && manifestStore !== ManifestStoreMap.Harness ? (
-                  <DragnDropPaths
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    fieldPath="valuesPaths"
-                    pathLabel={ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}
-                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-                    defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-                    dragDropFieldWidth={400}
-                  />
-                ) : (
-                  <>
-                    <MultiConfigSelectField
-                      isAttachment
-                      name="valuesPaths"
-                      allowableTypes={allowableTypes}
-                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+          {formik => {
+            const path = ManifestToPathMap[manifestType] || valuesPathMetaData?.path
+            const pathLabel = ManifestToPathLabelMap[manifestType] || valuesPathMetaData?.pathLabel
+
+            return (
+              <Form>
+                <Layout.Vertical>
+                  <Heading
+                    margin={{ bottom: 'xlarge' }}
+                    level={3}
+                    font={{ size: 'medium', weight: 'bold' }}
+                    color={Color.GREY_900}
+                  >
+                    {valuesPathMetaData
+                      ? valuesPathMetaData.addPathLabel
+                      : getString('pipeline.manifestType.addValuesYamlPath')}
+                  </Heading>
+                  {path && manifestStore !== ManifestStoreMap.Harness ? (
+                    <DragnDropPaths
                       formik={formik}
                       expressions={expressions}
-                      values={formik.values.valuesPaths as string | string[]}
-                      multiTypeFieldSelectorProps={{
-                        disableTypeSelection: false,
-                        label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
-                      }}
+                      allowableTypes={allowableTypes}
+                      fieldPath="valuesPaths"
+                      pathLabel={pathLabel && getString(pathLabel)}
+                      placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                      dragDropFieldWidth={400}
                     />
-                  </>
-                )}
-                <Layout.Horizontal>
-                  <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('submit')} />
-                </Layout.Horizontal>
-              </Layout.Vertical>
-            </Form>
-          )}
+                  ) : (
+                    <>
+                      <MultiConfigSelectField
+                        isAttachment
+                        name="valuesPaths"
+                        allowableTypes={allowableTypes}
+                        fileType={FILE_TYPE_VALUES.FILE_STORE}
+                        formik={formik}
+                        expressions={expressions}
+                        values={formik.values.valuesPaths as string | string[]}
+                        multiTypeFieldSelectorProps={{
+                          disableTypeSelection: false,
+                          label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
+                        }}
+                      />
+                    </>
+                  )}
+                  <Layout.Horizontal>
+                    <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('submit')} />
+                  </Layout.Horizontal>
+                </Layout.Vertical>
+              </Form>
+            )
+          }}
         </Formik>
       </Dialog>
     ),
     [valuesPaths]
   )
-
+  const hideAddManifest = valuesPathMetaData
+    ? allowOnlyOneFilePath && valuesPaths?.length === 1 && !isReadonly
+    : !isReadonly
   return (
     <section className={css.valuesList}>
       {getMultiTypeFromValue(valuesPaths) === MultiTypeInputType.FIXED ? (
@@ -205,10 +217,14 @@ function AttachPathYamlFlow({
         ))
       ) : (
         <div className={css.valuesPathList}>
-          {`${ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}: ${valuesPaths}`}
+          {valuesPathMetaData
+            ? `${getString(valuesPathMetaData.pathLabel)}: ${valuesPaths}`
+            : `${
+                ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])
+              }: ${valuesPaths}`}
         </div>
       )}
-      {!isReadonly && (
+      {!hideAddManifest && (
         <Button
           className={css.addValuesYaml}
           id="add-manifest"
@@ -216,7 +232,7 @@ function AttachPathYamlFlow({
           variation={ButtonVariation.LINK}
           onClick={showModal}
           text={getString('pipeline.manifestType.attachPath', {
-            manifestPath: ManifestToPathMap[manifestType]
+            manifestPath: valuesPathMetaData ? valuesPathMetaData.path : ManifestToPathMap[manifestType]
           })}
         />
       )}

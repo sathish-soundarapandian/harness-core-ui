@@ -70,6 +70,35 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   AutoScaler: 'AutoScaler'
 }
 
+export type TASManifestType = 'varsPaths' | 'autoScalerPath'
+
+export type ManifestMetaData = {
+  path: string
+  pathLabel: StringKeys
+  addPathLabel: StringKeys
+  pathKeyMap: string
+  allowOnlyOneFilePath: boolean
+}
+
+export const TASManifestToPaths: TASManifestType[] = ['varsPaths', 'autoScalerPath']
+
+export const TASManifestTypeMetaData: Record<TASManifestType, ManifestMetaData> = {
+  varsPaths: {
+    path: 'Vars',
+    pathLabel: 'pipeline.manifestType.varsYAMLPath',
+    addPathLabel: 'pipeline.manifestType.addVarsYAMLPath',
+    pathKeyMap: 'varsPaths',
+    allowOnlyOneFilePath: false
+  },
+  autoScalerPath: {
+    path: 'AutoScaler',
+    pathLabel: 'pipeline.manifestType.autoScalerYAMLPath',
+    addPathLabel: 'pipeline.manifestType.addAutoScalerYAMLPath',
+    pathKeyMap: 'autoScalerPath',
+    allowOnlyOneFilePath: true
+  }
+}
+
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'Values',
   HelmChart: 'Values',
