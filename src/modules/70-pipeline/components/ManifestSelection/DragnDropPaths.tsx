@@ -119,7 +119,7 @@ function DragnDropPaths({
                     ))}
                     {provided.placeholder}
 
-                    {allowOnlyOneFilePath && formik.values[fieldPath].length === 1 ? null : (
+                    {allowOnlyOneFilePath && formik.values[fieldPath]?.length === 1 ? null : (
                       <span>
                         <Button
                           text={getString('addFileText')}
