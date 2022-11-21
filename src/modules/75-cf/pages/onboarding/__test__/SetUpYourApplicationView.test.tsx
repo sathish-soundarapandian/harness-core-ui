@@ -158,4 +158,11 @@ describe('SetUpYourApplicationView', () => {
     })
     expect(document.querySelector('input[name="environmentSelectEl"]')).toHaveValue('QB')
   })
+
+  test('It should render the readme when environment, language & api key are set', () => {
+    const javaLang = SupportPlatforms.find(lang => lang.name === 'Java') as any
+    renderComponent({ language: javaLang, selectedEnvironment: { identifier: 'foobar' } })
+
+    expect(screen.getByText('cf.onboarding.setUpYourCode')).toBeVisible()
+  })
 })
