@@ -343,15 +343,20 @@ export default function SelectDeploymentType({
     return null
   }
 
-  const renderRecentDeploymentTemplates = (): ReactNode => (
-    <RecentDeploymentTemplates
-      labelClassName={viewContext ? stageCss.tabSubHeading : stageCss.deploymentTypeHeading}
-      readonly={isReadonly}
-      templateLinkConfig={templateLinkConfig}
-      onDeploymentTemplateSelect={onDeploymentTemplateSelect}
-      selectedDeploymentType={selectedDeploymentType}
-    />
-  )
+  const renderRecentDeploymentTemplates = (): ReactNode => {
+    if (isReadonly && selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
+      return null
+    }
+    return (
+      <RecentDeploymentTemplates
+        labelClassName={viewContext ? stageCss.tabSubHeading : stageCss.deploymentTypeHeading}
+        readonly={isReadonly}
+        templateLinkConfig={templateLinkConfig}
+        onDeploymentTemplateSelect={onDeploymentTemplateSelect}
+        selectedDeploymentType={selectedDeploymentType}
+      />
+    )
+  }
 
   const renderDeploymentTypeLabel = (): ReactNode => {
     // only selected deployment type thumbnail is rendered in readonly mode,

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty, pick, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, omit, pick, set } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import type {
@@ -546,17 +546,15 @@ export const isExecutionFieldPresent = (stage: DeploymentStageElementConfig): bo
   return !!(stage.spec?.execution && stage.spec?.execution.steps && stage.spec?.execution.steps?.length > 0)
 }
 
+export const isServiceDefinitionSpecDataPresent = (stage: DeploymentStageElementConfig): boolean => {
+  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables'))
+}
+
 export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig): boolean => {
   if (!stage) {
     return false
   }
-  return (
-    isArtifactManifestPresent(stage) ||
-    isInfraDefinitionPresent(stage) ||
-    isExecutionFieldPresent(stage) ||
-    isConfigFilesPresent(stage) ||
-    isCustomDeploymentDataPresent(stage)
-  )
+  return isInfraDefinitionPresent(stage) || isExecutionFieldPresent(stage) || isServiceDefinitionSpecDataPresent(stage)
 }
 
 export const hasStageData = (stage?: DeploymentStageElementConfig): boolean => {
