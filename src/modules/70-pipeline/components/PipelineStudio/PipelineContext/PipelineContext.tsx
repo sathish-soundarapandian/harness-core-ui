@@ -1130,6 +1130,7 @@ export function PipelineProvider({
   }, [])
 
   const updatePipelineView = React.useCallback((data: PipelineViewData) => {
+    console.log('updatePipelineView: ', data);
     dispatch(PipelineContextActions.updatePipelineView({ pipelineView: data }))
   }, [])
 

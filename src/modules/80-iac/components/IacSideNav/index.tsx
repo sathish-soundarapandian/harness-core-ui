@@ -47,6 +47,7 @@ export default function IacSideNav(): React.ReactElement {
         <>
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module: 'iac' })} />
           <SidebarLink label={getString('iac.stacks')} to={routes.toIacStacks({ ...params })} />
+          <SidebarLink label={'stack/slug'} to={routes.toIacStacksProvision({ ...params, slug: 'test' })} />
           <ProjectSetupMenu module="iac" />
         </>
       ) : null}

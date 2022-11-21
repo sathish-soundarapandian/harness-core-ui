@@ -17,7 +17,8 @@ export const IacApp = (props: any): React.ReactElement => (
 )
 
 export const IacComponentMap = {
-  IacStage: lazy(() => import('iac/IacStage'))
+  IacStage: lazy(() => import('iac/IacStage')),
+  IacStudio: lazy(() => import('iac/IACStudio'))
 }
 
 export const IacComponentMounter = <T,>(props: {

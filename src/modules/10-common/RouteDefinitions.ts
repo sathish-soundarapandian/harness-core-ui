@@ -1895,6 +1895,10 @@ const routes = {
   toIacStacks: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iac/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
+  ),
+  toIacStacksProvision: withAccountId(
+    ({ orgIdentifier, projectIdentifier, slug }: Partial<ProjectPathProps> & { slug?: string }) =>
+      `/iac/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks/${slug}/provisioning`
   )
 }
 

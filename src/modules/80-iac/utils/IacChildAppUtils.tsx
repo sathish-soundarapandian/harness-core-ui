@@ -9,13 +9,14 @@ import ApprovalAdvancedSpecifications from '@pipeline/components/CommonPipelineS
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
-import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import IacSideNav from '@iac/components/IacSideNav'
 import routes from '@common/RouteDefinitions'
 import { getStyles } from '@iac/utils'
+import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
+import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 
 const customComponents = {
   FormMultiTypeConnectorField,
@@ -23,19 +24,20 @@ const customComponents = {
   ApprovalStageExecution,
   ApprovalAdvancedSpecifications,
   SaveTemplateButton,
-  VariablesListTable
+  ExecutionGraph,
 }
 
 const customFunctions = {
   createTemplate,
   getStyles,
   isDuplicateStageId,
-  getNameAndIdentifierSchema
+  getNameAndIdentifierSchema,
 }
 
 const customHooks = {
   usePipelineContext,
-  useLocation
+  useLocation,
+  useAddStepTemplate
 }
 
 const IacSideNavProps: SidebarContext = {
