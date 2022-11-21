@@ -11,7 +11,7 @@ import * as Yup from 'yup'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { SubscribeViews, SubscriptionProps, BillingContactProps } from '@common/constants/SubscriptionTypes'
-import { InvoiceDetailDTO, useCreateFfSubscription } from 'services/cd-ng/index'
+import { InvoiceDetailDTO, useCreateSubscription } from 'services/cd-ng/index'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@auth-settings/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -20,6 +20,7 @@ import type { StateByCountryMap } from '@common/hooks/useRegionList'
 import BillingContact, { InitialBillingInfo } from './BillingContact'
 import { Header } from '../Header'
 import css from './BillingInfo.module.scss'
+import { PLAN_TYPES } from '../subscriptionUtils'
 
 interface BillingInfoProp {
   subscriptionProps: SubscriptionProps
@@ -51,7 +52,7 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
 
   const [err, setErr] = useState<string>()
 
-  const { mutate: createFFNewSubscription, loading: creatingNewSubscription } = useCreateFfSubscription({
+  const { mutate: createFFNewSubscription, loading: creatingNewSubscription } = useCreateSubscription({
     queryParams: { accountIdentifier: accountId }
   })
 
@@ -65,14 +66,27 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
         const sampleMultiplier = subscriptionProps.sampleDetails?.sampleMultiplier
         const numberOfMau =
           defaultTo(subscriptionProps.quantities?.featureFlag?.numberOfMau, 0) * defaultTo(sampleMultiplier, 0)
+        const numberOfDevelopers = defaultTo(subscriptionProps.quantities?.featureFlag?.numberOfDevelopers, 25)
+        const isPremiumSupport = subscriptionProps.premiumSupport || false
         // TODO: add a function to return create subscription function based of module
         res = await createFFNewSubscription({
           accountId,
+          moduleType: 'CF',
+          items: isPremiumSupport
+            ? [
+                { type: PLAN_TYPES.MAU, quantity: numberOfMau, quantityIncludedInPrice: true },
+                { type: PLAN_TYPES.DEVELOPERS, quantity: numberOfDevelopers, quantityIncludedInPrice: false },
+                { type: PLAN_TYPES.MAU_SUPPORT, quantity: numberOfMau, quantityIncludedInPrice: true },
+                { type: PLAN_TYPES.DEVELOPERS_SUPPORT, quantity: numberOfDevelopers, quantityIncludedInPrice: false }
+              ]
+            : [
+                { type: PLAN_TYPES.MAU, quantity: numberOfMau, quantityIncludedInPrice: true },
+                { type: PLAN_TYPES.DEVELOPERS, quantity: numberOfDevelopers, quantityIncludedInPrice: false }
+              ],
           edition: subscriptionProps.edition,
           paymentFreq: subscriptionProps.paymentFreq,
           premiumSupport: subscriptionProps.premiumSupport,
           ...subscriptionProps.quantities?.featureFlag,
-          numberOfMau,
           customer: {
             address: {
               postalCode: data?.zipCode,
