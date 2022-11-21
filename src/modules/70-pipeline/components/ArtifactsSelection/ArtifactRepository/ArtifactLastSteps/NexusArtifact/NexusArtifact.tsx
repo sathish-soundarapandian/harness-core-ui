@@ -51,10 +51,11 @@ import {
   k8sRepositoryFormatTypes,
   nexus2RepositoryFormatTypes,
   RepositoryFormatTypes,
-  ServiceDeploymentType
+  isAzureWebAppDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -99,6 +100,7 @@ export function Nexus3Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
   const isTemplateContext = context === ModalViewFor.Template
   const commonParams = {
     accountIdentifier: accountId,
@@ -469,7 +471,7 @@ export function Nexus3Artifact({
                   label={getString('common.repositoryFormat')}
                   items={
                     isSSHWinRMDeploymentType(selectedDeploymentType) ||
-                    selectedDeploymentType === ServiceDeploymentType.AzureWebApp
+                    (isAzureWebAppDeploymentType(selectedDeploymentType) && AZURE_WEB_APP_NG_NEXUS_PACKAGE)
                       ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
                       : k8sRepositoryFormatTypes
                   }
