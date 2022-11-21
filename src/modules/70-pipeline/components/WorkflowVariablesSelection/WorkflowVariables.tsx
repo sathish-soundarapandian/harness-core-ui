@@ -20,6 +20,7 @@ import type {
 
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { getFlattenedStages, getStageIndexFromPipeline } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { StepViewType } from '../AbstractSteps/Step'
@@ -50,6 +51,7 @@ export default function WorkflowVariables({
     updateStage
   } = usePipelineContext()
 
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const serviceConfig = stage?.stage?.spec?.serviceConfig || {}
   const parentStage = serviceConfig.useFromStage?.stage
@@ -104,7 +106,7 @@ export default function WorkflowVariables({
 
   const getYamlPropertiesForVariables = (): Variable[] => {
     let stageVariables: Variable[]
-    const _serviceConfig = get(varStage, 'stage.spec.serviceConfig', {})
+    const _serviceConfig = get(NG_SVC_ENV_REDESIGN ? stage : varStage, 'stage.spec.serviceConfig', {})
 
     if (isPropagating) stageVariables = get(_serviceConfig, 'stageOverrides.variables', [])
     else stageVariables = get(_serviceConfig, 'serviceDefinition.spec.variables', [])
