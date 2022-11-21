@@ -49,6 +49,7 @@ import type { ManifestStores, ManifestTypes } from '@pipeline/components/Manifes
 import { ManifestStoreMap, manifestTypeIcons } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   BinaryLabels,
   cleanServiceDataUtil,
@@ -108,16 +109,19 @@ const ConfigureServiceRef = (
   forwardRef: ConfigureServiceForwardRef
 ): React.ReactElement => {
   const { getString } = useStrings()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { showError, clear } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
+  const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
   const {
-    state: { service: serviceData },
+    state: { service: serviceData, delegate: delegateData },
     saveServiceData
   } = useCDOnboardingContext()
 
   const [manifestStepStatus, setManifestStepStatus] = useState<Map<string, StepStatus>>(DefaultManifestStepStatus)
   const [serviceIdentifier, setServiceIdentifier] = useState<string | undefined>(get(serviceData, 'identifier'))
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-
+  const [editService, setEditService] = useState(false)
   const { loading: createLoading, mutate: createService } = useCreateServiceV2({
     queryParams: {
       accountIdentifier: accountId
@@ -134,11 +138,6 @@ const ConfigureServiceRef = (
     }
   })
 
-  const [editService, setEditService] = useState(false)
-
-  const { showError, clear } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-
   const formikRef = useRef<FormikContextType<ConfigureServiceInterface>>()
   const selectGitProviderRef = React.useRef<SelectGitProviderRefInstance | null>(null)
 
@@ -154,9 +153,8 @@ const ConfigureServiceRef = (
     const serviceRef = formikRef?.current?.values?.serviceRef
     const isServiceNameUpdated = isEmpty(get(serviceData, 'identifier'))
 
-    if (isServiceNameUpdated) {
+    if (isServiceNameUpdated && !isEmpty(delegateData?.environmentEntities)) {
       const serviceRefIdentifier = getUniqueEntityIdentifier(serviceRef)
-
       setServiceIdentifier(serviceRefIdentifier)
       const updatedContextService = produce(serviceData, draft => {
         if (draft) {
@@ -181,6 +179,7 @@ const ConfigureServiceRef = (
       }
     }
   }
+
   React.useEffect(() => {
     // initial service creation from onboarding
     createServiceOnLoad()
@@ -193,8 +192,16 @@ const ConfigureServiceRef = (
       const artifactObj = get(serviceData, 'serviceDefinition.spec.artifacts') as ArtifactListConfig
       const updatedArtifactObj = produce(artifactObj, draft => {
         if (draft) {
-          set(draft, 'primary.sources[0].type', formikRef?.current?.values?.artifactType)
-          set(draft, 'primary.primaryArtifactRef', artifactObj?.primary?.sources?.[0]?.identifier)
+          if (NG_ARTIFACT_SOURCES) {
+            set(draft, 'primary.sources[0].type', formikRef?.current?.values?.artifactType)
+            set(draft, 'primary.primaryArtifactRef', artifactObj?.primary?.sources?.[0]?.identifier)
+            unset(draft, 'primary.sources.spec')
+            unset(draft, 'primary.identifier')
+          } else {
+            set(draft, 'primary.type', formikRef?.current?.values?.artifactType)
+            unset(draft, 'primary.primaryArtifactRef')
+            unset(draft, 'primary.sources')
+          }
         }
       })
 

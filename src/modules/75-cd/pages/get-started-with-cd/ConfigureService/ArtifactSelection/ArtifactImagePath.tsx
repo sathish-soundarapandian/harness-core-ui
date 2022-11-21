@@ -18,6 +18,7 @@ import {
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import type { ArtifactConfig } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import { getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
 import type { ConfigureServiceInterface } from '../ConfigureService'
@@ -31,6 +32,7 @@ const ALLOWABLE_TYPES = [
 
 export default function ArtifactImagePath({ formik }: { formik: FormikProps<ConfigureServiceInterface> }): JSX.Element {
   const { values: formValues, setFieldValue } = formik
+  const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
   const {
     state: { service: serviceData },
     saveServiceData
@@ -38,9 +40,11 @@ export default function ArtifactImagePath({ formik }: { formik: FormikProps<Conf
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isReadonly = false
-
+  const artifactPath = NG_ARTIFACT_SOURCES
+    ? 'serviceDefinition.spec.artifacts.primary.sources[0]'
+    : 'serviceDefinition.spec.artifacts.primary'
   const getInitiialArtifactLastStepData = React.useMemo(() => {
-    const artifactContextData = get(serviceData, 'serviceDefinition.spec.artifacts.primary.sources[0].spec')
+    const artifactContextData = get(serviceData, `${artifactPath}.spec`)
     const artifactName = artifactContextData?.name || 'sample_artifact_source'
     const identifier = getUniqueEntityIdentifier(artifactName)
 
@@ -63,7 +67,7 @@ export default function ArtifactImagePath({ formik }: { formik: FormikProps<Conf
       initialValues: getInitiialArtifactLastStepData as any,
       handleSubmit: (data: ArtifactConfig) => {
         const updatedContextService = produce(serviceData as ServiceDataType, draft => {
-          set(draft, 'serviceDefinition.spec.artifacts.primary.sources[0]', data)
+          set(draft, artifactPath, data)
         })
         saveServiceData(updatedContextService)
         setFieldValue('artifactConfig', data)

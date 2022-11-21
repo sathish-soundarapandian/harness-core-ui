@@ -71,6 +71,52 @@ const InHarnessFileStore = ({
   const [childNodes, setChildNodes] = React.useState<FileStoreNodeDTO[]>(formikProps?.values?.fileNodesData || [])
   const [openFileDrawer, setOpenFileDrawer] = React.useState<boolean>(false)
 
+  const saveConstructManifestObj = (filesData: FileStoreNodeDTO[]): void => {
+    const paths = {
+      files: [] as string[],
+      valuesPath: [] as string[]
+    }
+    const fileNodesData = filesData.map(node => {
+      if (node.path?.includes('values')) {
+        paths.valuesPath.push(`account:${node.path}`)
+      } else {
+        paths.files.push(`account:${node.path}`)
+      }
+      return {
+        ...node,
+        parentName: SAMPLE_MANIFEST_FOLDER
+      }
+    })
+
+    const manifestType = formikProps?.values?.manifestData?.type as ManifestTypes
+
+    const manifestObj: ManifestConfigWrapper = {
+      manifest: {
+        identifier: get(serviceData, 'serviceDefinition.spec.manifests[0].manifest.identifier'),
+        type: manifestType,
+        spec: {
+          store: {
+            type: ManifestStoreMap.Harness,
+            spec: {
+              files: paths.files,
+              valuesPath: paths.valuesPath,
+              skipResourceVersioning: false,
+              ...(manifestType === 'HelmChart' && { helmVersion: 'V2' })
+            }
+          }
+        }
+      }
+    }
+    formikProps?.setFieldValue('manifestConfig', manifestObj)
+    formikProps?.setFieldValue('fileNodesData', fileNodesData)
+
+    const updatedContextService = produce(serviceData as ServiceDataType, draft => {
+      set(draft, 'serviceDefinition.spec.manifests[0]', manifestObj)
+      set(draft, 'data.fileNodesData', fileNodesData)
+    })
+    saveServiceData(updatedContextService)
+  }
+
   // fetch all files from onBoarding sample folder
   const getListOfAllFiles = React.useCallback(async (): Promise<void> => {
     await getRootNodes({
@@ -80,48 +126,8 @@ const InHarnessFileStore = ({
       parentIdentifier: FILE_STORE_ROOT
     }).then(response => {
       if (response?.data?.children) {
-        const paths = {
-          files: [] as string[],
-          valuesPath: [] as string[]
-        }
-        const fileNodesData = response.data.children.map(node => {
-          if (node.path?.includes('values')) {
-            paths.valuesPath.push(`account:${node.path}`)
-          } else {
-            paths.files.push(`account:${node.path}`)
-          }
-          return {
-            ...node,
-            parentName: SAMPLE_MANIFEST_FOLDER
-          }
-        })
-        const manifestType = formikProps?.values?.manifestData?.type as ManifestTypes
-
-        const manifestObj: ManifestConfigWrapper = {
-          manifest: {
-            identifier: get(serviceData, 'serviceDefinition.spec.manifests[0].manifest.identifier'),
-            type: manifestType,
-            spec: {
-              store: {
-                type: ManifestStoreMap.Harness,
-                spec: {
-                  files: paths.files,
-                  valuesPath: paths.valuesPath,
-                  skipResourceVersioning: false,
-                  ...(manifestType === 'HelmChart' && { helmVersion: 'V2' })
-                }
-              }
-            }
-          }
-        }
-
-        formikProps?.setFieldValue('fileNodesData', fileNodesData)
-        setChildNodes(fileNodesData)
-        const updatedContextService = produce(serviceData as ServiceDataType, draft => {
-          set(draft, 'serviceDefinition.spec.manifests[0]', manifestObj)
-          set(draft, 'data.fileNodesData', fileNodesData)
-        })
-        saveServiceData(updatedContextService)
+        saveConstructManifestObj(response.data.children)
+        setChildNodes(response.data.children)
       }
     })
 
@@ -135,9 +141,7 @@ const InHarnessFileStore = ({
     Object.entries(manifestFileContents).forEach(async ([key, value]) => {
       const formData = new FormData()
       const blobContentEditor = new Blob([value], { type: 'text/plain' })
-
       const defaultMimeType = ExtensionType.YAML
-
       formData.append('type', FileStoreNodeTypes.FILE)
       formData.append('content', blobContentEditor)
       formData.append('mimeType', defaultMimeType)
@@ -187,7 +191,7 @@ const InHarnessFileStore = ({
 
   React.useEffect(() => {
     // register folder/files - if not present in context
-    isEmpty(childNodes) && registerSampleManifestFolder()
+    isEmpty(childNodes) ? registerSampleManifestFolder() : saveConstructManifestObj(childNodes)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [childNodes])
 
@@ -233,17 +237,6 @@ const InHarnessFileStore = ({
                         setDrawerData({
                           fileContent: child,
                           mode: DrawerMode.Preview
-                        })
-                      }}
-                    />
-                    <Icon
-                      name={'Edit'}
-                      size={18}
-                      onClick={() => {
-                        setOpenFileDrawer(true)
-                        setDrawerData({
-                          fileContent: child,
-                          mode: DrawerMode.Edit
                         })
                       }}
                     />

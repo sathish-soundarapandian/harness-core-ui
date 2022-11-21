@@ -8,17 +8,8 @@
 import React, { useEffect } from 'react'
 import { Spinner } from '@blueprintjs/core'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
-import {
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  Color,
-  Container,
-  FontVariation,
-  Layout,
-  Text,
-  useToaster
-} from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Layout, Text, useToaster } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import FileIcon from '@filestore/images/file-.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -131,7 +122,7 @@ export default function FilePreview(): JSX.Element {
               <Button
                 variation={ButtonVariation.SECONDARY}
                 className={css.cancel}
-                disabled={saveLoading}
+                disabled={isEmpty(value) || saveLoading || isEqual(initialContent, value)}
                 text={getString('common.discard')}
                 onClick={() => {
                   setValue(initialContent)

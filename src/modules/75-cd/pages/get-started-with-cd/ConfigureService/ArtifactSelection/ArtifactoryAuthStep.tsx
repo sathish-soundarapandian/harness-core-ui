@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Layout, Button, Text, Container, ButtonVariation, ButtonSize, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { get, isEmpty, noop, set } from 'lodash-es'
+import { get, isEmpty, noop, set, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
 import {
@@ -237,17 +237,24 @@ const ArtifactoryAuthStep = ({
   useEffect(() => {
     // reset editMode for new connector type
     if (isEmpty(serviceData?.data?.artifactData?.connectorResponse)) {
-      setIsEditMode(false)
-      setTestConnectionStatus(TestStatus.NOT_INITIATED)
+      if (isEmpty(connectorResponse)) {
+        setIsEditMode(false)
+        onSuccess(StepStatus.ToDo)
+        setTestConnectionStatus(TestStatus.NOT_INITIATED)
+      }
+    } else {
+      setIsEditMode(true)
+      onSuccess(StepStatus.Success)
+      setTestConnectionStatus(TestStatus.SUCCESS)
     }
-  }, [serviceData?.data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectorResponse, serviceData?.data])
 
   const validateDockerAuthentication = React.useCallback(async (): Promise<void> => {
     setTestConnectionStatus(TestStatus.IN_PROGRESS)
     setTestConnectionErrors([])
     const connectorData: DelegateSelectorStepData = {
       ...artifactAuthData,
-
       projectIdentifier: projectIdentifier,
       orgIdentifier: orgIdentifier
     }
@@ -272,7 +279,14 @@ const ArtifactoryAuthStep = ({
     },
     [serviceData]
   )
-
+  const resetContextConnectorData = (): void => {
+    const updatedContextService = produce(serviceData as ServiceDataType, draft => {
+      if (draft) unset(draft, 'data.artifactData.connectorResponse')
+    })
+    saveServiceData(updatedContextService)
+    setTestConnectionStatus(TestStatus.NOT_INITIATED)
+    onSuccess(StepStatus.ToDo)
+  }
   const authenticationStepProps = React.useMemo(() => {
     const prevStepData = getArtifactInitialValues(selectedArtifact)
     setArtifactAuthData(prevStepData)
@@ -290,7 +304,7 @@ const ArtifactoryAuthStep = ({
         setTestConnectionErrors([])
         setArtifactAuthData(data)
         // on field change, reset Test Connection
-        setTestConnectionStatus(TestStatus.NOT_INITIATED)
+        resetContextConnectorData()
       },
       context: ModalViewFor.CD_Onboarding,
       formClassName: moduleCss.artifactAuthFormOverride
