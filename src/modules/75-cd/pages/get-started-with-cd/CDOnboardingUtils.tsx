@@ -16,6 +16,7 @@ import type {
   ConnectorRequestBody,
   EnvironmentRequestDTO,
   EnvironmentResponseDTO,
+  FileStoreNodeDTO,
   Infrastructure,
   InfrastructureRequestDTO,
   NGServiceV2InfoConfig,
@@ -70,6 +71,7 @@ export interface ServiceData {
   connectorRef?: ConnectorInfoDTO & { gitDetails?: IGitContextFormProps }
   artifactToDeploy?: string
   artifactData?: ArtifactoryGenericFormInterface
+  fileNodesData?: FileStoreNodeDTO[]
 }
 
 export interface ArtifactoryGenericFormInterface {
@@ -103,6 +105,8 @@ export const newServiceState = {
       manifests: [{ manifest: { identifier: 'sample_manifest', spec: {}, type: 'K8sManifest' } }],
       artifacts: {
         primary: {
+          identifier: 'sample_artifact',
+          type: undefined,
           primaryArtifactRef: '<+input>',
           sources: [
             {
@@ -114,7 +118,12 @@ export const newServiceState = {
                 tag: 'latest'
               }
             }
-          ]
+          ],
+          spec: {
+            connectorRef: undefined,
+            imagePath: 'harness/todolist-sample',
+            tag: 'latest'
+          }
         }
       } as ArtifactListConfig
     } as ServiceSpec

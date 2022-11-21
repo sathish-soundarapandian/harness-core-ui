@@ -172,6 +172,9 @@
 
 .repositorySearch {
   width: 70% !important;
+  div[data-testid='dropdown-button'] {
+    background-color: var(--white) !important;
+  }
 }
 
 .dropdownPopover {
@@ -252,4 +255,7 @@
 }
 .delegateOverviewWrapper {
   padding-right: 10% !important;
+}
+.disable {
+  cursor: not-allowed !important;
 }

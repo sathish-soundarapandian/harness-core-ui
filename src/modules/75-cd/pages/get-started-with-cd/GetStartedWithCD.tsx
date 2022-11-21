@@ -38,7 +38,6 @@ export default function GetStartedWithCD(): React.ReactElement {
                 className={css.samplePipeline}
               />
             </Container>
-            <hr className={css.separator} />
             <Container className={css.buttonRow}>
               <Button
                 variation={ButtonVariation.PRIMARY}

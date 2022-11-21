@@ -90,7 +90,7 @@ export type SelectGitProviderForwardRef =
 interface SelectGitProviderProps {
   gitValues?: SelectGitProviderInterface
   connectionStatus?: TestStatus
-  selectedGitProvider: any
+  selectedGitProvider?: GitProvider
 
   onSuccess: (status: number, connectorResponse: SelectGitProviderRefInstance['connectorRef']) => void
 }
@@ -122,7 +122,7 @@ const SelectGitProviderRef = (
   const [connector, setConnector] = useState<ConnectorInfoDTO>()
   const [connectorResponse, setConnectorResponse] = useState<SelectGitProviderRefInstance['connectorRef']>()
   const [secret, setSecret] = useState<SecretDTOV2>()
-  const scrollRef = useRef<Element>()
+
   const oAuthSecretIntercepted = useRef<boolean>(false)
   const [oAuthStatus, setOAuthStatus] = useState<Status>(Status.TO_DO)
 
@@ -139,7 +139,6 @@ const SelectGitProviderRef = (
 
   useEffect(() => {
     setGitProvider(selectedGitProvider)
-    // resetFormFields()
   }, [selectedGitProvider])
 
   //#region OAuth validation and integration
@@ -177,7 +176,8 @@ const SelectGitProviderRef = (
         }
       }
     },
-    [gitProvider?.type]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [gitProvider?.type, getString]
   )
 
   /* Event listener for OAuth server event, this is essential for landing user back to the same tab from where the OAuth started, once it's done */
@@ -225,6 +225,7 @@ const SelectGitProviderRef = (
     if (oAuthSecretIntercepted.current) {
       window.removeEventListener('message', handleOAuthServerEvent) // remove event listener once oauth is done
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oAuthSecretIntercepted.current])
 
   const renderOAuthConnectionStatus = useCallback((): JSX.Element => {
@@ -264,10 +265,9 @@ const SelectGitProviderRef = (
       default:
         return <></>
     }
-  }, [oAuthStatus])
+  }, [getString, oAuthStatus])
 
   useEffect(() => {
-    //::TODO CHECK USEEFFECT NNEDE
     if (
       authMethod &&
       [
@@ -284,6 +284,7 @@ const SelectGitProviderRef = (
         onSuccess(testConnectionStatus, connectorResponse)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authMethod, oAuthStatus, testConnectionStatus, connectorResponse])
 
   const setForwardRef = ({
@@ -328,6 +329,7 @@ const SelectGitProviderRef = (
         connectorRef: connectorResponse
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formikRef, connector, secret, authMethod, gitProvider, testConnectionStatus, connectorResponse])
 
   //#region scm validation
@@ -354,7 +356,8 @@ const SelectGitProviderRef = (
       default:
         return secretPayload
     }
-  }, [gitProvider?.type, formikRef.current?.values])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gitProvider?.type, formikRef.current?.values, getString])
 
   const getSCMConnectorPayload = React.useCallback(
     (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
@@ -406,14 +409,9 @@ const SelectGitProviderRef = (
           return commonConnectorPayload
       }
     },
-    [gitProvider?.type, formikRef.current?.values?.username]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [gitProvider?.type, formikRef.current?.values?.username, getString]
   )
-
-  useEffect(() => {
-    if (scrollRef) {
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [testConnectionErrors?.length])
 
   const TestConnection = (): React.ReactElement => {
     switch (testConnectionStatus) {
@@ -501,7 +499,7 @@ const SelectGitProviderRef = (
             {testConnectionStatus === TestStatus.FAILED &&
             Array.isArray(testConnectionErrors) &&
             testConnectionErrors.length > 0 ? (
-              <Container padding={{ top: 'medium' }} ref={scrollRef}>
+              <Container padding={{ top: 'medium' }}>
                 <ErrorHandler responseMessages={testConnectionErrors || []} />
               </Container>
             ) : null}
@@ -582,7 +580,7 @@ const SelectGitProviderRef = (
         />
       )
     },
-    [testConnectionStatus]
+    [getString, testConnectionStatus]
   )
 
   const renderNonOAuthView = React.useCallback(
@@ -630,7 +628,7 @@ const SelectGitProviderRef = (
           return <></>
       }
     },
-    [gitProvider, testConnectionStatus]
+    [gitProvider, renderTextField]
   )
 
   //#endregion
@@ -708,6 +706,7 @@ const SelectGitProviderRef = (
         break
     }
     return initialValues
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gitProvider])
 
   const getValidationSchema = React.useCallback(() => {
@@ -746,13 +745,13 @@ const SelectGitProviderRef = (
       default:
         return Yup.object().shape({})
     }
-  }, [gitProvider])
+  }, [getString, gitProvider])
 
   //#endregion
 
   //#region on change of a git provider
 
-  const resetField = (field: keyof SelectGitProviderInterface) => {
+  const resetField = (field: keyof SelectGitProviderInterface): void => {
     const { setFieldValue, setFieldTouched } = formikRef.current || {}
     setFieldValue?.(field, '')
     setFieldTouched?.(field, false)
@@ -774,7 +773,7 @@ const SelectGitProviderRef = (
       default:
         return
     }
-  }, [gitProvider, authMethod])
+  }, [gitProvider])
 
   //#endregion
 

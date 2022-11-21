@@ -56,7 +56,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
   )
 
   const serviceDefinitionType =
-    'Kubernetes' || (get(serviceData, 'serviceDefinition.type') as ServiceDefinition['type'])
+    (get(serviceData, 'serviceDefinition.type') as ServiceDefinition['type']) || 'Kubernetes'
   const artifactTypes = allowedArtifactTypesForOnboiarding[serviceDefinitionType]
   const supportedArtifactTypes = React.useMemo(
     () =>

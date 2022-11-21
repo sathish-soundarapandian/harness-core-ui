@@ -18,7 +18,6 @@ export default function CDOnboardingWizard(): React.ReactElement {
   return (
     <CDOnboardingProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-      pipelineIdentifier=""
       serviceIdentifier={serviceId}
     >
       <DeployProvisioningWizard />

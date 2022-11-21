@@ -130,7 +130,9 @@ const SelectRepositoryRef = (
       </Text>
       <Container padding={{ top: 'small' }} className={cx(css.repositories)}>
         <DropDown
-          className={css.repositorySearch}
+          className={cx(css.repositorySearch, {
+            [css.disable]: fetchingRepositories
+          })}
           items={selectOptions}
           value={repository?.name as string}
           onChange={item => {
@@ -140,7 +142,6 @@ const SelectRepositoryRef = (
           usePortal={true}
           popoverClassName={css.dropdownPopover}
           addClearBtn={true}
-          query={query}
           onQueryChange={setQuery}
           placeholder={fetchingRepositories ? getString('cd.fetchingRepository') : getString('cd.selectRepository')}
         />

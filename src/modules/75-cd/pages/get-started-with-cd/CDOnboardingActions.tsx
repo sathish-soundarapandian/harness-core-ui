@@ -29,7 +29,6 @@ export interface CDOnboardingReducerState {
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
   delegate?: DelegateDataType
-  pipelineIdentifier?: string
   error?: string
   schemaErrors?: boolean
   isLoading?: boolean
@@ -56,7 +55,6 @@ export interface ActionResponse {
   schemaErrors?: boolean
   isUpdated?: boolean
   pipeline?: PipelineInfoConfig
-  pipelineIdentifier?: string
   service?: ServiceDataType
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
@@ -112,7 +110,6 @@ export const CDOnboardingContextActions = {
 
 export const initialState: CDOnboardingReducerState = {
   pipeline: { ...DefaultPipeline },
-  pipelineIdentifier: DefaultNewPipelineId,
   service: initialServiceState,
   environment: initialEnvironmentState.environment,
   infrastructure: initialEnvironmentState.infrastructure,

@@ -55,7 +55,6 @@ export const CDOnboardingContext = React.createContext<CDOnboardingContextInterf
 
 export interface CDOnboardingProviderProps {
   queryParams: GetPipelineQueryParams
-  pipelineIdentifier: string
   serviceIdentifier: string
 }
 
@@ -71,7 +70,6 @@ export function useWizardStepQueryParams() {
 
 export function CDOnboardingProvider({
   queryParams,
-  pipelineIdentifier,
   children
 }: React.PropsWithChildren<CDOnboardingProviderProps>): React.ReactElement {
   const [state, dispatch] = React.useReducer(
@@ -88,8 +86,6 @@ export function CDOnboardingProvider({
   )
 
   const [drawerData, setDrawerData] = React.useState<DrawerDataType>(initialDrawerData)
-
-  state.pipelineIdentifier = pipelineIdentifier
 
   const saveServiceData = React.useCallback((data: ServiceDataType) => {
     dispatch(CDOnboardingContextActions.updateService({ service: data }))

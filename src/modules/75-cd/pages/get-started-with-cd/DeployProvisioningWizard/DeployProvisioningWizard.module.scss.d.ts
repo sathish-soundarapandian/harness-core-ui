@@ -22,6 +22,7 @@ declare const styles: {
   readonly containerPadding: string
   readonly credentialsButton: string
   readonly delegateOverviewWrapper: string
+  readonly disable: string
   readonly dropdownPopover: string
   readonly footer: string
   readonly formInput: string
