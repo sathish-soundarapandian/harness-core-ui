@@ -12,13 +12,14 @@ import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError 
 import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 // import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
-import { DeploymentsTimeRangeContext, getFixed } from '@cd/components/Services/common'
+import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { DashboardWorkloadDeployment, GetWorkloadsQueryParams, useGetWorkloads } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FAIL_COLORS, SUCCESS_COLORS } from '@dashboards/constants'
 import { PageSpinner } from '@common/components'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
+import { getFixed } from '@common/utils/utils'
 import css from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget.module.scss'
 
 interface MostActiveServicesWidgetData {

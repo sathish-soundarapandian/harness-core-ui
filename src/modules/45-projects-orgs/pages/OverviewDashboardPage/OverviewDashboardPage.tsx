@@ -1,4 +1,4 @@
-import { Layout, PageBody, PageHeader } from '@harness/uicore'
+import { Layout, PageBody, PageHeader, Container } from '@harness/uicore'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -24,9 +24,14 @@ const OverviewDashboardPage = () => {
         })}
       />
       <PageBody>
-        <Layout.Horizontal className={css.container} padding="large" flex={{ justifyContent: 'center' }}>
+        <Layout.Horizontal
+          className={css.container}
+          padding={{ top: 'huge' }}
+          flex={{ justifyContent: 'center', alignItems: 'flex-start' }}
+        >
           <Layout.Vertical className={css.left}>
             <OverviewGlanceCardsV2 />
+            <Container padding={{ top: 'large', bottom: 'large' }} className={css.border} />
             <ModuleTiles />
           </Layout.Vertical>
           <Layout.Vertical className={css.right}>

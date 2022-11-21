@@ -7,9 +7,17 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly border: string
+  readonly badge: string
+  readonly badgeText: string
+  readonly badgesContainer: string
   readonly container: string
-  readonly left: string
-  readonly right: string
+  readonly executionCount: string
+  readonly failed24HrsExecutionsBadge: string
+  readonly header: string
+  readonly loadingContainer: string
+  readonly orgStyle: string
+  readonly popoverStyle: string
+  readonly popoverTable: string
+  readonly runningExecutions: string
 }
 export default styles
