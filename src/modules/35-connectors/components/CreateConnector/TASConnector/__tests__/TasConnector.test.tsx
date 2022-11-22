@@ -39,21 +39,16 @@ describe('<TASConnector />', () => {
   afterEach(() => {
     createConnector.mockReset()
   })
-  test('TAS Overview Step', async () => {
+
+  test('TAS Connector Wizard Steps Flow', async () => {
     const { getByText, container } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <TASConnector {...commonProps} isEditMode={false} connectorInfo={connectorInfoMock} mock={mockResponse} />
       </TestWrapper>
     )
-    expect(getByText('connectors.title.tas')).toBeInTheDocument()
-    expect(getByText('credentials')).toBeInTheDocument()
-    expect(getByText('connectors.selectConnectivityMode')).toBeInTheDocument()
 
-    // Change connector name
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test TAS Connector' }
-      })
+    fireEvent.change(container.querySelector('input[name="name"]')!, {
+      target: { value: 'Test TAS Connector' }
     })
 
     await act(async () => {
@@ -63,140 +58,45 @@ describe('<TASConnector />', () => {
     expect(getByText('small-tick')).toBeInTheDocument()
     // Validate next active step to be highlighted
     expect(container.querySelector('.StepWizard--activeStep p')?.textContent).toBe('credentials')
-  })
-
-  test('Step navigation from Overview to Credential', async () => {
-    const { getByText, container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <TASConnector {...commonProps} isEditMode={false} connectorInfo={connectorInfoMock} mock={mockResponse} />
-      </TestWrapper>
-    )
-
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test TAS Connector' }
-      })
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('continue')!)
-    })
     const stepWizardDetailsSection = container.querySelector('.StepWizard--stepDetails')! as HTMLElement
     expect(within(stepWizardDetailsSection).queryByText('credentials')).toBeInTheDocument()
 
-    await act(async () => {
-      fireEvent.click(getByText('back')!)
-    })
+    // move to identifier step
+    fireEvent.click(getByText('back')!)
     expect(container.querySelector('input[name="name"]')).toBeInTheDocument()
-  })
-
-  test('TAS Connector Credential Step', async () => {
-    const { getByText, container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <TASConnector {...commonProps} isEditMode={false} connectorInfo={connectorInfoMock} mock={mockResponse} />
-      </TestWrapper>
-    )
-
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test TAS Connector' }
-      })
-    })
-
+    // move to authentication step
     await act(async () => {
       fireEvent.click(getByText('continue')!)
     })
 
-    expect(getByText('pipelineSteps.endpointLabel')).toBeInTheDocument()
-    expect(getByText('authentication')).toBeInTheDocument()
-    expect(getByText('username')).toBeInTheDocument()
-    expect(getByText('password')).toBeInTheDocument()
-
     // Change Endpoint URL
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
-        target: { value: 'http://sample_url_tas.com/' }
-      })
+    fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
+      target: { value: 'http://sample_url_tas.com/' }
     })
 
     // Change username
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="usernametextField"]')!, {
-        target: { value: 'AdminUser' }
-      })
+    fireEvent.change(container.querySelector('input[name="usernametextField"]')!, {
+      target: { value: 'AdminUser' }
     })
 
     // Change token
-    act(() => {
-      fireEvent.click(getByText('createOrSelectSecret'))
-    })
+    fireEvent.click(getByText('createOrSelectSecret'))
 
     await waitFor(() => getByText('common.entityReferenceTitle'))
 
-    act(() => {
-      fireEvent.click(getByText('TasToken')!)
-    })
+    fireEvent.click(getByText('TasToken')!)
 
     act(() => {
       fireEvent.click(getByText('entityReference.apply')!)
     })
     expect(getByText('secrets.secret.configureSecret')).toBeInTheDocument()
     expect(getByText('<TasToken>')).toBeInTheDocument()
-  })
-
-  test('TAS Connector Connectivity Mode Step', async () => {
-    const { getByText, container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <TASConnector {...commonProps} isEditMode={false} connectorInfo={connectorInfoMock} mock={mockResponse} />
-      </TestWrapper>
-    )
-
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test TAS Connector' }
-      })
-    })
 
     await act(async () => {
       fireEvent.click(getByText('continue')!)
     })
 
-    // Change Endpoint URL
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
-        target: { value: 'http://sample_url_tas.com/' }
-      })
-    })
-
-    // Change username
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="usernametextField"]')!, {
-        target: { value: 'AdminUser' }
-      })
-    })
-
-    // Change token
-    act(() => {
-      fireEvent.click(getByText('createOrSelectSecret'))
-    })
-
-    await waitFor(() => getByText('common.entityReferenceTitle'))
-
-    act(() => {
-      fireEvent.click(getByText('TasToken')!)
-    })
-
-    act(() => {
-      fireEvent.click(getByText('entityReference.apply')!)
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('continue')!)
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('common.connectThroughPlatformInfo')!)
-    })
+    fireEvent.click(getByText('common.connectThroughPlatformInfo')!)
 
     await act(async () => {
       fireEvent.click(getByText('saveAndContinue')!)
@@ -231,12 +131,12 @@ describe('<TASConnector />', () => {
     )
   })
 
-  test('TAS Connector Delegate setup', async () => {
-    const { getByText, container } = render(
+  test('TAS Connector in edit mode and delegate selection flow ', async () => {
+    const { getAllByText, getByText, container } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <TASConnector
           {...commonProps}
-          isEditMode={false}
+          isEditMode
           connectorInfo={connectorInfoMock}
           mock={mockResponse}
           connectivityMode={ConnectivityModeType.Delegate}
@@ -244,54 +144,18 @@ describe('<TASConnector />', () => {
       </TestWrapper>
     )
 
-    expect(getByText('delegate.DelegateselectionLabel')).toBeInTheDocument()
-
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test TAS Connector' }
-      })
+    fireEvent.change(container.querySelector('input[name="name"]')!, {
+      target: { value: 'Test TAS Connector' }
     })
+    await act(async () => {
+      fireEvent.click(getByText('continue')!)
+    })
+    expect(getAllByText('<TasToken>').length).toBe(1)
 
     await act(async () => {
       fireEvent.click(getByText('continue')!)
     })
-
-    // Change Endpoint URL
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
-        target: { value: 'http://sample_url_tas.com/' }
-      })
-    })
-
-    // Change username
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="usernametextField"]')!, {
-        target: { value: 'AdminUser' }
-      })
-    })
-
-    // Change token
-    act(() => {
-      fireEvent.click(getByText('createOrSelectSecret'))
-    })
-
-    await waitFor(() => getByText('common.entityReferenceTitle'))
-
-    act(() => {
-      fireEvent.click(getByText('TasToken')!)
-    })
-
-    act(() => {
-      fireEvent.click(getByText('entityReference.apply')!)
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('continue')!)
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('common.connectThroughDelegateInfo')!)
-    })
+    fireEvent.click(getByText('common.connectThroughDelegateInfo')!)
 
     await act(async () => {
       fireEvent.click(getByText('continue')!)
@@ -307,23 +171,23 @@ describe('<TASConnector />', () => {
       fireEvent.click(getByText('saveAndContinue')!)
     })
 
-    expect(createConnector).toBeCalledWith(
+    expect(updateConnector).toBeCalledWith(
       {
         connector: {
           name: 'Test TAS Connector',
-          identifier: 'Test_TAS_Connector',
-          description: '',
+          identifier: 'tasConnector',
+          description: 'test description',
           orgIdentifier: 'default',
           projectIdentifier: 'defaultproject',
           type: 'Tas',
-          tags: {},
+          tags: { tag1: '', tag2: '', tag3: '' },
           spec: {
             credential: {
               type: 'ManualConfig',
               spec: {
-                endpointUrl: 'http://sample_url_tas.com/',
-                passwordRef: 'account.TasToken',
-                username: 'AdminUser'
+                endpointUrl: 'http://sample_url.com/',
+                passwordRef: 'tasToken',
+                username: 'admin'
               }
             },
             executeOnDelegate: true,
@@ -335,23 +199,5 @@ describe('<TASConnector />', () => {
         queryParams: {}
       }
     )
-  })
-
-  test('TAS Connector edit mode', async () => {
-    const { getAllByText, getByText, container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <TASConnector {...commonProps} isEditMode connectorInfo={connectorInfoMock} />
-      </TestWrapper>
-    )
-
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="name"]')!, {
-        target: { value: 'Test TAS Connector' }
-      })
-    })
-    await act(async () => {
-      fireEvent.click(getByText('continue')!)
-    })
-    expect(getAllByText('<TasToken>').length).toBe(1)
   })
 })

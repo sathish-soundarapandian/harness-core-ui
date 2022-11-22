@@ -366,10 +366,11 @@ manifestType:
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
-  varsYAMLPath: Vars.yaml
-  addVarsYAMLPath: Add Vars.yaml
+  varsYAMLPath: Vars.yaml path
+  addVarsYAMLPath: Auto Scaling path
   autoScalerYAMLPath: AutoScaler.yaml
   addAutoScalerYAMLPath: Add AutoScaler.yaml
+  cliVersion: CLI Version
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location

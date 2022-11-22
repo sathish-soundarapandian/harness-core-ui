@@ -20,6 +20,7 @@ import {
   buildGitPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type {
+  CLIVersionOptions,
   HelmVersionOptions,
   ManifestStores,
   ManifestStoreWithoutConnector,
@@ -78,26 +79,10 @@ export type ManifestMetaData = {
   addPathLabel: StringKeys
   pathKeyMap: string
   allowOnlyOneFilePath: boolean
+  icon: IconName
 }
 
 export const TASManifestToPaths: TASManifestType[] = ['varsPaths', 'autoScalerPath']
-
-export const TASManifestTypeMetaData: Record<TASManifestType, ManifestMetaData> = {
-  varsPaths: {
-    path: 'Vars',
-    pathLabel: 'pipeline.manifestType.varsYAMLPath',
-    addPathLabel: 'pipeline.manifestType.addVarsYAMLPath',
-    pathKeyMap: 'varsPaths',
-    allowOnlyOneFilePath: false
-  },
-  autoScalerPath: {
-    path: 'AutoScaler',
-    pathLabel: 'pipeline.manifestType.autoScalerYAMLPath',
-    addPathLabel: 'pipeline.manifestType.addAutoScalerYAMLPath',
-    pathKeyMap: 'autoScalerPath',
-    allowOnlyOneFilePath: true
-  }
-}
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'Values',
@@ -216,9 +201,28 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsServiceDefinition: 'service-amazon-ecs',
   EcsScalingPolicyDefinition: 'service-amazon-ecs',
   EcsScalableTargetDefinition: 'service-amazon-ecs',
-  TasManifest: 'service-pivotal', //TODO:: icon change --> 'tas-manifest',
-  Vars: 'service-pivotal', //TODO:: icon change -->  'list-vars',
-  AutoScaler: 'service-pivotal' //TODO:: icon change --> 'autoScaler'
+  TasManifest: 'tas-manifest',
+  Vars: 'list-vars',
+  AutoScaler: 'autoScaler'
+}
+
+export const TASManifestTypeMetaData: Record<TASManifestType, ManifestMetaData> = {
+  varsPaths: {
+    path: 'Vars',
+    pathLabel: 'pipeline.manifestType.varsYAMLPath',
+    addPathLabel: 'pipeline.manifestType.addVarsYAMLPath',
+    pathKeyMap: 'varsPaths',
+    allowOnlyOneFilePath: false,
+    icon: manifestTypeIcons.Vars
+  },
+  autoScalerPath: {
+    path: 'AutoScaler',
+    pathLabel: 'pipeline.manifestType.autoScalerYAMLPath',
+    addPathLabel: 'pipeline.manifestType.addAutoScalerYAMLPath',
+    pathKeyMap: 'autoScalerPath',
+    allowOnlyOneFilePath: true,
+    icon: manifestTypeIcons.AutoScaler
+  }
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -242,6 +246,11 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
   { label: 'Version 2', value: 'V2' },
   { label: 'Version 3', value: 'V3' }
+]
+
+export const cliVersions: Array<{ label: string; value: CLIVersionOptions }> = [
+  { label: 'CLI Version 7.0', value: 'V7' },
+  { label: 'CLI Version 8.0', value: 'V8' }
 ]
 
 export const ManifestIconByType: Record<ManifestStores, IconName> = {

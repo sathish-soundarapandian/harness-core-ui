@@ -40,9 +40,10 @@ interface ManifestWizardStepsProps<T, U> {
   manifestStoreTypes: ManifestStores[]
   changeManifestType: (data: U | null) => void
   types: ManifestTypes[]
+  listOfDisabledManifestTypes?: ManifestTypes[]
 }
 
-const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null) => {
+const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): boolean => {
   return !!(
     selectedManifest &&
     [
@@ -70,7 +71,8 @@ export function ManifestWizard<T, U>({
   lastSteps,
   changeManifestType,
   iconsProps,
-  isReadonly
+  isReadonly,
+  listOfDisabledManifestTypes
 }: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
@@ -120,6 +122,7 @@ export function ManifestWizard<T, U>({
         selectedManifest={selectedManifest}
         changeManifestType={changeManifestTypeRef}
         initialValues={initialValues}
+        listOfDisabledManifestTypes={listOfDisabledManifestTypes}
       />
       <ManifestStore
         name={getString('pipeline.manifestType.manifestSource')}

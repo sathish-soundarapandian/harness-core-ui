@@ -6,13 +6,23 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Layout, Text, Icon, StepWizard, StepProps, Button, ButtonSize, ButtonVariation } from '@harness/uicore'
+import {
+  Layout,
+  Text,
+  Icon,
+  StepWizard,
+  StepProps,
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { get, isEmpty, noop } from 'lodash-es'
+import { get, intersection, isEmpty, noop } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
@@ -38,6 +48,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
 import { getStatus, getConnectorNameFromValue } from '../../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../../PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -87,6 +98,8 @@ import KustomizeWithHarnessStore from '../ManifestWizardSteps/KustomizeWithHarne
 import { CommonManifestDetails } from '../ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
 import HelmWithHarnessStore from '../ManifestWizardSteps/HelmWithHarnessStore/HelmWithHarnessStore'
 import TasManifest from '../ManifestWizardSteps/TasManifest/TasManifest'
+import TASWithHarnessStore from '../ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
+import { allowedManifestForSingleAddition } from '../ManifestWizardSteps/CommonManifestDetails/utils'
 import css from '../ManifestSelection.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -306,11 +319,11 @@ function ManifestListView({
       ) && manifestStore === ManifestStoreMap.InheritFromManifest:
         manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
         break
+      case selectedManifest === ManifestDataType.TasManifest && manifestStore === ManifestStoreMap.Harness:
+        manifestDetailStep = <TASWithHarnessStore {...lastStepProps()} />
+        break
       case manifestStore === ManifestStoreMap.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
-        break
-      case selectedManifest === ManifestDataType.TasManifest:
-        manifestDetailStep = <TasManifest {...lastStepProps()} />
         break
       case [
         ManifestDataType.K8sManifest,
@@ -318,7 +331,7 @@ function ManifestListView({
         ManifestDataType.HelmChart,
         ManifestDataType.OpenshiftTemplate,
         ManifestDataType.OpenshiftParam,
-        // ManifestDataType.TasManifest,
+        ManifestDataType.TasManifest,
         ManifestDataType.Vars,
         ManifestDataType.AutoScaler
       ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.CustomRemote:
@@ -328,10 +341,14 @@ function ManifestListView({
         isGitTypeStores:
         manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
         break
+      case selectedManifest === ManifestDataType.TasManifest:
+        manifestDetailStep = <TasManifest {...lastStepProps()} />
+        break
       default:
         manifestDetailStep = <CommonManifestDetails {...lastStepProps()} />
         break
     }
+
     arr.push(manifestDetailStep)
     return arr
   }, [manifestStore, selectedManifest, lastStepProps])
@@ -441,6 +458,13 @@ function ManifestListView({
       setIsEditMode(false)
       setSelectedManifest(null)
     }
+    let listOfDisabledManifestTypes = [] as ManifestTypes[]
+    if (deploymentType === ServiceDeploymentType.TAS) {
+      const selectedManifestTypes = listOfManifests.map(
+        (item: ManifestConfigWrapper) => item.manifest?.type as ManifestTypes
+      )
+      listOfDisabledManifestTypes = intersection(selectedManifestTypes, allowedManifestForSingleAddition)
+    }
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
@@ -460,6 +484,7 @@ function ManifestListView({
             lastSteps={getLastSteps()}
             iconsProps={getIconProps()}
             isReadonly={isReadonly}
+            listOfDisabledManifestTypes={listOfDisabledManifestTypes}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -611,38 +636,39 @@ function ManifestListView({
                     )}
                     {manifest?.type === ManifestDataType.TasManifest &&
                       TASManifestToPaths.map(type => (
-                        <AttachPathYamlFlow
-                          key={type}
-                          renderConnectorField={renderConnectorField(
-                            manifest?.spec?.store.type,
-                            manifest?.spec?.store?.spec.connectorRef,
-                            connectorName,
-                            color
-                          )}
-                          manifestType={manifest?.type as PrimaryManifestType}
-                          manifestStore={manifest?.spec?.store?.type}
-                          valuesPathMetaData={TASManifestTypeMetaData[type]}
-                          valuesPaths={manifest?.spec[type]}
-                          expressions={expressions}
-                          allowableTypes={allowableTypes}
-                          isReadonly={isReadonly}
-                          attachPathYaml={formData =>
-                            attachPathYaml(
-                              formData,
-                              manifest?.identifier as string,
-                              manifest?.type as PrimaryManifestType,
-                              TASManifestTypeMetaData[type].pathKeyMap
-                            )
-                          }
-                          removeValuesYaml={valuesYamlIndex =>
-                            removeValuesYaml(
-                              valuesYamlIndex,
-                              manifest?.identifier as string,
-                              manifest?.type as PrimaryManifestType,
-                              TASManifestTypeMetaData[type].pathKeyMap
-                            )
-                          }
-                        />
+                        <Container key={type} margin={{ bottom: 'medium' }}>
+                          <AttachPathYamlFlow
+                            renderConnectorField={renderConnectorField(
+                              manifest?.spec?.store.type,
+                              manifest?.spec?.store?.spec.connectorRef,
+                              connectorName,
+                              color
+                            )}
+                            manifestType={manifest?.type as PrimaryManifestType}
+                            manifestStore={manifest?.spec?.store?.type}
+                            valuesPathMetaData={TASManifestTypeMetaData[type]}
+                            valuesPaths={manifest?.spec[type]}
+                            expressions={expressions}
+                            allowableTypes={allowableTypes}
+                            isReadonly={isReadonly}
+                            attachPathYaml={formData =>
+                              attachPathYaml(
+                                formData,
+                                manifest?.identifier as string,
+                                manifest?.type as PrimaryManifestType,
+                                TASManifestTypeMetaData[type].pathKeyMap
+                              )
+                            }
+                            removeValuesYaml={valuesYamlIndex =>
+                              removeValuesYaml(
+                                valuesYamlIndex,
+                                manifest?.identifier as string,
+                                manifest?.type as PrimaryManifestType,
+                                TASManifestTypeMetaData[type].pathKeyMap
+                              )
+                            }
+                          />
+                        </Container>
                       ))}
                   </div>
                 )
