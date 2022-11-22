@@ -9,10 +9,11 @@ import React from 'react'
 import { AllowedTypesWithRunTime, Layout, MultiTypeInputType, StepProps, Text } from '@harness/uicore'
 
 import { FontVariation } from '@harness/design-system'
-import { defaultTo, get, omit } from 'lodash-es'
+import produce from 'immer'
+import { defaultTo, get, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, UserRepoResponse } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
@@ -20,6 +21,7 @@ import type { ManifestLastStepProps, ManifestTypes } from '@pipeline/components/
 import HelmWithGIT from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmWithGIT/HelmWithGIT'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import type { ConfigureServiceInterface } from '../ConfigureService'
+import { getFullRepoName } from '../../DeployProvisioningWizard/Constants'
 
 interface ProvideManifestProps {
   initialValues: ManifestConfig
@@ -86,7 +88,14 @@ const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => 
       stepName: getString('pipeline.manifestType.manifestDetails'),
       initialValues: defaultTo(serviceData?.serviceDefinition?.spec?.manifests?.[0]?.manifest, null) as ManifestConfig,
       handleSubmit: (data: ManifestConfigWrapper) => {
-        formikProps?.setFieldValue('manifestConfig', data)
+        const updatedDataWithUserRepo = produce(data, draft => {
+          set(
+            draft,
+            'manifest.spec.store.spec.repoName',
+            getFullRepoName(serviceData?.data?.repoValues as UserRepoResponse)
+          )
+        })
+        formikProps?.setFieldValue('manifestConfig', updatedDataWithUserRepo)
       },
       selectedManifest: formikProps?.values?.manifestData?.type as ManifestTypes,
       manifestIdsList: [],
@@ -99,7 +108,7 @@ const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => 
     }
     return manifestDetailsProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formikProps?.values?.manifestData?.type])
+  }, [formikProps?.values])
 
   return (
     <Layout.Vertical spacing="small" padding={{ bottom: 'xxlarge' }}>
