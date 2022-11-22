@@ -35,33 +35,23 @@ describe('<StepTasAuthentication />', () => {
     )
 
     // Change Endpoint URL
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
-        target: { value: 'http://sample_url_tas.com/' }
-      })
+    fireEvent.change(container.querySelector('input[name="endpointUrl"]')!, {
+      target: { value: 'http://sample_url_tas.com/' }
     })
 
     // Change username
-    await act(async () => {
-      fireEvent.change(container.querySelector('input[name="usernametextField"]')!, {
-        target: { value: 'AdminUser' }
-      })
+    fireEvent.change(container.querySelector('input[name="usernametextField"]')!, {
+      target: { value: 'AdminUser' }
     })
 
     // Change token
-    act(() => {
-      fireEvent.click(getByText('createOrSelectSecret'))
-    })
+    fireEvent.click(getByText('createOrSelectSecret'))
 
     await waitFor(() => getByText('common.entityReferenceTitle'))
 
-    act(() => {
-      fireEvent.click(getByText('TasToken')!)
-    })
+    fireEvent.click(getByText('TasToken')!)
 
-    act(() => {
-      fireEvent.click(getByText('entityReference.apply')!)
-    })
+    fireEvent.click(getByText('entityReference.apply')!)
 
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)

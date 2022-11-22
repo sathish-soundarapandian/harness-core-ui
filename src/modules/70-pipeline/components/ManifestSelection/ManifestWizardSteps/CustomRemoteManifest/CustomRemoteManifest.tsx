@@ -35,7 +35,7 @@ import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextFi
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import { cliVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
@@ -57,6 +57,11 @@ const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
 const showParamsPaths = (selectedManifest: ManifestTypes): boolean => {
   return selectedManifest === ManifestDataType.OpenshiftTemplate
 }
+
+const showTASAdditionalPaths = (selectedManifest: ManifestTypes): boolean => {
+  return selectedManifest === ManifestDataType.TasManifest
+}
+
 const showSkipResourceVersion = (selectedManifest: ManifestTypes): boolean => {
   return [ManifestDataType.K8sManifest, ManifestDataType.HelmChart, ManifestDataType.OpenshiftTemplate].includes(
     selectedManifest
@@ -101,7 +106,10 @@ function CustomRemoteManifest({
             : removeEmptyFieldsFromStringArray(defaultTo(paramsPaths, []))?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
-              }))
+              })),
+        ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && {
+          cliVersion: get(initialValues, 'spec.cliVersion')
+        })
       }
     }
     return {
@@ -111,7 +119,8 @@ function CustomRemoteManifest({
       skipResourceVersioning: false,
       valuesPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       paramsPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
-      delegateSelectors: []
+      delegateSelectors: [],
+      ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && { cliVersion: 'V7' })
     }
   }
 
@@ -154,6 +163,26 @@ function CustomRemoteManifest({
             ? formData.paramsPaths
             : defaultTo(formData.paramsPaths as Array<{ path: string }>, []).map((path: { path: string }) => path.path)
         )
+      }
+
+      if (showTASAdditionalPaths(selectedManifest as ManifestTypes)) {
+        set(
+          manifestObj,
+          'manifest.spec.varsPaths',
+          typeof formData.varsPaths === 'string'
+            ? formData.varsPaths
+            : defaultTo(formData.varsPaths as Array<{ path: string }>, []).map((path: { path: string }) => path.path)
+        )
+        set(
+          manifestObj,
+          'manifest.spec.autoScalerPath',
+          typeof formData.autoScalerPath === 'string'
+            ? formData.autoScalerPath
+            : defaultTo(formData.autoScalerPath as Array<{ path: string }>, []).map(
+                (path: { path: string }) => path.path
+              )
+        )
+        set(manifestObj, 'manifest.spec.cliVersion', formData?.cliVersion)
       }
 
       handleSubmit(manifestObj)
@@ -204,6 +233,15 @@ function CustomRemoteManifest({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
+                  {showTASAdditionalPaths(selectedManifest as ManifestTypes) && (
+                    <div className={css.halfWidth}>
+                      <FormInput.Select
+                        name="cliVersion"
+                        label={getString('pipeline.manifestType.cliVersion')}
+                        items={cliVersions}
+                      />
+                    </div>
+                  )}
                   <div
                     className={cx(css.halfWidth, {
                       [css.runtimeInput]:
@@ -273,6 +311,73 @@ function CustomRemoteManifest({
                       />
                     )}
                   </div>
+
+                  {showTASAdditionalPaths(selectedManifest as ManifestTypes) && (
+                    <>
+                      <div
+                        className={cx({
+                          [css.runtimeInput]:
+                            getMultiTypeFromValue(formik.values?.varsPaths as string) === MultiTypeInputType.RUNTIME
+                        })}
+                      >
+                        <DragnDropPaths
+                          formik={formik}
+                          expressions={expressions}
+                          allowableTypes={allowableTypes}
+                          fieldPath="varsPaths"
+                          pathLabel={getString('pipeline.manifestType.varsYAMLPath')}
+                          placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                          defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                          dragDropFieldWidth={filePathWidth}
+                        />
+                        {getMultiTypeFromValue(formik.values.varsPaths as string) === MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={formik.values.varsPaths as string}
+                            type={getString('string')}
+                            variableName={'varsPaths'}
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={val => formik?.setFieldValue('varsPaths', val)}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </div>
+                      <div
+                        className={cx({
+                          [css.runtimeInput]:
+                            getMultiTypeFromValue(formik.values?.autoScalerPath as string) ===
+                            MultiTypeInputType.RUNTIME
+                        })}
+                      >
+                        <DragnDropPaths
+                          formik={formik}
+                          expressions={expressions}
+                          allowableTypes={allowableTypes}
+                          fieldPath="autoScalerPath"
+                          pathLabel={getString('pipeline.manifestType.autoScalerYAMLPath')}
+                          placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                          defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                          dragDropFieldWidth={filePathWidth}
+                          allowOnlyOneFilePath={true}
+                        />
+                        {getMultiTypeFromValue(formik.values.autoScalerPath as string) ===
+                          MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={formik.values.autoScalerPath as string}
+                            type={getString('string')}
+                            variableName={'autoScalerPath'}
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={val => formik?.setFieldValue('autoScalerPath', val)}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </div>
+                    </>
+                  )}
+
                   <div className={css.halfWidth}>
                     <MultiTypeDelegateSelector
                       expressions={expressions}

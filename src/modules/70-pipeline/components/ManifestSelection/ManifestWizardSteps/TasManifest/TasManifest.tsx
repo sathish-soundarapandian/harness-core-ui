@@ -30,7 +30,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { ManifestTypes, TASManifestDataType } from '../../ManifestInterface'
-import { GitRepoName, ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import { GitRepoName, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import { ManifestDetailsCoreSection } from '../CommonManifestDetails/ManifestDetailsCoreSection'
@@ -75,26 +75,23 @@ function TasManifest({
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        skipResourceVersioning: initialValues.spec?.skipResourceVersioning,
         repoName: getRepositoryName(prevStepData, initialValues),
-        paths:
-          typeof specValues.paths === 'string'
-            ? specValues.paths
-            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
-                path,
-                uuid: uuid(path, nameSpace())
-              })),
+        paths: removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+          path,
+          uuid: uuid(path, nameSpace())
+        })),
         varsPaths:
-          typeof initialValues?.spec?.varsPaths === 'string'
-            ? initialValues?.spec?.varsPaths
-            : removeEmptyFieldsFromStringArray(initialValues?.spec?.varsPaths)?.map((path: string) => ({
+          typeof initialValues.spec?.varsPaths === 'string'
+            ? initialValues.spec?.varsPaths
+            : removeEmptyFieldsFromStringArray(initialValues.spec?.varsPaths)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               })),
         autoScalerPath:
-          typeof initialValues?.spec?.autoScalerPath === 'string'
-            ? initialValues?.spec?.autoScalerPath
-            : removeEmptyFieldsFromStringArray(initialValues?.spec?.autoScalerPath)?.map((path: string) => ({
+          typeof initialValues.spec?.autoScalerPath === 'string'
+            ? initialValues.spec?.autoScalerPath
+            : removeEmptyFieldsFromStringArray(initialValues.spec?.autoScalerPath)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               }))
@@ -106,8 +103,6 @@ function TasManifest({
       commitId: undefined,
       gitFetchType: 'Branch',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
-      // varsPaths: [{ path: '', uuid: uuid('', nameSpace()) }],
-      // autoScalerPath: [{ path: '', uuid: uuid('', nameSpace()) }],
       skipResourceVersioning: false,
       repoName: getRepositoryName(prevStepData, initialValues)
     }
@@ -124,10 +119,7 @@ function TasManifest({
             spec: {
               connectorRef: formData?.connectorRef,
               gitFetchType: formData?.gitFetchType,
-              paths:
-                typeof formData?.paths === 'string'
-                  ? formData?.paths
-                  : formData?.paths?.map((path: { path: string }) => path.path)
+              paths: formData?.paths?.map((path: { path: string }) => path.path)
             }
           },
           varsPaths:
@@ -153,9 +145,6 @@ function TasManifest({
       }
     }
 
-    if (selectedManifest === ManifestDataType.K8sManifest) {
-      set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
-    }
     handleSubmit(manifestObj)
   }
 
@@ -186,6 +175,7 @@ function TasManifest({
                 })
               )
             }
+            /* istanbul ignore next */
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           }),
           varsPaths: Yup.lazy((value): Yup.Schema<unknown> => {

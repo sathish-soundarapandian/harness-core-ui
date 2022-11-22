@@ -2270,7 +2270,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.SPOT:
       return 'spot'
     case Connectors.TAS:
-      return 'service-pivotal' //TODO:: icon change
+      return 'tas'
     default:
       return 'cog'
   }

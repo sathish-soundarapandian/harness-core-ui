@@ -53,7 +53,7 @@ export class TasServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.TasService
   protected defaultValues: ServiceSpec = {}
 
-  protected stepIcon: IconName = 'service-pivotal' //TODO::  icon change to 'tas'
+  protected stepIcon: IconName = 'tas'
   protected stepName = 'Specify Tanzu Application Services'
   protected stepPaletteVisible = false
   protected _hasStepVariables = true
@@ -141,11 +141,16 @@ export class TasServiceSpec extends Step<ServiceSpec> {
           },
           body: {
             types: [
+              ArtifactToConnectorMap.AmazonS3,
+              ArtifactToConnectorMap.ArtifactoryRegistry,
+              ArtifactToConnectorMap.Acr,
               ArtifactToConnectorMap.DockerRegistry,
-              ArtifactToConnectorMap.Gcr,
               ArtifactToConnectorMap.Ecr,
-              ArtifactToConnectorMap.AmazonS3
-            ], // TODO:: CHECK WHY NEEDED?
+              ArtifactToConnectorMap.Gcr,
+              ArtifactToConnectorMap.Jenkins,
+              ArtifactToConnectorMap.Nexus3Registry,
+              ArtifactToConnectorMap.CustomArtifact
+            ],
             filterType: 'Connector'
           }
         }).then(this.returnConnectorListFromResponse)
@@ -177,7 +182,6 @@ export class TasServiceSpec extends Step<ServiceSpec> {
       const obj = get(pipelineObj, path.replace('.spec.artifactPath', ''))
       if (tasAllowedArtifactTypes.includes(obj?.type)) {
         return getBuildDetailsForArtifactoryArtifactWithYamlPromise({
-          //TODO:: CHECK
           queryParams: {
             artifactPath: obj.spec?.artifactDirectory,
             repository: obj.spec?.repository,

@@ -278,21 +278,20 @@ exports[`VerifyStepLogContent should render VerifyStepLogContent component of ty
               type="button"
             >
               <span
-                class="bp3-icon bp3-icon-arrow-down StyledProps--main StyledProps--padding-right-xsmall"
-                icon="arrow-down"
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="arrow-down"
               >
                 <svg
-                  data-icon="arrow-down"
+                  fill="none"
                   height="10"
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 24 8"
                   width="10"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <desc>
-                    arrow-down
-                  </desc>
                   <path
-                    d="M13 8c-.3 0-.5.1-.7.3L9 11.6V2c0-.5-.4-1-1-1s-1 .5-1 1v9.6L3.7 8.3C3.5 8.1 3.3 8 3 8c-.5 0-1 .5-1 1 0 .3.1.5.3.7l5 5c.2.2.4.3.7.3s.5-.1.7-.3l5-5c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                    fill-rule="evenodd"
+                    d="M12 8l12-8H0l12 8z"
+                    fill="currentColor"
+                    opacity="0.8"
                   />
                 </svg>
               </span>

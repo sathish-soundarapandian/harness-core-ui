@@ -18,3 +18,9 @@ export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boo
     ManifestDataType.AutoScaler
   ].includes(selectedManifest)
 }
+
+export const allowedManifestForSingleAddition = [ManifestDataType.TasManifest, ManifestDataType.AutoScaler]
+
+export const shouldAllowOnlyOneManifestAddition = (selectedManifest: ManifestTypes): boolean => {
+  return allowedManifestForSingleAddition.includes(selectedManifest)
+}

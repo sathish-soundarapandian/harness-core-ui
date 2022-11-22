@@ -34,7 +34,7 @@ export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
   KubernetesGitOps: 'gitops-green', //type specific to gitops
   ECS: 'service-amazon-ecs',
   Elastigroup: 'elastigroup',
-  Tas: 'service-pivotal' //TODO:: icon change
+  Tas: 'tas'
 }
 
 // this is added for card names in execution strategies
