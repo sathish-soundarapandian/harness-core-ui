@@ -195,7 +195,7 @@ const ConfigureServiceRef = (
           if (NG_ARTIFACT_SOURCES) {
             set(draft, 'primary.sources[0].type', formikRef?.current?.values?.artifactType)
             set(draft, 'primary.primaryArtifactRef', artifactObj?.primary?.sources?.[0]?.identifier)
-            unset(draft, 'primary.sources.spec')
+            unset(draft, 'primary.spec')
             unset(draft, 'primary.identifier')
           } else {
             set(draft, 'primary.type', formikRef?.current?.values?.artifactType)
@@ -348,7 +348,7 @@ const ConfigureServiceRef = (
       unset(draft, 'data.repovalues')
       unset(draft, 'data.gitConnectionStatus')
       unset(draft, 'data.connectorRef')
-      unset(draft, 'serviceDefinition.spec.manifest[0]')
+      set(draft, 'serviceDefinition.spec.manifest', newServiceState.serviceDefinition.spec.manifests)
       set(draft, 'serviceDefinition.spec.artifacts', newServiceState.serviceDefinition.spec.artifacts)
     })
     formikRef?.current?.setFieldValue('repository', undefined)

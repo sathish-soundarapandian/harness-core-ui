@@ -245,7 +245,7 @@ export const ACCOUNT_SCOPE_PREFIX = 'account.'
 export const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}/gateway/`
 
 export const getFullRepoName = (repository: UserRepoResponse): string => {
-  const { name: repositoryName, namespace } = repository
+  const { name: repositoryName = '', namespace = '' } = repository
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 

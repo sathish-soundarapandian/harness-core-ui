@@ -74,13 +74,13 @@ const InHarnessFileStore = ({
   const saveConstructManifestObj = (filesData: FileStoreNodeDTO[]): void => {
     const paths = {
       files: [] as string[],
-      valuesPath: [] as string[]
+      valuesPaths: [] as string[]
     }
     const fileNodesData = filesData.map(node => {
       if (node.path?.includes('values')) {
-        paths.valuesPath.push(`account:${node.path}`)
+        paths.valuesPaths.push(`${node.path}`)
       } else {
-        paths.files.push(`account:${node.path}`)
+        paths.files.push(`${node.path}`)
       }
       return {
         ...node,
@@ -98,12 +98,12 @@ const InHarnessFileStore = ({
           store: {
             type: ManifestStoreMap.Harness,
             spec: {
-              files: paths.files,
-              valuesPath: paths.valuesPath,
-              skipResourceVersioning: false,
-              ...(manifestType === 'HelmChart' && { helmVersion: 'V2' })
+              files: paths.files
             }
-          }
+          },
+          valuesPaths: paths.valuesPaths,
+          skipResourceVersioning: false,
+          ...(manifestType === 'HelmChart' && { helmVersion: 'V2' })
         }
       }
     }
