@@ -68,6 +68,7 @@ spec:
         {{- if .Values.env.secrets}}
         - secretRef:
             name: {{.Values.name}}
+        {{- end}}
         {{- end}}`
 
 const namespaceYaml = `{{- if .Values.createNamespace}}
