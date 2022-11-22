@@ -5100,6 +5100,9 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tasInfra.organizationPlaceholder': string
+  'cd.steps.tasInfra.space': string
+  'cd.steps.tasInfra.spacePlaceholder': string
   'cd.successfullyLinkedClusters': string
   'cd.terraformVarFiles': string
   'cd.testConnectionStepName': string

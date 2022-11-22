@@ -53,7 +53,7 @@ export class TasServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.TasService
   protected defaultValues: ServiceSpec = {}
 
-  protected stepIcon: IconName = 'service-pivotal' //TODO::  icon change to 'tas'
+  protected stepIcon: IconName = 'tas'
   protected stepName = 'Specify Tanzu Application Services'
   protected stepPaletteVisible = false
   protected _hasStepVariables = true

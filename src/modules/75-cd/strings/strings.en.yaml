@@ -120,6 +120,10 @@ steps:
     elastigroupConfigReq: Elastigroup Configuration is required
     elastigroupTitle: Elastigroup Configuration Source
     elastigroupConfigDetails: '{{$.common.configDetails}}'
+  tasInfra:
+    space: Space
+    organizationPlaceholder: Select organization
+    spacePlaceholder: Specify the space
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
