@@ -28,7 +28,7 @@ interface PluginsPanelInterface {
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const { height, onPluginAdd, existingPluginValues } = props
   const { getString } = useStrings()
-  const [textarea, setTextarea] = useState<string>(existingPluginValues)
+  const [textarea, setTextarea] = useState<string>('')
   const [selectedPlugin, setSelectedPlugin] = useState<string>('')
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
@@ -112,6 +112,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                 <Button style={{ height: '40px', width: '100px' }} onClick={onAddText}>
                   {getString('add')}
                 </Button>
+                <Text>{existingPluginValues}</Text>
               </Layout.Vertical>
             ) : (
               <Layout.Vertical>
