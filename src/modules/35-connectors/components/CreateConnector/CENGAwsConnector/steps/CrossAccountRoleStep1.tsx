@@ -14,8 +14,6 @@ import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import EmptyState from '../images/empty-state.svg'
@@ -42,8 +40,6 @@ interface CardData {
 
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
-
-  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI)
 
   const FeatureCards = useMemo(() => {
     const cards = [
@@ -139,11 +135,8 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
             {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
           </>
         )
-      }
-    ]
-
-    if (isGovernanceEnabled) {
-      cards.push({
+      },
+      {
         icon: 'nav-settings',
         text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
         value: Features.GOVERNANCE,
@@ -171,11 +164,11 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
             {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
           </>
         )
-      })
-    }
+      }
+    ]
 
     return cards as CardData[]
-  }, [isGovernanceEnabled])
+  }, [])
 
   const [selectedCards, setSelectedCards] = useState<CardData[]>(() => {
     const initialSelectedCards = []
