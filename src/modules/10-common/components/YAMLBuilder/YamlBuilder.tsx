@@ -781,14 +781,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const addCodeLens = useCallback(
     (fromLine: number, toLineNum: number) => {
-      const commandId = editorRef.current?.editor?.addCommand(
-        0,
-        function () {
-          setPluginInput('\na\nb')
-        },
-        ''
-      )
-
+      const commandId = editorRef.current?.editor?.addCommand(0, () => {}, '')
       const registrationId = monaco.languages.registerCodeLensProvider('yaml', {
         provideCodeLenses: function (_model: unknown, _token: unknown) {
           return {
@@ -827,10 +820,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (editor) {
         const position = editor?.getPosition()
         if (position) {
-          editor.trigger('keyboard', 'type', { text: `\n${textToInsert}` })
           const endingLineForCursorPosition =
             position.lineNumber + (numberOfNewLinesIntroduced ? numberOfNewLinesIntroduced : 0)
-          const contentInEndlingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition)
+          const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
+          const contentInEndlingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition)?.trim()
+          editor.trigger('keyboard', 'type', {
+            text: contentInStartingLine ? `\n${textToInsert}` : textToInsert
+          })
           if (contentInEndlingLine) {
             editor.setPosition({
               column: contentInEndlingLine.length + 1,
@@ -838,8 +834,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             })
             editor.focus()
           }
-          highlightInsertedText(position.lineNumber, endingLineForCursorPosition)
-          addCodeLens(position.lineNumber, endingLineForCursorPosition)
+          const startingPosition = position.lineNumber + (contentInStartingLine ? 1 : 0)
+          const endingPosition = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+          highlightInsertedText(startingPosition, endingPosition)
+          addCodeLens(startingPosition, endingPosition)
         }
       }
     },
