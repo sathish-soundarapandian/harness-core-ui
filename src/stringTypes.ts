@@ -2966,6 +2966,7 @@ export interface StringsMap {
   'scm.files': string
   'scm.homepageHeading': string
   'scm.learnMore': string
+  'scm.settings': string
   'scm.title': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string

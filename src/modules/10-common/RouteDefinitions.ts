@@ -1403,6 +1403,10 @@ const routes = {
       branch ? '/' + branch : ''
     }`
   },
+  toSCMRepositorySettings: ({ repoPath }: Required<Pick<SCMProps, 'repoPath'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
+  },
 
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>
