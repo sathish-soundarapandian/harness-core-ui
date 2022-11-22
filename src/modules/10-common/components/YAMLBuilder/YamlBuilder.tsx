@@ -822,22 +822,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         if (position) {
           const endingLineForCursorPosition =
             position.lineNumber + (numberOfNewLinesIntroduced ? numberOfNewLinesIntroduced : 0)
+
           const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
-          const contentInEndlingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition)?.trim()
+          const startingPosition = position.lineNumber + (contentInStartingLine ? 1 : 0)
+          const endingPosition = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+
+          // insert the plugin input
           editor.trigger('keyboard', 'type', {
             text: contentInStartingLine ? `\n${textToInsert}` : textToInsert
           })
-          if (contentInEndlingLine) {
-            editor.setPosition({
-              column: contentInEndlingLine.length + 1,
-              lineNumber: endingLineForCursorPosition
-            })
-            editor.focus()
-          }
-          const startingPosition = position.lineNumber + (contentInStartingLine ? 1 : 0)
-          const endingPosition = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+
+          // highlight the inserted text
           highlightInsertedText(startingPosition, endingPosition)
+
+          // add "Settings" control
           addCodeLens(startingPosition, endingPosition)
+
+          // Scroll to the end of the inserted text
+          editor.revealLineInCenter(endingPosition)
+          editor.focus()
         }
       }
     },
@@ -883,11 +886,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
       {showPluginsPanel ? (
-        <PluginsPanel
-          height={height}
-          onPluginAdd={(pluginInput: string) => setPluginInput(pluginInput)}
-          existingPluginValues={pluginInput}
-        />
+        <PluginsPanel height={height} onPluginAdd={setPluginInput} existingPluginValues={pluginInput} />
       ) : null}
     </Layout.Horizontal>
   )
