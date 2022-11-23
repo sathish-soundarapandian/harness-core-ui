@@ -2963,11 +2963,8 @@ export interface StringsMap {
   'projectsOrgs.whyCreateProject': string
   'projectsOrgs.youHaveNoProjects': string
   'scm.branches': string
-  'scm.files': string
   'scm.homepageHeading': string
   'scm.learnMore': string
-  'scm.settings': string
-  'scm.title': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string
